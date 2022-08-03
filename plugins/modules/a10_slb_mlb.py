@@ -74,9 +74,11 @@ options:
           connection failed; 'server_conn_closed'= Server connection closed;
           'client_conn_created'= Client connection created; 'client_conn_closed'= Client
           connection closed; 'client_conn_not_found'= Client connection not found;
-          'msg_dropped'= Message dropped; 'mlb_dcmsg_sent'= Dcmsg sent;
-          'mlb_dcmsg_received'= Dcmsg received; 'mlb_dcmsg_error'= Dcmsg error;
-          'mlb_dcmsg_alloc'= Dcmsg alloc; 'mlb_dcmsg_free'= Dcmsg free;"
+          'msg_dropped'= Message dropped; 'msg_rerouted'= Message rerouted;
+          'mlb_dcmsg_sent'= Dcmsg sent; 'mlb_dcmsg_received'= Dcmsg received;
+          'mlb_dcmsg_error'= Dcmsg error; 'mlb_dcmsg_alloc'= Dcmsg alloc;
+          'mlb_dcmsg_free'= Dcmsg free; 'mlb_server_probe'= Server probe;
+          'mlb_server_down'= Server down;"
                 type: str
     oper:
         description:
@@ -138,6 +140,10 @@ options:
                 description:
                 - "Message dropped"
                 type: str
+            msg_rerouted:
+                description:
+                - "Message rerouted"
+                type: str
             mlb_dcmsg_sent:
                 description:
                 - "Dcmsg sent"
@@ -157,6 +163,14 @@ options:
             mlb_dcmsg_free:
                 description:
                 - "Dcmsg free"
+                type: str
+            mlb_server_probe:
+                description:
+                - "Server probe"
+                type: str
+            mlb_server_down:
+                description:
+                - "Server down"
                 type: str
 
 '''
@@ -258,9 +272,10 @@ def get_argspec():
                     'server_conn_created', 'server_conn_rst',
                     'server_conn_failed', 'server_conn_closed',
                     'client_conn_created', 'client_conn_closed',
-                    'client_conn_not_found', 'msg_dropped', 'mlb_dcmsg_sent',
-                    'mlb_dcmsg_received', 'mlb_dcmsg_error', 'mlb_dcmsg_alloc',
-                    'mlb_dcmsg_free'
+                    'client_conn_not_found', 'msg_dropped', 'msg_rerouted',
+                    'mlb_dcmsg_sent', 'mlb_dcmsg_received', 'mlb_dcmsg_error',
+                    'mlb_dcmsg_alloc', 'mlb_dcmsg_free', 'mlb_server_probe',
+                    'mlb_server_down'
                 ]
             }
         },
@@ -298,6 +313,9 @@ def get_argspec():
                 'msg_dropped': {
                     'type': 'int',
                 },
+                'msg_rerouted': {
+                    'type': 'int',
+                },
                 'mlb_dcmsg_sent': {
                     'type': 'int',
                 },
@@ -311,6 +329,12 @@ def get_argspec():
                     'type': 'int',
                 },
                 'mlb_dcmsg_free': {
+                    'type': 'int',
+                },
+                'mlb_server_probe': {
+                    'type': 'int',
+                },
+                'mlb_server_down': {
                     'type': 'int',
                 }
             },
@@ -350,6 +374,9 @@ def get_argspec():
             'msg_dropped': {
                 'type': 'str',
             },
+            'msg_rerouted': {
+                'type': 'str',
+            },
             'mlb_dcmsg_sent': {
                 'type': 'str',
             },
@@ -363,6 +390,12 @@ def get_argspec():
                 'type': 'str',
             },
             'mlb_dcmsg_free': {
+                'type': 'str',
+            },
+            'mlb_server_probe': {
+                'type': 'str',
+            },
+            'mlb_server_down': {
                 'type': 'str',
             }
         }

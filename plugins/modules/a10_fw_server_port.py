@@ -118,6 +118,11 @@ options:
           Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'=
           Slowest response time;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     oper:
         description:
         - "Field oper"
@@ -337,6 +342,7 @@ AVAILABLE_PROPERTIES = [
     "health_check",
     "health_check_disable",
     "oper",
+    "packet_capture_template",
     "port_number",
     "protocol",
     "sampling_enable",
@@ -413,6 +419,9 @@ def get_argspec():
                     'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'oper': {
             'type': 'dict',

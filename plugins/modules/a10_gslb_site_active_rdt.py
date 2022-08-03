@@ -85,6 +85,11 @@ options:
         - "Client IP subnet mask, default is 32"
         type: str
         required: False
+    ipv6_mask:
+        description:
+        - "Client IPv6 subnet mask, default is 128"
+        type: int
+        required: False
     ignore_count:
         description:
         - "Ignore count if RDT is out of range, default is 5"
@@ -163,6 +168,7 @@ AVAILABLE_PROPERTIES = [
     "aging_time",
     "bind_geoloc",
     "ignore_count",
+    "ipv6_mask",
     "limit",
     "mask",
     "overlap",
@@ -211,6 +217,9 @@ def get_argspec():
         },
         'mask': {
             'type': 'str',
+        },
+        'ipv6_mask': {
+            'type': 'int',
         },
         'ignore_count': {
             'type': 'int',

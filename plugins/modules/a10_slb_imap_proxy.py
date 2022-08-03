@@ -91,7 +91,8 @@ options:
           Data Start state error; 'data_serv_connecting_err'= Data Serv CTNG error;
           'data_serv_connected_err'= Data Serv CTED error; 'request'= Total FTP Request;
           'capability'= Capability cmd; 'start_tls'= Total Start TLS cmd; 'login'= Total
-          Login cmd;"
+          Login cmd; 'realloc_error'= Realloc error; 'alloc_error'= Alloc error;
+          'boundary_error'= Boundary error; 'negative_error'= Negative error;"
                 type: str
     oper:
         description:
@@ -99,9 +100,9 @@ options:
         type: dict
         required: False
         suboptions:
-            l4_cpu_list:
+            imap_proxy_cpu_list:
                 description:
-                - "Field l4_cpu_list"
+                - "Field imap_proxy_cpu_list"
                 type: list
             cpu_count:
                 description:
@@ -317,6 +318,22 @@ options:
                 description:
                 - "Total Login cmd"
                 type: str
+            realloc_error:
+                description:
+                - "Realloc error"
+                type: str
+            alloc_error:
+                description:
+                - "Alloc error"
+                type: str
+            boundary_error:
+                description:
+                - "Boundary error"
+                type: str
+            negative_error:
+                description:
+                - "Negative error"
+                type: str
 
 '''
 
@@ -428,13 +445,15 @@ def get_argspec():
                     'cl_est_err', 'ser_connecting_err', 'server_response_err',
                     'cl_request_err', 'data_conn_start_err',
                     'data_serv_connecting_err', 'data_serv_connected_err',
-                    'request', 'capability', 'start_tls', 'login'
+                    'request', 'capability', 'start_tls', 'login',
+                    'realloc_error', 'alloc_error', 'boundary_error',
+                    'negative_error'
                 ]
             }
         },
         'oper': {
             'type': 'dict',
-            'l4_cpu_list': {
+            'imap_proxy_cpu_list': {
                 'type': 'list',
                 'current_proxy_conns': {
                     'type': 'int',
@@ -503,6 +522,18 @@ def get_argspec():
                     'type': 'int',
                 },
                 'client_rq_state_err': {
+                    'type': 'int',
+                },
+                'realloc_error': {
+                    'type': 'int',
+                },
+                'alloc_error': {
+                    'type': 'int',
+                },
+                'boundary_error': {
+                    'type': 'int',
+                },
+                'negative_error': {
                     'type': 'int',
                 }
             },
@@ -663,6 +694,18 @@ def get_argspec():
                 'type': 'str',
             },
             'login': {
+                'type': 'str',
+            },
+            'realloc_error': {
+                'type': 'str',
+            },
+            'alloc_error': {
+                'type': 'str',
+            },
+            'boundary_error': {
+                'type': 'str',
+            },
+            'negative_error': {
                 'type': 'str',
             }
         }

@@ -57,7 +57,24 @@ options:
         required: False
     feature_name:
         description:
-        - "'app-fw'= Application Firewall;"
+        - "'app-fw'= Application Firewall; 'ca-bundle'= CA Certificate Bundle;
+          'a10-threat-intel'= A10 Threat intel class list;"
+        type: str
+        required: False
+    prod_ver:
+        description:
+        - "update to this specific version, if this option is not configured, update to
+          the latest version"
+        type: str
+        required: False
+    from_staging_server:
+        description:
+        - "Get files from GLM Staging storage"
+        type: bool
+        required: False
+    stage_ver:
+        description:
+        - "update this specific version"
         type: str
         required: False
 
@@ -116,6 +133,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "feature_name",
+    "from_staging_server",
+    "prod_ver",
+    "stage_ver",
 ]
 
 
@@ -143,7 +163,21 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'feature_name': {'type': 'str', 'choices': ['app-fw']}})
+    rv.update({
+        'feature_name': {
+            'type': 'str',
+            'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
+        },
+        'prod_ver': {
+            'type': 'str',
+        },
+        'from_staging_server': {
+            'type': 'bool',
+        },
+        'stage_ver': {
+            'type': 'str',
+        }
+    })
     return rv
 
 

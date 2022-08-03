@@ -134,6 +134,18 @@ options:
                 description:
                 - "Configure background scan interval (Scan interval (sec) [Default=60 Disable=0])"
                 type: int
+            graceful_restart:
+                description:
+                - "Configure BGP BGP Graceful Restart"
+                type: bool
+            bgp_restart_time:
+                description:
+                - "BGP Peer Graceful Restart time in seconds (default 90)"
+                type: int
+            bgp_stalepath_time:
+                description:
+                - "BGP Graceful Restart Stalepath retention time in seconds (default 360)"
+                type: int
     distance_list:
         description:
         - "Field distance_list"
@@ -239,6 +251,18 @@ options:
             ipv6_neighbor_list:
                 description:
                 - "Field ipv6_neighbor_list"
+                type: list
+            ethernet_neighbor_list:
+                description:
+                - "Field ethernet_neighbor_list"
+                type: list
+            ve_neighbor_list:
+                description:
+                - "Field ve_neighbor_list"
+                type: list
+            trunk_neighbor_list:
+                description:
+                - "Field trunk_neighbor_list"
                 type: list
     redistribute:
         description:
@@ -495,6 +519,15 @@ def get_argspec():
             },
             'scan_time': {
                 'type': 'int',
+            },
+            'graceful_restart': {
+                'type': 'bool',
+            },
+            'bgp_restart_time': {
+                'type': 'int',
+            },
+            'bgp_stalepath_time': {
+                'type': 'int',
             }
         },
         'distance_list': {
@@ -618,6 +651,9 @@ def get_argspec():
                 'route_refresh': {
                     'type': 'bool',
                 },
+                'extended_nexthop': {
+                    'type': 'bool',
+                },
                 'collide_established': {
                     'type': 'bool',
                 },
@@ -653,6 +689,12 @@ def get_argspec():
                     'type': 'int',
                 },
                 'enforce_multihop': {
+                    'type': 'bool',
+                },
+                'bfd': {
+                    'type': 'bool',
+                },
+                'multihop': {
                     'type': 'bool',
                 },
                 'neighbor_filter_lists': {
@@ -753,7 +795,7 @@ def get_argspec():
                     'type': 'str',
                 },
                 'lif': {
-                    'type': 'int',
+                    'type': 'str',
                 },
                 'tunnel': {
                     'type': 'str',
@@ -802,6 +844,9 @@ def get_argspec():
                 'route_refresh': {
                     'type': 'bool',
                 },
+                'graceful_restart': {
+                    'type': 'bool',
+                },
                 'collide_established': {
                     'type': 'bool',
                 },
@@ -879,6 +924,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'restart_min': {
                     'type': 'int',
                 },
                 'next_hop_self': {
@@ -963,7 +1011,7 @@ def get_argspec():
                     'type': 'str',
                 },
                 'lif': {
-                    'type': 'int',
+                    'type': 'str',
                 },
                 'tunnel': {
                     'type': 'str',
@@ -1012,6 +1060,12 @@ def get_argspec():
                 'route_refresh': {
                     'type': 'bool',
                 },
+                'graceful_restart': {
+                    'type': 'bool',
+                },
+                'extended_nexthop': {
+                    'type': 'bool',
+                },
                 'collide_established': {
                     'type': 'bool',
                 },
@@ -1089,6 +1143,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'restart_min': {
                     'type': 'int',
                 },
                 'next_hop_self': {
@@ -1173,13 +1230,61 @@ def get_argspec():
                     'type': 'str',
                 },
                 'lif': {
-                    'type': 'int',
+                    'type': 'str',
                 },
                 'tunnel': {
                     'type': 'str',
                 },
                 'weight': {
                     'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ethernet_neighbor_list': {
+                'type': 'list',
+                'ethernet': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'unnumbered': {
+                    'type': 'bool',
+                },
+                'peer_group_name': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            've_neighbor_list': {
+                'type': 'list',
+                've': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'unnumbered': {
+                    'type': 'bool',
+                },
+                'peer_group_name': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'trunk_neighbor_list': {
+                'type': 'list',
+                'trunk': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'unnumbered': {
+                    'type': 'bool',
+                },
+                'peer_group_name': {
+                    'type': 'str',
                 },
                 'uuid': {
                     'type': 'str',
@@ -1532,6 +1637,9 @@ def get_argspec():
                             'type': 'str',
                             'choices': ['both', 'receive', 'send']
                         },
+                        'graceful_restart': {
+                            'type': 'bool',
+                        },
                         'default_originate': {
                             'type': 'bool',
                         },
@@ -1562,6 +1670,9 @@ def get_argspec():
                             'type': 'int',
                         },
                         'maximum_prefix_thres': {
+                            'type': 'int',
+                        },
+                        'restart_min': {
                             'type': 'int',
                         },
                         'next_hop_self': {
@@ -1630,6 +1741,9 @@ def get_argspec():
                             'type': 'str',
                             'choices': ['both', 'receive', 'send']
                         },
+                        'graceful_restart': {
+                            'type': 'bool',
+                        },
                         'default_originate': {
                             'type': 'bool',
                         },
@@ -1660,6 +1774,9 @@ def get_argspec():
                             'type': 'int',
                         },
                         'maximum_prefix_thres': {
+                            'type': 'int',
+                        },
+                        'restart_min': {
                             'type': 'int',
                         },
                         'next_hop_self': {
@@ -1701,6 +1818,45 @@ def get_argspec():
                         },
                         'weight': {
                             'type': 'int',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    },
+                    'ethernet_neighbor_ipv6_list': {
+                        'type': 'list',
+                        'ethernet': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'peer_group_name': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    },
+                    've_neighbor_ipv6_list': {
+                        'type': 'list',
+                        've': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'peer_group_name': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    },
+                    'trunk_neighbor_ipv6_list': {
+                        'type': 'list',
+                        'trunk': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'peer_group_name': {
+                            'type': 'str',
                         },
                         'uuid': {
                             'type': 'str',

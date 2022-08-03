@@ -263,7 +263,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service-name}/dns-ns-record/{ns-name}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service_name}/dns-ns-record/{ns-name}"
 
     f_dict = {}
     f_dict["ns-name"] = module.params["ns_name"]
@@ -277,7 +277,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service-name}/dns-ns-record/{ns-name}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service_name}/dns-ns-record/{ns-name}"
 
     f_dict = {}
     f_dict["ns-name"] = ""

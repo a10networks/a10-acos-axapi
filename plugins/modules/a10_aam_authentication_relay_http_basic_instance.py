@@ -90,6 +90,11 @@ options:
           Found; 'server-error'= Internal Server Error; 'unavailable'= Service
           Unavailable;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -190,6 +195,7 @@ AVAILABLE_PROPERTIES = [
     "domain",
     "domain_format",
     "name",
+    "packet_capture_template",
     "sampling_enable",
     "stats",
     "uuid",
@@ -245,6 +251,9 @@ def get_argspec():
                     'forbidden', 'not-found', 'server-error', 'unavailable'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

@@ -73,7 +73,8 @@ options:
           'snat_fail'= Source NAT failure; 'client_err'= Client fail; 'server_err'=
           Server fail; 'insert_clientip'= Insert client IP; 'default_switching'= Default
           switching; 'sender_switching'= Sender ID switching; 'target_switching'= Target
-          ID switching;"
+          ID switching; 'client_tls_conn'= Client TLS conn; 'server_tls_conn'= Server TLS
+          conn;"
                 type: str
     oper:
         description:
@@ -138,6 +139,14 @@ options:
             target_switching:
                 description:
                 - "Target ID switching"
+                type: str
+            client_tls_conn:
+                description:
+                - "Client TLS conn"
+                type: str
+            server_tls_conn:
+                description:
+                - "Server TLS conn"
                 type: str
 
 '''
@@ -238,7 +247,7 @@ def get_argspec():
                     'all', 'curr_proxy', 'total_proxy', 'svrsel_fail',
                     'noroute', 'snat_fail', 'client_err', 'server_err',
                     'insert_clientip', 'default_switching', 'sender_switching',
-                    'target_switching'
+                    'target_switching', 'client_tls_conn', 'server_tls_conn'
                 ]
             }
         },
@@ -277,6 +286,12 @@ def get_argspec():
                     'type': 'int',
                 },
                 'target_switching': {
+                    'type': 'int',
+                },
+                'client_tls_conn': {
+                    'type': 'int',
+                },
+                'server_tls_conn': {
                     'type': 'int',
                 }
             },
@@ -317,6 +332,12 @@ def get_argspec():
                 'type': 'str',
             },
             'target_switching': {
+                'type': 'str',
+            },
+            'client_tls_conn': {
+                'type': 'str',
+            },
+            'server_tls_conn': {
                 'type': 'str',
             }
         }

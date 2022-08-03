@@ -173,6 +173,22 @@ options:
                 description:
                 - "NAT64 Reverse No Prefix Match for IPv4"
                 type: str
+            icmp_to_icmp_err:
+                description:
+                - "ICMP to ICMP Conversion Error"
+                type: str
+            icmp_to_icmpv6_err:
+                description:
+                - "ICMP to ICMPv6 Conversion Error"
+                type: str
+            icmpv6_to_icmp_err:
+                description:
+                - "ICMPv6 to ICMP Conversion Error"
+                type: str
+            icmpv6_to_icmpv6_err:
+                description:
+                - "ICMPv6 to ICMPv6 Conversion Error"
+                type: str
 
 '''
 
@@ -343,6 +359,18 @@ def get_argspec():
                 'type': 'str',
             },
             '46_no_prefix_for_ipv4': {
+                'type': 'str',
+            },
+            'icmp_to_icmp_err': {
+                'type': 'str',
+            },
+            'icmp_to_icmpv6_err': {
+                'type': 'str',
+            },
+            'icmpv6_to_icmp_err': {
+                'type': 'str',
+            },
+            'icmpv6_to_icmpv6_err': {
                 'type': 'str',
             }
         }

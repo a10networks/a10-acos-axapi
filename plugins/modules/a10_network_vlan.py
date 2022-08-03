@@ -95,8 +95,8 @@ options:
                 type: int
     untagged_lif:
         description:
-        - "Logical tunnel interface (Logical tunnel interface number)"
-        type: int
+        - "Logical tunnel interface (Logical tunnel interface name)"
+        type: str
         required: False
     tagged_eth_list:
         description:
@@ -199,6 +199,10 @@ options:
                 description:
                 - "Field tagg_logical_ports"
                 type: dict
+            span_tree:
+                description:
+                - "Field span_tree"
+                type: str
             vlan_num:
                 description:
                 - "VLAN number"
@@ -361,7 +365,7 @@ def get_argspec():
             }
         },
         'untagged_lif': {
-            'type': 'int',
+            'type': 'str',
         },
         'tagged_eth_list': {
             'type': 'list',
@@ -446,6 +450,9 @@ def get_argspec():
                 'ports': {
                     'type': 'int',
                 }
+            },
+            'span_tree': {
+                'type': 'str',
             },
             'vlan_num': {
                 'type': 'int',

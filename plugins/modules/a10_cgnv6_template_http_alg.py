@@ -91,40 +91,6 @@ options:
         - "Header name (default= X-MSISDN)"
         type: str
         required: False
-    radius_sg:
-        description:
-        - "RADIUS service group (RADIUS service group name)"
-        type: str
-        required: False
-    secret_string:
-        description:
-        - "The RADIUS secret"
-        type: str
-        required: False
-    encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-        type: str
-        required: False
-    retry:
-        description:
-        - "Specify the maximum retries allowed for sending an request to a RADIUS server
-          (default 2) (The maximum retries allowed for sending an request to the radius
-          server (default 2))"
-        type: int
-        required: False
-    retry_svr_num:
-        description:
-        - "Specify the maximum RADIUS servers allowed to try (default 0)"
-        type: int
-        required: False
-    timeout:
-        description:
-        - "The maximum time allowed for waiting for a response from a radius server
-          (default 2)"
-        type: int
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -190,19 +156,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "encrypted",
     "header_name_client_ip",
     "header_name_msisdn",
     "include_tunnel_ip",
     "method",
     "name",
-    "radius_sg",
     "request_insert_client_ip",
     "request_insert_msisdn",
-    "retry",
-    "retry_svr_num",
-    "secret_string",
-    "timeout",
     "user_tag",
     "uuid",
 ]
@@ -255,24 +215,6 @@ def get_argspec():
         },
         'header_name_msisdn': {
             'type': 'str',
-        },
-        'radius_sg': {
-            'type': 'str',
-        },
-        'secret_string': {
-            'type': 'str',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'retry': {
-            'type': 'int',
-        },
-        'retry_svr_num': {
-            'type': 'int',
-        },
-        'timeout': {
-            'type': 'int',
         },
         'uuid': {
             'type': 'str',

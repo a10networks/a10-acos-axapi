@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_snmp_server_management_index
 description:
-    - Define index of management interface.
+    - Define index of management interface
 author: A10 Networks 2021
 options:
     state:

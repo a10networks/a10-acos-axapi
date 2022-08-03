@@ -89,24 +89,22 @@ options:
           'hw-fwd-vmid-drop'= hardware forward vmid mismatch count; 'hw-fwd-protocol-
           mismatch-drop'= hardware forward protocol mismatch count; 'hw-fwd-avail-
           ipv4-entry'= hardware forward available ipv4 entries count; 'hw-fwd-avail-
-          ipv6-entry'= hardware forward available ipv6 entries count; 'hw-fwd-entry-
-          create'= Hardware Entries Created; 'hw-fwd-entry-create-failure'= Hardware
-          Entries Created; 'hw-fwd-entry-create-fail-server-down'= Hardware Entries
-          Created; 'hw-fwd-entry-create-fail-max-entry'= Hardware Entries Created; 'hw-
-          fwd-entry-free'= Hardware Entries Freed; 'hw-fwd-entry-free-opp-entry'=
-          Hardware Entries Free due to opposite tuple entry ageout event; 'hw-fwd-entry-
-          free-no-hw-prog'= Hardware Entry Free no hw prog; 'hw-fwd-entry-free-no-conn'=
-          Hardware Entry Free no matched conn; 'hw-fwd-entry-free-no-sw-entry'= Hardware
-          Entry Free no software entry; 'hw-fwd-entry-counter'= Hardware Entry Count;
-          'hw-fwd-entry-age-out'= Hardware Entries Aged Out; 'hw-fwd-entry-age-out-idle'=
-          Hardware Entries Aged Out Idle; 'hw-fwd-entry-age-out-tcp-fin'= Hardware
-          Entries Aged Out TCP FIN; 'hw-fwd-entry-age-out-tcp-rst'= Hardware Entries Aged
-          Out TCP RST; 'hw-fwd-entry-age-out-invalid-dst'= Hardware Entries Aged Out
-          invalid dst; 'hw-fwd-entry-force-hw-invalidate'= Hardware Entries Force HW
-          Invalidate; 'hw-fwd-entry-invalidate-server-down'= Hardware Entries Invalidate
-          due to server down; 'hw-fwd-tcam-create'= TCAM Entries Created; 'hw-fwd-tcam-
-          free'= TCAM Entries Freed; 'hw-fwd-tcam-counter'= TCAM Entry Count;"
+          ipv6-entry'= hardware forward available ipv6 entries count;"
                 type: str
+    slb:
+        description:
+        - "Field slb"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     stats:
         description:
         - "Field stats"
@@ -217,86 +215,10 @@ options:
                 description:
                 - "hardware forward available ipv6 entries count"
                 type: str
-            hw_fwd_entry_create:
+            slb:
                 description:
-                - "Hardware Entries Created"
-                type: str
-            hw_fwd_entry_create_failure:
-                description:
-                - "Hardware Entries Created"
-                type: str
-            hw_fwd_entry_create_fail_server_down:
-                description:
-                - "Hardware Entries Created"
-                type: str
-            hw_fwd_entry_create_fail_max_entry:
-                description:
-                - "Hardware Entries Created"
-                type: str
-            hw_fwd_entry_free:
-                description:
-                - "Hardware Entries Freed"
-                type: str
-            hw_fwd_entry_free_opp_entry:
-                description:
-                - "Hardware Entries Free due to opposite tuple entry ageout event"
-                type: str
-            hw_fwd_entry_free_no_hw_prog:
-                description:
-                - "Hardware Entry Free no hw prog"
-                type: str
-            hw_fwd_entry_free_no_conn:
-                description:
-                - "Hardware Entry Free no matched conn"
-                type: str
-            hw_fwd_entry_free_no_sw_entry:
-                description:
-                - "Hardware Entry Free no software entry"
-                type: str
-            hw_fwd_entry_counter:
-                description:
-                - "Hardware Entry Count"
-                type: str
-            hw_fwd_entry_age_out:
-                description:
-                - "Hardware Entries Aged Out"
-                type: str
-            hw_fwd_entry_age_out_idle:
-                description:
-                - "Hardware Entries Aged Out Idle"
-                type: str
-            hw_fwd_entry_age_out_tcp_fin:
-                description:
-                - "Hardware Entries Aged Out TCP FIN"
-                type: str
-            hw_fwd_entry_age_out_tcp_rst:
-                description:
-                - "Hardware Entries Aged Out TCP RST"
-                type: str
-            hw_fwd_entry_age_out_invalid_dst:
-                description:
-                - "Hardware Entries Aged Out invalid dst"
-                type: str
-            hw_fwd_entry_force_hw_invalidate:
-                description:
-                - "Hardware Entries Force HW Invalidate"
-                type: str
-            hw_fwd_entry_invalidate_server_down:
-                description:
-                - "Hardware Entries Invalidate due to server down"
-                type: str
-            hw_fwd_tcam_create:
-                description:
-                - "TCAM Entries Created"
-                type: str
-            hw_fwd_tcam_free:
-                description:
-                - "TCAM Entries Freed"
-                type: str
-            hw_fwd_tcam_counter:
-                description:
-                - "TCAM Entry Count"
-                type: str
+                - "Field slb"
+                type: dict
 
 '''
 
@@ -353,6 +275,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "sampling_enable",
+    "slb",
     "stats",
     "uuid",
 ]
@@ -405,23 +328,34 @@ def get_argspec():
                     'hw-fwd-phyport-mismatch-drop',
                     'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop',
                     'hw-fwd-protocol-mismatch-drop', 'hw-fwd-avail-ipv4-entry',
-                    'hw-fwd-avail-ipv6-entry', 'hw-fwd-entry-create',
-                    'hw-fwd-entry-create-failure',
-                    'hw-fwd-entry-create-fail-server-down',
-                    'hw-fwd-entry-create-fail-max-entry', 'hw-fwd-entry-free',
-                    'hw-fwd-entry-free-opp-entry',
-                    'hw-fwd-entry-free-no-hw-prog',
-                    'hw-fwd-entry-free-no-conn',
-                    'hw-fwd-entry-free-no-sw-entry', 'hw-fwd-entry-counter',
-                    'hw-fwd-entry-age-out', 'hw-fwd-entry-age-out-idle',
-                    'hw-fwd-entry-age-out-tcp-fin',
-                    'hw-fwd-entry-age-out-tcp-rst',
-                    'hw-fwd-entry-age-out-invalid-dst',
-                    'hw-fwd-entry-force-hw-invalidate',
-                    'hw-fwd-entry-invalidate-server-down',
-                    'hw-fwd-tcam-create', 'hw-fwd-tcam-free',
-                    'hw-fwd-tcam-counter'
+                    'hw-fwd-avail-ipv6-entry'
                 ]
+            }
+        },
+        'slb': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'entry-create', 'entry-create-failure',
+                        'entry-create-fail-server-down',
+                        'entry-create-fail-max-entry', 'entry-free',
+                        'entry-free-opp-entry', 'entry-free-no-hw-prog',
+                        'entry-free-no-conn', 'entry-free-no-sw-entry',
+                        'entry-counter', 'entry-age-out', 'entry-age-out-idle',
+                        'entry-age-out-tcp-fin', 'entry-age-out-tcp-rst',
+                        'entry-age-out-invalid-dst',
+                        'entry-force-hw-invalidate',
+                        'entry-invalidate-server-down', 'tcam-create',
+                        'tcam-free', 'tcam-counter'
+                    ]
+                }
             }
         },
         'stats': {
@@ -504,65 +438,71 @@ def get_argspec():
             'hw_fwd_avail_ipv6_entry': {
                 'type': 'str',
             },
-            'hw_fwd_entry_create': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_create_failure': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_create_fail_server_down': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_create_fail_max_entry': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_free': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_free_opp_entry': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_free_no_hw_prog': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_free_no_conn': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_free_no_sw_entry': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_counter': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_age_out': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_age_out_idle': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_age_out_tcp_fin': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_age_out_tcp_rst': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_age_out_invalid_dst': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_force_hw_invalidate': {
-                'type': 'str',
-            },
-            'hw_fwd_entry_invalidate_server_down': {
-                'type': 'str',
-            },
-            'hw_fwd_tcam_create': {
-                'type': 'str',
-            },
-            'hw_fwd_tcam_free': {
-                'type': 'str',
-            },
-            'hw_fwd_tcam_counter': {
-                'type': 'str',
+            'slb': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'entry_create': {
+                        'type': 'str',
+                    },
+                    'entry_create_failure': {
+                        'type': 'str',
+                    },
+                    'entry_create_fail_server_down': {
+                        'type': 'str',
+                    },
+                    'entry_create_fail_max_entry': {
+                        'type': 'str',
+                    },
+                    'entry_free': {
+                        'type': 'str',
+                    },
+                    'entry_free_opp_entry': {
+                        'type': 'str',
+                    },
+                    'entry_free_no_hw_prog': {
+                        'type': 'str',
+                    },
+                    'entry_free_no_conn': {
+                        'type': 'str',
+                    },
+                    'entry_free_no_sw_entry': {
+                        'type': 'str',
+                    },
+                    'entry_counter': {
+                        'type': 'str',
+                    },
+                    'entry_age_out': {
+                        'type': 'str',
+                    },
+                    'entry_age_out_idle': {
+                        'type': 'str',
+                    },
+                    'entry_age_out_tcp_fin': {
+                        'type': 'str',
+                    },
+                    'entry_age_out_tcp_rst': {
+                        'type': 'str',
+                    },
+                    'entry_age_out_invalid_dst': {
+                        'type': 'str',
+                    },
+                    'entry_force_hw_invalidate': {
+                        'type': 'str',
+                    },
+                    'entry_invalidate_server_down': {
+                        'type': 'str',
+                    },
+                    'tcam_create': {
+                        'type': 'str',
+                    },
+                    'tcam_free': {
+                        'type': 'str',
+                    },
+                    'tcam_counter': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

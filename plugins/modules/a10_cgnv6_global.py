@@ -55,6 +55,18 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    port_scan_detection:
+        description:
+        - "'enable'= Enable port scan detection; 'disable'= Disable port scan
+          detection(default);"
+        type: str
+        required: False
+    ping_sweep_detection:
+        description:
+        - "'enable'= Enable ping sweep detection; 'disable'= Disable ping sweep
+          detection(default);"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -145,6 +157,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "ping_sweep_detection",
+    "port_scan_detection",
     "sampling_enable",
     "stats",
     "uuid",
@@ -176,6 +190,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'port_scan_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'ping_sweep_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
         'uuid': {
             'type': 'str',
         },

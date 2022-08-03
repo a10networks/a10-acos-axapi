@@ -69,12 +69,12 @@ options:
         required: False
     mon_entity_topk:
         description:
-        - "Enable topk for primary entities"
+        - "Enable monitoring entity topk for primary entities"
         type: bool
         required: False
     source_entity_topk:
         description:
-        - "Enable topk for sources to primary-entities"
+        - "Enable monitoring entity topk for sources to primary-entities"
         type: bool
         required: False
     index_sessions:

@@ -224,6 +224,12 @@ def get_argspec():
                         'service': {
                             'type': 'str',
                         }
+                    },
+                    'dscp_list': {
+                        'type': 'list',
+                        'dscp': {
+                            'type': 'str',
+                        }
                     }
                 }
             }

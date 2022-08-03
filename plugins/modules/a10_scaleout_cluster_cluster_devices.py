@@ -59,6 +59,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    enable:
+        description:
+        - "Field enable"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -175,6 +180,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "cluster_discovery_timeout",
     "device_id_list",
+    "enable",
     "minimum_nodes",
     "uuid",
 ]
@@ -203,6 +209,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'enable': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },

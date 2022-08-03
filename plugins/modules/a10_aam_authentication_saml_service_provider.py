@@ -123,6 +123,20 @@ options:
                 - "'post'= POST binding of single logout service; 'redirect'= Redirect binding of
           single logout service; 'soap'= SOAP binding of single logout service;"
                 type: str
+    SP_initiated_single_logout_service:
+        description:
+        - "Field SP_initiated_single_logout_service"
+        type: list
+        required: False
+        suboptions:
+            SP_SLO_location:
+                description:
+                - "The location of SP-initiated single logout service endpoint. (ex. /Logout)"
+                type: str
+            asynchronous:
+                description:
+                - "the IDP will not send a logout response to AX"
+                type: bool
     metadata_export_service:
         description:
         - "Field metadata_export_service"
@@ -189,7 +203,7 @@ options:
         - "SAML service provider service URL (ex. https=//www.a10networks.com/saml.sso)"
         type: str
         required: False
-    bad_request_redirect_uri:
+    bad_request_redirect_url:
         description:
         - "Specify URL to redirect"
         type: str
@@ -224,8 +238,16 @@ options:
           req'= SAML Single-Sign-On Request; 'acs-success'= SAML Single-Sign-On Success;
           'acs-authz-fail'= SAML Single-Sign-On Authorization Fail; 'acs-error'= SAML
           Single-Sign-On Error; 'slo-req'= Single Logout Request; 'slo-success'= Single
-          Logout Success; 'slo-error'= Single Logout Error; 'other-error'= Other Error;"
+          Logout Success; 'slo-error'= Single Logout Error; 'sp-slo-req'= SP-initiated
+          Single Logout Request; 'glo-slo-success'= Total Global Logout Success; 'loc-
+          slo-success'= Total Local Logout Success; 'par-slo-success'= Total Partial
+          Logout Success; 'other-error'= Other Error;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -275,6 +297,22 @@ options:
             slo_error:
                 description:
                 - "Single Logout Error"
+                type: str
+            sp_slo_req:
+                description:
+                - "SP-initiated Single Logout Request"
+                type: str
+            glo_slo_success:
+                description:
+                - "Total Global Logout Success"
+                type: str
+            loc_slo_success:
+                description:
+                - "Total Local Logout Success"
+                type: str
+            par_slo_success:
+                description:
+                - "Total Partial Logout Success"
                 type: str
             other_error:
                 description:
@@ -343,11 +381,12 @@ AVAILABLE_PROPERTIES = [
     "adfs_ws_federation",
     "artifact_resolution_service",
     "assertion_consuming_service",
-    "bad_request_redirect_uri",
+    "bad_request_redirect_url",
     "certificate",
     "entity_id",
     "metadata_export_service",
     "name",
+    "packet_capture_template",
     "require_assertion_signed",
     "saml_request_signed",
     "sampling_enable",
@@ -355,6 +394,7 @@ AVAILABLE_PROPERTIES = [
     "signature_algorithm",
     "single_logout_service",
     "soap_tls_certificate_validate",
+    "SP_initiated_single_logout_service",
     "stats",
     "user_tag",
     "uuid",
@@ -432,6 +472,15 @@ def get_argspec():
                 'choices': ['post', 'redirect', 'soap']
             }
         },
+        'SP_initiated_single_logout_service': {
+            'type': 'list',
+            'SP_SLO_location': {
+                'type': 'str',
+            },
+            'asynchronous': {
+                'type': 'bool',
+            }
+        },
         'metadata_export_service': {
             'type': 'dict',
             'md_export_location': {
@@ -472,7 +521,7 @@ def get_argspec():
         'service_url': {
             'type': 'str',
         },
-        'bad_request_redirect_uri': {
+        'bad_request_redirect_url': {
             'type': 'str',
         },
         'acs_uri_bypass': {
@@ -494,9 +543,13 @@ def get_argspec():
                     'sp-metadata-export-success', 'login-auth-req',
                     'login-auth-resp', 'acs-req', 'acs-success',
                     'acs-authz-fail', 'acs-error', 'slo-req', 'slo-success',
-                    'slo-error', 'other-error'
+                    'slo-error', 'sp-slo-req', 'glo-slo-success',
+                    'loc-slo-success', 'par-slo-success', 'other-error'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',
@@ -531,6 +584,18 @@ def get_argspec():
                 'type': 'str',
             },
             'slo_error': {
+                'type': 'str',
+            },
+            'sp_slo_req': {
+                'type': 'str',
+            },
+            'glo_slo_success': {
+                'type': 'str',
+            },
+            'loc_slo_success': {
+                'type': 'str',
+            },
+            'par_slo_success': {
                 'type': 'str',
             },
             'other_error': {

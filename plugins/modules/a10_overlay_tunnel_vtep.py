@@ -62,8 +62,9 @@ options:
         required: True
     encap:
         description:
-        - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type
-          is VXLAN;"
+        - "'ip-encap'= Tunnel encapsulation type is IP; 'gre'= Tunnel encapsulation type
+          is GRE; 'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel
+          Encapsulation Type is VXLAN;"
         type: str
         required: False
     uuid:
@@ -103,11 +104,12 @@ options:
           Too large packets in; 'dot1q_pkts_rx'= Dot1q packets in; 'frag_pkts_tx'= Frag
           packets out; 'reassembled_pkts_rx'= Reassembled packets in;
           'bad_inner_ipv4_len_rx'= bad inner ipv4 packet len; 'bad_inner_ipv6_len_rx'=
-          Bad inner ipv6 packet len; 'lif_un_init_rx'= Lif uninitialized packets in;"
+          Bad inner ipv6 packet len; 'frag_drop_pkts_tx'= Frag dropped packets out;
+          'lif_un_init_rx'= Lif uninitialized packets in;"
                 type: str
-    source_ip_address:
+    local_ip_address:
         description:
-        - "Field source_ip_address"
+        - "Field local_ip_address"
         type: dict
         required: False
         suboptions:
@@ -123,9 +125,23 @@ options:
                 description:
                 - "Field vni_list"
                 type: list
-    destination_ip_address_list:
+    local_ipv6_address:
         description:
-        - "Field destination_ip_address_list"
+        - "Field local_ipv6_address"
+        type: dict
+        required: False
+        suboptions:
+            ipv6_address:
+                description:
+                - "Source Tunnel End Point IPv6 address"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    remote_ip_address_list:
+        description:
+        - "Field remote_ip_address_list"
         type: list
         required: False
         suboptions:
@@ -146,10 +162,44 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            use_lif:
+                description:
+                - "Field use_lif"
+                type: dict
+            gre_keepalive:
+                description:
+                - "Field gre_keepalive"
+                type: dict
+            use_gre_key:
+                description:
+                - "Field use_gre_key"
+                type: dict
             vni_list:
                 description:
                 - "Field vni_list"
                 type: list
+    remote_ipv6_address_list:
+        description:
+        - "Field remote_ipv6_address_list"
+        type: list
+        required: False
+        suboptions:
+            ipv6_address:
+                description:
+                - "IPv6 Address of the remote VTEP"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            use_lif:
+                description:
+                - "Field use_lif"
+                type: dict
     host_list:
         description:
         - "Field host_list"
@@ -168,7 +218,7 @@ options:
                 description:
                 - " Configure the segment id ( VNI of the remote host)"
                 type: int
-            destination_vtep:
+            remote_vtep:
                 description:
                 - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
                 type: str
@@ -322,6 +372,10 @@ options:
                 description:
                 - "Bad inner ipv6 packet len"
                 type: str
+            frag_drop_pkts_tx:
+                description:
+                - "Frag dropped packets out"
+                type: str
             lif_un_init_rx:
                 description:
                 - "Lif uninitialized packets in"
@@ -385,12 +439,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "destination_ip_address_list",
     "encap",
     "host_list",
     "id",
+    "local_ip_address",
+    "local_ipv6_address",
+    "remote_ip_address_list",
+    "remote_ipv6_address_list",
     "sampling_enable",
-    "source_ip_address",
     "stats",
     "user_tag",
     "uuid",
@@ -428,7 +484,7 @@ def get_argspec():
         },
         'encap': {
             'type': 'str',
-            'choices': ['nvgre', 'vxlan']
+            'choices': ['ip-encap', 'gre', 'nvgre', 'vxlan']
         },
         'uuid': {
             'type': 'str',
@@ -456,11 +512,11 @@ def get_argspec():
                     'dropped_pkts_tx', 'large_pkts_rx', 'dot1q_pkts_rx',
                     'frag_pkts_tx', 'reassembled_pkts_rx',
                     'bad_inner_ipv4_len_rx', 'bad_inner_ipv6_len_rx',
-                    'lif_un_init_rx'
+                    'frag_drop_pkts_tx', 'lif_un_init_rx'
                 ]
             }
         },
-        'source_ip_address': {
+        'local_ip_address': {
             'type': 'dict',
             'ip_address': {
                 'type': 'str',
@@ -481,14 +537,23 @@ def get_argspec():
                     'type': 'bool',
                 },
                 'lif': {
-                    'type': 'int',
+                    'type': 'str',
                 },
                 'uuid': {
                     'type': 'str',
                 }
             }
         },
-        'destination_ip_address_list': {
+        'local_ipv6_address': {
+            'type': 'dict',
+            'ipv6_address': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'remote_ip_address_list': {
             'type': 'list',
             'ip_address': {
                 'type': 'str',
@@ -504,11 +569,69 @@ def get_argspec():
             'user_tag': {
                 'type': 'str',
             },
+            'use_lif': {
+                'type': 'dict',
+                'partition': {
+                    'type': 'str',
+                },
+                'lif': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'gre_keepalive': {
+                'type': 'dict',
+                'retry_time': {
+                    'type': 'int',
+                },
+                'retry_count': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'use_gre_key': {
+                'type': 'dict',
+                'gre_key': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
             'vni_list': {
                 'type': 'list',
                 'segment': {
                     'type': 'int',
                     'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'remote_ipv6_address_list': {
+            'type': 'list',
+            'ipv6_address': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'use_lif': {
+                'type': 'dict',
+                'partition': {
+                    'type': 'str',
+                },
+                'lif': {
+                    'type': 'str',
                 },
                 'uuid': {
                     'type': 'str',
@@ -529,7 +652,7 @@ def get_argspec():
                 'type': 'int',
                 'required': True,
             },
-            'destination_vtep': {
+            'remote_vtep': {
                 'type': 'str',
                 'required': True,
             },
@@ -642,6 +765,9 @@ def get_argspec():
                 'type': 'str',
             },
             'bad_inner_ipv6_len_rx': {
+                'type': 'str',
+            },
+            'frag_drop_pkts_tx': {
                 'type': 'str',
             },
             'lif_un_init_rx': {

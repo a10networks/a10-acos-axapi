@@ -99,7 +99,8 @@ options:
           'peak_conn'= Peak connections; 'response_time'= Response time;
           'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response
           time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
-          connections;"
+          connections; 'curr_conn_overflow'= Current connection counter overflow count;
+          'state_flaps'= State flaps count;"
                 type: str
     oper:
         description:
@@ -119,6 +120,14 @@ options:
                 description:
                 - "Field hm_index"
                 type: int
+            drs_list:
+                description:
+                - "Field drs_list"
+                type: list
+            alt_list:
+                description:
+                - "Field alt_list"
+                type: list
             name:
                 description:
                 - "Member name"
@@ -204,6 +213,14 @@ options:
             total_ssl_conn:
                 description:
                 - "Total SSL connections"
+                type: str
+            curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+                type: str
+            state_flaps:
+                description:
+                - "State flaps count"
                 type: str
             name:
                 description:
@@ -330,7 +347,8 @@ def get_argspec():
                     'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req',
                     'total_req', 'total_req_succ', 'peak_conn',
                     'response_time', 'fastest_rsp_time', 'slowest_rsp_time',
-                    'curr_ssl_conn', 'total_ssl_conn'
+                    'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow',
+                    'state_flaps'
                 ]
             }
         },
@@ -349,6 +367,96 @@ def get_argspec():
             },
             'hm_index': {
                 'type': 'int',
+            },
+            'drs_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_state': {
+                    'type': 'str',
+                },
+                'drs_hm_key': {
+                    'type': 'int',
+                },
+                'drs_hm_index': {
+                    'type': 'int',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'drs_priority': {
+                    'type': 'int',
+                },
+                'drs_curr_conn': {
+                    'type': 'int',
+                },
+                'drs_pers_conn': {
+                    'type': 'int',
+                },
+                'drs_total_conn': {
+                    'type': 'int',
+                },
+                'drs_curr_req': {
+                    'type': 'int',
+                },
+                'drs_total_req': {
+                    'type': 'int',
+                },
+                'drs_total_req_succ': {
+                    'type': 'int',
+                },
+                'drs_rev_pkts': {
+                    'type': 'int',
+                },
+                'drs_fwd_pkts': {
+                    'type': 'int',
+                },
+                'drs_rev_bts': {
+                    'type': 'int',
+                },
+                'drs_fwd_bts': {
+                    'type': 'int',
+                },
+                'drs_peak_conn': {
+                    'type': 'int',
+                },
+                'drs_rsp_time': {
+                    'type': 'int',
+                },
+                'drs_frsp_time': {
+                    'type': 'int',
+                },
+                'drs_srsp_time': {
+                    'type': 'int',
+                }
+            },
+            'alt_list': {
+                'type': 'list',
+                'alt_name': {
+                    'type': 'str',
+                },
+                'alt_port': {
+                    'type': 'int',
+                },
+                'alt_state': {
+                    'type': 'str',
+                },
+                'alt_curr_conn': {
+                    'type': 'int',
+                },
+                'alt_total_conn': {
+                    'type': 'int',
+                },
+                'alt_rev_pkts': {
+                    'type': 'int',
+                },
+                'alt_fwd_pkts': {
+                    'type': 'int',
+                },
+                'alt_peak_conn': {
+                    'type': 'int',
+                }
             },
             'name': {
                 'type': 'str',
@@ -413,6 +521,12 @@ def get_argspec():
                 'type': 'str',
             },
             'total_ssl_conn': {
+                'type': 'str',
+            },
+            'curr_conn_overflow': {
+                'type': 'str',
+            },
+            'state_flaps': {
                 'type': 'str',
             },
             'name': {

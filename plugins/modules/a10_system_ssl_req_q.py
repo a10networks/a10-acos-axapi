@@ -68,9 +68,9 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num-ssl-queues'= num-ssl-queues; 'ssl-req-q-depth-tot'= ssl-req-q-
-          depth-tot; 'ssl-req-q-inuse-tot'= ssl-req-q-inuse-tot; 'ssl-hw-q-depth-tot'=
-          ssl-hw-q-depth-tot; 'ssl-hw-q-inuse-tot'= ssl-hw-q-inuse-tot;"
+                - "'all'= all; 'num-ssl-queues'= some help string; 'ssl-req-q-depth-tot'= some
+          help string; 'ssl-req-q-inuse-tot'= some help string; 'ssl-hw-q-depth-tot'=
+          some help string; 'ssl-hw-q-inuse-tot'= some help string;"
                 type: str
     stats:
         description:
@@ -80,23 +80,23 @@ options:
         suboptions:
             num_ssl_queues:
                 description:
-                - "Field num_ssl_queues"
+                - "some help string"
                 type: str
             ssl_req_q_depth_tot:
                 description:
-                - "Field ssl_req_q_depth_tot"
+                - "some help string"
                 type: str
             ssl_req_q_inuse_tot:
                 description:
-                - "Field ssl_req_q_inuse_tot"
+                - "some help string"
                 type: str
             ssl_hw_q_depth_tot:
                 description:
-                - "Field ssl_hw_q_depth_tot"
+                - "some help string"
                 type: str
             ssl_hw_q_inuse_tot:
                 description:
-                - "Field ssl_hw_q_inuse_tot"
+                - "some help string"
                 type: str
 
 '''

@@ -100,8 +100,7 @@ options:
         description:
         - "'host'= the cookie will have been set with a Secure attribute, a Path attribute
           with a value of /, and no Domain attribute; 'secure'= the cookie will have been
-          set with a Secure attribute; 'check'= check server prefix and enforce prefix
-          format;"
+          set with a Secure attribute;"
         type: str
         required: False
     domain:
@@ -116,7 +115,7 @@ options:
         required: False
     path:
         description:
-        - "Set cookie path"
+        - "Set cookie path (Cookie path, default is '/')"
         type: str
         required: False
     pass_thru:
@@ -301,7 +300,7 @@ def get_argspec():
         },
         'prefix': {
             'type': 'str',
-            'choices': ['host', 'secure', 'check']
+            'choices': ['host', 'secure']
         },
         'domain': {
             'type': 'str',

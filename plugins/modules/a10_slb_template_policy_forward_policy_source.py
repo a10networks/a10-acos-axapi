@@ -117,6 +117,10 @@ options:
                 description:
                 - "Field class_list_list"
                 type: list
+            web_reputation_scope_list:
+                description:
+                - "Field web_reputation_scope_list"
+                type: list
             web_category_list_list:
                 description:
                 - "Field web_category_list_list"
@@ -289,6 +293,33 @@ def get_argspec():
                 'ntype': {
                     'type': 'str',
                     'choices': ['host', 'url', 'ip']
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            },
+            'web_reputation_scope_list': {
+                'type': 'list',
+                'web_reputation_scope': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'action': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['host', 'url']
                 },
                 'priority': {
                     'type': 'int',

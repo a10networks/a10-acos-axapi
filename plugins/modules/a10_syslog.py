@@ -70,6 +70,10 @@ options:
                 description:
                 - "Field system_log"
                 type: list
+            next_msg_idx:
+                description:
+                - "Field next_msg_idx"
+                type: int
 
 '''
 
@@ -168,6 +172,9 @@ def get_argspec():
                 'log_data_search': {
                     'type': 'str',
                 }
+            },
+            'next_msg_idx': {
+                'type': 'int',
             }
         }
     })

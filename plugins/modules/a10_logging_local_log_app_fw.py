@@ -102,6 +102,14 @@ options:
                 description:
                 - "Field interval_position"
                 type: str
+            source_threat_category_match:
+                description:
+                - "Field source_threat_category_match"
+                type: str
+            destination_threat_category_match:
+                description:
+                - "Field destination_threat_category_match"
+                type: str
             total:
                 description:
                 - "Field total"
@@ -234,6 +242,12 @@ def get_argspec():
             'interval_position': {
                 'type': 'str',
             },
+            'source_threat_category_match': {
+                'type': 'str',
+            },
+            'destination_threat_category_match': {
+                'type': 'str',
+            },
             'total': {
                 'type': 'int',
             },
@@ -259,6 +273,18 @@ def get_argspec():
                 },
                 'destination_port': {
                     'type': 'int',
+                },
+                'source_threat_list_name': {
+                    'type': 'str',
+                },
+                'destination_threat_list_name': {
+                    'type': 'str',
+                },
+                'source_threat_category': {
+                    'type': 'str',
+                },
+                'destination_threat_category': {
+                    'type': 'str',
                 },
                 'action': {
                     'type': 'str',
@@ -299,6 +325,12 @@ def get_argspec():
                         'type': 'str',
                     },
                     'client_ip': {
+                        'type': 'str',
+                    },
+                    'threat_category': {
+                        'type': 'str',
+                    },
+                    'threat_category_match': {
                         'type': 'str',
                     },
                     'action': {

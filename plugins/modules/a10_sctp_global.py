@@ -88,7 +88,35 @@ options:
           system-memory'= Out of System Memory; 'conn_ext_size_max'= Max Conn Extension
           Size; 'bad-csum-shadow'= Bad Checksum Shadow; 'bad-payload-drop-shadow'= Bad
           Packet Payload Drop Shadow; 'bad-alignment-drop-shadow'= Bad Packet Alignment
-          Drop Shadow;"
+          Drop Shadow; 'sctp-chunk-type-init'= SCTP Chunk Type INIT; 'sctp-chunk-type-
+          init-ack'= SCTP Chunk Type INIT-ACK; 'sctp-chunk-type-cookie-echo'= SCTP Chunk
+          Type COOKIE-ECHO; 'sctp-chunk-type-cookie-ack'= SCTP Chunk Type COOKIE-ACK;
+          'sctp-chunk-type-sack'= SCTP Chunk Type SACK; 'sctp-chunk-type-asconf'= SCTP
+          Chunk Type ASCONF; 'sctp-chunk-type-asconf-ack'= SCTP Chunk Type ASCONF-ACK;
+          'sctp-chunk-type-data'= SCTP Chunk Type DATA; 'sctp-chunk-type-abort'= SCTP
+          Chunk Type ABORT; 'sctp-chunk-type-shutdown'= SCTP Chunk Type SHUTDOWN; 'sctp-
+          chunk-type-shutdown-ack'= SCTP Chunk Type SHUTDOWN-ACK; 'sctp-chunk-type-
+          shutdown-complete'= SCTP Chunk Type SHUTDOWN-COMPLETE; 'sctp-chunk-type-error-
+          op'= SCTP Chunk Type ERROR-OP; 'sctp-chunk-type-heartbeat'= SCTP Chunk Type
+          HEARTBEAT; 'sctp-chunk-type-heartbeat-ack'= SCTP Chunk Type HEARTBEAT-ACK;
+          'sctp-chunk-type-other'= SCTP Chunk Type OTHER; 'sctp-heartbeat-no-tuple'= SCTP
+          HEARTBEAT/ACK no tuple found; 'sctp-data-no-tuple'= SCTP DATA chunk no tuple
+          found; 'sctp-data-no-ext-match'= SCTP DATA no extended match found; 'sctp-
+          chunk-type-init-drop'= SCTP Chunk Type INIT drop; 'sctp-chunk-type-init-ack-
+          drop'= SCTP Chunk Type INIT-ACK drop; 'sctp-chunk-type-shutdown-complete-drop'=
+          SCTP Chunk Type SHUTDOWN-COMPLETE drop; 'sctp-chunk-type-abort-data-drop'= SCTP
+          Chunk Type with ABORT and DATA drop; 'sctp-chunk-heart-beat-clubbed'= SCTP
+          HEARTBEAT chunk with other chunk; 'sctp-retx-init-ack-drop'= SCTP Chunk Type
+          INIT_ACK with retx mismatched vtag drop; 'sctp-route-err-heartbeat-drop'= SCTP
+          HEARTBEAT ROUTE lookup failed drop; 'sctp-reroute-failover'= SCTP REROUTE
+          lookup for chunks other than HEARTBEAT; 'sctp-route-err-drop'= SCTP ROUTE
+          lookup failed for chunks other than HEARTBEAT drop; 'sctp-no-ext-match'= SCTP
+          no extended match found; 'sctp-retx-init-ack'= SCTP Chunk Type INIT_ACK
+          retransmitted; 'sctp-retx-init-drop'= SCTP Retransmitted INIT drop; 'sctp-retx-
+          init'= SCTP Retransmitted INIT; 'sctp-asconf-process-drop'= SCTP ASCONF process
+          drop; 'sctp-init-vtag-zero-drop'= SCTP INIT VTAG ZERO drop; 'pkt-len-err-drop'=
+          Invalid Packet Length Drop; 'pkt-chunk-len-err-drop'= Invalid Chunk Length
+          Drop; 'pkt-asconf-param-len-err-drop'= Invalid Parameter Length Drop;"
                 type: str
     stats:
         description:
@@ -191,6 +219,154 @@ options:
             sby_static_nat_cfg_not_found:
                 description:
                 - "Static NAT Config Not Found on Standby"
+                type: str
+            sctp_chunk_type_init:
+                description:
+                - "SCTP Chunk Type INIT"
+                type: str
+            sctp_chunk_type_init_ack:
+                description:
+                - "SCTP Chunk Type INIT-ACK"
+                type: str
+            sctp_chunk_type_cookie_echo:
+                description:
+                - "SCTP Chunk Type COOKIE-ECHO"
+                type: str
+            sctp_chunk_type_cookie_ack:
+                description:
+                - "SCTP Chunk Type COOKIE-ACK"
+                type: str
+            sctp_chunk_type_sack:
+                description:
+                - "SCTP Chunk Type SACK"
+                type: str
+            sctp_chunk_type_asconf:
+                description:
+                - "SCTP Chunk Type ASCONF"
+                type: str
+            sctp_chunk_type_asconf_ack:
+                description:
+                - "SCTP Chunk Type ASCONF-ACK"
+                type: str
+            sctp_chunk_type_data:
+                description:
+                - "SCTP Chunk Type DATA"
+                type: str
+            sctp_chunk_type_abort:
+                description:
+                - "SCTP Chunk Type ABORT"
+                type: str
+            sctp_chunk_type_shutdown:
+                description:
+                - "SCTP Chunk Type SHUTDOWN"
+                type: str
+            sctp_chunk_type_shutdown_ack:
+                description:
+                - "SCTP Chunk Type SHUTDOWN-ACK"
+                type: str
+            sctp_chunk_type_shutdown_complete:
+                description:
+                - "SCTP Chunk Type SHUTDOWN-COMPLETE"
+                type: str
+            sctp_chunk_type_error_op:
+                description:
+                - "SCTP Chunk Type ERROR-OP"
+                type: str
+            sctp_chunk_type_heartbeat:
+                description:
+                - "SCTP Chunk Type HEARTBEAT"
+                type: str
+            sctp_chunk_type_heartbeat_ack:
+                description:
+                - "SCTP Chunk Type HEARTBEAT-ACK"
+                type: str
+            sctp_chunk_type_other:
+                description:
+                - "SCTP Chunk Type OTHER"
+                type: str
+            sctp_heartbeat_no_tuple:
+                description:
+                - "SCTP HEARTBEAT/ACK no tuple found"
+                type: str
+            sctp_data_no_tuple:
+                description:
+                - "SCTP DATA chunk no tuple found"
+                type: str
+            sctp_data_no_ext_match:
+                description:
+                - "SCTP DATA no extended match found"
+                type: str
+            sctp_chunk_type_init_drop:
+                description:
+                - "SCTP Chunk Type INIT drop"
+                type: str
+            sctp_chunk_type_init_ack_drop:
+                description:
+                - "SCTP Chunk Type INIT-ACK drop"
+                type: str
+            sctp_chunk_type_shutdown_complete_drop:
+                description:
+                - "SCTP Chunk Type SHUTDOWN-COMPLETE drop"
+                type: str
+            sctp_chunk_type_abort_data_drop:
+                description:
+                - "SCTP Chunk Type with ABORT and DATA drop"
+                type: str
+            sctp_chunk_heart_beat_clubbed:
+                description:
+                - "SCTP HEARTBEAT chunk with other chunk"
+                type: str
+            sctp_retx_init_ack_drop:
+                description:
+                - "SCTP Chunk Type INIT_ACK with retx mismatched vtag drop"
+                type: str
+            sctp_route_err_heartbeat_drop:
+                description:
+                - "SCTP HEARTBEAT ROUTE lookup failed drop"
+                type: str
+            sctp_reroute_failover:
+                description:
+                - "SCTP REROUTE lookup for chunks other than HEARTBEAT"
+                type: str
+            sctp_route_err_drop:
+                description:
+                - "SCTP ROUTE lookup failed for chunks other than HEARTBEAT drop"
+                type: str
+            sctp_no_ext_match:
+                description:
+                - "SCTP no extended match found"
+                type: str
+            sctp_retx_init_ack:
+                description:
+                - "SCTP Chunk Type INIT_ACK retransmitted"
+                type: str
+            sctp_retx_init_drop:
+                description:
+                - "SCTP Retransmitted INIT drop"
+                type: str
+            sctp_retx_init:
+                description:
+                - "SCTP Retransmitted INIT"
+                type: str
+            sctp_asconf_process_drop:
+                description:
+                - "SCTP ASCONF process drop"
+                type: str
+            sctp_init_vtag_zero_drop:
+                description:
+                - "SCTP INIT VTAG ZERO drop"
+                type: str
+            pkt_len_err_drop:
+                description:
+                - "Invalid Packet Length Drop"
+                type: str
+            pkt_chunk_len_err_drop:
+                description:
+                - "Invalid Chunk Length Drop"
+                type: str
+            pkt_asconf_param_len_err_drop:
+                description:
+                - "Invalid Parameter Length Drop"
                 type: str
 
 '''
@@ -302,7 +478,27 @@ def get_argspec():
                     'sby-session-update-fail', 'sby-static-nat-cfg-not-found',
                     'sctp-out-of-system-memory', 'conn_ext_size_max',
                     'bad-csum-shadow', 'bad-payload-drop-shadow',
-                    'bad-alignment-drop-shadow'
+                    'bad-alignment-drop-shadow', 'sctp-chunk-type-init',
+                    'sctp-chunk-type-init-ack', 'sctp-chunk-type-cookie-echo',
+                    'sctp-chunk-type-cookie-ack', 'sctp-chunk-type-sack',
+                    'sctp-chunk-type-asconf', 'sctp-chunk-type-asconf-ack',
+                    'sctp-chunk-type-data', 'sctp-chunk-type-abort',
+                    'sctp-chunk-type-shutdown', 'sctp-chunk-type-shutdown-ack',
+                    'sctp-chunk-type-shutdown-complete',
+                    'sctp-chunk-type-error-op', 'sctp-chunk-type-heartbeat',
+                    'sctp-chunk-type-heartbeat-ack', 'sctp-chunk-type-other',
+                    'sctp-heartbeat-no-tuple', 'sctp-data-no-tuple',
+                    'sctp-data-no-ext-match', 'sctp-chunk-type-init-drop',
+                    'sctp-chunk-type-init-ack-drop',
+                    'sctp-chunk-type-shutdown-complete-drop',
+                    'sctp-chunk-type-abort-data-drop',
+                    'sctp-chunk-heart-beat-clubbed', 'sctp-retx-init-ack-drop',
+                    'sctp-route-err-heartbeat-drop', 'sctp-reroute-failover',
+                    'sctp-route-err-drop', 'sctp-no-ext-match',
+                    'sctp-retx-init-ack', 'sctp-retx-init-drop',
+                    'sctp-retx-init', 'sctp-asconf-process-drop',
+                    'sctp-init-vtag-zero-drop', 'pkt-len-err-drop',
+                    'pkt-chunk-len-err-drop', 'pkt-asconf-param-len-err-drop'
                 ]
             }
         },
@@ -378,6 +574,117 @@ def get_argspec():
                 'type': 'str',
             },
             'sby_static_nat_cfg_not_found': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_init': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_init_ack': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_cookie_echo': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_cookie_ack': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_sack': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_asconf': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_asconf_ack': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_data': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_abort': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_shutdown': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_shutdown_ack': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_shutdown_complete': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_error_op': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_heartbeat': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_heartbeat_ack': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_other': {
+                'type': 'str',
+            },
+            'sctp_heartbeat_no_tuple': {
+                'type': 'str',
+            },
+            'sctp_data_no_tuple': {
+                'type': 'str',
+            },
+            'sctp_data_no_ext_match': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_init_drop': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_init_ack_drop': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_shutdown_complete_drop': {
+                'type': 'str',
+            },
+            'sctp_chunk_type_abort_data_drop': {
+                'type': 'str',
+            },
+            'sctp_chunk_heart_beat_clubbed': {
+                'type': 'str',
+            },
+            'sctp_retx_init_ack_drop': {
+                'type': 'str',
+            },
+            'sctp_route_err_heartbeat_drop': {
+                'type': 'str',
+            },
+            'sctp_reroute_failover': {
+                'type': 'str',
+            },
+            'sctp_route_err_drop': {
+                'type': 'str',
+            },
+            'sctp_no_ext_match': {
+                'type': 'str',
+            },
+            'sctp_retx_init_ack': {
+                'type': 'str',
+            },
+            'sctp_retx_init_drop': {
+                'type': 'str',
+            },
+            'sctp_retx_init': {
+                'type': 'str',
+            },
+            'sctp_asconf_process_drop': {
+                'type': 'str',
+            },
+            'sctp_init_vtag_zero_drop': {
+                'type': 'str',
+            },
+            'pkt_len_err_drop': {
+                'type': 'str',
+            },
+            'pkt_chunk_len_err_drop': {
+                'type': 'str',
+            },
+            'pkt_asconf_param_len_err_drop': {
                 'type': 'str',
             }
         }

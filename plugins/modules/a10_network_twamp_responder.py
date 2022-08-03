@@ -55,6 +55,31 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    enable_ip:
+        description:
+        - "Enable IP TWAMP packets"
+        type: bool
+        required: False
+    enable_ipv6:
+        description:
+        - "Enable IPv6 TWAMP packets"
+        type: bool
+        required: False
+    enable_both_ip_ipv6:
+        description:
+        - "Enable both IP and IPv6 TWAMP packets"
+        type: bool
+        required: False
+    port:
+        description:
+        - "Port number"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     ip:
         description:
         - "Field ip"
@@ -87,21 +112,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    both:
-        description:
-        - "Enable both IP and IPv6 TWAMP packets"
-        type: bool
-        required: False
-    port:
-        description:
-        - "Port number"
-        type: int
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        type: str
-        required: False
 
 '''
 
@@ -157,7 +167,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "both",
+    "enable_both_ip_ipv6",
+    "enable_ip",
+    "enable_ipv6",
     "ip",
     "ipv6",
     "port",
@@ -190,6 +202,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'enable_ip': {
+            'type': 'bool',
+        },
+        'enable_ipv6': {
+            'type': 'bool',
+        },
+        'enable_both_ip_ipv6': {
+            'type': 'bool',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'ip': {
             'type': 'dict',
             'acl_id': {
@@ -210,15 +237,6 @@ def get_argspec():
             'uuid': {
                 'type': 'str',
             }
-        },
-        'both': {
-            'type': 'bool',
-        },
-        'port': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

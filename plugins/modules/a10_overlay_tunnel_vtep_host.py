@@ -75,7 +75,7 @@ options:
         - " Configure the segment id ( VNI of the remote host)"
         type: int
         required: True
-    destination_vtep:
+    remote_vtep:
         description:
         - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
         type: str
@@ -140,9 +140,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "destination_vtep",
     "ip_addr",
     "overlay_mac_addr",
+    "remote_vtep",
     "uuid",
     "vni",
 ]
@@ -185,7 +185,7 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'destination_vtep': {
+        'remote_vtep': {
             'type': 'str',
             'required': True,
         },
@@ -201,13 +201,13 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/{ip-addr}+{overlay-mac-addr}+{vni}+{destination-vtep}"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/{ip-addr}+{overlay-mac-addr}+{vni}+{remote-vtep}"
 
     f_dict = {}
     f_dict["ip-addr"] = module.params["ip_addr"]
     f_dict["overlay-mac-addr"] = module.params["overlay_mac_addr"]
     f_dict["vni"] = module.params["vni"]
-    f_dict["destination-vtep"] = module.params["destination_vtep"]
+    f_dict["remote-vtep"] = module.params["remote_vtep"]
     f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)
@@ -216,13 +216,13 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/{ip-addr}+{overlay-mac-addr}+{vni}+{destination-vtep}"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/{ip-addr}+{overlay-mac-addr}+{vni}+{remote-vtep}"
 
     f_dict = {}
     f_dict["ip-addr"] = ""
     f_dict["overlay-mac-addr"] = ""
     f_dict["vni"] = ""
-    f_dict["destination-vtep"] = ""
+    f_dict["remote-vtep"] = ""
     f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)

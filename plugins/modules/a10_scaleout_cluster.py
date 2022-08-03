@@ -92,6 +92,11 @@ options:
                 description:
                 - "Field start_delay"
                 type: int
+            cluster_mode:
+                description:
+                - "'layer-2'= Nodes in cluster are layer 2 connected (default mode); 'layer-3'=
+          Nodes in cluster are l3 connected;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -100,9 +105,17 @@ options:
                 description:
                 - "Field l2_redirect"
                 type: dict
-            session_sync_interface:
+            traffic_redirection:
                 description:
-                - "Field session_sync_interface"
+                - "Field traffic_redirection"
+                type: dict
+            session_sync:
+                description:
+                - "Field session_sync"
+                type: dict
+            exclude_interfaces:
+                description:
+                - "Field exclude_interfaces"
                 type: dict
             tracking_template:
                 description:
@@ -114,6 +127,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -136,6 +153,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -160,6 +181,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -174,6 +199,51 @@ options:
         type: dict
         required: False
         suboptions:
+            tickTime:
+                description:
+                - "Field tickTime"
+                type: int
+            initLimit:
+                description:
+                - "Field initLimit"
+                type: int
+            syncLimit:
+                description:
+                - "Field syncLimit"
+                type: int
+            minSessionTimeout:
+                description:
+                - "Field minSessionTimeout"
+                type: int
+            maxSessionTimeout:
+                description:
+                - "Field maxSessionTimeout"
+                type: int
+            client_recv_timeout:
+                description:
+                - "Field client_recv_timeout"
+                type: int
+            clientPort:
+                description:
+                - "client session port"
+                type: int
+            loopback_intf_support:
+                description:
+                - "support loopback interface for scaleout database (enabled by default)"
+                type: bool
+            broken_detect_timeout:
+                description:
+                - "database connection broken detection timeout (mseconds) (12000 mseconds for
+          default)"
+                type: int
+            more_election_packet:
+                description:
+                - "send more election packet in election period (enabled by default)"
+                type: bool
+            elect_conn_timeout:
+                description:
+                - "election connection timeout (mseconds) (1200 for default)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -295,6 +365,10 @@ def get_argspec():
             'start_delay': {
                 'type': 'int',
             },
+            'cluster_mode': {
+                'type': 'str',
+                'choices': ['layer-2', 'layer-3']
+            },
             'uuid': {
                 'type': 'str',
             },
@@ -316,7 +390,103 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'session_sync_interface': {
+            'traffic_redirection': {
+                'type': 'dict',
+                'follow_shared': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'interfaces': {
+                    'type': 'dict',
+                    'eth_cfg': {
+                        'type': 'list',
+                        'ethernet': {
+                            'type': 'str',
+                        }
+                    },
+                    'trunk_cfg': {
+                        'type': 'list',
+                        'trunk': {
+                            'type': 'int',
+                        }
+                    },
+                    've_cfg': {
+                        'type': 'list',
+                        've': {
+                            'type': 'int',
+                        }
+                    },
+                    'loopback_cfg': {
+                        'type': 'list',
+                        'loopback': {
+                            'type': 'int',
+                        }
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'reachability_options': {
+                    'type': 'dict',
+                    'skip_default_route': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'session_sync': {
+                'type': 'dict',
+                'follow_shared': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'interfaces': {
+                    'type': 'dict',
+                    'eth_cfg': {
+                        'type': 'list',
+                        'ethernet': {
+                            'type': 'str',
+                        }
+                    },
+                    'trunk_cfg': {
+                        'type': 'list',
+                        'trunk': {
+                            'type': 'int',
+                        }
+                    },
+                    've_cfg': {
+                        'type': 'list',
+                        've': {
+                            'type': 'int',
+                        }
+                    },
+                    'loopback_cfg': {
+                        'type': 'list',
+                        'loopback': {
+                            'type': 'int',
+                        }
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'reachability_options': {
+                    'type': 'dict',
+                    'skip_default_route': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'exclude_interfaces': {
                 'type': 'dict',
                 'eth_cfg': {
                     'type': 'list',
@@ -333,6 +503,12 @@ def get_argspec():
                 've_cfg': {
                     'type': 'list',
                     've': {
+                        'type': 'int',
+                    }
+                },
+                'loopback_cfg': {
+                    'type': 'list',
+                    'loopback': {
                         'type': 'int',
                     }
                 },
@@ -364,11 +540,43 @@ def get_argspec():
                     'user_tag': {
                         'type': 'str',
                     }
+                },
+                'multi_template_list': {
+                    'type': 'list',
+                    'multi_template': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'template': {
+                        'type': 'list',
+                        'template_name': {
+                            'type': 'str',
+                        },
+                        'partition_name': {
+                            'type': 'str',
+                        }
+                    },
+                    'threshold': {
+                        'type': 'int',
+                    },
+                    'action': {
+                        'type': 'str',
+                        'choices': ['down', 'exit-cluster']
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'user_tag': {
+                        'type': 'str',
+                    }
                 }
             }
         },
         'cluster_devices': {
             'type': 'dict',
+            'enable': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             },
@@ -413,6 +621,9 @@ def get_argspec():
         },
         'device_groups': {
             'type': 'dict',
+            'enable': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             },
@@ -467,6 +678,9 @@ def get_argspec():
         },
         'service_config': {
             'type': 'dict',
+            'enable': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             },
@@ -492,6 +706,39 @@ def get_argspec():
         },
         'db_config': {
             'type': 'dict',
+            'tickTime': {
+                'type': 'int',
+            },
+            'initLimit': {
+                'type': 'int',
+            },
+            'syncLimit': {
+                'type': 'int',
+            },
+            'minSessionTimeout': {
+                'type': 'int',
+            },
+            'maxSessionTimeout': {
+                'type': 'int',
+            },
+            'client_recv_timeout': {
+                'type': 'int',
+            },
+            'clientPort': {
+                'type': 'int',
+            },
+            'loopback_intf_support': {
+                'type': 'bool',
+            },
+            'broken_detect_timeout': {
+                'type': 'int',
+            },
+            'more_election_packet': {
+                'type': 'bool',
+            },
+            'elect_conn_timeout': {
+                'type': 'int',
+            },
             'uuid': {
                 'type': 'str',
             }

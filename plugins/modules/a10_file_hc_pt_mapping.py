@@ -65,15 +65,15 @@ options:
         - "harmony-controller local partition tenant mapping file"
         type: str
         required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
-        type: str
-        required: False
     action:
         description:
         - "'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'=
           check; 'replace'= replace; 'delete'= delete;"
+        type: str
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
         type: str
         required: False
 
@@ -168,9 +168,6 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'file_handle': {
-            'type': 'str',
-        },
         'action': {
             'type':
             'str',
@@ -178,6 +175,9 @@ def get_argspec():
                 'import', 'export', 'copy', 'rename', 'check', 'replace',
                 'delete'
             ]
+        },
+        'file_handle': {
+            'type': 'str',
         }
     })
     return rv

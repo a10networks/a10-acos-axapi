@@ -157,6 +157,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -396,6 +400,9 @@ def get_argspec():
                         'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'oper': {

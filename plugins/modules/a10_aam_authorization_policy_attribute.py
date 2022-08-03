@@ -95,6 +95,11 @@ options:
         - "IP address is transformed into network byte order"
         type: bool
         required: False
+    number_type:
+        description:
+        - "Attribute type is decimal number"
+        type: bool
+        required: False
     attr_str:
         description:
         - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
@@ -126,6 +131,19 @@ options:
     attr_ipv4:
         description:
         - "IPv4 address"
+        type: str
+        required: False
+    attr_number:
+        description:
+        - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal;
+          'less-than'= Operation type is less-than; 'more-than'= Operation type is more-
+          than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-
+          equal-to'= Operation type is more-thatn-equal-to;"
+        type: str
+        required: False
+    attr_number_val:
+        description:
+        - "Set attribute value"
         type: str
         required: False
     A10_AX_AUTH_URI:
@@ -217,6 +235,8 @@ AVAILABLE_PROPERTIES = [
     "attr_ip",
     "attr_ipv4",
     "attr_num",
+    "attr_number",
+    "attr_number_val",
     "attr_str",
     "attr_str_val",
     "attr_type",
@@ -225,6 +245,7 @@ AVAILABLE_PROPERTIES = [
     "custom_attr_type",
     "integer_type",
     "ip_type",
+    "number_type",
     "string_type",
     "uuid",
 ]
@@ -277,6 +298,9 @@ def get_argspec():
         'ip_type': {
             'type': 'bool',
         },
+        'number_type': {
+            'type': 'bool',
+        },
         'attr_str': {
             'type': 'str',
             'choices': ['match', 'sub-string']
@@ -300,6 +324,17 @@ def get_argspec():
             'choices': ['equal', 'not-equal']
         },
         'attr_ipv4': {
+            'type': 'str',
+        },
+        'attr_number': {
+            'type':
+            'str',
+            'choices': [
+                'equal', 'not-equal', 'less-than', 'more-than',
+                'less-than-equal-to', 'more-than-equal-to'
+            ]
+        },
+        'attr_number_val': {
             'type': 'str',
         },
         'A10_AX_AUTH_URI': {

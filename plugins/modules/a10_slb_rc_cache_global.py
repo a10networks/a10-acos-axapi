@@ -84,8 +84,167 @@ options:
           Big; 'content_toosmall'= Policy Content Too Small; 'entry_create_failures'=
           Entry Create failures; 'mem_size'= Memory Used; 'entry_num'= Entry Cached;
           'replaced_entry'= Entry Replaced; 'aging_entry'= Entry Aged Out;
-          'cleaned_entry'= Entry Cleaned;"
+          'cleaned_entry'= Entry Cleaned; 'rsp_type_stream'= Responses from http2 server
+          200 OK - Stream;"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            entry_list:
+                description:
+                - "Field entry_list"
+                type: list
+            cache_hits:
+                description:
+                - "Field cache_hits"
+                type: int
+            cache_miss:
+                description:
+                - "Field cache_miss"
+                type: int
+            memory_used:
+                description:
+                - "Field memory_used"
+                type: str
+            hit_ratio:
+                description:
+                - "Field hit_ratio"
+                type: str
+            304_ratio:
+                description:
+                - "Field 304_ratio"
+                type: str
+            bytes_served:
+                description:
+                - "Field bytes_served"
+                type: str
+            total_request:
+                description:
+                - "Field total_request"
+                type: int
+            no_cache_requests:
+                description:
+                - "Field no_cache_requests"
+                type: int
+            cacheable_requests:
+                description:
+                - "Field cacheable_requests"
+                type: int
+            ims_requests:
+                description:
+                - "Field ims_requests"
+                type: int
+            resp_server_304_not_modified:
+                description:
+                - "Field resp_server_304_not_modified"
+                type: int
+            resp_server_200_ok_chunk:
+                description:
+                - "Field resp_server_200_ok_chunk"
+                type: int
+            resp_server_no_cache_response:
+                description:
+                - "Field resp_server_no_cache_response"
+                type: int
+            resp_server_200_ok_cont:
+                description:
+                - "Field resp_server_200_ok_cont"
+                type: int
+            resp_server_other:
+                description:
+                - "Field resp_server_other"
+                type: int
+            resp_cache_304_not_modified:
+                description:
+                - "Field resp_cache_304_not_modified"
+                type: int
+            resp_cache_200_ok_gzip:
+                description:
+                - "Field resp_cache_200_ok_gzip"
+                type: int
+            resp_cache_other:
+                description:
+                - "Field resp_cache_other"
+                type: int
+            resp_cache_200_ok_no_comp:
+                description:
+                - "Field resp_cache_200_ok_no_comp"
+                type: int
+            resp_cache_200_ok_deflate:
+                description:
+                - "Field resp_cache_200_ok_deflate"
+                type: int
+            entries_cached:
+                description:
+                - "Field entries_cached"
+                type: int
+            entries_aged:
+                description:
+                - "Field entries_aged"
+                type: int
+            entries_create_fail:
+                description:
+                - "Field entries_create_fail"
+                type: int
+            entries_replaced:
+                description:
+                - "Field entries_replaced"
+                type: int
+            entries_cleaned:
+                description:
+                - "Field entries_cleaned"
+                type: int
+            revalidation_success:
+                description:
+                - "Field revalidation_success"
+                type: int
+            revalidation_failure:
+                description:
+                - "Field revalidation_failure"
+                type: int
+            policy_uri_nocache:
+                description:
+                - "Field policy_uri_nocache"
+                type: int
+            polic_uri_invalidate:
+                description:
+                - "Field polic_uri_invalidate"
+                type: int
+            policy_content_small:
+                description:
+                - "Field policy_content_small"
+                type: int
+            policy_uri_cache:
+                description:
+                - "Field policy_uri_cache"
+                type: int
+            policy_content_big:
+                description:
+                - "Field policy_content_big"
+                type: int
+            virtual_server:
+                description:
+                - "Field virtual_server"
+                type: str
+            virtual_port:
+                description:
+                - "Field virtual_port"
+                type: int
+            display_detail:
+                description:
+                - "Field display_detail"
+                type: int
+            uri_name:
+                description:
+                - "Field uri_name"
+                type: str
+            replacement_list:
+                description:
+                - "Field replacement_list"
+                type: list
     stats:
         description:
         - "Field stats"
@@ -212,6 +371,10 @@ options:
                 description:
                 - "Entry Cleaned"
                 type: str
+            rsp_type_stream:
+                description:
+                - "Responses from http2 server 200 OK - Stream"
+                type: str
 
 '''
 
@@ -267,6 +430,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "oper",
     "sampling_enable",
     "stats",
     "uuid",
@@ -315,8 +479,276 @@ def get_argspec():
                     'rsp_deflate', 'rsp_other', 'nocache_match', 'match',
                     'invalidate_match', 'content_toobig', 'content_toosmall',
                     'entry_create_failures', 'mem_size', 'entry_num',
-                    'replaced_entry', 'aging_entry', 'cleaned_entry'
+                    'replaced_entry', 'aging_entry', 'cleaned_entry',
+                    'rsp_type_stream'
                 ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'entry_list': {
+                'type': 'list',
+                'host': {
+                    'type': 'str',
+                },
+                'url': {
+                    'type': 'str',
+                },
+                'bytes': {
+                    'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
+                },
+                'status': {
+                    'type': 'str',
+                },
+                'expires': {
+                    'type': 'str',
+                },
+                'host1': {
+                    'type': 'str',
+                },
+                'url1': {
+                    'type': 'str',
+                },
+                'bytes1': {
+                    'type': 'str',
+                },
+                'response_hdr_len': {
+                    'type': 'str',
+                },
+                'status_code': {
+                    'type': 'str',
+                },
+                'etag': {
+                    'type': 'str',
+                },
+                'cache_control': {
+                    'type': 'str',
+                },
+                'date': {
+                    'type': 'str',
+                },
+                'last_modified': {
+                    'type': 'str',
+                },
+                'time_elapsed': {
+                    'type': 'str',
+                },
+                'age': {
+                    'type': 'str',
+                },
+                'expires1': {
+                    'type': 'str',
+                },
+                'hits': {
+                    'type': 'str',
+                },
+                'misses': {
+                    'type': 'str',
+                },
+                'concurrent_readers': {
+                    'type': 'str',
+                },
+                'content_encoding': {
+                    'type': 'str',
+                },
+                'http_version': {
+                    'type': 'str',
+                },
+                'response_chunked_encoding': {
+                    'type': 'str',
+                },
+                'weak_etag': {
+                    'type': 'str',
+                },
+                'full_response_cache': {
+                    'type': 'str',
+                },
+                'http_request_method': {
+                    'type': 'str',
+                },
+                'vserver_name': {
+                    'type': 'str',
+                },
+                'vport': {
+                    'type': 'str',
+                },
+                'memory_configured': {
+                    'type': 'str',
+                },
+                'memory_used': {
+                    'type': 'str',
+                },
+                'memory_used_locally': {
+                    'type': 'str',
+                },
+                'percent_used': {
+                    'type': 'str',
+                },
+                'partition': {
+                    'type': 'str',
+                }
+            },
+            'cache_hits': {
+                'type': 'int',
+            },
+            'cache_miss': {
+                'type': 'int',
+            },
+            'memory_used': {
+                'type': 'str',
+            },
+            'hit_ratio': {
+                'type': 'str',
+            },
+            '304_ratio': {
+                'type': 'str',
+            },
+            'bytes_served': {
+                'type': 'str',
+            },
+            'total_request': {
+                'type': 'int',
+            },
+            'no_cache_requests': {
+                'type': 'int',
+            },
+            'cacheable_requests': {
+                'type': 'int',
+            },
+            'ims_requests': {
+                'type': 'int',
+            },
+            'resp_server_304_not_modified': {
+                'type': 'int',
+            },
+            'resp_server_200_ok_chunk': {
+                'type': 'int',
+            },
+            'resp_server_no_cache_response': {
+                'type': 'int',
+            },
+            'resp_server_200_ok_cont': {
+                'type': 'int',
+            },
+            'resp_server_other': {
+                'type': 'int',
+            },
+            'resp_cache_304_not_modified': {
+                'type': 'int',
+            },
+            'resp_cache_200_ok_gzip': {
+                'type': 'int',
+            },
+            'resp_cache_other': {
+                'type': 'int',
+            },
+            'resp_cache_200_ok_no_comp': {
+                'type': 'int',
+            },
+            'resp_cache_200_ok_deflate': {
+                'type': 'int',
+            },
+            'entries_cached': {
+                'type': 'int',
+            },
+            'entries_aged': {
+                'type': 'int',
+            },
+            'entries_create_fail': {
+                'type': 'int',
+            },
+            'entries_replaced': {
+                'type': 'int',
+            },
+            'entries_cleaned': {
+                'type': 'int',
+            },
+            'revalidation_success': {
+                'type': 'int',
+            },
+            'revalidation_failure': {
+                'type': 'int',
+            },
+            'policy_uri_nocache': {
+                'type': 'int',
+            },
+            'polic_uri_invalidate': {
+                'type': 'int',
+            },
+            'policy_content_small': {
+                'type': 'int',
+            },
+            'policy_uri_cache': {
+                'type': 'int',
+            },
+            'policy_content_big': {
+                'type': 'int',
+            },
+            'virtual_server': {
+                'type': 'str',
+            },
+            'virtual_port': {
+                'type': 'int',
+            },
+            'display_detail': {
+                'type': 'int',
+            },
+            'uri_name': {
+                'type': 'str',
+            },
+            'replacement_list': {
+                'type': 'list',
+                'one_256th': {
+                    'type': 'int',
+                },
+                'one_128th': {
+                    'type': 'int',
+                },
+                'one_64th': {
+                    'type': 'int',
+                },
+                'one_32th': {
+                    'type': 'int',
+                },
+                'one_16th': {
+                    'type': 'int',
+                },
+                'one_8th': {
+                    'type': 'int',
+                },
+                'one_4th': {
+                    'type': 'int',
+                },
+                'one_2th': {
+                    'type': 'int',
+                },
+                'one': {
+                    'type': 'int',
+                },
+                'two': {
+                    'type': 'int',
+                },
+                'four': {
+                    'type': 'int',
+                },
+                'eight': {
+                    'type': 'int',
+                },
+                'sixteen': {
+                    'type': 'int',
+                },
+                'thirty_two': {
+                    'type': 'int',
+                },
+                'sixty_four': {
+                    'type': 'int',
+                },
+                'one_twenty_eight': {
+                    'type': 'int',
+                }
             }
         },
         'stats': {
@@ -409,6 +841,9 @@ def get_argspec():
                 'type': 'str',
             },
             'cleaned_entry': {
+                'type': 'str',
+            },
+            'rsp_type_stream': {
                 'type': 'str',
             }
         }
@@ -587,6 +1022,14 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info[
                     "rc-cache-global-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client,
+                                                      existing_url(module),
+                                                      params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["rc-cache-global"][
+                    "oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client,
                                                        existing_url(module),

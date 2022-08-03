@@ -60,6 +60,11 @@ options:
         - "Specify NTLM authentication relay name"
         type: str
         required: True
+    large_request_disable:
+        description:
+        - "Disable NTLM relay processing for large requests"
+        type: bool
+        required: False
     domain:
         description:
         - "Specify NTLM domain, default is null"
@@ -102,6 +107,11 @@ options:
           HEAD requests sent with NEGOTIATE header; 'head-auth-request-sent'= HEAD
           requests sent with AUTH header;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -256,7 +266,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "domain",
+    "large_request_disable",
     "name",
+    "packet_capture_template",
     "sampling_enable",
     "stats",
     "user_tag",
@@ -294,6 +306,9 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'large_request_disable': {
+            'type': 'bool',
+        },
         'domain': {
             'type': 'str',
         },
@@ -322,6 +337,9 @@ def get_argspec():
                     'head-negotiate-request-sent', 'head-auth-request-sent'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

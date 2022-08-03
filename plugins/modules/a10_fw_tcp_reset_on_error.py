@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    outbound:
+        description:
+        - "'enable'= Enable send TCP reset on error;"
+        type: str
+        required: False
     enable:
         description:
         - "Enable send TCP reset on error"
@@ -121,6 +126,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "enable",
+    "outbound",
     "uuid",
 ]
 
@@ -150,6 +156,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'outbound': {
+            'type': 'str',
+            'choices': ['enable']
+        },
         'enable': {
             'type': 'bool',
         },

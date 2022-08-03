@@ -218,6 +218,30 @@ options:
                 description:
                 - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
                 type: str
+            tls13_aes_128_gcm_sha256_id:
+                description:
+                - "TLS13_AES_128_GCM_SHA256 Cipher ID"
+                type: str
+            tls13_aes_256_gcm_sha384_id:
+                description:
+                - "TLS13_AES_256_GCM_SHA384 Cipher ID"
+                type: str
+            tls13_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS13_CHACHA20_POLY1305_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_sm2_sms4_sm3_id:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_SM3 Cipher ID"
+                type: str
+            tls1_ecdhe_sm2_sms4_gcm_sm3_id:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_GCM_SM3 Cipher ID"
+                type: str
+            tls1_ecdhe_sm2_sms4_sha256_id:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_SHA256 Cipher ID"
+                type: str
             ssl3_rsa_des_192_cbc3_sha_successes:
                 description:
                 - "SSL3_RSA_DES_192_CBC3_SHA Successes"
@@ -357,6 +381,30 @@ options:
             tls1_dhe_rsa_chacha20_poly1305_sha256_successes:
                 description:
                 - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+                type: int
+            tls13_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS13_AES_128_GCM_SHA256 cipher successes"
+                type: int
+            tls13_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS13_AES_256_GCM_SHA384 cipher successes"
+                type: int
+            tls13_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS13_CHACHA20_POLY1305_SHA256 cipher successes"
+                type: int
+            tls1_ecdhe_sm2_sms4_sm3_successes:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_SM3 cipher successes"
+                type: int
+            tls1_ecdhe_sm2_sms4_gcm_sm3_successes:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_GCM_SM3 cipher successes"
+                type: int
+            tls1_ecdhe_sm2_sms4_sha256_successes:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_SHA256 cipher successes"
                 type: int
             ssl3_rsa_des_192_cbc3_sha_failures:
                 description:
@@ -498,6 +546,30 @@ options:
                 description:
                 - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
                 type: int
+            tls13_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS13_AES_128_GCM_SHA256 cipher failures"
+                type: int
+            tls13_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS13_AES_256_GCM_SHA384 cipher failures"
+                type: int
+            tls13_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS13_CHACHA20_POLY1305_SHA256 cipher failures"
+                type: int
+            tls1_ecdhe_sm2_sms4_sm3_failures:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_SM3 cipher failures"
+                type: int
+            tls1_ecdhe_sm2_sms4_gcm_sm3_failures:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_GCM_SM3 cipher failures"
+                type: int
+            tls1_ecdhe_sm2_sms4_sha256_failures:
+                description:
+                - "TLS1_ECDHE_SM2_WITH_SMS4_SHA256 cipher failures"
+                type: int
             kex_rsa_512_successes:
                 description:
                 - "Successful 512-bit RSA key exchanges"
@@ -538,6 +610,22 @@ options:
                 description:
                 - "Successful secp384r1 ECDHE key exchanges"
                 type: int
+            kex_ecdhe_secp521r1_successes:
+                description:
+                - "Successful secp521r1 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_x25519_successes:
+                description:
+                - "Successful x25519 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_x448_successes:
+                description:
+                - "Successful x448 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_sm2_successes:
+                description:
+                - "Successful sm2p256v1 ECDHE key exchanges"
+                type: int
             kex_ecdhe_secp256r1_failures:
                 description:
                 - "Failed secp256r1 ECDHE key exchanges"
@@ -545,6 +633,22 @@ options:
             kex_ecdhe_secp384r1_failures:
                 description:
                 - "Failed secp384r1 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_secp521r1_failures:
+                description:
+                - "Failed secp521r1 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_x25519_failures:
+                description:
+                - "Failed x25519 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_x448_failures:
+                description:
+                - "Failed x448 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_sm2_failures:
+                description:
+                - "Failed sm2p256v1 ECDHE key exchanges"
                 type: int
             kex_dhe_512_successes:
                 description:
@@ -590,6 +694,10 @@ options:
                 description:
                 - "Successful TLS1.2 connections"
                 type: int
+            tls13_successes:
+                description:
+                - "Successful TLS1.3 connections"
+                type: int
             ssl2_failures:
                 description:
                 - "Failed SSL2 connections"
@@ -609,6 +717,10 @@ options:
             tls12_failures:
                 description:
                 - "Failed TLS1.2 connections"
+                type: int
+            tls13_failures:
+                description:
+                - "Failed TLS1.3 connections"
                 type: int
             sess_cache_new:
                 description:
@@ -666,6 +778,10 @@ options:
                 description:
                 - "Successful TLS1.2 renegotiations"
                 type: int
+            renego_tls13_successes:
+                description:
+                - "Successful TLS1.3 renegotiations"
+                type: int
             renego_ssl2_failures:
                 description:
                 - "Failed SSL2 renegotiations"
@@ -685,6 +801,14 @@ options:
             renego_tls12_failures:
                 description:
                 - "Failed TLS1.2 renegotiations"
+                type: int
+            renego_tls13_failures:
+                description:
+                - "Failed TLS1.3 renegotiations"
+                type: int
+            downgraded:
+                description:
+                - "TLS version downgraded"
                 type: int
 
 '''
@@ -890,6 +1014,24 @@ def get_argspec():
             'tls1_dhe_rsa_chacha20_poly1305_sha256_id': {
                 'type': 'str',
             },
+            'tls13_aes_128_gcm_sha256_id': {
+                'type': 'str',
+            },
+            'tls13_aes_256_gcm_sha384_id': {
+                'type': 'str',
+            },
+            'tls13_chacha20_poly1305_sha256_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_sm2_sms4_sm3_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_sm2_sms4_gcm_sm3_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_sm2_sms4_sha256_id': {
+                'type': 'str',
+            },
             'ssl3_rsa_des_192_cbc3_sha_successes': {
                 'type': 'int',
             },
@@ -993,6 +1135,24 @@ def get_argspec():
                 'type': 'int',
             },
             'tls1_dhe_rsa_chacha20_poly1305_sha256_successes': {
+                'type': 'int',
+            },
+            'tls13_aes_128_gcm_sha256_successes': {
+                'type': 'int',
+            },
+            'tls13_aes_256_gcm_sha384_successes': {
+                'type': 'int',
+            },
+            'tls13_chacha20_poly1305_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_sm2_sms4_sm3_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_sm2_sms4_gcm_sm3_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_sm2_sms4_sha256_successes': {
                 'type': 'int',
             },
             'ssl3_rsa_des_192_cbc3_sha_failures': {
@@ -1100,6 +1260,24 @@ def get_argspec():
             'tls1_dhe_rsa_chacha20_poly1305_sha256_failures': {
                 'type': 'int',
             },
+            'tls13_aes_128_gcm_sha256_failures': {
+                'type': 'int',
+            },
+            'tls13_aes_256_gcm_sha384_failures': {
+                'type': 'int',
+            },
+            'tls13_chacha20_poly1305_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_sm2_sms4_sm3_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_sm2_sms4_gcm_sm3_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_sm2_sms4_sha256_failures': {
+                'type': 'int',
+            },
             'kex_rsa_512_successes': {
                 'type': 'int',
             },
@@ -1130,10 +1308,34 @@ def get_argspec():
             'kex_ecdhe_secp384r1_successes': {
                 'type': 'int',
             },
+            'kex_ecdhe_secp521r1_successes': {
+                'type': 'int',
+            },
+            'kex_ecdhe_x25519_successes': {
+                'type': 'int',
+            },
+            'kex_ecdhe_x448_successes': {
+                'type': 'int',
+            },
+            'kex_ecdhe_sm2_successes': {
+                'type': 'int',
+            },
             'kex_ecdhe_secp256r1_failures': {
                 'type': 'int',
             },
             'kex_ecdhe_secp384r1_failures': {
+                'type': 'int',
+            },
+            'kex_ecdhe_secp521r1_failures': {
+                'type': 'int',
+            },
+            'kex_ecdhe_x25519_failures': {
+                'type': 'int',
+            },
+            'kex_ecdhe_x448_failures': {
+                'type': 'int',
+            },
+            'kex_ecdhe_sm2_failures': {
                 'type': 'int',
             },
             'kex_dhe_512_successes': {
@@ -1169,6 +1371,9 @@ def get_argspec():
             'tls12_successes': {
                 'type': 'int',
             },
+            'tls13_successes': {
+                'type': 'int',
+            },
             'ssl2_failures': {
                 'type': 'int',
             },
@@ -1182,6 +1387,9 @@ def get_argspec():
                 'type': 'int',
             },
             'tls12_failures': {
+                'type': 'int',
+            },
+            'tls13_failures': {
                 'type': 'int',
             },
             'sess_cache_new': {
@@ -1226,6 +1434,9 @@ def get_argspec():
             'renego_tls12_successes': {
                 'type': 'int',
             },
+            'renego_tls13_successes': {
+                'type': 'int',
+            },
             'renego_ssl2_failures': {
                 'type': 'int',
             },
@@ -1239,6 +1450,12 @@ def get_argspec():
                 'type': 'int',
             },
             'renego_tls12_failures': {
+                'type': 'int',
+            },
+            'renego_tls13_failures': {
+                'type': 'int',
+            },
+            'downgraded': {
                 'type': 'int',
             }
         }

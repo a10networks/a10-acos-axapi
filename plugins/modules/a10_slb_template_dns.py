@@ -65,6 +65,17 @@ options:
         - "'nocache'= Cache disable; 'cache'= Cache enable;"
         type: str
         required: False
+    cache_record_serving_policy:
+        description:
+        - "'global'= Follow global cofiguration (Default); 'no-change'= No change in
+          record order; 'round-robin'= Round-robin;"
+        type: str
+        required: False
+    remove_aa_flag:
+        description:
+        - "Make answers created from cache non-authoritative"
+        type: bool
+        required: False
     disable_dns_template:
         description:
         - "Disable DNS template"
@@ -92,7 +103,8 @@ options:
         required: False
     max_cache_entry_size:
         description:
-        - "Define maximum cache entry size (Maximum cache entry size per VIP)"
+        - "Define maximum cache entry size (Maximum cache entry size per VIP (default
+          1024))"
         type: int
         required: False
     max_cache_size:
@@ -103,6 +115,27 @@ options:
     enable_cache_sharing:
         description:
         - "Enable DNS cache sharing"
+        type: bool
+        required: False
+    disable_ra_cached_resp:
+        description:
+        - "Disable DNS recursive available flag in cached response"
+        type: bool
+        required: False
+    remove_padding_to_server:
+        description:
+        - "Remove EDNS(0) padding to server"
+        type: bool
+        required: False
+    add_padding_to_client:
+        description:
+        - "'block-length'= Block-Length Padding; 'random-block-length'= Random-Block-
+          Length Padding;"
+        type: str
+        required: False
+    remove_edns_csubnet_to_server:
+        description:
+        - "Remove EDNS(0) client subnet from client queries"
         type: bool
         required: False
     redirect_to_tcp_port:
@@ -120,6 +153,16 @@ options:
         - "Use different service group if DNSSEC DO bit set (Service Group Name)"
         type: str
         required: False
+    disable_rpz_attach_soa:
+        description:
+        - "Disable attaching SOA due to RPZ"
+        type: bool
+        required: False
+    dns_logging:
+        description:
+        - "dns logging template (DNS Logging template name)"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -130,6 +173,90 @@ options:
         - "Customized tag"
         type: str
         required: False
+    udp_retransmit:
+        description:
+        - "Field udp_retransmit"
+        type: dict
+        required: False
+        suboptions:
+            retry_interval:
+                description:
+                - "DNS Retry Interval value 1 - 400 in units of 100ms, default is 10 (default is
+          1000ms) (1 - 400 in units of 100ms, default is 10 (1000ms/1sec))"
+                type: int
+            max_trials:
+                description:
+                - "Total number of times to try DNS query to server before closing client
+          connection, default 3"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    query_type_filter:
+        description:
+        - "Field query_type_filter"
+        type: dict
+        required: False
+        suboptions:
+            query_type_action:
+                description:
+                - "'allow'= Allow only certain DNS query types; 'deny'= Deny only certain DNS
+          query types;"
+                type: str
+            query_type:
+                description:
+                - "Field query_type"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    query_class_filter:
+        description:
+        - "Field query_class_filter"
+        type: dict
+        required: False
+        suboptions:
+            query_class_action:
+                description:
+                - "'allow'= Allow only certain DNS query classes; 'deny'= Deny only certain DNS
+          query classes;"
+                type: str
+            query_class:
+                description:
+                - "Field query_class"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    rpz_list:
+        description:
+        - "Field rpz_list"
+        type: list
+        required: False
+        suboptions:
+            seq_id:
+                description:
+                - "sequential id of RPZ"
+                type: int
+            name:
+                description:
+                - "Specify a Response Policy Zone name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            logging:
+                description:
+                - "Field logging"
+                type: dict
     class_list:
         description:
         - "Field class_list"
@@ -162,7 +289,7 @@ options:
             filter_response_rate:
                 description:
                 - "Maximum allowed request rate for the filter. This should match average traffic.
-          (default 20 per two seconds)"
+          (default 10 per seconds)"
                 type: int
             slip_rate:
                 description:
@@ -182,6 +309,92 @@ options:
           enable-log configuration; 'rate-limit'= Rate-Limit based on configuration
           (Default); 'whitelist'= Whitelist, disable rate-limiting;"
                 type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            rrl_class_list_list:
+                description:
+                - "Field rrl_class_list_list"
+                type: list
+    local_dns_resolution:
+        description:
+        - "Field local_dns_resolution"
+        type: dict
+        required: False
+        suboptions:
+            host_list_cfg:
+                description:
+                - "Field host_list_cfg"
+                type: list
+            local_resolver_cfg:
+                description:
+                - "Field local_resolver_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    recursive_dns_resolution:
+        description:
+        - "Field recursive_dns_resolution"
+        type: dict
+        required: False
+        suboptions:
+            host_list_cfg:
+                description:
+                - "Field host_list_cfg"
+                type: list
+            ns_cache_lookup:
+                description:
+                - "'disabled'= Disable NS Cache Lookup; 'enabled'= Enable NS Cache Lookup;"
+                type: str
+            use_service_group_response:
+                description:
+                - "'disabled'= Start Recursive Resolver if Server response doesnt have final
+          answer; 'enabled'= Forward Backend Server response to client and dont start
+          recursive resolver;"
+                type: str
+            ipv4_nat_pool:
+                description:
+                - "IPv4 Source NAT pool or pool group"
+                type: str
+            ipv6_nat_pool:
+                description:
+                - "IPv6 Source NAT pool or pool group"
+                type: str
+            retries_per_level:
+                description:
+                - "Number of DNS query retries at each server level before closing client
+          connection, default 6"
+                type: int
+            full_response:
+                description:
+                - "Serve all records (authority and additional) when applicable"
+                type: bool
+            max_trials:
+                description:
+                - "Total number of times to try DNS query to server before closing client
+          connection, default 0"
+                type: int
+            request_for_pending_resolution:
+                description:
+                - "'drop'= Drop of the request during ongoing; 'respond-with-servfail'= Respond
+          with SERVFAIL of the request during ongoing; 'start-new-resolution'= Start new
+          resolution of the request during ongoing;"
+                type: str
+            udp_retry_interval:
+                description:
+                - "UDP DNS Retry Interval value 1-6, default is 1 sec (1-6 , default is 1 sec)"
+                type: int
+            udp_initial_interval:
+                description:
+                - "UDP DNS Retry Interval value 1-6, default is 5 sec (1-6, default is 5sec)"
+                type: int
+            use_client_qid:
+                description:
+                - "Use client side query id for recursive query"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -241,21 +454,35 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "add_padding_to_client",
+    "cache_record_serving_policy",
     "class_list",
     "default_policy",
     "disable_dns_template",
+    "disable_ra_cached_resp",
+    "disable_rpz_attach_soa",
+    "dns_logging",
     "dnssec_service_group",
     "drop",
     "enable_cache_sharing",
     "forward",
+    "local_dns_resolution",
     "max_cache_entry_size",
     "max_cache_size",
     "max_query_length",
     "name",
     "period",
+    "query_class_filter",
     "query_id_switch",
+    "query_type_filter",
+    "recursive_dns_resolution",
     "redirect_to_tcp_port",
+    "remove_aa_flag",
+    "remove_edns_csubnet_to_server",
+    "remove_padding_to_server",
     "response_rate_limiting",
+    "rpz_list",
+    "udp_retransmit",
     "user_tag",
     "uuid",
 ]
@@ -294,6 +521,13 @@ def get_argspec():
             'type': 'str',
             'choices': ['nocache', 'cache']
         },
+        'cache_record_serving_policy': {
+            'type': 'str',
+            'choices': ['global', 'no-change', 'round-robin']
+        },
+        'remove_aa_flag': {
+            'type': 'bool',
+        },
         'disable_dns_template': {
             'type': 'bool',
         },
@@ -318,6 +552,19 @@ def get_argspec():
         'enable_cache_sharing': {
             'type': 'bool',
         },
+        'disable_ra_cached_resp': {
+            'type': 'bool',
+        },
+        'remove_padding_to_server': {
+            'type': 'bool',
+        },
+        'add_padding_to_client': {
+            'type': 'str',
+            'choices': ['block-length', 'random-block-length']
+        },
+        'remove_edns_csubnet_to_server': {
+            'type': 'bool',
+        },
         'redirect_to_tcp_port': {
             'type': 'bool',
         },
@@ -327,11 +574,109 @@ def get_argspec():
         'dnssec_service_group': {
             'type': 'str',
         },
+        'disable_rpz_attach_soa': {
+            'type': 'bool',
+        },
+        'dns_logging': {
+            'type': 'str',
+        },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
+        },
+        'udp_retransmit': {
+            'type': 'dict',
+            'retry_interval': {
+                'type': 'int',
+            },
+            'max_trials': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'query_type_filter': {
+            'type': 'dict',
+            'query_type_action': {
+                'type': 'str',
+                'choices': ['allow', 'deny']
+            },
+            'query_type': {
+                'type': 'list',
+                'str_query_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA',
+                        'TXT', 'ANY'
+                    ]
+                },
+                'num_query_type': {
+                    'type': 'int',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'query_class_filter': {
+            'type': 'dict',
+            'query_class_action': {
+                'type': 'str',
+                'choices': ['allow', 'deny']
+            },
+            'query_class': {
+                'type': 'list',
+                'str_query_class': {
+                    'type': 'str',
+                    'choices': ['INTERNET', 'CHAOS', 'HESIOD', 'NONE', 'ANY']
+                },
+                'num_query_class': {
+                    'type': 'int',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'rpz_list': {
+            'type': 'list',
+            'seq_id': {
+                'type': 'int',
+                'required': True,
+            },
+            'name': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'logging': {
+                'type': 'dict',
+                'enable': {
+                    'type': 'bool',
+                },
+                'rpz_action': {
+                    'type': 'list',
+                    'str_rpz_action': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'drop', 'pass-thru', 'nxdomain', 'nodata',
+                            'tcp-only', 'local-data'
+                        ]
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
         },
         'class_list': {
             'type': 'dict',
@@ -414,6 +759,116 @@ def get_argspec():
             'action': {
                 'type': 'str',
                 'choices': ['log-only', 'rate-limit', 'whitelist']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'rrl_class_list_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                },
+                'lid_list': {
+                    'type': 'list',
+                    'lidnum': {
+                        'type': 'int',
+                        'required': True,
+                    },
+                    'lid_response_rate': {
+                        'type': 'int',
+                    },
+                    'lid_slip_rate': {
+                        'type': 'int',
+                    },
+                    'lid_window': {
+                        'type': 'int',
+                    },
+                    'lid_enable_log': {
+                        'type': 'bool',
+                    },
+                    'lid_action': {
+                        'type': 'str',
+                        'choices': ['log-only', 'rate-limit', 'whitelist']
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'user_tag': {
+                        'type': 'str',
+                    }
+                }
+            }
+        },
+        'local_dns_resolution': {
+            'type': 'dict',
+            'host_list_cfg': {
+                'type': 'list',
+                'hostnames': {
+                    'type': 'str',
+                }
+            },
+            'local_resolver_cfg': {
+                'type': 'list',
+                'local_resolver': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'recursive_dns_resolution': {
+            'type': 'dict',
+            'host_list_cfg': {
+                'type': 'list',
+                'hostnames': {
+                    'type': 'str',
+                }
+            },
+            'ns_cache_lookup': {
+                'type': 'str',
+                'choices': ['disabled', 'enabled']
+            },
+            'use_service_group_response': {
+                'type': 'str',
+                'choices': ['disabled', 'enabled']
+            },
+            'ipv4_nat_pool': {
+                'type': 'str',
+            },
+            'ipv6_nat_pool': {
+                'type': 'str',
+            },
+            'retries_per_level': {
+                'type': 'int',
+            },
+            'full_response': {
+                'type': 'bool',
+            },
+            'max_trials': {
+                'type': 'int',
+            },
+            'request_for_pending_resolution': {
+                'type':
+                'str',
+                'choices':
+                ['drop', 'respond-with-servfail', 'start-new-resolution']
+            },
+            'udp_retry_interval': {
+                'type': 'int',
+            },
+            'udp_initial_interval': {
+                'type': 'int',
+            },
+            'use_client_qid': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',

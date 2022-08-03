@@ -62,10 +62,15 @@ options:
           detect certain attacks. (default);"
         type: str
         required: False
+    restart_learning_on_anomaly:
+        description:
+        - "Relearn anomaly detection parameters after detecting an anomaly"
+        type: bool
+        required: False
     feature_status:
         description:
-        - "'enable'= Enable anomaly-detection; 'disable'= Disable anomaly detection
-          (default);"
+        - "'enable'= Enable anomaly-detection (Not valid for source-nat-ip and source
+          monitor types); 'disable'= Disable anomaly detection (default);"
         type: str
         required: False
     logging:
@@ -137,6 +142,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "feature_status",
     "logging",
+    "restart_learning_on_anomaly",
     "sensitivity",
     "uuid",
 ]
@@ -170,6 +176,9 @@ def get_argspec():
         'sensitivity': {
             'type': 'str',
             'choices': ['high', 'low']
+        },
+        'restart_learning_on_anomaly': {
+            'type': 'bool',
         },
         'feature_status': {
             'type': 'str',

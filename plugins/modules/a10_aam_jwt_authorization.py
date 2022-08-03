@@ -133,6 +133,11 @@ options:
           JWT Token Expired; 'jwt-signature-failure'= JWT Signature Failure; 'jwt-other-
           error'= JWT Other Error;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -237,6 +242,7 @@ AVAILABLE_PROPERTIES = [
     "jwt_forwarding",
     "log_level",
     "name",
+    "packet_capture_template",
     "sampling_enable",
     "stats",
     "user_tag",
@@ -322,6 +328,9 @@ def get_argspec():
                     'jwt-signature-failure', 'jwt-other-error'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

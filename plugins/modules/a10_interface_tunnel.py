@@ -110,6 +110,11 @@ options:
           bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'=
           Byte received rate bits/sec;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     ip:
         description:
         - "Field ip"
@@ -353,6 +358,7 @@ AVAILABLE_PROPERTIES = [
     "mtu",
     "name",
     "oper",
+    "packet_capture_template",
     "sampling_enable",
     "speed",
     "stats",
@@ -425,10 +431,16 @@ def get_argspec():
                 ]
             }
         },
+        'packet_capture_template': {
+            'type': 'str',
+        },
         'ip': {
             'type': 'dict',
             'address': {
                 'type': 'dict',
+                'dhcp': {
+                    'type': 'bool',
+                },
                 'ip_cfg': {
                     'type': 'list',
                     'ipv4_address': {

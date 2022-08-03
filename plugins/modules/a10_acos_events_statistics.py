@@ -100,7 +100,8 @@ options:
           send failed in Logd; 'msg_dropped_no_active_member_logd'= Messages Dropped, no
           active member in collector grp in Logd; 'msg_dropped_other_logd'= Messages
           Dropped, unexpected error in Logd; 'msg_dropped_invalid_part'= Messages
-          Dropped, Invalid partition Id;"
+          Dropped, Invalid partition Id; 'acos_evt_test_logs_ticks'= Number of ticks when
+          running ACOS Event Test Logs;"
                 type: str
     stats:
         description:
@@ -282,7 +283,8 @@ def get_argspec():
                     'msg_dropped_craft_fail_logd',
                     'msg_dropped_send_failed_logd',
                     'msg_dropped_no_active_member_logd',
-                    'msg_dropped_other_logd', 'msg_dropped_invalid_part'
+                    'msg_dropped_other_logd', 'msg_dropped_invalid_part',
+                    'acos_evt_test_logs_ticks'
                 ]
             }
         },

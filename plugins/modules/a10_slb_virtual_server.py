@@ -138,6 +138,11 @@ options:
         - "'drop-packet'= Drop packet for disabled virtual-port;"
         type: str
         required: False
+    suppress_internal_loopback:
+        description:
+        - "Suppress VIP internal loopback programming"
+        type: bool
+        required: False
     arp_disable:
         description:
         - "Disable Respond to Virtual Server ARP request"
@@ -161,6 +166,16 @@ options:
     template_virtual_server:
         description:
         - "Virtual server template (Virtual server template name)"
+        type: str
+        required: False
+    shared_partition_vs_template:
+        description:
+        - "Reference a virtual-server template from shared partition"
+        type: bool
+        required: False
+    template_virtual_server_shared:
+        description:
+        - "Virtual-Server Template Name"
         type: str
         required: False
     template_logging:
@@ -228,6 +243,10 @@ options:
                 description:
                 - "Specify IP address"
                 type: str
+            target_floating_ipv6:
+                description:
+                - "Specify IPv6 address"
+                type: str
             cancel_migration:
                 description:
                 - "Cancel migration"
@@ -256,16 +275,15 @@ options:
           IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
           'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
           'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'=
-          [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load
+          Port; 'https'= HTTPS port; 'imap'= imap proxy port; 'mlb'= Message based load
           balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
           'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
           Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
           'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
           protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
-          SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
-          Port; 'fast-fix'= Fast FIX port;"
+          'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
+          'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
+          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port;"
                 type: str
             range:
                 description:
@@ -275,6 +293,10 @@ options:
                 description:
                 - "Alternate Virtual Port"
                 type: bool
+            proxy_layer:
+                description:
+                - "'v1'= Force using old proxy; 'v2'= Force using new proxy;"
+                type: str
             optimization_level:
                 description:
                 - "'0'= No optimization; '1'= Optimization level 1 (Experimental);"
@@ -339,6 +361,10 @@ options:
                 description:
                 - "'enable'= Enable; 'disable'= Disable;"
                 type: str
+            l7_service_chain:
+                description:
+                - "Field l7_service_chain"
+                type: bool
             def_selection_if_pref_failed:
                 description:
                 - "'def-selection-if-pref-failed'= Use default server selection method if prefer
@@ -364,6 +390,10 @@ options:
             force_routing_mode:
                 description:
                 - "Force routing mode"
+                type: bool
+            one_server_conn:
+                description:
+                - "Support server that allow only one connection"
                 type: bool
             rate:
                 description:
@@ -410,13 +440,17 @@ options:
                 description:
                 - "expand syn-cookie with timestamp and wscale"
                 type: bool
-            acl_id_list:
+            showtech_print_extended_stats:
                 description:
-                - "Field acl_id_list"
-                type: list
-            acl_name_list:
+                - "Enable print extended stats in showtech for dns vports"
+                type: bool
+            attack_detection:
                 description:
-                - "Field acl_name_list"
+                - "Enable analytics"
+                type: bool
+            acl_list:
+                description:
+                - "Field acl_list"
                 type: list
             template_policy:
                 description:
@@ -437,6 +471,10 @@ options:
             no_auto_up_on_aflex:
                 description:
                 - "Don't automatically mark vport up when aFleX is bound"
+                type: bool
+            enable_scaleout:
+                description:
+                - "Field enable_scaleout"
                 type: bool
             scaleout_bucket_count:
                 description:
@@ -465,6 +503,10 @@ options:
             precedence:
                 description:
                 - "Set auto NAT pool as higher precedence for source NAT"
+                type: bool
+            ip_smart_rr:
+                description:
+                - "Use IP address round-robin behavior"
                 type: bool
             use_cgnv6:
                 description:
@@ -511,6 +553,10 @@ options:
                 - "Bind a use-rcv-hop-for-resp Server Group to this Virtual Server (Server Group
           Name)"
                 type: str
+            reselection:
+                description:
+                - "'disable'= disable;"
+                type: str
             eth_fwd:
                 description:
                 - "Ethernet interface number"
@@ -529,15 +575,39 @@ options:
                 type: str
             template_sip:
                 description:
+                - "SIP Template Name"
+                type: str
+            p_template_sip_shared:
+                description:
+                - "SIP Template Name"
+                type: bool
+            template_sip_shared:
+                description:
                 - "SIP template"
                 type: str
             template_smpp:
                 description:
                 - "SMPP template"
                 type: str
+            shared_partition_smpp_template:
+                description:
+                - "Reference a smpp template from shared partition"
+                type: bool
+            template_smpp_shared:
+                description:
+                - "SMPP Template Name"
+                type: str
             template_dblb:
                 description:
                 - "DBLB Template (DBLB template name)"
+                type: str
+            shared_partition_dblb_template:
+                description:
+                - "Reference a dblb template from shared partition"
+                type: bool
+            template_dblb_shared:
+                description:
+                - "DBLB Template Name"
                 type: str
             template_connection_reuse:
                 description:
@@ -627,9 +697,29 @@ options:
                 description:
                 - "IMAP/POP3 Template (IMAP/POP3 Config Name)"
                 type: str
+            shared_partition_imap_pop3_template:
+                description:
+                - "Reference a IMAP/POP3 template from shared partition"
+                type: bool
+            template_imap_pop3_shared:
+                description:
+                - "IMAP/POP3 Template Name"
+                type: str
             template_smtp:
                 description:
                 - "SMTP Template (SMTP Config Name)"
+                type: str
+            shared_partition_smtp_template:
+                description:
+                - "Reference a SMTP template from shared partition"
+                type: bool
+            template_smtp_shared:
+                description:
+                - "SMTP Template Name"
+                type: str
+            template_mqtt:
+                description:
+                - "MQTT Template (MQTT Config Name)"
                 type: str
             template_http:
                 description:
@@ -679,9 +769,17 @@ options:
                 description:
                 - "ICAP respmod service template (respmod-icap template name)"
                 type: str
-            template_file_inspection:
+            template_doh:
                 description:
-                - "File Inspection service template (file-inspection template name)"
+                - "DNS over HTTP(s) Template Name"
+                type: str
+            shared_partition_doh_template:
+                description:
+                - "Reference a DNS over HTTP(s) template from shared partition"
+                type: bool
+            template_doh_shared:
+                description:
+                - "DNS over HTTP(s) Template Name"
                 type: str
             template_server_ssl:
                 description:
@@ -779,9 +877,21 @@ options:
                 description:
                 - "Cache Template Name"
                 type: str
+            template_ram_cache:
+                description:
+                - "RAM caching template (Cache Template Name)"
+                type: str
             template_fix:
                 description:
                 - "FIX template (FIX Template Name)"
+                type: str
+            shared_partition_fix_template:
+                description:
+                - "Reference a FIX template from shared partition"
+                type: bool
+            template_fix_shared:
+                description:
+                - "FIX Template Name"
                 type: str
             waf_template:
                 description:
@@ -844,6 +954,30 @@ options:
                 description:
                 - "enable dynamic memory compute on virtual port"
                 type: bool
+            substitute_source_mac:
+                description:
+                - "Substitute Source MAC Address to that of the outgoing interface"
+                type: bool
+            ignore_global:
+                description:
+                - "Ignore global substitute-source-mac"
+                type: bool
+            aflex_table_entry_syn_disable:
+                description:
+                - "Disable aFlex entry sync for this port"
+                type: bool
+            aflex_table_entry_syn_enable:
+                description:
+                - "Enable aFlex entry sync for this port"
+                type: bool
+            gtp_session_lb:
+                description:
+                - "Enable GTP Session Load Balancing"
+                type: bool
+            reply_acme_challenge:
+                description:
+                - "Reply ACME http-01 challenge. This option only takes effect in HTTP port 80"
+                type: bool
             resolve_web_cat_list:
                 description:
                 - "Web Category List name"
@@ -860,6 +994,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -1028,12 +1166,15 @@ AVAILABLE_PROPERTIES = [
     "redistribute_route_map",
     "redistribution_flagged",
     "shared_partition_policy_template",
+    "shared_partition_vs_template",
     "stats_data_action",
+    "suppress_internal_loopback",
     "template_logging",
     "template_policy",
     "template_policy_shared",
     "template_scaleout",
     "template_virtual_server",
+    "template_virtual_server_shared",
     "use_if_ip",
     "user_tag",
     "uuid",
@@ -1122,6 +1263,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['drop-packet']
         },
+        'suppress_internal_loopback': {
+            'type': 'bool',
+        },
         'arp_disable': {
             'type': 'bool',
         },
@@ -1135,6 +1279,12 @@ def get_argspec():
             'type': 'str',
         },
         'template_virtual_server': {
+            'type': 'str',
+        },
+        'shared_partition_vs_template': {
+            'type': 'bool',
+        },
+        'template_virtual_server_shared': {
             'type': 'str',
         },
         'template_logging': {
@@ -1176,6 +1326,9 @@ def get_argspec():
             'target_floating_ipv4': {
                 'type': 'str',
             },
+            'target_floating_ipv6': {
+                'type': 'str',
+            },
             'cancel_migration': {
                 'type': 'bool',
             },
@@ -1200,9 +1353,9 @@ def get_argspec():
                 'choices': [
                     'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
                     'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
-                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
+                    'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius',
+                    'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy',
+                    'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli',
                     'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
                 ]
             },
@@ -1211,6 +1364,10 @@ def get_argspec():
             },
             'alternate_port': {
                 'type': 'bool',
+            },
+            'proxy_layer': {
+                'type': 'str',
+                'choices': ['v1', 'v2']
             },
             'optimization_level': {
                 'type': 'str',
@@ -1264,6 +1421,9 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['enable', 'disable']
             },
+            'l7_service_chain': {
+                'type': 'bool',
+            },
             'def_selection_if_pref_failed': {
                 'type':
                 'str',
@@ -1285,6 +1445,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'force_routing_mode': {
+                'type': 'bool',
+            },
+            'one_server_conn': {
                 'type': 'bool',
             },
             'rate': {
@@ -1321,10 +1484,25 @@ def get_argspec():
             'expand': {
                 'type': 'bool',
             },
-            'acl_id_list': {
+            'showtech_print_extended_stats': {
+                'type': 'bool',
+            },
+            'attack_detection': {
+                'type': 'bool',
+            },
+            'acl_list': {
                 'type': 'list',
                 'acl_id': {
                     'type': 'int',
+                },
+                'acl_name': {
+                    'type': 'str',
+                },
+                'acl_id_shared': {
+                    'type': 'int',
+                },
+                'acl_name_shared': {
+                    'type': 'str',
                 },
                 'acl_id_src_nat_pool': {
                     'type': 'str',
@@ -1341,9 +1519,6 @@ def get_argspec():
                 'acl_id_seq_num_shared': {
                     'type': 'int',
                 },
-                'acl_id_shared': {
-                    'type': 'int',
-                },
                 'v_acl_id_src_nat_pool': {
                     'type': 'str',
                 },
@@ -1358,12 +1533,6 @@ def get_argspec():
                 },
                 'v_acl_id_seq_num_shared': {
                     'type': 'int',
-                }
-            },
-            'acl_name_list': {
-                'type': 'list',
-                'acl_name': {
-                    'type': 'str',
                 },
                 'acl_name_src_nat_pool': {
                     'type': 'str',
@@ -1379,9 +1548,6 @@ def get_argspec():
                 },
                 'acl_name_seq_num_shared': {
                     'type': 'int',
-                },
-                'acl_name_shared': {
-                    'type': 'str',
                 },
                 'v_acl_name_src_nat_pool': {
                     'type': 'str',
@@ -1420,6 +1586,9 @@ def get_argspec():
             'no_auto_up_on_aflex': {
                 'type': 'bool',
             },
+            'enable_scaleout': {
+                'type': 'bool',
+            },
             'scaleout_bucket_count': {
                 'type': 'int',
             },
@@ -1439,6 +1608,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'precedence': {
+                'type': 'bool',
+            },
+            'ip_smart_rr': {
                 'type': 'bool',
             },
             'use_cgnv6': {
@@ -1476,6 +1648,10 @@ def get_argspec():
             'server_group': {
                 'type': 'str',
             },
+            'reselection': {
+                'type': 'str',
+                'choices': ['disable']
+            },
             'eth_fwd': {
                 'type': 'str',
             },
@@ -1491,10 +1667,28 @@ def get_argspec():
             'template_sip': {
                 'type': 'str',
             },
+            'p_template_sip_shared': {
+                'type': 'bool',
+            },
+            'template_sip_shared': {
+                'type': 'str',
+            },
             'template_smpp': {
                 'type': 'str',
             },
+            'shared_partition_smpp_template': {
+                'type': 'bool',
+            },
+            'template_smpp_shared': {
+                'type': 'str',
+            },
             'template_dblb': {
+                'type': 'str',
+            },
+            'shared_partition_dblb_template': {
+                'type': 'bool',
+            },
+            'template_dblb_shared': {
                 'type': 'str',
             },
             'template_connection_reuse': {
@@ -1563,7 +1757,22 @@ def get_argspec():
             'template_imap_pop3': {
                 'type': 'str',
             },
+            'shared_partition_imap_pop3_template': {
+                'type': 'bool',
+            },
+            'template_imap_pop3_shared': {
+                'type': 'str',
+            },
             'template_smtp': {
+                'type': 'str',
+            },
+            'shared_partition_smtp_template': {
+                'type': 'bool',
+            },
+            'template_smtp_shared': {
+                'type': 'str',
+            },
+            'template_mqtt': {
                 'type': 'str',
             },
             'template_http': {
@@ -1602,7 +1811,13 @@ def get_argspec():
             'template_respmod_icap': {
                 'type': 'str',
             },
-            'template_file_inspection': {
+            'template_doh': {
+                'type': 'str',
+            },
+            'shared_partition_doh_template': {
+                'type': 'bool',
+            },
+            'template_doh_shared': {
                 'type': 'str',
             },
             'template_server_ssl': {
@@ -1677,7 +1892,16 @@ def get_argspec():
             'template_cache_shared': {
                 'type': 'str',
             },
+            'template_ram_cache': {
+                'type': 'str',
+            },
             'template_fix': {
+                'type': 'str',
+            },
+            'shared_partition_fix_template': {
+                'type': 'bool',
+            },
+            'template_fix_shared': {
                 'type': 'str',
             },
             'waf_template': {
@@ -1728,6 +1952,24 @@ def get_argspec():
             'memory_compute': {
                 'type': 'bool',
             },
+            'substitute_source_mac': {
+                'type': 'bool',
+            },
+            'ignore_global': {
+                'type': 'bool',
+            },
+            'aflex_table_entry_syn_disable': {
+                'type': 'bool',
+            },
+            'aflex_table_entry_syn_enable': {
+                'type': 'bool',
+            },
+            'gtp_session_lb': {
+                'type': 'bool',
+            },
+            'reply_acme_challenge': {
+                'type': 'bool',
+            },
             'resolve_web_cat_list': {
                 'type': 'str',
             },
@@ -1761,15 +2003,38 @@ def get_argspec():
                         'total_fwd_pkts_out', 'total_rev_bytes_out',
                         'total_rev_pkts_out', 'curr_req_rate', 'curr_resp',
                         'total_resp', 'total_resp_succ', 'curr_resp_rate',
-                        'curr_conn_overflow', 'dnsrrl_total_allowed',
-                        'dnsrrl_total_dropped', 'dnsrrl_total_slipped',
-                        'dnsrrl_bad_fqdn', 'throughput-bits-per-sec',
-                        'dynamic-memory-alloc', 'dynamic-memory-free',
-                        'dynamic-memory', 'ip_only_lb_fwd_bytes',
-                        'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts',
-                        'ip_only_lb_rev_pkts'
+                        'dnsrrl_total_allowed', 'dnsrrl_total_dropped',
+                        'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn',
+                        'throughput-bits-per-sec', 'dynamic-memory-alloc',
+                        'dynamic-memory-free', 'dynamic-memory',
+                        'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes',
+                        'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts',
+                        'total_dns_filter_type_drop',
+                        'total_dns_filter_class_drop',
+                        'dns_filter_type_a_drop', 'dns_filter_type_aaaa_drop',
+                        'dns_filter_type_cname_drop',
+                        'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop',
+                        'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop',
+                        'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop',
+                        'dns_filter_type_any_drop',
+                        'dns_filter_type_others_drop',
+                        'dns_filter_class_internet_drop',
+                        'dns_filter_class_chaos_drop',
+                        'dns_filter_class_hesiod_drop',
+                        'dns_filter_class_none_drop',
+                        'dns_filter_class_any_drop',
+                        'dns_filter_class_others_drop', 'dns_rpz_action_drop',
+                        'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only',
+                        'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata',
+                        'dns_rpz_action_local_data',
+                        'dns_rpz_trigger_client_ip', 'dns_rpz_trigger_resp_ip',
+                        'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname',
+                        'dns_rpz_trigger_ns_name'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'oper': {
@@ -1866,10 +2131,10 @@ def get_argspec():
                     'choices': [
                         'tcp', 'udp', 'others', 'diameter', 'dns-tcp',
                         'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy',
-                        'http', 'https', 'http2', 'http2s', 'imap', 'mlb',
-                        'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp',
-                        'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys',
-                        'smtp', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy',
+                        'http', 'https', 'imap', 'mlb', 'mms', 'mysql',
+                        'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp',
+                        'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt',
+                        'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy',
                         'tftp', 'fast-fix'
                     ]
                 },
@@ -1880,6 +2145,15 @@ def get_argspec():
                         'str',
                         'choices':
                         ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+                    },
+                    'real_curr_conn': {
+                        'type': 'int',
+                    },
+                    'int_curr_conn': {
+                        'type': 'int',
+                    },
+                    'curr_conn_overflow': {
+                        'type': 'int',
                     },
                     'loc_list': {
                         'type': 'str',
@@ -2216,7 +2490,328 @@ def get_argspec():
                         'stream_closed': {
                             'type': 'int',
                         },
+                        'jsi_requests': {
+                            'type': 'int',
+                        },
+                        'jsi_responses': {
+                            'type': 'int',
+                        },
+                        'jsi_pri_requests': {
+                            'type': 'int',
+                        },
+                        'jsi_api_requests': {
+                            'type': 'int',
+                        },
+                        'jsi_api_responses': {
+                            'type': 'int',
+                        },
+                        'jsi_api_no_auth_hdr': {
+                            'type': 'int',
+                        },
+                        'jsi_api_no_token': {
+                            'type': 'int',
+                        },
+                        'jsi_skip_no_fi': {
+                            'type': 'int',
+                        },
+                        'jsi_skip_no_ua': {
+                            'type': 'int',
+                        },
+                        'jsi_skip_not_browser': {
+                            'type': 'int',
+                        },
+                        'jsi_hash_add_fails': {
+                            'type': 'int',
+                        },
+                        'jsi_hash_lookup_fails': {
+                            'type': 'int',
+                        },
                         'header_length_long': {
+                            'type': 'int',
+                        },
+                        'req_get': {
+                            'type': 'int',
+                        },
+                        'req_head': {
+                            'type': 'int',
+                        },
+                        'req_put': {
+                            'type': 'int',
+                        },
+                        'req_post': {
+                            'type': 'int',
+                        },
+                        'req_trace': {
+                            'type': 'int',
+                        },
+                        'req_options': {
+                            'type': 'int',
+                        },
+                        'req_connect': {
+                            'type': 'int',
+                        },
+                        'req_delete': {
+                            'type': 'int',
+                        },
+                        'req_unknown': {
+                            'type': 'int',
+                        },
+                        'req_track': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_1k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_2k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_4k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_8k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_16k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_32k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_64k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_256k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_gt_256k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_512': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_1k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_2k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_4k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_gt_4k': {
+                            'type': 'int',
+                        },
+                        'req_sz_1k': {
+                            'type': 'int',
+                        },
+                        'req_sz_2k': {
+                            'type': 'int',
+                        },
+                        'req_sz_4k': {
+                            'type': 'int',
+                        },
+                        'req_sz_8k': {
+                            'type': 'int',
+                        },
+                        'req_sz_16k': {
+                            'type': 'int',
+                        },
+                        'req_sz_32k': {
+                            'type': 'int',
+                        },
+                        'req_sz_64k': {
+                            'type': 'int',
+                        },
+                        'req_sz_256k': {
+                            'type': 'int',
+                        },
+                        'req_sz_gt_256k': {
+                            'type': 'int',
+                        },
+                        'req_content_len': {
+                            'type': 'int',
+                        },
+                        'rsp_chunk': {
+                            'type': 'int',
+                        },
+                        'doh_req': {
+                            'type': 'int',
+                        },
+                        'doh_req_get': {
+                            'type': 'int',
+                        },
+                        'doh_req_post': {
+                            'type': 'int',
+                        },
+                        'doh_non_doh_req': {
+                            'type': 'int',
+                        },
+                        'doh_non_doh_req_get': {
+                            'type': 'int',
+                        },
+                        'doh_non_doh_req_post': {
+                            'type': 'int',
+                        },
+                        'doh_resp': {
+                            'type': 'int',
+                        },
+                        'doh_tc_resp': {
+                            'type': 'int',
+                        },
+                        'doh_udp_dns_req': {
+                            'type': 'int',
+                        },
+                        'doh_udp_dns_resp': {
+                            'type': 'int',
+                        },
+                        'doh_tcp_dns_req': {
+                            'type': 'int',
+                        },
+                        'doh_tcp_dns_resp': {
+                            'type': 'int',
+                        },
+                        'doh_req_send_failed': {
+                            'type': 'int',
+                        },
+                        'doh_resp_send_failed': {
+                            'type': 'int',
+                        },
+                        'doh_malloc_fail': {
+                            'type': 'int',
+                        },
+                        'doh_req_udp_retry': {
+                            'type': 'int',
+                        },
+                        'doh_req_udp_retry_fail': {
+                            'type': 'int',
+                        },
+                        'doh_req_tcp_retry': {
+                            'type': 'int',
+                        },
+                        'doh_req_tcp_retry_fail': {
+                            'type': 'int',
+                        },
+                        'doh_snat_failed': {
+                            'type': 'int',
+                        },
+                        'doh_path_not_found': {
+                            'type': 'int',
+                        },
+                        'doh_get_dns_arg_failed': {
+                            'type': 'int',
+                        },
+                        'doh_get_base64_decode_failed': {
+                            'type': 'int',
+                        },
+                        'doh_post_content_type_mismatch': {
+                            'type': 'int',
+                        },
+                        'doh_post_payload_not_found': {
+                            'type': 'int',
+                        },
+                        'doh_post_payload_extract_failed': {
+                            'type': 'int',
+                        },
+                        'doh_non_doh_method': {
+                            'type': 'int',
+                        },
+                        'doh_tcp_send_failed': {
+                            'type': 'int',
+                        },
+                        'doh_udp_send_failed': {
+                            'type': 'int',
+                        },
+                        'doh_query_time_out': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_a': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_aaaa': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_ns': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_cname': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_any': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_srv': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_mx': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_soa': {
+                            'type': 'int',
+                        },
+                        'doh_dns_query_type_others': {
+                            'type': 'int',
+                        },
+                        'doh_resp_setup_failed': {
+                            'type': 'int',
+                        },
+                        'doh_resp_header_alloc_failed': {
+                            'type': 'int',
+                        },
+                        'doh_resp_que_failed': {
+                            'type': 'int',
+                        },
+                        'doh_resp_udp_frags': {
+                            'type': 'int',
+                        },
+                        'doh_resp_tcp_frags': {
+                            'type': 'int',
+                        },
+                        'doh_serv_sel_failed': {
+                            'type': 'int',
+                        },
+                        'doh_retry_w_tcp': {
+                            'type': 'int',
+                        },
+                        'doh_get_uri_too_long': {
+                            'type': 'int',
+                        },
+                        'doh_post_payload_too_large': {
+                            'type': 'int',
+                        },
+                        'doh_dns_malformed_query': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_err_format': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_err_server': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_err_name': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_err_type': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_refuse': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_yxdomain': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_yxrrset': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_nxrrset': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_notauth': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_notzone': {
+                            'type': 'int',
+                        },
+                        'doh_dns_resp_rcode_other': {
                             'type': 'int',
                         }
                     },
@@ -2232,8 +2827,8 @@ def get_argspec():
                     'http_vport': {
                         'type': 'bool',
                     },
-                    'real_curr_conn': {
-                        'type': 'int',
+                    'clear_curr_conn': {
+                        'type': 'bool',
                     }
                 }
             }

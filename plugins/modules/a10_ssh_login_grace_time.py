@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ssh_login_grace_time
 description:
     - The grace time during which a connection can exist without successful
-      authentication.
+      authentication
 author: A10 Networks 2021
 options:
     state:

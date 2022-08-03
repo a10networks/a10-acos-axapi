@@ -85,6 +85,21 @@ options:
         - "Customized attribute No.3"
         type: bool
         required: False
+    custom4:
+        description:
+        - "Customized attribute No.4"
+        type: bool
+        required: False
+    custom5:
+        description:
+        - "Customized attribute No.5"
+        type: bool
+        required: False
+    custom6:
+        description:
+        - "Customized attribute No.6"
+        type: bool
+        required: False
     imei:
         description:
         - " International Mobile Equipment Identity (IMEI)"
@@ -163,6 +178,9 @@ AVAILABLE_PROPERTIES = [
     "custom1",
     "custom2",
     "custom3",
+    "custom4",
+    "custom5",
+    "custom6",
     "disable_pool_based",
     "imei",
     "imsi",
@@ -214,6 +232,15 @@ def get_argspec():
             'type': 'bool',
         },
         'custom3': {
+            'type': 'bool',
+        },
+        'custom4': {
+            'type': 'bool',
+        },
+        'custom5': {
+            'type': 'bool',
+        },
+        'custom6': {
             'type': 'bool',
         },
         'imei': {

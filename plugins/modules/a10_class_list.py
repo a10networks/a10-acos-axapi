@@ -107,6 +107,10 @@ options:
                 description:
                 - "LSN RADIUS Profile Index"
                 type: int
+            gtp_rate_limit_policy_v4:
+                description:
+                - "GTP Rate Limit Template Name"
+                type: str
             age:
                 description:
                 - "Specify age in minutes"
@@ -145,6 +149,10 @@ options:
                 description:
                 - "LSN RADIUS Profile Index"
                 type: int
+            gtp_rate_limit_policy_v6:
+                description:
+                - "GTP Rate Limit Template Name"
+                type: str
             v6_age:
                 description:
                 - "Specify age in minutes"
@@ -238,6 +246,10 @@ options:
                 description:
                 - "Specify value string"
                 type: str
+            gtp_rate_limit_policy_str:
+                description:
+                - "GTP Rate Limit Template Name"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -293,6 +305,10 @@ options:
             ac_total_entries:
                 description:
                 - "Field ac_total_entries"
+                type: int
+            geo_total_entries:
+                description:
+                - "Field geo_total_entries"
                 type: int
             ipv4_entries:
                 description:
@@ -448,6 +464,9 @@ def get_argspec():
             'lsn_radius_profile': {
                 'type': 'int',
             },
+            'gtp_rate_limit_policy_v4': {
+                'type': 'str',
+            },
             'age': {
                 'type': 'int',
             }
@@ -474,6 +493,9 @@ def get_argspec():
             },
             'v6_lsn_radius_profile': {
                 'type': 'int',
+            },
+            'gtp_rate_limit_policy_v6': {
+                'type': 'str',
             },
             'v6_age': {
                 'type': 'int',
@@ -539,6 +561,9 @@ def get_argspec():
             },
             'ac_value': {
                 'type': 'str',
+            },
+            'gtp_rate_limit_policy_str': {
+                'type': 'str',
             }
         },
         'uuid': {
@@ -586,6 +611,9 @@ def get_argspec():
             'ac_total_entries': {
                 'type': 'int',
             },
+            'geo_total_entries': {
+                'type': 'int',
+            },
             'ipv4_entries': {
                 'type': 'list',
                 'ipv4_addr': {
@@ -603,10 +631,16 @@ def get_argspec():
                 'ipv4_lsn_radius_profile': {
                     'type': 'int',
                 },
+                'ipv4_gtp_policy': {
+                    'type': 'str',
+                },
                 'ipv4_hit_count': {
                     'type': 'int',
                 },
                 'ipv4_age': {
+                    'type': 'int',
+                },
+                'ipv4_rpz_type': {
                     'type': 'int',
                 }
             },
@@ -627,10 +661,16 @@ def get_argspec():
                 'ipv6_lsn_radius_profile': {
                     'type': 'int',
                 },
+                'ipv6_gtp_policy': {
+                    'type': 'str',
+                },
                 'ipv6_hit_count': {
                     'type': 'int',
                 },
                 'ipv6_age': {
+                    'type': 'int',
+                },
+                'ipv6_rpz_type': {
                     'type': 'int',
                 }
             },
@@ -650,6 +690,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'dns_hit_count': {
+                    'type': 'int',
+                },
+                'dns_rpz_type': {
                     'type': 'int',
                 }
             },
@@ -686,6 +729,9 @@ def get_argspec():
                 },
                 'ac_hit_count': {
                     'type': 'int',
+                },
+                'ac_gtp_policy': {
+                    'type': 'str',
                 }
             },
             'name': {

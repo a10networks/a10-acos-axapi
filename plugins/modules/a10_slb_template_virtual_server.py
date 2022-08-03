@@ -153,6 +153,16 @@ options:
         - "Send gratuitous ARP for every IP in the subnet virtual server"
         type: bool
         required: False
+    disable_when_all_ports_down:
+        description:
+        - "Disable Virtual Server when all member ports are down"
+        type: bool
+        required: False
+    disable_when_any_port_down:
+        description:
+        - "Disable Virtual Server when any member port is down"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -224,6 +234,8 @@ AVAILABLE_PROPERTIES = [
     "conn_rate_limit",
     "conn_rate_limit_no_logging",
     "conn_rate_limit_reset",
+    "disable_when_all_ports_down",
+    "disable_when_any_port_down",
     "icmp_lockup",
     "icmp_lockup_period",
     "icmp_rate_limit",
@@ -320,6 +332,12 @@ def get_argspec():
             'type': 'int',
         },
         'subnet_gratuitous_arp': {
+            'type': 'bool',
+        },
+        'disable_when_all_ports_down': {
+            'type': 'bool',
+        },
+        'disable_when_any_port_down': {
             'type': 'bool',
         },
         'uuid': {

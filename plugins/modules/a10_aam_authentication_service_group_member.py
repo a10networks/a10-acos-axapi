@@ -107,11 +107,16 @@ options:
           status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse
           packets inspected status code non 5xx; 'curr_req'= Current requests;
           'total_req'= Total requests; 'total_req_succ'= Total requests successful;
-          'peak_conn'= peak_conn; 'response_time'= Response time; 'fastest_rsp_time'=
-          Fastest response time; 'slowest_rsp_time'= Slowest response time;
-          'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
+          'peak_conn'= some help string; 'response_time'= Response time;
+          'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response
+          time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
           connections; 'curr_conn_overflow'= Current connection counter overflow count;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     oper:
         description:
         - "Field oper"
@@ -202,7 +207,7 @@ options:
                 type: str
             peak_conn:
                 description:
-                - "Field peak_conn"
+                - "some help string"
                 type: str
             response_time:
                 description:
@@ -295,6 +300,7 @@ AVAILABLE_PROPERTIES = [
     "member_state",
     "name",
     "oper",
+    "packet_capture_template",
     "port",
     "sampling_enable",
     "stats",
@@ -365,6 +371,9 @@ def get_argspec():
                     'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'oper': {
             'type': 'dict',

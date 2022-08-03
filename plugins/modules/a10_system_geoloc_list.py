@@ -103,8 +103,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'hit-count'= hit-count; 'total-geoloc'= total-geoloc; 'total-
-          active'= total-active;"
+                - "'all'= all; 'hit-count'= some help string; 'total-geoloc'= some help string;
+          'total-active'= some help string;"
                 type: str
     oper:
         description:
@@ -128,15 +128,15 @@ options:
         suboptions:
             hit_count:
                 description:
-                - "Field hit_count"
+                - "some help string"
                 type: str
             total_geoloc:
                 description:
-                - "Field total_geoloc"
+                - "some help string"
                 type: str
             total_active:
                 description:
-                - "Field total_active"
+                - "some help string"
                 type: str
             name:
                 description:

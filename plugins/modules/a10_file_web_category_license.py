@@ -70,19 +70,14 @@ options:
         - "Web-Category license local file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "License file size in byte"
-        type: int
+        - "'import'= import;"
+        type: str
         required: False
     file_handle:
         description:
         - "Full path of the uploaded file"
-        type: str
-        required: False
-    action:
-        description:
-        - "'import'= import;"
         type: str
         required: False
     use_mgmt_port:
@@ -149,7 +144,6 @@ AVAILABLE_PROPERTIES = [
     "device",
     "file",
     "file_handle",
-    "size",
     "use_mgmt_port",
 ]
 
@@ -188,15 +182,12 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
-        'file_handle': {
-            'type': 'str',
-        },
         'action': {
             'type': 'str',
             'choices': ['import']
+        },
+        'file_handle': {
+            'type': 'str',
         },
         'use_mgmt_port': {
             'type': 'bool',

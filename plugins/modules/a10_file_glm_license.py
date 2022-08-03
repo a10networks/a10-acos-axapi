@@ -70,14 +70,14 @@ options:
         - "glm license local file name"
         type: str
         required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
-        type: str
-        required: False
     action:
         description:
         - "'import'= import;"
+        type: str
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
         type: str
         required: False
     dst_file:
@@ -182,12 +182,12 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'file_handle': {
-            'type': 'str',
-        },
         'action': {
             'type': 'str',
             'choices': ['import']
+        },
+        'file_handle': {
+            'type': 'str',
         },
         'dst_file': {
             'type': 'str',

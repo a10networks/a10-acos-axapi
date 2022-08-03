@@ -471,6 +471,18 @@ def get_argspec():
                     'name': {
                         'type': 'str',
                     }
+                },
+                'rib': {
+                    'type': 'dict',
+                    'exact': {
+                        'type': 'str',
+                    },
+                    'reachable': {
+                        'type': 'str',
+                    },
+                    'unreachable': {
+                        'type': 'str',
+                    }
                 }
             },
             'ipv6': {
@@ -508,6 +520,18 @@ def get_argspec():
                         'type': 'int',
                     },
                     'name': {
+                        'type': 'str',
+                    }
+                },
+                'rib': {
+                    'type': 'dict',
+                    'exact': {
+                        'type': 'str',
+                    },
+                    'reachable': {
+                        'type': 'str',
+                    },
+                    'unreachable': {
                         'type': 'str',
                     }
                 }

@@ -56,7 +56,7 @@ options:
         required: False
     action:
         description:
-        - "'enable'= enable VCS; 'disable'= disable VCS;"
+        - "'disable'= disable VCS; 'enable'= enable VCS;"
         type: str
         required: False
     uuid:
@@ -149,7 +149,7 @@ def get_argspec():
     rv.update({
         'action': {
             'type': 'str',
-            'choices': ['enable', 'disable']
+            'choices': ['disable', 'enable']
         },
         'uuid': {
             'type': 'str',

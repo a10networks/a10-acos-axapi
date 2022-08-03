@@ -57,7 +57,7 @@ options:
         required: False
     frag_timeout:
         description:
-        - "in milliseconds 4 - 16000 (default is 1000)"
+        - "in milliseconds 4 - 65535 (default is 60000)"
         type: int
         required: False
     uuid:
@@ -98,7 +98,8 @@ options:
           'ipd-entry-drop'= DDoS Protection Drop; 'max-packets-exceeded'= Too Many
           Packets Per Reassembly Drop; 'session-packets-exceeded'= Session Max Packets
           Exceeded; 'frag-session-count'= Fragmentation Session Count; 'sctp-rcv'= SCTP
-          Received; 'sctp-dropped'= SCTP Dropped;"
+          Received; 'sctp-dropped'= SCTP Dropped; 'first-gtp-packet-too-small'= First GTP
+          Fragment Too Small Drop;"
                 type: str
     stats:
         description:
@@ -286,6 +287,10 @@ options:
                 description:
                 - "SCTP Dropped"
                 type: str
+            first_gtp_packet_too_small:
+                description:
+                - "First GTP Fragment Too Small Drop"
+                type: str
 
 '''
 
@@ -402,7 +407,8 @@ def get_argspec():
                     'high-cpu-threshold', 'low-cpu-threshold',
                     'cpu-threshold-drop', 'ipd-entry-drop',
                     'max-packets-exceeded', 'session-packets-exceeded',
-                    'frag-session-count', 'sctp-rcv', 'sctp-dropped'
+                    'frag-session-count', 'sctp-rcv', 'sctp-dropped',
+                    'first-gtp-packet-too-small'
                 ]
             }
         },
@@ -541,6 +547,9 @@ def get_argspec():
                 'type': 'str',
             },
             'sctp_dropped': {
+                'type': 'str',
+            },
+            'first_gtp_packet_too_small': {
                 'type': 'str',
             }
         }

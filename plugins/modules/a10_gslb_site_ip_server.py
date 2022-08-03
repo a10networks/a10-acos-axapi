@@ -70,16 +70,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        type: list
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'hits'= Number of times the IP was selected;"
-                type: str
     oper:
         description:
         - "Field oper"
@@ -177,7 +167,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "ip_server_name",
     "oper",
-    "sampling_enable",
     "stats",
     "uuid",
 ]
@@ -214,13 +203,6 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-            }
         },
         'oper': {
             'type': 'dict',

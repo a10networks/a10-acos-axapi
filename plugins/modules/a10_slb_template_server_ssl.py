@@ -82,6 +82,11 @@ options:
                 description:
                 - "Specify service-group (Service group name)"
                 type: str
+    server_name:
+        description:
+        - "Specify Server Name"
+        type: str
+        required: False
     crl_certs:
         description:
         - "Field crl_certs"
@@ -96,16 +101,6 @@ options:
                 description:
                 - "Certificate Revocation Lists Partition Shared"
                 type: bool
-    cert:
-        description:
-        - "Certificate Name"
-        type: str
-        required: False
-    cert_shared_str:
-        description:
-        - "Certificate Name"
-        type: str
-        required: False
     cipher_without_prio_list:
         description:
         - "Field cipher_without_prio_list"
@@ -193,7 +188,7 @@ options:
     version:
         description:
         - "TLS/SSL version, default is the highest number supported (TLS/SSL version=
-          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
+          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1, 33-TLSv1.2 and 34-TLSv1.3)"
         type: int
         required: False
     dgversion:
@@ -221,43 +216,6 @@ options:
     sslilogging:
         description:
         - "'disable'= Disable all logging; 'all'= enable all logging(error, info);"
-        type: str
-        required: False
-    dh_short_key_action:
-        description:
-        - "'none'= no change; 'prepend'= prepend dh key; 'regenerate'= regenerate dh key;"
-        type: str
-        required: False
-    key:
-        description:
-        - "Key Name"
-        type: str
-        required: False
-    passphrase:
-        description:
-        - "Password Phrase"
-        type: str
-        required: False
-    encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        type: str
-        required: False
-    key_shared_str:
-        description:
-        - "Key Name"
-        type: str
-        required: False
-    key_shared_passphrase:
-        description:
-        - "Password Phrase"
-        type: str
-        required: False
-    key_shared_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
         type: str
         required: False
     ocsp_stapling:
@@ -306,6 +264,11 @@ options:
         - "Enable SSLi FTP over TLS support at which port"
         type: int
         required: False
+    early_data:
+        description:
+        - "Enable TLS 1.3 early data (0-RTT)"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -316,6 +279,37 @@ options:
         - "Customized tag"
         type: str
         required: False
+    certificate:
+        description:
+        - "Field certificate"
+        type: dict
+        required: False
+        suboptions:
+            cert:
+                description:
+                - "Certificate Name"
+                type: str
+            key:
+                description:
+                - "Client private-key (Key Name)"
+                type: str
+            passphrase:
+                description:
+                - "Password Phrase"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+            shared:
+                description:
+                - "Client Certificate and Key Partition Shared"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -373,30 +367,24 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "alert_type",
     "ca_certs",
-    "cert",
-    "cert_shared_str",
+    "certificate",
     "cipher_template",
     "cipher_without_prio_list",
     "close_notify",
     "crl_certs",
     "dgversion",
-    "dh_short_key_action",
     "dh_type",
+    "early_data",
     "ec_list",
     "enable_ssli_ftp_alg",
     "enable_tls_alert_logging",
-    "encrypted",
     "forward_proxy_enable",
     "handshake_logging_enable",
-    "key",
-    "key_shared_encrypted",
-    "key_shared_passphrase",
-    "key_shared_str",
     "name",
     "ocsp_stapling",
-    "passphrase",
     "renegotiation_disable",
     "server_certificate_error",
+    "server_name",
     "session_cache_size",
     "session_cache_timeout",
     "session_ticket_enable",
@@ -455,6 +443,9 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'server_name': {
+            'type': 'str',
+        },
         'crl_certs': {
             'type': 'list',
             'crl': {
@@ -463,12 +454,6 @@ def get_argspec():
             'crl_partition_shared': {
                 'type': 'bool',
             }
-        },
-        'cert': {
-            'type': 'str',
-        },
-        'cert_shared_str': {
-            'type': 'str',
         },
         'cipher_without_prio_list': {
             'type': 'list',
@@ -554,28 +539,6 @@ def get_argspec():
             'type': 'str',
             'choices': ['disable', 'all']
         },
-        'dh_short_key_action': {
-            'type': 'str',
-            'choices': ['none', 'prepend', 'regenerate']
-        },
-        'key': {
-            'type': 'str',
-        },
-        'passphrase': {
-            'type': 'str',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'key_shared_str': {
-            'type': 'str',
-        },
-        'key_shared_passphrase': {
-            'type': 'str',
-        },
-        'key_shared_encrypted': {
-            'type': 'str',
-        },
         'ocsp_stapling': {
             'type': 'bool',
         },
@@ -603,11 +566,35 @@ def get_argspec():
         'enable_ssli_ftp_alg': {
             'type': 'int',
         },
+        'early_data': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
+        },
+        'certificate': {
+            'type': 'dict',
+            'cert': {
+                'type': 'str',
+            },
+            'key': {
+                'type': 'str',
+            },
+            'passphrase': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
+            'shared': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

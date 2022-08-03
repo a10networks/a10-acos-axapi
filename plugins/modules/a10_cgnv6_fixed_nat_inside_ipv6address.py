@@ -130,6 +130,12 @@ options:
                 description:
                 - "Configure a numeric offset to the first NAT IP address"
                 type: int
+    skip_ports_on_rollover:
+        description:
+        - "Not using the first block of ports for NAT IPs smaller than the configured
+          offset"
+        type: bool
+        required: False
     ports_per_user:
         description:
         - "Configure Ports per Inside User (ports-per-user)"
@@ -235,6 +241,7 @@ AVAILABLE_PROPERTIES = [
     "ports_per_user",
     "respond_to_user_mac",
     "session_quota",
+    "skip_ports_on_rollover",
     "usable_nat_ports",
     "uuid",
     "vrid",
@@ -315,6 +322,9 @@ def get_argspec():
             'numeric_offset': {
                 'type': 'int',
             }
+        },
+        'skip_ports_on_rollover': {
+            'type': 'bool',
         },
         'ports_per_user': {
             'type': 'int',

@@ -177,6 +177,9 @@ def get_argspec():
                 'vlan_info': {
                     'type': 'str',
                 },
+                'encap_info': {
+                    'type': 'str',
+                },
                 'state': {
                     'type': 'str',
                 },
@@ -202,6 +205,9 @@ def get_argspec():
                     'type': 'str',
                 },
                 'intf_name': {
+                    'type': 'str',
+                },
+                'unnumbered_oper': {
                     'type': 'str',
                 }
             }

@@ -80,6 +80,12 @@ options:
         - "Field start_delay"
         type: int
         required: False
+    cluster_mode:
+        description:
+        - "'layer-2'= Nodes in cluster are layer 2 connected (default mode); 'layer-3'=
+          Nodes in cluster are l3 connected;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -111,9 +117,53 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    session_sync_interface:
+    traffic_redirection:
         description:
-        - "Field session_sync_interface"
+        - "Field traffic_redirection"
+        type: dict
+        required: False
+        suboptions:
+            follow_shared:
+                description:
+                - "Follow shared partition for redirection"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            interfaces:
+                description:
+                - "Field interfaces"
+                type: dict
+            reachability_options:
+                description:
+                - "Field reachability_options"
+                type: dict
+    session_sync:
+        description:
+        - "Field session_sync"
+        type: dict
+        required: False
+        suboptions:
+            follow_shared:
+                description:
+                - "Follow shared partition for session sync"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            interfaces:
+                description:
+                - "Field interfaces"
+                type: dict
+            reachability_options:
+                description:
+                - "Field reachability_options"
+                type: dict
+    exclude_interfaces:
+        description:
+        - "Field exclude_interfaces"
         type: dict
         required: False
         suboptions:
@@ -129,6 +179,10 @@ options:
                 description:
                 - "Field ve_cfg"
                 type: list
+            loopback_cfg:
+                description:
+                - "Field loopback_cfg"
+                type: list
             uuid:
                 description:
                 - "uuid of the object"
@@ -142,6 +196,10 @@ options:
             template_list:
                 description:
                 - "Field template_list"
+                type: list
+            multi_template_list:
+                description:
+                - "Field multi_template_list"
                 type: list
 
 '''
@@ -199,12 +257,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "action",
+    "cluster_mode",
+    "exclude_interfaces",
     "id",
     "l2_redirect",
     "priority",
-    "session_sync_interface",
+    "session_sync",
     "start_delay",
     "tracking_template",
+    "traffic_redirection",
     "uuid",
 ]
 
@@ -247,6 +308,10 @@ def get_argspec():
         'start_delay': {
             'type': 'int',
         },
+        'cluster_mode': {
+            'type': 'str',
+            'choices': ['layer-2', 'layer-3']
+        },
         'uuid': {
             'type': 'str',
         },
@@ -268,7 +333,103 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'session_sync_interface': {
+        'traffic_redirection': {
+            'type': 'dict',
+            'follow_shared': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'interfaces': {
+                'type': 'dict',
+                'eth_cfg': {
+                    'type': 'list',
+                    'ethernet': {
+                        'type': 'str',
+                    }
+                },
+                'trunk_cfg': {
+                    'type': 'list',
+                    'trunk': {
+                        'type': 'int',
+                    }
+                },
+                've_cfg': {
+                    'type': 'list',
+                    've': {
+                        'type': 'int',
+                    }
+                },
+                'loopback_cfg': {
+                    'type': 'list',
+                    'loopback': {
+                        'type': 'int',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'reachability_options': {
+                'type': 'dict',
+                'skip_default_route': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'session_sync': {
+            'type': 'dict',
+            'follow_shared': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'interfaces': {
+                'type': 'dict',
+                'eth_cfg': {
+                    'type': 'list',
+                    'ethernet': {
+                        'type': 'str',
+                    }
+                },
+                'trunk_cfg': {
+                    'type': 'list',
+                    'trunk': {
+                        'type': 'int',
+                    }
+                },
+                've_cfg': {
+                    'type': 'list',
+                    've': {
+                        'type': 'int',
+                    }
+                },
+                'loopback_cfg': {
+                    'type': 'list',
+                    'loopback': {
+                        'type': 'int',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'reachability_options': {
+                'type': 'dict',
+                'skip_default_route': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'exclude_interfaces': {
             'type': 'dict',
             'eth_cfg': {
                 'type': 'list',
@@ -285,6 +446,12 @@ def get_argspec():
             've_cfg': {
                 'type': 'list',
                 've': {
+                    'type': 'int',
+                }
+            },
+            'loopback_cfg': {
+                'type': 'list',
+                'loopback': {
                     'type': 'int',
                 }
             },
@@ -309,6 +476,35 @@ def get_argspec():
                         'type': 'str',
                         'choices': ['down', 'exit-cluster']
                     }
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            },
+            'multi_template_list': {
+                'type': 'list',
+                'multi_template': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'template': {
+                    'type': 'list',
+                    'template_name': {
+                        'type': 'str',
+                    },
+                    'partition_name': {
+                        'type': 'str',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'action': {
+                    'type': 'str',
+                    'choices': ['down', 'exit-cluster']
                 },
                 'uuid': {
                     'type': 'str',

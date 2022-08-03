@@ -65,6 +65,18 @@ options:
         - "Name for the interface"
         type: str
         required: False
+    port_scan_detection:
+        description:
+        - "'enable'= Enable port scan detection; 'disable'= Disable port scan
+          detection(default);"
+        type: str
+        required: False
+    ping_sweep_detection:
+        description:
+        - "'enable'= Enabl ping sweep detection; 'disable'= Disable ping sweep
+          detection(default);"
+        type: str
+        required: False
     l3_vlan_fwd_disable:
         description:
         - "Field l3_vlan_fwd_disable"
@@ -95,10 +107,31 @@ options:
         - "turn off the FEC"
         type: bool
         required: False
+    port_breakout:
+        description:
+        - "'4x10G'= Breakout 100G/40G ports into 4x10G ports; '4x25G'= Breakout 100G ports
+          into 4x25G ports; '2x50G'= Breakout 100G ports into 2x50G ports;"
+        type: str
+        required: False
+    speed_forced_1g:
+        description:
+        - "force the speed to be 1G on 25G link"
+        type: bool
+        required: False
+    speed_forced_10g:
+        description:
+        - "force the speed to be 10G on 25G link"
+        type: bool
+        required: False
     speed_forced_40g:
         description:
         - "force the speed to be 40G on 100G link"
         type: bool
+        required: False
+    ipg_bit_time:
+        description:
+        - "Set Inter-packet-gap interval in bit timing, default is 96"
+        type: int
         required: False
     remove_vlan_tag:
         description:
@@ -212,6 +245,27 @@ options:
           l4-src-port; 'l4-dst-port'= l4-dst-port;"
         type: str
         required: False
+    virtual_wire:
+        description:
+        - "Mark ethernet as a virtual wire interface"
+        type: bool
+        required: False
+    update_l2_info:
+        description:
+        - "Update and use received L2 information"
+        type: bool
+        required: False
+    vlan_learning:
+        description:
+        - "'enable'= Enable VLAN learning; 'disable'= Disable VLAN learning;"
+        type: str
+        required: False
+    mac_learning:
+        description:
+        - "'enable'= Enable MAC learning; 'disable'= Disable MAC learning; 'dmac-only'=
+          Enable destination MAC learning only;"
+        type: str
+        required: False
     access_list:
         description:
         - "Field access_list"
@@ -256,6 +310,11 @@ options:
           Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec;
           'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     lldp:
         description:
         - "Field lldp"
@@ -337,6 +396,10 @@ options:
             ttl_ignore:
                 description:
                 - "Ignore TTL decrement for a received packet before sending out"
+                type: bool
+            syn_cookie:
+                description:
+                - "Configure Enable SYN-cookie on the interface"
                 type: bool
             slb_partition_redirect:
                 description:
@@ -636,6 +699,32 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    spanning_tree:
+        description:
+        - "Field spanning_tree"
+        type: dict
+        required: False
+        suboptions:
+            auto_edge:
+                description:
+                - "Enable auto-edge"
+                type: bool
+            admin_edge:
+                description:
+                - "Enable admin-edge"
+                type: bool
+            instance_list:
+                description:
+                - "Field instance_list"
+                type: list
+            path_cost:
+                description:
+                - "Path cost (Limit)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -750,9 +839,21 @@ options:
                 description:
                 - "Field tagged_vlan_list"
                 type: str
+            span_mode:
+                description:
+                - "Field span_mode"
+                type: str
+            span_port_state:
+                description:
+                - "Field span_port_state"
+                type: str
             is_lead_member:
                 description:
                 - "Field is_lead_member"
+                type: int
+            is_blocked:
+                description:
+                - "Field is_blocked"
                 type: int
             current_vnp_id:
                 description:
@@ -810,6 +911,34 @@ options:
                 description:
                 - "Field outgoing_pkts_monitored"
                 type: int
+            ip_unnumbered_oper:
+                description:
+                - "Field ip_unnumbered_oper"
+                type: int
+            ip_unnumbered_enabled:
+                description:
+                - "Field ip_unnumbered_enabled"
+                type: int
+            ip_unnumbered_mac_learned:
+                description:
+                - "Field ip_unnumbered_mac_learned"
+                type: int
+            ip_unnumbered_peer_lla:
+                description:
+                - "Field ip_unnumbered_peer_lla"
+                type: str
+            last_count_clear_at:
+                description:
+                - "Field last_count_clear_at"
+                type: str
+            last_up_event_at:
+                description:
+                - "Field last_up_event_at"
+                type: str
+            last_down_event_at:
+                description:
+                - "Field last_down_event_at"
+                type: str
             ifnum:
                 description:
                 - "Ethernet interface number"
@@ -986,12 +1115,14 @@ AVAILABLE_PROPERTIES = [
     "icmpv6_rate_limit",
     "ifnum",
     "ip",
+    "ipg_bit_time",
     "ipv6",
     "isis",
     "l3_vlan_fwd_disable",
     "lldp",
     "load_interval",
     "lw_4o6",
+    "mac_learning",
     "map",
     "media_type_copper",
     "monitor_list",
@@ -999,16 +1130,26 @@ AVAILABLE_PROPERTIES = [
     "name",
     "nptv6",
     "oper",
+    "packet_capture_template",
+    "ping_sweep_detection",
+    "port_breakout",
+    "port_scan_detection",
     "remove_vlan_tag",
     "sampling_enable",
+    "spanning_tree",
     "speed",
+    "speed_forced_10g",
+    "speed_forced_1g",
     "speed_forced_40g",
     "stats",
     "traffic_distribution_mode",
     "trap_source",
     "trunk_group_list",
+    "update_l2_info",
     "user_tag",
     "uuid",
+    "virtual_wire",
+    "vlan_learning",
 ]
 
 
@@ -1044,6 +1185,14 @@ def get_argspec():
         'name': {
             'type': 'str',
         },
+        'port_scan_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'ping_sweep_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
         'l3_vlan_fwd_disable': {
             'type': 'bool',
         },
@@ -1062,8 +1211,21 @@ def get_argspec():
         'fec_forced_off': {
             'type': 'bool',
         },
+        'port_breakout': {
+            'type': 'str',
+            'choices': ['4x10G', '4x25G', '2x50G']
+        },
+        'speed_forced_1g': {
+            'type': 'bool',
+        },
+        'speed_forced_10g': {
+            'type': 'bool',
+        },
         'speed_forced_40g': {
             'type': 'bool',
+        },
+        'ipg_bit_time': {
+            'type': 'int',
         },
         'remove_vlan_tag': {
             'type': 'bool',
@@ -1143,6 +1305,20 @@ def get_argspec():
             'choices':
             ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
         },
+        'virtual_wire': {
+            'type': 'bool',
+        },
+        'update_l2_info': {
+            'type': 'bool',
+        },
+        'vlan_learning': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'mac_learning': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'dmac-only']
+        },
         'access_list': {
             'type': 'dict',
             'acl_id': {
@@ -1174,6 +1350,9 @@ def get_argspec():
                     'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'lldp': {
             'type': 'dict',
@@ -1283,6 +1462,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'ttl_ignore': {
+                'type': 'bool',
+            },
+            'syn_cookie': {
                 'type': 'bool',
             },
             'slb_partition_redirect': {
@@ -2151,6 +2333,30 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'spanning_tree': {
+            'type': 'dict',
+            'auto_edge': {
+                'type': 'bool',
+            },
+            'admin_edge': {
+                'type': 'bool',
+            },
+            'instance_list': {
+                'type': 'list',
+                'instance_start': {
+                    'type': 'int',
+                },
+                'mstp_path_cost': {
+                    'type': 'int',
+                }
+            },
+            'path_cost': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
             'state': {
@@ -2261,7 +2467,16 @@ def get_argspec():
             'tagged_vlan_list': {
                 'type': 'str',
             },
+            'span_mode': {
+                'type': 'str',
+            },
+            'span_port_state': {
+                'type': 'str',
+            },
             'is_lead_member': {
+                'type': 'int',
+            },
+            'is_blocked': {
                 'type': 'int',
             },
             'current_vnp_id': {
@@ -2305,6 +2520,27 @@ def get_argspec():
             },
             'outgoing_pkts_monitored': {
                 'type': 'int',
+            },
+            'ip_unnumbered_oper': {
+                'type': 'int',
+            },
+            'ip_unnumbered_enabled': {
+                'type': 'int',
+            },
+            'ip_unnumbered_mac_learned': {
+                'type': 'int',
+            },
+            'ip_unnumbered_peer_lla': {
+                'type': 'str',
+            },
+            'last_count_clear_at': {
+                'type': 'str',
+            },
+            'last_up_event_at': {
+                'type': 'str',
+            },
+            'last_down_event_at': {
+                'type': 'str',
             },
             'ifnum': {
                 'type': 'str',

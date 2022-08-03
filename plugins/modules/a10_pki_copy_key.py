@@ -61,7 +61,7 @@ options:
         required: False
     rotation:
         description:
-        - "Specify rotation number of SCEP generated key file"
+        - "Specify rotation number of SCEP/CMP generated key file"
         type: int
         required: False
     dest_key:

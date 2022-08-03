@@ -66,6 +66,10 @@ options:
         type: dict
         required: False
         suboptions:
+            dhcp:
+                description:
+                - "Use DHCP to configure IP address"
+                type: bool
             ip_cfg:
                 description:
                 - "Field ip_cfg"
@@ -230,6 +234,9 @@ def get_argspec():
     rv.update({
         'address': {
             'type': 'dict',
+            'dhcp': {
+                'type': 'bool',
+            },
             'ip_cfg': {
                 'type': 'list',
                 'ipv4_address': {

@@ -70,6 +70,11 @@ options:
           self-standby;"
         type: str
         required: False
+    skip_check:
+        description:
+        - "skip single device check"
+        type: bool
+        required: False
 
 '''
 
@@ -127,6 +132,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "action",
     "all_partitions",
+    "skip_check",
     "vrid",
 ]
 
@@ -163,6 +169,9 @@ def get_argspec():
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable']
+        },
+        'skip_check': {
+            'type': 'bool',
         }
     })
     return rv

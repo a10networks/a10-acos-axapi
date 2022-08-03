@@ -121,6 +121,14 @@ options:
                 description:
                 - "Specify the Kerbros password change port, default is 464"
                 type: int
+            kdc_validate:
+                description:
+                - "Enable KDC validation"
+                type: bool
+            kerberos_kdc_validation:
+                description:
+                - "Field kerberos_kdc_validation"
+                type: dict
     realm:
         description:
         - "Specify realm of Windows server"
@@ -171,8 +179,15 @@ options:
           'ntlm_prepare_req_success'= NTLM Prepare Request Success;
           'ntlm_prepare_req_error'= NTLM Prepare Request Error; 'ntlm_auth_success'= NTLM
           Authentication Success; 'ntlm_auth_failure'= NTLM Authentication Failure;
-          'ntlm_timeout_error'= NTLM Timeout; 'ntlm_other_error'= NTLM Other Error;"
+          'ntlm_timeout_error'= NTLM Timeout; 'ntlm_other_error'= NTLM Other Error;
+          'krb_validate_kdc_success'= Kerberos KDC Validation Success;
+          'krb_validate_kdc_failure'= Kerberos KDC Validation Failure;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -247,6 +262,14 @@ options:
                 description:
                 - "NTLM Other Error"
                 type: str
+            krb_validate_kdc_success:
+                description:
+                - "Kerberos KDC Validation Success"
+                type: str
+            krb_validate_kdc_failure:
+                description:
+                - "Kerberos KDC Validation Failure"
+                type: str
             name:
                 description:
                 - "Specify Windows authentication server name"
@@ -312,6 +335,7 @@ AVAILABLE_PROPERTIES = [
     "health_check_string",
     "host",
     "name",
+    "packet_capture_template",
     "realm",
     "sampling_enable",
     "stats",
@@ -390,6 +414,27 @@ def get_argspec():
             },
             'kerberos_password_change_port': {
                 'type': 'int',
+            },
+            'kdc_validate': {
+                'type': 'bool',
+            },
+            'kerberos_kdc_validation': {
+                'type': 'dict',
+                'kdc_spn': {
+                    'type': 'str',
+                },
+                'kdc_account': {
+                    'type': 'str',
+                },
+                'kdc_password': {
+                    'type': 'bool',
+                },
+                'kdc_pwd': {
+                    'type': 'str',
+                },
+                'encrypted': {
+                    'type': 'str',
+                }
             }
         },
         'realm': {
@@ -423,9 +468,13 @@ def get_argspec():
                     'ntlm_session_setup_success', 'ntlm_session_setup_failure',
                     'ntlm_prepare_req_success', 'ntlm_prepare_req_error',
                     'ntlm_auth_success', 'ntlm_auth_failure',
-                    'ntlm_timeout_error', 'ntlm_other_error'
+                    'ntlm_timeout_error', 'ntlm_other_error',
+                    'krb_validate_kdc_success', 'krb_validate_kdc_failure'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',
@@ -478,6 +527,12 @@ def get_argspec():
                 'type': 'str',
             },
             'ntlm_other_error': {
+                'type': 'str',
+            },
+            'krb_validate_kdc_success': {
+                'type': 'str',
+            },
+            'krb_validate_kdc_failure': {
                 'type': 'str',
             },
             'name': {

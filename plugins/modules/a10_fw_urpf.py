@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_fw_urpf
 description:
-    - Enable Unicast Reverse Path Forwarding (Default= Disable)
+    - Unicast Reverse Path Forwarding (Default= loose)
 author: A10 Networks 2021
 options:
     state:
@@ -57,7 +57,8 @@ options:
         required: False
     status:
         description:
-        - "'strict'= Perform Strict Check;"
+        - "'loose'= Perform loose check; 'strict'= Perform strict check; 'disable'=
+          Disable check;"
         type: str
         required: False
     uuid:
@@ -152,7 +153,7 @@ def get_argspec():
     rv.update({
         'status': {
             'type': 'str',
-            'choices': ['strict']
+            'choices': ['loose', 'strict', 'disable']
         },
         'uuid': {
             'type': 'str',

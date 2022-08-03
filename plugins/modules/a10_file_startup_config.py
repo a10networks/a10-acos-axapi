@@ -65,19 +65,14 @@ options:
         - "startup-config local file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "startup-config file size in byte"
-        type: int
+        - "'import'= import;"
+        type: str
         required: False
     file_handle:
         description:
         - "full path of the uploaded file"
-        type: str
-        required: False
-    action:
-        description:
-        - "'import'= import;"
         type: str
         required: False
     dst_file:
@@ -176,7 +171,6 @@ AVAILABLE_PROPERTIES = [
     "file",
     "file_handle",
     "oper",
-    "size",
     "uuid",
 ]
 
@@ -212,15 +206,12 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
-        'file_handle': {
-            'type': 'str',
-        },
         'action': {
             'type': 'str',
             'choices': ['import']
+        },
+        'file_handle': {
+            'type': 'str',
         },
         'dst_file': {
             'type': 'str',

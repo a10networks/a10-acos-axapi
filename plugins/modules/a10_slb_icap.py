@@ -131,9 +131,9 @@ options:
         type: dict
         required: False
         suboptions:
-            l4_cpu_list:
+            icap_cpu_list:
                 description:
-                - "Field l4_cpu_list"
+                - "Field icap_cpu_list"
                 type: list
             cpu_count:
                 description:
@@ -697,7 +697,7 @@ def get_argspec():
         },
         'oper': {
             'type': 'dict',
-            'l4_cpu_list': {
+            'icap_cpu_list': {
                 'type': 'list',
                 'reqmod_request': {
                     'type': 'int',

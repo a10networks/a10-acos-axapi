@@ -65,10 +65,20 @@ options:
         - "Use management port to connect to GLM"
         type: bool
         required: False
+    host:
+        description:
+        - "Field host"
+        type: str
+        required: False
     enable_requests:
         description:
         - "Turn on periodic GLM license requests (default license retrieval interval is
           every 24 hours)"
+        type: bool
+        required: False
+    check_expiration:
+        description:
+        - "Field check_expiration"
         type: bool
         required: False
     allocate_bandwidth:
@@ -83,7 +93,14 @@ options:
         required: False
     enterprise:
         description:
-        - "Enter the ELM hostname or IP"
+        - "Enter the ELM hostname, IP or [IPV6]"
+        type: str
+        required: False
+    enterprise_request_type:
+        description:
+        - "'fqdn'= TLS verified with FQDN; 'self-signed'= TLS verified with self signed
+          certificate(Default); 'self-signed-pull-cert'= Request and use self signed
+          certificate;"
         type: str
         required: False
     port:
@@ -95,6 +112,16 @@ options:
         description:
         - "Helpful identifier for this appliance"
         type: str
+        required: False
+    burst:
+        description:
+        - "Enable Burst License"
+        type: bool
+        required: False
+    thunder_capacity_license:
+        description:
+        - "Field thunder_capacity_license"
+        type: bool
         required: False
     uuid:
         description:
@@ -111,6 +138,74 @@ options:
                 description:
                 - "Immediately send a single GLM license request"
                 type: bool
+    new_license:
+        description:
+        - "Field new_license"
+        type: dict
+        required: False
+        suboptions:
+            existing_org:
+                description:
+                - "Use existing account with organization ID"
+                type: bool
+            org_id:
+                description:
+                - "GLM organization id"
+                type: int
+            existing_user:
+                description:
+                - "Use an existing account with email and password"
+                type: bool
+            glm_email:
+                description:
+                - "GLM email"
+                type: str
+            glm_password:
+                description:
+                - "GLM password"
+                type: str
+            new_user:
+                description:
+                - "Create a new account"
+                type: bool
+            new_email:
+                description:
+                - "GLM email"
+                type: str
+            new_password:
+                description:
+                - "GLM password"
+                type: str
+            account_name:
+                description:
+                - "Account Name"
+                type: str
+            first_name:
+                description:
+                - "First Name"
+                type: str
+            last_name:
+                description:
+                - "Last Name"
+                type: str
+            country:
+                description:
+                - "Country"
+                type: str
+            phone:
+                description:
+                - "Phone"
+                type: str
+            name:
+                description:
+                - "License name (Configure license name)"
+                type: str
+            ntype:
+                description:
+                - "'webroot'= webroot; 'webroot_trial'= webroot_trial; 'webroot_ti'= webroot_ti;
+          'webroot_ti_trial'= webroot_ti_trial; 'qosmos'= qosmos; 'qosmos_trial'=
+          qosmos_trial; 'ipsec_vpn'= ipsec_vpn;"
+                type: str
     proxy_server:
         description:
         - "Field proxy_server"
@@ -142,6 +237,20 @@ options:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
                 type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    create_license_request:
+        description:
+        - "Field create_license_request"
+        type: dict
+        required: False
+        suboptions:
+            create_license_request:
+                description:
+                - "Create a GLM trial or license request"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -203,12 +312,19 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "allocate_bandwidth",
     "appliance_name",
+    "burst",
+    "check_expiration",
+    "create_license_request",
     "enable_requests",
     "enterprise",
+    "enterprise_request_type",
+    "host",
     "interval",
+    "new_license",
     "port",
     "proxy_server",
     "send",
+    "thunder_capacity_license",
     "token",
     "use_mgmt_port",
     "uuid",
@@ -246,7 +362,13 @@ def get_argspec():
         'use_mgmt_port': {
             'type': 'bool',
         },
+        'host': {
+            'type': 'str',
+        },
         'enable_requests': {
+            'type': 'bool',
+        },
+        'check_expiration': {
             'type': 'bool',
         },
         'allocate_bandwidth': {
@@ -258,11 +380,21 @@ def get_argspec():
         'enterprise': {
             'type': 'str',
         },
+        'enterprise_request_type': {
+            'type': 'str',
+            'choices': ['fqdn', 'self-signed', 'self-signed-pull-cert']
+        },
         'port': {
             'type': 'int',
         },
         'appliance_name': {
             'type': 'str',
+        },
+        'burst': {
+            'type': 'bool',
+        },
+        'thunder_capacity_license': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
@@ -271,6 +403,59 @@ def get_argspec():
             'type': 'dict',
             'license_request': {
                 'type': 'bool',
+            }
+        },
+        'new_license': {
+            'type': 'dict',
+            'existing_org': {
+                'type': 'bool',
+            },
+            'org_id': {
+                'type': 'int',
+            },
+            'existing_user': {
+                'type': 'bool',
+            },
+            'glm_email': {
+                'type': 'str',
+            },
+            'glm_password': {
+                'type': 'str',
+            },
+            'new_user': {
+                'type': 'bool',
+            },
+            'new_email': {
+                'type': 'str',
+            },
+            'new_password': {
+                'type': 'str',
+            },
+            'account_name': {
+                'type': 'str',
+            },
+            'first_name': {
+                'type': 'str',
+            },
+            'last_name': {
+                'type': 'str',
+            },
+            'country': {
+                'type': 'str',
+            },
+            'phone': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+            },
+            'ntype': {
+                'type':
+                'str',
+                'choices': [
+                    'webroot', 'webroot_trial', 'webroot_ti',
+                    'webroot_ti_trial', 'qosmos', 'qosmos_trial', 'ipsec_vpn'
+                ]
             }
         },
         'proxy_server': {
@@ -292,6 +477,15 @@ def get_argspec():
             },
             'encrypted': {
                 'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'create_license_request': {
+            'type': 'dict',
+            'create_license_request': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',

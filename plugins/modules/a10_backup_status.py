@@ -74,6 +74,14 @@ options:
                 description:
                 - "Field message"
                 type: str
+            size:
+                description:
+                - "Field size"
+                type: int
+            progress:
+                description:
+                - "Field progress"
+                type: int
 
 '''
 
@@ -169,6 +177,12 @@ def get_argspec():
             },
             'message': {
                 'type': 'str',
+            },
+            'size': {
+                'type': 'int',
+            },
+            'progress': {
+                'type': 'int',
             }
         }
     })

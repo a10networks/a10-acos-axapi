@@ -146,6 +146,11 @@ options:
         - "send reset to client when server is down"
         type: bool
         required: False
+    re_select_if_server_down:
+        description:
+        - "re-select another server if service port is down"
+        type: bool
+        required: False
     del_session_on_server_down:
         description:
         - "Delete session if the server/port goes down (either disabled/hm down)"
@@ -231,6 +236,7 @@ AVAILABLE_PROPERTIES = [
     "logging",
     "name",
     "qos",
+    "re_select_if_server_down",
     "reset_follow_fin",
     "reset_fwd",
     "reset_rev",
@@ -315,6 +321,9 @@ def get_argspec():
             'type': 'bool',
         },
         'down': {
+            'type': 'bool',
+        },
+        're_select_if_server_down': {
             'type': 'bool',
         },
         'del_session_on_server_down': {

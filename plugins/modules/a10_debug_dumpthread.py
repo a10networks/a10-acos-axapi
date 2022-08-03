@@ -54,6 +54,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    dumy:
+        description:
+        - "Dummy"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -114,6 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "dumy",
     "uuid",
 ]
 
@@ -140,9 +146,14 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {
-        'type': 'str',
-    }})
+    rv.update({
+        'dumy': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
 
 
@@ -166,10 +177,23 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["dumpthread"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["dumpthread"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["dumpthread"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):

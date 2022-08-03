@@ -82,6 +82,21 @@ options:
           AAAA Query to resolve FQDN;"
         type: str
         required: False
+    use_aam_server:
+        description:
+        - "Using aam server. For health check, please configure it in aam server"
+        type: bool
+        required: False
+    ethernet:
+        description:
+        - "ethernet interface"
+        type: str
+        required: False
+    trunk:
+        description:
+        - "trunk interface"
+        type: int
+        required: False
     action:
         description:
         - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server;
@@ -101,6 +116,21 @@ options:
     template_server:
         description:
         - "Server template (Server template name)"
+        type: str
+        required: False
+    shared_partition_server_template:
+        description:
+        - "Reference a server template from shared partition"
+        type: bool
+        required: False
+    template_server_shared:
+        description:
+        - "Server Template Name"
+        type: str
+        required: False
+    template_link_cost:
+        description:
+        - "Link-Cost template (Link-Cost template name)"
         type: str
         required: False
     health_check:
@@ -234,6 +264,14 @@ options:
                 description:
                 - "Port template (Port template name)"
                 type: str
+            shared_partition_port_template:
+                description:
+                - "Reference a port template from shared partition"
+                type: bool
+            template_port_shared:
+                description:
+                - "Port Template Name"
+                type: str
             template_server_ssl:
                 description:
                 - "Server side SSL template (Server side SSL Name)"
@@ -320,6 +358,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -369,6 +411,10 @@ options:
             disable:
                 description:
                 - "Field disable"
+                type: int
+            weight:
+                description:
+                - "Field weight"
                 type: int
             drs_list:
                 description:
@@ -523,6 +569,7 @@ AVAILABLE_PROPERTIES = [
     "alternate_server",
     "conn_limit",
     "conn_resume",
+    "ethernet",
     "extended_stats",
     "external_ip",
     "fqdn_name",
@@ -539,11 +586,16 @@ AVAILABLE_PROPERTIES = [
     "sampling_enable",
     "server_ipv6_addr",
     "shared_partition_health_check",
+    "shared_partition_server_template",
     "slow_start",
     "spoofing_cache",
     "stats",
     "stats_data_action",
+    "template_link_cost",
     "template_server",
+    "template_server_shared",
+    "trunk",
+    "use_aam_server",
     "user_tag",
     "uuid",
     "weight",
@@ -594,6 +646,15 @@ def get_argspec():
             'choices':
             ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
         },
+        'use_aam_server': {
+            'type': 'bool',
+        },
+        'ethernet': {
+            'type': 'str',
+        },
+        'trunk': {
+            'type': 'int',
+        },
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable', 'disable-with-health-check']
@@ -605,6 +666,15 @@ def get_argspec():
             'type': 'str',
         },
         'template_server': {
+            'type': 'str',
+        },
+        'shared_partition_server_template': {
+            'type': 'bool',
+        },
+        'template_server_shared': {
+            'type': 'str',
+        },
+        'template_link_cost': {
             'type': 'str',
         },
         'health_check': {
@@ -689,6 +759,12 @@ def get_argspec():
                 'type': 'int',
             },
             'template_port': {
+                'type': 'str',
+            },
+            'shared_partition_port_template': {
+                'type': 'bool',
+            },
+            'template_port_shared': {
                 'type': 'str',
             },
             'template_server_ssl': {
@@ -787,6 +863,9 @@ def get_argspec():
                         'curr_pconn'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'oper': {
@@ -828,6 +907,9 @@ def get_argspec():
                 'type': 'int',
             },
             'disable': {
+                'type': 'int',
+            },
+            'weight': {
                 'type': 'int',
             },
             'drs_list': {
@@ -909,6 +991,9 @@ def get_argspec():
                 },
                 'drs_peak_conn': {
                     'type': 'int',
+                },
+                'drs_weight': {
+                    'type': 'int',
                 }
             },
             'name': {
@@ -988,48 +1073,18 @@ def get_argspec():
                     'resv_conn': {
                         'type': 'int',
                     },
-                    'ip': {
-                        'type': 'str',
-                    },
-                    'ipv6': {
-                        'type': 'str',
-                    },
-                    'vrid': {
-                        'type': 'int',
-                    },
-                    'ha_group_id': {
-                        'type': 'int',
-                    },
-                    'ports_consumed': {
-                        'type': 'int',
-                    },
-                    'ports_consumed_total': {
-                        'type': 'int',
-                    },
-                    'ports_freed_total': {
-                        'type': 'int',
-                    },
-                    'alloc_failed': {
-                        'type': 'int',
-                    },
-                    'drs_auto_nat_list': {
+                    'auto_nat_addr_list': {
                         'type': 'list',
-                        'drs_name': {
-                            'type': 'str',
-                        },
-                        'drs_port': {
-                            'type': 'int',
-                        },
-                        'ip': {
-                            'type': 'str',
-                        },
-                        'ipv6': {
+                        'auto_nat_ip': {
                             'type': 'str',
                         },
                         'vrid': {
                             'type': 'int',
                         },
                         'ha_group_id': {
+                            'type': 'int',
+                        },
+                        'ip_rr': {
                             'type': 'int',
                         },
                         'ports_consumed': {
@@ -1043,6 +1098,42 @@ def get_argspec():
                         },
                         'alloc_failed': {
                             'type': 'int',
+                        }
+                    },
+                    'drs_auto_nat_list': {
+                        'type': 'list',
+                        'drs_name': {
+                            'type': 'str',
+                        },
+                        'drs_port': {
+                            'type': 'int',
+                        },
+                        'drs_auto_nat_address_list': {
+                            'type': 'list',
+                            'auto_nat_ip': {
+                                'type': 'str',
+                            },
+                            'vrid': {
+                                'type': 'int',
+                            },
+                            'ha_group_id': {
+                                'type': 'int',
+                            },
+                            'ip_rr': {
+                                'type': 'int',
+                            },
+                            'ports_consumed': {
+                                'type': 'int',
+                            },
+                            'ports_consumed_total': {
+                                'type': 'int',
+                            },
+                            'ports_freed_total': {
+                                'type': 'int',
+                            },
+                            'alloc_failed': {
+                                'type': 'int',
+                            }
                         }
                     },
                     'pool_name': {

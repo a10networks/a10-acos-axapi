@@ -140,6 +140,21 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    secure:
+        description:
+        - "Field secure"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'enable'= Enable Secure; 'disable'= Disable Secure (default); 'enable-
+          fallback'= Fall back to non-secure if fail;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -211,6 +226,7 @@ AVAILABLE_PROPERTIES = [
     "msg_format_acos_2x",
     "oper",
     "ping_site",
+    "secure",
     "status_interval",
     "use_mgmt_port",
     "use_mgmt_port_for_all_partitions",
@@ -299,6 +315,16 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'secure': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable', 'enable-fallback']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
             'session_list': {
@@ -356,6 +382,24 @@ def get_argspec():
                 },
                 'message_header_error': {
                     'type': 'int',
+                },
+                'secure_negotiation_success': {
+                    'type': 'int',
+                },
+                'secure_negotiation_fail': {
+                    'type': 'int',
+                },
+                'ssl_handshake_success': {
+                    'type': 'int',
+                },
+                'ssl_handshake_fail': {
+                    'type': 'int',
+                },
+                'secure_state': {
+                    'type': 'str',
+                },
+                'secure_config': {
+                    'type': 'str',
                 }
             }
         }

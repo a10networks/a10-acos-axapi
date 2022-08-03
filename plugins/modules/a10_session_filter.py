@@ -106,42 +106,62 @@ options:
             app_category:
                 description:
                 - "'aaa'= Protocol/application used for AAA (Authentification, Authorization and
-          Accounting) purposes.; 'adult-content'= Adult content.; 'advertising'=
-          Advertising networks and applications.; 'analytics-and-statistics'= user-
-          analytics and statistics.; 'anonymizers-and-proxies'= Traffic-anonymization
-          protocol/application.; 'audio-chat'= Protocol/application used for Audio Chat.;
-          'basic'= Protocols required for basic classification, e.g., ARP, HTTP; 'blog'=
-          Blogging platform.; 'cdn'= Protocol/application used for Content-Delivery
-          Networks.; 'chat'= Protocol/application used for Text Chat.; 'classified-ads'=
-          Protocol/application used for Classified ads.; 'cloud-based-services'= SaaS
-          and/or PaaS cloud based services.; 'crowdfunding'= Service for funding a
-          project or venture by raising small amounts of money from a large number of
-          people.; 'cryptocurrency'= Cryptocurrency.; 'database'= Database-specific
-          protocols.; 'disposable-email'= Disposable email accounts.; 'ebook-reader'=
-          Services for e-book readers.; 'email'= Native email protocol.; 'enterprise'=
+          Accounting) purposes.; 'adult-content'= Adult content protocol/application.;
+          'advertising'= Advertising networks and applications.; 'application-enforcing-
+          tls'= Application known to enforce HSTS and thus use of TLS.; 'analytics-and-
+          statistics'= User analytics and statistics protocol/application.; 'anonymizers-
+          and-proxies'= Traffic-anonymization protocol/application.; 'audio-chat'=
+          Protocol/application used for Audio Chat.; 'basic'= Covers all protocols
+          required for basic classification, including most networking protocols as well
+          as standard protocols like HTTP.; 'blog'= Blogging platform
+          protocol/application.; 'cdn'= Protocol/application used for Content-Delivery
+          Networks.; 'certification-authority'= Certification Authority for SSL/TLS
+          certificate.; 'chat'= Protocol/application used for Text Chat.; 'classified-
+          ads'= Protocol/application used for Classified Advertisements.; 'cloud-based-
+          services'= SaaS and/or PaaS cloud based services.; 'crowdfunding'= Service for
+          funding a project or venture by raising small amounts of money from a large
+          number of people, typically via the Internet.; 'cryptocurrency'= Services for
+          mining cryptocurrencies, for example a Crypto Web Browser (an application that
+          mines crypto currency in the background while its user browses the web).;
+          'database'= Database-specific protocols.; 'disposable-email'= Service offering
+          Disposable Email Accounts (DEA). DEA is a technique to share temporary email
+          address between many users.; 'ebook-reader'= Services for e-book readers, i.e.
+          connected devices that display electronic books (typically using e-ink displays
+          to reduce glare and eye strain).; 'education'= Protocols offering education
+          services and online courses.; 'email'= Native email protocol.; 'enterprise'=
           Protocol/application used in an enterprise network.; 'file-management'=
-          Protocol/application designed specifically for file management and exchange,
-          e.g., Dropbox, SMB; 'file-transfer'= Protocol that offers file transferring as
-          a functionality as a secondary feature. e.g., Skype, Whatsapp; 'forum'= Online
-          forum.; 'gaming'= Protocol/application used by games.; 'instant-messaging-and-
-          multimedia-conferencing'= Protocol/application used for Instant messaging or
-          multiconferencing.; 'internet-of-things'= Internet Of Things
-          protocol/application.; 'mobile'= Mobile-specific protocol/application.; 'map-
-          service'= Digital Maps service.; 'multimedia-streaming'= Protocol/application
-          used for multimedia streaming.; 'networking'= Protocol used for (inter)
-          networking purpose.; 'news-portal'= Protocol/application used for News
-          Portals.; 'peer-to-peer'= Protocol/application used for Peer-to-peer purposes.;
-          'remote-access'= Protocol/application used for remote access.; 'scada'= SCADA
-          (Supervisory control and data acquisition) protocols, all generations.;
-          'social-networks'= Social networking application.; 'software-update'= Auto-
-          update protocol.; 'standards-based'= Protocol issued from standardized bodies
-          such as IETF, ITU, IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-
-          chat'= Protocol/application used for Video Chat.; 'voip'= Application used for
-          Voice over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
+          Protocol/application designed specifically for file management and exchange.
+          This can include bona fide network protocols (like SMB) as well as web/cloud
+          services (like Dropbox).; 'file-transfer'= Protocol that offers file
+          transferring as a secondary feature. This typically includes IM, WebMail, and
+          other protocols that allow file transfers in addition to their principal
+          function.; 'forum'= Online forum protocol/application.; 'gaming'=
+          Protocol/application used by games.; 'healthcare'= Protocols offering medical
+          services, i.e protocols used in medical environment.; 'instant-messaging-and-
+          multimedia-conferencing'= Protocol/application used for Instant Messaging or
+          Multi-Conferencing.; 'internet-of-things'= Internet Of Things
+          protocol/application.; 'map-service'= Digital Maps service (web site and their
+          related API).; 'mobile'= Mobile-specific protocol/application.; 'multimedia-
+          streaming'= Protocol/application used for multimedia streaming.; 'networking'=
+          Protocol used for (inter) networking purpose.; 'news-portal'=
+          Protocol/application used for News Portals.; 'payment-service'= Application
+          offering online services for accepting electronic payments by a variety of
+          payment methods (credit card, bank-based payments such as direct debit, bank
+          transfer, etc).; 'peer-to-peer'= Protocol/application used for Peer-to-peer
+          purposes.; 'remote-access'= Protocol/application used for remote access.;
+          'scada'= SCADA (Supervisory control and data acquisition) protocols, all
+          generations.; 'social-networks'= Social networking application.; 'software-
+          update'= Auto-update protocol.; 'speedtest'= Speedtest application allowing to
+          access quality of Internet connection (upload, download, latency, etc).;
+          'standards-based'= Protocol issued from standardized bodies such as IETF, ITU,
+          IEEE, ETSI, OIF.; 'transportation'= Transportation services, for example
+          smartphone applications that allow users to hail a taxi.; 'video-chat'=
+          Protocol/application used for Video Chat.; 'voip'= Application used for Voice-
+          Over-IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
           purposes.; 'web'= Application based on HTTP/HTTPS.; 'web-e-commerce'=
           Protocol/application used for E-commerce websites.; 'web-search-engines'=
           Protocol/application used for Web search portals.; 'web-websites'=
-          Protocol/application used for Company Websites.; 'webmails'= Web email
+          Protocol/application used for Company Websites.; 'webmails'= Web-based e-mail
           application.; 'web-ext-adult'= Web Extension Adult; 'web-ext-auctions'= Web
           Extension Auctions; 'web-ext-blogs'= Web Extension Blogs; 'web-ext-business-
           and-economy'= Web Extension Business and Economy; 'web-ext-cdns'= Web Extension
@@ -307,21 +327,22 @@ def get_argspec():
                 'str',
                 'choices': [
                     'aaa', 'adult-content', 'advertising',
-                    'analytics-and-statistics', 'anonymizers-and-proxies',
-                    'audio-chat', 'basic', 'blog', 'cdn', 'chat',
-                    'classified-ads', 'cloud-based-services', 'crowdfunding',
-                    'cryptocurrency', 'database', 'disposable-email',
-                    'ebook-reader', 'email', 'enterprise', 'file-management',
-                    'file-transfer', 'forum', 'gaming',
+                    'application-enforcing-tls', 'analytics-and-statistics',
+                    'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog',
+                    'cdn', 'certification-authority', 'chat', 'classified-ads',
+                    'cloud-based-services', 'crowdfunding', 'cryptocurrency',
+                    'database', 'disposable-email', 'ebook-reader',
+                    'education', 'email', 'enterprise', 'file-management',
+                    'file-transfer', 'forum', 'gaming', 'healthcare',
                     'instant-messaging-and-multimedia-conferencing',
-                    'internet-of-things', 'mobile', 'map-service',
+                    'internet-of-things', 'map-service', 'mobile',
                     'multimedia-streaming', 'networking', 'news-portal',
-                    'peer-to-peer', 'remote-access', 'scada',
-                    'social-networks', 'software-update', 'standards-based',
-                    'transportation', 'video-chat', 'voip', 'vpn-tunnels',
-                    'web', 'web-e-commerce', 'web-search-engines',
-                    'web-websites', 'webmails', 'web-ext-adult',
-                    'web-ext-auctions', 'web-ext-blogs',
+                    'payment-service', 'peer-to-peer', 'remote-access',
+                    'scada', 'social-networks', 'software-update', 'speedtest',
+                    'standards-based', 'transportation', 'video-chat', 'voip',
+                    'vpn-tunnels', 'web', 'web-e-commerce',
+                    'web-search-engines', 'web-websites', 'webmails',
+                    'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs',
                     'web-ext-business-and-economy', 'web-ext-cdns',
                     'web-ext-collaboration',
                     'web-ext-computer-and-internet-info',

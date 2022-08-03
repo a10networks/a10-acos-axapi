@@ -267,6 +267,12 @@ def get_argspec():
                 },
                 'cleaned_entry': {
                     'type': 'str',
+                },
+                'rsp_type_stream': {
+                    'type': 'str',
+                },
+                'header_save_error': {
+                    'type': 'str',
                 }
             }
         }

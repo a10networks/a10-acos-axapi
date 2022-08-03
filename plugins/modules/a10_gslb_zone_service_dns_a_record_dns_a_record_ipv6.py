@@ -120,16 +120,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        type: list
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'hits'= Number of times the record has been used;"
-                type: str
     stats:
         description:
         - "Field stats"
@@ -205,7 +195,6 @@ AVAILABLE_PROPERTIES = [
     "disable",
     "dns_a_record_ipv6",
     "no_resp",
-    "sampling_enable",
     "static",
     "stats",
     "ttl",
@@ -270,13 +259,6 @@ def get_argspec():
         'uuid': {
             'type': 'str',
         },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-            }
-        },
         'stats': {
             'type': 'dict',
             'hits': {
@@ -301,7 +283,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service-name}/dns-a-record/dns-a-record-ipv6/{dns-a-record-ipv6}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service_name}/dns-a-record/dns-a-record-ipv6/{dns-a-record-ipv6}"
 
     f_dict = {}
     f_dict["dns-a-record-ipv6"] = module.params["dns_a_record_ipv6"]
@@ -315,7 +297,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service-name}/dns-a-record/dns-a-record-ipv6/{dns-a-record-ipv6}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service_name}/dns-a-record/dns-a-record-ipv6/{dns-a-record-ipv6}"
 
     f_dict = {}
     f_dict["dns-a-record-ipv6"] = ""

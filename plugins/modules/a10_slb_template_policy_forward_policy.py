@@ -150,6 +150,18 @@ options:
                 description:
                 - "Source NAT pool or pool group for fallback server"
                 type: str
+            proxy_chaining:
+                description:
+                - "Enable proxy chaining feature"
+                type: bool
+            proxy_chaining_bypass:
+                description:
+                - "Forward all https packets to upstream proxy"
+                type: bool
+            support_cert_fetch:
+                description:
+                - "Fetch server certificate by upstream proxy"
+                type: bool
             log:
                 description:
                 - "enable logging"
@@ -383,6 +395,15 @@ def get_argspec():
             'fall_back_snat': {
                 'type': 'str',
             },
+            'proxy_chaining': {
+                'type': 'bool',
+            },
+            'proxy_chaining_bypass': {
+                'type': 'bool',
+            },
+            'support_cert_fetch': {
+                'type': 'bool',
+            },
             'log': {
                 'type': 'bool',
             },
@@ -462,6 +483,33 @@ def get_argspec():
                     'ntype': {
                         'type': 'str',
                         'choices': ['host', 'url', 'ip']
+                    },
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'hits']
+                        }
+                    }
+                },
+                'web_reputation_scope_list': {
+                    'type': 'list',
+                    'web_reputation_scope': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'action': {
+                        'type': 'str',
+                    },
+                    'ntype': {
+                        'type': 'str',
+                        'choices': ['host', 'url']
                     },
                     'priority': {
                         'type': 'int',

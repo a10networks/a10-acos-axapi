@@ -65,10 +65,11 @@ options:
         - "ssl certificate local file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "ssl certificate file size in byte"
-        type: int
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
+          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
         required: False
     file_handle:
         description:
@@ -88,12 +89,6 @@ options:
     pfx_password_export:
         description:
         - "The password for exported certificate file (pfx type only)"
-        type: str
-        required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
         type: str
         required: False
     dst_file:
@@ -183,7 +178,6 @@ AVAILABLE_PROPERTIES = [
     "oper",
     "pfx_password",
     "pfx_password_export",
-    "size",
     "uuid",
 ]
 
@@ -219,8 +213,13 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
+        'action': {
+            'type':
+            'str',
+            'choices': [
+                'create', 'import', 'export', 'copy', 'rename', 'check',
+                'replace', 'delete'
+            ]
         },
         'file_handle': {
             'type': 'str',
@@ -234,14 +233,6 @@ def get_argspec():
         },
         'pfx_password_export': {
             'type': 'str',
-        },
-        'action': {
-            'type':
-            'str',
-            'choices': [
-                'create', 'import', 'export', 'copy', 'rename', 'check',
-                'replace', 'delete'
-            ]
         },
         'dst_file': {
             'type': 'str',

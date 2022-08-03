@@ -106,6 +106,16 @@ options:
         - "Specify the threshold for limit"
         type: int
         required: False
+    proto_aging_time:
+        description:
+        - "Specify GSLB Protocol aging time"
+        type: int
+        required: False
+    proto_aging_fast:
+        description:
+        - "Fast GSLB Protocol aging"
+        type: bool
+        required: False
     controller:
         description:
         - "Specify the local controller for the GSLB site (Specify the hostname of the
@@ -122,16 +132,6 @@ options:
         - "Customized tag"
         type: str
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        type: list
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'hits'= Number of times the site was selected;"
-                type: str
     ip_server_list:
         description:
         - "Field ip_server_list"
@@ -146,10 +146,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-                type: list
     active_rdt:
         description:
         - "Field active_rdt"
@@ -176,6 +172,10 @@ options:
                 description:
                 - "Client IP subnet mask, default is 32"
                 type: str
+            ipv6_mask:
+                description:
+                - "Client IPv6 subnet mask, default is 128"
+                type: int
             ignore_count:
                 description:
                 - "Ignore count if RDT is out of range, default is 5"
@@ -218,6 +218,10 @@ options:
                 description:
                 - "Client IP subnet mask, default is 32"
                 type: str
+            ipv6_mask:
+                description:
+                - "Client IPv6 subnet mask, default is 128"
+                type: int
             ignore_count:
                 description:
                 - "Ignore count if RDT is out of range, default is 5"
@@ -248,11 +252,27 @@ options:
                 description:
                 - "IP address"
                 type: str
+            ipv6_address:
+                description:
+                - "IPv6 address"
+                type: str
             admin_preference:
                 description:
                 - "Specify administrative preference (Specify admin-preference value,default is
           100)"
                 type: int
+            session_number:
+                description:
+                - "Field session_number"
+                type: int
+            session_utilization:
+                description:
+                - "Field session_utilization"
+                type: int
+            rdt_type:
+                description:
+                - "'rdt'= rdt; 'site-rdt'= site-rdt;"
+                type: str
             client_ip:
                 description:
                 - "Specify client IP address"
@@ -260,6 +280,10 @@ options:
             rdt_value:
                 description:
                 - "Specify Round-delay-time"
+                type: int
+            probe_timer:
+                description:
+                - "Field probe_timer"
                 type: int
             auto_detect:
                 description:
@@ -432,7 +456,8 @@ AVAILABLE_PROPERTIES = [
     "limit",
     "multiple_geo_locations",
     "oper",
-    "sampling_enable",
+    "proto_aging_fast",
+    "proto_aging_time",
     "site_name",
     "slb_dev_list",
     "stats",
@@ -500,6 +525,12 @@ def get_argspec():
         'threshold': {
             'type': 'int',
         },
+        'proto_aging_time': {
+            'type': 'int',
+        },
+        'proto_aging_fast': {
+            'type': 'bool',
+        },
         'controller': {
             'type': 'str',
         },
@@ -509,13 +540,6 @@ def get_argspec():
         'user_tag': {
             'type': 'str',
         },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-            }
-        },
         'ip_server_list': {
             'type': 'list',
             'ip_server_name': {
@@ -524,13 +548,6 @@ def get_argspec():
             },
             'uuid': {
                 'type': 'str',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type': 'str',
-                    'choices': ['all', 'hits']
-                }
             }
         },
         'active_rdt': {
@@ -549,6 +566,9 @@ def get_argspec():
             },
             'mask': {
                 'type': 'str',
+            },
+            'ipv6_mask': {
+                'type': 'int',
             },
             'ignore_count': {
                 'type': 'int',
@@ -580,6 +600,9 @@ def get_argspec():
             'mask': {
                 'type': 'str',
             },
+            'ipv6_mask': {
+                'type': 'int',
+            },
             'ignore_count': {
                 'type': 'int',
             },
@@ -602,13 +625,29 @@ def get_argspec():
             'ip_address': {
                 'type': 'str',
             },
+            'ipv6_address': {
+                'type': 'str',
+            },
             'admin_preference': {
                 'type': 'int',
+            },
+            'session_number': {
+                'type': 'int',
+            },
+            'session_utilization': {
+                'type': 'int',
+            },
+            'rdt_type': {
+                'type': 'str',
+                'choices': ['rdt', 'site-rdt']
             },
             'client_ip': {
                 'type': 'str',
             },
             'rdt_value': {
+                'type': 'int',
+            },
+            'probe_timer': {
                 'type': 'int',
             },
             'auto_detect': {

@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    message_id_scope_route:
+        description:
+        - Key to identify parent object
+        type: str
+        required: True
     message_id_log_msg:
         description:
         - Key to identify parent object
@@ -172,16 +177,21 @@ def get_argspec():
         }
     })
     # Parent keys
-    rv.update(dict(message_id_log_msg=dict(type='str', required=True), ))
+    rv.update(
+        dict(
+            message_id_scope_route=dict(type='str', required=True),
+            message_id_log_msg=dict(type='str', required=True),
+        ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/acos-events/message-id/{message_id_log_msg}/property/severity"
+    url_base = "/axapi/v3/acos-events/message-id/{message_id_log_msg}+{message_id_scope_route}/property/severity"
 
     f_dict = {}
+    f_dict["message_id_scope_route"] = module.params["message_id_scope_route"]
     f_dict["message_id_log_msg"] = module.params["message_id_log_msg"]
 
     return url_base.format(**f_dict)
@@ -190,9 +200,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/acos-events/message-id/{message_id_log_msg}/property/severity"
+    url_base = "/axapi/v3/acos-events/message-id/{message_id_log_msg}+{message_id_scope_route}/property/severity"
 
     f_dict = {}
+    f_dict["message_id_scope_route"] = module.params["message_id_scope_route"]
     f_dict["message_id_log_msg"] = module.params["message_id_log_msg"]
 
     return url_base.format(**f_dict)

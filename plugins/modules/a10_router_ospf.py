@@ -76,6 +76,11 @@ options:
         - "Compatible with RFC 1583"
         type: bool
         required: False
+    extern_lsa_equivalence_check:
+        description:
+        - "external LSA equivalance check"
+        type: bool
+        required: False
     default_metric:
         description:
         - "Set metric of redistributed routes (Default metric)"
@@ -535,6 +540,7 @@ AVAILABLE_PROPERTIES = [
     "distance",
     "distribute_internal_list",
     "distribute_lists",
+    "extern_lsa_equivalence_check",
     "ha_standby_extra_cost",
     "host_list",
     "log_adjacency_changes_cfg",
@@ -592,6 +598,9 @@ def get_argspec():
             'type': 'bool',
         },
         'rfc1583_compatible': {
+            'type': 'bool',
+        },
+        'extern_lsa_equivalence_check': {
             'type': 'bool',
         },
         'default_metric': {

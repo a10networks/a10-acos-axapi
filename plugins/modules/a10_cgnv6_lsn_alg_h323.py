@@ -108,6 +108,14 @@ options:
                 description:
                 - "H323 FastStart"
                 type: str
+            parse_error:
+                description:
+                - "Message Parse Error"
+                type: str
+            tcp_out_of_order_drop:
+                description:
+                - "TCP Out-of-Order Drop"
+                type: str
 
 '''
 
@@ -231,6 +239,12 @@ def get_argspec():
                 'type': 'str',
             },
             'fast_start': {
+                'type': 'str',
+            },
+            'parse_error': {
+                'type': 'str',
+            },
+            'tcp_out_of_order_drop': {
                 'type': 'str',
             }
         }

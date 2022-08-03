@@ -96,15 +96,26 @@ options:
           dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info
           Allocation Failed; 'sctp-session-created'= SCTP Session Created; 'sctp-session-
           deleted'= SCTP Session Deleted; 'log_type_sctp_inner_proto_filter'= Log Event
-          Type SCTP Inner Proto Filter; 'log_type_gtp_message_filtering'= Log Event Type
-          GTP Message Filtering; 'log_type_gtp_apn_filtering'= Log Event Type GTP Apn
-          Filtering; 'tcp-logging-port-allocated'= TCP Logging Port Allocated; 'tcp-
-          logging-port-freed'= TCP Logging Port Freed; 'tcp-logging-port-allocation-
-          failed'= TCP Logging Port Allocation Failed; 'log_type_gtp_invalid_teid'= Log
-          Event Type GTP Invalid TEID; 'log_gtp_type_reserved_ie_present'= Log Event Type
-          GTP Reserved Information Element Present; 'log_type_gtp_mandatory_ie_missing'=
-          Log Event Type GTP Mandatory Information Element Missing;"
+          Type SCTP Inner Proto Filter; 'tcp-logging-port-allocated'= TCP Logging Port
+          Allocated; 'tcp-logging-port-freed'= TCP Logging Port Freed; 'tcp-logging-port-
+          allocation-failed'= TCP Logging Port Allocation Failed; 'iddos-blackhole-entry-
+          create'= iDDoS IP Entry Created; 'iddos-blackhole-entry-delete'= iDDoS IP Entry
+          Deleted; 'session-limit-exceeded'= Session Limit Exceeded;"
                 type: str
+    gtp:
+        description:
+        - "Field gtp"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     stats:
         description:
         - "Field stats"
@@ -199,26 +210,22 @@ options:
                 description:
                 - "Log Event Type SCTP Inner Proto Filter"
                 type: str
-            log_type_gtp_message_filtering:
+            iddos_blackhole_entry_create:
                 description:
-                - "Log Event Type GTP Message Filtering"
+                - "iDDoS IP Entry Created"
                 type: str
-            log_type_gtp_apn_filtering:
+            iddos_blackhole_entry_delete:
                 description:
-                - "Log Event Type GTP Apn Filtering"
+                - "iDDoS IP Entry Deleted"
                 type: str
-            log_type_gtp_invalid_teid:
+            session_limit_exceeded:
                 description:
-                - "Log Event Type GTP Invalid TEID"
+                - "Session Limit Exceeded"
                 type: str
-            log_gtp_type_reserved_ie_present:
+            gtp:
                 description:
-                - "Log Event Type GTP Reserved Information Element Present"
-                type: str
-            log_type_gtp_mandatory_ie_missing:
-                description:
-                - "Log Event Type GTP Mandatory Information Element Missing"
-                type: str
+                - "Field gtp"
+                type: dict
 
 '''
 
@@ -274,6 +281,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "gtp",
     "name",
     "sampling_enable",
     "stats",
@@ -337,14 +345,51 @@ def get_argspec():
                     'http-out-of-order-dropped', 'http-alloc-failed',
                     'sctp-session-created', 'sctp-session-deleted',
                     'log_type_sctp_inner_proto_filter',
-                    'log_type_gtp_message_filtering',
-                    'log_type_gtp_apn_filtering', 'tcp-logging-port-allocated',
-                    'tcp-logging-port-freed',
+                    'tcp-logging-port-allocated', 'tcp-logging-port-freed',
                     'tcp-logging-port-allocation-failed',
-                    'log_type_gtp_invalid_teid',
-                    'log_gtp_type_reserved_ie_present',
-                    'log_type_gtp_mandatory_ie_missing'
+                    'iddos-blackhole-entry-create',
+                    'iddos-blackhole-entry-delete', 'session-limit-exceeded'
                 ]
+            }
+        },
+        'gtp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'log_type_gtp_invalid_teid',
+                        'log_gtp_type_reserved_ie_present',
+                        'log_type_gtp_mandatory_ie_missing',
+                        'log_type_gtp_mandatory_ie_inside_grouped_ie_missing',
+                        'log_type_gtp_msisdn_filtering',
+                        'log_type_gtp_out_of_order_ie',
+                        'log_type_gtp_out_of_state_ie',
+                        'log_type_enduser_ip_spoofed',
+                        'log_type_crosslayer_correlation',
+                        'log_type_message_not_supported',
+                        'log_type_out_of_state', 'log_type_max_msg_length',
+                        'log_type_gtp_message_filtering',
+                        'log_type_gtp_apn_filtering',
+                        'log_type_gtp_rat_type_filtering',
+                        'log_type_country_code_mismatch',
+                        'log_type_gtp_in_gtp_filtering',
+                        'log_type_gtp_node_restart',
+                        'log_type_gtp_seq_num_mismatch',
+                        'log_type_gtp_rate_limit_periodic',
+                        'log_type_gtp_rate_limit_periodic',
+                        'log_type_gtp_rate_limit_periodic',
+                        'log_type_gtp_rate_limit_periodic',
+                        'log_type_gtp_rate_limit_periodic',
+                        'log_type_gtp_rate_limit_periodic',
+                        'log_type_gtp_rate_limit_periodic'
+                    ]
+                }
             }
         },
         'stats': {
@@ -415,20 +460,80 @@ def get_argspec():
             'log_type_sctp_inner_proto_filter': {
                 'type': 'str',
             },
-            'log_type_gtp_message_filtering': {
+            'iddos_blackhole_entry_create': {
                 'type': 'str',
             },
-            'log_type_gtp_apn_filtering': {
+            'iddos_blackhole_entry_delete': {
                 'type': 'str',
             },
-            'log_type_gtp_invalid_teid': {
+            'session_limit_exceeded': {
                 'type': 'str',
             },
-            'log_gtp_type_reserved_ie_present': {
-                'type': 'str',
-            },
-            'log_type_gtp_mandatory_ie_missing': {
-                'type': 'str',
+            'gtp': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'log_type_gtp_invalid_teid': {
+                        'type': 'str',
+                    },
+                    'log_gtp_type_reserved_ie_present': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_mandatory_ie_missing': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_mandatory_ie_inside_grouped_ie_missing': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_msisdn_filtering': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_out_of_order_ie': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_out_of_state_ie': {
+                        'type': 'str',
+                    },
+                    'log_type_enduser_ip_spoofed': {
+                        'type': 'str',
+                    },
+                    'log_type_crosslayer_correlation': {
+                        'type': 'str',
+                    },
+                    'log_type_message_not_supported': {
+                        'type': 'str',
+                    },
+                    'log_type_out_of_state': {
+                        'type': 'str',
+                    },
+                    'log_type_max_msg_length': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_message_filtering': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_apn_filtering': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_rat_type_filtering': {
+                        'type': 'str',
+                    },
+                    'log_type_country_code_mismatch': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_in_gtp_filtering': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_node_restart': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_seq_num_mismatch': {
+                        'type': 'str',
+                    },
+                    'log_type_gtp_rate_limit_periodic': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

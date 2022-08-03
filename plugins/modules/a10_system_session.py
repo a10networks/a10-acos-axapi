@@ -137,7 +137,21 @@ options:
           Total SSL Forward Proxy Username Bypass Count;
           'ssl_forward_proxy_ad_grpup_bypass_total'= Total SSL Forward Proxy AD-Group
           Bypass Count; 'diameter_concurrent_user_sessions_counter'= Diameter Concurrent
-          User-Sessions;"
+          User-Sessions; 'client_ssl_session_ticket_reuse_total'= Total SSL Client
+          Session Ticket Reuse; 'server_ssl_session_ticket_reuse_total'= Total SSL Server
+          Session Ticket Reuse; 'total_clientside_early_data_connections'= Total
+          clientside early data connections; 'total_serverside_early_data_connections'=
+          Total serverside early data connections; 'total_clientside_failed_early_data-
+          connections'= Total clientside failed early data connections;
+          'total_serverside_failed_early_data-connections'= Total serverside failed early
+          data connections; 'ssl_forward_proxy_esni_bypass_total'= Total SSL Forward
+          Proxy ESNI Bypass Count; 'ssl_forward_proxy_esni_reset_total'= Total SSL
+          Forward Proxy ESNI Drop Count; 'total_logging_conn'= Total Logging Conn;
+          'gtp_c_est_counter'= GTP-C Established; 'gtp_c_half_open_counter'= GTP-C Half
+          Open; 'gtp_u_counter'= GTP-U Count; 'gtp_c_echo_counter'= GTP-C Echo Count;
+          'gtp_u_echo_counter'= GTP-U Echo Count; 'gtp_curr_free_conn'= GTP Current
+          Available Conn; 'gtp_cum_conn_counter'= GTP cumulative Conn Count;
+          'gtp_cum_conn_freed_counter'= GTP cumulative Conn Freed;"
                 type: str
     stats:
         description:
@@ -373,6 +387,66 @@ options:
                 description:
                 - "Diameter Concurrent User-Sessions"
                 type: str
+            client_ssl_session_ticket_reuse_total:
+                description:
+                - "Total SSL Client Session Ticket Reuse"
+                type: str
+            server_ssl_session_ticket_reuse_total:
+                description:
+                - "Total SSL Server Session Ticket Reuse"
+                type: str
+            total_clientside_early_data_connections:
+                description:
+                - "Total clientside early data connections"
+                type: str
+            total_serverside_early_data_connections:
+                description:
+                - "Total serverside early data connections"
+                type: str
+            total_clientside_failed_early_data_connections:
+                description:
+                - "Total clientside failed early data connections"
+                type: str
+            total_serverside_failed_early_data_connections:
+                description:
+                - "Total serverside failed early data connections"
+                type: str
+            total_logging_conn:
+                description:
+                - "Total Logging Conn"
+                type: str
+            gtp_c_est_counter:
+                description:
+                - "GTP-C Established"
+                type: str
+            gtp_c_half_open_counter:
+                description:
+                - "GTP-C Half Open"
+                type: str
+            gtp_u_counter:
+                description:
+                - "GTP-U Count"
+                type: str
+            gtp_c_echo_counter:
+                description:
+                - "GTP-C Echo Count"
+                type: str
+            gtp_u_echo_counter:
+                description:
+                - "GTP-U Echo Count"
+                type: str
+            gtp_curr_free_conn:
+                description:
+                - "GTP Current Available Conn"
+                type: str
+            gtp_cum_conn_counter:
+                description:
+                - "GTP cumulative Conn Count"
+                type: str
+            gtp_cum_conn_freed_counter:
+                description:
+                - "GTP cumulative Conn Freed"
+                type: str
 
 '''
 
@@ -517,7 +591,19 @@ def get_argspec():
                     'ssl_forward_proxy_no_sni_reset_total',
                     'ssl_forward_proxy_username_bypass_total',
                     'ssl_forward_proxy_ad_grpup_bypass_total',
-                    'diameter_concurrent_user_sessions_counter'
+                    'diameter_concurrent_user_sessions_counter',
+                    'client_ssl_session_ticket_reuse_total',
+                    'server_ssl_session_ticket_reuse_total',
+                    'total_clientside_early_data_connections',
+                    'total_serverside_early_data_connections',
+                    'total_clientside_failed_early_data-connections',
+                    'total_serverside_failed_early_data-connections',
+                    'ssl_forward_proxy_esni_bypass_total',
+                    'ssl_forward_proxy_esni_reset_total', 'total_logging_conn',
+                    'gtp_c_est_counter', 'gtp_c_half_open_counter',
+                    'gtp_u_counter', 'gtp_c_echo_counter',
+                    'gtp_u_echo_counter', 'gtp_curr_free_conn',
+                    'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter'
                 ]
             }
         },
@@ -692,6 +778,51 @@ def get_argspec():
                 'type': 'str',
             },
             'diameter_concurrent_user_sessions_counter': {
+                'type': 'str',
+            },
+            'client_ssl_session_ticket_reuse_total': {
+                'type': 'str',
+            },
+            'server_ssl_session_ticket_reuse_total': {
+                'type': 'str',
+            },
+            'total_clientside_early_data_connections': {
+                'type': 'str',
+            },
+            'total_serverside_early_data_connections': {
+                'type': 'str',
+            },
+            'total_clientside_failed_early_data_connections': {
+                'type': 'str',
+            },
+            'total_serverside_failed_early_data_connections': {
+                'type': 'str',
+            },
+            'total_logging_conn': {
+                'type': 'str',
+            },
+            'gtp_c_est_counter': {
+                'type': 'str',
+            },
+            'gtp_c_half_open_counter': {
+                'type': 'str',
+            },
+            'gtp_u_counter': {
+                'type': 'str',
+            },
+            'gtp_c_echo_counter': {
+                'type': 'str',
+            },
+            'gtp_u_echo_counter': {
+                'type': 'str',
+            },
+            'gtp_curr_free_conn': {
+                'type': 'str',
+            },
+            'gtp_cum_conn_counter': {
+                'type': 'str',
+            },
+            'gtp_cum_conn_freed_counter': {
                 'type': 'str',
             }
         }

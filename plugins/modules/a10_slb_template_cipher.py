@@ -60,6 +60,22 @@ options:
         - "Cipher Template Name"
         type: str
         required: True
+    cipher13_cfg:
+        description:
+        - "Field cipher13_cfg"
+        type: list
+        required: False
+        suboptions:
+            cipher13_suite:
+                description:
+                - "'TLS_AES_256_GCM_SHA384'= TLS_AES_256_GCM_SHA384;
+          'TLS_CHACHA20_POLY1305_SHA256'= TLS_CHACHA20_POLY1305_SHA256;
+          'TLS_AES_128_GCM_SHA256'= TLS_AES_128_GCM_SHA256;"
+                type: str
+            priority:
+                description:
+                - "Cipher priority (Cipher priority (default 1))"
+                type: int
     cipher_cfg:
         description:
         - "Field cipher_cfg"
@@ -97,7 +113,10 @@ options:
           TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256;
           'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'=
           TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256;
-          'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256;"
+          'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256;
+          'TLS1_ECDHE_SM2_WITH_SMS4_SM3'= TLS1_ECDHE_SM2_WITH_SMS4_SM3;
+          'TLS1_ECDHE_SM2_WITH_SMS4_SHA256'= TLS1_ECDHE_SM2_WITH_SMS4_SHA256;
+          'TLS1_ECDHE_SM2_WITH_SMS4_GCM_SM3'= TLS1_ECDHE_SM2_WITH_SMS4_GCM_SM3;"
                 type: str
             priority:
                 description:
@@ -169,6 +188,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "cipher_cfg",
+    "cipher13_cfg",
     "name",
     "user_tag",
     "uuid",
@@ -204,6 +224,20 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'cipher13_cfg': {
+            'type': 'list',
+            'cipher13_suite': {
+                'type':
+                'str',
+                'choices': [
+                    'TLS_AES_256_GCM_SHA384', 'TLS_CHACHA20_POLY1305_SHA256',
+                    'TLS_AES_128_GCM_SHA256'
+                ]
+            },
+            'priority': {
+                'type': 'int',
+            }
+        },
         'cipher_cfg': {
             'type': 'list',
             'cipher_suite': {
@@ -234,7 +268,10 @@ def get_argspec():
                     'TLS1_ECDHE_ECDSA_AES_256_SHA384',
                     'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256',
                     'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256',
-                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
+                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_ECDHE_SM2_WITH_SMS4_SM3',
+                    'TLS1_ECDHE_SM2_WITH_SMS4_SHA256',
+                    'TLS1_ECDHE_SM2_WITH_SMS4_GCM_SM3'
                 ]
             },
             'priority': {

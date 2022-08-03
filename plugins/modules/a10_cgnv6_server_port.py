@@ -206,38 +206,26 @@ options:
                 description:
                 - "Field resv_conn"
                 type: int
-            ip:
+            auto_nat_addr_list:
                 description:
-                - "Field ip"
+                - "Field auto_nat_addr_list"
+                type: list
+            drs_auto_nat_list:
+                description:
+                - "Field drs_auto_nat_list"
+                type: list
+            pool_name:
+                description:
+                - "Field pool_name"
                 type: str
-            ipv6:
+            nat_pool_addr_list:
                 description:
-                - "Field ipv6"
-                type: str
-            vrid:
+                - "Field nat_pool_addr_list"
+                type: list
+            drs_ip_nat_list:
                 description:
-                - "Field vrid"
-                type: int
-            ha_group_id:
-                description:
-                - "Field ha_group_id"
-                type: int
-            ports_consumed:
-                description:
-                - "Field ports_consumed"
-                type: int
-            ports_consumed_total:
-                description:
-                - "Field ports_consumed_total"
-                type: int
-            ports_freed_total:
-                description:
-                - "Field ports_freed_total"
-                type: int
-            alloc_failed:
-                description:
-                - "Field alloc_failed"
-                type: int
+                - "Field drs_ip_nat_list"
+                type: list
             port_number:
                 description:
                 - "Port Number"
@@ -563,29 +551,119 @@ def get_argspec():
             'resv_conn': {
                 'type': 'int',
             },
-            'ip': {
+            'auto_nat_addr_list': {
+                'type': 'list',
+                'auto_nat_ip': {
+                    'type': 'str',
+                },
+                'vrid': {
+                    'type': 'int',
+                },
+                'ha_group_id': {
+                    'type': 'int',
+                },
+                'ip_rr': {
+                    'type': 'int',
+                },
+                'ports_consumed': {
+                    'type': 'int',
+                },
+                'ports_consumed_total': {
+                    'type': 'int',
+                },
+                'ports_freed_total': {
+                    'type': 'int',
+                },
+                'alloc_failed': {
+                    'type': 'int',
+                }
+            },
+            'drs_auto_nat_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'drs_auto_nat_address_list': {
+                    'type': 'list',
+                    'auto_nat_ip': {
+                        'type': 'str',
+                    },
+                    'vrid': {
+                        'type': 'int',
+                    },
+                    'ha_group_id': {
+                        'type': 'int',
+                    },
+                    'ip_rr': {
+                        'type': 'int',
+                    },
+                    'ports_consumed': {
+                        'type': 'int',
+                    },
+                    'ports_consumed_total': {
+                        'type': 'int',
+                    },
+                    'ports_freed_total': {
+                        'type': 'int',
+                    },
+                    'alloc_failed': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'pool_name': {
                 'type': 'str',
             },
-            'ipv6': {
-                'type': 'str',
+            'nat_pool_addr_list': {
+                'type': 'list',
+                'nat_ip': {
+                    'type': 'str',
+                },
+                'ports_consumed': {
+                    'type': 'int',
+                },
+                'ports_consumed_total': {
+                    'type': 'int',
+                },
+                'ports_freed_total': {
+                    'type': 'int',
+                },
+                'alloc_failed': {
+                    'type': 'int',
+                }
             },
-            'vrid': {
-                'type': 'int',
-            },
-            'ha_group_id': {
-                'type': 'int',
-            },
-            'ports_consumed': {
-                'type': 'int',
-            },
-            'ports_consumed_total': {
-                'type': 'int',
-            },
-            'ports_freed_total': {
-                'type': 'int',
-            },
-            'alloc_failed': {
-                'type': 'int',
+            'drs_ip_nat_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'pool_name': {
+                    'type': 'str',
+                },
+                'nat_pool_addr_list': {
+                    'type': 'list',
+                    'nat_ip': {
+                        'type': 'str',
+                    },
+                    'ports_consumed': {
+                        'type': 'int',
+                    },
+                    'ports_consumed_total': {
+                        'type': 'int',
+                    },
+                    'ports_freed_total': {
+                        'type': 'int',
+                    },
+                    'alloc_failed': {
+                        'type': 'int',
+                    }
+                }
             },
             'port_number': {
                 'type': 'int',

@@ -133,6 +133,11 @@ options:
           OCSP Stapling Unknown Certificate Response; 'stapling-timeout'= OCSP Stapling
           Timeout; 'stapling-fail'= Handle OCSP response failed;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -251,6 +256,7 @@ AVAILABLE_PROPERTIES = [
     "health_check_string",
     "http_version",
     "name",
+    "packet_capture_template",
     "port_health_check",
     "port_health_check_disable",
     "responder_ca",
@@ -340,6 +346,9 @@ def get_argspec():
                     'stapling-fail'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

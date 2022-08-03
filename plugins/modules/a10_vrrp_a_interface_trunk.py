@@ -75,11 +75,16 @@ options:
         - "both a router and server interface"
         type: bool
         required: False
-    vlan:
+    vlan_cfg:
         description:
-        - "VLAN ID"
-        type: int
+        - "Field vlan_cfg"
+        type: list
         required: False
+        suboptions:
+            vlan:
+                description:
+                - "VLAN ID"
+                type: int
     no_heartbeat:
         description:
         - "do not send out heartbeat packet from this interface"
@@ -157,7 +162,7 @@ AVAILABLE_PROPERTIES = [
     "trunk_val",
     "user_tag",
     "uuid",
-    "vlan",
+    "vlan_cfg",
 ]
 
 
@@ -199,8 +204,11 @@ def get_argspec():
         'both': {
             'type': 'bool',
         },
-        'vlan': {
-            'type': 'int',
+        'vlan_cfg': {
+            'type': 'list',
+            'vlan': {
+                'type': 'int',
+            }
         },
         'no_heartbeat': {
             'type': 'bool',

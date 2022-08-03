@@ -201,6 +201,10 @@ options:
                 description:
                 - "Field peer"
                 type: dict
+            rib:
+                description:
+                - "Field rib"
+                type: dict
     ipv6:
         description:
         - "Field ipv6"
@@ -218,6 +222,10 @@ options:
             peer_1:
                 description:
                 - "Field peer_1"
+                type: dict
+            rib:
+                description:
+                - "Field rib"
                 type: dict
     metric:
         description:
@@ -486,6 +494,18 @@ def get_argspec():
                 'name': {
                     'type': 'str',
                 }
+            },
+            'rib': {
+                'type': 'dict',
+                'exact': {
+                    'type': 'str',
+                },
+                'reachable': {
+                    'type': 'str',
+                },
+                'unreachable': {
+                    'type': 'str',
+                }
             }
         },
         'ipv6': {
@@ -523,6 +543,18 @@ def get_argspec():
                     'type': 'int',
                 },
                 'name': {
+                    'type': 'str',
+                }
+            },
+            'rib': {
+                'type': 'dict',
+                'exact': {
+                    'type': 'str',
+                },
+                'reachable': {
+                    'type': 'str',
+                },
+                'unreachable': {
                     'type': 'str',
                 }
             }

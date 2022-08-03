@@ -125,7 +125,15 @@ options:
           'self_grat_nat_ip_arp_drop'= Self generated grat ARP PKT dropped for NAT IP;
           'ip_not_found_arp_drop'= ARP PKT dropped due to IP not found;
           'dev_link_down_arp_drop'= ARP PKT dropped due to interface is down;
-          'lacp_tx_intf_err_drop'= LACP interface error corrected;"
+          'lacp_tx_intf_err_drop'= LACP interface error corrected; 'service_chain_sent'=
+          Service Chain Packets Sent; 'service_chain_rcvd'= Service Chain Packets Rcvd;
+          'unnumbered_nat_error'= Unnumbered NAT error; 'unnumbered_unsupported_drop'=
+          Unsupported protocol for unnumbered; 'ipv6frag_gre_dropped'= IPv6 Frag gre
+          Drop; 'ipv6_ndisc_dad_prefix_mismatch_drop'= IPv6 DAD on Advertise drop for
+          prefix mismatch; 'bw_ignore_limit'= BW Limit ignored packets count;
+          'ppsl_drop_egr'= Packet-Per-Sec Limit Drop at egress; 'ppsl_drop_ing'= Packet-
+          Per-Sec Limit Drop at ingress; 'ppsl_ignore_limit'= Packet-Per-Sec Limit
+          ignored packets count;"
                 type: str
     stats:
         description:
@@ -497,6 +505,46 @@ options:
                 description:
                 - "LACP interface error corrected"
                 type: str
+            service_chain_sent:
+                description:
+                - "Service Chain Packets Sent"
+                type: str
+            service_chain_rcvd:
+                description:
+                - "Service Chain Packets Rcvd"
+                type: str
+            unnumbered_nat_error:
+                description:
+                - "Unnumbered NAT error"
+                type: str
+            unnumbered_unsupported_drop:
+                description:
+                - "Unsupported protocol for unnumbered"
+                type: str
+            ipv6frag_gre_dropped:
+                description:
+                - "IPv6 Frag gre Drop"
+                type: str
+            ipv6_ndisc_dad_prefix_mismatch_drop:
+                description:
+                - "IPv6 DAD on Advertise drop for prefix mismatch"
+                type: str
+            bw_ignore_limit:
+                description:
+                - "BW Limit ignored packets count"
+                type: str
+            ppsl_drop_egr:
+                description:
+                - "Packet-Per-Sec Limit Drop at egress"
+                type: str
+            ppsl_drop_ing:
+                description:
+                - "Packet-Per-Sec Limit Drop at ingress"
+                type: str
+            ppsl_ignore_limit:
+                description:
+                - "Packet-Per-Sec Limit ignored packets count"
+                type: str
 
 '''
 
@@ -632,7 +680,11 @@ def get_argspec():
                     'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop',
                     'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop',
                     'ip_not_found_arp_drop', 'dev_link_down_arp_drop',
-                    'lacp_tx_intf_err_drop'
+                    'lacp_tx_intf_err_drop', 'service_chain_sent',
+                    'service_chain_rcvd', 'unnumbered_nat_error',
+                    'unnumbered_unsupported_drop', 'ipv6frag_gre_dropped',
+                    'ipv6_ndisc_dad_prefix_mismatch_drop', 'bw_ignore_limit',
+                    'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit'
                 ]
             }
         },
@@ -909,6 +961,36 @@ def get_argspec():
                 'type': 'str',
             },
             'lacp_tx_intf_err_drop': {
+                'type': 'str',
+            },
+            'service_chain_sent': {
+                'type': 'str',
+            },
+            'service_chain_rcvd': {
+                'type': 'str',
+            },
+            'unnumbered_nat_error': {
+                'type': 'str',
+            },
+            'unnumbered_unsupported_drop': {
+                'type': 'str',
+            },
+            'ipv6frag_gre_dropped': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_dad_prefix_mismatch_drop': {
+                'type': 'str',
+            },
+            'bw_ignore_limit': {
+                'type': 'str',
+            },
+            'ppsl_drop_egr': {
+                'type': 'str',
+            },
+            'ppsl_drop_ing': {
+                'type': 'str',
+            },
+            'ppsl_ignore_limit': {
                 'type': 'str',
             }
         }

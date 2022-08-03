@@ -57,8 +57,8 @@ options:
         required: False
     action:
         description:
-        - "'enable'= Enable persistent storage(default); 'disable'= Disable persistent
-          storage;"
+        - "'enable'= Enable persistent storage; 'disable'= Disable persistent
+          storage(default);"
         type: str
         required: False
     uuid:

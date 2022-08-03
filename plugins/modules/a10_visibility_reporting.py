@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    session_logging:
+        description:
+        - "'enable'= Enable session logging; 'disable'= Disable session logging(default);"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -187,6 +192,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "sampling_enable",
+    "session_logging",
     "stats",
     "telemetry_export_interval",
     "template",
@@ -219,6 +225,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'session_logging': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
         'uuid': {
             'type': 'str',
         },

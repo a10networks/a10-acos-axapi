@@ -122,6 +122,12 @@ options:
           Default is 120.)"
         type: int
         required: False
+    default_charset:
+        description:
+        - "'iso-8859-1'= Use ISO-8859-1 as the default charset; 'utf-8'= Use UTF-8 as the
+          default charset; 'us-ascii'= Use US-ASCII as the default charset;"
+        type: str
+        required: False
     max_concurrent_streams:
         description:
         - "(http2 only) Max concurrent streams, default 100"
@@ -472,6 +478,52 @@ options:
         - "Customized tag"
         type: str
         required: False
+    http_protocol_check:
+        description:
+        - "Field http_protocol_check"
+        type: dict
+        required: False
+        suboptions:
+            h2up_content_length_alias:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            malformed_h2up_header_value:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            malformed_h2up_scheme_value:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            h2up_with_transfer_encoding:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            multiple_content_length:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            multiple_transfer_encoding:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            transfer_encoding_and_content_length:
+                description:
+                - "'drop'= Drop the request and Send 400 to the client side;"
+                type: str
+            get_and_payload:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            h2up_with_host_and_auth:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -542,9 +594,11 @@ AVAILABLE_PROPERTIES = [
     "compression_minimum_content_length",
     "cookie_format",
     "cookie_samesite",
+    "default_charset",
     "failover_url",
     "frame_limit",
     "host_switching",
+    "http_protocol_check",
     "insert_client_ip",
     "insert_client_ip_header_name",
     "insert_client_port",
@@ -653,6 +707,10 @@ def get_argspec():
         },
         'compression_minimum_content_length': {
             'type': 'int',
+        },
+        'default_charset': {
+            'type': 'str',
+            'choices': ['iso-8859-1', 'utf-8', 'us-ascii']
         },
         'max_concurrent_streams': {
             'type': 'int',
@@ -876,6 +934,48 @@ def get_argspec():
         },
         'user_tag': {
             'type': 'str',
+        },
+        'http_protocol_check': {
+            'type': 'dict',
+            'h2up_content_length_alias': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'malformed_h2up_header_value': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'malformed_h2up_scheme_value': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'h2up_with_transfer_encoding': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'multiple_content_length': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'multiple_transfer_encoding': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'transfer_encoding_and_content_length': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'get_and_payload': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'h2up_with_host_and_auth': {
+                'type': 'str',
+                'choices': ['drop']
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

@@ -69,7 +69,7 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'num'= Num; 'curr'= Current proxy conns; 'total'= Total proxy
-          conns; 'svrsel_fail'= Server selection failure; 'no_route'= no_route;
+          conns; 'svrsel_fail'= Server selection failure; 'no_route'= no route failure;
           'snat_fail'= source nat failure; 'feat'= feat packet; 'cc'= clear ctrl port
           packet; 'data_ssl'= data ssl force; 'line_too_long'= line too long;
           'line_mem_freed'= request line freed; 'invalid_start_line'= invalid start line;
@@ -131,7 +131,7 @@ options:
                 type: str
             no_route:
                 description:
-                - "Field no_route"
+                - "no route failure"
                 type: str
             snat_fail:
                 description:

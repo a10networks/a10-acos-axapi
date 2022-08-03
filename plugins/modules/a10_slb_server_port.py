@@ -81,6 +81,16 @@ options:
         - "Port template (Port template name)"
         type: str
         required: False
+    shared_partition_port_template:
+        description:
+        - "Reference a port template from shared partition"
+        type: bool
+        required: False
+    template_port_shared:
+        description:
+        - "Port Template Name"
+        type: str
+        required: False
     template_server_ssl:
         description:
         - "Server side SSL template (Server side SSL Name)"
@@ -230,6 +240,11 @@ options:
           Response status Other; 'resp-latency'= Time to First Response Byte;
           'curr_pconn'= Current persistent connections;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     oper:
         description:
         - "Field oper"
@@ -308,38 +323,10 @@ options:
                 description:
                 - "Field resv_conn"
                 type: int
-            ip:
+            auto_nat_addr_list:
                 description:
-                - "Field ip"
-                type: str
-            ipv6:
-                description:
-                - "Field ipv6"
-                type: str
-            vrid:
-                description:
-                - "Field vrid"
-                type: int
-            ha_group_id:
-                description:
-                - "Field ha_group_id"
-                type: int
-            ports_consumed:
-                description:
-                - "Field ports_consumed"
-                type: int
-            ports_consumed_total:
-                description:
-                - "Field ports_consumed_total"
-                type: int
-            ports_freed_total:
-                description:
-                - "Field ports_freed_total"
-                type: int
-            alloc_failed:
-                description:
-                - "Field alloc_failed"
-                type: int
+                - "Field auto_nat_addr_list"
+                type: list
             drs_auto_nat_list:
                 description:
                 - "Field drs_auto_nat_list"
@@ -586,16 +573,19 @@ AVAILABLE_PROPERTIES = [
     "no_logging",
     "no_ssl",
     "oper",
+    "packet_capture_template",
     "port_number",
     "protocol",
     "range",
     "rport_health_check_shared",
     "sampling_enable",
+    "shared_partition_port_template",
     "shared_rport_health_check",
     "stats",
     "stats_data_action",
     "support_http2",
     "template_port",
+    "template_port_shared",
     "template_server_ssl",
     "user_tag",
     "uuid",
@@ -641,6 +631,12 @@ def get_argspec():
             'type': 'int',
         },
         'template_port': {
+            'type': 'str',
+        },
+        'shared_partition_port_template': {
+            'type': 'bool',
+        },
+        'template_port_shared': {
             'type': 'str',
         },
         'template_server_ssl': {
@@ -739,6 +735,9 @@ def get_argspec():
                 ]
             }
         },
+        'packet_capture_template': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'state': {
@@ -801,48 +800,18 @@ def get_argspec():
             'resv_conn': {
                 'type': 'int',
             },
-            'ip': {
-                'type': 'str',
-            },
-            'ipv6': {
-                'type': 'str',
-            },
-            'vrid': {
-                'type': 'int',
-            },
-            'ha_group_id': {
-                'type': 'int',
-            },
-            'ports_consumed': {
-                'type': 'int',
-            },
-            'ports_consumed_total': {
-                'type': 'int',
-            },
-            'ports_freed_total': {
-                'type': 'int',
-            },
-            'alloc_failed': {
-                'type': 'int',
-            },
-            'drs_auto_nat_list': {
+            'auto_nat_addr_list': {
                 'type': 'list',
-                'drs_name': {
-                    'type': 'str',
-                },
-                'drs_port': {
-                    'type': 'int',
-                },
-                'ip': {
-                    'type': 'str',
-                },
-                'ipv6': {
+                'auto_nat_ip': {
                     'type': 'str',
                 },
                 'vrid': {
                     'type': 'int',
                 },
                 'ha_group_id': {
+                    'type': 'int',
+                },
+                'ip_rr': {
                     'type': 'int',
                 },
                 'ports_consumed': {
@@ -856,6 +825,42 @@ def get_argspec():
                 },
                 'alloc_failed': {
                     'type': 'int',
+                }
+            },
+            'drs_auto_nat_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'drs_auto_nat_address_list': {
+                    'type': 'list',
+                    'auto_nat_ip': {
+                        'type': 'str',
+                    },
+                    'vrid': {
+                        'type': 'int',
+                    },
+                    'ha_group_id': {
+                        'type': 'int',
+                    },
+                    'ip_rr': {
+                        'type': 'int',
+                    },
+                    'ports_consumed': {
+                        'type': 'int',
+                    },
+                    'ports_consumed_total': {
+                        'type': 'int',
+                    },
+                    'ports_freed_total': {
+                        'type': 'int',
+                    },
+                    'alloc_failed': {
+                        'type': 'int',
+                    }
                 }
             },
             'pool_name': {

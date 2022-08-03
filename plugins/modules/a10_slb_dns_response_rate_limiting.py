@@ -85,6 +85,30 @@ options:
         type: dict
         required: False
         suboptions:
+            filter_type:
+                description:
+                - "Field filter_type"
+                type: str
+            filter_address_v4:
+                description:
+                - "Field filter_address_v4"
+                type: str
+            filter_address_v6:
+                description:
+                - "Field filter_address_v6"
+                type: str
+            filter_fqdn:
+                description:
+                - "Field filter_fqdn"
+                type: str
+            filter_debug:
+                description:
+                - "Field filter_debug"
+                type: int
+            entry_list:
+                description:
+                - "Field entry_list"
+                type: list
             dnsrrl_cpu_list:
                 description:
                 - "Field dnsrrl_cpu_list"
@@ -271,6 +295,47 @@ def get_argspec():
         },
         'oper': {
             'type': 'dict',
+            'filter_type': {
+                'type': 'str',
+                'choices': ['statistics', 'entry', 'entry-ipv4', 'entry-ipv6']
+            },
+            'filter_address_v4': {
+                'type': 'str',
+            },
+            'filter_address_v6': {
+                'type': 'str',
+            },
+            'filter_fqdn': {
+                'type': 'str',
+            },
+            'filter_debug': {
+                'type': 'int',
+            },
+            'entry_list': {
+                'type': 'list',
+                'entry_address': {
+                    'type': 'str',
+                },
+                'entry_fqdn': {
+                    'type': 'str',
+                },
+                'entry_hit_count': {
+                    'type': 'int',
+                },
+                'entry_age': {
+                    'type': 'int',
+                },
+                'entry_response_credit': {
+                    'type': 'int',
+                },
+                'entry_action': {
+                    'type': 'str',
+                    'choices': ['R', 'W', 'L']
+                },
+                'entry_over_limit': {
+                    'type': 'int',
+                }
+            },
             'dnsrrl_cpu_list': {
                 'type': 'list',
                 'total_created': {

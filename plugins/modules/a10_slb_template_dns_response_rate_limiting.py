@@ -69,7 +69,7 @@ options:
     filter_response_rate:
         description:
         - "Maximum allowed request rate for the filter. This should match average traffic.
-          (default 20 per two seconds)"
+          (default 10 per seconds)"
         type: int
         required: False
     slip_rate:
@@ -99,6 +99,28 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    rrl_class_list_list:
+        description:
+        - "Field rrl_class_list_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Class-list name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            lid_list:
+                description:
+                - "Field lid_list"
+                type: list
 
 '''
 
@@ -158,6 +180,7 @@ AVAILABLE_PROPERTIES = [
     "enable_log",
     "filter_response_rate",
     "response_rate",
+    "rrl_class_list_list",
     "slip_rate",
     "uuid",
     "window",
@@ -210,6 +233,48 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
+        },
+        'rrl_class_list_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'lid_list': {
+                'type': 'list',
+                'lidnum': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'lid_response_rate': {
+                    'type': 'int',
+                },
+                'lid_slip_rate': {
+                    'type': 'int',
+                },
+                'lid_window': {
+                    'type': 'int',
+                },
+                'lid_enable_log': {
+                    'type': 'bool',
+                },
+                'lid_action': {
+                    'type': 'str',
+                    'choices': ['log-only', 'rate-limit', 'whitelist']
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            }
         }
     })
     # Parent keys

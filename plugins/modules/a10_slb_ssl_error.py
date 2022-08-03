@@ -1046,6 +1046,992 @@ options:
                 description:
                 - "bad handshake length"
                 type: int
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            app_data_in_handshake:
+                description:
+                - "app data in handshake"
+                type: str
+            attempt_to_reuse_sess_in_diff_context:
+                description:
+                - "attempt to reuse sess in diff context"
+                type: str
+            bad_alert_record:
+                description:
+                - "bad alert record"
+                type: str
+            bad_authentication_type:
+                description:
+                - "bad authentication type"
+                type: str
+            bad_change_cipher_spec:
+                description:
+                - "bad change cipher spec"
+                type: str
+            bad_checksum:
+                description:
+                - "bad checksum"
+                type: str
+            bad_data_returned_by_callback:
+                description:
+                - "bad data returned by callback"
+                type: str
+            bad_decompression:
+                description:
+                - "bad decompression"
+                type: str
+            bad_dh_g_length:
+                description:
+                - "bad dh g length"
+                type: str
+            bad_dh_pub_key_length:
+                description:
+                - "bad dh pub key length"
+                type: str
+            bad_dh_p_length:
+                description:
+                - "bad dh p length"
+                type: str
+            bad_digest_length:
+                description:
+                - "bad digest length"
+                type: str
+            bad_dsa_signature:
+                description:
+                - "bad dsa signature"
+                type: str
+            bad_hello_request:
+                description:
+                - "bad hello request"
+                type: str
+            bad_length:
+                description:
+                - "bad length"
+                type: str
+            bad_mac_decode:
+                description:
+                - "bad mac decode"
+                type: str
+            bad_message_type:
+                description:
+                - "bad message type"
+                type: str
+            bad_packet_length:
+                description:
+                - "bad packet length"
+                type: str
+            bad_protocol_version_counter:
+                description:
+                - "bad protocol version counter"
+                type: str
+            bad_response_argument:
+                description:
+                - "bad response argument"
+                type: str
+            bad_rsa_decrypt:
+                description:
+                - "bad rsa decrypt"
+                type: str
+            bad_rsa_encrypt:
+                description:
+                - "bad rsa encrypt"
+                type: str
+            bad_rsa_e_length:
+                description:
+                - "bad rsa e length"
+                type: str
+            bad_rsa_modulus_length:
+                description:
+                - "bad rsa modulus length"
+                type: str
+            bad_rsa_signature:
+                description:
+                - "bad rsa signature"
+                type: str
+            bad_signature:
+                description:
+                - "bad signature"
+                type: str
+            bad_ssl_filetype:
+                description:
+                - "bad ssl filetype"
+                type: str
+            bad_ssl_session_id_length:
+                description:
+                - "bad ssl session id length"
+                type: str
+            bad_state:
+                description:
+                - "bad state"
+                type: str
+            bad_write_retry:
+                description:
+                - "bad write retry"
+                type: str
+            bio_not_set:
+                description:
+                - "bio not set"
+                type: str
+            block_cipher_pad_is_wrong:
+                description:
+                - "block cipher pad is wrong"
+                type: str
+            bn_lib:
+                description:
+                - "bn lib"
+                type: str
+            ca_dn_length_mismatch:
+                description:
+                - "ca dn length mismatch"
+                type: str
+            ca_dn_too_long:
+                description:
+                - "ca dn too long"
+                type: str
+            ccs_received_early:
+                description:
+                - "ccs received early"
+                type: str
+            certificate_verify_failed:
+                description:
+                - "certificate verify failed"
+                type: str
+            cert_length_mismatch:
+                description:
+                - "cert length mismatch"
+                type: str
+            challenge_is_different:
+                description:
+                - "challenge is different"
+                type: str
+            cipher_code_wrong_length:
+                description:
+                - "cipher code wrong length"
+                type: str
+            cipher_or_hash_unavailable:
+                description:
+                - "cipher or hash unavailable"
+                type: str
+            cipher_table_src_error:
+                description:
+                - "cipher table src error"
+                type: str
+            compressed_length_too_long:
+                description:
+                - "compressed length too long"
+                type: str
+            compression_failure:
+                description:
+                - "compression failure"
+                type: str
+            compression_library_error:
+                description:
+                - "compression library error"
+                type: str
+            connection_id_is_different:
+                description:
+                - "connection id is different"
+                type: str
+            connection_type_not_set:
+                description:
+                - "connection type not set"
+                type: str
+            data_between_ccs_and_finished:
+                description:
+                - "data between ccs and finished"
+                type: str
+            data_length_too_long:
+                description:
+                - "data length too long"
+                type: str
+            decryption_failed:
+                description:
+                - "decryption failed"
+                type: str
+            decryption_failed_or_bad_record_mac:
+                description:
+                - "decryption failed or bad record mac"
+                type: str
+            dh_public_value_length_is_wrong:
+                description:
+                - "dh public value length is wrong"
+                type: str
+            digest_check_failed:
+                description:
+                - "digest check failed"
+                type: str
+            encrypted_length_too_long:
+                description:
+                - "encrypted length too long"
+                type: str
+            error_generating_tmp_rsa_key:
+                description:
+                - "error generating tmp rsa key"
+                type: str
+            error_in_received_cipher_list:
+                description:
+                - "error in received cipher list"
+                type: str
+            excessive_message_size:
+                description:
+                - "excessive message size"
+                type: str
+            extra_data_in_message:
+                description:
+                - "extra data in message"
+                type: str
+            got_a_fin_before_a_ccs:
+                description:
+                - "got a fin before a ccs"
+                type: str
+            https_proxy_request:
+                description:
+                - "https proxy request"
+                type: str
+            http_request:
+                description:
+                - "http request"
+                type: str
+            illegal_padding:
+                description:
+                - "illegal padding"
+                type: str
+            inappropriate_fallback:
+                description:
+                - "inappropriate fallback"
+                type: str
+            invalid_challenge_length:
+                description:
+                - "invalid challenge length"
+                type: str
+            invalid_command:
+                description:
+                - "invalid command"
+                type: str
+            invalid_purpose:
+                description:
+                - "invalid purpose"
+                type: str
+            invalid_status_response:
+                description:
+                - "invalid status response"
+                type: str
+            invalid_trust:
+                description:
+                - "invalid trust"
+                type: str
+            key_arg_too_long:
+                description:
+                - "key arg too long"
+                type: str
+            krb5:
+                description:
+                - "krb5"
+                type: str
+            krb5_client_cc_principal:
+                description:
+                - "krb5 client cc principal"
+                type: str
+            krb5_client_get_cred:
+                description:
+                - "krb5 client get cred"
+                type: str
+            krb5_client_init:
+                description:
+                - "krb5 client init"
+                type: str
+            krb5_client_mk_req:
+                description:
+                - "krb5 client mk_req"
+                type: str
+            krb5_server_bad_ticket:
+                description:
+                - "krb5 server bad ticket"
+                type: str
+            krb5_server_init:
+                description:
+                - "krb5 server init"
+                type: str
+            krb5_server_rd_req:
+                description:
+                - "krb5 server rd_req"
+                type: str
+            krb5_server_tkt_expired:
+                description:
+                - "krb5 server tkt expired"
+                type: str
+            krb5_server_tkt_not_yet_valid:
+                description:
+                - "krb5 server tkt not yet valid"
+                type: str
+            krb5_server_tkt_skew:
+                description:
+                - "krb5 server tkt skew"
+                type: str
+            length_mismatch:
+                description:
+                - "length mismatch"
+                type: str
+            length_too_short:
+                description:
+                - "length too short"
+                type: str
+            library_bug:
+                description:
+                - "library bug"
+                type: str
+            library_has_no_ciphers:
+                description:
+                - "library has no ciphers"
+                type: str
+            mast_key_too_long:
+                description:
+                - "mast key too long"
+                type: str
+            message_too_long:
+                description:
+                - "message too long"
+                type: str
+            missing_dh_dsa_cert:
+                description:
+                - "missing dh dsa cert"
+                type: str
+            missing_dh_key:
+                description:
+                - "missing dh key"
+                type: str
+            missing_dh_rsa_cert:
+                description:
+                - "missing dh rsa cert"
+                type: str
+            missing_dsa_signing_cert:
+                description:
+                - "missing dsa signing cert"
+                type: str
+            missing_export_tmp_dh_key:
+                description:
+                - "missing export tmp dh key"
+                type: str
+            missing_export_tmp_rsa_key:
+                description:
+                - "missing export tmp rsa key"
+                type: str
+            missing_rsa_certificate:
+                description:
+                - "missing rsa certificate"
+                type: str
+            missing_rsa_encrypting_cert:
+                description:
+                - "missing rsa encrypting cert"
+                type: str
+            missing_rsa_signing_cert:
+                description:
+                - "missing rsa signing cert"
+                type: str
+            missing_tmp_dh_key:
+                description:
+                - "missing tmp dh key"
+                type: str
+            missing_tmp_rsa_key:
+                description:
+                - "missing tmp rsa key"
+                type: str
+            missing_tmp_rsa_pkey:
+                description:
+                - "missing tmp rsa pkey"
+                type: str
+            missing_verify_message:
+                description:
+                - "missing verify message"
+                type: str
+            non_sslv2_initial_packet:
+                description:
+                - "non sslv2 initial packet"
+                type: str
+            no_certificates_returned:
+                description:
+                - "no certificates returned"
+                type: str
+            no_certificate_assigned:
+                description:
+                - "no certificate assigned"
+                type: str
+            no_certificate_returned:
+                description:
+                - "no certificate returned"
+                type: str
+            no_certificate_set:
+                description:
+                - "no certificate set"
+                type: str
+            no_certificate_specified:
+                description:
+                - "no certificate specified"
+                type: str
+            no_ciphers_available:
+                description:
+                - "no ciphers available"
+                type: str
+            no_ciphers_passed:
+                description:
+                - "no ciphers passed"
+                type: str
+            no_ciphers_specified:
+                description:
+                - "no ciphers specified"
+                type: str
+            no_cipher_list:
+                description:
+                - "no cipher list"
+                type: str
+            no_cipher_match:
+                description:
+                - "no cipher match"
+                type: str
+            no_client_cert_received:
+                description:
+                - "no client cert received"
+                type: str
+            no_compression_specified:
+                description:
+                - "no compression specified"
+                type: str
+            no_method_specified:
+                description:
+                - "no method specified"
+                type: str
+            no_privatekey:
+                description:
+                - "no privatekey"
+                type: str
+            no_private_key_assigned:
+                description:
+                - "no private key assigned"
+                type: str
+            no_protocols_available:
+                description:
+                - "no protocols available"
+                type: str
+            no_publickey:
+                description:
+                - "no publickey"
+                type: str
+            no_shared_cipher:
+                description:
+                - "no shared cipher"
+                type: str
+            no_verify_callback:
+                description:
+                - "no verify callback"
+                type: str
+            null_ssl_ctx:
+                description:
+                - "null ssl ctx"
+                type: str
+            null_ssl_method_passed:
+                description:
+                - "null ssl method passed"
+                type: str
+            old_session_cipher_not_returned:
+                description:
+                - "old session cipher not returned"
+                type: str
+            packet_length_too_long:
+                description:
+                - "packet length too long"
+                type: str
+            path_too_long:
+                description:
+                - "path too long"
+                type: str
+            peer_did_not_return_a_certificate:
+                description:
+                - "peer did not return a certificate"
+                type: str
+            peer_error:
+                description:
+                - "peer error"
+                type: str
+            peer_error_certificate:
+                description:
+                - "peer error certificate"
+                type: str
+            peer_error_no_certificate:
+                description:
+                - "peer error no certificate"
+                type: str
+            peer_error_no_cipher:
+                description:
+                - "peer error no cipher"
+                type: str
+            peer_error_unsupported_certificate_type:
+                description:
+                - "peer error unsupported certificate type"
+                type: str
+            pre_mac_length_too_long:
+                description:
+                - "pre mac length too long"
+                type: str
+            problems_mapping_cipher_functions:
+                description:
+                - "problems mapping cipher functions"
+                type: str
+            protocol_is_shutdown:
+                description:
+                - "protocol is shutdown"
+                type: str
+            public_key_encrypt_error:
+                description:
+                - "public key encrypt error"
+                type: str
+            public_key_is_not_rsa:
+                description:
+                - "public key is not rsa"
+                type: str
+            public_key_not_rsa:
+                description:
+                - "public key not rsa"
+                type: str
+            read_bio_not_set:
+                description:
+                - "read bio not set"
+                type: str
+            read_wrong_packet_type:
+                description:
+                - "read wrong packet type"
+                type: str
+            record_length_mismatch:
+                description:
+                - "record length mismatch"
+                type: str
+            record_too_large:
+                description:
+                - "record too large"
+                type: str
+            record_too_small:
+                description:
+                - "record too small"
+                type: str
+            required_cipher_missing:
+                description:
+                - "required cipher missing"
+                type: str
+            reuse_cert_length_not_zero:
+                description:
+                - "reuse cert length not zero"
+                type: str
+            reuse_cert_type_not_zero:
+                description:
+                - "reuse cert type not zero"
+                type: str
+            reuse_cipher_list_not_zero:
+                description:
+                - "reuse cipher list not zero"
+                type: str
+            scsv_received_when_renegotiating:
+                description:
+                - "scsv received when renegotiating"
+                type: str
+            session_id_context_uninitialized:
+                description:
+                - "session id context uninitialized"
+                type: str
+            short_read:
+                description:
+                - "short read"
+                type: str
+            signature_for_non_signing_certificate:
+                description:
+                - "signature for non signing certificate"
+                type: str
+            ssl23_doing_session_id_reuse:
+                description:
+                - "ssl23 doing session id reuse"
+                type: str
+            ssl2_connection_id_too_long:
+                description:
+                - "ssl2 connection id too long"
+                type: str
+            ssl3_session_id_too_long:
+                description:
+                - "ssl3 session id too long"
+                type: str
+            ssl3_session_id_too_short:
+                description:
+                - "ssl3 session id too short"
+                type: str
+            sslv3_alert_bad_certificate:
+                description:
+                - "sslv3 alert bad certificate"
+                type: str
+            sslv3_alert_bad_record_mac:
+                description:
+                - "sslv3 alert bad record mac"
+                type: str
+            sslv3_alert_certificate_expired:
+                description:
+                - "sslv3 alert certificate expired"
+                type: str
+            sslv3_alert_certificate_revoked:
+                description:
+                - "sslv3 alert certificate revoked"
+                type: str
+            sslv3_alert_certificate_unknown:
+                description:
+                - "sslv3 alert certificate unknown"
+                type: str
+            sslv3_alert_decompression_failure:
+                description:
+                - "sslv3 alert decompression failure"
+                type: str
+            sslv3_alert_handshake_failure:
+                description:
+                - "sslv3 alert handshake failure"
+                type: str
+            sslv3_alert_illegal_parameter:
+                description:
+                - "sslv3 alert illegal parameter"
+                type: str
+            sslv3_alert_no_certificate:
+                description:
+                - "sslv3 alert no certificate"
+                type: str
+            sslv3_alert_peer_error_cert:
+                description:
+                - "sslv3 alert peer error cert"
+                type: str
+            sslv3_alert_peer_error_no_cert:
+                description:
+                - "sslv3 alert peer error no cert"
+                type: str
+            sslv3_alert_peer_error_no_cipher:
+                description:
+                - "sslv3 alert peer error no cipher"
+                type: str
+            sslv3_alert_peer_error_unsupp_cert_type:
+                description:
+                - "sslv3 alert peer error unsupp cert type"
+                type: str
+            sslv3_alert_unexpected_msg:
+                description:
+                - "sslv3 alert unexpected msg"
+                type: str
+            sslv3_alert_unknown_remote_err_type:
+                description:
+                - "sslv3 alert unknown remote err type"
+                type: str
+            sslv3_alert_unspported_cert:
+                description:
+                - "sslv3 alert unspported cert"
+                type: str
+            ssl_ctx_has_no_default_ssl_version:
+                description:
+                - "ssl ctx has no default ssl version"
+                type: str
+            ssl_handshake_failure:
+                description:
+                - "ssl handshake failure"
+                type: str
+            ssl_library_has_no_ciphers:
+                description:
+                - "ssl library has no ciphers"
+                type: str
+            ssl_session_id_callback_failed:
+                description:
+                - "ssl session id callback failed"
+                type: str
+            ssl_session_id_conflict:
+                description:
+                - "ssl session id conflict"
+                type: str
+            ssl_session_id_context_too_long:
+                description:
+                - "ssl session id context too long"
+                type: str
+            ssl_session_id_has_bad_length:
+                description:
+                - "ssl session id has bad length"
+                type: str
+            ssl_session_id_is_different:
+                description:
+                - "ssl session id is different"
+                type: str
+            tlsv1_alert_access_denied:
+                description:
+                - "tlsv1 alert access denied"
+                type: str
+            tlsv1_alert_decode_error:
+                description:
+                - "tlsv1 alert decode error"
+                type: str
+            tlsv1_alert_decryption_failed:
+                description:
+                - "tlsv1 alert decryption failed"
+                type: str
+            tlsv1_alert_decrypt_error:
+                description:
+                - "tlsv1 alert decrypt error"
+                type: str
+            tlsv1_alert_export_restriction:
+                description:
+                - "tlsv1 alert export restriction"
+                type: str
+            tlsv1_alert_insufficient_security:
+                description:
+                - "tlsv1 alert insufficient security"
+                type: str
+            tlsv1_alert_internal_error:
+                description:
+                - "tlsv1 alert internal error"
+                type: str
+            tlsv1_alert_no_renegotiation:
+                description:
+                - "tlsv1 alert no renegotiation"
+                type: str
+            tlsv1_alert_protocol_version:
+                description:
+                - "tlsv1 alert protocol version"
+                type: str
+            tlsv1_alert_record_overflow:
+                description:
+                - "tlsv1 alert record overflow"
+                type: str
+            tlsv1_alert_unknown_ca:
+                description:
+                - "tlsv1 alert unknown ca"
+                type: str
+            tlsv1_alert_user_cancelled:
+                description:
+                - "tlsv1 alert user cancelled"
+                type: str
+            tls_client_cert_req_with_anon_cipher:
+                description:
+                - "tls client cert req with anon cipher"
+                type: str
+            tls_peer_did_not_respond_with_cert_list:
+                description:
+                - "tls peer did not respond with cert list"
+                type: str
+            tls_rsa_encrypted_value_length_is_wrong:
+                description:
+                - "tls rsa encrypted value length is wrong"
+                type: str
+            tried_to_use_unsupported_cipher:
+                description:
+                - "tried to use unsupported cipher"
+                type: str
+            unable_to_decode_dh_certs:
+                description:
+                - "unable to decode dh certs"
+                type: str
+            unable_to_extract_public_key:
+                description:
+                - "unable to extract public key"
+                type: str
+            unable_to_find_dh_parameters:
+                description:
+                - "unable to find dh parameters"
+                type: str
+            unable_to_find_public_key_parameters:
+                description:
+                - "unable to find public key parameters"
+                type: str
+            unable_to_find_ssl_method:
+                description:
+                - "unable to find ssl method"
+                type: str
+            unable_to_load_ssl2_md5_routines:
+                description:
+                - "unable to load ssl2 md5 routines"
+                type: str
+            unable_to_load_ssl3_md5_routines:
+                description:
+                - "unable to load ssl3 md5 routines"
+                type: str
+            unable_to_load_ssl3_sha1_routines:
+                description:
+                - "unable to load ssl3 sha1 routines"
+                type: str
+            unexpected_message:
+                description:
+                - "unexpected message"
+                type: str
+            unexpected_record:
+                description:
+                - "unexpected record"
+                type: str
+            uninitialized:
+                description:
+                - "uninitialized"
+                type: str
+            unknown_alert_type:
+                description:
+                - "unknown alert type"
+                type: str
+            unknown_certificate_type:
+                description:
+                - "unknown certificate type"
+                type: str
+            unknown_cipher_returned:
+                description:
+                - "unknown cipher returned"
+                type: str
+            unknown_cipher_type:
+                description:
+                - "unknown cipher type"
+                type: str
+            unknown_key_exchange_type:
+                description:
+                - "unknown key exchange type"
+                type: str
+            unknown_pkey_type:
+                description:
+                - "unknown pkey type"
+                type: str
+            unknown_protocol:
+                description:
+                - "unknown protocol"
+                type: str
+            unknown_remote_error_type:
+                description:
+                - "unknown remote error type"
+                type: str
+            unknown_ssl_version:
+                description:
+                - "unknown ssl version"
+                type: str
+            unknown_state:
+                description:
+                - "unknown state"
+                type: str
+            unsupported_cipher:
+                description:
+                - "unsupported cipher"
+                type: str
+            unsupported_compression_algorithm:
+                description:
+                - "unsupported compression algorithm"
+                type: str
+            unsupported_option:
+                description:
+                - "unsupported option"
+                type: str
+            unsupported_protocol:
+                description:
+                - "unsupported protocol"
+                type: str
+            unsupported_ssl_version:
+                description:
+                - "unsupported ssl version"
+                type: str
+            unsupported_status_type:
+                description:
+                - "unsupported status type"
+                type: str
+            write_bio_not_set:
+                description:
+                - "write bio not set"
+                type: str
+            wrong_cipher_returned:
+                description:
+                - "wrong cipher returned"
+                type: str
+            wrong_message_type:
+                description:
+                - "wrong message type"
+                type: str
+            wrong_counter_of_key_bits:
+                description:
+                - "wrong counter of key bits"
+                type: str
+            wrong_signature_length:
+                description:
+                - "wrong signature length"
+                type: str
+            wrong_signature_size:
+                description:
+                - "wrong signature size"
+                type: str
+            wrong_ssl_version:
+                description:
+                - "wrong ssl version"
+                type: str
+            wrong_version_counter:
+                description:
+                - "wrong version counter"
+                type: str
+            x509_lib:
+                description:
+                - "x509 lib"
+                type: str
+            x509_verification_setup_problems:
+                description:
+                - "x509 verification setup problems"
+                type: str
+            clienthello_tlsext:
+                description:
+                - "clienthello tlsext"
+                type: str
+            parse_tlsext:
+                description:
+                - "parse tlsext"
+                type: str
+            serverhello_tlsext:
+                description:
+                - "serverhello tlsext"
+                type: str
+            ssl3_ext_invalid_servername:
+                description:
+                - "ssl3 ext invalid servername"
+                type: str
+            ssl3_ext_invalid_servername_type:
+                description:
+                - "ssl3 ext invalid servername type"
+                type: str
+            multiple_sgc_restarts:
+                description:
+                - "multiple sgc restarts"
+                type: str
+            tls_invalid_ecpointformat_list:
+                description:
+                - "tls invalid ecpointformat list"
+                type: str
+            bad_ecc_cert:
+                description:
+                - "bad ecc cert"
+                type: str
+            bad_ecdsa_sig:
+                description:
+                - "bad ecdsa sig"
+                type: str
+            bad_ecpoint:
+                description:
+                - "bad ecpoint"
+                type: str
+            cookie_mismatch:
+                description:
+                - "cookie mismatch"
+                type: str
+            unsupported_elliptic_curve:
+                description:
+                - "unsupported elliptic curve"
+                type: str
+            no_required_digest:
+                description:
+                - "no required digest"
+                type: str
+            unsupported_digest_type:
+                description:
+                - "unsupported digest type"
+                type: str
+            bad_handshake_length:
+                description:
+                - "bad handshake length"
+                type: str
 
 '''
 
@@ -1102,6 +2088,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "oper",
+    "stats",
     "uuid",
 ]
 
@@ -1871,6 +2858,744 @@ def get_argspec():
             'bad_handshake_length': {
                 'type': 'int',
             }
+        },
+        'stats': {
+            'type': 'dict',
+            'app_data_in_handshake': {
+                'type': 'str',
+            },
+            'attempt_to_reuse_sess_in_diff_context': {
+                'type': 'str',
+            },
+            'bad_alert_record': {
+                'type': 'str',
+            },
+            'bad_authentication_type': {
+                'type': 'str',
+            },
+            'bad_change_cipher_spec': {
+                'type': 'str',
+            },
+            'bad_checksum': {
+                'type': 'str',
+            },
+            'bad_data_returned_by_callback': {
+                'type': 'str',
+            },
+            'bad_decompression': {
+                'type': 'str',
+            },
+            'bad_dh_g_length': {
+                'type': 'str',
+            },
+            'bad_dh_pub_key_length': {
+                'type': 'str',
+            },
+            'bad_dh_p_length': {
+                'type': 'str',
+            },
+            'bad_digest_length': {
+                'type': 'str',
+            },
+            'bad_dsa_signature': {
+                'type': 'str',
+            },
+            'bad_hello_request': {
+                'type': 'str',
+            },
+            'bad_length': {
+                'type': 'str',
+            },
+            'bad_mac_decode': {
+                'type': 'str',
+            },
+            'bad_message_type': {
+                'type': 'str',
+            },
+            'bad_packet_length': {
+                'type': 'str',
+            },
+            'bad_protocol_version_counter': {
+                'type': 'str',
+            },
+            'bad_response_argument': {
+                'type': 'str',
+            },
+            'bad_rsa_decrypt': {
+                'type': 'str',
+            },
+            'bad_rsa_encrypt': {
+                'type': 'str',
+            },
+            'bad_rsa_e_length': {
+                'type': 'str',
+            },
+            'bad_rsa_modulus_length': {
+                'type': 'str',
+            },
+            'bad_rsa_signature': {
+                'type': 'str',
+            },
+            'bad_signature': {
+                'type': 'str',
+            },
+            'bad_ssl_filetype': {
+                'type': 'str',
+            },
+            'bad_ssl_session_id_length': {
+                'type': 'str',
+            },
+            'bad_state': {
+                'type': 'str',
+            },
+            'bad_write_retry': {
+                'type': 'str',
+            },
+            'bio_not_set': {
+                'type': 'str',
+            },
+            'block_cipher_pad_is_wrong': {
+                'type': 'str',
+            },
+            'bn_lib': {
+                'type': 'str',
+            },
+            'ca_dn_length_mismatch': {
+                'type': 'str',
+            },
+            'ca_dn_too_long': {
+                'type': 'str',
+            },
+            'ccs_received_early': {
+                'type': 'str',
+            },
+            'certificate_verify_failed': {
+                'type': 'str',
+            },
+            'cert_length_mismatch': {
+                'type': 'str',
+            },
+            'challenge_is_different': {
+                'type': 'str',
+            },
+            'cipher_code_wrong_length': {
+                'type': 'str',
+            },
+            'cipher_or_hash_unavailable': {
+                'type': 'str',
+            },
+            'cipher_table_src_error': {
+                'type': 'str',
+            },
+            'compressed_length_too_long': {
+                'type': 'str',
+            },
+            'compression_failure': {
+                'type': 'str',
+            },
+            'compression_library_error': {
+                'type': 'str',
+            },
+            'connection_id_is_different': {
+                'type': 'str',
+            },
+            'connection_type_not_set': {
+                'type': 'str',
+            },
+            'data_between_ccs_and_finished': {
+                'type': 'str',
+            },
+            'data_length_too_long': {
+                'type': 'str',
+            },
+            'decryption_failed': {
+                'type': 'str',
+            },
+            'decryption_failed_or_bad_record_mac': {
+                'type': 'str',
+            },
+            'dh_public_value_length_is_wrong': {
+                'type': 'str',
+            },
+            'digest_check_failed': {
+                'type': 'str',
+            },
+            'encrypted_length_too_long': {
+                'type': 'str',
+            },
+            'error_generating_tmp_rsa_key': {
+                'type': 'str',
+            },
+            'error_in_received_cipher_list': {
+                'type': 'str',
+            },
+            'excessive_message_size': {
+                'type': 'str',
+            },
+            'extra_data_in_message': {
+                'type': 'str',
+            },
+            'got_a_fin_before_a_ccs': {
+                'type': 'str',
+            },
+            'https_proxy_request': {
+                'type': 'str',
+            },
+            'http_request': {
+                'type': 'str',
+            },
+            'illegal_padding': {
+                'type': 'str',
+            },
+            'inappropriate_fallback': {
+                'type': 'str',
+            },
+            'invalid_challenge_length': {
+                'type': 'str',
+            },
+            'invalid_command': {
+                'type': 'str',
+            },
+            'invalid_purpose': {
+                'type': 'str',
+            },
+            'invalid_status_response': {
+                'type': 'str',
+            },
+            'invalid_trust': {
+                'type': 'str',
+            },
+            'key_arg_too_long': {
+                'type': 'str',
+            },
+            'krb5': {
+                'type': 'str',
+            },
+            'krb5_client_cc_principal': {
+                'type': 'str',
+            },
+            'krb5_client_get_cred': {
+                'type': 'str',
+            },
+            'krb5_client_init': {
+                'type': 'str',
+            },
+            'krb5_client_mk_req': {
+                'type': 'str',
+            },
+            'krb5_server_bad_ticket': {
+                'type': 'str',
+            },
+            'krb5_server_init': {
+                'type': 'str',
+            },
+            'krb5_server_rd_req': {
+                'type': 'str',
+            },
+            'krb5_server_tkt_expired': {
+                'type': 'str',
+            },
+            'krb5_server_tkt_not_yet_valid': {
+                'type': 'str',
+            },
+            'krb5_server_tkt_skew': {
+                'type': 'str',
+            },
+            'length_mismatch': {
+                'type': 'str',
+            },
+            'length_too_short': {
+                'type': 'str',
+            },
+            'library_bug': {
+                'type': 'str',
+            },
+            'library_has_no_ciphers': {
+                'type': 'str',
+            },
+            'mast_key_too_long': {
+                'type': 'str',
+            },
+            'message_too_long': {
+                'type': 'str',
+            },
+            'missing_dh_dsa_cert': {
+                'type': 'str',
+            },
+            'missing_dh_key': {
+                'type': 'str',
+            },
+            'missing_dh_rsa_cert': {
+                'type': 'str',
+            },
+            'missing_dsa_signing_cert': {
+                'type': 'str',
+            },
+            'missing_export_tmp_dh_key': {
+                'type': 'str',
+            },
+            'missing_export_tmp_rsa_key': {
+                'type': 'str',
+            },
+            'missing_rsa_certificate': {
+                'type': 'str',
+            },
+            'missing_rsa_encrypting_cert': {
+                'type': 'str',
+            },
+            'missing_rsa_signing_cert': {
+                'type': 'str',
+            },
+            'missing_tmp_dh_key': {
+                'type': 'str',
+            },
+            'missing_tmp_rsa_key': {
+                'type': 'str',
+            },
+            'missing_tmp_rsa_pkey': {
+                'type': 'str',
+            },
+            'missing_verify_message': {
+                'type': 'str',
+            },
+            'non_sslv2_initial_packet': {
+                'type': 'str',
+            },
+            'no_certificates_returned': {
+                'type': 'str',
+            },
+            'no_certificate_assigned': {
+                'type': 'str',
+            },
+            'no_certificate_returned': {
+                'type': 'str',
+            },
+            'no_certificate_set': {
+                'type': 'str',
+            },
+            'no_certificate_specified': {
+                'type': 'str',
+            },
+            'no_ciphers_available': {
+                'type': 'str',
+            },
+            'no_ciphers_passed': {
+                'type': 'str',
+            },
+            'no_ciphers_specified': {
+                'type': 'str',
+            },
+            'no_cipher_list': {
+                'type': 'str',
+            },
+            'no_cipher_match': {
+                'type': 'str',
+            },
+            'no_client_cert_received': {
+                'type': 'str',
+            },
+            'no_compression_specified': {
+                'type': 'str',
+            },
+            'no_method_specified': {
+                'type': 'str',
+            },
+            'no_privatekey': {
+                'type': 'str',
+            },
+            'no_private_key_assigned': {
+                'type': 'str',
+            },
+            'no_protocols_available': {
+                'type': 'str',
+            },
+            'no_publickey': {
+                'type': 'str',
+            },
+            'no_shared_cipher': {
+                'type': 'str',
+            },
+            'no_verify_callback': {
+                'type': 'str',
+            },
+            'null_ssl_ctx': {
+                'type': 'str',
+            },
+            'null_ssl_method_passed': {
+                'type': 'str',
+            },
+            'old_session_cipher_not_returned': {
+                'type': 'str',
+            },
+            'packet_length_too_long': {
+                'type': 'str',
+            },
+            'path_too_long': {
+                'type': 'str',
+            },
+            'peer_did_not_return_a_certificate': {
+                'type': 'str',
+            },
+            'peer_error': {
+                'type': 'str',
+            },
+            'peer_error_certificate': {
+                'type': 'str',
+            },
+            'peer_error_no_certificate': {
+                'type': 'str',
+            },
+            'peer_error_no_cipher': {
+                'type': 'str',
+            },
+            'peer_error_unsupported_certificate_type': {
+                'type': 'str',
+            },
+            'pre_mac_length_too_long': {
+                'type': 'str',
+            },
+            'problems_mapping_cipher_functions': {
+                'type': 'str',
+            },
+            'protocol_is_shutdown': {
+                'type': 'str',
+            },
+            'public_key_encrypt_error': {
+                'type': 'str',
+            },
+            'public_key_is_not_rsa': {
+                'type': 'str',
+            },
+            'public_key_not_rsa': {
+                'type': 'str',
+            },
+            'read_bio_not_set': {
+                'type': 'str',
+            },
+            'read_wrong_packet_type': {
+                'type': 'str',
+            },
+            'record_length_mismatch': {
+                'type': 'str',
+            },
+            'record_too_large': {
+                'type': 'str',
+            },
+            'record_too_small': {
+                'type': 'str',
+            },
+            'required_cipher_missing': {
+                'type': 'str',
+            },
+            'reuse_cert_length_not_zero': {
+                'type': 'str',
+            },
+            'reuse_cert_type_not_zero': {
+                'type': 'str',
+            },
+            'reuse_cipher_list_not_zero': {
+                'type': 'str',
+            },
+            'scsv_received_when_renegotiating': {
+                'type': 'str',
+            },
+            'session_id_context_uninitialized': {
+                'type': 'str',
+            },
+            'short_read': {
+                'type': 'str',
+            },
+            'signature_for_non_signing_certificate': {
+                'type': 'str',
+            },
+            'ssl23_doing_session_id_reuse': {
+                'type': 'str',
+            },
+            'ssl2_connection_id_too_long': {
+                'type': 'str',
+            },
+            'ssl3_session_id_too_long': {
+                'type': 'str',
+            },
+            'ssl3_session_id_too_short': {
+                'type': 'str',
+            },
+            'sslv3_alert_bad_certificate': {
+                'type': 'str',
+            },
+            'sslv3_alert_bad_record_mac': {
+                'type': 'str',
+            },
+            'sslv3_alert_certificate_expired': {
+                'type': 'str',
+            },
+            'sslv3_alert_certificate_revoked': {
+                'type': 'str',
+            },
+            'sslv3_alert_certificate_unknown': {
+                'type': 'str',
+            },
+            'sslv3_alert_decompression_failure': {
+                'type': 'str',
+            },
+            'sslv3_alert_handshake_failure': {
+                'type': 'str',
+            },
+            'sslv3_alert_illegal_parameter': {
+                'type': 'str',
+            },
+            'sslv3_alert_no_certificate': {
+                'type': 'str',
+            },
+            'sslv3_alert_peer_error_cert': {
+                'type': 'str',
+            },
+            'sslv3_alert_peer_error_no_cert': {
+                'type': 'str',
+            },
+            'sslv3_alert_peer_error_no_cipher': {
+                'type': 'str',
+            },
+            'sslv3_alert_peer_error_unsupp_cert_type': {
+                'type': 'str',
+            },
+            'sslv3_alert_unexpected_msg': {
+                'type': 'str',
+            },
+            'sslv3_alert_unknown_remote_err_type': {
+                'type': 'str',
+            },
+            'sslv3_alert_unspported_cert': {
+                'type': 'str',
+            },
+            'ssl_ctx_has_no_default_ssl_version': {
+                'type': 'str',
+            },
+            'ssl_handshake_failure': {
+                'type': 'str',
+            },
+            'ssl_library_has_no_ciphers': {
+                'type': 'str',
+            },
+            'ssl_session_id_callback_failed': {
+                'type': 'str',
+            },
+            'ssl_session_id_conflict': {
+                'type': 'str',
+            },
+            'ssl_session_id_context_too_long': {
+                'type': 'str',
+            },
+            'ssl_session_id_has_bad_length': {
+                'type': 'str',
+            },
+            'ssl_session_id_is_different': {
+                'type': 'str',
+            },
+            'tlsv1_alert_access_denied': {
+                'type': 'str',
+            },
+            'tlsv1_alert_decode_error': {
+                'type': 'str',
+            },
+            'tlsv1_alert_decryption_failed': {
+                'type': 'str',
+            },
+            'tlsv1_alert_decrypt_error': {
+                'type': 'str',
+            },
+            'tlsv1_alert_export_restriction': {
+                'type': 'str',
+            },
+            'tlsv1_alert_insufficient_security': {
+                'type': 'str',
+            },
+            'tlsv1_alert_internal_error': {
+                'type': 'str',
+            },
+            'tlsv1_alert_no_renegotiation': {
+                'type': 'str',
+            },
+            'tlsv1_alert_protocol_version': {
+                'type': 'str',
+            },
+            'tlsv1_alert_record_overflow': {
+                'type': 'str',
+            },
+            'tlsv1_alert_unknown_ca': {
+                'type': 'str',
+            },
+            'tlsv1_alert_user_cancelled': {
+                'type': 'str',
+            },
+            'tls_client_cert_req_with_anon_cipher': {
+                'type': 'str',
+            },
+            'tls_peer_did_not_respond_with_cert_list': {
+                'type': 'str',
+            },
+            'tls_rsa_encrypted_value_length_is_wrong': {
+                'type': 'str',
+            },
+            'tried_to_use_unsupported_cipher': {
+                'type': 'str',
+            },
+            'unable_to_decode_dh_certs': {
+                'type': 'str',
+            },
+            'unable_to_extract_public_key': {
+                'type': 'str',
+            },
+            'unable_to_find_dh_parameters': {
+                'type': 'str',
+            },
+            'unable_to_find_public_key_parameters': {
+                'type': 'str',
+            },
+            'unable_to_find_ssl_method': {
+                'type': 'str',
+            },
+            'unable_to_load_ssl2_md5_routines': {
+                'type': 'str',
+            },
+            'unable_to_load_ssl3_md5_routines': {
+                'type': 'str',
+            },
+            'unable_to_load_ssl3_sha1_routines': {
+                'type': 'str',
+            },
+            'unexpected_message': {
+                'type': 'str',
+            },
+            'unexpected_record': {
+                'type': 'str',
+            },
+            'uninitialized': {
+                'type': 'str',
+            },
+            'unknown_alert_type': {
+                'type': 'str',
+            },
+            'unknown_certificate_type': {
+                'type': 'str',
+            },
+            'unknown_cipher_returned': {
+                'type': 'str',
+            },
+            'unknown_cipher_type': {
+                'type': 'str',
+            },
+            'unknown_key_exchange_type': {
+                'type': 'str',
+            },
+            'unknown_pkey_type': {
+                'type': 'str',
+            },
+            'unknown_protocol': {
+                'type': 'str',
+            },
+            'unknown_remote_error_type': {
+                'type': 'str',
+            },
+            'unknown_ssl_version': {
+                'type': 'str',
+            },
+            'unknown_state': {
+                'type': 'str',
+            },
+            'unsupported_cipher': {
+                'type': 'str',
+            },
+            'unsupported_compression_algorithm': {
+                'type': 'str',
+            },
+            'unsupported_option': {
+                'type': 'str',
+            },
+            'unsupported_protocol': {
+                'type': 'str',
+            },
+            'unsupported_ssl_version': {
+                'type': 'str',
+            },
+            'unsupported_status_type': {
+                'type': 'str',
+            },
+            'write_bio_not_set': {
+                'type': 'str',
+            },
+            'wrong_cipher_returned': {
+                'type': 'str',
+            },
+            'wrong_message_type': {
+                'type': 'str',
+            },
+            'wrong_counter_of_key_bits': {
+                'type': 'str',
+            },
+            'wrong_signature_length': {
+                'type': 'str',
+            },
+            'wrong_signature_size': {
+                'type': 'str',
+            },
+            'wrong_ssl_version': {
+                'type': 'str',
+            },
+            'wrong_version_counter': {
+                'type': 'str',
+            },
+            'x509_lib': {
+                'type': 'str',
+            },
+            'x509_verification_setup_problems': {
+                'type': 'str',
+            },
+            'clienthello_tlsext': {
+                'type': 'str',
+            },
+            'parse_tlsext': {
+                'type': 'str',
+            },
+            'serverhello_tlsext': {
+                'type': 'str',
+            },
+            'ssl3_ext_invalid_servername': {
+                'type': 'str',
+            },
+            'ssl3_ext_invalid_servername_type': {
+                'type': 'str',
+            },
+            'multiple_sgc_restarts': {
+                'type': 'str',
+            },
+            'tls_invalid_ecpointformat_list': {
+                'type': 'str',
+            },
+            'bad_ecc_cert': {
+                'type': 'str',
+            },
+            'bad_ecdsa_sig': {
+                'type': 'str',
+            },
+            'bad_ecpoint': {
+                'type': 'str',
+            },
+            'cookie_mismatch': {
+                'type': 'str',
+            },
+            'unsupported_elliptic_curve': {
+                'type': 'str',
+            },
+            'no_required_digest': {
+                'type': 'str',
+            },
+            'unsupported_digest_type': {
+                'type': 'str',
+            },
+            'bad_handshake_length': {
+                'type': 'str',
+            }
         }
     })
     return rv
@@ -2042,6 +3767,14 @@ def run_command(module):
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["ssl-error"][
                     "oper"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "stats":
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
+                                                       params=module.params)
+                result["axapi_calls"].append(get_type_result)
+                info = get_type_result["response_body"]
+                result["acos_info"] = info["ssl-error"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

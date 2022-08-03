@@ -88,6 +88,14 @@ options:
                 description:
                 - "Field system_memory_counts"
                 type: int
+            AC_trie_memory:
+                description:
+                - "Field AC_trie_memory"
+                type: list
+            AC_trie_memory_counts:
+                description:
+                - "Field AC_trie_memory_counts"
+                type: int
             aFleX_memory:
                 description:
                 - "Field aFleX_memory"
@@ -96,14 +104,6 @@ options:
                 description:
                 - "Field aflex_memory_counts"
                 type: int
-            N2_memory:
-                description:
-                - "Field N2_memory"
-                type: list
-            n2_memory_counts:
-                description:
-                - "Field n2_memory_counts"
-                type: int
             SSL_memory:
                 description:
                 - "Field SSL_memory"
@@ -111,6 +111,14 @@ options:
             ssl_memory_counts:
                 description:
                 - "Field ssl_memory_counts"
+                type: int
+            N2_memory:
+                description:
+                - "Field N2_memory"
+                type: list
+            n2_memory_counts:
+                description:
+                - "Field n2_memory_counts"
                 type: int
             TCP_memory:
                 description:
@@ -271,6 +279,21 @@ def get_argspec():
             'system_memory_counts': {
                 'type': 'int',
             },
+            'AC_trie_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'AC_trie_memory_counts': {
+                'type': 'int',
+            },
             'aFleX_memory': {
                 'type': 'list',
                 'Object_size': {
@@ -286,21 +309,6 @@ def get_argspec():
             'aflex_memory_counts': {
                 'type': 'int',
             },
-            'N2_memory': {
-                'type': 'list',
-                'Object_size': {
-                    'type': 'int',
-                },
-                'Allocated': {
-                    'type': 'int',
-                },
-                'Max': {
-                    'type': 'int',
-                }
-            },
-            'n2_memory_counts': {
-                'type': 'int',
-            },
             'SSL_memory': {
                 'type': 'list',
                 'Object_size': {
@@ -314,6 +322,21 @@ def get_argspec():
                 }
             },
             'ssl_memory_counts': {
+                'type': 'int',
+            },
+            'N2_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'n2_memory_counts': {
                 'type': 'int',
             },
             'TCP_memory': {

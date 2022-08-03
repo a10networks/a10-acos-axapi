@@ -95,6 +95,10 @@ options:
                 description:
                 - "Field slb"
                 type: dict
+            scaleout:
+                description:
+                - "Field scaleout"
+                type: dict
             snmp:
                 description:
                 - "Field snmp"
@@ -465,6 +469,66 @@ def get_argspec():
                 },
                 'uuid': {
                     'type': 'str',
+                }
+            },
+            'scaleout': {
+                'type': 'dict',
+                'infrastructure': {
+                    'type': 'dict',
+                    'all': {
+                        'type': 'bool',
+                    },
+                    'test_send_all_traps': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'cluster': {
+                        'type': 'dict',
+                        'single_node_mode': {
+                            'type': 'bool',
+                        },
+                        'election': {
+                            'type': 'bool',
+                        },
+                        'master_calling_re_election': {
+                            'type': 'bool',
+                        },
+                        'node_status': {
+                            'type': 'bool',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    },
+                    'service_node': {
+                        'type': 'dict',
+                        'local_device_disabled': {
+                            'type': 'bool',
+                        },
+                        'service_master': {
+                            'type': 'bool',
+                        },
+                        'traffic_map_update': {
+                            'type': 'bool',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    },
+                    'master_node': {
+                        'type': 'dict',
+                        'traffic_map_distribution': {
+                            'type': 'bool',
+                        },
+                        'vserver_traffic_map_update': {
+                            'type': 'bool',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
                 }
             },
             'snmp': {

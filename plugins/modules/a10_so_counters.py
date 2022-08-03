@@ -68,27 +68,48 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'so_pkts_conn_in'= Total packets processed for an established
-          connection; 'so_pkts_conn_redirect'= Total packets redirected for an
-          established connection; 'so_pkts_dropped'= Total packets dropped;
-          'so_pkts_errors'= Total packet errors; 'so_pkts_in'= Total packets in-coming;
-          'so_pkts_new_conn_in'= Total packets processed for a new connection;
-          'so_pkts_new_conn_redirect'= Total packets redirected for a new connection;
-          'so_pkts_out'= Total packets sent out; 'so_pkts_redirect'= Total packets
-          redirected; 'so_pkts_conn_sync_fail'= Total connection sync failures;
-          'so_pkts_nat_reserve_fail'= Total NAT reserve failures;
-          'so_pkts_nat_release_fail'= Total NAT release failures; 'so_pkts_conn_l7_sync'=
-          Total L7 connection syncs; 'so_pkts_conn_l4_sync'= Total L4 connection syncs;
-          'so_pkts_conn_nat_sync'= Total NAT connection syncs;
-          'so_pkts_conn_xparent_fw_sync'= Total Xparent FW connection syncs;
-          'so_pkts_redirect_conn_aged_out'= Total redirect conns aged out;
-          'so_pkts_traffic_map_not_found_drop'= Traffic MAP Not Found Drop;
+                - "'all'= all; 'so_pkts_rcvd'= Total data packets received;
+          'so_redirect_pkts_sent'= Total packets redirected out of node;
+          'so_pkts_dropped'= Total packets dropped; 'so_redirected_pkts_rcvd'= Total
+          redirected packets received on node; 'so_fw_shadow_session_created'= FW Shadow
+          Session created; 'so_pkts_traffic_map_not_found_drop'= Traffic MAP Not Found
+          Drop; 'so_slb_pkts_redirect_conn_aged_out'= Total SLB redirect conns aged out;
           'so_pkts_scaleout_not_active_drop'= Scaleout Not Active Drop;
-          'so_pkts_dest_mac_mistmatch_drop'= Destination MAC Mistmatch Drop;
+          'so_pkts_slb_nat_reserve_fail'= Total SLB NAT reserve failures;
+          'so_pkts_slb_nat_release_fail'= Total SLB NAT release failures;
+          'so_pkts_dest_mac_mismatch_drop'= Destination MAC Mistmatch Drop;
+          'so_pkts_l2redirect_dest_mac_zero_drop'= Destination MAC Address zero Drop;
           'so_pkts_l2redirect_interface_not_up'= L2redirect Intf is not UP;
-          'so_fw_internal_rule_count'= FW internal rule count;
-          'so_pkts_redirect_table_error'= Redirect Table Error; 'so_pkts_mac_zero_drop'=
-          MAC Address zero Drop;"
+          'so_pkts_l2redirect_invalid_redirect_info_error'= Redirect Table Error due to
+          invalid redirect info; 'so_pkts_l3_redirect_encap_error_drop'= L3 Redirect
+          encap error drop during transmission;
+          'so_pkts_l3_redirect_inner_mac_zero_drop'= L3 Redirect inner mac zero drop
+          during transmission; 'so_pkts_l3_redirect_decap_vlan_sanity_drop'= L3 Redirect
+          Decap VLAN Sanity Drop during receipt;
+          'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop'= L3 Redirect received non ipv4
+          VXLAN packet; 'so_pkts_l3_redirect_decap_rx_encap_params_drop'= L3 Redirect
+          decap Rx encap params error Drop; 'so_pkts_l3_redirect_table_error'= L3
+          Redirect Table error Drop; 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop'= Recevied
+          l3 redirect packets in L2 mode Drop; 'so_pkts_l3_redirect_fragmentation_error'=
+          L3 redirect encap Fragmentation error;
+          'so_pkts_l3_redirect_table_no_entry_found'= L3 redirect Table no redirect entry
+          found error; 'so_pkts_l3_redirect_invalid_dev_dir'= L3 Redirect Invalid Device
+          direction during transmission; 'so_pkts_l3_redirect_chassis_dest_mac_error'= L3
+          Redirect RX multi-slot Destination MAC Error;
+          'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop'= L3 Redirect ipv4 packet after
+          encap more than max jumbo size;
+          'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop'= L3 Redirect tx ipv6 packet
+          after encap more than max jumbo size;
+          'so_pkts_l3_redirect_too_large_pkts_in_drop'= Received L3 Redirected fragmented
+          packets too large; 'so_sync_fw_shadow_session_create'= Sent Sync message for FW
+          Shadow session creation; 'so_sync_fw_shadow_session_delete'= Sent Sync message
+          for FW Shadow session deletion; 'so_sync_fw_shadow_ext'= Sync FW Shadow
+          extension creation/updation; 'so_sync_shadow_stats_to_active'= Sync Shadow
+          session stats from shadow to active; 'so_fw_internal_rule_count'= FW internal
+          rule count; 'so_hc_registration_done'= Scaleout stats block registered with HC;
+          'so_hc_deregistration_done'= Scaleout stats block de-registered with HC;
+          'so_pkts_l2redirect_vlan_retrieval_error'= L2 redirect pkt vlan not retrieved;
+          'so_pkts_l2redirect_port_retrieval_error'= L2 redirect pkt port not retrieved;"
                 type: str
     stats:
         description:
@@ -96,101 +117,125 @@ options:
         type: dict
         required: False
         suboptions:
-            so_pkts_conn_in:
+            so_pkts_rcvd:
                 description:
-                - "Total packets processed for an established connection"
+                - "Total data packets received"
                 type: str
-            so_pkts_conn_redirect:
+            so_redirect_pkts_sent:
                 description:
-                - "Total packets redirected for an established connection"
+                - "Total packets redirected out of node"
                 type: str
             so_pkts_dropped:
                 description:
                 - "Total packets dropped"
                 type: str
-            so_pkts_errors:
+            so_redirected_pkts_rcvd:
                 description:
-                - "Total packet errors"
+                - "Total redirected packets received on node"
                 type: str
-            so_pkts_in:
+            so_fw_shadow_session_created:
                 description:
-                - "Total packets in-coming"
-                type: str
-            so_pkts_new_conn_in:
-                description:
-                - "Total packets processed for a new connection"
-                type: str
-            so_pkts_new_conn_redirect:
-                description:
-                - "Total packets redirected for a new connection"
-                type: str
-            so_pkts_out:
-                description:
-                - "Total packets sent out"
-                type: str
-            so_pkts_redirect:
-                description:
-                - "Total packets redirected"
-                type: str
-            so_pkts_conn_sync_fail:
-                description:
-                - "Total connection sync failures"
-                type: str
-            so_pkts_nat_reserve_fail:
-                description:
-                - "Total NAT reserve failures"
-                type: str
-            so_pkts_nat_release_fail:
-                description:
-                - "Total NAT release failures"
-                type: str
-            so_pkts_conn_l7_sync:
-                description:
-                - "Total L7 connection syncs"
-                type: str
-            so_pkts_conn_l4_sync:
-                description:
-                - "Total L4 connection syncs"
-                type: str
-            so_pkts_conn_nat_sync:
-                description:
-                - "Total NAT connection syncs"
-                type: str
-            so_pkts_conn_xparent_fw_sync:
-                description:
-                - "Total Xparent FW connection syncs"
-                type: str
-            so_pkts_redirect_conn_aged_out:
-                description:
-                - "Total redirect conns aged out"
+                - "FW Shadow Session created"
                 type: str
             so_pkts_traffic_map_not_found_drop:
                 description:
                 - "Traffic MAP Not Found Drop"
                 type: str
+            so_slb_pkts_redirect_conn_aged_out:
+                description:
+                - "Total SLB redirect conns aged out"
+                type: str
             so_pkts_scaleout_not_active_drop:
                 description:
                 - "Scaleout Not Active Drop"
                 type: str
-            so_pkts_dest_mac_mistmatch_drop:
+            so_pkts_slb_nat_reserve_fail:
+                description:
+                - "Total SLB NAT reserve failures"
+                type: str
+            so_pkts_slb_nat_release_fail:
+                description:
+                - "Total SLB NAT release failures"
+                type: str
+            so_pkts_dest_mac_mismatch_drop:
                 description:
                 - "Destination MAC Mistmatch Drop"
+                type: str
+            so_pkts_l2redirect_dest_mac_zero_drop:
+                description:
+                - "Destination MAC Address zero Drop"
                 type: str
             so_pkts_l2redirect_interface_not_up:
                 description:
                 - "L2redirect Intf is not UP"
                 type: str
-            so_fw_internal_rule_count:
+            so_pkts_l2redirect_invalid_redirect_info_error:
                 description:
-                - "FW internal rule count"
+                - "Redirect Table Error due to invalid redirect info"
                 type: str
-            so_pkts_redirect_table_error:
+            so_pkts_l3_redirect_encap_error_drop:
                 description:
-                - "Redirect Table Error"
+                - "L3 Redirect encap error drop during transmission"
                 type: str
-            so_pkts_mac_zero_drop:
+            so_pkts_l3_redirect_inner_mac_zero_drop:
                 description:
-                - "MAC Address zero Drop"
+                - "L3 Redirect inner mac zero drop during transmission"
+                type: str
+            so_pkts_l3_redirect_decap_vlan_sanity_drop:
+                description:
+                - "L3 Redirect Decap VLAN Sanity Drop during receipt"
+                type: str
+            so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop:
+                description:
+                - "L3 Redirect received non ipv4 VXLAN packet"
+                type: str
+            so_pkts_l3_redirect_decap_rx_encap_params_drop:
+                description:
+                - "L3 Redirect decap Rx encap params error Drop"
+                type: str
+            so_pkts_l3_redirect_table_error:
+                description:
+                - "L3 Redirect Table error Drop"
+                type: str
+            so_pkts_l3_redirect_rcvd_in_l2_mode_drop:
+                description:
+                - "Recevied l3 redirect packets in L2 mode Drop"
+                type: str
+            so_pkts_l3_redirect_fragmentation_error:
+                description:
+                - "L3 redirect encap Fragmentation error"
+                type: str
+            so_pkts_l3_redirect_table_no_entry_found:
+                description:
+                - "L3 redirect Table no redirect entry found error"
+                type: str
+            so_pkts_l3_redirect_invalid_dev_dir:
+                description:
+                - "L3 Redirect Invalid Device direction during transmission"
+                type: str
+            so_pkts_l3_redirect_chassis_dest_mac_error:
+                description:
+                - "L3 Redirect RX multi-slot Destination MAC Error"
+                type: str
+            so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop:
+                description:
+                - "L3 Redirect ipv4 packet after encap more than max jumbo size"
+                type: str
+            so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop:
+                description:
+                - "L3 Redirect tx ipv6 packet after encap more than max jumbo size"
+                type: str
+            so_pkts_l3_redirect_too_large_pkts_in_drop:
+                description:
+                - "Received L3 Redirected fragmented packets too large"
+                type: str
+            so_pkts_l2redirect_vlan_retrieval_error:
+                description:
+                - "L2 redirect pkt vlan not retrieved"
+                type: str
+            so_pkts_l2redirect_port_retrieval_error:
+                description:
+                - "L2 redirect pkt port not retrieved"
                 type: str
 
 '''
@@ -287,96 +332,132 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'so_pkts_conn_in', 'so_pkts_conn_redirect',
-                    'so_pkts_dropped', 'so_pkts_errors', 'so_pkts_in',
-                    'so_pkts_new_conn_in', 'so_pkts_new_conn_redirect',
-                    'so_pkts_out', 'so_pkts_redirect',
-                    'so_pkts_conn_sync_fail', 'so_pkts_nat_reserve_fail',
-                    'so_pkts_nat_release_fail', 'so_pkts_conn_l7_sync',
-                    'so_pkts_conn_l4_sync', 'so_pkts_conn_nat_sync',
-                    'so_pkts_conn_xparent_fw_sync',
-                    'so_pkts_redirect_conn_aged_out',
+                    'all', 'so_pkts_rcvd', 'so_redirect_pkts_sent',
+                    'so_pkts_dropped', 'so_redirected_pkts_rcvd',
+                    'so_fw_shadow_session_created',
                     'so_pkts_traffic_map_not_found_drop',
+                    'so_slb_pkts_redirect_conn_aged_out',
                     'so_pkts_scaleout_not_active_drop',
-                    'so_pkts_dest_mac_mistmatch_drop',
+                    'so_pkts_slb_nat_reserve_fail',
+                    'so_pkts_slb_nat_release_fail',
+                    'so_pkts_dest_mac_mismatch_drop',
+                    'so_pkts_l2redirect_dest_mac_zero_drop',
                     'so_pkts_l2redirect_interface_not_up',
-                    'so_fw_internal_rule_count',
-                    'so_pkts_redirect_table_error', 'so_pkts_mac_zero_drop'
+                    'so_pkts_l2redirect_invalid_redirect_info_error',
+                    'so_pkts_l3_redirect_encap_error_drop',
+                    'so_pkts_l3_redirect_inner_mac_zero_drop',
+                    'so_pkts_l3_redirect_decap_vlan_sanity_drop',
+                    'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop',
+                    'so_pkts_l3_redirect_decap_rx_encap_params_drop',
+                    'so_pkts_l3_redirect_table_error',
+                    'so_pkts_l3_redirect_rcvd_in_l2_mode_drop',
+                    'so_pkts_l3_redirect_fragmentation_error',
+                    'so_pkts_l3_redirect_table_no_entry_found',
+                    'so_pkts_l3_redirect_invalid_dev_dir',
+                    'so_pkts_l3_redirect_chassis_dest_mac_error',
+                    'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop',
+                    'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop',
+                    'so_pkts_l3_redirect_too_large_pkts_in_drop',
+                    'so_sync_fw_shadow_session_create',
+                    'so_sync_fw_shadow_session_delete',
+                    'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active',
+                    'so_fw_internal_rule_count', 'so_hc_registration_done',
+                    'so_hc_deregistration_done',
+                    'so_pkts_l2redirect_vlan_retrieval_error',
+                    'so_pkts_l2redirect_port_retrieval_error'
                 ]
             }
         },
         'stats': {
             'type': 'dict',
-            'so_pkts_conn_in': {
+            'so_pkts_rcvd': {
                 'type': 'str',
             },
-            'so_pkts_conn_redirect': {
+            'so_redirect_pkts_sent': {
                 'type': 'str',
             },
             'so_pkts_dropped': {
                 'type': 'str',
             },
-            'so_pkts_errors': {
+            'so_redirected_pkts_rcvd': {
                 'type': 'str',
             },
-            'so_pkts_in': {
-                'type': 'str',
-            },
-            'so_pkts_new_conn_in': {
-                'type': 'str',
-            },
-            'so_pkts_new_conn_redirect': {
-                'type': 'str',
-            },
-            'so_pkts_out': {
-                'type': 'str',
-            },
-            'so_pkts_redirect': {
-                'type': 'str',
-            },
-            'so_pkts_conn_sync_fail': {
-                'type': 'str',
-            },
-            'so_pkts_nat_reserve_fail': {
-                'type': 'str',
-            },
-            'so_pkts_nat_release_fail': {
-                'type': 'str',
-            },
-            'so_pkts_conn_l7_sync': {
-                'type': 'str',
-            },
-            'so_pkts_conn_l4_sync': {
-                'type': 'str',
-            },
-            'so_pkts_conn_nat_sync': {
-                'type': 'str',
-            },
-            'so_pkts_conn_xparent_fw_sync': {
-                'type': 'str',
-            },
-            'so_pkts_redirect_conn_aged_out': {
+            'so_fw_shadow_session_created': {
                 'type': 'str',
             },
             'so_pkts_traffic_map_not_found_drop': {
                 'type': 'str',
             },
+            'so_slb_pkts_redirect_conn_aged_out': {
+                'type': 'str',
+            },
             'so_pkts_scaleout_not_active_drop': {
                 'type': 'str',
             },
-            'so_pkts_dest_mac_mistmatch_drop': {
+            'so_pkts_slb_nat_reserve_fail': {
+                'type': 'str',
+            },
+            'so_pkts_slb_nat_release_fail': {
+                'type': 'str',
+            },
+            'so_pkts_dest_mac_mismatch_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l2redirect_dest_mac_zero_drop': {
                 'type': 'str',
             },
             'so_pkts_l2redirect_interface_not_up': {
                 'type': 'str',
             },
-            'so_fw_internal_rule_count': {
+            'so_pkts_l2redirect_invalid_redirect_info_error': {
                 'type': 'str',
             },
-            'so_pkts_redirect_table_error': {
+            'so_pkts_l3_redirect_encap_error_drop': {
                 'type': 'str',
             },
-            'so_pkts_mac_zero_drop': {
+            'so_pkts_l3_redirect_inner_mac_zero_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_decap_vlan_sanity_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_decap_rx_encap_params_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_table_error': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_rcvd_in_l2_mode_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_fragmentation_error': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_table_no_entry_found': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_invalid_dev_dir': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_chassis_dest_mac_error': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l3_redirect_too_large_pkts_in_drop': {
+                'type': 'str',
+            },
+            'so_pkts_l2redirect_vlan_retrieval_error': {
+                'type': 'str',
+            },
+            'so_pkts_l2redirect_port_retrieval_error': {
                 'type': 'str',
             }
         }

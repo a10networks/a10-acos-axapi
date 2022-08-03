@@ -70,6 +70,11 @@ options:
         - "Port template (Port template name)"
         type: str
         required: False
+    template_server:
+        description:
+        - "Server template (Server template name)"
+        type: str
+        required: False
     template_policy:
         description:
         - "Policy template (Policy template name)"
@@ -115,7 +120,25 @@ options:
           Stateless load-balancing based on only IP hash for both Src and Dst;
           'stateless-src-ip-hash'= Stateless load-balancing based on Src IP and Src port
           hash; 'stateless-src-ip-only-hash'= Stateless load-balancing based on only Src
-          IP hash;"
+          IP hash; 'stateless-per-pkt-weighted-rr'= Stateless load-balancing using per-
+          packet weighted round robin on server level; 'stateless-per-pkt-service-
+          weighted-rr'= Stateless load-balancing using per-packet weighted round robin on
+          service port level;"
+        type: str
+        required: False
+    llb_method:
+        description:
+        - "'next-hop-link'= Server selection w/ link probe template on service port level;"
+        type: str
+        required: False
+    link_probe_template:
+        description:
+        - "Link Probe template (Link Probe template name)"
+        type: str
+        required: False
+    lclb_method:
+        description:
+        - "'link-cost-load-balance'= Link cost load balance;"
         type: str
         required: False
     pseudo_round_robin:
@@ -137,7 +160,10 @@ options:
           Stateless load-balancing based on only IP hash for both Src and Dst;
           'stateless-src-ip-hash'= Stateless load-balancing based on Src IP and Src port
           hash; 'stateless-src-ip-only-hash'= Stateless load-balancing based on only Src
-          IP hash;"
+          IP hash; 'stateless-per-pkt-weighted-rr'= Stateless load-balancing using per-
+          packet weighted round robin on server level; 'stateless-per-pkt-service-
+          weighted-rr'= Stateless load-balancing using per-packet weighted round robin on
+          service port level;"
         type: str
         required: False
     conn_rate:
@@ -649,6 +675,9 @@ AVAILABLE_PROPERTIES = [
     "l4_session_usage_revert_rate",
     "lb_method",
     "lc_method",
+    "lclb_method",
+    "link_probe_template",
+    "llb_method",
     "member_list",
     "min_active_member",
     "min_active_member_action",
@@ -678,6 +707,7 @@ AVAILABLE_PROPERTIES = [
     "template_policy",
     "template_policy_shared",
     "template_port",
+    "template_server",
     "top_fastest",
     "top_slowest",
     "traffic_replication_mirror",
@@ -726,6 +756,9 @@ def get_argspec():
         'template_port': {
             'type': 'str',
         },
+        'template_server': {
+            'type': 'str',
+        },
         'template_policy': {
             'type': 'str',
         },
@@ -760,8 +793,21 @@ def get_argspec():
             'choices': [
                 'stateless-dst-ip-hash', 'stateless-per-pkt-round-robin',
                 'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash',
-                'stateless-src-ip-hash', 'stateless-src-ip-only-hash'
+                'stateless-src-ip-hash', 'stateless-src-ip-only-hash',
+                'stateless-per-pkt-weighted-rr',
+                'stateless-per-pkt-service-weighted-rr'
             ]
+        },
+        'llb_method': {
+            'type': 'str',
+            'choices': ['next-hop-link']
+        },
+        'link_probe_template': {
+            'type': 'str',
+        },
+        'lclb_method': {
+            'type': 'str',
+            'choices': ['link-cost-load-balance']
         },
         'pseudo_round_robin': {
             'type': 'bool',
@@ -775,7 +821,9 @@ def get_argspec():
             'choices': [
                 'stateless-dst-ip-hash', 'stateless-per-pkt-round-robin',
                 'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash',
-                'stateless-src-ip-hash', 'stateless-src-ip-only-hash'
+                'stateless-src-ip-hash', 'stateless-src-ip-only-hash',
+                'stateless-per-pkt-weighted-rr',
+                'stateless-per-pkt-service-weighted-rr'
             ]
         },
         'conn_rate': {

@@ -65,20 +65,9 @@ options:
         - "techsupport local file name"
         type: str
         required: False
-    size:
-        description:
-        - "techsupport file size in byte"
-        type: int
-        required: False
     action:
         description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
-        type: str
-        required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
+        - "'create'= create; 'check'= check; 'delete'= delete;"
         type: str
         required: False
 
@@ -137,9 +126,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "action",
-    "dst_file",
     "file",
-    "size",
 ]
 
 
@@ -174,19 +161,9 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
         'action': {
-            'type':
-            'str',
-            'choices': [
-                'create', 'import', 'export', 'copy', 'rename', 'check',
-                'replace', 'delete'
-            ]
-        },
-        'dst_file': {
             'type': 'str',
+            'choices': ['create', 'check', 'delete']
         }
     })
     return rv

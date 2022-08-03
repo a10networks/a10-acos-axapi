@@ -57,7 +57,8 @@ options:
         required: False
     feature_name:
         description:
-        - "'app-fw'= Application Firewall;"
+        - "'app-fw'= Application Firewall; 'a10-threat-intel'= A10 Threat intel class
+          list;"
         type: str
         required: False
 
@@ -143,7 +144,12 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'feature_name': {'type': 'str', 'choices': ['app-fw']}})
+    rv.update({
+        'feature_name': {
+            'type': 'str',
+            'choices': ['app-fw', 'a10-threat-intel']
+        }
+    })
     return rv
 
 

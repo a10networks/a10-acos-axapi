@@ -88,7 +88,7 @@ options:
     warn_temp:
         description:
         - "Monitor warning system temperature threshold (Threshold value in Celsius,
-          default 68)"
+          default 1)"
         type: int
         required: False
     conn_type0:
@@ -140,6 +140,16 @@ options:
         description:
         - "SMP resource type 4 (Threshold value, default 32767)"
         type: int
+        required: False
+    ctrl_btdump:
+        description:
+        - "Generate ctrl-cpu-btdump on threshold exceeeds"
+        type: bool
+        required: False
+    data_btdump:
+        description:
+        - "Generate data-cpu-btdump on threshold exceeeds"
+        type: bool
         required: False
     uuid:
         description:
@@ -208,7 +218,9 @@ AVAILABLE_PROPERTIES = [
     "conn_type2",
     "conn_type3",
     "conn_type4",
+    "ctrl_btdump",
     "ctrl_cpu",
+    "data_btdump",
     "data_cpu",
     "disk",
     "memory",
@@ -297,6 +309,12 @@ def get_argspec():
         },
         'smp_type4': {
             'type': 'int',
+        },
+        'ctrl_btdump': {
+            'type': 'bool',
+        },
+        'data_btdump': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

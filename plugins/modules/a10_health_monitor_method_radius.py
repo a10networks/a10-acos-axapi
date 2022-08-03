@@ -70,11 +70,6 @@ options:
         - "Specify the username"
         type: str
         required: False
-    radius_password:
-        description:
-        - "Specify the user password"
-        type: bool
-        required: False
     radius_password_string:
         description:
         - "Configure password, '' means empty password"
@@ -88,7 +83,13 @@ options:
         required: False
     radius_secret:
         description:
-        - "Specify the shared secret of RADIUS server (Shared Crypto Key)"
+        - "Configure shared secret of RADIUS server"
+        type: str
+        required: False
+    radius_secret_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
         type: str
         required: False
     radius_port:
@@ -170,11 +171,11 @@ AVAILABLE_PROPERTIES = [
     "radius",
     "radius_encrypted",
     "radius_expect",
-    "radius_password",
     "radius_password_string",
     "radius_port",
     "radius_response_code",
     "radius_secret",
+    "radius_secret_encrypted",
     "radius_username",
     "uuid",
 ]
@@ -211,9 +212,6 @@ def get_argspec():
         'radius_username': {
             'type': 'str',
         },
-        'radius_password': {
-            'type': 'bool',
-        },
         'radius_password_string': {
             'type': 'str',
         },
@@ -221,6 +219,9 @@ def get_argspec():
             'type': 'str',
         },
         'radius_secret': {
+            'type': 'str',
+        },
+        'radius_secret_encrypted': {
             'type': 'str',
         },
         'radius_port': {

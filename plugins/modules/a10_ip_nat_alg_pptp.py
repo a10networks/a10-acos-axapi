@@ -73,15 +73,13 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'current-smp-sessions'= current-smp-sessions; 'current-gre-
-          sessions'= current-gre-sessions; 'smp-session-creation-failure'= smp-session-
-          creation-failure; 'truncated-pns-message'= truncated-pns-message; 'truncated-
-          pac-message'= truncated-pac-message; 'mismatched-pns-call-id'= mismatched-pns-
-          call-id; 'mismatched-pac-call-id'= mismatched-pac-call-id; 'retransmitted-pns-
-          message'= retransmitted-pns-message; 'retransmitted-pac-message'=
-          retransmitted-pac-message; 'truncated-gre-packet'= truncated-gre-packet;
-          'unknown-gre-version'= unknown-gre-version; 'no-matching-gre-session'= no-
-          matching-gre-session;"
+                - "'all'= all; 'current-smp-sessions'= some help string; 'current-gre-sessions'=
+          some help string; 'smp-session-creation-failure'= some help string; 'truncated-
+          pns-message'= some help string; 'truncated-pac-message'= some help string;
+          'mismatched-pns-call-id'= some help string; 'mismatched-pac-call-id'= some help
+          string; 'retransmitted-pns-message'= some help string; 'retransmitted-pac-
+          message'= some help string; 'truncated-gre-packet'= some help string; 'unknown-
+          gre-version'= some help string; 'no-matching-gre-session'= some help string;"
                 type: str
     stats:
         description:
@@ -91,51 +89,51 @@ options:
         suboptions:
             current_smp_sessions:
                 description:
-                - "Field current_smp_sessions"
+                - "some help string"
                 type: str
             current_gre_sessions:
                 description:
-                - "Field current_gre_sessions"
+                - "some help string"
                 type: str
             smp_session_creation_failure:
                 description:
-                - "Field smp_session_creation_failure"
+                - "some help string"
                 type: str
             truncated_pns_message:
                 description:
-                - "Field truncated_pns_message"
+                - "some help string"
                 type: str
             truncated_pac_message:
                 description:
-                - "Field truncated_pac_message"
+                - "some help string"
                 type: str
             mismatched_pns_call_id:
                 description:
-                - "Field mismatched_pns_call_id"
+                - "some help string"
                 type: str
             mismatched_pac_call_id:
                 description:
-                - "Field mismatched_pac_call_id"
+                - "some help string"
                 type: str
             retransmitted_pns_message:
                 description:
-                - "Field retransmitted_pns_message"
+                - "some help string"
                 type: str
             retransmitted_pac_message:
                 description:
-                - "Field retransmitted_pac_message"
+                - "some help string"
                 type: str
             truncated_gre_packet:
                 description:
-                - "Field truncated_gre_packet"
+                - "some help string"
                 type: str
             unknown_gre_version:
                 description:
-                - "Field unknown_gre_version"
+                - "some help string"
                 type: str
             no_matching_gre_session:
                 description:
-                - "Field no_matching_gre_session"
+                - "some help string"
                 type: str
 
 '''

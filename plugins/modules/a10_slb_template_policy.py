@@ -690,6 +690,15 @@ def get_argspec():
                 'fall_back_snat': {
                     'type': 'str',
                 },
+                'proxy_chaining': {
+                    'type': 'bool',
+                },
+                'proxy_chaining_bypass': {
+                    'type': 'bool',
+                },
+                'support_cert_fetch': {
+                    'type': 'bool',
+                },
                 'log': {
                     'type': 'bool',
                 },
@@ -769,6 +778,33 @@ def get_argspec():
                         'ntype': {
                             'type': 'str',
                             'choices': ['host', 'url', 'ip']
+                        },
+                        'priority': {
+                            'type': 'int',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                            }
+                        }
+                    },
+                    'web_reputation_scope_list': {
+                        'type': 'list',
+                        'web_reputation_scope': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'action': {
+                            'type': 'str',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                            'choices': ['host', 'url']
                         },
                         'priority': {
                             'type': 'int',

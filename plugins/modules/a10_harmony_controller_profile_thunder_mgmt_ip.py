@@ -60,6 +60,11 @@ options:
         - "IP address (IPv4 address)"
         type: str
         required: False
+    ipv6_addr:
+        description:
+        - "IPV6 address for the host"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -121,6 +126,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "ip_address",
+    "ipv6_addr",
     "uuid",
 ]
 
@@ -151,6 +157,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update({
         'ip_address': {
+            'type': 'str',
+        },
+        'ipv6_addr': {
             'type': 'str',
         },
         'uuid': {

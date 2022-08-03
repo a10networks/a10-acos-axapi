@@ -480,6 +480,16 @@ options:
         - "Category Food and Dining"
         type: bool
         required: False
+    nudity_artistic:
+        description:
+        - "Category Nudity join Entertainment and Arts"
+        type: bool
+        required: False
+    illegal_pornography:
+        description:
+        - "Category Illegal join Adult and Pornography"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -547,7 +557,8 @@ options:
           and-beauty'= fashion and beauty category; 'recreation-and-hobbies'= recreation
           and hobbies category; 'motor-vehicles'= motor vehicles category; 'web-hosting-
           sites'= web hosting sites category; 'food-and-dining'= food and dining
-          category;"
+          category; 'nudity-artistic'= nudity join entertainment and arts; 'illegal-
+          pornography'= illegal join adult and pornography;"
                 type: str
     stats:
         description:
@@ -891,6 +902,14 @@ options:
                 description:
                 - "food and dining category"
                 type: str
+            nudity_artistic:
+                description:
+                - "nudity join entertainment and arts"
+                type: str
+            illegal_pornography:
+                description:
+                - "illegal join adult and pornography"
+                type: str
             name:
                 description:
                 - "Web Category List name"
@@ -981,6 +1000,7 @@ AVAILABLE_PROPERTIES = [
     "home_and_garden",
     "hunting_and_fishing",
     "illegal",
+    "illegal_pornography",
     "image_and_video_search",
     "internet_communications",
     "internet_portals",
@@ -997,6 +1017,7 @@ AVAILABLE_PROPERTIES = [
     "name",
     "news_and_media",
     "nudity",
+    "nudity_artistic",
     "online_greeting_cards",
     "open_http_proxies",
     "parked_domains",
@@ -1323,6 +1344,12 @@ def get_argspec():
         'food_and_dining': {
             'type': 'bool',
         },
+        'nudity_artistic': {
+            'type': 'bool',
+        },
+        'illegal_pornography': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
@@ -1365,7 +1392,8 @@ def get_argspec():
                     'alcohol-and-tobacco', 'private-IP-addresses',
                     'image-and-video-search', 'fashion-and-beauty',
                     'recreation-and-hobbies', 'motor-vehicles',
-                    'web-hosting-sites', 'food-and-dining'
+                    'web-hosting-sites', 'food-and-dining', 'nudity-artistic',
+                    'illegal-pornography'
                 ]
             }
         },
@@ -1621,6 +1649,12 @@ def get_argspec():
                 'type': 'str',
             },
             'food_and_dining': {
+                'type': 'str',
+            },
+            'nudity_artistic': {
+                'type': 'str',
+            },
+            'illegal_pornography': {
                 'type': 'str',
             },
             'name': {

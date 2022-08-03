@@ -57,7 +57,8 @@ options:
         required: False
     esp_value:
         description:
-        - "'enable'= Enable ESP ALG for LSN;"
+        - "'enable'= Enable ESP ALG for LSN; 'enable-with-ctrl'= Enable ESP ALG for LSN
+          with control session;"
         type: str
         required: False
     uuid:
@@ -74,7 +75,7 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'session-created'= ESP Sessions Created; 'placeholder-debug'=
-          Placeholder Debug;"
+          Placeholder Debug; 'nat-ip-conflict'= NAT IP Conflict;"
                 type: str
     stats:
         description:
@@ -85,6 +86,10 @@ options:
             session_created:
                 description:
                 - "ESP Sessions Created"
+                type: str
+            nat_ip_conflict:
+                description:
+                - "NAT IP Conflict"
                 type: str
 
 '''
@@ -175,7 +180,7 @@ def get_argspec():
     rv.update({
         'esp_value': {
             'type': 'str',
-            'choices': ['enable']
+            'choices': ['enable', 'enable-with-ctrl']
         },
         'uuid': {
             'type': 'str',
@@ -183,13 +188,20 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type': 'str',
-                'choices': ['all', 'session-created', 'placeholder-debug']
+                'type':
+                'str',
+                'choices': [
+                    'all', 'session-created', 'placeholder-debug',
+                    'nat-ip-conflict'
+                ]
             }
         },
         'stats': {
             'type': 'dict',
             'session_created': {
+                'type': 'str',
+            },
+            'nat_ip_conflict': {
                 'type': 'str',
             }
         }

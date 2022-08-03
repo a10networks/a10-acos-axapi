@@ -70,6 +70,11 @@ options:
         - "'redirect'= redirect JWT to specific URI; 'relay'= relay JWT to back-end;"
         type: str
         required: False
+    jwt_relay_uri:
+        description:
+        - "Specify JWT relay URI (for relay action)"
+        type: str
+        required: False
     token_lifetime:
         description:
         - "Specify JWT token lifetime (Specify lifetime (in seconds), default is 300.)"
@@ -159,6 +164,7 @@ AVAILABLE_PROPERTIES = [
     "action",
     "encrypted",
     "issuer",
+    "jwt_relay_uri",
     "name",
     "secret_string",
     "signature_secret",
@@ -203,6 +209,9 @@ def get_argspec():
         'action': {
             'type': 'str',
             'choices': ['redirect', 'relay']
+        },
+        'jwt_relay_uri': {
+            'type': 'str',
         },
         'token_lifetime': {
             'type': 'int',

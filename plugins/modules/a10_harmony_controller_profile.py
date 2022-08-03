@@ -60,15 +60,20 @@ options:
         - "Set harmony controller host adddress"
         type: str
         required: False
+    host_ipv6:
+        description:
+        - "IPV6 address or FQDN for the host"
+        type: str
+        required: False
+    port:
+        description:
+        - "Set port for remote Harmony Controller"
+        type: int
+        required: False
     use_mgmt_port:
         description:
         - "Use management port for connections"
         type: bool
-        required: False
-    port:
-        description:
-        - "Set port for remote Harmony Controller, default is 8443"
-        type: int
         required: False
     provider:
         description:
@@ -82,12 +87,12 @@ options:
         required: False
     cluster_name:
         description:
-        - "cluster name for the device"
+        - "name of cluster in harmony controller that this device is a member of"
         type: str
         required: False
     cluster_id:
         description:
-        - "cluster id for the device"
+        - " id for the cluster in harmony controller, typically an uuid"
         type: str
         required: False
     secret_value:
@@ -156,6 +161,10 @@ options:
             ip_address:
                 description:
                 - "IP address (IPv4 address)"
+                type: str
+            ipv6_addr:
+                description:
+                - "IPV6 address for the host"
                 type: str
             uuid:
                 description:
@@ -253,6 +262,10 @@ options:
                 description:
                 - "Field tunnel_error_message"
                 type: str
+            peer_device_info:
+                description:
+                - "Field peer_device_info"
+                type: str
 
 '''
 
@@ -314,6 +327,7 @@ AVAILABLE_PROPERTIES = [
     "cluster_id",
     "cluster_name",
     "host",
+    "host_ipv6",
     "interval",
     "oper",
     "password_encrypted",
@@ -358,11 +372,14 @@ def get_argspec():
         'host': {
             'type': 'str',
         },
-        'use_mgmt_port': {
-            'type': 'bool',
+        'host_ipv6': {
+            'type': 'str',
         },
         'port': {
             'type': 'int',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
         },
         'provider': {
             'type': 'str',
@@ -414,6 +431,9 @@ def get_argspec():
         'thunder_mgmt_ip': {
             'type': 'dict',
             'ip_address': {
+                'type': 'str',
+            },
+            'ipv6_addr': {
                 'type': 'str',
             },
             'uuid': {
@@ -485,6 +505,9 @@ def get_argspec():
                 'type': 'str',
             },
             'tunnel_error_message': {
+                'type': 'str',
+            },
+            'peer_device_info': {
                 'type': 'str',
             }
         }

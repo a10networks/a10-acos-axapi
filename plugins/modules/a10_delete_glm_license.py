@@ -55,11 +55,6 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    cylance:
-        description:
-        - "only remove Cylance license"
-        type: bool
-        required: False
     threatstop:
         description:
         - "only remove ThreatSTOP license"
@@ -78,6 +73,21 @@ options:
     ipsec_vpn:
         description:
         - "only remove IPSEC VPN license"
+        type: bool
+        required: False
+    webroot:
+        description:
+        - "only remove Webroot license"
+        type: bool
+        required: False
+    a10_ti:
+        description:
+        - "only remove A10 Threat Intel license"
+        type: bool
+        required: False
+    secure_gaming:
+        description:
+        - "only remove Secure gaming license"
         type: bool
         required: False
 
@@ -135,10 +145,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cylance",
+    "a10_ti",
     "ipsec_vpn",
     "qosmos",
+    "secure_gaming",
     "threatstop",
+    "webroot",
     "webroot_ti",
 ]
 
@@ -168,9 +180,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'cylance': {
-            'type': 'bool',
-        },
         'threatstop': {
             'type': 'bool',
         },
@@ -181,6 +190,15 @@ def get_argspec():
             'type': 'bool',
         },
         'ipsec_vpn': {
+            'type': 'bool',
+        },
+        'webroot': {
+            'type': 'bool',
+        },
+        'a10_ti': {
+            'type': 'bool',
+        },
+        'secure_gaming': {
             'type': 'bool',
         }
     })

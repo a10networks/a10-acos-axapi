@@ -301,6 +301,51 @@ options:
         - "Specify passcode variable name in default logon page (Default= passcode)"
         type: str
         required: False
+    enable_CAPTCHA:
+        description:
+        - "Enable CAPTCHA in deafult logon page"
+        type: bool
+        required: False
+    captcha_type:
+        description:
+        - "'reCAPTCHAv2-checkbox'= Google reCAPTCHAv2 Checkbox; 'reCAPTCHAv2-invisible'=
+          Google reCAPTCHAv2 Invisible; 'reCAPTCHAv3'= Google reCAPTCHAv3;"
+        type: str
+        required: False
+    site_key_string:
+        description:
+        - "Site key string"
+        type: str
+        required: False
+    encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+        type: str
+        required: False
+    reCAPTCHA_cfg:
+        description:
+        - "Field reCAPTCHA_cfg"
+        type: dict
+        required: False
+        suboptions:
+            reCAPTCHA_theme:
+                description:
+                - "'light'= light theme; 'dark'= dark theme;"
+                type: str
+            reCAPTCHA_size:
+                description:
+                - "'normal'= normal size; 'compact'= compact size;"
+                type: str
+            reCAPTCHA_badge:
+                description:
+                - "'bottom-left'= bottom left corner; 'bottom-right'= bottom right corner;"
+                type: str
+            reCAPTCHA_action:
+                description:
+                - "Specify reCAPTCHA action (Specify action string, only accept alphanumeric,
+          underscore, and slash (Default= A10_DEFAULT_LOGON))"
+                type: str
     submit_text:
         description:
         - "Specify submit button text in default logon page (Default= Log In)"
@@ -368,12 +413,17 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "action_url",
     "background",
+    "captcha_type",
+    "enable_CAPTCHA",
     "enable_passcode",
+    "encrypted",
     "fail_msg_cfg",
     "passcode_cfg",
     "passcode_var",
     "password_cfg",
     "password_var",
+    "reCAPTCHA_cfg",
+    "site_key_string",
     "submit_text",
     "username_cfg",
     "username_var",
@@ -609,6 +659,39 @@ def get_argspec():
         },
         'passcode_var': {
             'type': 'str',
+        },
+        'enable_CAPTCHA': {
+            'type': 'bool',
+        },
+        'captcha_type': {
+            'type':
+            'str',
+            'choices':
+            ['reCAPTCHAv2-checkbox', 'reCAPTCHAv2-invisible', 'reCAPTCHAv3']
+        },
+        'site_key_string': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'reCAPTCHA_cfg': {
+            'type': 'dict',
+            'reCAPTCHA_theme': {
+                'type': 'str',
+                'choices': ['light', 'dark']
+            },
+            'reCAPTCHA_size': {
+                'type': 'str',
+                'choices': ['normal', 'compact']
+            },
+            'reCAPTCHA_badge': {
+                'type': 'str',
+                'choices': ['bottom-left', 'bottom-right']
+            },
+            'reCAPTCHA_action': {
+                'type': 'str',
+            }
         },
         'submit_text': {
             'type': 'str',

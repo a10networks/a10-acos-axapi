@@ -60,6 +60,11 @@ options:
         - "'a10'= Enable A10 core dump, by default; 'system'= Enable system coredump;"
         type: str
         required: False
+    full:
+        description:
+        - "Enable full system core dump"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -121,6 +126,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "core_level",
+    "full",
     "uuid",
 ]
 
@@ -153,6 +159,9 @@ def get_argspec():
         'core_level': {
             'type': 'str',
             'choices': ['a10', 'system']
+        },
+        'full': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

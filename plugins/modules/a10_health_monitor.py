@@ -149,6 +149,32 @@ options:
           down reason)"
         type: str
         required: False
+    ssl_ticket:
+        description:
+        - "Enable SSL-Ticket Session Resumption"
+        type: bool
+        required: False
+    ssl_ticket_lifetime:
+        description:
+        - "SSL-Ticket lifetime (seconds)"
+        type: int
+        required: False
+    ssl_version:
+        description:
+        - "TLS/SSL version (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1, 33-TLSv1.2 and
+          34-TLSv1.3)"
+        type: int
+        required: False
+    ssl_dgversion:
+        description:
+        - "Lower TLS/SSL version can be downgraded"
+        type: int
+        required: False
+    default_state_up:
+        description:
+        - "Initial health state will default to UP"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -304,6 +330,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "default_state_up",
     "disable_after_down",
     "dsr_l2_strict",
     "interval",
@@ -317,6 +344,10 @@ AVAILABLE_PROPERTIES = [
     "retry",
     "sample_threshold",
     "ssl_ciphers",
+    "ssl_dgversion",
+    "ssl_ticket",
+    "ssl_ticket_lifetime",
+    "ssl_version",
     "status_code",
     "strict_retry_on_server_err_resp",
     "threshold",
@@ -405,6 +436,21 @@ def get_argspec():
         'ssl_ciphers': {
             'type': 'str',
         },
+        'ssl_ticket': {
+            'type': 'bool',
+        },
+        'ssl_ticket_lifetime': {
+            'type': 'int',
+        },
+        'ssl_version': {
+            'type': 'int',
+        },
+        'ssl_dgversion': {
+            'type': 'int',
+        },
+        'default_state_up': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
@@ -450,6 +496,12 @@ def get_argspec():
                     'port_contains': {
                         'type': 'str',
                     }
+                },
+                'maintenance': {
+                    'type': 'bool',
+                },
+                'maintenance_text': {
+                    'type': 'str',
                 },
                 'uuid': {
                     'type': 'str',
@@ -505,6 +557,15 @@ def get_argspec():
                 'url_type': {
                     'type': 'str',
                     'choices': ['GET', 'POST', 'HEAD']
+                },
+                'maintenance': {
+                    'type': 'bool',
+                },
+                'maintenance_text': {
+                    'type': 'str',
+                },
+                'maintenance_text_regex': {
+                    'type': 'str',
                 },
                 'url_path': {
                     'type': 'str',
@@ -660,6 +721,9 @@ def get_argspec():
                     'type': 'dict',
                     'dns_ipv4_response': {
                         'type': 'str',
+                    },
+                    'dns_ipv4_fqdn': {
+                        'type': 'str',
                     }
                 },
                 'dns_ipv4_recurse': {
@@ -676,6 +740,9 @@ def get_argspec():
                     'type': 'dict',
                     'dns_ipv6_response': {
                         'type': 'str',
+                    },
+                    'dns_ipv6_fqdn': {
+                        'type': 'str',
                     }
                 },
                 'dns_ipv6_recurse': {
@@ -691,9 +758,23 @@ def get_argspec():
                 'dns_domain_port': {
                     'type': 'int',
                 },
+                'dns_domain_type': {
+                    'type': 'str',
+                    'choices':
+                    ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
+                },
                 'dns_domain_expect': {
                     'type': 'dict',
                     'dns_domain_response': {
+                        'type': 'str',
+                    },
+                    'dns_domain_fqdn': {
+                        'type': 'str',
+                    },
+                    'dns_domain_ipv4': {
+                        'type': 'str',
+                    },
+                    'dns_domain_ipv6': {
                         'type': 'str',
                     }
                 },
@@ -703,11 +784,6 @@ def get_argspec():
                 },
                 'dns_domain_tcp': {
                     'type': 'bool',
-                },
-                'dns_domain_type': {
-                    'type': 'str',
-                    'choices':
-                    ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
                 },
                 'uuid': {
                     'type': 'str',
@@ -802,9 +878,6 @@ def get_argspec():
                 'radius_username': {
                     'type': 'str',
                 },
-                'radius_password': {
-                    'type': 'bool',
-                },
                 'radius_password_string': {
                     'type': 'str',
                 },
@@ -812,6 +885,9 @@ def get_argspec():
                     'type': 'str',
                 },
                 'radius_secret': {
+                    'type': 'str',
+                },
+                'radius_secret_encrypted': {
                     'type': 'str',
                 },
                 'radius_port': {
@@ -1047,6 +1123,15 @@ def get_argspec():
                 'web_port': {
                     'type': 'int',
                 },
+                'disable_sslv2hello': {
+                    'type': 'bool',
+                },
+                'https_host': {
+                    'type': 'str',
+                },
+                'sni': {
+                    'type': 'bool',
+                },
                 'https_expect': {
                     'type': 'bool',
                 },
@@ -1060,12 +1145,6 @@ def get_argspec():
                     'type': 'str',
                 },
                 'text_regex': {
-                    'type': 'str',
-                },
-                'https_host': {
-                    'type': 'str',
-                },
-                'https_maintenance_code': {
                     'type': 'str',
                 },
                 'https_url': {
@@ -1091,7 +1170,22 @@ def get_argspec():
                 'https_postfile': {
                     'type': 'str',
                 },
+                'https_maintenance_code': {
+                    'type': 'str',
+                },
+                'maintenance': {
+                    'type': 'bool',
+                },
+                'maintenance_text': {
+                    'type': 'str',
+                },
+                'maintenance_text_regex': {
+                    'type': 'str',
+                },
                 'https_username': {
+                    'type': 'str',
+                },
+                'https_server_cert_name': {
                     'type': 'str',
                 },
                 'https_password': {
@@ -1102,9 +1196,6 @@ def get_argspec():
                 },
                 'https_encrypted': {
                     'type': 'str',
-                },
-                'disable_sslv2hello': {
-                    'type': 'bool',
                 },
                 'https_kerberos_auth': {
                     'type': 'bool',

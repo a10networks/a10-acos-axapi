@@ -55,11 +55,246 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    glname:
+        description:
+        - "Debug for matched Geo-location"
+        type: str
+        required: False
+    memory:
+        description:
+        - "Debug GSLB memory"
+        type: bool
+        required: False
+    id:
+        description:
+        - "Specify ID"
+        type: int
+        required: False
+    ip_addr:
+        description:
+        - "Debug for matched IP address"
+        type: str
+        required: False
+    ipv6_addr:
+        description:
+        - "Debug for matched IPv6 address"
+        type: str
+        required: False
+    state:
+        description:
+        - "Keep GSLB state information"
+        type: bool
+        required: False
+    one_shot:
+        description:
+        - "Stop after get 64 states"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    group:
+        description:
+        - "Field group"
+        type: dict
+        required: False
+        suboptions:
+            cache:
+                description:
+                - "Cache trace information"
+                type: bool
+            event:
+                description:
+                - "EVENTS trace information"
+                type: bool
+            all:
+                description:
+                - "All trace information"
+                type: bool
+            fsm:
+                description:
+                - "FSM trace information"
+                type: bool
+            ip:
+                description:
+                - "Remote IP address of GSLB controller of the group"
+                type: bool
+            peer_ipv4:
+                description:
+                - "Specify remote IPv4 Address"
+                type: str
+            peer_ipv6:
+                description:
+                - "Specify remote IPv6 Address"
+                type: str
+            ipc:
+                description:
+                - "IPC trace information"
+                type: bool
+            keep_alive:
+                description:
+                - "KEEPALIVE trace information"
+                type: bool
+            message:
+                description:
+                - "Debug GSLB group message"
+                type: bool
+            message_all:
+                description:
+                - "All messages"
+                type: bool
+            message_keepalive:
+                description:
+                - "GMP keepalive messages"
+                type: bool
+            message_notify:
+                description:
+                - "GMP notify messages"
+                type: bool
+            message_control:
+                description:
+                - "GMP control messages"
+                type: bool
+            message_query:
+                description:
+                - "GMP query messages"
+                type: bool
+            message_open:
+                description:
+                - "GMP open messages"
+                type: bool
+            message_group:
+                description:
+                - "GMP group messages"
+                type: bool
+            name:
+                description:
+                - "Name of GSLB group"
+                type: str
+            normal:
+                description:
+                - "Normal trace information"
+                type: bool
+            timer:
+                description:
+                - "Timer trace information"
+                type: bool
+            update:
+                description:
+                - "Update trace information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    protocol:
+        description:
+        - "Field protocol"
+        type: dict
+        required: False
+        suboptions:
+            cache:
+                description:
+                - "Cache trace information"
+                type: bool
+            event:
+                description:
+                - "EVENTS trace information"
+                type: bool
+            all:
+                description:
+                - "All trace information"
+                type: bool
+            active_rdt:
+                description:
+                - "ARDT trace information"
+                type: bool
+            fsm:
+                description:
+                - "FSM trace information"
+                type: bool
+            ip:
+                description:
+                - "Specify the remote IP address"
+                type: bool
+            peer_ipv4:
+                description:
+                - "Specify remote IPv4 Address"
+                type: str
+            peer_ipv6:
+                description:
+                - "Specify remote IPv6 Address"
+                type: str
+            ipc:
+                description:
+                - "IPC trace information"
+                type: bool
+            keep_alive:
+                description:
+                - "KEEPALIVE trace information"
+                type: bool
+            message:
+                description:
+                - "Debug GSLB protocol message"
+                type: bool
+            message_all:
+                description:
+                - "All messages"
+                type: bool
+            message_keepalive:
+                description:
+                - "GMP keepalive messages"
+                type: bool
+            message_notify:
+                description:
+                - "GMP notify messages"
+                type: bool
+            message_control:
+                description:
+                - "GMP control messages"
+                type: bool
+            message_query:
+                description:
+                - "GMP query messages"
+                type: bool
+            message_open:
+                description:
+                - "GMP open messages"
+                type: bool
+            message_update:
+                description:
+                - "GMP update messages"
+                type: bool
+            message_ardt_query:
+                description:
+                - "GMP ardt-query messages"
+                type: bool
+            message_ardt_report:
+                description:
+                - "GMP ardt-report messages"
+                type: bool
+            name:
+                description:
+                - "Specify the slb device name"
+                type: str
+            normal:
+                description:
+                - "Normal trace information"
+                type: bool
+            timer:
+                description:
+                - "Timer trace information"
+                type: bool
+            update:
+                description:
+                - "Update trace information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -115,6 +350,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "glname",
+    "group",
+    "id",
+    "ip_addr",
+    "ipv6_addr",
+    "memory",
+    "one_shot",
+    "protocol",
+    "state",
     "uuid",
 ]
 
@@ -143,9 +387,179 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {
-        'type': 'str',
-    }})
+    rv.update({
+        'glname': {
+            'type': 'str',
+        },
+        'memory': {
+            'type': 'bool',
+        },
+        'id': {
+            'type': 'int',
+        },
+        'ip_addr': {
+            'type': 'str',
+        },
+        'ipv6_addr': {
+            'type': 'str',
+        },
+        'state': {
+            'type': 'bool',
+        },
+        'one_shot': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'group': {
+            'type': 'dict',
+            'cache': {
+                'type': 'bool',
+            },
+            'event': {
+                'type': 'bool',
+            },
+            'all': {
+                'type': 'bool',
+            },
+            'fsm': {
+                'type': 'bool',
+            },
+            'ip': {
+                'type': 'bool',
+            },
+            'peer_ipv4': {
+                'type': 'str',
+            },
+            'peer_ipv6': {
+                'type': 'str',
+            },
+            'ipc': {
+                'type': 'bool',
+            },
+            'keep_alive': {
+                'type': 'bool',
+            },
+            'message': {
+                'type': 'bool',
+            },
+            'message_all': {
+                'type': 'bool',
+            },
+            'message_keepalive': {
+                'type': 'bool',
+            },
+            'message_notify': {
+                'type': 'bool',
+            },
+            'message_control': {
+                'type': 'bool',
+            },
+            'message_query': {
+                'type': 'bool',
+            },
+            'message_open': {
+                'type': 'bool',
+            },
+            'message_group': {
+                'type': 'bool',
+            },
+            'name': {
+                'type': 'str',
+            },
+            'normal': {
+                'type': 'bool',
+            },
+            'timer': {
+                'type': 'bool',
+            },
+            'update': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'protocol': {
+            'type': 'dict',
+            'cache': {
+                'type': 'bool',
+            },
+            'event': {
+                'type': 'bool',
+            },
+            'all': {
+                'type': 'bool',
+            },
+            'active_rdt': {
+                'type': 'bool',
+            },
+            'fsm': {
+                'type': 'bool',
+            },
+            'ip': {
+                'type': 'bool',
+            },
+            'peer_ipv4': {
+                'type': 'str',
+            },
+            'peer_ipv6': {
+                'type': 'str',
+            },
+            'ipc': {
+                'type': 'bool',
+            },
+            'keep_alive': {
+                'type': 'bool',
+            },
+            'message': {
+                'type': 'bool',
+            },
+            'message_all': {
+                'type': 'bool',
+            },
+            'message_keepalive': {
+                'type': 'bool',
+            },
+            'message_notify': {
+                'type': 'bool',
+            },
+            'message_control': {
+                'type': 'bool',
+            },
+            'message_query': {
+                'type': 'bool',
+            },
+            'message_open': {
+                'type': 'bool',
+            },
+            'message_update': {
+                'type': 'bool',
+            },
+            'message_ardt_query': {
+                'type': 'bool',
+            },
+            'message_ardt_report': {
+                'type': 'bool',
+            },
+            'name': {
+                'type': 'str',
+            },
+            'normal': {
+                'type': 'bool',
+            },
+            'timer': {
+                'type': 'bool',
+            },
+            'update': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        }
+    })
     return rv
 
 
@@ -169,10 +583,23 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["gslb"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["gslb"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["gslb"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):

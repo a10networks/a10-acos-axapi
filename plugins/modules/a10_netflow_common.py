@@ -67,6 +67,11 @@ options:
           lasting session (default= disabled)."
         type: bool
         required: False
+    nat44_tpl_1001:
+        description:
+        - "Field nat44_tpl_1001"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -128,6 +133,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "max_packet_queue_time",
+    "nat44_tpl_1001",
     "reset_time_on_flow_record",
     "uuid",
 ]
@@ -162,6 +168,9 @@ def get_argspec():
             'type': 'int',
         },
         'reset_time_on_flow_record': {
+            'type': 'bool',
+        },
+        'nat44_tpl_1001': {
             'type': 'bool',
         },
         'uuid': {

@@ -124,6 +124,10 @@ options:
                 description:
                 - "Specify passcode variable name in form submission"
                 type: str
+            captcha_variable:
+                description:
+                - "Specify captcha variable name in form submission"
+                type: str
             login_failure_message:
                 description:
                 - "Specify login failure message shown in logon page (Specify error string,
@@ -382,6 +386,9 @@ def get_argspec():
                 'type': 'str',
             },
             'passcode_variable': {
+                'type': 'str',
+            },
+            'captcha_variable': {
                 'type': 'str',
             },
             'login_failure_message': {

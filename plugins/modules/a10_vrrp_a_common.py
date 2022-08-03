@@ -152,6 +152,11 @@ options:
         - "Enables Layer 2/3 forwarding of Layer 4 traffic on the Standby ACOS device"
         type: bool
         required: False
+    enable_sync_session_seq_number:
+        description:
+        - "enable monitoring sending and receiving sync packets with sequence number"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -227,6 +232,7 @@ AVAILABLE_PROPERTIES = [
     "dead_timer",
     "device_id",
     "disable_default_vrid",
+    "enable_sync_session_seq_number",
     "forward_l4_packet_on_standby",
     "get_ready_time",
     "hello_interval",
@@ -322,6 +328,9 @@ def get_argspec():
             }
         },
         'forward_l4_packet_on_standby': {
+            'type': 'bool',
+        },
+        'enable_sync_session_seq_number': {
             'type': 'bool',
         },
         'uuid': {

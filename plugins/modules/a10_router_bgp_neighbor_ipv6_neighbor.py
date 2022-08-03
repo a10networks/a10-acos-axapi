@@ -116,6 +116,16 @@ options:
         - "Advertise route-refresh capability to this neighbor"
         type: bool
         required: False
+    graceful_restart:
+        description:
+        - "enable graceful-restart helper for this neighbor"
+        type: bool
+        required: False
+    extended_nexthop:
+        description:
+        - "Advertise extended-nexthop capability to this neighbor"
+        type: bool
+        required: False
     collide_established:
         description:
         - "Include Neighbor in Established State for Collision Detection"
@@ -236,6 +246,11 @@ options:
     maximum_prefix_thres:
         description:
         - "threshold-value, 1 to 100 percent"
+        type: int
+        required: False
+    restart_min:
+        description:
+        - "restart value, 1 to 1440 minutes"
         type: int
         required: False
     next_hop_self:
@@ -370,8 +385,8 @@ options:
         required: False
     lif:
         description:
-        - "Logical interface (Lif interface number)"
-        type: int
+        - "Logical interface (Lif interface name)"
+        type: str
         required: False
     tunnel:
         description:
@@ -464,6 +479,8 @@ AVAILABLE_PROPERTIES = [
     "ebgp_multihop_hop_count",
     "enforce_multihop",
     "ethernet",
+    "extended_nexthop",
+    "graceful_restart",
     "inbound",
     "key_id",
     "key_type",
@@ -485,6 +502,7 @@ AVAILABLE_PROPERTIES = [
     "peer_group_name",
     "prefix_list_direction",
     "remove_private_as",
+    "restart_min",
     "route_map",
     "route_refresh",
     "send_community_val",
@@ -563,6 +581,12 @@ def get_argspec():
         'route_refresh': {
             'type': 'bool',
         },
+        'graceful_restart': {
+            'type': 'bool',
+        },
+        'extended_nexthop': {
+            'type': 'bool',
+        },
         'collide_established': {
             'type': 'bool',
         },
@@ -638,6 +662,9 @@ def get_argspec():
             'type': 'int',
         },
         'maximum_prefix_thres': {
+            'type': 'int',
+        },
+        'restart_min': {
             'type': 'int',
         },
         'next_hop_self': {
@@ -722,7 +749,7 @@ def get_argspec():
             'type': 'str',
         },
         'lif': {
-            'type': 'int',
+            'type': 'str',
         },
         'tunnel': {
             'type': 'str',

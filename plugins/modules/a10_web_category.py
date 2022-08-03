@@ -125,6 +125,11 @@ options:
         - "Enable BrightCloud SDK"
         type: bool
         required: False
+    online_check_disable:
+        description:
+        - "Disables online queries for license. By default it is enabled."
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -563,6 +568,14 @@ options:
                 description:
                 - "Category Food and Dining"
                 type: bool
+            nudity_artistic:
+                description:
+                - "Category Nudity join Entertainment and Arts"
+                type: bool
+            illegal_pornography:
+                description:
+                - "Category Illegal join Adult and Pornography"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -589,6 +602,58 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    reputation_scope_list:
+        description:
+        - "Field reputation_scope_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Reputation Scope name"
+                type: str
+            greater_than:
+                description:
+                - "Field greater_than"
+                type: dict
+            less_than:
+                description:
+                - "Field less_than"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    web_reputation:
+        description:
+        - "Field web_reputation"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            intercepted_urls:
+                description:
+                - "Field intercepted_urls"
+                type: dict
+            bypassed_urls:
+                description:
+                - "Field bypassed_urls"
+                type: dict
+            url:
+                description:
+                - "Field url"
+                type: dict
     oper:
         description:
         - "Field oper"
@@ -655,6 +720,10 @@ options:
                 description:
                 - "Field statistics"
                 type: dict
+            web_reputation:
+                description:
+                - "Field web_reputation"
+                type: dict
 
 '''
 
@@ -719,10 +788,12 @@ AVAILABLE_PROPERTIES = [
     "enable",
     "intercepted_urls",
     "license",
+    "online_check_disable",
     "oper",
     "port",
     "proxy_server",
     "remote_syslog_enable",
+    "reputation_scope_list",
     "rtu_cache_size",
     "rtu_update_disable",
     "rtu_update_interval",
@@ -733,6 +804,7 @@ AVAILABLE_PROPERTIES = [
     "url",
     "use_mgmt_port",
     "uuid",
+    "web_reputation",
 ]
 
 
@@ -801,6 +873,9 @@ def get_argspec():
             'type': 'bool',
         },
         'enable': {
+            'type': 'bool',
+        },
+        'online_check_disable': {
             'type': 'bool',
         },
         'uuid': {
@@ -1122,6 +1197,12 @@ def get_argspec():
             'food_and_dining': {
                 'type': 'bool',
             },
+            'nudity_artistic': {
+                'type': 'bool',
+            },
+            'illegal_pornography': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             },
@@ -1167,7 +1248,8 @@ def get_argspec():
                         'alcohol-and-tobacco', 'private-IP-addresses',
                         'image-and-video-search', 'fashion-and-beauty',
                         'recreation-and-hobbies', 'motor-vehicles',
-                        'web-hosting-sites', 'food-and-dining'
+                        'web-hosting-sites', 'food-and-dining',
+                        'nudity-artistic', 'illegal-pornography'
                     ]
                 }
             }
@@ -1187,6 +1269,96 @@ def get_argspec():
                         'cloud-lookup', 'rtu-lookup', 'lookup-latency',
                         'db-mem', 'rtu-cache-mem', 'lookup-cache-mem'
                     ]
+                }
+            }
+        },
+        'reputation_scope_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'greater_than': {
+                'type': 'dict',
+                'greater_trustworthy': {
+                    'type': 'bool',
+                },
+                'greater_low_risk': {
+                    'type': 'bool',
+                },
+                'greater_moderate_risk': {
+                    'type': 'bool',
+                },
+                'greater_suspicious': {
+                    'type': 'bool',
+                },
+                'greater_malicious': {
+                    'type': 'bool',
+                },
+                'greater_threshold': {
+                    'type': 'int',
+                }
+            },
+            'less_than': {
+                'type': 'dict',
+                'less_trustworthy': {
+                    'type': 'bool',
+                },
+                'less_low_risk': {
+                    'type': 'bool',
+                },
+                'less_moderate_risk': {
+                    'type': 'bool',
+                },
+                'less_suspicious': {
+                    'type': 'bool',
+                },
+                'less_malicious': {
+                    'type': 'bool',
+                },
+                'less_threshold': {
+                    'type': 'int',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'trustworthy', 'low-risk', 'moderate-risk',
+                        'suspicious', 'malicious'
+                    ]
+                }
+            }
+        },
+        'web_reputation': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'intercepted_urls': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'bypassed_urls': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'url': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
                 }
             }
         },
@@ -1350,6 +1522,87 @@ def get_argspec():
                     },
                     'total_req_lookup_processed': {
                         'type': 'int',
+                    }
+                }
+            },
+            'web_reputation': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'url_list': {
+                        'type': 'list',
+                        'url_name': {
+                            'type': 'str',
+                        }
+                    },
+                    'number_of_urls': {
+                        'type': 'int',
+                    },
+                    'all_urls': {
+                        'type': 'str',
+                        'choices': ['true']
+                    },
+                    'url_name': {
+                        'type': 'str',
+                    }
+                },
+                'intercepted_urls': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'url_list': {
+                            'type': 'list',
+                            'url_name': {
+                                'type': 'str',
+                            }
+                        },
+                        'number_of_urls': {
+                            'type': 'int',
+                        },
+                        'all_urls': {
+                            'type': 'str',
+                            'choices': ['true']
+                        },
+                        'url_name': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'bypassed_urls': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'url_list': {
+                            'type': 'list',
+                            'url_name': {
+                                'type': 'str',
+                            }
+                        },
+                        'number_of_urls': {
+                            'type': 'int',
+                        },
+                        'all_urls': {
+                            'type': 'str',
+                            'choices': ['true']
+                        },
+                        'url_name': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'url': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'reputation_score': {
+                            'type': 'str',
+                        },
+                        'name': {
+                            'type': 'str',
+                        },
+                        'local_db_only': {
+                            'type': 'int',
+                        }
                     }
                 }
             }

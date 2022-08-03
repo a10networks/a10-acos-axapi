@@ -296,6 +296,216 @@ options:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
                 type: int
+    virtual_port_cfg:
+        description:
+        - "Field virtual_port_cfg"
+        type: dict
+        required: False
+        suboptions:
+            virtual_port_max:
+                description:
+                - "Enter the number of virtual-port allowed (virtual-port count (default is max-
+          value))"
+                type: int
+            virtual_port_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    cache_template_cfg:
+        description:
+        - "Field cache_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            cache_template_max:
+                description:
+                - "Enter the number of cache-template allowed (cache-template count (default is
+          max-value))"
+                type: int
+            cache_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    client_ssl_template_cfg:
+        description:
+        - "Field client_ssl_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            client_ssl_template_max:
+                description:
+                - "Enter the number of client-ssl-template allowed (client-ssl-template count
+          (default is max-value))"
+                type: int
+            client_ssl_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    conn_reuse_template_cfg:
+        description:
+        - "Field conn_reuse_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            conn_reuse_template_max:
+                description:
+                - "Enter the number of conn-reuse-template allowed (conn-reuse-template count
+          (default is max-value))"
+                type: int
+            conn_reuse_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    fast_tcp_template_cfg:
+        description:
+        - "Field fast_tcp_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fast_tcp_template_max:
+                description:
+                - "Enter the number of fast-tcp-template allowed (fast-tcp-template count (default
+          is max-value))"
+                type: int
+            fast_tcp_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    fast_udp_template_cfg:
+        description:
+        - "Field fast_udp_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fast_udp_template_max:
+                description:
+                - "Enter the number of fast-udp-template allowed (fast-udp-template count (default
+          is max-value))"
+                type: int
+            fast_udp_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    fix_template_cfg:
+        description:
+        - "Field fix_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fix_template_max:
+                description:
+                - "Enter the number of fix-template allowed (fix-template count (default is max-
+          value))"
+                type: int
+            fix_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    http_template_cfg:
+        description:
+        - "Field http_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            http_template_max:
+                description:
+                - "Enter the number of http-template allowed (http-template count (default is max-
+          value))"
+                type: int
+            http_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    link_cost_template_cfg:
+        description:
+        - "Field link_cost_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            link_cost_template_max:
+                description:
+                - "Enter the number of link-cost-template allowed (link-cost-template count
+          (default is max-value))"
+                type: int
+            link_cost_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    persist_cookie_template_cfg:
+        description:
+        - "Field persist_cookie_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            persist_cookie_template_max:
+                description:
+                - "Enter the number of persist-cookie-template allowed (persist-cookie-template
+          count (default is max-value))"
+                type: int
+            persist_cookie_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    persist_srcip_template_cfg:
+        description:
+        - "Field persist_srcip_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            persist_srcip_template_max:
+                description:
+                - "Enter the number of persist-srcip-template allowed (persist-source-ip-template
+          count (default is max-value))"
+                type: int
+            persist_srcip_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    server_ssl_template_cfg:
+        description:
+        - "Field server_ssl_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            server_ssl_template_max:
+                description:
+                - "Enter the number of server-ssl-template allowed (server-ssl-template count
+          (default is max-value))"
+                type: int
+            server_ssl_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    proxy_template_cfg:
+        description:
+        - "Field proxy_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            proxy_template_max:
+                description:
+                - "Enter the number of proxy-template allowed (server-ssl-template count (default
+          is max-value))"
+                type: int
+            proxy_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    stream_template_cfg:
+        description:
+        - "Field stream_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            stream_template_max:
+                description:
+                - "Enter the number of stream-template allowed (server-ssl-template count (default
+          is max-value))"
+                type: int
+            stream_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
     threshold:
         description:
         - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
@@ -361,6 +571,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "cache_template_cfg",
+    "client_ssl_template_cfg",
+    "conn_reuse_template_cfg",
+    "fast_tcp_template_cfg",
+    "fast_udp_template_cfg",
+    "fix_template_cfg",
     "gslb_device_cfg",
     "gslb_geo_location_cfg",
     "gslb_ip_list_cfg",
@@ -373,11 +589,19 @@ AVAILABLE_PROPERTIES = [
     "gslb_template_cfg",
     "gslb_zone_cfg",
     "health_monitor_cfg",
+    "http_template_cfg",
+    "link_cost_template_cfg",
+    "persist_cookie_template_cfg",
+    "persist_srcip_template_cfg",
+    "proxy_template_cfg",
     "real_port_cfg",
     "real_server_cfg",
+    "server_ssl_template_cfg",
     "service_group_cfg",
+    "stream_template_cfg",
     "threshold",
     "uuid",
+    "virtual_port_cfg",
     "virtual_server_cfg",
 ]
 
@@ -546,6 +770,132 @@ def get_argspec():
                 'type': 'int',
             },
             'virtual_server_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'virtual_port_cfg': {
+            'type': 'dict',
+            'virtual_port_max': {
+                'type': 'int',
+            },
+            'virtual_port_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'cache_template_cfg': {
+            'type': 'dict',
+            'cache_template_max': {
+                'type': 'int',
+            },
+            'cache_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'client_ssl_template_cfg': {
+            'type': 'dict',
+            'client_ssl_template_max': {
+                'type': 'int',
+            },
+            'client_ssl_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'conn_reuse_template_cfg': {
+            'type': 'dict',
+            'conn_reuse_template_max': {
+                'type': 'int',
+            },
+            'conn_reuse_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'fast_tcp_template_cfg': {
+            'type': 'dict',
+            'fast_tcp_template_max': {
+                'type': 'int',
+            },
+            'fast_tcp_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'fast_udp_template_cfg': {
+            'type': 'dict',
+            'fast_udp_template_max': {
+                'type': 'int',
+            },
+            'fast_udp_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'fix_template_cfg': {
+            'type': 'dict',
+            'fix_template_max': {
+                'type': 'int',
+            },
+            'fix_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'http_template_cfg': {
+            'type': 'dict',
+            'http_template_max': {
+                'type': 'int',
+            },
+            'http_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'link_cost_template_cfg': {
+            'type': 'dict',
+            'link_cost_template_max': {
+                'type': 'int',
+            },
+            'link_cost_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'persist_cookie_template_cfg': {
+            'type': 'dict',
+            'persist_cookie_template_max': {
+                'type': 'int',
+            },
+            'persist_cookie_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'persist_srcip_template_cfg': {
+            'type': 'dict',
+            'persist_srcip_template_max': {
+                'type': 'int',
+            },
+            'persist_srcip_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'server_ssl_template_cfg': {
+            'type': 'dict',
+            'server_ssl_template_max': {
+                'type': 'int',
+            },
+            'server_ssl_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'proxy_template_cfg': {
+            'type': 'dict',
+            'proxy_template_max': {
+                'type': 'int',
+            },
+            'proxy_template_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'stream_template_cfg': {
+            'type': 'dict',
+            'stream_template_max': {
+                'type': 'int',
+            },
+            'stream_template_min_guarantee': {
                 'type': 'int',
             }
         },

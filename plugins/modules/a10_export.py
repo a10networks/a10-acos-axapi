@@ -99,11 +99,6 @@ options:
         - "Black white List File"
         type: str
         required: False
-    file_inspection_bw_list:
-        description:
-        - "Black white List File"
-        type: str
-        required: False
     class_list:
         description:
         - "Class List File"
@@ -174,6 +169,11 @@ options:
         - "Json web key"
         type: str
         required: False
+    ipsec_error_dump:
+        description:
+        - "IPsec error dump File"
+        type: str
+        required: False
     ip_map_list:
         description:
         - "IP Map List File"
@@ -229,6 +229,11 @@ options:
         - "Enter Mon entity debug file name"
         type: str
         required: False
+    pktcapture_file:
+        description:
+        - "Enter Pktcapture file name"
+        type: str
+        required: False
     profile:
         description:
         - "Startup-config Profile"
@@ -257,6 +262,11 @@ options:
     externalfilename:
         description:
         - "Export the External Program from the System"
+        type: str
+        required: False
+    rpz:
+        description:
+        - "Response Policy Zone File"
         type: str
         required: False
     use_mgmt_port:
@@ -364,20 +374,22 @@ AVAILABLE_PROPERTIES = [
     "dnssec_dnskey",
     "dnssec_ds",
     "externalfilename",
-    "file_inspection_bw_list",
     "fixed_nat",
     "fixed_nat_archive",
     "geo_location",
     "ip_map_list",
+    "ipsec_error_dump",
     "local_uri_file",
     "lw_4o6",
     "lw_4o6_binding_table_validation_log",
     "merged_pcap",
     "mon_entity_debug_file",
     "per_cpu",
+    "pktcapture_file",
     "policy",
     "profile",
     "remote_file",
+    "rpz",
     "running_config",
     "saml_idp_name",
     "ssl_cert",
@@ -449,9 +461,6 @@ def get_argspec():
         'bw_list': {
             'type': 'str',
         },
-        'file_inspection_bw_list': {
-            'type': 'str',
-        },
         'class_list': {
             'type': 'str',
         },
@@ -494,6 +503,9 @@ def get_argspec():
         'auth_jwks': {
             'type': 'str',
         },
+        'ipsec_error_dump': {
+            'type': 'str',
+        },
         'ip_map_list': {
             'type': 'str',
         },
@@ -527,6 +539,9 @@ def get_argspec():
         'mon_entity_debug_file': {
             'type': 'str',
         },
+        'pktcapture_file': {
+            'type': 'str',
+        },
         'profile': {
             'type': 'str',
         },
@@ -543,6 +558,9 @@ def get_argspec():
             'type': 'bool',
         },
         'externalfilename': {
+            'type': 'str',
+        },
+        'rpz': {
             'type': 'str',
         },
         'use_mgmt_port': {

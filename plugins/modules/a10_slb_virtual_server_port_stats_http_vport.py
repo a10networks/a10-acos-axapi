@@ -509,6 +509,291 @@ def get_argspec():
                 },
                 'header_length_long': {
                     'type': 'str',
+                },
+                'req_get': {
+                    'type': 'str',
+                },
+                'req_head': {
+                    'type': 'str',
+                },
+                'req_put': {
+                    'type': 'str',
+                },
+                'req_post': {
+                    'type': 'str',
+                },
+                'req_trace': {
+                    'type': 'str',
+                },
+                'req_options': {
+                    'type': 'str',
+                },
+                'req_connect': {
+                    'type': 'str',
+                },
+                'req_delete': {
+                    'type': 'str',
+                },
+                'req_unknown': {
+                    'type': 'str',
+                },
+                'req_track': {
+                    'type': 'str',
+                },
+                'rsp_sz_1k': {
+                    'type': 'str',
+                },
+                'rsp_sz_2k': {
+                    'type': 'str',
+                },
+                'rsp_sz_4k': {
+                    'type': 'str',
+                },
+                'rsp_sz_8k': {
+                    'type': 'str',
+                },
+                'rsp_sz_16k': {
+                    'type': 'str',
+                },
+                'rsp_sz_32k': {
+                    'type': 'str',
+                },
+                'rsp_sz_64k': {
+                    'type': 'str',
+                },
+                'rsp_sz_256k': {
+                    'type': 'str',
+                },
+                'rsp_sz_gt_256k': {
+                    'type': 'str',
+                },
+                'chunk_sz_512': {
+                    'type': 'str',
+                },
+                'chunk_sz_1k': {
+                    'type': 'str',
+                },
+                'chunk_sz_2k': {
+                    'type': 'str',
+                },
+                'chunk_sz_4k': {
+                    'type': 'str',
+                },
+                'chunk_sz_gt_4k': {
+                    'type': 'str',
+                },
+                'req_sz_1k': {
+                    'type': 'str',
+                },
+                'req_sz_2k': {
+                    'type': 'str',
+                },
+                'req_sz_4k': {
+                    'type': 'str',
+                },
+                'req_sz_8k': {
+                    'type': 'str',
+                },
+                'req_sz_16k': {
+                    'type': 'str',
+                },
+                'req_sz_32k': {
+                    'type': 'str',
+                },
+                'req_sz_64k': {
+                    'type': 'str',
+                },
+                'req_sz_256k': {
+                    'type': 'str',
+                },
+                'req_sz_gt_256k': {
+                    'type': 'str',
+                },
+                'req_content_len': {
+                    'type': 'str',
+                },
+                'rsp_chunk': {
+                    'type': 'str',
+                },
+                'doh_req': {
+                    'type': 'str',
+                },
+                'doh_req_get': {
+                    'type': 'str',
+                },
+                'doh_req_post': {
+                    'type': 'str',
+                },
+                'doh_non_doh_req': {
+                    'type': 'str',
+                },
+                'doh_non_doh_req_get': {
+                    'type': 'str',
+                },
+                'doh_non_doh_req_post': {
+                    'type': 'str',
+                },
+                'doh_resp': {
+                    'type': 'str',
+                },
+                'doh_tc_resp': {
+                    'type': 'str',
+                },
+                'doh_udp_dns_req': {
+                    'type': 'str',
+                },
+                'doh_udp_dns_resp': {
+                    'type': 'str',
+                },
+                'doh_tcp_dns_req': {
+                    'type': 'str',
+                },
+                'doh_tcp_dns_resp': {
+                    'type': 'str',
+                },
+                'doh_req_send_failed': {
+                    'type': 'str',
+                },
+                'doh_resp_send_failed': {
+                    'type': 'str',
+                },
+                'doh_malloc_fail': {
+                    'type': 'str',
+                },
+                'doh_req_udp_retry': {
+                    'type': 'str',
+                },
+                'doh_req_udp_retry_fail': {
+                    'type': 'str',
+                },
+                'doh_req_tcp_retry': {
+                    'type': 'str',
+                },
+                'doh_req_tcp_retry_fail': {
+                    'type': 'str',
+                },
+                'doh_snat_failed': {
+                    'type': 'str',
+                },
+                'doh_path_not_found': {
+                    'type': 'str',
+                },
+                'doh_get_dns_arg_failed': {
+                    'type': 'str',
+                },
+                'doh_get_base64_decode_failed': {
+                    'type': 'str',
+                },
+                'doh_post_content_type_mismatch': {
+                    'type': 'str',
+                },
+                'doh_post_payload_not_found': {
+                    'type': 'str',
+                },
+                'doh_post_payload_extract_failed': {
+                    'type': 'str',
+                },
+                'doh_non_doh_method': {
+                    'type': 'str',
+                },
+                'doh_tcp_send_failed': {
+                    'type': 'str',
+                },
+                'doh_udp_send_failed': {
+                    'type': 'str',
+                },
+                'doh_query_time_out': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_a': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_aaaa': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_ns': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_cname': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_any': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_srv': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_mx': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_soa': {
+                    'type': 'str',
+                },
+                'doh_dns_query_type_others': {
+                    'type': 'str',
+                },
+                'doh_resp_setup_failed': {
+                    'type': 'str',
+                },
+                'doh_resp_header_alloc_failed': {
+                    'type': 'str',
+                },
+                'doh_resp_que_failed': {
+                    'type': 'str',
+                },
+                'doh_resp_udp_frags': {
+                    'type': 'str',
+                },
+                'doh_resp_tcp_frags': {
+                    'type': 'str',
+                },
+                'doh_serv_sel_failed': {
+                    'type': 'str',
+                },
+                'doh_retry_w_tcp': {
+                    'type': 'str',
+                },
+                'doh_get_uri_too_long': {
+                    'type': 'str',
+                },
+                'doh_post_payload_too_large': {
+                    'type': 'str',
+                },
+                'doh_dns_malformed_query': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_err_format': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_err_server': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_err_name': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_err_type': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_refuse': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_yxdomain': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_yxrrset': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_nxrrset': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_notauth': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_notzone': {
+                    'type': 'str',
+                },
+                'doh_dns_resp_rcode_other': {
+                    'type': 'str',
                 }
             }
         }

@@ -75,6 +75,11 @@ options:
         - "Local GUI image name"
         type: str
         required: False
+    remote_url:
+        description:
+        - "Field remote_url"
+        type: str
+        required: False
     rollback:
         description:
         - "Rollback to a specific local GUI image"
@@ -104,6 +109,16 @@ options:
         description:
         - "File URL"
         type: str
+        required: False
+    image_file:
+        description:
+        - "Field image_file"
+        type: str
+        required: False
+    gui_upload:
+        description:
+        - "Field gui_upload"
+        type: bool
         required: False
 
 '''
@@ -162,8 +177,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "delete",
     "file_url",
+    "gui_upload",
     "image",
+    "image_file",
     "local",
+    "remote_url",
     "rollback",
     "source_ip_address",
     "upload",
@@ -206,6 +224,9 @@ def get_argspec():
         'local': {
             'type': 'str',
         },
+        'remote_url': {
+            'type': 'str',
+        },
         'rollback': {
             'type': 'str',
         },
@@ -223,6 +244,12 @@ def get_argspec():
         },
         'file_url': {
             'type': 'str',
+        },
+        'image_file': {
+            'type': 'str',
+        },
+        'gui_upload': {
+            'type': 'bool',
         }
     })
     return rv

@@ -114,6 +114,11 @@ options:
         - "Ignore TTL decrement for a received packet before sending out"
         type: bool
         required: False
+    syn_cookie:
+        description:
+        - "Configure Enable SYN-cookie on the interface"
+        type: bool
+        required: False
     slb_partition_redirect:
         description:
         - "Redirect SLB traffic across partition"
@@ -309,6 +314,7 @@ AVAILABLE_PROPERTIES = [
     "server",
     "slb_partition_redirect",
     "stateful_firewall",
+    "syn_cookie",
     "ttl_ignore",
     "uuid",
 ]
@@ -370,6 +376,9 @@ def get_argspec():
             'type': 'bool',
         },
         'ttl_ignore': {
+            'type': 'bool',
+        },
+        'syn_cookie': {
             'type': 'bool',
         },
         'slb_partition_redirect': {

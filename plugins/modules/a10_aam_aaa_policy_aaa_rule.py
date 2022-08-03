@@ -169,9 +169,14 @@ options:
         - "Specify authorization policy to bind to the AAA rule"
         type: str
         required: False
+    captcha_authz_policy:
+        description:
+        - "Specify authorization policy for CAPTCHA (Authorization policy name)"
+        type: str
+        required: False
     auth_failure_bypass:
         description:
-        - "Forward client’s request even though authentication has failed"
+        - "Forward client request even though authentication has failed"
         type: bool
         required: False
     uuid:
@@ -192,8 +197,9 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'total_count'= total_count; 'hit_deny'= hit_deny; 'hit_auth'=
-          hit_auth; 'hit_bypass'= hit_bypass; 'failure_bypass'= failure_bypass;"
+                - "'all'= all; 'total_count'= some help string; 'hit_deny'= some help string;
+          'hit_auth'= some help string; 'hit_bypass'= some help string; 'failure_bypass'=
+          some help string;"
                 type: str
     stats:
         description:
@@ -203,23 +209,23 @@ options:
         suboptions:
             total_count:
                 description:
-                - "Field total_count"
+                - "some help string"
                 type: str
             hit_deny:
                 description:
-                - "Field hit_deny"
+                - "some help string"
                 type: str
             hit_auth:
                 description:
-                - "Field hit_auth"
+                - "some help string"
                 type: str
             hit_bypass:
                 description:
-                - "Field hit_bypass"
+                - "some help string"
                 type: str
             failure_bypass:
                 description:
-                - "Field failure_bypass"
+                - "some help string"
                 type: str
             index:
                 description:
@@ -285,6 +291,7 @@ AVAILABLE_PROPERTIES = [
     "auth_failure_bypass",
     "authentication_template",
     "authorize_policy",
+    "captcha_authz_policy",
     "domain_name",
     "host",
     "index",
@@ -388,6 +395,9 @@ def get_argspec():
             'type': 'str',
         },
         'authorize_policy': {
+            'type': 'str',
+        },
+        'captcha_authz_policy': {
             'type': 'str',
         },
         'auth_failure_bypass': {

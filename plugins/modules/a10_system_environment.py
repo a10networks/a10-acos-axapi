@@ -74,6 +74,14 @@ options:
                 description:
                 - "Field physical_temperature2"
                 type: str
+            cpu0_temperature:
+                description:
+                - "Field cpu0_temperature"
+                type: str
+            cpu1_temperature:
+                description:
+                - "Field cpu1_temperature"
+                type: str
             fan1a_report:
                 description:
                 - "Field fan1a_report"
@@ -412,6 +420,12 @@ def get_argspec():
                 'type': 'str',
             },
             'physical_temperature2': {
+                'type': 'str',
+            },
+            'cpu0_temperature': {
+                'type': 'str',
+            },
+            'cpu1_temperature': {
                 'type': 'str',
             },
             'fan1a_report': {

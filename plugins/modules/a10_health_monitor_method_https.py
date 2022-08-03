@@ -70,6 +70,21 @@ options:
         - "Specify HTTPS port (Port Number (default 443))"
         type: int
         required: False
+    disable_sslv2hello:
+        description:
+        - "Disable SSLv2Hello for HTTPs"
+        type: bool
+        required: False
+    https_host:
+        description:
+        - "Specify 'Host=' header used in request (enclose IPv6 address in [])"
+        type: str
+        required: False
+    sni:
+        description:
+        - "Server Name Indication for HTTPs"
+        type: bool
+        required: False
     https_expect:
         description:
         - "Specify what you expect from the response message"
@@ -95,17 +110,6 @@ options:
     text_regex:
         description:
         - "Specify text expected  with Regex"
-        type: str
-        required: False
-    https_host:
-        description:
-        - "Specify 'Host=' header used in request (enclose IPv6 address in [])"
-        type: str
-        required: False
-    https_maintenance_code:
-        description:
-        - "Specify response code for maintenance (Format is xx,xx-xx (xx between [100,
-          899])"
         type: str
         required: False
     https_url:
@@ -143,9 +147,35 @@ options:
         - "Specify the HTTP post data (Input post data file name here)"
         type: str
         required: False
+    https_maintenance_code:
+        description:
+        - "Specify response code for maintenance (Format is xx,xx-xx (xx between [100,
+          899])"
+        type: str
+        required: False
+    maintenance:
+        description:
+        - "Specify response text for maintenance"
+        type: bool
+        required: False
+    maintenance_text:
+        description:
+        - "Specify text for maintenance"
+        type: str
+        required: False
+    maintenance_text_regex:
+        description:
+        - "Specify Regex text for maintenance"
+        type: str
+        required: False
     https_username:
         description:
         - "Specify the username"
+        type: str
+        required: False
+    https_server_cert_name:
+        description:
+        - "Expect Server Cert commonName"
         type: str
         required: False
     https_password:
@@ -163,11 +193,6 @@ options:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
         type: str
-        required: False
-    disable_sslv2hello:
-        description:
-        - "Disable SSLv2Hello for HTTPs"
-        type: bool
         required: False
     https_kerberos_auth:
         description:
@@ -309,15 +334,20 @@ AVAILABLE_PROPERTIES = [
     "https_postdata",
     "https_postfile",
     "https_response_code",
+    "https_server_cert_name",
     "https_text",
     "https_url",
     "https_username",
     "key",
     "key_pass_phrase",
     "key_phrase",
+    "maintenance",
+    "maintenance_text",
+    "maintenance_text_regex",
     "post_path",
     "post_type",
     "response_code_regex",
+    "sni",
     "text_regex",
     "url_path",
     "url_type",
@@ -357,6 +387,15 @@ def get_argspec():
         'web_port': {
             'type': 'int',
         },
+        'disable_sslv2hello': {
+            'type': 'bool',
+        },
+        'https_host': {
+            'type': 'str',
+        },
+        'sni': {
+            'type': 'bool',
+        },
         'https_expect': {
             'type': 'bool',
         },
@@ -370,12 +409,6 @@ def get_argspec():
             'type': 'str',
         },
         'text_regex': {
-            'type': 'str',
-        },
-        'https_host': {
-            'type': 'str',
-        },
-        'https_maintenance_code': {
             'type': 'str',
         },
         'https_url': {
@@ -401,7 +434,22 @@ def get_argspec():
         'https_postfile': {
             'type': 'str',
         },
+        'https_maintenance_code': {
+            'type': 'str',
+        },
+        'maintenance': {
+            'type': 'bool',
+        },
+        'maintenance_text': {
+            'type': 'str',
+        },
+        'maintenance_text_regex': {
+            'type': 'str',
+        },
         'https_username': {
+            'type': 'str',
+        },
+        'https_server_cert_name': {
             'type': 'str',
         },
         'https_password': {
@@ -412,9 +460,6 @@ def get_argspec():
         },
         'https_encrypted': {
             'type': 'str',
-        },
-        'disable_sslv2hello': {
-            'type': 'bool',
         },
         'https_kerberos_auth': {
             'type': 'bool',

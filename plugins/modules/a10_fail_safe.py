@@ -123,6 +123,11 @@ options:
         - "Check total memory size of current system (Size of memory (GB))"
         type: int
         required: False
+    dataplane_recovery_timeout:
+        description:
+        - "dataplane hung detection timeout before ACOS is restarted (in seconds)"
+        type: int
+        required: False
     log:
         description:
         - "Log the event"
@@ -277,6 +282,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "config",
+    "dataplane_recovery_timeout",
     "disable_failsafe",
     "fpga_buff_recovery_threshold",
     "fpga_monitor_enable",
@@ -362,6 +368,9 @@ def get_argspec():
             'type': 'int',
         },
         'total_memory_size_check': {
+            'type': 'int',
+        },
+        'dataplane_recovery_timeout': {
             'type': 'int',
         },
         'log': {
@@ -451,6 +460,9 @@ def get_argspec():
                         'type': 'str',
                     },
                     'hw_recovery_timeout': {
+                        'type': 'str',
+                    },
+                    'dataplane_recovery_timeout': {
                         'type': 'str',
                     },
                     'fpga_mon_enable': {

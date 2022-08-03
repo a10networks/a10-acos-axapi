@@ -60,214 +60,22 @@ options:
         - "WAF Template Name"
         type: str
         required: True
-    allowed_http_methods:
+    csp:
         description:
-        - "List of allowed HTTP methods. Default is 'GET POST'. (List of HTTP methods
-          allowed (default 'GET POST'))"
+        - "Insert HTTP header Content-Security-Policy if necessary"
+        type: bool
+        required: False
+    csp_value:
+        description:
+        - "CSP header value, e.g., 'script-src 'none''"
         type: str
         required: False
-    bot_check:
+    csp_insert_type:
         description:
-        - "Check User-Agent for known bots"
-        type: bool
-        required: False
-    bot_check_policy_file:
-        description:
-        - "Name of WAF policy list file"
+        - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
+          always'= Always insert the header even when there is a header with the same
+          name;"
         type: str
-        required: False
-    brute_force_challenge_limit:
-        description:
-        - "Maximum brute-force events before sending challenge (default 2) (Maximum brute-
-          force events before locking out client (default 2))"
-        type: int
-        required: False
-    brute_force_global:
-        description:
-        - "Brute-force triggers apply globally instead of per-client (Apply brute-force
-          triggers globally)"
-        type: bool
-        required: False
-    brute_force_lockout_limit:
-        description:
-        - "Maximum brute-force events before locking out client (default 5)"
-        type: int
-        required: False
-    brute_force_lockout_period:
-        description:
-        - "Number of seconds client should be locked out (default 600)"
-        type: int
-        required: False
-    brute_force_test_period:
-        description:
-        - "Number of seconds for brute-force event counting (default 60)"
-        type: int
-        required: False
-    brute_force_check:
-        description:
-        - "Enable brute-force attack mitigation"
-        type: bool
-        required: False
-    brute_force_resp_codes:
-        description:
-        - "Trigger brute-force check on HTTP response code"
-        type: bool
-        required: False
-    brute_force_resp_codes_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    brute_force_resp_string:
-        description:
-        - "Trigger brute-force check on HTTP response line"
-        type: bool
-        required: False
-    brute_force_resp_string_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    brute_force_resp_headers:
-        description:
-        - "Trigger brute-force check on HTTP response header names"
-        type: bool
-        required: False
-    brute_force_resp_headers_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    disable:
-        description:
-        - "Disable buffer overflow protection"
-        type: bool
-        required: False
-    max_cookie_len:
-        description:
-        - "Max Cookie length allowed in request (default 4096) (Maximum length of cookie
-          allowed (default 4096))"
-        type: int
-        required: False
-    max_cookie_name_len:
-        description:
-        - "Max Cookie Name length allowed in request (default 64) ( Maximum length of
-          cookie name allowed (default 64))"
-        type: int
-        required: False
-    max_cookie_value_len:
-        description:
-        - "Max Cookie Value length allowed in request (default 4096) (Maximum length of
-          cookie value allowed (default 4096))"
-        type: int
-        required: False
-    max_cookies_len:
-        description:
-        - "Max Total Cookies length allowed in request (default 4096) (Maximum total
-          length of cookies allowed (default 4096))"
-        type: int
-        required: False
-    max_data_parse:
-        description:
-        - "Max data parsed for Web Application Firewall (default 65536) (Maximum data
-          parsed for Web Application Firewall (default 65536))"
-        type: int
-        required: False
-    max_hdr_name_len:
-        description:
-        - "Max header name length allowed in request (default 63) (Maximum length of
-          header name allowed (default 63))"
-        type: int
-        required: False
-    max_hdr_value_len:
-        description:
-        - "Max header value length allowed in request (default 4096) (Maximum length of
-          header value allowed (default 4096))"
-        type: int
-        required: False
-    max_hdrs_len:
-        description:
-        - "Max headers length allowed in request (default 4096) (Maximum length of headers
-          allowed (default 4096))"
-        type: int
-        required: False
-    max_line_len:
-        description:
-        - "Max Line length allowed in request (default 1024) (Maximum length of Request
-          line allowed (default 1024))"
-        type: int
-        required: False
-    max_parameter_name_len:
-        description:
-        - "Max HTML parameter name length in an HTTP request (default 256) (Maximum HTML
-          parameter name length in an HTTP request (default 256))"
-        type: int
-        required: False
-    max_parameter_total_len:
-        description:
-        - "Max HTML parameter total length in an HTTP request (default 4096) (Maximum HTML
-          parameter total length in an HTTP request (default 4096))"
-        type: int
-        required: False
-    max_parameter_value_len:
-        description:
-        - "Max HTML parameter value length in an HTTP request (default 4096) (Maximum HTML
-          parameter value in an HTTP request (default 4096))"
-        type: int
-        required: False
-    max_post_size:
-        description:
-        - "Max content length allowed in POST request (default 20480) (Maximum size
-          allowed content in an HTTP POST request (default 20480))"
-        type: int
-        required: False
-    max_query_len:
-        description:
-        - "Max Query length allowed in request (default 1024) (Maximum length of Request
-          query allowed (default 1024))"
-        type: int
-        required: False
-    max_url_len:
-        description:
-        - "Max URL length allowed in request (default 1024) (Maximum length of URL allowed
-          (default 1024))"
-        type: int
-        required: False
-    ccn_mask:
-        description:
-        - "Mask credit card numbers in response"
-        type: bool
-        required: False
-    cookie_name:
-        description:
-        - "Cookie name (simple string or PCRE pattern)"
-        type: str
-        required: False
-    cookie_encryption_secret:
-        description:
-        - "Cookie encryption secret"
-        type: str
-        required: False
-    secret_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-        type: str
-        required: False
-    challenge_action_cookie:
-        description:
-        - "Use Set-Cookie to determine if client allows cookies"
-        type: bool
-        required: False
-    challenge_action_javascript:
-        description:
-        - "Add JavaScript to response to test if client allows JavaScript"
-        type: bool
-        required: False
-    csrf_check:
-        description:
-        - "Tag the form to protect against Cross-site Request Forgery"
-        type: bool
         required: False
     http_redirect:
         description:
@@ -300,177 +108,40 @@ options:
         - "Response content to send client when denying request"
         type: str
         required: False
-    deny_non_masked_passwords:
-        description:
-        - "Denies forms that have a password field with a textual type, resulting in this
-          field not being masked"
-        type: bool
-        required: False
-    deny_non_ssl_passwords:
-        description:
-        - "Denies any form that has a password field if the form is not sent over an SSL
-          connection"
-        type: bool
-        required: False
-    deny_password_autocomplete:
-        description:
-        - "Check to protect against server-generated form which contain password fields
-          that allow autocomplete"
-        type: bool
-        required: False
     deploy_mode:
         description:
         - "'active'= Deploy WAF in active (blocking) mode; 'passive'= Deploy WAF in
           passive (log-only) mode; 'learning'= Deploy WAF in learning mode;"
         type: str
         required: False
-    filter_resp_hdrs:
-        description:
-        - "Removes web server's identifying headers"
-        type: bool
-        required: False
-    form_consistency_check:
-        description:
-        - "Form input consistency check"
-        type: bool
-        required: False
-    form_deny_non_post:
-        description:
-        - "Deny request with forms if the method is not POST"
-        type: bool
-        required: False
-    form_deny_non_ssl:
-        description:
-        - "Deny request with forms if the protocol is not SSL"
-        type: bool
-        required: False
-    form_set_no_cache:
-        description:
-        - "Disable caching of form-containing responses"
-        type: bool
-        required: False
-    hide_resp_codes:
-        description:
-        - "Hides response codes that are not allowed (default 4xx, 5xx)"
-        type: bool
-        required: False
-    hide_resp_codes_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    http_check:
-        description:
-        - "Check request for HTTP protocol compliance"
-        type: bool
-        required: False
-    json_format_check:
-        description:
-        - "Check HTTP body for JSON format compliance"
-        type: bool
-        required: False
-    max_array_value_count:
-        description:
-        - "Maximum number of values in an array in a JSON request body (default 256)
-          (Maximum number of values in a JSON array (default 256))"
-        type: int
-        required: False
-    max_depth:
-        description:
-        - "Maximum recursion depth in a value in a JSON requesnt body (default 16)
-          (Maximum recursion depth in a JSON value (default 16))"
-        type: int
-        required: False
-    max_object_member_count:
-        description:
-        - "Maximum number of members in an object in a JSON request body (default 256)
-          (Maximum number of members in a JSON object (default 256))"
-        type: int
-        required: False
-    max_string:
-        description:
-        - "Maximum length of a string in a JSON request body (default 64) (Maximum length
-          of a JSON string (default 64))"
-        type: int
-        required: False
     log_succ_reqs:
         description:
         - "Log successful waf requests"
         type: bool
         required: False
-    max_cookies:
+    learn_pr:
         description:
-        - "Maximum number of cookies allowed in request (default 20)"
-        type: int
-        required: False
-    max_entities:
-        description:
-        - "Maximum number of MIME entities allowed in request (default 10)"
-        type: int
-        required: False
-    max_hdrs:
-        description:
-        - "Maximum number of headers allowed in request (default 20)"
-        type: int
-        required: False
-    max_parameters:
-        description:
-        - "Maximum number of HTML parameters allowed in request (default 64)"
-        type: int
-        required: False
-    pcre_mask:
-        description:
-        - "Mask matched PCRE pattern in response"
-        type: str
-        required: False
-    keep_start:
-        description:
-        - "Number of unmasked characters at the beginning (default= 0)"
-        type: int
-        required: False
-    keep_end:
-        description:
-        - "Number of unmasked characters at the end (default= 0)"
-        type: int
-        required: False
-    mask:
-        description:
-        - "Character to mask the matched pattern (default= X)"
-        type: str
-        required: False
-    redirect_wlist:
-        description:
-        - "Check Redirect URL against list of previously learned redirects"
+        - "Enable per-request logs for WAF learning"
         type: bool
         required: False
-    referer_check:
+    parent:
         description:
-        - "Check referer to protect against CSRF attacks"
+        - "inherit from parent template"
         type: bool
         required: False
-    referer_domain_list:
+    parent_template_waf:
         description:
-        - "List of referer domains allowed"
+        - "WAF template (WAF Config name)"
         type: str
         required: False
-    referer_safe_url:
+    pcre_match_limit:
         description:
-        - " Safe URL to redirect to if referer is missing"
-        type: str
+        - "Maximum number of matches allowed (default 30000)"
+        type: int
         required: False
-    referer_domain_list_only:
+    pcre_match_recursion_limit:
         description:
-        - "List of referer domains allowed"
-        type: str
-        required: False
-    session_check:
-        description:
-        - "Enable session checking via session cookie"
-        type: bool
-        required: False
-    lifetime:
-        description:
-        - "Session lifetime in minutes (default 10)"
+        - "Maximum levels of recursive allowed (default 5000)"
         type: int
         required: False
     soap_format_check:
@@ -478,151 +149,10 @@ options:
         - "Check XML document for SOAP format compliance"
         type: bool
         required: False
-    sqlia_check:
-        description:
-        - "'reject'= Reject requests with SQLIA patterns; 'sanitize'= Remove bad SQL from
-          request;"
-        type: str
-        required: False
-    sqlia_check_policy_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    ssn_mask:
-        description:
-        - "Mask US Social Security numbers in response"
-        type: bool
-        required: False
     logging:
         description:
         - "Logging template (Logging Config name)"
         type: str
-        required: False
-    uri_blist_check:
-        description:
-        - "specify name of WAF policy list file to blacklist"
-        type: bool
-        required: False
-    waf_blist_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    uri_wlist_check:
-        description:
-        - "specify name of WAF policy list file to whitelist"
-        type: bool
-        required: False
-    waf_wlist_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
-    url_check:
-        description:
-        - "Check URL against list of previously learned URLs"
-        type: bool
-        required: False
-    decode_entities:
-        description:
-        - "Decode entities in internal url"
-        type: bool
-        required: False
-    decode_escaped_chars:
-        description:
-        - "Decode escaped characters such as \\r \\n \\' \\xXX \\u00YY in internal url"
-        type: bool
-        required: False
-    decode_hex_chars:
-        description:
-        - "Decode hex chars such as \\%xx and \\%u00yy in internal url"
-        type: bool
-        required: False
-    remove_comments:
-        description:
-        - "Remove comments from internal url"
-        type: bool
-        required: False
-    remove_selfref:
-        description:
-        - "Remove self-references such as /./ and /path/../ from internal url"
-        type: bool
-        required: False
-    remove_spaces:
-        description:
-        - "Remove spaces from internal url"
-        type: bool
-        required: False
-    xml_format_check:
-        description:
-        - "Check HTTP body for XML format compliance"
-        type: bool
-        required: False
-    max_attr:
-        description:
-        - "Maximum number of attributes of an XML element (default 256)"
-        type: int
-        required: False
-    max_attr_name_len:
-        description:
-        - "Maximum length of an attribute name (default 128)"
-        type: int
-        required: False
-    max_attr_value_len:
-        description:
-        - "Maximum length of an attribute text value (default 128)"
-        type: int
-        required: False
-    max_cdata_len:
-        description:
-        - "Maximum length of an CDATA section of an element (default 65535)"
-        type: int
-        required: False
-    max_elem:
-        description:
-        - "Maximum number of XML elements (default 1024)"
-        type: int
-        required: False
-    max_elem_child:
-        description:
-        - "Maximum number of children of an XML element (default 1024)"
-        type: int
-        required: False
-    max_elem_depth:
-        description:
-        - "Maximum recursion level for element definition (default 256)"
-        type: int
-        required: False
-    max_elem_name_len:
-        description:
-        - "Maximum length for an element name (default 128)"
-        type: int
-        required: False
-    max_entity_exp:
-        description:
-        - "Maximum number of entity expansions (default 1024)"
-        type: int
-        required: False
-    max_entity_exp_depth:
-        description:
-        - "Maximum nested depth of entity expansion (default 32)"
-        type: int
-        required: False
-    max_namespace:
-        description:
-        - "Maximum number of namespace declarations (default 16)"
-        type: int
-        required: False
-    max_namespace_uri_len:
-        description:
-        - "Maximum length of a namespace URI (default 256)"
-        type: int
-        required: False
-    xml_sqlia_check:
-        description:
-        - "Check XML data against SQLIA policy"
-        type: bool
         required: False
     wsdl_file:
         description:
@@ -644,22 +174,6 @@ options:
         - "Specify name of XML-Schema file for verifying XML body contents"
         type: str
         required: False
-    xml_xss_check:
-        description:
-        - "Check XML data against XSS policy"
-        type: bool
-        required: False
-    xss_check:
-        description:
-        - "'reject'= Reject requests with bad cookies; 'sanitize'= Remove bad cookies from
-          request;"
-        type: str
-        required: False
-    xss_check_policy_file:
-        description:
-        - "Name of WAF policy list file"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -670,6 +184,884 @@ options:
         - "Customized tag"
         type: str
         required: False
+    brute_force_protection:
+        description:
+        - "Field brute_force_protection"
+        type: dict
+        required: False
+        suboptions:
+            challenge_action_cookie:
+                description:
+                - "Use Set-Cookie to determine if client allows cookies"
+                type: bool
+            challenge_action_javascript:
+                description:
+                - "Add JavaScript to response to test if client allows JavaScript"
+                type: bool
+            challenge_action_captcha:
+                description:
+                - "Initiate a Captcha to verify client can respond"
+                type: bool
+            brute_force_challenge_limit:
+                description:
+                - "Maximum brute-force events before sending challenge (default 2) (Maximum brute-
+          force events before locking out client (default 2))"
+                type: int
+            enable_disable_action:
+                description:
+                - "'enable'= Enable brute force protections; 'disable'= Disable brute force
+          protections (default);"
+                type: str
+            brute_force_global:
+                description:
+                - "Brute-force triggers apply globally instead of per-client (Apply brute-force
+          triggers globally)"
+                type: bool
+            brute_force_lockout_limit:
+                description:
+                - "Maximum brute-force events before locking out client (default 5)"
+                type: int
+            brute_force_lockout_period:
+                description:
+                - "Number of seconds client should be locked out (default 600)"
+                type: int
+            brute_force_resp_codes:
+                description:
+                - "Trigger brute-force check on HTTP response code"
+                type: bool
+            brute_force_resp_codes_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            brute_force_resp_headers:
+                description:
+                - "Trigger brute-force check on HTTP response header names"
+                type: bool
+            brute_force_resp_headers_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            brute_force_resp_string:
+                description:
+                - "Trigger brute-force check on HTTP response reason phrase"
+                type: bool
+            brute_force_resp_string_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            brute_force_test_period:
+                description:
+                - "Number of seconds for brute-force event counting (default 60)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    http_limit_check:
+        description:
+        - "Field http_limit_check"
+        type: dict
+        required: False
+        suboptions:
+            disable:
+                description:
+                - "Disable all checks for HTTP limit"
+                type: bool
+            max_content_length:
+                description:
+                - "Max length of content (Maximum length of content allowed)"
+                type: bool
+            max_content_length_value:
+                description:
+                - "Max length of content (default 4096) (Maximum length of content allowed
+          (default 4096))"
+                type: int
+            max_cookie_header_length:
+                description:
+                - "Max Cookie header length allowed in request (Maximum length of cookie header
+          allowed)"
+                type: bool
+            max_cookie_header_length_value:
+                description:
+                - "Max Cookie header length allowed in request (default 4096) (Maximum length of
+          cookie header allowed (default 4096))"
+                type: int
+            max_cookie_name_length:
+                description:
+                - "Max Cookie name length allowed in request (Maximum length of cookie name
+          allowed)"
+                type: bool
+            max_cookie_name_length_value:
+                description:
+                - "Max Cookie name length allowed in request (default 64) (Maximum length of
+          cookie name allowed (default 64))"
+                type: int
+            max_cookie_value_length:
+                description:
+                - "Max Cookie value length allowed in request (Maximum length of cookie value
+          allowed)"
+                type: bool
+            max_cookie_value_length_value:
+                description:
+                - "Max Cookie value length allowed in request (default 4096) (Maximum length of
+          cookie value allowed (default 4096))"
+                type: int
+            max_cookies:
+                description:
+                - "Max Cookies allowed in request (Maximum number of cookie allowed)"
+                type: bool
+            max_cookies_value:
+                description:
+                - "Max Cookies allowed in request (default 20) (Maximum number of cookie allowed
+          (default 20))"
+                type: int
+            max_cookies_length:
+                description:
+                - "Total Cookies length allowed in request (Maximum length of all cookies in
+          request)"
+                type: bool
+            max_cookies_length_value:
+                description:
+                - "Total Cookies length allowed in request (default 4096) (Maximum length of all
+          cookies in request (default 4096))"
+                type: int
+            max_data_parse:
+                description:
+                - "Max data to be parsed for Web Application Firewall"
+                type: bool
+            max_data_parse_value:
+                description:
+                - "Max data to be parsed for Web Application Firewall (default 262144)"
+                type: int
+            max_entities:
+                description:
+                - "Maximum number of MIME entities allowed in request"
+                type: bool
+            max_entities_value:
+                description:
+                - "Maximum number of MIME entities allowed in request (default 10)"
+                type: int
+            max_header_length:
+                description:
+                - "Max header length allowed in request (Maximum length of header allowed)"
+                type: bool
+            max_header_length_value:
+                description:
+                - "Max header length allowed in request (default 4096) (Maximum length of header
+          allowed (default 4096))"
+                type: int
+            max_header_name_length:
+                description:
+                - "Max header name length allowed in request (Maximum length of header name
+          allowed)"
+                type: bool
+            max_header_name_length_value:
+                description:
+                - "Max header name length allowed in request (default 64) (Maximum length of
+          header name allowed (default 64))"
+                type: int
+            max_header_value_length:
+                description:
+                - "Max header value length allowed in request (Maximum length of header value
+          allowed)"
+                type: bool
+            max_header_value_length_value:
+                description:
+                - "Max header value length allowed in request (default 4096) (Maximum length of
+          header value allowed (default 4096))"
+                type: int
+            max_headers:
+                description:
+                - "Total number of headers allowed in request (Maximum number of headers in
+          request)"
+                type: bool
+            max_headers_value:
+                description:
+                - "Total number of headers allowed in request (default 64) (Maximum number of
+          headers in request (default 64))"
+                type: int
+            max_headers_length:
+                description:
+                - "Total headers length allowed in request (Maximum length of all headers in
+          request)"
+                type: bool
+            max_headers_length_value:
+                description:
+                - "Total headers length allowed in request (default 4096) (Maximum length of all
+          headers in request (default 4096))"
+                type: int
+            max_param_name_length:
+                description:
+                - "Max query/POST parameter name length allowed in request (Maximum length of
+          query/POST parameter names allowed)"
+                type: bool
+            max_param_name_length_value:
+                description:
+                - "Max query/POST parameter name length allowed in request (default 256) (Maximum
+          length of query/POST parameter names allowed (default 256))"
+                type: int
+            max_param_value_length:
+                description:
+                - "Max query/POST parameter value length allowed in request (Maximum length of
+          query/POST parameter value allowed)"
+                type: bool
+            max_param_value_length_value:
+                description:
+                - "Max query/POST parameter value length allowed in request (default 4096)
+          (Maximum length of query/POST parameter value allowed (default 4096))"
+                type: int
+            max_params:
+                description:
+                - "Total query/POST parameters allowed in request (Maximum number of query/POST
+          parameters in request)"
+                type: bool
+            max_params_value:
+                description:
+                - "Total query/POST parameters allowed in request (default 64) (Maximum number of
+          query/POST parameters in request (default 64))"
+                type: int
+            max_params_length:
+                description:
+                - "Total query/POST parameters length allowed in request (Maximum length of all
+          params in request)"
+                type: bool
+            max_params_length_value:
+                description:
+                - "Total query/POST parameters length allowed in request (default 4096) (Maximum
+          length of all params in request (default 4096))"
+                type: int
+            max_post_length:
+                description:
+                - "Maximum content length allowed in POST request"
+                type: bool
+            max_post_length_value:
+                description:
+                - "Maximum content length allowed in POST request (default 20480)"
+                type: int
+            max_query_length:
+                description:
+                - "Max length of query string (Maximum length of query string allowed)"
+                type: bool
+            max_query_length_value:
+                description:
+                - "Max length of query string (default 4096) (Maximum length of query string
+          allowed (default 4096))"
+                type: int
+            max_request_length:
+                description:
+                - "Max length of request (Maximum length of request allowed)"
+                type: bool
+            max_request_length_value:
+                description:
+                - "Max length of request (default 20480) (Maximum length of request allowed
+          (default 20480))"
+                type: int
+            max_request_line_length:
+                description:
+                - "Max length of request line (Maximum length of request line)"
+                type: bool
+            max_request_line_length_value:
+                description:
+                - "Max length of request line (default 4096) (Maximum length of request line
+          (default 4096))"
+                type: int
+            max_url_length:
+                description:
+                - "Max length of url (Maximum length of url allowed)"
+                type: bool
+            max_url_length_value:
+                description:
+                - "Max length of url (default 4096) (Maximum length of url allowed (default 4096))"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    http_protocol_check:
+        description:
+        - "Field http_protocol_check"
+        type: dict
+        required: False
+        suboptions:
+            disable:
+                description:
+                - "Disable all checks for HTTP protocol compliance"
+                type: bool
+            allowed_headers:
+                description:
+                - "Enable allowed-headers check (default disabled)"
+                type: bool
+            allowed_headers_list:
+                description:
+                - "Allowed HTTP headers. Default 'Host Referer User-Agent Accept Accept-Encoding
+          ...' (see docs for full list) (Allowed HTTP headers (default 'Host Referer
+          User-Agent Accept Accept-Encoding ...' (see docs for full list)))"
+                type: str
+            allowed_methods:
+                description:
+                - "Enable allowed-methods check (default disabled)"
+                type: bool
+            allowed_methods_list:
+                description:
+                - "List of allowed HTTP methods. Default is 'GET POST'. (List of HTTP methods
+          allowed (default 'GET POST'))"
+                type: str
+            allowed_versions:
+                description:
+                - "Enable allowed-versions check (default disabled)"
+                type: bool
+            allowed_versions_list:
+                description:
+                - "List of allowed HTTP versions (default '1.0 1.1 2')"
+                type: str
+            bad_multipart_request:
+                description:
+                - "Check for bad multipart/form-data request body"
+                type: bool
+            body_without_content_type:
+                description:
+                - "Check for Body request without Content-Type header in request"
+                type: bool
+            get_with_content:
+                description:
+                - "Check for GET request with Content-Length headers in request"
+                type: bool
+            head_with_content:
+                description:
+                - "Check for HEAD request with Content-Length headers in request"
+                type: bool
+            host_header_with_ip:
+                description:
+                - "Check for Host header with IP address"
+                type: bool
+            invalid_url_encoding:
+                description:
+                - "Check for invalid URL encoding in request"
+                type: bool
+            malformed_content_length:
+                description:
+                - "Check for malformed content-length in request"
+                type: bool
+            malformed_header:
+                description:
+                - "Check for malformed HTTP header"
+                type: bool
+            malformed_parameter:
+                description:
+                - "Check for malformed HTTP query/POST parameter"
+                type: bool
+            malformed_request:
+                description:
+                - "Check for malformed HTTP request"
+                type: bool
+            malformed_request_line:
+                description:
+                - "Check for malformed HTTP request line"
+                type: bool
+            missing_header_value:
+                description:
+                - "Check for missing header value in request"
+                type: bool
+            missing_host_header:
+                description:
+                - "Check for missing Host header in HTTP/1.1 request"
+                type: bool
+            multiple_content_length:
+                description:
+                - "Check for multiple Content-Length headers in request"
+                type: bool
+            post_with_0_content:
+                description:
+                - "Check for POST request with Content-Length 0"
+                type: bool
+            post_without_content:
+                description:
+                - "Check for POST request without Content-Length/Chunked Encoding headers in
+          request"
+                type: bool
+            post_without_content_type:
+                description:
+                - "Check for POST request without Content-Type header in request"
+                type: bool
+            non_ssl_cookie_prefix:
+                description:
+                - "Check for Bad __Secure- or __Host- Cookie Name prefixes in non-ssl request"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    cookie_security:
+        description:
+        - "Field cookie_security"
+        type: dict
+        required: False
+        suboptions:
+            enable_disable_action:
+                description:
+                - "'enable'= Enable cookie security (default); 'disable'= Disable cookie security;"
+                type: str
+            allow_missing_cookie:
+                description:
+                - "Allow requests with missing cookies"
+                type: bool
+            allow_unrecognized_cookie:
+                description:
+                - "Allow requests with unrecognized cookies"
+                type: bool
+            cookie_policy:
+                description:
+                - "Field cookie_policy"
+                type: list
+            set_cookie_policy:
+                description:
+                - "Field set_cookie_policy"
+                type: list
+            tamper_protection_http_only:
+                description:
+                - "Add HttpOnly flag to cookies not in set-cookie-policy list (default on)"
+                type: bool
+            tamper_protection_secure:
+                description:
+                - "Add Secure flag to cookies not in set-cookie-policy list (default on)"
+                type: bool
+            tamper_protection_samesite:
+                description:
+                - "'none'= none; 'lax'= lax; 'strict'= strict;"
+                type: str
+            tamper_protection_secret:
+                description:
+                - "Cookie encryption secret"
+                type: str
+            tamper_protection_secret_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            tamper_protection_grace_period:
+                description:
+                - "Allow unrecognized cookies for a period of time after cookie encryption being
+          applied (default 120 minutes)"
+                type: int
+            tamper_protection_session_cookie_only:
+                description:
+                - "Only encrypt session cookies"
+                type: bool
+            tamper_protection_sign:
+                description:
+                - "Sign cookies"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    evasion_check:
+        description:
+        - "Field evasion_check"
+        type: dict
+        required: False
+        suboptions:
+            apache_whitespace:
+                description:
+                - "Check for whitespace characters in URL"
+                type: bool
+            decode_entities:
+                description:
+                - "Decode entities in internal url (default on)"
+                type: bool
+            decode_escaped_chars:
+                description:
+                - "Decode escaped characters such as \\r \\n \\' \\xXX \\u00YY in internal url
+          (default on)"
+                type: bool
+            decode_plus_chars:
+                description:
+                - "Decode '+' as space in URL (default on)"
+                type: bool
+            decode_unicode_chars:
+                description:
+                - "Check for evasion attempt using %u encoding of Unicode chars to bypass (default
+          on)"
+                type: bool
+            dir_traversal:
+                description:
+                - "Check for directory traversal attempt (default on)"
+                type: bool
+            high_ascii_bytes:
+                description:
+                - "Check for evasion attempt using ASCII bytes with values"
+                type: bool
+            invalid_hex_encoding:
+                description:
+                - "Check for evasion attempt using invalid hex characters (not in 0-9,a-f)"
+                type: bool
+            multiple_encoding_levels:
+                description:
+                - "Check for evasion attempt using multiple levels of encoding"
+                type: bool
+            multiple_slashes:
+                description:
+                - "Check for evasion attempt using multiple slashes/backslashes"
+                type: bool
+            max_levels:
+                description:
+                - "Max levels of encoding allowed in request (default 2)"
+                type: int
+            remove_comments:
+                description:
+                - "Remove comments from internal url"
+                type: bool
+            remove_spaces:
+                description:
+                - "Remove spaces from internal url (default on)"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    data_leak_prevention:
+        description:
+        - "Field data_leak_prevention"
+        type: dict
+        required: False
+        suboptions:
+            ccn_mask:
+                description:
+                - "Mask credit card numbers in response"
+                type: bool
+            ssn_mask:
+                description:
+                - "Mask US Social Security numbers in response"
+                type: bool
+            pcre_mask:
+                description:
+                - "Mask matched PCRE pattern in response"
+                type: str
+            keep_start:
+                description:
+                - "Number of unmasked characters at the beginning (default= 0)"
+                type: int
+            keep_end:
+                description:
+                - "Number of unmasked characters at the end (default= 0)"
+                type: int
+            mask:
+                description:
+                - "Character to mask the matched pattern (default= X)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    form_protection:
+        description:
+        - "Field form_protection"
+        type: dict
+        required: False
+        suboptions:
+            enable_disable_action:
+                description:
+                - "'enable'= Enable web form protections (default); 'disable'= Disable web form
+          protections;"
+                type: str
+            csrf_check:
+                description:
+                - "Tag the form to protect against Cross-site Request Forgery"
+                type: bool
+            field_consistency_check:
+                description:
+                - "Form input consistency check"
+                type: bool
+            password_check_non_masked:
+                description:
+                - "Check forms that have a password field with a textual type, resulting in this
+          field not being masked"
+                type: bool
+            password_check_non_ssl:
+                description:
+                - "Check forms that has a password field if the form is not sent over an SSL
+          connection"
+                type: bool
+            password_check_autocomplete:
+                description:
+                - "Check to protect against server-generated form which contain password fields
+          that allow autocomplete"
+                type: bool
+            form_check_non_ssl:
+                description:
+                - "Check whether SSL is used for request with forms"
+                type: bool
+            form_check_caching:
+                description:
+                - "Disable caching for response with forms"
+                type: bool
+            form_check_non_post:
+                description:
+                - "Check whether POST is used for request with forms"
+                type: bool
+            form_check_request_non_post:
+                description:
+                - "Check whether POST is used for request with forms"
+                type: bool
+            form_check_response_non_post:
+                description:
+                - "Check whether form method POST is used for response with forms"
+                type: bool
+            form_check_response_non_post_sanitize:
+                description:
+                - "Change form method GET to POST (Use with caution= make sure server application
+          still work)"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    response_cloaking:
+        description:
+        - "Field response_cloaking"
+        type: dict
+        required: False
+        suboptions:
+            filter_headers:
+                description:
+                - "Removes web server's identifying headers"
+                type: bool
+            hide_status_codes:
+                description:
+                - "Hides response status codes that are not allowed (default 4xx, 5xx)"
+                type: bool
+            hide_status_codes_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    request_check:
+        description:
+        - "Field request_check"
+        type: dict
+        required: False
+        suboptions:
+            bot_check:
+                description:
+                - "Check User-Agent for known bots"
+                type: bool
+            bot_check_policy_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            command_injection_check:
+                description:
+                - "Check to protect against command injection attacks"
+                type: str
+            command_injection_check_policy_file:
+                description:
+                - "Name of WAF policy command injection list file"
+                type: str
+            redirect_whitelist:
+                description:
+                - "Check Redirect URL against list of previously learned redirects"
+                type: bool
+            referer_check:
+                description:
+                - "Check referer to protect against CSRF attacks"
+                type: bool
+            referer_domain_list:
+                description:
+                - "List of referer domains allowed"
+                type: str
+            referer_safe_url:
+                description:
+                - " Safe URL to redirect to if referer is missing"
+                type: str
+            referer_domain_list_only:
+                description:
+                - "List of referer domains allowed"
+                type: str
+            session_check:
+                description:
+                - "Enable session checking via session cookie"
+                type: bool
+            lifetime:
+                description:
+                - "Session lifetime in minutes (default 10)"
+                type: int
+            sqlia_check:
+                description:
+                - "'reject'= Reject requests with SQLIA patterns;"
+                type: str
+            sqlia_check_policy_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            url_blacklist:
+                description:
+                - "specify name of WAF policy list file to blacklist"
+                type: bool
+            waf_blacklist_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            url_whitelist:
+                description:
+                - "specify name of WAF policy list file to whitelist"
+                type: bool
+            waf_whitelist_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            url_learned_list:
+                description:
+                - "Check URL against list of previously learned URLs"
+                type: bool
+            xss_check:
+                description:
+                - "'reject'= Reject requests with bad cookies;"
+                type: str
+            xss_check_policy_file:
+                description:
+                - "Name of WAF policy list file"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    violation_log_mask:
+        description:
+        - "Field violation_log_mask"
+        type: dict
+        required: False
+        suboptions:
+            query_param_name_equal_type:
+                description:
+                - "'equals'= Mask the query value if the query name equals to the string;"
+                type: str
+            query_param_name_value:
+                description:
+                - "The list of Query parameter names"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    json_check:
+        description:
+        - "Field json_check"
+        type: dict
+        required: False
+        suboptions:
+            format_check:
+                description:
+                - "Check HTTP body for JSON format compliance"
+                type: bool
+            max_array_values:
+                description:
+                - "Maximum number of values in an array in a JSON request body (default 256)
+          (Maximum number of values in a JSON array (default 256))"
+                type: int
+            max_depth:
+                description:
+                - "Maximum recursion depth in a value in a JSON requesnt body (default 16)
+          (Maximum recursion depth in a JSON value (default 16))"
+                type: int
+            max_object_members:
+                description:
+                - "Maximum number of members in an object in a JSON request body (default 256)
+          (Maximum number of members in a JSON object (default 256))"
+                type: int
+            max_string_length:
+                description:
+                - "Maximum length of a string in a JSON request body (default 64) (Maximum length
+          of a JSON string (default 64))"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    xml_check:
+        description:
+        - "Field xml_check"
+        type: dict
+        required: False
+        suboptions:
+            disable:
+                description:
+                - "Disable all checks for XML limit"
+                type: bool
+            max_attr:
+                description:
+                - "Maximum number of attributes of an XML element (default 256)"
+                type: int
+            max_attr_name_len:
+                description:
+                - "Maximum length of an attribute name (default 128)"
+                type: int
+            max_attr_value_len:
+                description:
+                - "Maximum length of an attribute text value (default 128)"
+                type: int
+            max_cdata_len:
+                description:
+                - "Maximum length of an CDATA section of an element (default 65535)"
+                type: int
+            max_elem:
+                description:
+                - "Maximum number of XML elements (default 1024)"
+                type: int
+            max_elem_child:
+                description:
+                - "Maximum number of children of an XML element (default 1024)"
+                type: int
+            max_elem_depth:
+                description:
+                - "Maximum recursion level for element definition (default 256)"
+                type: int
+            max_elem_name_len:
+                description:
+                - "Maximum length for an element name (default 128)"
+                type: int
+            max_entity_decl:
+                description:
+                - "Maximum number of entity declarations (default 1024)"
+                type: int
+            max_entity_depth:
+                description:
+                - "Maximum depth of entities (default 32)"
+                type: int
+            max_entity_exp:
+                description:
+                - "Maximum number of entity expansions (default 1024)"
+                type: int
+            max_entity_exp_depth:
+                description:
+                - "Maximum nested depth of entity expansions (default 32)"
+                type: int
+            max_namespace:
+                description:
+                - "Maximum number of namespace declarations (default 16)"
+                type: int
+            max_namespace_uri_len:
+                description:
+                - "Maximum length of a namespace URI (default 256)"
+                type: int
+            format:
+                description:
+                - "Check HTTP body for XML format compliance"
+                type: bool
+            sqlia:
+                description:
+                - "Check XML data against SQLIA policy"
+                type: bool
+            xss:
+                description:
+                - "Check XML data against XSS policy"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -688,481 +1080,1189 @@ options:
                 description:
                 - "Requests Denied"
                 type: str
-            bot_check_succ:
-                description:
-                - "Botnet Check Success"
-                type: str
-            bot_check_fail:
-                description:
-                - "Botnet Check Failure"
-                type: str
-            form_consistency_succ:
-                description:
-                - "Form Consistency Success"
-                type: str
-            form_consistency_fail:
-                description:
-                - "Form Consistency Failure"
-                type: str
-            form_csrf_tag_succ:
-                description:
-                - "Form CSRF tag Success"
-                type: str
-            form_csrf_tag_fail:
-                description:
-                - "Form CSRF tag Failure"
-                type: str
-            url_check_succ:
-                description:
-                - "URL Check Success"
-                type: str
-            url_check_fail:
-                description:
-                - "URL Check Failure"
-                type: str
-            url_check_learn:
-                description:
-                - "URL Check Learn"
-                type: str
-            buf_ovf_url_len_fail:
-                description:
-                - "Buffer Overflow - URL Length Failure"
-                type: str
-            buf_ovf_cookie_len_fail:
-                description:
-                - "Buffer Overflow - Cookie Length Failure"
-                type: str
-            buf_ovf_hdrs_len_fail:
-                description:
-                - "Buffer Overflow - Headers length Failure"
-                type: str
-            buf_ovf_post_size_fail:
-                description:
-                - "Buffer Overflow - Post size Failure"
-                type: str
-            max_cookies_fail:
-                description:
-                - "Max Cookies Failure"
-                type: str
-            max_hdrs_fail:
-                description:
-                - "Max Headers Failure"
-                type: str
-            http_method_check_succ:
-                description:
-                - "Http Method Check Success"
-                type: str
-            http_method_check_fail:
-                description:
-                - "Http Method Check Failure"
-                type: str
-            http_check_succ:
-                description:
-                - "Http Check Success"
-                type: str
-            http_check_fail:
-                description:
-                - "Http Check Failure"
-                type: str
-            referer_check_succ:
-                description:
-                - "Referer Check Success"
-                type: str
-            referer_check_fail:
-                description:
-                - "Referer Check Failure"
-                type: str
-            referer_check_redirect:
-                description:
-                - "Referer Check Redirect"
-                type: str
-            uri_wlist_succ:
-                description:
-                - "URI White List Success"
-                type: str
-            uri_wlist_fail:
-                description:
-                - "URI White List Failure"
-                type: str
-            uri_blist_succ:
-                description:
-                - "URI Black List Success"
-                type: str
-            uri_blist_fail:
-                description:
-                - "URI Black List Failure"
-                type: str
-            post_form_check_succ:
-                description:
-                - "Post Form Check Success"
-                type: str
-            post_form_check_sanitize:
-                description:
-                - "Post Form Check Sanitized"
-                type: str
-            post_form_check_reject:
-                description:
-                - "Post Form Check Rejected"
-                type: str
-            ccn_mask_amex:
-                description:
-                - "Credit Card Number Mask Amex"
-                type: str
-            ccn_mask_diners:
-                description:
-                - "Credit Card Number Mask Diners"
-                type: str
-            ccn_mask_visa:
-                description:
-                - "Credit Card Number Mask Visa"
-                type: str
-            ccn_mask_mastercard:
-                description:
-                - "Credit Card Number Mask Mastercard"
-                type: str
-            ccn_mask_discover:
-                description:
-                - "Credit Card Number Mask Discover"
-                type: str
-            ccn_mask_jcb:
-                description:
-                - "Credit Card Number Mask Jcb"
-                type: str
-            ssn_mask:
-                description:
-                - "Social Security Number Mask"
-                type: str
-            pcre_mask:
-                description:
-                - "PCRE Mask"
-                type: str
-            cookie_encrypt_succ:
-                description:
-                - "Cookie Encrypt Success"
-                type: str
-            cookie_encrypt_fail:
-                description:
-                - "Cookie Encrypt Failure"
-                type: str
-            cookie_encrypt_limit_exceeded:
-                description:
-                - "Cookie Encrypt Limit Exceeded"
-                type: str
-            cookie_encrypt_skip_rcache:
-                description:
-                - "Cookie Encrypt Skip RCache"
-                type: str
-            cookie_decrypt_succ:
-                description:
-                - "Cookie Decrypt Success"
-                type: str
-            cookie_decrypt_fail:
-                description:
-                - "Cookie Decrypt Failure"
-                type: str
-            sqlia_chk_url_succ:
-                description:
-                - "SQLIA Check URL Success"
-                type: str
-            sqlia_chk_url_sanitize:
-                description:
-                - "SQLIA Check URL Sanitized"
-                type: str
-            sqlia_chk_url_reject:
-                description:
-                - "SQLIA Check URL Rejected"
-                type: str
-            sqlia_chk_post_succ:
-                description:
-                - "SQLIA Check Post Success"
-                type: str
-            sqlia_chk_post_sanitize:
-                description:
-                - "SQLIA Check Post Sanitized"
-                type: str
-            sqlia_chk_post_reject:
-                description:
-                - "SQLIA Check Post Rejected"
-                type: str
-            xss_chk_cookie_succ:
-                description:
-                - "XSS Check Cookie Success"
-                type: str
-            xss_chk_cookie_sanitize:
-                description:
-                - "XSS Check Cookie Sanitized"
-                type: str
-            xss_chk_cookie_reject:
-                description:
-                - "XSS Check Cookie Rejected"
-                type: str
-            xss_chk_url_succ:
-                description:
-                - "XSS Check URL Success"
-                type: str
-            xss_chk_url_sanitize:
-                description:
-                - "XSS Check URL Sanitized"
-                type: str
-            xss_chk_url_reject:
-                description:
-                - "XSS Check URL Rejected"
-                type: str
-            xss_chk_post_succ:
-                description:
-                - "XSS Check Post Success"
-                type: str
-            xss_chk_post_sanitize:
-                description:
-                - "XSS Check Post Sanitized"
-                type: str
-            xss_chk_post_reject:
-                description:
-                - "XSS Check Post Rejected"
-                type: str
-            resp_code_hidden:
-                description:
-                - "Response Code Hidden"
-                type: str
-            resp_hdrs_filtered:
-                description:
-                - "Response Headers Filtered"
-                type: str
-            learn_updates:
-                description:
-                - "Learning Updates"
-                type: str
-            num_drops:
-                description:
-                - "Number Drops"
-                type: str
-            num_resets:
-                description:
-                - "Number Resets"
-                type: str
-            form_non_ssl_reject:
-                description:
-                - "Form Non SSL Rejected"
-                type: str
-            form_non_post_reject:
-                description:
-                - "Form Non Post Rejected"
-                type: str
-            sess_check_none:
-                description:
-                - "Session Check None"
-                type: str
-            sess_check_succ:
-                description:
-                - "Session Check Success"
-                type: str
-            sess_check_fail:
-                description:
-                - "Session Check Failure"
-                type: str
-            soap_check_succ:
-                description:
-                - "Soap Check Success"
-                type: str
-            soap_check_failure:
-                description:
-                - "Soap Check Failure"
-                type: str
-            wsdl_fail:
-                description:
-                - "WSDL Failure"
-                type: str
-            wsdl_succ:
-                description:
-                - "WSDL Success"
-                type: str
-            xml_schema_fail:
-                description:
-                - "XML Schema Failure"
-                type: str
-            xml_schema_succ:
-                description:
-                - "XML Schema Success"
-                type: str
-            xml_sqlia_chk_fail:
-                description:
-                - "XML Sqlia Check Failure"
-                type: str
-            xml_sqlia_chk_succ:
-                description:
-                - "XML Sqlia Check Success"
-                type: str
-            xml_xss_chk_fail:
-                description:
-                - "XML XSS Check Failure"
-                type: str
-            xml_xss_chk_succ:
-                description:
-                - "XML XSS Check Success"
-                type: str
-            json_check_failure:
-                description:
-                - "JSON Check Failure"
-                type: str
-            json_check_succ:
-                description:
-                - "JSON Check Success"
-                type: str
-            xml_check_failure:
-                description:
-                - "XML Check Failure"
-                type: str
-            xml_check_succ:
-                description:
-                - "XML Check Success"
-                type: str
-            buf_ovf_cookie_value_len_fail:
-                description:
-                - "Buffer Overflow - Cookie Value Length Failure"
-                type: str
-            buf_ovf_cookies_len_fail:
-                description:
-                - "Buffer Overflow - Cookies Length Failure"
-                type: str
-            buf_ovf_hdr_name_len_fail:
-                description:
-                - "Buffer Overflow - Header Name Length Failure"
-                type: str
-            buf_ovf_hdr_value_len_fail:
-                description:
-                - "Buffer Overflow - Header Value Length Failure"
-                type: str
-            buf_ovf_max_data_parse_fail:
-                description:
-                - "Buffer Overflow - Max Data Parse Failure"
-                type: str
-            buf_ovf_line_len_fail:
-                description:
-                - "Buffer Overflow - Line Length Failure"
-                type: str
-            buf_ovf_parameter_name_len_fail:
-                description:
-                - "Buffer Overflow - HTML Parameter Name Length Failure"
-                type: str
-            buf_ovf_parameter_value_len_fail:
-                description:
-                - "Buffer Overflow - HTML Parameter Value Length Failure"
-                type: str
-            buf_ovf_parameter_total_len_fail:
-                description:
-                - "Buffer Overflow - HTML Parameter Total Length Failure"
-                type: str
-            buf_ovf_query_len_fail:
-                description:
-                - "Buffer Overflow - Query Length Failure"
-                type: str
-            max_entities_fail:
-                description:
-                - "Max Entities Failure"
-                type: str
-            max_parameters_fail:
-                description:
-                - "Max Parameters Failure"
-                type: str
-            buf_ovf_cookie_name_len_fail:
-                description:
-                - "Buffer Overflow - Cookie Name Length Failure"
-                type: str
-            xml_limit_attr:
-                description:
-                - "XML Limit Attribue"
-                type: str
-            xml_limit_attr_name_len:
-                description:
-                - "XML Limit Name Length"
-                type: str
-            xml_limit_attr_value_len:
-                description:
-                - "XML Limit Value Length"
-                type: str
-            xml_limit_cdata_len:
-                description:
-                - "XML Limit CData Length"
-                type: str
-            xml_limit_elem:
-                description:
-                - "XML Limit Element"
-                type: str
-            xml_limit_elem_child:
-                description:
-                - "XML Limit Element Child"
-                type: str
-            xml_limit_elem_depth:
-                description:
-                - "XML Limit Element Depth"
-                type: str
-            xml_limit_elem_name_len:
-                description:
-                - "XML Limit Element Name Length"
-                type: str
-            xml_limit_entity_exp:
-                description:
-                - "XML Limit Entity Exp"
-                type: str
-            xml_limit_entity_exp_depth:
-                description:
-                - "XML Limit Entity Exp Depth"
-                type: str
-            xml_limit_namespace:
-                description:
-                - "XML Limit Namespace"
-                type: str
-            xml_limit_namespace_uri_len:
-                description:
-                - "XML Limit Namespace URI Length"
-                type: str
-            json_limit_array_value_count:
-                description:
-                - "JSON Limit Array Value Count"
-                type: str
-            json_limit_depth:
-                description:
-                - "JSON Limit Depth"
-                type: str
-            json_limit_object_member_count:
-                description:
-                - "JSON Limit Object Number Count"
-                type: str
-            json_limit_string:
-                description:
-                - "JSON Limit String"
-                type: str
-            form_non_masked_password:
-                description:
-                - "Form Non Masked Password"
-                type: str
-            form_non_ssl_password:
-                description:
-                - "Form Non SSL Password"
-                type: str
-            form_password_autocomplete:
-                description:
-                - "Form Password Autocomplete"
-                type: str
-            redirect_wlist_succ:
-                description:
-                - "Redirect Whitelist Success"
-                type: str
-            redirect_wlist_fail:
-                description:
-                - "Redirect Whitelist Failure"
-                type: str
-            redirect_wlist_learn:
-                description:
-                - "Redirect Whitelist Learn"
-                type: str
-            form_set_no_cache:
-                description:
-                - "Form Set No Cache"
-                type: str
             resp_denied:
                 description:
                 - "Responses Denied"
+                type: str
+            brute_force_success:
+                description:
+                - "Brute-Force checks passed"
+                type: str
+            brute_force_violation:
+                description:
+                - "Brute-Force checks violation"
+                type: str
+            brute_force_challenge_cookie_sent:
+                description:
+                - "Cookie Challenge Sent"
+                type: str
+            brute_force_challenge_cookie_success:
+                description:
+                - "Cookie Challenge check passed"
+                type: str
+            brute_force_challenge_cookie_violation:
+                description:
+                - "Cookie challenge violation"
+                type: str
+            brute_force_challenge_javascript_sent:
+                description:
+                - "JavaScript challenge sent"
+                type: str
+            brute_force_challenge_javascript_success:
+                description:
+                - "JavaScript challenge check passed"
+                type: str
+            brute_force_challenge_javascript_violation:
+                description:
+                - "JavaScript challenge violation"
+                type: str
+            brute_force_challenge_captcha_sent:
+                description:
+                - "Captcha challenge sent"
+                type: str
+            brute_force_challenge_captcha_success:
+                description:
+                - "Captcha challenge check passed"
+                type: str
+            brute_force_challenge_captcha_violation:
+                description:
+                - "Captcha challenge violation"
+                type: str
+            brute_force_lockout_limit_success:
+                description:
+                - "Lockout limit check passed"
+                type: str
+            brute_force_lockout_limit_violation:
+                description:
+                - "Lockout limit violation"
+                type: str
+            brute_force_challenge_limit_success:
+                description:
+                - "Lockout limit check passed"
+                type: str
+            brute_force_challenge_limit_violation:
+                description:
+                - "Lockout limit violation"
+                type: str
+            brute_force_response_codes_triggered:
+                description:
+                - "Response Codes Triggered"
+                type: str
+            brute_force_response_headers_triggered:
+                description:
+                - "Brute Force Response Headers Triggered"
+                type: str
+            brute_force_response_string_triggered:
+                description:
+                - "Brute Force Response string Triggered"
+                type: str
+            cookie_security_encrypt_success:
+                description:
+                - "Cookie Security - encrypt successful"
+                type: str
+            cookie_security_encrypt_violation:
+                description:
+                - "Cookie Security - encrypt violation"
+                type: str
+            cookie_security_encrypt_limit_exceeded:
+                description:
+                - "Cookie Security - encrypt limit exceeded"
+                type: str
+            cookie_security_encrypt_skip_rcache:
+                description:
+                - "Cookie Security - encrypt skipped - RAM cache"
+                type: str
+            cookie_security_decrypt_success:
+                description:
+                - "Cookie Security - decrypt successful"
+                type: str
+            cookie_security_decrypt_violation:
+                description:
+                - "Cookie Security - decrypt violation"
+                type: str
+            cookie_security_sign_success:
+                description:
+                - "Cookie Security - signing successful"
+                type: str
+            cookie_security_sign_violation:
+                description:
+                - "Cookie Security - signing violation"
+                type: str
+            cookie_security_sign_limit_exceeded:
+                description:
+                - "Cookie Security - signing limit exceeded"
+                type: str
+            cookie_security_sign_skip_rcache:
+                description:
+                - "Cookie Security - signing skipped - RAM Cache"
+                type: str
+            cookie_security_signature_check_success:
+                description:
+                - "Cookie Security - signature check successful"
+                type: str
+            cookie_security_signature_check_violation:
+                description:
+                - "Cookie Security - signature check violation"
+                type: str
+            cookie_security_add_http_only_success:
+                description:
+                - "Cookie Security - http-only flag added"
+                type: str
+            cookie_security_add_http_only_violation:
+                description:
+                - "Cookie Security - http-only flag violation"
+                type: str
+            cookie_security_add_secure_success:
+                description:
+                - "Cookie Security - secure flag added"
+                type: str
+            cookie_security_add_secure_violation:
+                description:
+                - "Cookie Security - secure flag violation"
+                type: str
+            cookie_security_missing_cookie_success:
+                description:
+                - "Cookie Security - request with missing cookie"
+                type: str
+            cookie_security_missing_cookie_violation:
+                description:
+                - "Cookie Security - missing cookie violation"
+                type: str
+            cookie_security_unrecognized_cookie_success:
+                description:
+                - "Cookie Security - request with unrecognized cookie"
+                type: str
+            cookie_security_unrecognized_cookie_violation:
+                description:
+                - "Cookie Security - unrecognized cookie violation"
+                type: str
+            cookie_security_cookie_policy_success:
+                description:
+                - "Cookie Security - cookie policy passed"
+                type: str
+            cookie_security_cookie_policy_violation:
+                description:
+                - "Cookie Security - cookie policy violation"
+                type: str
+            cookie_security_persistent_cookies:
+                description:
+                - "Cookie Security - persistent cookies"
+                type: str
+            cookie_security_persistent_cookies_encrypted:
+                description:
+                - "Cookie Security - encrypted persistent cookies"
+                type: str
+            cookie_security_persistent_cookies_signed:
+                description:
+                - "Cookie Security - signed persistent cookies"
+                type: str
+            cookie_security_session_cookies:
+                description:
+                - "Cookie Security - session cookies"
+                type: str
+            cookie_security_session_cookies_encrypted:
+                description:
+                - "Cookie Security - encrypted session cookies"
+                type: str
+            cookie_security_session_cookies_signed:
+                description:
+                - "Cookie Security - signed session cookies"
+                type: str
+            cookie_security_allowed_session_cookies:
+                description:
+                - "Cookie Security - allowed session cookies"
+                type: str
+            cookie_security_allowed_persistent_cookies:
+                description:
+                - "Cookie Security - allowed persistent cookies"
+                type: str
+            cookie_security_disallowed_session_cookies:
+                description:
+                - "Cookie Security - disallowed session cookies"
+                type: str
+            cookie_security_disallowed_persistent_cookies:
+                description:
+                - "Cookie Security - disallowed persistent cookies"
+                type: str
+            cookie_security_allowed_session_set_cookies:
+                description:
+                - "Cookie Security - disallowed session Set-Cookies"
+                type: str
+            cookie_security_allowed_persistent_set_cookies:
+                description:
+                - "Cookie Security - disallowed persistent Set-Cookies"
+                type: str
+            cookie_security_disallowed_session_set_cookies:
+                description:
+                - "Cookie Security - disallowed session Set-Cookies"
+                type: str
+            cookie_security_disallowed_persistent_set_cookies:
+                description:
+                - "Cookie Security - disallowed persistent Set-Cookies"
+                type: str
+            csp_header_violation:
+                description:
+                - "CSP header missing"
+                type: str
+            csp_header_success:
+                description:
+                - "CSP header found"
+                type: str
+            csp_header_inserted:
+                description:
+                - "CSP header Inserted"
+                type: str
+            form_csrf_tag_success:
+                description:
+                - "Form CSRF tag passed"
+                type: str
+            form_csrf_tag_violation:
+                description:
+                - "Form CSRF tag violation"
+                type: str
+            form_consistency_success:
+                description:
+                - "Form Consistency passed"
+                type: str
+            form_consistency_violation:
+                description:
+                - "Form Consistency violation"
+                type: str
+            form_tag_inserted:
+                description:
+                - "Form A10 Tag Inserted"
+                type: str
+            form_non_ssl_success:
+                description:
+                - "Form Non SSL check passed"
+                type: str
+            form_non_ssl_violation:
+                description:
+                - "Form Non SSL violation"
+                type: str
+            form_request_non_post_success:
+                description:
+                - "Form Method being Non Post in Request passed"
+                type: str
+            form_request_non_post_violation:
+                description:
+                - "Form Method being Non Post in Request violation"
+                type: str
+            form_check_success:
+                description:
+                - "Post Form Check passed"
+                type: str
+            form_check_violation:
+                description:
+                - "Post Form Check violation"
+                type: str
+            form_check_sanitize:
+                description:
+                - "Post Form Check Sanitized"
+                type: str
+            form_non_masked_password_success:
+                description:
+                - "Form Non Masked Password check passed"
+                type: str
+            form_non_masked_password_violation:
+                description:
+                - "Form Non Masked Password violation"
+                type: str
+            form_non_ssl_password_success:
+                description:
+                - "Form Non SSL Password check passed"
+                type: str
+            form_non_ssl_password_violation:
+                description:
+                - "Form Non SSL Password violation"
+                type: str
+            form_password_autocomplete_success:
+                description:
+                - "Form Password Autocomplete check passed"
+                type: str
+            form_password_autocomplete_violation:
+                description:
+                - "Form Password Autocomplete violation"
+                type: str
+            form_set_no_cache_success:
+                description:
+                - "Form Set No Cache check passed"
+                type: str
+            form_set_no_cache:
+                description:
+                - "Form Set No Cache violation"
+                type: str
+            dlp_ccn_success:
+                description:
+                - "Credit Card Number check passed"
+                type: str
+            dlp_ccn_amex_violation:
+                description:
+                - "Amex Credit Card Number Detected"
+                type: str
+            dlp_ccn_amex_masked:
+                description:
+                - "Amex Credit Card Number Masked"
+                type: str
+            dlp_ccn_diners_violation:
+                description:
+                - "Diners Club Credit Card Number Detected"
+                type: str
+            dlp_ccn_diners_masked:
+                description:
+                - "Diners Club Credit Card Number Masked"
+                type: str
+            dlp_ccn_visa_violation:
+                description:
+                - "Visa Credit Card Number Detected"
+                type: str
+            dlp_ccn_visa_masked:
+                description:
+                - "Visa Credit Card Number Masked"
+                type: str
+            dlp_ccn_mastercard_violation:
+                description:
+                - "MasterCard Credit Card Number Detected"
+                type: str
+            dlp_ccn_mastercard_masked:
+                description:
+                - "MasterCard Credit Card Number Masked"
+                type: str
+            dlp_ccn_discover_violation:
+                description:
+                - "Discover Credit Card Number Detected"
+                type: str
+            dlp_ccn_discover_masked:
+                description:
+                - "Discover Credit Card Number Masked"
+                type: str
+            dlp_ccn_jcb_violation:
+                description:
+                - "JCB Credit Card Number Detected"
+                type: str
+            dlp_ccn_jcb_masked:
+                description:
+                - "JCB Credit Card Number Masked"
+                type: str
+            dlp_ssn_success:
+                description:
+                - "Social Security Number Mask check passed"
+                type: str
+            dlp_ssn_violation:
+                description:
+                - "Social Security Number Mask violation"
+                type: str
+            dlp_pcre_success:
+                description:
+                - "PCRE Mask check passed"
+                type: str
+            dlp_pcre_violation:
+                description:
+                - "PCRE Mask violation"
+                type: str
+            dlp_pcre_masked:
+                description:
+                - "PCRE Mask violation"
+                type: str
+            evasion_check_apache_whitespace_success:
+                description:
+                - "Apache Whitespace check passed"
+                type: str
+            evasion_check_apache_whitespace_violation:
+                description:
+                - "Apache Whitespace check violation"
+                type: str
+            evasion_check_decode_entities_success:
+                description:
+                - "Decode Entities check passed"
+                type: str
+            evasion_check_decode_entities_violation:
+                description:
+                - "Decode Entities check violation"
+                type: str
+            evasion_check_decode_escaped_chars_success:
+                description:
+                - "Decode Escaped Chars check passed"
+                type: str
+            evasion_check_decode_escaped_chars_violation:
+                description:
+                - "Decode Escaped Chars check violation"
+                type: str
+            evasion_check_decode_unicode_chars_success:
+                description:
+                - "Decode Unicode Chars check passed"
+                type: str
+            evasion_check_decode_unicode_chars_violation:
+                description:
+                - "Decode Unicode Chars check violation"
+                type: str
+            evasion_check_dir_traversal_success:
+                description:
+                - "Dir traversal check passed"
+                type: str
+            evasion_check_dir_traversal_violation:
+                description:
+                - "Dir traversal check violation"
+                type: str
+            evasion_check_high_ascii_bytes_success:
+                description:
+                - "High Ascii Bytes check passed"
+                type: str
+            evasion_check_high_ascii_bytes_violation:
+                description:
+                - "High Ascii Bytes check violation"
+                type: str
+            evasion_check_invalid_hex_encoding_success:
+                description:
+                - "Invalid Hex Encoding check passed"
+                type: str
+            evasion_check_invalid_hex_encoding_violation:
+                description:
+                - "Invalid Hex Encoding check violation"
+                type: str
+            evasion_check_multiple_encoding_levels_success:
+                description:
+                - "Multiple Encoding Levels check passed"
+                type: str
+            evasion_check_multiple_encoding_levels_violation:
+                description:
+                - "Multiple Encoding Levels check violation"
+                type: str
+            evasion_check_multiple_slashes_success:
+                description:
+                - "Multiple Slashes check passed"
+                type: str
+            evasion_check_multiple_slashes_violation:
+                description:
+                - "Multiple Slashes check violation"
+                type: str
+            evasion_check_max_levels_success:
+                description:
+                - "Max Levels check passed"
+                type: str
+            evasion_check_max_levels_violation:
+                description:
+                - "Max Levels check violation"
+                type: str
+            evasion_check_remove_comments_success:
+                description:
+                - "Remove Comments check passed"
+                type: str
+            evasion_check_remove_comments_violation:
+                description:
+                - "Remove Comments check violation"
+                type: str
+            evasion_check_remove_spaces_success:
+                description:
+                - "Remove Spaces check passed"
+                type: str
+            evasion_check_remove_spaces_violation:
+                description:
+                - "Remove Spaces check violation"
+                type: str
+            http_limit_max_content_length_success:
+                description:
+                - "MAX content-length check passed"
+                type: str
+            http_limit_max_content_length_violation:
+                description:
+                - "MAX content-length check violation"
+                type: str
+            http_limit_max_cookie_header_length_success:
+                description:
+                - "MAX cookie header length check passed"
+                type: str
+            http_limit_max_cookie_header_length_violation:
+                description:
+                - "MAX cookie header length violation"
+                type: str
+            http_limit_max_cookie_name_length_success:
+                description:
+                - "MAX cookie name length check passed"
+                type: str
+            http_limit_max_cookie_name_length_violation:
+                description:
+                - "MAX cookie name length violation"
+                type: str
+            http_limit_max_cookie_value_length_success:
+                description:
+                - "MAX cookie value length check passed"
+                type: str
+            http_limit_max_cookie_value_length_violation:
+                description:
+                - "MAX cookie value length violation"
+                type: str
+            http_limit_max_cookies_success:
+                description:
+                - "Max Cookies check passed"
+                type: str
+            http_limit_max_cookies_violation:
+                description:
+                - "Max Cookies violation"
+                type: str
+            http_limit_max_cookies_length_success:
+                description:
+                - "MAX cookies length check passed"
+                type: str
+            http_limit_max_cookies_length_violation:
+                description:
+                - "MAX cookies length violation"
+                type: str
+            http_limit_max_data_parse_success:
+                description:
+                - "Buffer Overflow - Max Data Parse check passed"
+                type: str
+            http_limit_max_data_parse_violation:
+                description:
+                - "Buffer Overflow - Max Data Parse violation"
+                type: str
+            http_limit_max_entities_success:
+                description:
+                - "Max Entities check passed"
+                type: str
+            http_limit_max_entities_violation:
+                description:
+                - "Max Entities violation"
+                type: str
+            http_limit_max_header_length_success:
+                description:
+                - "MAX header length check passed"
+                type: str
+            http_limit_max_header_length_violation:
+                description:
+                - "MAX header length check violation"
+                type: str
+            http_limit_max_header_name_length_success:
+                description:
+                - "MAX header name length check passed"
+                type: str
+            http_limit_max_header_name_length_violation:
+                description:
+                - "MAX header name length check violation"
+                type: str
+            http_limit_max_header_value_length_success:
+                description:
+                - "MAX header value length check passed"
+                type: str
+            http_limit_max_header_value_length_violation:
+                description:
+                - "MAX header value length check violation"
+                type: str
+            http_limit_max_headers_success:
+                description:
+                - "MAX headers count check passed"
+                type: str
+            http_limit_max_headers_violation:
+                description:
+                - "Max Headers violation"
+                type: str
+            http_limit_max_headers_length_success:
+                description:
+                - "MAX headers length check passed"
+                type: str
+            http_limit_max_headers_length_violation:
+                description:
+                - "MAX headers length check violation"
+                type: str
+            http_limit_max_param_name_length_success:
+                description:
+                - "Limit check - MAX parameter name length check passed"
+                type: str
+            http_limit_max_param_name_length_violation:
+                description:
+                - "Limit check - MAX parameter name length violation"
+                type: str
+            http_limit_max_param_value_length_success:
+                description:
+                - "Limit check - MAX parameter value length check passed"
+                type: str
+            http_limit_max_param_value_length_violation:
+                description:
+                - "Limit check - MAX parameter value length violation"
+                type: str
+            http_limit_max_params_success:
+                description:
+                - "Limit check - MAX parameters check passed"
+                type: str
+            http_limit_max_params_violation:
+                description:
+                - "Limit check - MAX parameters violation"
+                type: str
+            http_limit_max_params_length_success:
+                description:
+                - "Limit check - MAX parameters total length check passed"
+                type: str
+            http_limit_max_params_length_violation:
+                description:
+                - "Limit check - MAX parameters total length violation"
+                type: str
+            http_limit_max_post_length_success:
+                description:
+                - "MAX POST length check passed"
+                type: str
+            http_limit_max_post_length_violation:
+                description:
+                - "MAX POST length violation"
+                type: str
+            http_limit_max_query_length_success:
+                description:
+                - "Limit check - MAX query length check passed"
+                type: str
+            http_limit_max_query_length_violation:
+                description:
+                - "Limit check - MAX query length violation"
+                type: str
+            http_limit_max_request_length_success:
+                description:
+                - "Limit check - MAX request length check passed"
+                type: str
+            http_limit_max_request_length_violation:
+                description:
+                - "Limit check - MAX request length violation"
+                type: str
+            http_limit_max_request_line_length_success:
+                description:
+                - "Limit check - MAX request line length check passed"
+                type: str
+            http_limit_max_request_line_length_violation:
+                description:
+                - "Limit check - MAX request line length violation"
+                type: str
+            max_url_length_success:
+                description:
+                - "Limit check - MAX URL length check passed"
+                type: str
+            max_url_length_violation:
+                description:
+                - "Limit check - MAX URL length violation"
+                type: str
+            http_protocol_allowed_headers_success:
+                description:
+                - "HTTP headers check passed"
+                type: str
+            http_protocol_allowed_headers_violation:
+                description:
+                - "HTTP headers check violation"
+                type: str
+            http_protocol_allowed_versions_success:
+                description:
+                - "HTTP versions check passed"
+                type: str
+            http_protocol_allowed_versions_violation:
+                description:
+                - "HTTP versions check violation"
+                type: str
+            http_protocol_allowed_method_check_success:
+                description:
+                - "HTTP Method Check passed"
+                type: str
+            http_protocol_allowed_method_check_violation:
+                description:
+                - "HTTP Method Check violation"
+                type: str
+            http_protocol_bad_multipart_request_success:
+                description:
+                - "Bad multi-part request check passed"
+                type: str
+            http_protocol_bad_multipart_request_violation:
+                description:
+                - "Bad multi-part request check violation"
+                type: str
+            http_protocol_get_with_content_success:
+                description:
+                - "GET with content check passed"
+                type: str
+            http_protocol_get_with_content_violation:
+                description:
+                - "GET with content check violation"
+                type: str
+            http_protocol_head_with_content_success:
+                description:
+                - "HEAD with content check passed"
+                type: str
+            http_protocol_head_with_content_violation:
+                description:
+                - "HEAD with content check violation"
+                type: str
+            http_protocol_host_header_with_ip_success:
+                description:
+                - "Host header with IP check passed"
+                type: str
+            http_protocol_host_header_with_ip_violation:
+                description:
+                - "Host header with IP check violation"
+                type: str
+            http_protocol_invalid_url_encoding_success:
+                description:
+                - "Invalid url encoding check passed"
+                type: str
+            http_protocol_invalid_url_encoding_violation:
+                description:
+                - "Invalid url encoding check violation"
+                type: str
+            http_protocol_malformed_content_length_success:
+                description:
+                - "Malformed content-length check passed"
+                type: str
+            http_protocol_malformed_content_length_violation:
+                description:
+                - "Malformed content-length check violation"
+                type: str
+            http_protocol_malformed_header_success:
+                description:
+                - "Malformed header check passed"
+                type: str
+            http_protocol_malformed_header_violation:
+                description:
+                - "Malformed header check passed"
+                type: str
+            http_protocol_malformed_parameter_success:
+                description:
+                - "Malformed parameter check passed"
+                type: str
+            http_protocol_malformed_parameter_violation:
+                description:
+                - "Malformed parameter check violation"
+                type: str
+            http_protocol_malformed_request_success:
+                description:
+                - "Malformed request check passed"
+                type: str
+            http_protocol_malformed_request_violation:
+                description:
+                - "Malformed request check violation"
+                type: str
+            http_protocol_malformed_request_line_success:
+                description:
+                - "Malformed request line check passed"
+                type: str
+            http_protocol_malformed_request_line_violation:
+                description:
+                - "Malformed request line check violation"
+                type: str
+            http_protocol_missing_header_value_success:
+                description:
+                - "Missing header value check violation"
+                type: str
+            http_protocol_missing_header_value_violation:
+                description:
+                - "Missing header value check violation"
+                type: str
+            http_protocol_missing_host_header_success:
+                description:
+                - "Missing host header check passed"
+                type: str
+            http_protocol_missing_host_header_violation:
+                description:
+                - "Missing host header check violation"
+                type: str
+            http_protocol_multiple_content_length_success:
+                description:
+                - "Multiple content-length headers check passed"
+                type: str
+            http_protocol_multiple_content_length_violation:
+                description:
+                - "Multiple content-length headers check violation"
+                type: str
+            http_protocol_post_with_0_content_success:
+                description:
+                - "POST with 0 content check passed"
+                type: str
+            http_protocol_post_with_0_content_violation:
+                description:
+                - "POST with 0 content check violation"
+                type: str
+            http_protocol_post_without_content_success:
+                description:
+                - "POST without content check passed"
+                type: str
+            http_protocol_post_without_content_violation:
+                description:
+                - "POST without content check violation"
+                type: str
+            http_protocol_success:
+                description:
+                - "HTTP Check passed"
+                type: str
+            http_protocol_violation:
+                description:
+                - "HTTP Check violation"
+                type: str
+            json_check_format_success:
+                description:
+                - "JSON Check passed"
+                type: str
+            json_check_format_violation:
+                description:
+                - "JSON Check violation"
+                type: str
+            json_check_max_array_value_count_success:
+                description:
+                - "JSON Limit Array Value Count check passed"
+                type: str
+            json_check_max_array_value_count_violation:
+                description:
+                - "JSON Limit Array Value Count violation"
+                type: str
+            json_check_max_depth_success:
+                description:
+                - "JSON Limit Depth check passed"
+                type: str
+            json_check_max_depth_violation:
+                description:
+                - "JSON Limit Depth violation"
+                type: str
+            json_check_max_object_member_count_success:
+                description:
+                - "JSON Limit Object Number Count check passed"
+                type: str
+            json_check_max_object_member_count_violation:
+                description:
+                - "JSON Limit Object Number Count violation"
+                type: str
+            json_check_max_string_success:
+                description:
+                - "JSON Limit String check passed"
+                type: str
+            json_check_max_string_violation:
+                description:
+                - "JSON Limit String violation"
+                type: str
+            request_check_bot_success:
+                description:
+                - "Bot check passed"
+                type: str
+            request_check_bot_violation:
+                description:
+                - "Bot check violation"
+                type: str
+            request_check_redirect_wlist_success:
+                description:
+                - "Redirect Whitelist passed"
+                type: str
+            request_check_redirect_wlist_violation:
+                description:
+                - "Redirect Whitelist violation"
+                type: str
+            request_check_redirect_wlist_learn:
+                description:
+                - "Redirect Whitelist Learn"
+                type: str
+            request_check_referer_success:
+                description:
+                - "Referer Check passed"
+                type: str
+            request_check_referer_violation:
+                description:
+                - "Referer Check violation"
+                type: str
+            request_check_referer_redirect:
+                description:
+                - "Referer Check Redirect"
+                type: str
+            request_check_session_check_none:
+                description:
+                - "Session Created"
+                type: str
+            request_check_session_check_success:
+                description:
+                - "Session Check passed"
+                type: str
+            request_check_session_check_violation:
+                description:
+                - "Session Check violation"
+                type: str
+            request_check_sqlia_url_success:
+                description:
+                - "SQLIA Check URL passed"
+                type: str
+            request_check_sqlia_url_violation:
+                description:
+                - "SQLIA Check URL violation"
+                type: str
+            request_check_sqlia_url_sanitize:
+                description:
+                - "SQLIA Check URL Sanitized"
+                type: str
+            request_check_sqlia_post_body_success:
+                description:
+                - "SQLIA Check Post passed"
+                type: str
+            request_check_sqlia_post_body_violation:
+                description:
+                - "SQLIA Check Post violation"
+                type: str
+            request_check_sqlia_post_body_sanitize:
+                description:
+                - "SQLIA Check Post Sanitized"
+                type: str
+            request_check_url_list_success:
+                description:
+                - "URL Check passed"
+                type: str
+            request_check_url_list_violation:
+                description:
+                - "URL Check violation"
+                type: str
+            request_check_url_list_learn:
+                description:
+                - "URL Check Learn"
+                type: str
+            request_check_url_whitelist_success:
+                description:
+                - "URI White List passed"
+                type: str
+            request_check_url_whitelist_violation:
+                description:
+                - "URI White List violation"
+                type: str
+            request_check_url_blacklist_success:
+                description:
+                - "URI Black List passed"
+                type: str
+            request_check_url_blacklist_violation:
+                description:
+                - "URI Black List violation"
+                type: str
+            request_check_xss_cookie_success:
+                description:
+                - "XSS Check Cookie passed"
+                type: str
+            request_check_xss_cookie_violation:
+                description:
+                - "XSS Check Cookie violation"
+                type: str
+            request_check_xss_cookie_sanitize:
+                description:
+                - "XSS Check Cookie Sanitized"
+                type: str
+            request_check_xss_url_success:
+                description:
+                - "XSS Check URL passed"
+                type: str
+            request_check_xss_url_violation:
+                description:
+                - "XSS Check URL violation"
+                type: str
+            request_check_xss_url_sanitize:
+                description:
+                - "XSS Check URL Sanitized"
+                type: str
+            request_check_xss_post_body_success:
+                description:
+                - "XSS Check Post passed"
+                type: str
+            request_check_xss_post_body_violation:
+                description:
+                - "XSS Check Post violation"
+                type: str
+            request_check_xss_post_body_sanitize:
+                description:
+                - "XSS Check Post Sanitized"
+                type: str
+            response_cloaking_hide_status_code_success:
+                description:
+                - "Response Hide Code check passed"
+                type: str
+            response_cloaking_hide_status_code_violation:
+                description:
+                - "Response Hide Code violation"
+                type: str
+            response_cloaking_filter_headers_success:
+                description:
+                - "Response Headers Filter check passed"
+                type: str
+            response_cloaking_filter_headers_violation:
+                description:
+                - "Response Headers Filter violation"
+                type: str
+            soap_check_success:
+                description:
+                - "Soap Check passed"
+                type: str
+            soap_check_violation:
+                description:
+                - "Soap Check violation"
+                type: str
+            xml_check_format_success:
+                description:
+                - "XML Check passed"
+                type: str
+            xml_check_format_violation:
+                description:
+                - "XML Check violation"
+                type: str
+            xml_check_max_attr_success:
+                description:
+                - "XML Limit Attribute check passed"
+                type: str
+            xml_check_max_attr_violation:
+                description:
+                - "XML Limit Attribute violation"
+                type: str
+            xml_check_max_attr_name_len_success:
+                description:
+                - "XML Limit Name Length check passed"
+                type: str
+            xml_check_max_attr_name_len_violation:
+                description:
+                - "XML Limit Name Length violation"
+                type: str
+            xml_check_max_attr_value_len_success:
+                description:
+                - "XML Limit Value Length check passed"
+                type: str
+            xml_check_max_attr_value_len_violation:
+                description:
+                - "XML Limit Value Length violation"
+                type: str
+            xml_check_max_cdata_len_success:
+                description:
+                - "XML Limit CData Length check passed"
+                type: str
+            xml_check_max_cdata_len_violation:
+                description:
+                - "XML Limit CData Length violation"
+                type: str
+            xml_check_max_elem_success:
+                description:
+                - "XML Limit Element check passed"
+                type: str
+            xml_check_max_elem_violation:
+                description:
+                - "XML Limit Element violation"
+                type: str
+            xml_check_max_elem_child_success:
+                description:
+                - "XML Limit Element Child check passed"
+                type: str
+            xml_check_max_elem_child_violation:
+                description:
+                - "XML Limit Element Child violation"
+                type: str
+            xml_check_max_elem_depth_success:
+                description:
+                - "XML Limit Element Depth check passed"
+                type: str
+            xml_check_max_elem_depth_violation:
+                description:
+                - "XML Limit Element Depth violation"
+                type: str
+            xml_check_max_elem_name_len_success:
+                description:
+                - "XML Limit Element Name Length check passed"
+                type: str
+            xml_check_max_elem_name_len_violation:
+                description:
+                - "XML Limit Element Name Length violation"
+                type: str
+            xml_check_max_entity_exp_success:
+                description:
+                - "XML Limit Entity Decl check passed"
+                type: str
+            xml_check_max_entity_exp_violation:
+                description:
+                - "XML Limit Entity Decl violation"
+                type: str
+            xml_check_max_entity_exp_depth_success:
+                description:
+                - "XML Limit Entities Depth check passed"
+                type: str
+            xml_check_max_entity_exp_depth_violation:
+                description:
+                - "XML Limit Entities Depth violation"
+                type: str
+            xml_check_max_namespace_success:
+                description:
+                - "XML Limit Namespace check passed"
+                type: str
+            xml_check_max_namespace_violation:
+                description:
+                - "XML Limit Namespace violation"
+                type: str
+            xml_check_namespace_uri_len_success:
+                description:
+                - "XML Limit Namespace URI Length check passed"
+                type: str
+            xml_check_namespace_uri_len_violation:
+                description:
+                - "XML Limit Namespace URI Length violation"
+                type: str
+            xml_check_sqlia_success:
+                description:
+                - "XML Sqlia Check passed"
+                type: str
+            xml_check_sqlia_violation:
+                description:
+                - "XML Sqlia Check violation"
+                type: str
+            xml_check_xss_success:
+                description:
+                - "XML XSS Check passed"
+                type: str
+            xml_check_xss_violation:
+                description:
+                - "XML XSS Check violation"
+                type: str
+            xml_content_check_schema_success:
+                description:
+                - "XML Schema passed"
+                type: str
+            xml_content_check_schema_violation:
+                description:
+                - "XML Schema violation"
+                type: str
+            xml_content_check_wsdl_success:
+                description:
+                - "WSDL passed"
+                type: str
+            xml_content_check_wsdl_violation:
+                description:
+                - "WSDL violation"
+                type: str
+            learning_list_full:
+                description:
+                - "Learning list is full"
+                type: str
+            action_allow:
+                description:
+                - "Request Action allowed"
+                type: str
+            action_deny_200:
+                description:
+                - "Request Deny with 200"
+                type: str
+            action_deny_403:
+                description:
+                - "Request Deny with 403"
+                type: str
+            action_deny_redirect:
+                description:
+                - "Request Deny with Redirect"
+                type: str
+            action_deny_reset:
+                description:
+                - "Request Deny with Resets"
+                type: str
+            action_drop:
+                description:
+                - "Number of Dropped Requests"
+                type: str
+            action_deny_custom_response:
+                description:
+                - "Request Deny with custom response"
+                type: str
+            action_learn:
+                description:
+                - "Request Learning Updates"
+                type: str
+            action_log:
+                description:
+                - "Log request violation"
+                type: str
+            policy_limit_exceeded:
+                description:
+                - "Policy limit exceeded"
                 type: str
             sessions_alloc:
                 description:
@@ -1180,33 +2280,141 @@ options:
                 description:
                 - "Too many sessions consumed"
                 type: str
-            called:
+            regex_violation:
                 description:
-                - "Threshold check count"
+                - "Regular expression failure"
                 type: str
-            permitted:
+            request_check_command_injection_cookies_success:
                 description:
-                - "Honor threshold  count"
+                - "Command Injection Check cookies passed"
                 type: str
-            brute_force_success:
+            request_check_command_injection_cookies_violation:
                 description:
-                - "Brute-force checks passed"
+                - "Command Injection Check cookies violation"
                 type: str
-            brute_force_fail:
+            request_check_command_injection_headers_success:
                 description:
-                - "Brute-force checks failed"
+                - "Command Injection Check headers passed"
                 type: str
-            challenge_cookie_sent:
+            request_check_command_injection_headers_violation:
                 description:
-                - "Cookie challenge sent"
+                - "Command Injection Check headers violation"
                 type: str
-            challenge_javascript_sent:
+            request_check_command_injection_uri_query_success:
                 description:
-                - "JavaScript challenge sent"
+                - "Command Injection Check url query arguments passed"
                 type: str
-            challenge_captcha_sent:
+            request_check_command_injection_uri_query_violation:
                 description:
-                - "Captcha challenge sent"
+                - "Command Injection Check url query arguments violation"
+                type: str
+            request_check_command_injection_form_body_success:
+                description:
+                - "Command Injection Check form body arguments passed"
+                type: str
+            request_check_command_injection_form_body_violation:
+                description:
+                - "Command Injection Check form body arguments violation"
+                type: str
+            cookie_security_decrypt_in_grace_period_violation:
+                description:
+                - "Cookie Decrypt violation but in grace period"
+                type: str
+            form_response_non_post_success:
+                description:
+                - "Response form method was POST"
+                type: str
+            form_response_non_post_violation:
+                description:
+                - "Response form method was not POST"
+                type: str
+            form_response_non_post_sanitize:
+                description:
+                - "Changed response form method to POST"
+                type: str
+            xml_check_max_entity_decl_success:
+                description:
+                - "XML Limit Entity Decl check passed"
+                type: str
+            xml_check_max_entity_decl_violation:
+                description:
+                - "XML Limit Entity Decl violation"
+                type: str
+            xml_check_max_entity_depth_success:
+                description:
+                - "XML Limit Entity Depth check passed"
+                type: str
+            xml_check_max_entity_depth_violation:
+                description:
+                - "XML Limit Entity Depth violation"
+                type: str
+            response_action_allow:
+                description:
+                - "Response Action allowed"
+                type: str
+            response_action_deny_200:
+                description:
+                - "Response Deny with 200"
+                type: str
+            response_action_deny_403:
+                description:
+                - "Response Deny with 403"
+                type: str
+            response_action_deny_redirect:
+                description:
+                - "Response Deny with Redirect"
+                type: str
+            response_action_deny_reset:
+                description:
+                - "Response Deny with Resets"
+                type: str
+            response_action_drop:
+                description:
+                - "Number of Dropped Responses"
+                type: str
+            response_action_deny_custom_response:
+                description:
+                - "Response Deny with custom response"
+                type: str
+            response_action_learn:
+                description:
+                - "Response Learning Updates"
+                type: str
+            response_action_log:
+                description:
+                - "Log response violation"
+                type: str
+            http_protocol_post_without_content_type_success:
+                description:
+                - "POST without content type check passed"
+                type: str
+            http_protocol_post_without_content_type_violation:
+                description:
+                - "POST without content type check violation"
+                type: str
+            http_protocol_body_without_content_type_success:
+                description:
+                - "Body without content type check passed"
+                type: str
+            http_protocol_body_without_content_type_violation:
+                description:
+                - "Body without content type check violation"
+                type: str
+            http_protocol_non_ssl_cookie_prefix_success:
+                description:
+                - "Cookie Name Prefix check passed"
+                type: str
+            http_protocol_non_ssl_cookie_prefix_violation:
+                description:
+                - "Cookie Name Prefix check violation"
+                type: str
+            cookie_security_add_samesite_success:
+                description:
+                - "Cookie Security - samesite attribute added successfully"
+                type: str
+            cookie_security_add_samesite_violation:
+                description:
+                - "Cookie Security - samesite attribute violation"
                 type: str
             name:
                 description:
@@ -1267,124 +2475,44 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "allowed_http_methods",
-    "bot_check",
-    "bot_check_policy_file",
-    "brute_force_challenge_limit",
-    "brute_force_check",
-    "brute_force_global",
-    "brute_force_lockout_limit",
-    "brute_force_lockout_period",
-    "brute_force_resp_codes",
-    "brute_force_resp_codes_file",
-    "brute_force_resp_headers",
-    "brute_force_resp_headers_file",
-    "brute_force_resp_string",
-    "brute_force_resp_string_file",
-    "brute_force_test_period",
-    "ccn_mask",
-    "challenge_action_cookie",
-    "challenge_action_javascript",
-    "cookie_encryption_secret",
-    "cookie_name",
-    "csrf_check",
-    "decode_entities",
-    "decode_escaped_chars",
-    "decode_hex_chars",
-    "deny_non_masked_passwords",
-    "deny_non_ssl_passwords",
-    "deny_password_autocomplete",
+    "brute_force_protection",
+    "cookie_security",
+    "csp",
+    "csp_insert_type",
+    "csp_value",
+    "data_leak_prevention",
     "deploy_mode",
-    "disable",
-    "filter_resp_hdrs",
-    "form_consistency_check",
-    "form_deny_non_post",
-    "form_deny_non_ssl",
-    "form_set_no_cache",
-    "hide_resp_codes",
-    "hide_resp_codes_file",
-    "http_check",
+    "evasion_check",
+    "form_protection",
+    "http_limit_check",
+    "http_protocol_check",
     "http_redirect",
     "http_resp_200",
     "http_resp_403",
-    "json_format_check",
-    "keep_end",
-    "keep_start",
-    "lifetime",
+    "json_check",
+    "learn_pr",
     "log_succ_reqs",
     "logging",
-    "mask",
-    "max_array_value_count",
-    "max_attr",
-    "max_attr_name_len",
-    "max_attr_value_len",
-    "max_cdata_len",
-    "max_cookie_len",
-    "max_cookie_name_len",
-    "max_cookie_value_len",
-    "max_cookies",
-    "max_cookies_len",
-    "max_data_parse",
-    "max_depth",
-    "max_elem",
-    "max_elem_child",
-    "max_elem_depth",
-    "max_elem_name_len",
-    "max_entities",
-    "max_entity_exp",
-    "max_entity_exp_depth",
-    "max_hdr_name_len",
-    "max_hdr_value_len",
-    "max_hdrs",
-    "max_hdrs_len",
-    "max_line_len",
-    "max_namespace",
-    "max_namespace_uri_len",
-    "max_object_member_count",
-    "max_parameter_name_len",
-    "max_parameter_total_len",
-    "max_parameter_value_len",
-    "max_parameters",
-    "max_post_size",
-    "max_query_len",
-    "max_string",
-    "max_url_len",
     "name",
-    "pcre_mask",
-    "redirect_wlist",
-    "referer_check",
-    "referer_domain_list",
-    "referer_domain_list_only",
-    "referer_safe_url",
-    "remove_comments",
-    "remove_selfref",
-    "remove_spaces",
+    "parent",
+    "parent_template_waf",
+    "pcre_match_limit",
+    "pcre_match_recursion_limit",
+    "request_check",
     "reset_conn",
     "resp_url_200",
     "resp_url_403",
-    "secret_encrypted",
-    "session_check",
+    "response_cloaking",
     "soap_format_check",
-    "sqlia_check",
-    "sqlia_check_policy_file",
-    "ssn_mask",
     "stats",
-    "uri_blist_check",
-    "uri_wlist_check",
-    "url_check",
     "user_tag",
     "uuid",
-    "waf_blist_file",
-    "waf_wlist_file",
+    "violation_log_mask",
     "wsdl_file",
     "wsdl_resp_val_file",
-    "xml_format_check",
+    "xml_check",
     "xml_schema_file",
     "xml_schema_resp_val_file",
-    "xml_sqlia_check",
-    "xml_xss_check",
-    "xss_check",
-    "xss_check_policy_file",
 ]
 
 
@@ -1417,119 +2545,15 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'allowed_http_methods': {
+        'csp': {
+            'type': 'bool',
+        },
+        'csp_value': {
             'type': 'str',
         },
-        'bot_check': {
-            'type': 'bool',
-        },
-        'bot_check_policy_file': {
+        'csp_insert_type': {
             'type': 'str',
-        },
-        'brute_force_challenge_limit': {
-            'type': 'int',
-        },
-        'brute_force_global': {
-            'type': 'bool',
-        },
-        'brute_force_lockout_limit': {
-            'type': 'int',
-        },
-        'brute_force_lockout_period': {
-            'type': 'int',
-        },
-        'brute_force_test_period': {
-            'type': 'int',
-        },
-        'brute_force_check': {
-            'type': 'bool',
-        },
-        'brute_force_resp_codes': {
-            'type': 'bool',
-        },
-        'brute_force_resp_codes_file': {
-            'type': 'str',
-        },
-        'brute_force_resp_string': {
-            'type': 'bool',
-        },
-        'brute_force_resp_string_file': {
-            'type': 'str',
-        },
-        'brute_force_resp_headers': {
-            'type': 'bool',
-        },
-        'brute_force_resp_headers_file': {
-            'type': 'str',
-        },
-        'disable': {
-            'type': 'bool',
-        },
-        'max_cookie_len': {
-            'type': 'int',
-        },
-        'max_cookie_name_len': {
-            'type': 'int',
-        },
-        'max_cookie_value_len': {
-            'type': 'int',
-        },
-        'max_cookies_len': {
-            'type': 'int',
-        },
-        'max_data_parse': {
-            'type': 'int',
-        },
-        'max_hdr_name_len': {
-            'type': 'int',
-        },
-        'max_hdr_value_len': {
-            'type': 'int',
-        },
-        'max_hdrs_len': {
-            'type': 'int',
-        },
-        'max_line_len': {
-            'type': 'int',
-        },
-        'max_parameter_name_len': {
-            'type': 'int',
-        },
-        'max_parameter_total_len': {
-            'type': 'int',
-        },
-        'max_parameter_value_len': {
-            'type': 'int',
-        },
-        'max_post_size': {
-            'type': 'int',
-        },
-        'max_query_len': {
-            'type': 'int',
-        },
-        'max_url_len': {
-            'type': 'int',
-        },
-        'ccn_mask': {
-            'type': 'bool',
-        },
-        'cookie_name': {
-            'type': 'str',
-        },
-        'cookie_encryption_secret': {
-            'type': 'str',
-        },
-        'secret_encrypted': {
-            'type': 'str',
-        },
-        'challenge_action_cookie': {
-            'type': 'bool',
-        },
-        'challenge_action_javascript': {
-            'type': 'bool',
-        },
-        'csrf_check': {
-            'type': 'bool',
+            'choices': ['insert-if-not-exist', 'insert-always']
         },
         'http_redirect': {
             'type': 'str',
@@ -1549,196 +2573,33 @@ def get_argspec():
         'resp_url_403': {
             'type': 'str',
         },
-        'deny_non_masked_passwords': {
-            'type': 'bool',
-        },
-        'deny_non_ssl_passwords': {
-            'type': 'bool',
-        },
-        'deny_password_autocomplete': {
-            'type': 'bool',
-        },
         'deploy_mode': {
             'type': 'str',
             'choices': ['active', 'passive', 'learning']
         },
-        'filter_resp_hdrs': {
-            'type': 'bool',
-        },
-        'form_consistency_check': {
-            'type': 'bool',
-        },
-        'form_deny_non_post': {
-            'type': 'bool',
-        },
-        'form_deny_non_ssl': {
-            'type': 'bool',
-        },
-        'form_set_no_cache': {
-            'type': 'bool',
-        },
-        'hide_resp_codes': {
-            'type': 'bool',
-        },
-        'hide_resp_codes_file': {
-            'type': 'str',
-        },
-        'http_check': {
-            'type': 'bool',
-        },
-        'json_format_check': {
-            'type': 'bool',
-        },
-        'max_array_value_count': {
-            'type': 'int',
-        },
-        'max_depth': {
-            'type': 'int',
-        },
-        'max_object_member_count': {
-            'type': 'int',
-        },
-        'max_string': {
-            'type': 'int',
-        },
         'log_succ_reqs': {
             'type': 'bool',
         },
-        'max_cookies': {
-            'type': 'int',
-        },
-        'max_entities': {
-            'type': 'int',
-        },
-        'max_hdrs': {
-            'type': 'int',
-        },
-        'max_parameters': {
-            'type': 'int',
-        },
-        'pcre_mask': {
-            'type': 'str',
-        },
-        'keep_start': {
-            'type': 'int',
-        },
-        'keep_end': {
-            'type': 'int',
-        },
-        'mask': {
-            'type': 'str',
-        },
-        'redirect_wlist': {
+        'learn_pr': {
             'type': 'bool',
         },
-        'referer_check': {
+        'parent': {
             'type': 'bool',
         },
-        'referer_domain_list': {
+        'parent_template_waf': {
             'type': 'str',
         },
-        'referer_safe_url': {
-            'type': 'str',
+        'pcre_match_limit': {
+            'type': 'int',
         },
-        'referer_domain_list_only': {
-            'type': 'str',
-        },
-        'session_check': {
-            'type': 'bool',
-        },
-        'lifetime': {
+        'pcre_match_recursion_limit': {
             'type': 'int',
         },
         'soap_format_check': {
             'type': 'bool',
         },
-        'sqlia_check': {
-            'type': 'str',
-            'choices': ['reject', 'sanitize']
-        },
-        'sqlia_check_policy_file': {
-            'type': 'str',
-        },
-        'ssn_mask': {
-            'type': 'bool',
-        },
         'logging': {
             'type': 'str',
-        },
-        'uri_blist_check': {
-            'type': 'bool',
-        },
-        'waf_blist_file': {
-            'type': 'str',
-        },
-        'uri_wlist_check': {
-            'type': 'bool',
-        },
-        'waf_wlist_file': {
-            'type': 'str',
-        },
-        'url_check': {
-            'type': 'bool',
-        },
-        'decode_entities': {
-            'type': 'bool',
-        },
-        'decode_escaped_chars': {
-            'type': 'bool',
-        },
-        'decode_hex_chars': {
-            'type': 'bool',
-        },
-        'remove_comments': {
-            'type': 'bool',
-        },
-        'remove_selfref': {
-            'type': 'bool',
-        },
-        'remove_spaces': {
-            'type': 'bool',
-        },
-        'xml_format_check': {
-            'type': 'bool',
-        },
-        'max_attr': {
-            'type': 'int',
-        },
-        'max_attr_name_len': {
-            'type': 'int',
-        },
-        'max_attr_value_len': {
-            'type': 'int',
-        },
-        'max_cdata_len': {
-            'type': 'int',
-        },
-        'max_elem': {
-            'type': 'int',
-        },
-        'max_elem_child': {
-            'type': 'int',
-        },
-        'max_elem_depth': {
-            'type': 'int',
-        },
-        'max_elem_name_len': {
-            'type': 'int',
-        },
-        'max_entity_exp': {
-            'type': 'int',
-        },
-        'max_entity_exp_depth': {
-            'type': 'int',
-        },
-        'max_namespace': {
-            'type': 'int',
-        },
-        'max_namespace_uri_len': {
-            'type': 'int',
-        },
-        'xml_sqlia_check': {
-            'type': 'bool',
         },
         'wsdl_file': {
             'type': 'str',
@@ -1752,21 +2613,660 @@ def get_argspec():
         'xml_schema_resp_val_file': {
             'type': 'str',
         },
-        'xml_xss_check': {
-            'type': 'bool',
-        },
-        'xss_check': {
-            'type': 'str',
-            'choices': ['reject', 'sanitize']
-        },
-        'xss_check_policy_file': {
-            'type': 'str',
-        },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
+        },
+        'brute_force_protection': {
+            'type': 'dict',
+            'challenge_action_cookie': {
+                'type': 'bool',
+            },
+            'challenge_action_javascript': {
+                'type': 'bool',
+            },
+            'challenge_action_captcha': {
+                'type': 'bool',
+            },
+            'brute_force_challenge_limit': {
+                'type': 'int',
+            },
+            'enable_disable_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'brute_force_global': {
+                'type': 'bool',
+            },
+            'brute_force_lockout_limit': {
+                'type': 'int',
+            },
+            'brute_force_lockout_period': {
+                'type': 'int',
+            },
+            'brute_force_resp_codes': {
+                'type': 'bool',
+            },
+            'brute_force_resp_codes_file': {
+                'type': 'str',
+            },
+            'brute_force_resp_headers': {
+                'type': 'bool',
+            },
+            'brute_force_resp_headers_file': {
+                'type': 'str',
+            },
+            'brute_force_resp_string': {
+                'type': 'bool',
+            },
+            'brute_force_resp_string_file': {
+                'type': 'str',
+            },
+            'brute_force_test_period': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'http_limit_check': {
+            'type': 'dict',
+            'disable': {
+                'type': 'bool',
+            },
+            'max_content_length': {
+                'type': 'bool',
+            },
+            'max_content_length_value': {
+                'type': 'int',
+            },
+            'max_cookie_header_length': {
+                'type': 'bool',
+            },
+            'max_cookie_header_length_value': {
+                'type': 'int',
+            },
+            'max_cookie_name_length': {
+                'type': 'bool',
+            },
+            'max_cookie_name_length_value': {
+                'type': 'int',
+            },
+            'max_cookie_value_length': {
+                'type': 'bool',
+            },
+            'max_cookie_value_length_value': {
+                'type': 'int',
+            },
+            'max_cookies': {
+                'type': 'bool',
+            },
+            'max_cookies_value': {
+                'type': 'int',
+            },
+            'max_cookies_length': {
+                'type': 'bool',
+            },
+            'max_cookies_length_value': {
+                'type': 'int',
+            },
+            'max_data_parse': {
+                'type': 'bool',
+            },
+            'max_data_parse_value': {
+                'type': 'int',
+            },
+            'max_entities': {
+                'type': 'bool',
+            },
+            'max_entities_value': {
+                'type': 'int',
+            },
+            'max_header_length': {
+                'type': 'bool',
+            },
+            'max_header_length_value': {
+                'type': 'int',
+            },
+            'max_header_name_length': {
+                'type': 'bool',
+            },
+            'max_header_name_length_value': {
+                'type': 'int',
+            },
+            'max_header_value_length': {
+                'type': 'bool',
+            },
+            'max_header_value_length_value': {
+                'type': 'int',
+            },
+            'max_headers': {
+                'type': 'bool',
+            },
+            'max_headers_value': {
+                'type': 'int',
+            },
+            'max_headers_length': {
+                'type': 'bool',
+            },
+            'max_headers_length_value': {
+                'type': 'int',
+            },
+            'max_param_name_length': {
+                'type': 'bool',
+            },
+            'max_param_name_length_value': {
+                'type': 'int',
+            },
+            'max_param_value_length': {
+                'type': 'bool',
+            },
+            'max_param_value_length_value': {
+                'type': 'int',
+            },
+            'max_params': {
+                'type': 'bool',
+            },
+            'max_params_value': {
+                'type': 'int',
+            },
+            'max_params_length': {
+                'type': 'bool',
+            },
+            'max_params_length_value': {
+                'type': 'int',
+            },
+            'max_post_length': {
+                'type': 'bool',
+            },
+            'max_post_length_value': {
+                'type': 'int',
+            },
+            'max_query_length': {
+                'type': 'bool',
+            },
+            'max_query_length_value': {
+                'type': 'int',
+            },
+            'max_request_length': {
+                'type': 'bool',
+            },
+            'max_request_length_value': {
+                'type': 'int',
+            },
+            'max_request_line_length': {
+                'type': 'bool',
+            },
+            'max_request_line_length_value': {
+                'type': 'int',
+            },
+            'max_url_length': {
+                'type': 'bool',
+            },
+            'max_url_length_value': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'http_protocol_check': {
+            'type': 'dict',
+            'disable': {
+                'type': 'bool',
+            },
+            'allowed_headers': {
+                'type': 'bool',
+            },
+            'allowed_headers_list': {
+                'type': 'str',
+            },
+            'allowed_methods': {
+                'type': 'bool',
+            },
+            'allowed_methods_list': {
+                'type': 'str',
+            },
+            'allowed_versions': {
+                'type': 'bool',
+            },
+            'allowed_versions_list': {
+                'type': 'str',
+                'choices': ['0.9', '1.0', '1.1', '2']
+            },
+            'bad_multipart_request': {
+                'type': 'bool',
+            },
+            'body_without_content_type': {
+                'type': 'bool',
+            },
+            'get_with_content': {
+                'type': 'bool',
+            },
+            'head_with_content': {
+                'type': 'bool',
+            },
+            'host_header_with_ip': {
+                'type': 'bool',
+            },
+            'invalid_url_encoding': {
+                'type': 'bool',
+            },
+            'malformed_content_length': {
+                'type': 'bool',
+            },
+            'malformed_header': {
+                'type': 'bool',
+            },
+            'malformed_parameter': {
+                'type': 'bool',
+            },
+            'malformed_request': {
+                'type': 'bool',
+            },
+            'malformed_request_line': {
+                'type': 'bool',
+            },
+            'missing_header_value': {
+                'type': 'bool',
+            },
+            'missing_host_header': {
+                'type': 'bool',
+            },
+            'multiple_content_length': {
+                'type': 'bool',
+            },
+            'post_with_0_content': {
+                'type': 'bool',
+            },
+            'post_without_content': {
+                'type': 'bool',
+            },
+            'post_without_content_type': {
+                'type': 'bool',
+            },
+            'non_ssl_cookie_prefix': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'cookie_security': {
+            'type': 'dict',
+            'enable_disable_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'allow_missing_cookie': {
+                'type': 'bool',
+            },
+            'allow_unrecognized_cookie': {
+                'type': 'bool',
+            },
+            'cookie_policy': {
+                'type': 'list',
+                'cookie_policy_name': {
+                    'type': 'str',
+                },
+                'cookie_policy_allow': {
+                    'type': 'bool',
+                },
+                'cookie_policy_disallow': {
+                    'type': 'bool',
+                }
+            },
+            'set_cookie_policy': {
+                'type': 'list',
+                'set_cookie_policy_name': {
+                    'type': 'str',
+                },
+                'set_cookie_policy_allow': {
+                    'type': 'bool',
+                },
+                'set_cookie_policy_disallow': {
+                    'type': 'bool',
+                },
+                'set_cookie_policy_http_only': {
+                    'type': 'bool',
+                },
+                'set_cookie_policy_secure': {
+                    'type': 'bool',
+                },
+                'set_cookie_policy_samesite': {
+                    'type': 'str',
+                    'choices': ['none', 'lax', 'strict']
+                },
+                'set_cookie_policy_sign': {
+                    'type': 'bool',
+                },
+                'set_cookie_policy_secret': {
+                    'type': 'str',
+                },
+                'set_cookie_policy_secret_encrypted': {
+                    'type': 'str',
+                }
+            },
+            'tamper_protection_http_only': {
+                'type': 'bool',
+            },
+            'tamper_protection_secure': {
+                'type': 'bool',
+            },
+            'tamper_protection_samesite': {
+                'type': 'str',
+                'choices': ['none', 'lax', 'strict']
+            },
+            'tamper_protection_secret': {
+                'type': 'str',
+            },
+            'tamper_protection_secret_encrypted': {
+                'type': 'str',
+            },
+            'tamper_protection_grace_period': {
+                'type': 'int',
+            },
+            'tamper_protection_session_cookie_only': {
+                'type': 'bool',
+            },
+            'tamper_protection_sign': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'evasion_check': {
+            'type': 'dict',
+            'apache_whitespace': {
+                'type': 'bool',
+            },
+            'decode_entities': {
+                'type': 'bool',
+            },
+            'decode_escaped_chars': {
+                'type': 'bool',
+            },
+            'decode_plus_chars': {
+                'type': 'bool',
+            },
+            'decode_unicode_chars': {
+                'type': 'bool',
+            },
+            'dir_traversal': {
+                'type': 'bool',
+            },
+            'high_ascii_bytes': {
+                'type': 'bool',
+            },
+            'invalid_hex_encoding': {
+                'type': 'bool',
+            },
+            'multiple_encoding_levels': {
+                'type': 'bool',
+            },
+            'multiple_slashes': {
+                'type': 'bool',
+            },
+            'max_levels': {
+                'type': 'int',
+            },
+            'remove_comments': {
+                'type': 'bool',
+            },
+            'remove_spaces': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'data_leak_prevention': {
+            'type': 'dict',
+            'ccn_mask': {
+                'type': 'bool',
+            },
+            'ssn_mask': {
+                'type': 'bool',
+            },
+            'pcre_mask': {
+                'type': 'str',
+            },
+            'keep_start': {
+                'type': 'int',
+            },
+            'keep_end': {
+                'type': 'int',
+            },
+            'mask': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'form_protection': {
+            'type': 'dict',
+            'enable_disable_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'csrf_check': {
+                'type': 'bool',
+            },
+            'field_consistency_check': {
+                'type': 'bool',
+            },
+            'password_check_non_masked': {
+                'type': 'bool',
+            },
+            'password_check_non_ssl': {
+                'type': 'bool',
+            },
+            'password_check_autocomplete': {
+                'type': 'bool',
+            },
+            'form_check_non_ssl': {
+                'type': 'bool',
+            },
+            'form_check_caching': {
+                'type': 'bool',
+            },
+            'form_check_non_post': {
+                'type': 'bool',
+            },
+            'form_check_request_non_post': {
+                'type': 'bool',
+            },
+            'form_check_response_non_post': {
+                'type': 'bool',
+            },
+            'form_check_response_non_post_sanitize': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'response_cloaking': {
+            'type': 'dict',
+            'filter_headers': {
+                'type': 'bool',
+            },
+            'hide_status_codes': {
+                'type': 'bool',
+            },
+            'hide_status_codes_file': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'request_check': {
+            'type': 'dict',
+            'bot_check': {
+                'type': 'bool',
+            },
+            'bot_check_policy_file': {
+                'type': 'str',
+            },
+            'command_injection_check': {
+                'type': 'str',
+                'choices': ['cookies', 'headers', 'form-body', 'uri-query']
+            },
+            'command_injection_check_policy_file': {
+                'type': 'str',
+            },
+            'redirect_whitelist': {
+                'type': 'bool',
+            },
+            'referer_check': {
+                'type': 'bool',
+            },
+            'referer_domain_list': {
+                'type': 'str',
+            },
+            'referer_safe_url': {
+                'type': 'str',
+            },
+            'referer_domain_list_only': {
+                'type': 'str',
+            },
+            'session_check': {
+                'type': 'bool',
+            },
+            'lifetime': {
+                'type': 'int',
+            },
+            'sqlia_check': {
+                'type': 'str',
+                'choices': ['reject']
+            },
+            'sqlia_check_policy_file': {
+                'type': 'str',
+            },
+            'url_blacklist': {
+                'type': 'bool',
+            },
+            'waf_blacklist_file': {
+                'type': 'str',
+            },
+            'url_whitelist': {
+                'type': 'bool',
+            },
+            'waf_whitelist_file': {
+                'type': 'str',
+            },
+            'url_learned_list': {
+                'type': 'bool',
+            },
+            'xss_check': {
+                'type': 'str',
+                'choices': ['reject']
+            },
+            'xss_check_policy_file': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'violation_log_mask': {
+            'type': 'dict',
+            'query_param_name_equal_type': {
+                'type': 'str',
+                'choices': ['equals']
+            },
+            'query_param_name_value': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'json_check': {
+            'type': 'dict',
+            'format_check': {
+                'type': 'bool',
+            },
+            'max_array_values': {
+                'type': 'int',
+            },
+            'max_depth': {
+                'type': 'int',
+            },
+            'max_object_members': {
+                'type': 'int',
+            },
+            'max_string_length': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'xml_check': {
+            'type': 'dict',
+            'disable': {
+                'type': 'bool',
+            },
+            'max_attr': {
+                'type': 'int',
+            },
+            'max_attr_name_len': {
+                'type': 'int',
+            },
+            'max_attr_value_len': {
+                'type': 'int',
+            },
+            'max_cdata_len': {
+                'type': 'int',
+            },
+            'max_elem': {
+                'type': 'int',
+            },
+            'max_elem_child': {
+                'type': 'int',
+            },
+            'max_elem_depth': {
+                'type': 'int',
+            },
+            'max_elem_name_len': {
+                'type': 'int',
+            },
+            'max_entity_decl': {
+                'type': 'int',
+            },
+            'max_entity_depth': {
+                'type': 'int',
+            },
+            'max_entity_exp': {
+                'type': 'int',
+            },
+            'max_entity_exp_depth': {
+                'type': 'int',
+            },
+            'max_namespace': {
+                'type': 'int',
+            },
+            'max_namespace_uri_len': {
+                'type': 'int',
+            },
+            'format': {
+                'type': 'bool',
+            },
+            'sqlia': {
+                'type': 'bool',
+            },
+            'xss': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         },
         'stats': {
             'type': 'dict',
@@ -1779,361 +3279,892 @@ def get_argspec():
             'req_denied': {
                 'type': 'str',
             },
-            'bot_check_succ': {
+            'resp_denied': {
                 'type': 'str',
             },
-            'bot_check_fail': {
+            'brute_force_success': {
                 'type': 'str',
             },
-            'form_consistency_succ': {
+            'brute_force_violation': {
                 'type': 'str',
             },
-            'form_consistency_fail': {
+            'brute_force_challenge_cookie_sent': {
                 'type': 'str',
             },
-            'form_csrf_tag_succ': {
+            'brute_force_challenge_cookie_success': {
                 'type': 'str',
             },
-            'form_csrf_tag_fail': {
+            'brute_force_challenge_cookie_violation': {
                 'type': 'str',
             },
-            'url_check_succ': {
+            'brute_force_challenge_javascript_sent': {
                 'type': 'str',
             },
-            'url_check_fail': {
+            'brute_force_challenge_javascript_success': {
                 'type': 'str',
             },
-            'url_check_learn': {
+            'brute_force_challenge_javascript_violation': {
                 'type': 'str',
             },
-            'buf_ovf_url_len_fail': {
+            'brute_force_challenge_captcha_sent': {
                 'type': 'str',
             },
-            'buf_ovf_cookie_len_fail': {
+            'brute_force_challenge_captcha_success': {
                 'type': 'str',
             },
-            'buf_ovf_hdrs_len_fail': {
+            'brute_force_challenge_captcha_violation': {
                 'type': 'str',
             },
-            'buf_ovf_post_size_fail': {
+            'brute_force_lockout_limit_success': {
                 'type': 'str',
             },
-            'max_cookies_fail': {
+            'brute_force_lockout_limit_violation': {
                 'type': 'str',
             },
-            'max_hdrs_fail': {
+            'brute_force_challenge_limit_success': {
                 'type': 'str',
             },
-            'http_method_check_succ': {
+            'brute_force_challenge_limit_violation': {
                 'type': 'str',
             },
-            'http_method_check_fail': {
+            'brute_force_response_codes_triggered': {
                 'type': 'str',
             },
-            'http_check_succ': {
+            'brute_force_response_headers_triggered': {
                 'type': 'str',
             },
-            'http_check_fail': {
+            'brute_force_response_string_triggered': {
                 'type': 'str',
             },
-            'referer_check_succ': {
+            'cookie_security_encrypt_success': {
                 'type': 'str',
             },
-            'referer_check_fail': {
+            'cookie_security_encrypt_violation': {
                 'type': 'str',
             },
-            'referer_check_redirect': {
+            'cookie_security_encrypt_limit_exceeded': {
                 'type': 'str',
             },
-            'uri_wlist_succ': {
+            'cookie_security_encrypt_skip_rcache': {
                 'type': 'str',
             },
-            'uri_wlist_fail': {
+            'cookie_security_decrypt_success': {
                 'type': 'str',
             },
-            'uri_blist_succ': {
+            'cookie_security_decrypt_violation': {
                 'type': 'str',
             },
-            'uri_blist_fail': {
+            'cookie_security_sign_success': {
                 'type': 'str',
             },
-            'post_form_check_succ': {
+            'cookie_security_sign_violation': {
                 'type': 'str',
             },
-            'post_form_check_sanitize': {
+            'cookie_security_sign_limit_exceeded': {
                 'type': 'str',
             },
-            'post_form_check_reject': {
+            'cookie_security_sign_skip_rcache': {
                 'type': 'str',
             },
-            'ccn_mask_amex': {
+            'cookie_security_signature_check_success': {
                 'type': 'str',
             },
-            'ccn_mask_diners': {
+            'cookie_security_signature_check_violation': {
                 'type': 'str',
             },
-            'ccn_mask_visa': {
+            'cookie_security_add_http_only_success': {
                 'type': 'str',
             },
-            'ccn_mask_mastercard': {
+            'cookie_security_add_http_only_violation': {
                 'type': 'str',
             },
-            'ccn_mask_discover': {
+            'cookie_security_add_secure_success': {
                 'type': 'str',
             },
-            'ccn_mask_jcb': {
+            'cookie_security_add_secure_violation': {
                 'type': 'str',
             },
-            'ssn_mask': {
+            'cookie_security_missing_cookie_success': {
                 'type': 'str',
             },
-            'pcre_mask': {
+            'cookie_security_missing_cookie_violation': {
                 'type': 'str',
             },
-            'cookie_encrypt_succ': {
+            'cookie_security_unrecognized_cookie_success': {
                 'type': 'str',
             },
-            'cookie_encrypt_fail': {
+            'cookie_security_unrecognized_cookie_violation': {
                 'type': 'str',
             },
-            'cookie_encrypt_limit_exceeded': {
+            'cookie_security_cookie_policy_success': {
                 'type': 'str',
             },
-            'cookie_encrypt_skip_rcache': {
+            'cookie_security_cookie_policy_violation': {
                 'type': 'str',
             },
-            'cookie_decrypt_succ': {
+            'cookie_security_persistent_cookies': {
                 'type': 'str',
             },
-            'cookie_decrypt_fail': {
+            'cookie_security_persistent_cookies_encrypted': {
                 'type': 'str',
             },
-            'sqlia_chk_url_succ': {
+            'cookie_security_persistent_cookies_signed': {
                 'type': 'str',
             },
-            'sqlia_chk_url_sanitize': {
+            'cookie_security_session_cookies': {
                 'type': 'str',
             },
-            'sqlia_chk_url_reject': {
+            'cookie_security_session_cookies_encrypted': {
                 'type': 'str',
             },
-            'sqlia_chk_post_succ': {
+            'cookie_security_session_cookies_signed': {
                 'type': 'str',
             },
-            'sqlia_chk_post_sanitize': {
+            'cookie_security_allowed_session_cookies': {
                 'type': 'str',
             },
-            'sqlia_chk_post_reject': {
+            'cookie_security_allowed_persistent_cookies': {
                 'type': 'str',
             },
-            'xss_chk_cookie_succ': {
+            'cookie_security_disallowed_session_cookies': {
                 'type': 'str',
             },
-            'xss_chk_cookie_sanitize': {
+            'cookie_security_disallowed_persistent_cookies': {
                 'type': 'str',
             },
-            'xss_chk_cookie_reject': {
+            'cookie_security_allowed_session_set_cookies': {
                 'type': 'str',
             },
-            'xss_chk_url_succ': {
+            'cookie_security_allowed_persistent_set_cookies': {
                 'type': 'str',
             },
-            'xss_chk_url_sanitize': {
+            'cookie_security_disallowed_session_set_cookies': {
                 'type': 'str',
             },
-            'xss_chk_url_reject': {
+            'cookie_security_disallowed_persistent_set_cookies': {
                 'type': 'str',
             },
-            'xss_chk_post_succ': {
+            'csp_header_violation': {
                 'type': 'str',
             },
-            'xss_chk_post_sanitize': {
+            'csp_header_success': {
                 'type': 'str',
             },
-            'xss_chk_post_reject': {
+            'csp_header_inserted': {
                 'type': 'str',
             },
-            'resp_code_hidden': {
+            'form_csrf_tag_success': {
                 'type': 'str',
             },
-            'resp_hdrs_filtered': {
+            'form_csrf_tag_violation': {
                 'type': 'str',
             },
-            'learn_updates': {
+            'form_consistency_success': {
                 'type': 'str',
             },
-            'num_drops': {
+            'form_consistency_violation': {
                 'type': 'str',
             },
-            'num_resets': {
+            'form_tag_inserted': {
                 'type': 'str',
             },
-            'form_non_ssl_reject': {
+            'form_non_ssl_success': {
                 'type': 'str',
             },
-            'form_non_post_reject': {
+            'form_non_ssl_violation': {
                 'type': 'str',
             },
-            'sess_check_none': {
+            'form_request_non_post_success': {
                 'type': 'str',
             },
-            'sess_check_succ': {
+            'form_request_non_post_violation': {
                 'type': 'str',
             },
-            'sess_check_fail': {
+            'form_check_success': {
                 'type': 'str',
             },
-            'soap_check_succ': {
+            'form_check_violation': {
                 'type': 'str',
             },
-            'soap_check_failure': {
+            'form_check_sanitize': {
                 'type': 'str',
             },
-            'wsdl_fail': {
+            'form_non_masked_password_success': {
                 'type': 'str',
             },
-            'wsdl_succ': {
+            'form_non_masked_password_violation': {
                 'type': 'str',
             },
-            'xml_schema_fail': {
+            'form_non_ssl_password_success': {
                 'type': 'str',
             },
-            'xml_schema_succ': {
+            'form_non_ssl_password_violation': {
                 'type': 'str',
             },
-            'xml_sqlia_chk_fail': {
+            'form_password_autocomplete_success': {
                 'type': 'str',
             },
-            'xml_sqlia_chk_succ': {
+            'form_password_autocomplete_violation': {
                 'type': 'str',
             },
-            'xml_xss_chk_fail': {
-                'type': 'str',
-            },
-            'xml_xss_chk_succ': {
-                'type': 'str',
-            },
-            'json_check_failure': {
-                'type': 'str',
-            },
-            'json_check_succ': {
-                'type': 'str',
-            },
-            'xml_check_failure': {
-                'type': 'str',
-            },
-            'xml_check_succ': {
-                'type': 'str',
-            },
-            'buf_ovf_cookie_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_cookies_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_hdr_name_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_hdr_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_max_data_parse_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_line_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_name_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_total_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_query_len_fail': {
-                'type': 'str',
-            },
-            'max_entities_fail': {
-                'type': 'str',
-            },
-            'max_parameters_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_cookie_name_len_fail': {
-                'type': 'str',
-            },
-            'xml_limit_attr': {
-                'type': 'str',
-            },
-            'xml_limit_attr_name_len': {
-                'type': 'str',
-            },
-            'xml_limit_attr_value_len': {
-                'type': 'str',
-            },
-            'xml_limit_cdata_len': {
-                'type': 'str',
-            },
-            'xml_limit_elem': {
-                'type': 'str',
-            },
-            'xml_limit_elem_child': {
-                'type': 'str',
-            },
-            'xml_limit_elem_depth': {
-                'type': 'str',
-            },
-            'xml_limit_elem_name_len': {
-                'type': 'str',
-            },
-            'xml_limit_entity_exp': {
-                'type': 'str',
-            },
-            'xml_limit_entity_exp_depth': {
-                'type': 'str',
-            },
-            'xml_limit_namespace': {
-                'type': 'str',
-            },
-            'xml_limit_namespace_uri_len': {
-                'type': 'str',
-            },
-            'json_limit_array_value_count': {
-                'type': 'str',
-            },
-            'json_limit_depth': {
-                'type': 'str',
-            },
-            'json_limit_object_member_count': {
-                'type': 'str',
-            },
-            'json_limit_string': {
-                'type': 'str',
-            },
-            'form_non_masked_password': {
-                'type': 'str',
-            },
-            'form_non_ssl_password': {
-                'type': 'str',
-            },
-            'form_password_autocomplete': {
-                'type': 'str',
-            },
-            'redirect_wlist_succ': {
-                'type': 'str',
-            },
-            'redirect_wlist_fail': {
-                'type': 'str',
-            },
-            'redirect_wlist_learn': {
+            'form_set_no_cache_success': {
                 'type': 'str',
             },
             'form_set_no_cache': {
                 'type': 'str',
             },
-            'resp_denied': {
+            'dlp_ccn_success': {
+                'type': 'str',
+            },
+            'dlp_ccn_amex_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_amex_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_diners_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_diners_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_visa_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_visa_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_mastercard_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_mastercard_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_discover_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_discover_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_jcb_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_jcb_masked': {
+                'type': 'str',
+            },
+            'dlp_ssn_success': {
+                'type': 'str',
+            },
+            'dlp_ssn_violation': {
+                'type': 'str',
+            },
+            'dlp_pcre_success': {
+                'type': 'str',
+            },
+            'dlp_pcre_violation': {
+                'type': 'str',
+            },
+            'dlp_pcre_masked': {
+                'type': 'str',
+            },
+            'evasion_check_apache_whitespace_success': {
+                'type': 'str',
+            },
+            'evasion_check_apache_whitespace_violation': {
+                'type': 'str',
+            },
+            'evasion_check_decode_entities_success': {
+                'type': 'str',
+            },
+            'evasion_check_decode_entities_violation': {
+                'type': 'str',
+            },
+            'evasion_check_decode_escaped_chars_success': {
+                'type': 'str',
+            },
+            'evasion_check_decode_escaped_chars_violation': {
+                'type': 'str',
+            },
+            'evasion_check_decode_unicode_chars_success': {
+                'type': 'str',
+            },
+            'evasion_check_decode_unicode_chars_violation': {
+                'type': 'str',
+            },
+            'evasion_check_dir_traversal_success': {
+                'type': 'str',
+            },
+            'evasion_check_dir_traversal_violation': {
+                'type': 'str',
+            },
+            'evasion_check_high_ascii_bytes_success': {
+                'type': 'str',
+            },
+            'evasion_check_high_ascii_bytes_violation': {
+                'type': 'str',
+            },
+            'evasion_check_invalid_hex_encoding_success': {
+                'type': 'str',
+            },
+            'evasion_check_invalid_hex_encoding_violation': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_encoding_levels_success': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_encoding_levels_violation': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_slashes_success': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_slashes_violation': {
+                'type': 'str',
+            },
+            'evasion_check_max_levels_success': {
+                'type': 'str',
+            },
+            'evasion_check_max_levels_violation': {
+                'type': 'str',
+            },
+            'evasion_check_remove_comments_success': {
+                'type': 'str',
+            },
+            'evasion_check_remove_comments_violation': {
+                'type': 'str',
+            },
+            'evasion_check_remove_spaces_success': {
+                'type': 'str',
+            },
+            'evasion_check_remove_spaces_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_content_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_content_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_header_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_header_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_name_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_name_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_value_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_value_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_data_parse_success': {
+                'type': 'str',
+            },
+            'http_limit_max_data_parse_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_entities_success': {
+                'type': 'str',
+            },
+            'http_limit_max_entities_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_header_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_header_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_header_name_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_header_name_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_header_value_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_header_value_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_success': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_param_name_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_param_name_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_param_value_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_param_value_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_params_success': {
+                'type': 'str',
+            },
+            'http_limit_max_params_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_params_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_params_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_post_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_post_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_query_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_query_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_request_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_request_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_request_line_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_request_line_length_violation': {
+                'type': 'str',
+            },
+            'max_url_length_success': {
+                'type': 'str',
+            },
+            'max_url_length_violation': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_headers_success': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_headers_violation': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_versions_success': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_versions_violation': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_method_check_success': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_method_check_violation': {
+                'type': 'str',
+            },
+            'http_protocol_bad_multipart_request_success': {
+                'type': 'str',
+            },
+            'http_protocol_bad_multipart_request_violation': {
+                'type': 'str',
+            },
+            'http_protocol_get_with_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_get_with_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_head_with_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_head_with_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_host_header_with_ip_success': {
+                'type': 'str',
+            },
+            'http_protocol_host_header_with_ip_violation': {
+                'type': 'str',
+            },
+            'http_protocol_invalid_url_encoding_success': {
+                'type': 'str',
+            },
+            'http_protocol_invalid_url_encoding_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_content_length_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_content_length_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_header_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_header_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_parameter_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_parameter_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_line_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_line_violation': {
+                'type': 'str',
+            },
+            'http_protocol_missing_header_value_success': {
+                'type': 'str',
+            },
+            'http_protocol_missing_header_value_violation': {
+                'type': 'str',
+            },
+            'http_protocol_missing_host_header_success': {
+                'type': 'str',
+            },
+            'http_protocol_missing_host_header_violation': {
+                'type': 'str',
+            },
+            'http_protocol_multiple_content_length_success': {
+                'type': 'str',
+            },
+            'http_protocol_multiple_content_length_violation': {
+                'type': 'str',
+            },
+            'http_protocol_post_with_0_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_post_with_0_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_success': {
+                'type': 'str',
+            },
+            'http_protocol_violation': {
+                'type': 'str',
+            },
+            'json_check_format_success': {
+                'type': 'str',
+            },
+            'json_check_format_violation': {
+                'type': 'str',
+            },
+            'json_check_max_array_value_count_success': {
+                'type': 'str',
+            },
+            'json_check_max_array_value_count_violation': {
+                'type': 'str',
+            },
+            'json_check_max_depth_success': {
+                'type': 'str',
+            },
+            'json_check_max_depth_violation': {
+                'type': 'str',
+            },
+            'json_check_max_object_member_count_success': {
+                'type': 'str',
+            },
+            'json_check_max_object_member_count_violation': {
+                'type': 'str',
+            },
+            'json_check_max_string_success': {
+                'type': 'str',
+            },
+            'json_check_max_string_violation': {
+                'type': 'str',
+            },
+            'request_check_bot_success': {
+                'type': 'str',
+            },
+            'request_check_bot_violation': {
+                'type': 'str',
+            },
+            'request_check_redirect_wlist_success': {
+                'type': 'str',
+            },
+            'request_check_redirect_wlist_violation': {
+                'type': 'str',
+            },
+            'request_check_redirect_wlist_learn': {
+                'type': 'str',
+            },
+            'request_check_referer_success': {
+                'type': 'str',
+            },
+            'request_check_referer_violation': {
+                'type': 'str',
+            },
+            'request_check_referer_redirect': {
+                'type': 'str',
+            },
+            'request_check_session_check_none': {
+                'type': 'str',
+            },
+            'request_check_session_check_success': {
+                'type': 'str',
+            },
+            'request_check_session_check_violation': {
+                'type': 'str',
+            },
+            'request_check_sqlia_url_success': {
+                'type': 'str',
+            },
+            'request_check_sqlia_url_violation': {
+                'type': 'str',
+            },
+            'request_check_sqlia_url_sanitize': {
+                'type': 'str',
+            },
+            'request_check_sqlia_post_body_success': {
+                'type': 'str',
+            },
+            'request_check_sqlia_post_body_violation': {
+                'type': 'str',
+            },
+            'request_check_sqlia_post_body_sanitize': {
+                'type': 'str',
+            },
+            'request_check_url_list_success': {
+                'type': 'str',
+            },
+            'request_check_url_list_violation': {
+                'type': 'str',
+            },
+            'request_check_url_list_learn': {
+                'type': 'str',
+            },
+            'request_check_url_whitelist_success': {
+                'type': 'str',
+            },
+            'request_check_url_whitelist_violation': {
+                'type': 'str',
+            },
+            'request_check_url_blacklist_success': {
+                'type': 'str',
+            },
+            'request_check_url_blacklist_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_cookie_success': {
+                'type': 'str',
+            },
+            'request_check_xss_cookie_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_cookie_sanitize': {
+                'type': 'str',
+            },
+            'request_check_xss_url_success': {
+                'type': 'str',
+            },
+            'request_check_xss_url_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_url_sanitize': {
+                'type': 'str',
+            },
+            'request_check_xss_post_body_success': {
+                'type': 'str',
+            },
+            'request_check_xss_post_body_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_post_body_sanitize': {
+                'type': 'str',
+            },
+            'response_cloaking_hide_status_code_success': {
+                'type': 'str',
+            },
+            'response_cloaking_hide_status_code_violation': {
+                'type': 'str',
+            },
+            'response_cloaking_filter_headers_success': {
+                'type': 'str',
+            },
+            'response_cloaking_filter_headers_violation': {
+                'type': 'str',
+            },
+            'soap_check_success': {
+                'type': 'str',
+            },
+            'soap_check_violation': {
+                'type': 'str',
+            },
+            'xml_check_format_success': {
+                'type': 'str',
+            },
+            'xml_check_format_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_success': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_name_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_name_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_value_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_value_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_cdata_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_cdata_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_child_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_child_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_depth_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_depth_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_name_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_name_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_depth_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_depth_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_namespace_success': {
+                'type': 'str',
+            },
+            'xml_check_max_namespace_violation': {
+                'type': 'str',
+            },
+            'xml_check_namespace_uri_len_success': {
+                'type': 'str',
+            },
+            'xml_check_namespace_uri_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_sqlia_success': {
+                'type': 'str',
+            },
+            'xml_check_sqlia_violation': {
+                'type': 'str',
+            },
+            'xml_check_xss_success': {
+                'type': 'str',
+            },
+            'xml_check_xss_violation': {
+                'type': 'str',
+            },
+            'xml_content_check_schema_success': {
+                'type': 'str',
+            },
+            'xml_content_check_schema_violation': {
+                'type': 'str',
+            },
+            'xml_content_check_wsdl_success': {
+                'type': 'str',
+            },
+            'xml_content_check_wsdl_violation': {
+                'type': 'str',
+            },
+            'learning_list_full': {
+                'type': 'str',
+            },
+            'action_allow': {
+                'type': 'str',
+            },
+            'action_deny_200': {
+                'type': 'str',
+            },
+            'action_deny_403': {
+                'type': 'str',
+            },
+            'action_deny_redirect': {
+                'type': 'str',
+            },
+            'action_deny_reset': {
+                'type': 'str',
+            },
+            'action_drop': {
+                'type': 'str',
+            },
+            'action_deny_custom_response': {
+                'type': 'str',
+            },
+            'action_learn': {
+                'type': 'str',
+            },
+            'action_log': {
+                'type': 'str',
+            },
+            'policy_limit_exceeded': {
                 'type': 'str',
             },
             'sessions_alloc': {
@@ -2148,25 +4179,106 @@ def get_argspec():
             'too_many_sessions': {
                 'type': 'str',
             },
-            'called': {
+            'regex_violation': {
                 'type': 'str',
             },
-            'permitted': {
+            'request_check_command_injection_cookies_success': {
                 'type': 'str',
             },
-            'brute_force_success': {
+            'request_check_command_injection_cookies_violation': {
                 'type': 'str',
             },
-            'brute_force_fail': {
+            'request_check_command_injection_headers_success': {
                 'type': 'str',
             },
-            'challenge_cookie_sent': {
+            'request_check_command_injection_headers_violation': {
                 'type': 'str',
             },
-            'challenge_javascript_sent': {
+            'request_check_command_injection_uri_query_success': {
                 'type': 'str',
             },
-            'challenge_captcha_sent': {
+            'request_check_command_injection_uri_query_violation': {
+                'type': 'str',
+            },
+            'request_check_command_injection_form_body_success': {
+                'type': 'str',
+            },
+            'request_check_command_injection_form_body_violation': {
+                'type': 'str',
+            },
+            'cookie_security_decrypt_in_grace_period_violation': {
+                'type': 'str',
+            },
+            'form_response_non_post_success': {
+                'type': 'str',
+            },
+            'form_response_non_post_violation': {
+                'type': 'str',
+            },
+            'form_response_non_post_sanitize': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_decl_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_decl_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_depth_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_depth_violation': {
+                'type': 'str',
+            },
+            'response_action_allow': {
+                'type': 'str',
+            },
+            'response_action_deny_200': {
+                'type': 'str',
+            },
+            'response_action_deny_403': {
+                'type': 'str',
+            },
+            'response_action_deny_redirect': {
+                'type': 'str',
+            },
+            'response_action_deny_reset': {
+                'type': 'str',
+            },
+            'response_action_drop': {
+                'type': 'str',
+            },
+            'response_action_deny_custom_response': {
+                'type': 'str',
+            },
+            'response_action_learn': {
+                'type': 'str',
+            },
+            'response_action_log': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_type_success': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_type_violation': {
+                'type': 'str',
+            },
+            'http_protocol_body_without_content_type_success': {
+                'type': 'str',
+            },
+            'http_protocol_body_without_content_type_violation': {
+                'type': 'str',
+            },
+            'http_protocol_non_ssl_cookie_prefix_success': {
+                'type': 'str',
+            },
+            'http_protocol_non_ssl_cookie_prefix_violation': {
+                'type': 'str',
+            },
+            'cookie_security_add_samesite_success': {
+                'type': 'str',
+            },
+            'cookie_security_add_samesite_violation': {
                 'type': 'str',
             },
             'name': {

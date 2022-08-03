@@ -63,7 +63,7 @@ options:
     ntype:
         description:
         - "'saml'= SAML authentication template; 'standard'= Standard authentication
-          template;"
+          template; 'oauth'= Oauth 2.0 authentication template;"
         type: str
         required: False
     auth_sess_mode:
@@ -80,6 +80,16 @@ options:
     saml_idp:
         description:
         - "Specify SAML identity provider"
+        type: str
+        required: False
+    oauth_authorization_server:
+        description:
+        - "Specify OAUTH authorization server"
+        type: str
+        required: False
+    oauth_client:
+        description:
+        - "Specify OAUTH client"
         type: str
         required: False
     cookie_domain:
@@ -105,8 +115,7 @@ options:
     cookie_max_age:
         description:
         - "Configure Max-Age for authentication session cookie (Configure Max-Age in
-          seconds. System will not set Max-Age/Expires for value 0 and default is 604800
-          (1 week).)"
+          seconds, 0 for no Max-Age/Expires attributes. Default is 604800 (1 week).)"
         type: int
         required: False
     cookie_secure_enable:
@@ -185,6 +194,11 @@ options:
         - "Specify AD domain account"
         type: str
         required: False
+    captcha:
+        description:
+        - "Specify captcha profile (Specify captcha proflie name)"
+        type: str
+        required: False
     accounting_server:
         description:
         - "Specify a RADIUS accounting server"
@@ -213,6 +227,32 @@ options:
           Disable authentication logs for this template;"
         type: str
         required: False
+    chain:
+        description:
+        - "Field chain"
+        type: list
+        required: False
+        suboptions:
+            chain_server:
+                description:
+                - "Specify authentication server (Specify authentication server template name)"
+                type: str
+            chain_server_priority:
+                description:
+                - "Set server priority, higher the number higher the priority. Default is 3.
+          (Chain server priority, higher the number higher the priority. Default is 3.)"
+                type: int
+            chain_sg:
+                description:
+                - "Bind an authentication service group to this template (Specify authentication
+          service group name)"
+                type: str
+            chain_sg_priority:
+                description:
+                - "Set service-group priority, higher the number higher the priority. Default is
+          3. (Chain service-group priority, higher the number higher the priority.
+          Default is 3.)"
+                type: int
     uuid:
         description:
         - "uuid of the object"
@@ -282,6 +322,8 @@ AVAILABLE_PROPERTIES = [
     "accounting_server",
     "accounting_service_group",
     "auth_sess_mode",
+    "captcha",
+    "chain",
     "cookie_domain",
     "cookie_domain_group",
     "cookie_httponly_enable",
@@ -298,6 +340,8 @@ AVAILABLE_PROPERTIES = [
     "max_session_time",
     "modify_content_security_policy",
     "name",
+    "oauth_authorization_server",
+    "oauth_client",
     "redirect_hostname",
     "relay",
     "saml_idp",
@@ -341,7 +385,7 @@ def get_argspec():
         },
         'ntype': {
             'type': 'str',
-            'choices': ['saml', 'standard']
+            'choices': ['saml', 'standard', 'oauth']
         },
         'auth_sess_mode': {
             'type': 'str',
@@ -351,6 +395,12 @@ def get_argspec():
             'type': 'str',
         },
         'saml_idp': {
+            'type': 'str',
+        },
+        'oauth_authorization_server': {
+            'type': 'str',
+        },
+        'oauth_client': {
             'type': 'str',
         },
         'cookie_domain': {
@@ -411,6 +461,9 @@ def get_argspec():
         'account': {
             'type': 'str',
         },
+        'captcha': {
+            'type': 'str',
+        },
         'accounting_server': {
             'type': 'str',
         },
@@ -426,6 +479,21 @@ def get_argspec():
         'log': {
             'type': 'str',
             'choices': ['use-partition-level-config', 'enable', 'disable']
+        },
+        'chain': {
+            'type': 'list',
+            'chain_server': {
+                'type': 'str',
+            },
+            'chain_server_priority': {
+                'type': 'int',
+            },
+            'chain_sg': {
+                'type': 'str',
+            },
+            'chain_sg_priority': {
+                'type': 'int',
+            }
         },
         'uuid': {
             'type': 'str',

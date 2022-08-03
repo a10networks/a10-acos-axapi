@@ -340,12 +340,12 @@ def get_argspec():
                     'str',
                     'choices': [
                         'imei', 'imsi', 'msisdn', 'custom1', 'custom2',
-                        'custom3'
+                        'custom3', 'custom4', 'custom5', 'custom6'
                     ]
                 },
                 'attr_event': {
                     'type': 'str',
-                    'choices': ['http-requests', 'sessions']
+                    'choices': ['http-requests', 'sessions', 'limit-policy']
                 }
             },
             'no_quote': {

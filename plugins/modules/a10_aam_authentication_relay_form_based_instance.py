@@ -78,6 +78,11 @@ options:
           Request; 'not_fnd'= Not Found; 'error'= Internal Server Error; 'other_error'=
           Other Error;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     request_uri_list:
         description:
         - "Field request_uri_list"
@@ -228,6 +233,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "name",
+    "packet_capture_template",
     "request_uri_list",
     "sampling_enable",
     "stats",
@@ -278,6 +284,9 @@ def get_argspec():
                     'other_error'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'request_uri_list': {
             'type': 'list',

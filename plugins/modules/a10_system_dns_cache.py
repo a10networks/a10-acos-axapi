@@ -77,7 +77,8 @@ options:
           'ageout'= Total aged out; 'bad_answer'= Bad Answer; 'ageout_weight'= Total aged
           for lower weight; 'total_log'= Total stats log sent; 'total_alloc'= Total
           allocated; 'total_freed'= Total freed; 'current_allocate'= Current allocate;
-          'current_data_allocate'= Current data allocate;"
+          'current_data_allocate'= Current data allocate; 'resolver_queue_full'= Resolver
+          task queue full; 'truncated_r'= Response with Truncation bit set;"
                 type: str
     oper:
         description:
@@ -105,6 +106,50 @@ options:
                 description:
                 - "Field entry"
                 type: bool
+            global:
+                description:
+                - "Field global"
+                type: bool
+            vport:
+                description:
+                - "Field vport"
+                type: bool
+            vs_name:
+                description:
+                - "Field vs_name"
+                type: str
+            port_type:
+                description:
+                - "Field port_type"
+                type: str
+            port_num:
+                description:
+                - "Field port_num"
+                type: int
+            type_value:
+                description:
+                - "Field type_value"
+                type: int
+            fqdn_domain:
+                description:
+                - "domain name"
+                type: str
+            class_string:
+                description:
+                - "Field class_string"
+                type: str
+            class_value:
+                description:
+                - "type value"
+                type: int
+            type_string:
+                description:
+                - "Field type_string"
+                type: str
+            domain_name:
+                description:
+                - "domain name"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -194,6 +239,14 @@ options:
             current_data_allocate:
                 description:
                 - "Current data allocate"
+                type: str
+            resolver_queue_full:
+                description:
+                - "Resolver task queue full"
+                type: str
+            truncated_r:
+                description:
+                - "Response with Truncation bit set"
                 type: str
 
 '''
@@ -295,7 +348,8 @@ def get_argspec():
                     'multiple_q', 'oversize_q', 'bad_r', 'oversize_r',
                     'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout',
                     'bad_answer', 'ageout_weight', 'total_log', 'total_alloc',
-                    'total_freed', 'current_allocate', 'current_data_allocate'
+                    'total_freed', 'current_allocate', 'current_data_allocate',
+                    'resolver_queue_full', 'truncated_r'
                 ]
             }
         },
@@ -369,6 +423,41 @@ def get_argspec():
             },
             'entry': {
                 'type': 'bool',
+            },
+            'global': {
+                'type': 'bool',
+            },
+            'vport': {
+                'type': 'bool',
+            },
+            'vs_name': {
+                'type': 'str',
+            },
+            'port_type': {
+                'type': 'str',
+            },
+            'port_num': {
+                'type': 'int',
+            },
+            'type_value': {
+                'type': 'int',
+            },
+            'fqdn_domain': {
+                'type': 'str',
+            },
+            'class_string': {
+                'type': 'str',
+                'choices': ['IN', 'CH', 'HS', 'NONE', 'ANY']
+            },
+            'class_value': {
+                'type': 'int',
+            },
+            'type_string': {
+                'type': 'str',
+                'choices': ['A', 'AAAA', 'CNAE', 'MX', 'NS', 'SRV']
+            },
+            'domain_name': {
+                'type': 'str',
             }
         },
         'stats': {
@@ -434,6 +523,12 @@ def get_argspec():
                 'type': 'str',
             },
             'current_data_allocate': {
+                'type': 'str',
+            },
+            'resolver_queue_full': {
+                'type': 'str',
+            },
+            'truncated_r': {
                 'type': 'str',
             }
         }

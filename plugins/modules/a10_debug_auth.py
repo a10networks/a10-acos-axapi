@@ -85,6 +85,11 @@ options:
         - "Show the logs of specific virtual-server (Virtual-server name)"
         type: str
         required: False
+    authd:
+        description:
+        - "enable detail authd log"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -145,6 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "authd",
     "client_addr",
     "level",
     "saml",
@@ -198,6 +204,9 @@ def get_argspec():
         },
         'virtual_server': {
             'type': 'str',
+        },
+        'authd': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

@@ -70,6 +70,11 @@ options:
         - "VLAN Id"
         type: int
         required: True
+    redirect_dummy_mac:
+        description:
+        - "Dummy for redirect use"
+        type: bool
+        required: False
     dest:
         description:
         - "Trap MAC with this DA to CPU"
@@ -138,6 +143,7 @@ AVAILABLE_PROPERTIES = [
     "dest",
     "mac",
     "port",
+    "redirect_dummy_mac",
     "uuid",
     "vlan",
 ]
@@ -178,6 +184,9 @@ def get_argspec():
         'vlan': {
             'type': 'int',
             'required': True,
+        },
+        'redirect_dummy_mac': {
+            'type': 'bool',
         },
         'dest': {
             'type': 'bool',

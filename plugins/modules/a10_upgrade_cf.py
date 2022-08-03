@@ -86,6 +86,11 @@ options:
         - "File URL"
         type: str
         required: False
+    image_file:
+        description:
+        - "Field image_file"
+        type: str
+        required: False
     staggered_upgrade_mode:
         description:
         - "in staggered upgrade mode"
@@ -159,6 +164,7 @@ AVAILABLE_PROPERTIES = [
     "Device",
     "file_url",
     "image",
+    "image_file",
     "local",
     "reboot_after_upgrade",
     "staggered_upgrade_mode",
@@ -205,6 +211,9 @@ def get_argspec():
             'type': 'bool',
         },
         'file_url': {
+            'type': 'str',
+        },
+        'image_file': {
             'type': 'str',
         },
         'staggered_upgrade_mode': {

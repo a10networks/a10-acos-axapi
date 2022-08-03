@@ -120,10 +120,25 @@ options:
         - "how long between heartbeats (in unit of second, default is 3)"
         type: int
         required: False
+    chassis_id:
+        description:
+        - "Chassis ID"
+        type: int
+        required: False
+    config_info:
+        description:
+        - "Configuration information (Configuration tag)"
+        type: str
+        required: False
     config_seq:
         description:
         - "Configuration sequence number"
         type: str
+        required: False
+    tcp_channel_monitor:
+        description:
+        - "Enable vBlade TCP channel monitor"
+        type: bool
         required: False
     size:
         description:
@@ -201,6 +216,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "chassis_id",
+    "config_info",
     "config_seq",
     "dead_interval",
     "failure_retry_count_value",
@@ -214,6 +231,7 @@ AVAILABLE_PROPERTIES = [
     "size",
     "speed_limit",
     "ssl_enable",
+    "tcp_channel_monitor",
     "time_interval",
     "uuid",
 ]
@@ -283,8 +301,17 @@ def get_argspec():
         'time_interval': {
             'type': 'int',
         },
+        'chassis_id': {
+            'type': 'int',
+        },
+        'config_info': {
+            'type': 'str',
+        },
         'config_seq': {
             'type': 'str',
+        },
+        'tcp_channel_monitor': {
+            'type': 'bool',
         },
         'size': {
             'type': 'int',
