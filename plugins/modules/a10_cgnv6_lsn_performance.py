@@ -68,15 +68,13 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'data-sessions-current-epoch'= data-sessions-current-epoch;
-          'fullcone-created-current-epoch'= fullcone-created-current-epoch; 'user-quote-
-          created-current-epoch'= user-quote-created-current-epoch; 'data-sessions-
-          previous-epoch-first'= data-sessions-previous-epoch-first; 'fullcone-created-
-          previous-epoch-first'= fullcone-created-previous-epoch-first; 'user-quote-
-          created-previous-epoch-first'= user-quote-created-previous-epoch-first; 'data-
-          sessions-previous-epoch-last'= data-sessions-previous-epoch-last; 'fullcone-
-          created-previous-epoch-last'= fullcone-created-previous-epoch-last; 'user-
-          quote-created-previous-epoch-last'= user-quote-created-previous-epoch-last;"
+                - "'all'= all; 'data-sessions-current-epoch'= some help string; 'fullcone-created-
+          current-epoch'= some help string; 'user-quote-created-current-epoch'= some help
+          string; 'data-sessions-previous-epoch-first'= some help string; 'fullcone-
+          created-previous-epoch-first'= some help string; 'user-quote-created-previous-
+          epoch-first'= some help string; 'data-sessions-previous-epoch-last'= some help
+          string; 'fullcone-created-previous-epoch-last'= some help string; 'user-quote-
+          created-previous-epoch-last'= some help string;"
                 type: str
     oper:
         description:
@@ -104,39 +102,39 @@ options:
         suboptions:
             data_sessions_current_epoch:
                 description:
-                - "Field data_sessions_current_epoch"
+                - "some help string"
                 type: str
             fullcone_created_current_epoch:
                 description:
-                - "Field fullcone_created_current_epoch"
+                - "some help string"
                 type: str
             user_quote_created_current_epoch:
                 description:
-                - "Field user_quote_created_current_epoch"
+                - "some help string"
                 type: str
             data_sessions_previous_epoch_first:
                 description:
-                - "Field data_sessions_previous_epoch_first"
+                - "some help string"
                 type: str
             fullcone_created_previous_epoch_first:
                 description:
-                - "Field fullcone_created_previous_epoch_first"
+                - "some help string"
                 type: str
             user_quote_created_previous_epoch_first:
                 description:
-                - "Field user_quote_created_previous_epoch_first"
+                - "some help string"
                 type: str
             data_sessions_previous_epoch_last:
                 description:
-                - "Field data_sessions_previous_epoch_last"
+                - "some help string"
                 type: str
             fullcone_created_previous_epoch_last:
                 description:
-                - "Field fullcone_created_previous_epoch_last"
+                - "some help string"
                 type: str
             user_quote_created_previous_epoch_last:
                 description:
-                - "Field user_quote_created_previous_epoch_last"
+                - "some help string"
                 type: str
 
 '''

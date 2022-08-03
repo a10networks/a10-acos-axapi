@@ -65,20 +65,15 @@ options:
         - "bw-list file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "bw-list file size in byte"
-        type: int
+        - "'check'= check; 'create'= create; 'delete'= delete; 'export'= export; 'import'=
+          import; 'replace'= replace;"
+        type: str
         required: False
     file_handle:
         description:
         - "full path of the uploaded file"
-        type: str
-        required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
         type: str
         required: False
     dst_file:
@@ -161,7 +156,6 @@ AVAILABLE_PROPERTIES = [
     "file",
     "file_handle",
     "oper",
-    "size",
     "uuid",
 ]
 
@@ -197,19 +191,13 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
+        'action': {
+            'type': 'str',
+            'choices':
+            ['check', 'create', 'delete', 'export', 'import', 'replace']
         },
         'file_handle': {
             'type': 'str',
-        },
-        'action': {
-            'type':
-            'str',
-            'choices': [
-                'create', 'import', 'export', 'copy', 'rename', 'check',
-                'replace', 'delete'
-            ]
         },
         'dst_file': {
             'type': 'str',

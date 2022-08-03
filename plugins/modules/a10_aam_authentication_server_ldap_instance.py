@@ -221,6 +221,11 @@ options:
           'pw_change_success'= Password change success; 'pw_change_failure'= Password
           change failure;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -366,6 +371,7 @@ AVAILABLE_PROPERTIES = [
     "host",
     "ldaps_conn_reuse_idle_timeout",
     "name",
+    "packet_capture_template",
     "port",
     "port_hm",
     "port_hm_disable",
@@ -506,6 +512,9 @@ def get_argspec():
                     'pw_change_success', 'pw_change_failure'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

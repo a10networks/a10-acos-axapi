@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_system_tcp
 description:
-    - tcp counters
+    - tcp counters and global config
 author: A10 Networks 2021
 options:
     state:
@@ -85,6 +85,24 @@ options:
           noroute; 'exceedmss'= MSS exceeded pkt dropped; 'tfo_conns'= TFO Total
           Connections; 'tfo_actives'= TFO Current Actives; 'tfo_denied'= TFO Denied;"
                 type: str
+    rate_limit_reset_unknown_conn:
+        description:
+        - "Field rate_limit_reset_unknown_conn"
+        type: dict
+        required: False
+        suboptions:
+            pkt_rate_for_reset_unknown_conn:
+                description:
+                - "Field pkt_rate_for_reset_unknown_conn"
+                type: int
+            log_for_reset_unknown_conn:
+                description:
+                - "Log when rate exceed"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -99,6 +117,10 @@ options:
                 description:
                 - "Field cpu_count"
                 type: int
+            rate_limit_reset_unknown_conn:
+                description:
+                - "Field rate_limit_reset_unknown_conn"
+                type: dict
     stats:
         description:
         - "Field stats"
@@ -169,6 +191,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "oper",
+    "rate_limit_reset_unknown_conn",
     "sampling_enable",
     "stats",
     "uuid",
@@ -220,6 +243,18 @@ def get_argspec():
                     'ax_rexmit_syn', 'tcpabortontimeout', 'noroute',
                     'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
                 ]
+            }
+        },
+        'rate_limit_reset_unknown_conn': {
+            'type': 'dict',
+            'pkt_rate_for_reset_unknown_conn': {
+                'type': 'int',
+            },
+            'log_for_reset_unknown_conn': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
             }
         },
         'oper': {
@@ -337,6 +372,21 @@ def get_argspec():
             },
             'cpu_count': {
                 'type': 'int',
+            },
+            'rate_limit_reset_unknown_conn': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'unknown_conn_rate_limit': {
+                        'type': 'int',
+                    },
+                    'unknown_conn_current_rate': {
+                        'type': 'int',
+                    },
+                    'unknown_conn_rate_limit_drop': {
+                        'type': 'int',
+                    }
+                }
             }
         },
         'stats': {

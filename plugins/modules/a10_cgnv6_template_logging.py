@@ -76,6 +76,10 @@ options:
                 description:
                 - "Field fixed_nat"
                 type: dict
+            one_to_one_nat:
+                description:
+                - "Field one_to_one_nat"
+                type: dict
             map_dhcpv6:
                 description:
                 - "Field map_dhcpv6"
@@ -531,6 +535,15 @@ def get_argspec():
                     }
                 }
             },
+            'one_to_one_nat': {
+                'type': 'dict',
+                'one_to_one_nat_sessions': {
+                    'type': 'bool',
+                },
+                'one_to_one_merged_style': {
+                    'type': 'bool',
+                }
+            },
             'map_dhcpv6': {
                 'type': 'dict',
                 'map_dhcpv6_prefix_all': {
@@ -593,7 +606,7 @@ def get_argspec():
                     'str',
                     'choices': [
                         'imei', 'imsi', 'msisdn', 'custom1', 'custom2',
-                        'custom3'
+                        'custom3', 'custom4', 'custom5', 'custom6'
                     ]
                 },
                 'attr_event': {
@@ -788,6 +801,15 @@ def get_argspec():
                         'type': 'str',
                     }
                 },
+                'dhcpv6_map_prefix_assigned': {
+                    'type': 'str',
+                },
+                'dhcpv6_map_prefix_released': {
+                    'type': 'str',
+                },
+                'dhcpv6_map_prefix_renewed': {
+                    'type': 'str',
+                },
                 'http_request_got': {
                     'type': 'str',
                 },
@@ -807,6 +829,15 @@ def get_argspec():
             },
             'custom_message': {
                 'type': 'dict',
+                'custom_dhcpv6_map_prefix_assigned': {
+                    'type': 'str',
+                },
+                'custom_dhcpv6_map_prefix_released': {
+                    'type': 'str',
+                },
+                'custom_dhcpv6_map_prefix_renewed': {
+                    'type': 'str',
+                },
                 'custom_fixed_nat_allocated': {
                     'type': 'str',
                 },

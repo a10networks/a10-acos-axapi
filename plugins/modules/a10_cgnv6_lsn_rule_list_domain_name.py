@@ -110,7 +110,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'placeholder'= placeholder;"
+                - "'all'= all; 'placeholder'= some help string;"
                 type: str
     oper:
         description:

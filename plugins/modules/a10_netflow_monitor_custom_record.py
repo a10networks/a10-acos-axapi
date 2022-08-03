@@ -95,7 +95,18 @@ options:
           batch-v2-nat64-creation'= Export NAT64 Port Batch v2 Creation Event; 'port-
           batch-v2-nat64-deletion'= Export NAT64 Port Batch v2 Deletion Event; 'port-
           batch-v2-dslite-creation'= Export Dslite Port Batch v2 Creation Event; 'port-
-          batch-v2-dslite-deletion'= Export Dslite Port Batch v2 Deletion Event;"
+          batch-v2-dslite-deletion'= Export Dslite Port Batch v2 Deletion Event; 'gtp-c-
+          tunnel-event'= Export GTP Control Tunnel Creation or Deletion Events; 'gtp-u-
+          tunnel-event'= Export GTP User Tunnel Creation or Deletion Events; 'gtp-deny-
+          event'= Export GTP Deny events on GTP C/U Tunnels; 'gtp-info-event'= Export GTP
+          Info events on GTP C/U Tunnels; 'fw-ddos-entry-creation'= Export FW iDDoS Entry
+          Created Record; 'fw-ddos-entry-deletion'= Export FW iDDoS Entry Deleted Record;
+          'fw-session-limit-exceeded'= Export FW Session Limit Exceeded Record; 'cgn-
+          ddos-l3-entry-creation'= Export CGN iDDoS L3 Entry Creation; 'cgn-
+          ddos-l3-entry-deletion'= Export CGN iDDoS L3 Entry Deletion; 'cgn-
+          ddos-l4-entry-creation'= Export CGN iDDoS L4 Entry Creation; 'cgn-
+          ddos-l4-entry-deletion'= Export CGN iDDoS L4 Entry Deletion; 'gtp-rate-limit-
+          periodic'= Export GTP Rate Limit Periodic;"
                 type: str
             ipfix_template:
                 description:
@@ -217,7 +228,12 @@ def get_argspec():
                     'port-batch-v2-nat64-creation',
                     'port-batch-v2-nat64-deletion',
                     'port-batch-v2-dslite-creation',
-                    'port-batch-v2-dslite-deletion'
+                    'port-batch-v2-dslite-deletion', 'gtp-c-tunnel-event',
+                    'gtp-u-tunnel-event', 'gtp-deny-event', 'gtp-info-event',
+                    'fw-ddos-entry-creation', 'fw-ddos-entry-deletion',
+                    'fw-session-limit-exceeded', 'cgn-ddos-l3-entry-creation',
+                    'cgn-ddos-l3-entry-deletion', 'cgn-ddos-l4-entry-creation',
+                    'cgn-ddos-l4-entry-deletion', 'gtp-rate-limit-periodic'
                 ]
             },
             'ipfix_template': {

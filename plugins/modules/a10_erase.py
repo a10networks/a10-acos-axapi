@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    service_config:
+        description:
+        - "Wipe out all service config"
+        type: bool
+        required: False
     all_partitions:
         description:
         - "Wipe out all service config for all partitions"
@@ -73,6 +78,11 @@ options:
     reload:
         description:
         - "reload after erase"
+        type: bool
+        required: False
+    grubconfig:
+        description:
+        - "Reset boot grub settings"
         type: bool
         required: False
 
@@ -131,9 +141,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "all_partitions",
+    "grubconfig",
     "preserve_accounts",
     "preserve_management",
     "reload",
+    "service_config",
 ]
 
 
@@ -162,6 +174,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'service_config': {
+            'type': 'bool',
+        },
         'all_partitions': {
             'type': 'bool',
         },
@@ -172,6 +187,9 @@ def get_argspec():
             'type': 'bool',
         },
         'reload': {
+            'type': 'bool',
+        },
+        'grubconfig': {
             'type': 'bool',
         }
     })

@@ -157,6 +157,23 @@ options:
           size 4096 bits; '8192'= Key size 8192 bits;"
         type: str
         required: False
+    days:
+        description:
+        - "Validity of self-signed certificate (default 1825)"
+        type: int
+        required: False
+    start_date:
+        description:
+        - "Start date of self-signed certificate in YYMMDDHHMMSS format specified in UTC
+          time"
+        type: str
+        required: False
+    end_date:
+        description:
+        - "End date of self-signed certificate in YYMMDDHHMMSS format specified in UTC
+          time"
+        type: str
+        required: False
     method:
         description:
         - "'GET'= GET request; 'POST'= POST request;"
@@ -237,8 +254,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "days",
     "dn",
     "encrypted",
+    "end_date",
     "enroll",
     "interval",
     "key_length",
@@ -255,6 +274,7 @@ AVAILABLE_PROPERTIES = [
     "renew_every_type",
     "renew_every_value",
     "secret_string",
+    "start_date",
     "subject_alternate_name",
     "url",
     "user_tag",
@@ -348,6 +368,15 @@ def get_argspec():
         'key_length': {
             'type': 'str',
             'choices': ['1024', '2048', '4096', '8192']
+        },
+        'days': {
+            'type': 'int',
+        },
+        'start_date': {
+            'type': 'str',
+        },
+        'end_date': {
+            'type': 'str',
         },
         'method': {
             'type': 'str',

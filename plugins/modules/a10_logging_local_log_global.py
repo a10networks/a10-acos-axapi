@@ -75,27 +75,23 @@ options:
           error; 'log-summarized'= Total raw log summarized; 'l1-log-summarized'= Total
           layer 1 log summarized; 'l2-log-summarized'= Total layer 2 log summarized;
           'log-summarized-error'= Total local-log summarization error; 'aam-db'= Total
-          local-log AAM raw database; 'ep-db'= Total local-log EP raw database; 'fi-db'=
-          Total local-log File-Inspection raw database; 'fw-db'= Total local-log Firewall
-          raw database; 'aam-top-user-db'= Total local-log AAM top user summary database;
-          'ep-top-user-db'= Total local-log EP top user summary database; 'ep-top-src-
-          db'= Total local-log EP top client summary database; 'ep-top-dst-db'= Total
-          local-log EP top destination summary database; 'ep-top-domain-db'= Total local-
-          log EP top domain summary database; 'ep-top-web-category-db'= Total local-log
-          EP top web-category summary database; 'ep-top-host-db'= Total local-log EP top
-          host summary database; 'fi-top-src-db'= Total local-log File-Inspection top
-          source summary database; 'fi-top-dst-db'= Total local-log File-Inspection top
-          destination summary database; 'fi-top-filename-db'= Total local-log File-
-          Inspection top file name summary database; 'fi-top-file-ext-db'= Total local-
-          log File-Inspection top file extension summary database; 'fi-top-url-db'= Total
-          local-log File-Inspection top URL summary database; 'fw-top-app-db'= Total
-          local-log Friewall top application summary database; 'fw-top-src-db'= Total
-          local-log Friewall top source summary database; 'fw-top-app-src-db'= Total
-          local-log Friewall top application and source summary database; 'fw-top-
-          category-db'= Total local-log Friewall top category summary database; 'db-
+          local-log AAM raw database; 'ep-db'= Total local-log EP raw database; 'fw-db'=
+          Total local-log Firewall raw database; 'aam-top-user-db'= Total local-log AAM
+          top user summary database; 'ep-top-user-db'= Total local-log EP top user
+          summary database; 'ep-top-src-db'= Total local-log EP top client summary
+          database; 'ep-top-dst-db'= Total local-log EP top destination summary database;
+          'ep-top-domain-db'= Total local-log EP top domain summary database; 'ep-top-
+          web-category-db'= Total local-log EP top web-category summary database; 'ep-
+          top-host-db'= Total local-log EP top host summary database; 'fw-top-app-db'=
+          Total local-log Firewall top application summary database; 'fw-top-src-db'=
+          Total local-log Firewall top source summary database; 'fw-top-app-src-db'=
+          Total local-log Firewall top application and source summary database; 'fw-top-
+          category-db'= Total local-log Firewall top category summary database; 'db-
           erro'= Total local-log database create error; 'query'= Total local-log axapi
           query; 'response'= Total local-log axapi response; 'query-error'= Total local-
-          log axapi query error;"
+          log axapi query error; 'fw-top-thr-db'= Total local-log Firewall top threat
+          summary database; 'fw-top-thr-src-db'= Total local-log Firewall top threat and
+          source summary database;"
                 type: str
     stats:
         description:
@@ -155,10 +151,6 @@ options:
                 description:
                 - "Total local-log EP raw database"
                 type: str
-            fi_db:
-                description:
-                - "Total local-log File-Inspection raw database"
-                type: str
             fw_db:
                 description:
                 - "Total local-log Firewall raw database"
@@ -191,41 +183,21 @@ options:
                 description:
                 - "Total local-log EP top host summary database"
                 type: str
-            fi_top_src_db:
-                description:
-                - "Total local-log File-Inspection top source summary database"
-                type: str
-            fi_top_dst_db:
-                description:
-                - "Total local-log File-Inspection top destination summary database"
-                type: str
-            fi_top_filename_db:
-                description:
-                - "Total local-log File-Inspection top file name summary database"
-                type: str
-            fi_top_file_ext_db:
-                description:
-                - "Total local-log File-Inspection top file extension summary database"
-                type: str
-            fi_top_url_db:
-                description:
-                - "Total local-log File-Inspection top URL summary database"
-                type: str
             fw_top_app_db:
                 description:
-                - "Total local-log Friewall top application summary database"
+                - "Total local-log Firewall top application summary database"
                 type: str
             fw_top_src_db:
                 description:
-                - "Total local-log Friewall top source summary database"
+                - "Total local-log Firewall top source summary database"
                 type: str
             fw_top_app_src_db:
                 description:
-                - "Total local-log Friewall top application and source summary database"
+                - "Total local-log Firewall top application and source summary database"
                 type: str
             fw_top_category_db:
                 description:
-                - "Total local-log Friewall top category summary database"
+                - "Total local-log Firewall top category summary database"
                 type: str
             db_erro:
                 description:
@@ -242,6 +214,14 @@ options:
             query_error:
                 description:
                 - "Total local-log axapi query error"
+                type: str
+            fw_top_thr_db:
+                description:
+                - "Total local-log Firewall top threat summary database"
+                type: str
+            fw_top_thr_src_db:
+                description:
+                - "Total local-log Firewall top threat and source summary database"
                 type: str
 
 '''
@@ -341,14 +321,13 @@ def get_argspec():
                     'all', 'enqueue', 'enqueue-full', 'enqueue-error',
                     'dequeue', 'dequeue-error', 'raw-log', 'raw-log-error',
                     'log-summarized', 'l1-log-summarized', 'l2-log-summarized',
-                    'log-summarized-error', 'aam-db', 'ep-db', 'fi-db',
-                    'fw-db', 'aam-top-user-db', 'ep-top-user-db',
-                    'ep-top-src-db', 'ep-top-dst-db', 'ep-top-domain-db',
+                    'log-summarized-error', 'aam-db', 'ep-db', 'fw-db',
+                    'aam-top-user-db', 'ep-top-user-db', 'ep-top-src-db',
+                    'ep-top-dst-db', 'ep-top-domain-db',
                     'ep-top-web-category-db', 'ep-top-host-db',
-                    'fi-top-src-db', 'fi-top-dst-db', 'fi-top-filename-db',
-                    'fi-top-file-ext-db', 'fi-top-url-db', 'fw-top-app-db',
-                    'fw-top-src-db', 'fw-top-app-src-db', 'fw-top-category-db',
-                    'db-erro', 'query', 'response', 'query-error'
+                    'fw-top-app-db', 'fw-top-src-db', 'fw-top-app-src-db',
+                    'fw-top-category-db', 'db-erro', 'query', 'response',
+                    'query-error', 'fw-top-thr-db', 'fw-top-thr-src-db'
                 ]
             }
         },
@@ -393,9 +372,6 @@ def get_argspec():
             'ep_db': {
                 'type': 'str',
             },
-            'fi_db': {
-                'type': 'str',
-            },
             'fw_db': {
                 'type': 'str',
             },
@@ -420,21 +396,6 @@ def get_argspec():
             'ep_top_host_db': {
                 'type': 'str',
             },
-            'fi_top_src_db': {
-                'type': 'str',
-            },
-            'fi_top_dst_db': {
-                'type': 'str',
-            },
-            'fi_top_filename_db': {
-                'type': 'str',
-            },
-            'fi_top_file_ext_db': {
-                'type': 'str',
-            },
-            'fi_top_url_db': {
-                'type': 'str',
-            },
             'fw_top_app_db': {
                 'type': 'str',
             },
@@ -457,6 +418,12 @@ def get_argspec():
                 'type': 'str',
             },
             'query_error': {
+                'type': 'str',
+            },
+            'fw_top_thr_db': {
+                'type': 'str',
+            },
+            'fw_top_thr_src_db': {
                 'type': 'str',
             }
         }

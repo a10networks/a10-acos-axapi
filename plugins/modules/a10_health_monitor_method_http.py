@@ -118,6 +118,21 @@ options:
         - "'GET'= HTTP GET method; 'POST'= HTTP POST method; 'HEAD'= HTTP HEAD method;"
         type: str
         required: False
+    maintenance:
+        description:
+        - "Specify response text for maintenance"
+        type: bool
+        required: False
+    maintenance_text:
+        description:
+        - "Specify text for maintenance"
+        type: str
+        required: False
+    maintenance_text_regex:
+        description:
+        - "Specify Regex text for maintenance"
+        type: str
+        required: False
     url_path:
         description:
         - "Specify URL path, default is '/'"
@@ -273,6 +288,9 @@ AVAILABLE_PROPERTIES = [
     "http_text",
     "http_url",
     "http_username",
+    "maintenance",
+    "maintenance_text",
+    "maintenance_text_regex",
     "post_path",
     "post_type",
     "response_code_regex",
@@ -341,6 +359,15 @@ def get_argspec():
         'url_type': {
             'type': 'str',
             'choices': ['GET', 'POST', 'HEAD']
+        },
+        'maintenance': {
+            'type': 'bool',
+        },
+        'maintenance_text': {
+            'type': 'str',
+        },
+        'maintenance_text_regex': {
+            'type': 'str',
         },
         'url_path': {
             'type': 'str',

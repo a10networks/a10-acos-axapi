@@ -110,6 +110,11 @@ options:
           5xx count; 'service_curr_conn_overflow'= Current connection counter overflow
           count;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     member_list:
         description:
         - "Field member_list"
@@ -144,6 +149,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -333,6 +342,7 @@ AVAILABLE_PROPERTIES = [
     "member_list",
     "name",
     "oper",
+    "packet_capture_template",
     "protocol",
     "sampling_enable",
     "stats",
@@ -405,6 +415,9 @@ def get_argspec():
                 ]
             }
         },
+        'packet_capture_template': {
+            'type': 'str',
+        },
         'member_list': {
             'type': 'list',
             'name': {
@@ -445,6 +458,9 @@ def get_argspec():
                         'curr_conn_overflow'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'oper': {

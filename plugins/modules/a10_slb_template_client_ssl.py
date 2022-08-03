@@ -102,26 +102,6 @@ options:
         - "Chain Certificate Name"
         type: str
         required: False
-    cert:
-        description:
-        - "Certificate Name"
-        type: str
-        required: False
-    cert_shared_str:
-        description:
-        - "Certificate Name"
-        type: str
-        required: False
-    cert_alternate:
-        description:
-        - "Specify the second certificate (Certificate Name)"
-        type: str
-        required: False
-    cert_alt_partition_shared:
-        description:
-        - "Certificate Partition Shared"
-        type: bool
-        required: False
     dh_type:
         description:
         - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048;"
@@ -287,6 +267,37 @@ options:
         - "CA Private Key Partition Shared"
         type: bool
         required: False
+    fp_ca_certificate:
+        description:
+        - "CA Certificate for forward proxy (SSL forward proxy CA Certificate Name)"
+        type: str
+        required: False
+    fp_ca_key:
+        description:
+        - "CA Private Key for forward proxy (SSL forward proxy CA Key Name)"
+        type: str
+        required: False
+    fp_ca_key_passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    fp_ca_key_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    fp_ca_chain_cert:
+        description:
+        - "Chain Certificate (Chain Certificate Name)"
+        type: str
+        required: False
+    fp_ca_certificate_shared:
+        description:
+        - "CA Private Key Partition Shared"
+        type: bool
+        required: False
     forward_proxy_alt_sign:
         description:
         - "Forward proxy alternate signing cert and key"
@@ -311,6 +322,11 @@ options:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
+        required: False
+    fp_alt_chain_cert:
+        description:
+        - "Chain Certificate (Chain Certificate Name)"
         type: str
         required: False
     fp_alt_shared:
@@ -383,6 +399,17 @@ options:
         type: bool
         required: False
     no_shared_cipher_action:
+        description:
+        - "'bypass'= bypass SSLi processing; 'drop'= close the connection;"
+        type: str
+        required: False
+    forward_proxy_esni_action:
+        description:
+        - "Action taken if receiving encrypted server name indication extension in client
+          hello MSG, bypass the connection by default"
+        type: bool
+        required: False
+    fp_esni_action:
         description:
         - "'bypass'= bypass SSLi processing; 'drop'= close the connection;"
         type: str
@@ -465,10 +492,16 @@ options:
         - "Year"
         type: int
         required: False
+    forward_proxy_hash_persistence_interval:
+        description:
+        - "Set the time interval to save the hash persistence certs (Interval value, in
+          minutes)"
+        type: int
+        required: False
     forward_proxy_ssl_version:
         description:
-        - "TLS/SSL version, default is TLS1.2 (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1 and
-          33-TLSv1.2)"
+        - "TLS/SSL version, default is TLS1.2 (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1,
+          33-TLSv1.2 and 34-TLSv1.3)"
         type: int
         required: False
     forward_proxy_ocsp_disable:
@@ -909,6 +942,68 @@ options:
           wait for cert and then inspect the connection;"
         type: str
         required: False
+    web_reputation:
+        description:
+        - "Field web_reputation"
+        type: dict
+        required: False
+        suboptions:
+            bypass_trustworthy:
+                description:
+                - "Bypass when reputation score is greater than or equal to 81"
+                type: bool
+            bypass_low_risk:
+                description:
+                - "Bypass when reputation score is greater than or equal to 61"
+                type: bool
+            bypass_moderate_risk:
+                description:
+                - "Bypass when reputation score is greater than or equal to 41"
+                type: bool
+            bypass_suspicious:
+                description:
+                - "Bypass when reputation score is greater than or equal to 21"
+                type: bool
+            bypass_malicious:
+                description:
+                - "Bypass when reputation score is greater than or equal to 1"
+                type: bool
+            bypass_threshold:
+                description:
+                - "Bypass when reputation score is greater than or equal to the customized score
+          (1-100)"
+                type: int
+    exception_web_reputation:
+        description:
+        - "Field exception_web_reputation"
+        type: dict
+        required: False
+        suboptions:
+            exception_trustworthy:
+                description:
+                - "Intercept when reputation score is less than or equal to 100"
+                type: bool
+            exception_low_risk:
+                description:
+                - "Intercept when reputation score is less than or equal to 80"
+                type: bool
+            exception_moderate_risk:
+                description:
+                - "Intercept when reputation score is less than or equal to 60"
+                type: bool
+            exception_suspicious:
+                description:
+                - "Intercept when reputation score is less than or equal to 40"
+                type: bool
+            exception_malicious:
+                description:
+                - "Intercept when reputation score is less than or equal to 20"
+                type: bool
+            exception_threshold:
+                description:
+                - "Intercept when reputation score is less than or equal to a customized value
+          (1-100)"
+                type: int
     web_category:
         description:
         - "Field web_category"
@@ -1251,6 +1346,364 @@ options:
                 description:
                 - "Category Food and Dining"
                 type: bool
+            nudity_artistic:
+                description:
+                - "Category Nudity join Entertainment and Arts"
+                type: bool
+            illegal_pornography:
+                description:
+                - "Category Illegal join Adult and Pornography"
+                type: bool
+    exception_web_category:
+        description:
+        - "Field exception_web_category"
+        type: dict
+        required: False
+        suboptions:
+            exception_uncategorized:
+                description:
+                - "Uncategorized URLs"
+                type: bool
+            exception_real_estate:
+                description:
+                - "Category Real Estate"
+                type: bool
+            exception_computer_and_internet_security:
+                description:
+                - "Category Computer and Internet Security"
+                type: bool
+            exception_financial_services:
+                description:
+                - "Category Financial Services"
+                type: bool
+            exception_business_and_economy:
+                description:
+                - "Category Business and Economy"
+                type: bool
+            exception_computer_and_internet_info:
+                description:
+                - "Category Computer and Internet Info"
+                type: bool
+            exception_auctions:
+                description:
+                - "Category Auctions"
+                type: bool
+            exception_shopping:
+                description:
+                - "Category Shopping"
+                type: bool
+            exception_cult_and_occult:
+                description:
+                - "Category Cult and Occult"
+                type: bool
+            exception_travel:
+                description:
+                - "Category Travel"
+                type: bool
+            exception_drugs:
+                description:
+                - "Category Abused Drugs"
+                type: bool
+            exception_adult_and_pornography:
+                description:
+                - "Category Adult and Pornography"
+                type: bool
+            exception_home_and_garden:
+                description:
+                - "Category Home and Garden"
+                type: bool
+            exception_military:
+                description:
+                - "Category Military"
+                type: bool
+            exception_social_network:
+                description:
+                - "Category Social Network"
+                type: bool
+            exception_dead_sites:
+                description:
+                - "Category Dead Sites (db Ops only)"
+                type: bool
+            exception_stock_advice_and_tools:
+                description:
+                - "Category Stock Advice and Tools"
+                type: bool
+            exception_training_and_tools:
+                description:
+                - "Category Training and Tools"
+                type: bool
+            exception_dating:
+                description:
+                - "Category Dating"
+                type: bool
+            exception_sex_education:
+                description:
+                - "Category Sex Education"
+                type: bool
+            exception_religion:
+                description:
+                - "Category Religion"
+                type: bool
+            exception_entertainment_and_arts:
+                description:
+                - "Category Entertainment and Arts"
+                type: bool
+            exception_personal_sites_and_blogs:
+                description:
+                - "Category Personal sites and Blogs"
+                type: bool
+            exception_legal:
+                description:
+                - "Category Legal"
+                type: bool
+            exception_local_information:
+                description:
+                - "Category Local Information"
+                type: bool
+            exception_streaming_media:
+                description:
+                - "Category Streaming Media"
+                type: bool
+            exception_job_search:
+                description:
+                - "Category Job Search"
+                type: bool
+            exception_gambling:
+                description:
+                - "Category Gambling"
+                type: bool
+            exception_translation:
+                description:
+                - "Category Translation"
+                type: bool
+            exception_reference_and_research:
+                description:
+                - "Category Reference and Research"
+                type: bool
+            exception_shareware_and_freeware:
+                description:
+                - "Category Shareware and Freeware"
+                type: bool
+            exception_peer_to_peer:
+                description:
+                - "Category Peer to Peer"
+                type: bool
+            exception_marijuana:
+                description:
+                - "Category Marijuana"
+                type: bool
+            exception_hacking:
+                description:
+                - "Category Hacking"
+                type: bool
+            exception_games:
+                description:
+                - "Category Games"
+                type: bool
+            exception_philosophy_and_politics:
+                description:
+                - "Category Philosophy and Political Advocacy"
+                type: bool
+            exception_weapons:
+                description:
+                - "Category Weapons"
+                type: bool
+            exception_pay_to_surf:
+                description:
+                - "Category Pay to Surf"
+                type: bool
+            exception_hunting_and_fishing:
+                description:
+                - "Category Hunting and Fishing"
+                type: bool
+            exception_society:
+                description:
+                - "Category Society"
+                type: bool
+            exception_educational_institutions:
+                description:
+                - "Category Educational Institutions"
+                type: bool
+            exception_online_greeting_cards:
+                description:
+                - "Category Online Greeting cards"
+                type: bool
+            exception_sports:
+                description:
+                - "Category Sports"
+                type: bool
+            exception_swimsuits_and_intimate_apparel:
+                description:
+                - "Category Swimsuits and Intimate Apparel"
+                type: bool
+            exception_questionable:
+                description:
+                - "Category Questionable"
+                type: bool
+            exception_kids:
+                description:
+                - "Category Kids"
+                type: bool
+            exception_hate_and_racism:
+                description:
+                - "Category Hate and Racism"
+                type: bool
+            exception_personal_storage:
+                description:
+                - "Category Personal Storage"
+                type: bool
+            exception_violence:
+                description:
+                - "Category Violence"
+                type: bool
+            exception_keyloggers_and_monitoring:
+                description:
+                - "Category Keyloggers and Monitoring"
+                type: bool
+            exception_search_engines:
+                description:
+                - "Category Search Engines"
+                type: bool
+            exception_internet_portals:
+                description:
+                - "Category Internet Portals"
+                type: bool
+            exception_web_advertisements:
+                description:
+                - "Category Web Advertisements"
+                type: bool
+            exception_cheating:
+                description:
+                - "Category Cheating"
+                type: bool
+            exception_gross:
+                description:
+                - "Category Gross"
+                type: bool
+            exception_web_based_email:
+                description:
+                - "Category Web based email"
+                type: bool
+            exception_malware_sites:
+                description:
+                - "Category Malware Sites"
+                type: bool
+            exception_phishing_and_other_fraud:
+                description:
+                - "Category Phishing and Other Frauds"
+                type: bool
+            exception_proxy_avoid_and_anonymizers:
+                description:
+                - "Category Proxy Avoid and Anonymizers"
+                type: bool
+            exception_spyware_and_adware:
+                description:
+                - "Category Spyware and Adware"
+                type: bool
+            exception_music:
+                description:
+                - "Category Music"
+                type: bool
+            exception_government:
+                description:
+                - "Category Government"
+                type: bool
+            exception_nudity:
+                description:
+                - "Category Nudity"
+                type: bool
+            exception_news_and_media:
+                description:
+                - "Category News and Media"
+                type: bool
+            exception_illegal:
+                description:
+                - "Category Illegal"
+                type: bool
+            exception_cdns:
+                description:
+                - "Category CDNs"
+                type: bool
+            exception_internet_communications:
+                description:
+                - "Category Internet Communications"
+                type: bool
+            exception_bot_nets:
+                description:
+                - "Category Bot Nets"
+                type: bool
+            exception_abortion:
+                description:
+                - "Category Abortion"
+                type: bool
+            exception_health_and_medicine:
+                description:
+                - "Category Health and Medicine"
+                type: bool
+            exception_confirmed_spam_sources:
+                description:
+                - "Category Confirmed SPAM Sources"
+                type: bool
+            exception_spam_urls:
+                description:
+                - "Category SPAM URLs"
+                type: bool
+            exception_unconfirmed_spam_sources:
+                description:
+                - "Category Unconfirmed SPAM Sources"
+                type: bool
+            exception_open_http_proxies:
+                description:
+                - "Category Open HTTP Proxies"
+                type: bool
+            exception_dynamic_comment:
+                description:
+                - "Category Dynamic Comment"
+                type: bool
+            exception_parked_domains:
+                description:
+                - "Category Parked Domains"
+                type: bool
+            exception_alcohol_and_tobacco:
+                description:
+                - "Category Alcohol and Tobacco"
+                type: bool
+            exception_private_ip_addresses:
+                description:
+                - "Category Private IP Addresses"
+                type: bool
+            exception_image_and_video_search:
+                description:
+                - "Category Image and Video Search"
+                type: bool
+            exception_fashion_and_beauty:
+                description:
+                - "Category Fashion and Beauty"
+                type: bool
+            exception_recreation_and_hobbies:
+                description:
+                - "Category Recreation and Hobbies"
+                type: bool
+            exception_motor_vehicles:
+                description:
+                - "Category Motor Vehicles"
+                type: bool
+            exception_web_hosting_sites:
+                description:
+                - "Category Web Hosting Sites"
+                type: bool
+            exception_food_and_dining:
+                description:
+                - "Category Food and Dining"
+                type: bool
+            exception_nudity_artistic:
+                description:
+                - "Category Nudity join Entertainment and Arts"
+                type: bool
+            exception_illegal_pornography:
+                description:
+                - "Category Illegal join Adult and Pornography"
+                type: bool
     require_web_category:
         description:
         - "Wait for web category to be resolved before taking bypass decision"
@@ -1261,59 +1714,6 @@ options:
         - "'no-match-action-inspect'= Inspected if not matched; 'no-match-action-drop'=
           Dropped if not matched;"
         type: str
-        required: False
-    key:
-        description:
-        - "Key Name"
-        type: str
-        required: False
-    key_passphrase:
-        description:
-        - "Password Phrase"
-        type: str
-        required: False
-    key_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        type: str
-        required: False
-    key_shared_str:
-        description:
-        - "Key Name"
-        type: str
-        required: False
-    key_shared_passphrase:
-        description:
-        - "Password Phrase"
-        type: str
-        required: False
-    key_shared_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        type: str
-        required: False
-    key_alternate:
-        description:
-        - "Specify the second private key (Key Name)"
-        type: str
-        required: False
-    key_alt_passphrase:
-        description:
-        - "Password Phrase"
-        type: str
-        required: False
-    key_alt_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        type: str
-        required: False
-    key_alt_partition_shared:
-        description:
-        - "Key Partition Shared"
-        type: bool
         required: False
     template_cipher:
         description:
@@ -1463,6 +1863,26 @@ options:
         - "Enable logging of sni-auto-map failures. Disable by default"
         type: bool
         required: False
+    sni_bypass_missing_cert:
+        description:
+        - "Bypass when missing cert/key"
+        type: bool
+        required: False
+    sni_bypass_expired_cert:
+        description:
+        - "Bypass when certificate expired"
+        type: bool
+        required: False
+    sni_bypass_explicit_list:
+        description:
+        - "Bypass when matched explicit bypass list (Specify class list name)"
+        type: str
+        required: False
+    sni_bypass_enable_log:
+        description:
+        - "Enable logging when bypass event happens, disabled by default"
+        type: bool
+        required: False
     direct_client_server_auth:
         description:
         - "Let backend server does SSL client authentication directly"
@@ -1480,10 +1900,15 @@ options:
           cache timeout disabled))"
         type: int
         required: False
+    session_ticket_disable:
+        description:
+        - "Disable client side session ticket support"
+        type: bool
+        required: False
     session_ticket_lifetime:
         description:
         - "Session ticket lifetime in seconds from stateless session resumption (Lifetime
-          value in seconds. Default value 0 (Session ticket lifetime limit disabled))"
+          value in seconds. Default value 0 (Session ticket lifetime is 7200 seconds))"
         type: int
         required: False
     ssl_false_start_disable:
@@ -1499,7 +1924,7 @@ options:
     version:
         description:
         - "TLS/SSL version, default is the highest number supported (TLS/SSL version=
-          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
+          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1, 33-TLSv1.2 and 34-TLSv1.3)"
         type: int
         required: False
     dgversion:
@@ -1572,6 +1997,16 @@ options:
         - "Enable SSLi FTP over TLS support at which port"
         type: int
         required: False
+    early_data:
+        description:
+        - "Enable TLS 1.3 early data (0-RTT)"
+        type: bool
+        required: False
+    no_anti_replay:
+        description:
+        - "Disable anti-replay protection for TLS 1.3 early data (0-RTT data)"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -1582,64 +2017,40 @@ options:
         - "Customized tag"
         type: str
         required: False
-    sampling_enable:
+    certificate_list:
         description:
-        - "Field sampling_enable"
+        - "Field certificate_list"
         type: list
         required: False
         suboptions:
-            counters1:
+            cert:
                 description:
-                - "'all'= all; 'real-estate'= real estate category; 'computer-and-internet-
-          security'= computer and internet security category; 'financial-services'=
-          financial services category; 'business-and-economy'= business and economy
-          category; 'computer-and-internet-info'= computer and internet info category;
-          'auctions'= auctions category; 'shopping'= shopping category; 'cult-and-
-          occult'= cult and occult category; 'travel'= travel category; 'drugs'= drugs
-          category; 'adult-and-pornography'= adult and pornography category; 'home-and-
-          garden'= home and garden category; 'military'= military category; 'social-
-          network'= social network category; 'dead-sites'= dead sites category; 'stock-
-          advice-and-tools'= stock advice and tools category; 'training-and-tools'=
-          training and tools category; 'dating'= dating category; 'sex-education'= sex
-          education category; 'religion'= religion category; 'entertainment-and-arts'=
-          entertainment and arts category; 'personal-sites-and-blogs'= personal sites and
-          blogs category; 'legal'= legal category; 'local-information'= local information
-          category; 'streaming-media'= streaming media category; 'job-search'= job search
-          category; 'gambling'= gambling category; 'translation'= translation category;
-          'reference-and-research'= reference and research category; 'shareware-and-
-          freeware'= shareware and freeware category; 'peer-to-peer'= peer to peer
-          category; 'marijuana'= marijuana category; 'hacking'= hacking category;
-          'games'= games category; 'philosophy-and-politics'= philosophy and politics
-          category; 'weapons'= weapons category; 'pay-to-surf'= pay to surf category;
-          'hunting-and-fishing'= hunting and fishing category; 'society'= society
-          category; 'educational-institutions'= educational institutions category;
-          'online-greeting-cards'= online greeting cards category; 'sports'= sports
-          category; 'swimsuits-and-intimate-apparel'= swimsuits and intimate apparel
-          category; 'questionable'= questionable category; 'kids'= kids category; 'hate-
-          and-racism'= hate and racism category; 'personal-storage'= personal storage
-          category; 'violence'= violence category; 'keyloggers-and-monitoring'=
-          keyloggers and monitoring category; 'search-engines'= search engines category;
-          'internet-portals'= internet portals category; 'web-advertisements'= web
-          advertisements category; 'cheating'= cheating category; 'gross'= gross
-          category; 'web-based-email'= web based email category; 'malware-sites'= malware
-          sites category; 'phishing-and-other-fraud'= phishing and other fraud category;
-          'proxy-avoid-and-anonymizers'= proxy avoid and anonymizers category; 'spyware-
-          and-adware'= spyware and adware category; 'music'= music category;
-          'government'= government category; 'nudity'= nudity category; 'news-and-media'=
-          news and media category; 'illegal'= illegal category; 'CDNs'= content delivery
-          networks category; 'internet-communications'= internet communications category;
-          'bot-nets'= bot nets category; 'abortion'= abortion category; 'health-and-
-          medicine'= health and medicine category; 'confirmed-SPAM-sources'= confirmed
-          SPAM sources category; 'SPAM-URLs'= SPAM URLs category; 'unconfirmed-SPAM-
-          sources'= unconfirmed SPAM sources category; 'open-HTTP-proxies'= open HTTP
-          proxies category; 'dynamic-comment'= dynamic comment category; 'parked-
-          domains'= parked domains category; 'alcohol-and-tobacco'= alcohol and tobacco
-          category; 'private-IP-addresses'= private IP addresses category; 'image-and-
-          video-search'= image and video search category; 'fashion-and-beauty'= fashion
-          and beauty category; 'recreation-and-hobbies'= recreation and hobbies category;
-          'motor-vehicles'= motor vehicles category; 'web-hosting-sites'= web hosting
-          sites category; 'food-and-dining'= food and dining category; 'uncategorised'=
-          uncategorised; 'other-category'= other category;"
+                - "Certificate Name"
+                type: str
+            key:
+                description:
+                - "Server Private Key (Key Name)"
+                type: str
+            passphrase:
+                description:
+                - "Password Phrase"
+                type: str
+            key_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+            chain_cert:
+                description:
+                - "Chain Certificate (Chain Certificate Name)"
+                type: str
+            shared:
+                description:
+                - "Server Certificate and Key Partition Shared"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
                 type: str
     oper:
         description:
@@ -1993,6 +2404,14 @@ options:
                 description:
                 - "food and dining category"
                 type: str
+            nudity_artistic:
+                description:
+                - "nudity join Entertainment and Arts"
+                type: str
+            illegal_pornography:
+                description:
+                - "illegal join Adult and Pornography"
+                type: str
             uncategorised:
                 description:
                 - "uncategorised"
@@ -2000,6 +2419,26 @@ options:
             other_category:
                 description:
                 - "other category"
+                type: str
+            trustworthy:
+                description:
+                - "Trustworthy level(81-100)"
+                type: str
+            low_risk:
+                description:
+                - "Low-risk level(61-80)"
+                type: str
+            moderate_risk:
+                description:
+                - "Moderate-risk level(41-60)"
+                type: str
+            suspicious:
+                description:
+                - "Suspicious level(21-40)"
+                type: str
+            malicious:
+                description:
+                - "Malicious level(1-20)"
                 type: str
             name:
                 description:
@@ -2078,16 +2517,13 @@ AVAILABLE_PROPERTIES = [
     "ca_certs",
     "cache_persistence_list_name",
     "case_insensitive",
-    "cert",
-    "cert_alt_partition_shared",
-    "cert_alternate",
     "cert_revoke_action",
-    "cert_shared_str",
     "cert_unknown_action",
     "certificate_issuer_contains_list",
     "certificate_issuer_ends_with_list",
     "certificate_issuer_equals_list",
     "certificate_issuer_starts_with_list",
+    "certificate_list",
     "certificate_san_contains_list",
     "certificate_san_ends_with_list",
     "certificate_san_equals_list",
@@ -2114,6 +2550,7 @@ AVAILABLE_PROPERTIES = [
     "dh_type",
     "direct_client_server_auth",
     "disable_sslv3",
+    "early_data",
     "ec_list",
     "enable_ssli_ftp_alg",
     "enable_tls_alert_logging",
@@ -2125,6 +2562,8 @@ AVAILABLE_PROPERTIES = [
     "exception_certificate_subject_cl_name",
     "exception_sni_cl_name",
     "exception_user_name_list",
+    "exception_web_category",
+    "exception_web_reputation",
     "expire_hours",
     "forward_encrypted",
     "forward_passphrase",
@@ -2142,7 +2581,9 @@ AVAILABLE_PROPERTIES = [
     "forward_proxy_decrypted_dscp",
     "forward_proxy_decrypted_dscp_bypass",
     "forward_proxy_enable",
+    "forward_proxy_esni_action",
     "forward_proxy_failsafe_disable",
+    "forward_proxy_hash_persistence_interval",
     "forward_proxy_log_disable",
     "forward_proxy_no_shared_cipher_action",
     "forward_proxy_no_sni_action",
@@ -2153,10 +2594,17 @@ AVAILABLE_PROPERTIES = [
     "forward_proxy_trusted_ca_lists",
     "forward_proxy_verify_cert_fail_action",
     "fp_alt_cert",
+    "fp_alt_chain_cert",
     "fp_alt_encrypted",
     "fp_alt_key",
     "fp_alt_passphrase",
     "fp_alt_shared",
+    "fp_ca_certificate",
+    "fp_ca_certificate_shared",
+    "fp_ca_chain_cert",
+    "fp_ca_key",
+    "fp_ca_key_encrypted",
+    "fp_ca_key_passphrase",
     "fp_ca_key_shared",
     "fp_ca_shared",
     "fp_cert_ext_aia_ca_issuers",
@@ -2167,27 +2615,19 @@ AVAILABLE_PROPERTIES = [
     "fp_cert_fetch_natpool_name",
     "fp_cert_fetch_natpool_name_shared",
     "fp_cert_fetch_natpool_precedence",
+    "fp_esni_action",
     "handshake_logging_enable",
     "hsm_type",
     "inspect_certificate_issuer_cl_name",
     "inspect_certificate_san_cl_name",
     "inspect_certificate_subject_cl_name",
     "inspect_list_name",
-    "key",
-    "key_alt_encrypted",
-    "key_alt_partition_shared",
-    "key_alt_passphrase",
-    "key_alternate",
-    "key_encrypted",
-    "key_passphrase",
-    "key_shared_encrypted",
-    "key_shared_passphrase",
-    "key_shared_str",
     "ldap_base_dn_from_cert",
     "ldap_search_filter",
     "local_logging",
     "multi_class_list",
     "name",
+    "no_anti_replay",
     "no_shared_cipher_action",
     "non_ssl_bypass_l4session",
     "non_ssl_bypass_service_group",
@@ -2216,14 +2656,18 @@ AVAILABLE_PROPERTIES = [
     "renegotiation_disable",
     "req_ca_lists",
     "require_web_category",
-    "sampling_enable",
     "server_name_auto_map",
     "server_name_list",
     "session_cache_size",
     "session_cache_timeout",
+    "session_ticket_disable",
     "session_ticket_lifetime",
     "shared_partition_cipher_template",
     "shared_partition_pool",
+    "sni_bypass_enable_log",
+    "sni_bypass_expired_cert",
+    "sni_bypass_explicit_list",
+    "sni_bypass_missing_cert",
     "sni_enable_log",
     "ssl_false_start_disable",
     "ssli_logging",
@@ -2240,6 +2684,7 @@ AVAILABLE_PROPERTIES = [
     "verify_cert_fail_action",
     "version",
     "web_category",
+    "web_reputation",
 ]
 
 
@@ -2298,18 +2743,6 @@ def get_argspec():
         },
         'chain_cert_shared_str': {
             'type': 'str',
-        },
-        'cert': {
-            'type': 'str',
-        },
-        'cert_shared_str': {
-            'type': 'str',
-        },
-        'cert_alternate': {
-            'type': 'str',
-        },
-        'cert_alt_partition_shared': {
-            'type': 'bool',
         },
         'dh_type': {
             'type': 'str',
@@ -2414,6 +2847,24 @@ def get_argspec():
         'fp_ca_key_shared': {
             'type': 'bool',
         },
+        'fp_ca_certificate': {
+            'type': 'str',
+        },
+        'fp_ca_key': {
+            'type': 'str',
+        },
+        'fp_ca_key_passphrase': {
+            'type': 'str',
+        },
+        'fp_ca_key_encrypted': {
+            'type': 'str',
+        },
+        'fp_ca_chain_cert': {
+            'type': 'str',
+        },
+        'fp_ca_certificate_shared': {
+            'type': 'bool',
+        },
         'forward_proxy_alt_sign': {
             'type': 'bool',
         },
@@ -2427,6 +2878,9 @@ def get_argspec():
             'type': 'str',
         },
         'fp_alt_encrypted': {
+            'type': 'str',
+        },
+        'fp_alt_chain_cert': {
             'type': 'str',
         },
         'fp_alt_shared': {
@@ -2475,6 +2929,13 @@ def get_argspec():
             'type': 'str',
             'choices': ['bypass', 'drop']
         },
+        'forward_proxy_esni_action': {
+            'type': 'bool',
+        },
+        'fp_esni_action': {
+            'type': 'str',
+            'choices': ['bypass', 'drop']
+        },
         'forward_proxy_cert_unknown_action': {
             'type': 'bool',
         },
@@ -2519,6 +2980,9 @@ def get_argspec():
             'type': 'int',
         },
         'notafteryear': {
+            'type': 'int',
+        },
+        'forward_proxy_hash_persistence_interval': {
             'type': 'int',
         },
         'forward_proxy_ssl_version': {
@@ -2785,6 +3249,48 @@ def get_argspec():
             'type': 'str',
             'choices': ['bypass', 'reset', 'intercept']
         },
+        'web_reputation': {
+            'type': 'dict',
+            'bypass_trustworthy': {
+                'type': 'bool',
+            },
+            'bypass_low_risk': {
+                'type': 'bool',
+            },
+            'bypass_moderate_risk': {
+                'type': 'bool',
+            },
+            'bypass_suspicious': {
+                'type': 'bool',
+            },
+            'bypass_malicious': {
+                'type': 'bool',
+            },
+            'bypass_threshold': {
+                'type': 'int',
+            }
+        },
+        'exception_web_reputation': {
+            'type': 'dict',
+            'exception_trustworthy': {
+                'type': 'bool',
+            },
+            'exception_low_risk': {
+                'type': 'bool',
+            },
+            'exception_moderate_risk': {
+                'type': 'bool',
+            },
+            'exception_suspicious': {
+                'type': 'bool',
+            },
+            'exception_malicious': {
+                'type': 'bool',
+            },
+            'exception_threshold': {
+                'type': 'int',
+            }
+        },
         'web_category': {
             'type': 'dict',
             'uncategorized': {
@@ -3038,6 +3544,273 @@ def get_argspec():
             },
             'food_and_dining': {
                 'type': 'bool',
+            },
+            'nudity_artistic': {
+                'type': 'bool',
+            },
+            'illegal_pornography': {
+                'type': 'bool',
+            }
+        },
+        'exception_web_category': {
+            'type': 'dict',
+            'exception_uncategorized': {
+                'type': 'bool',
+            },
+            'exception_real_estate': {
+                'type': 'bool',
+            },
+            'exception_computer_and_internet_security': {
+                'type': 'bool',
+            },
+            'exception_financial_services': {
+                'type': 'bool',
+            },
+            'exception_business_and_economy': {
+                'type': 'bool',
+            },
+            'exception_computer_and_internet_info': {
+                'type': 'bool',
+            },
+            'exception_auctions': {
+                'type': 'bool',
+            },
+            'exception_shopping': {
+                'type': 'bool',
+            },
+            'exception_cult_and_occult': {
+                'type': 'bool',
+            },
+            'exception_travel': {
+                'type': 'bool',
+            },
+            'exception_drugs': {
+                'type': 'bool',
+            },
+            'exception_adult_and_pornography': {
+                'type': 'bool',
+            },
+            'exception_home_and_garden': {
+                'type': 'bool',
+            },
+            'exception_military': {
+                'type': 'bool',
+            },
+            'exception_social_network': {
+                'type': 'bool',
+            },
+            'exception_dead_sites': {
+                'type': 'bool',
+            },
+            'exception_stock_advice_and_tools': {
+                'type': 'bool',
+            },
+            'exception_training_and_tools': {
+                'type': 'bool',
+            },
+            'exception_dating': {
+                'type': 'bool',
+            },
+            'exception_sex_education': {
+                'type': 'bool',
+            },
+            'exception_religion': {
+                'type': 'bool',
+            },
+            'exception_entertainment_and_arts': {
+                'type': 'bool',
+            },
+            'exception_personal_sites_and_blogs': {
+                'type': 'bool',
+            },
+            'exception_legal': {
+                'type': 'bool',
+            },
+            'exception_local_information': {
+                'type': 'bool',
+            },
+            'exception_streaming_media': {
+                'type': 'bool',
+            },
+            'exception_job_search': {
+                'type': 'bool',
+            },
+            'exception_gambling': {
+                'type': 'bool',
+            },
+            'exception_translation': {
+                'type': 'bool',
+            },
+            'exception_reference_and_research': {
+                'type': 'bool',
+            },
+            'exception_shareware_and_freeware': {
+                'type': 'bool',
+            },
+            'exception_peer_to_peer': {
+                'type': 'bool',
+            },
+            'exception_marijuana': {
+                'type': 'bool',
+            },
+            'exception_hacking': {
+                'type': 'bool',
+            },
+            'exception_games': {
+                'type': 'bool',
+            },
+            'exception_philosophy_and_politics': {
+                'type': 'bool',
+            },
+            'exception_weapons': {
+                'type': 'bool',
+            },
+            'exception_pay_to_surf': {
+                'type': 'bool',
+            },
+            'exception_hunting_and_fishing': {
+                'type': 'bool',
+            },
+            'exception_society': {
+                'type': 'bool',
+            },
+            'exception_educational_institutions': {
+                'type': 'bool',
+            },
+            'exception_online_greeting_cards': {
+                'type': 'bool',
+            },
+            'exception_sports': {
+                'type': 'bool',
+            },
+            'exception_swimsuits_and_intimate_apparel': {
+                'type': 'bool',
+            },
+            'exception_questionable': {
+                'type': 'bool',
+            },
+            'exception_kids': {
+                'type': 'bool',
+            },
+            'exception_hate_and_racism': {
+                'type': 'bool',
+            },
+            'exception_personal_storage': {
+                'type': 'bool',
+            },
+            'exception_violence': {
+                'type': 'bool',
+            },
+            'exception_keyloggers_and_monitoring': {
+                'type': 'bool',
+            },
+            'exception_search_engines': {
+                'type': 'bool',
+            },
+            'exception_internet_portals': {
+                'type': 'bool',
+            },
+            'exception_web_advertisements': {
+                'type': 'bool',
+            },
+            'exception_cheating': {
+                'type': 'bool',
+            },
+            'exception_gross': {
+                'type': 'bool',
+            },
+            'exception_web_based_email': {
+                'type': 'bool',
+            },
+            'exception_malware_sites': {
+                'type': 'bool',
+            },
+            'exception_phishing_and_other_fraud': {
+                'type': 'bool',
+            },
+            'exception_proxy_avoid_and_anonymizers': {
+                'type': 'bool',
+            },
+            'exception_spyware_and_adware': {
+                'type': 'bool',
+            },
+            'exception_music': {
+                'type': 'bool',
+            },
+            'exception_government': {
+                'type': 'bool',
+            },
+            'exception_nudity': {
+                'type': 'bool',
+            },
+            'exception_news_and_media': {
+                'type': 'bool',
+            },
+            'exception_illegal': {
+                'type': 'bool',
+            },
+            'exception_cdns': {
+                'type': 'bool',
+            },
+            'exception_internet_communications': {
+                'type': 'bool',
+            },
+            'exception_bot_nets': {
+                'type': 'bool',
+            },
+            'exception_abortion': {
+                'type': 'bool',
+            },
+            'exception_health_and_medicine': {
+                'type': 'bool',
+            },
+            'exception_confirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'exception_spam_urls': {
+                'type': 'bool',
+            },
+            'exception_unconfirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'exception_open_http_proxies': {
+                'type': 'bool',
+            },
+            'exception_dynamic_comment': {
+                'type': 'bool',
+            },
+            'exception_parked_domains': {
+                'type': 'bool',
+            },
+            'exception_alcohol_and_tobacco': {
+                'type': 'bool',
+            },
+            'exception_private_ip_addresses': {
+                'type': 'bool',
+            },
+            'exception_image_and_video_search': {
+                'type': 'bool',
+            },
+            'exception_fashion_and_beauty': {
+                'type': 'bool',
+            },
+            'exception_recreation_and_hobbies': {
+                'type': 'bool',
+            },
+            'exception_motor_vehicles': {
+                'type': 'bool',
+            },
+            'exception_web_hosting_sites': {
+                'type': 'bool',
+            },
+            'exception_food_and_dining': {
+                'type': 'bool',
+            },
+            'exception_nudity_artistic': {
+                'type': 'bool',
+            },
+            'exception_illegal_pornography': {
+                'type': 'bool',
             }
         },
         'require_web_category': {
@@ -3046,36 +3819,6 @@ def get_argspec():
         'forward_proxy_require_sni_cert_matched': {
             'type': 'str',
             'choices': ['no-match-action-inspect', 'no-match-action-drop']
-        },
-        'key': {
-            'type': 'str',
-        },
-        'key_passphrase': {
-            'type': 'str',
-        },
-        'key_encrypted': {
-            'type': 'str',
-        },
-        'key_shared_str': {
-            'type': 'str',
-        },
-        'key_shared_passphrase': {
-            'type': 'str',
-        },
-        'key_shared_encrypted': {
-            'type': 'str',
-        },
-        'key_alternate': {
-            'type': 'str',
-        },
-        'key_alt_passphrase': {
-            'type': 'str',
-        },
-        'key_alt_encrypted': {
-            'type': 'str',
-        },
-        'key_alt_partition_shared': {
-            'type': 'bool',
         },
         'template_cipher': {
             'type': 'str',
@@ -3184,6 +3927,18 @@ def get_argspec():
         'sni_enable_log': {
             'type': 'bool',
         },
+        'sni_bypass_missing_cert': {
+            'type': 'bool',
+        },
+        'sni_bypass_expired_cert': {
+            'type': 'bool',
+        },
+        'sni_bypass_explicit_list': {
+            'type': 'str',
+        },
+        'sni_bypass_enable_log': {
+            'type': 'bool',
+        },
         'direct_client_server_auth': {
             'type': 'bool',
         },
@@ -3192,6 +3947,9 @@ def get_argspec():
         },
         'session_cache_timeout': {
             'type': 'int',
+        },
+        'session_ticket_disable': {
+            'type': 'bool',
         },
         'session_ticket_lifetime': {
             'type': 'int',
@@ -3247,51 +4005,41 @@ def get_argspec():
         'enable_ssli_ftp_alg': {
             'type': 'int',
         },
+        'early_data': {
+            'type': 'bool',
+        },
+        'no_anti_replay': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
         },
-        'sampling_enable': {
+        'certificate_list': {
             'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'real-estate', 'computer-and-internet-security',
-                    'financial-services', 'business-and-economy',
-                    'computer-and-internet-info', 'auctions', 'shopping',
-                    'cult-and-occult', 'travel', 'drugs',
-                    'adult-and-pornography', 'home-and-garden', 'military',
-                    'social-network', 'dead-sites', 'stock-advice-and-tools',
-                    'training-and-tools', 'dating', 'sex-education',
-                    'religion', 'entertainment-and-arts',
-                    'personal-sites-and-blogs', 'legal', 'local-information',
-                    'streaming-media', 'job-search', 'gambling', 'translation',
-                    'reference-and-research', 'shareware-and-freeware',
-                    'peer-to-peer', 'marijuana', 'hacking', 'games',
-                    'philosophy-and-politics', 'weapons', 'pay-to-surf',
-                    'hunting-and-fishing', 'society',
-                    'educational-institutions', 'online-greeting-cards',
-                    'sports', 'swimsuits-and-intimate-apparel', 'questionable',
-                    'kids', 'hate-and-racism', 'personal-storage', 'violence',
-                    'keyloggers-and-monitoring', 'search-engines',
-                    'internet-portals', 'web-advertisements', 'cheating',
-                    'gross', 'web-based-email', 'malware-sites',
-                    'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers',
-                    'spyware-and-adware', 'music', 'government', 'nudity',
-                    'news-and-media', 'illegal', 'CDNs',
-                    'internet-communications', 'bot-nets', 'abortion',
-                    'health-and-medicine', 'confirmed-SPAM-sources',
-                    'SPAM-URLs', 'unconfirmed-SPAM-sources',
-                    'open-HTTP-proxies', 'dynamic-comment', 'parked-domains',
-                    'alcohol-and-tobacco', 'private-IP-addresses',
-                    'image-and-video-search', 'fashion-and-beauty',
-                    'recreation-and-hobbies', 'motor-vehicles',
-                    'web-hosting-sites', 'food-and-dining', 'uncategorised',
-                    'other-category'
-                ]
+            'cert': {
+                'type': 'str',
+                'required': True,
+            },
+            'key': {
+                'type': 'str',
+            },
+            'passphrase': {
+                'type': 'str',
+            },
+            'key_encrypted': {
+                'type': 'str',
+            },
+            'chain_cert': {
+                'type': 'str',
+            },
+            'shared': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
             }
         },
         'oper': {
@@ -3570,10 +4318,31 @@ def get_argspec():
             'food_and_dining': {
                 'type': 'str',
             },
+            'nudity_artistic': {
+                'type': 'str',
+            },
+            'illegal_pornography': {
+                'type': 'str',
+            },
             'uncategorised': {
                 'type': 'str',
             },
             'other_category': {
+                'type': 'str',
+            },
+            'trustworthy': {
+                'type': 'str',
+            },
+            'low_risk': {
+                'type': 'str',
+            },
+            'moderate_risk': {
+                'type': 'str',
+            },
+            'suspicious': {
+                'type': 'str',
+            },
+            'malicious': {
                 'type': 'str',
             },
             'name': {

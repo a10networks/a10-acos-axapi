@@ -187,6 +187,9 @@ def get_argspec():
                 'is_part_default_vlan': {
                     'type': 'str',
                 },
+                'span_tree': {
+                    'type': 'str',
+                },
                 'rate_pkt_sent': {
                     'type': 'int',
                 },

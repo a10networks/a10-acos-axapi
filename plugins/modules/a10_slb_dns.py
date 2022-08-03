@@ -69,14 +69,28 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'slb_req'= No. of requests; 'slb_resp'= No. of responses;
-          'slb_no_resp'= No. of resource failures; 'slb_req_rexmit'= No. of request
-          retransmits; 'slb_resp_no_match'= No. of requests with no response;
-          'slb_no_resource'= No. of resource failures; 'nat_req'= (NAT) No. of requests;
-          'nat_resp'= (NAT) No. of responses; 'nat_no_resp'= (NAT) No. of resource
-          failures; 'nat_req_rexmit'= (NAT) No. of request retransmits;
+          'slb_no_resp'= No. of requests with no response; 'slb_req_rexmit'= No. of
+          requests retransmit; 'slb_resp_no_match'= No. of requests and responses with no
+          match; 'slb_no_resource'= No. of resource failures; 'nat_req'= (NAT) No. of
+          requests; 'nat_resp'= (NAT) No. of responses; 'nat_no_resp'= (NAT) No. of
+          resource failures; 'nat_req_rexmit'= (NAT) No. of request retransmits;
           'nat_resp_no_match'= (NAT) No. of requests with no response; 'nat_no_resource'=
           (NAT) No. of resource failures; 'nat_xid_reused'= (NAT) No. of requests reusing
-          a transaction id;"
+          a transaction id; 'filter_type_drop'= Total Query Type Drop;
+          'filter_class_drop'= Total Query Class Drop; 'filter_type_any_drop'= Total
+          Query ANY Type Drop; 'slb_dns_client_ssl_succ'= No. of client ssl success;
+          'slb_dns_server_ssl_succ'= No. of server ssl success; 'slb_dns_udp_conn'= No.
+          of backend udp connections; 'slb_dns_udp_conn_succ'= No. of backend udp conn
+          established; 'slb_dns_padding_to_server_removed'= some help string;
+          'slb_dns_padding_to_client_added'= some help string;
+          'slb_dns_edns_subnet_to_server_removed'= some help string;
+          'slb_dns_udp_retransmit'= some help string; 'slb_dns_udp_retransmit_fail'= some
+          help string; 'rpz_action_drop'= RPZ Action Drop; 'rpz_action_pass_thru'= RPZ
+          Action Pass Through; 'rpz_action_tcp_only'= RPZ Action TCP Only;
+          'rpz_action_nxdomain'= RPZ Action NXDOMAIN; 'rpz_action_nodata'= RPZ Action
+          NODATA; 'rpz_action_local_data'= RPZ Action Local Data; 'slb_drop'= DNS
+          requests drop; 'nat_slb_drop'= (NAT)DNS requests drop; 'invalid_q_len_to_udp'=
+          invalid query length to conver to UDP;"
                 type: str
     stats:
         description:
@@ -94,15 +108,15 @@ options:
                 type: str
             slb_no_resp:
                 description:
-                - "No. of resource failures"
+                - "No. of requests with no response"
                 type: str
             slb_req_rexmit:
                 description:
-                - "No. of request retransmits"
+                - "No. of requests retransmit"
                 type: str
             slb_resp_no_match:
                 description:
-                - "No. of requests with no response"
+                - "No. of requests and responses with no match"
                 type: str
             slb_no_resource:
                 description:
@@ -135,6 +149,90 @@ options:
             nat_xid_reused:
                 description:
                 - "(NAT) No. of requests reusing a transaction id"
+                type: str
+            filter_type_drop:
+                description:
+                - "Total Query Type Drop"
+                type: str
+            filter_class_drop:
+                description:
+                - "Total Query Class Drop"
+                type: str
+            filter_type_any_drop:
+                description:
+                - "Total Query ANY Type Drop"
+                type: str
+            slb_dns_client_ssl_succ:
+                description:
+                - "No. of client ssl success"
+                type: str
+            slb_dns_server_ssl_succ:
+                description:
+                - "No. of server ssl success"
+                type: str
+            slb_dns_udp_conn:
+                description:
+                - "No. of backend udp connections"
+                type: str
+            slb_dns_udp_conn_succ:
+                description:
+                - "No. of backend udp conn established"
+                type: str
+            slb_dns_padding_to_server_removed:
+                description:
+                - "some help string"
+                type: str
+            slb_dns_padding_to_client_added:
+                description:
+                - "some help string"
+                type: str
+            slb_dns_edns_subnet_to_server_removed:
+                description:
+                - "some help string"
+                type: str
+            slb_dns_udp_retransmit:
+                description:
+                - "some help string"
+                type: str
+            slb_dns_udp_retransmit_fail:
+                description:
+                - "some help string"
+                type: str
+            rpz_action_drop:
+                description:
+                - "RPZ Action Drop"
+                type: str
+            rpz_action_pass_thru:
+                description:
+                - "RPZ Action Pass Through"
+                type: str
+            rpz_action_tcp_only:
+                description:
+                - "RPZ Action TCP Only"
+                type: str
+            rpz_action_nxdomain:
+                description:
+                - "RPZ Action NXDOMAIN"
+                type: str
+            rpz_action_nodata:
+                description:
+                - "RPZ Action NODATA"
+                type: str
+            rpz_action_local_data:
+                description:
+                - "RPZ Action Local Data"
+                type: str
+            slb_drop:
+                description:
+                - "DNS requests drop"
+                type: str
+            nat_slb_drop:
+                description:
+                - "(NAT)DNS requests drop"
+                type: str
+            invalid_q_len_to_udp:
+                description:
+                - "invalid query length to conver to UDP"
                 type: str
 
 '''
@@ -234,7 +332,19 @@ def get_argspec():
                     'all', 'slb_req', 'slb_resp', 'slb_no_resp',
                     'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource',
                     'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit',
-                    'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused'
+                    'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused',
+                    'filter_type_drop', 'filter_class_drop',
+                    'filter_type_any_drop', 'slb_dns_client_ssl_succ',
+                    'slb_dns_server_ssl_succ', 'slb_dns_udp_conn',
+                    'slb_dns_udp_conn_succ',
+                    'slb_dns_padding_to_server_removed',
+                    'slb_dns_padding_to_client_added',
+                    'slb_dns_edns_subnet_to_server_removed',
+                    'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail',
+                    'rpz_action_drop', 'rpz_action_pass_thru',
+                    'rpz_action_tcp_only', 'rpz_action_nxdomain',
+                    'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop',
+                    'nat_slb_drop', 'invalid_q_len_to_udp'
                 ]
             }
         },
@@ -277,6 +387,69 @@ def get_argspec():
                 'type': 'str',
             },
             'nat_xid_reused': {
+                'type': 'str',
+            },
+            'filter_type_drop': {
+                'type': 'str',
+            },
+            'filter_class_drop': {
+                'type': 'str',
+            },
+            'filter_type_any_drop': {
+                'type': 'str',
+            },
+            'slb_dns_client_ssl_succ': {
+                'type': 'str',
+            },
+            'slb_dns_server_ssl_succ': {
+                'type': 'str',
+            },
+            'slb_dns_udp_conn': {
+                'type': 'str',
+            },
+            'slb_dns_udp_conn_succ': {
+                'type': 'str',
+            },
+            'slb_dns_padding_to_server_removed': {
+                'type': 'str',
+            },
+            'slb_dns_padding_to_client_added': {
+                'type': 'str',
+            },
+            'slb_dns_edns_subnet_to_server_removed': {
+                'type': 'str',
+            },
+            'slb_dns_udp_retransmit': {
+                'type': 'str',
+            },
+            'slb_dns_udp_retransmit_fail': {
+                'type': 'str',
+            },
+            'rpz_action_drop': {
+                'type': 'str',
+            },
+            'rpz_action_pass_thru': {
+                'type': 'str',
+            },
+            'rpz_action_tcp_only': {
+                'type': 'str',
+            },
+            'rpz_action_nxdomain': {
+                'type': 'str',
+            },
+            'rpz_action_nodata': {
+                'type': 'str',
+            },
+            'rpz_action_local_data': {
+                'type': 'str',
+            },
+            'slb_drop': {
+                'type': 'str',
+            },
+            'nat_slb_drop': {
+                'type': 'str',
+            },
+            'invalid_q_len_to_udp': {
                 'type': 'str',
             }
         }

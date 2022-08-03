@@ -82,6 +82,10 @@ options:
                 description:
                 - "Field hw_recovery_timeout"
                 type: str
+            dataplane_recovery_timeout:
+                description:
+                - "Field dataplane_recovery_timeout"
+                type: str
             fpga_mon_enable:
                 description:
                 - "Field fpga_mon_enable"
@@ -202,6 +206,9 @@ def get_argspec():
                 'type': 'str',
             },
             'hw_recovery_timeout': {
+                'type': 'str',
+            },
+            'dataplane_recovery_timeout': {
                 'type': 'str',
             },
             'fpga_mon_enable': {

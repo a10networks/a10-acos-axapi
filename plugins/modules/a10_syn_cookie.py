@@ -62,12 +62,13 @@ options:
         required: False
     on_threshold:
         description:
-        - "on-threshold for Syn-cookie (Decimal number)"
+        - "on-threshold for Syn-cookie. (default 0) (Decimal number, 0 for turning on Syn-
+          cookie without threshold)"
         type: int
         required: False
     off_threshold:
         description:
-        - "off-threshold for Syn-cookie (Decimal number)"
+        - "off-threshold for Syn-cookie. (default 0) (Decimal number)"
         type: int
         required: False
     uuid:

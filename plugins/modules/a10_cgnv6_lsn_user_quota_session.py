@@ -118,6 +118,10 @@ options:
                 description:
                 - "Field top_by_all_usage"
                 type: bool
+            top_sort_by_cli:
+                description:
+                - "Field top_sort_by_cli"
+                type: bool
             nat_addr:
                 description:
                 - "Field nat_addr"
@@ -276,6 +280,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'top_by_all_usage': {
+                'type': 'bool',
+            },
+            'top_sort_by_cli': {
                 'type': 'bool',
             },
             'nat_addr': {

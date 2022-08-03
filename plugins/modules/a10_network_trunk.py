@@ -177,7 +177,7 @@ def get_argspec():
                 },
                 'trunk_type': {
                     'type': 'str',
-                    'choices': ['Dynamic-LACP', 'Static']
+                    'choices': ['Dynamic (LACP)', 'Static']
                 },
                 'admin_key': {
                     'type': 'int',

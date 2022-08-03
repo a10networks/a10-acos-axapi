@@ -351,6 +351,132 @@ def get_argspec():
                         'type': 'int',
                     }
                 },
+                'virtual_port_cfg': {
+                    'type': 'dict',
+                    'virtual_port_max': {
+                        'type': 'int',
+                    },
+                    'virtual_port_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'cache_template_cfg': {
+                    'type': 'dict',
+                    'cache_template_max': {
+                        'type': 'int',
+                    },
+                    'cache_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'client_ssl_template_cfg': {
+                    'type': 'dict',
+                    'client_ssl_template_max': {
+                        'type': 'int',
+                    },
+                    'client_ssl_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'conn_reuse_template_cfg': {
+                    'type': 'dict',
+                    'conn_reuse_template_max': {
+                        'type': 'int',
+                    },
+                    'conn_reuse_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'fast_tcp_template_cfg': {
+                    'type': 'dict',
+                    'fast_tcp_template_max': {
+                        'type': 'int',
+                    },
+                    'fast_tcp_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'fast_udp_template_cfg': {
+                    'type': 'dict',
+                    'fast_udp_template_max': {
+                        'type': 'int',
+                    },
+                    'fast_udp_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'fix_template_cfg': {
+                    'type': 'dict',
+                    'fix_template_max': {
+                        'type': 'int',
+                    },
+                    'fix_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'http_template_cfg': {
+                    'type': 'dict',
+                    'http_template_max': {
+                        'type': 'int',
+                    },
+                    'http_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'link_cost_template_cfg': {
+                    'type': 'dict',
+                    'link_cost_template_max': {
+                        'type': 'int',
+                    },
+                    'link_cost_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'persist_cookie_template_cfg': {
+                    'type': 'dict',
+                    'persist_cookie_template_max': {
+                        'type': 'int',
+                    },
+                    'persist_cookie_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'persist_srcip_template_cfg': {
+                    'type': 'dict',
+                    'persist_srcip_template_max': {
+                        'type': 'int',
+                    },
+                    'persist_srcip_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'server_ssl_template_cfg': {
+                    'type': 'dict',
+                    'server_ssl_template_max': {
+                        'type': 'int',
+                    },
+                    'server_ssl_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'proxy_template_cfg': {
+                    'type': 'dict',
+                    'proxy_template_max': {
+                        'type': 'int',
+                    },
+                    'proxy_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'stream_template_cfg': {
+                    'type': 'dict',
+                    'stream_template_max': {
+                        'type': 'int',
+                    },
+                    'stream_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
                 'threshold': {
                     'type': 'int',
                 },

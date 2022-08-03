@@ -204,6 +204,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -547,6 +551,9 @@ def get_argspec():
                         'pw_change_success', 'pw_change_failure'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'oper': {

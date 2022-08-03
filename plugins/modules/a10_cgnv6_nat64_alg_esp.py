@@ -57,7 +57,8 @@ options:
         required: False
     esp_enable:
         description:
-        - "'enable'= Enable NAT64 ESP ALG;"
+        - "'enable'= Enable NAT64 ESP ALG; 'enable-with-ctrl'= Enable ESP NAT64 ALG with
+          control session;"
         type: str
         required: False
     uuid:
@@ -65,6 +66,31 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'session-created'= ESP Sessions Created; 'nat-ip-conflict'= NAT IP
+          Conflict;"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            session_created:
+                description:
+                - "ESP Sessions Created"
+                type: str
+            nat_ip_conflict:
+                description:
+                - "NAT IP Conflict"
+                type: str
 
 '''
 
@@ -121,6 +147,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "esp_enable",
+    "sampling_enable",
+    "stats",
     "uuid",
 ]
 
@@ -152,10 +180,26 @@ def get_argspec():
     rv.update({
         'esp_enable': {
             'type': 'str',
-            'choices': ['enable']
+            'choices': ['enable', 'enable-with-ctrl']
         },
         'uuid': {
             'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'session-created', 'nat-ip-conflict']
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'session_created': {
+                'type': 'str',
+            },
+            'nat_ip_conflict': {
+                'type': 'str',
+            }
         }
     })
     return rv
@@ -331,6 +375,14 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info[
                     "esp-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "stats":
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
+                                                       params=module.params)
+                result["axapi_calls"].append(get_type_result)
+                info = get_type_result["response_body"]
+                result["acos_info"] = info["esp"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

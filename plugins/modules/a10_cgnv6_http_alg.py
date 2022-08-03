@@ -132,6 +132,26 @@ options:
                 description:
                 - "Query Response Dropped"
                 type: str
+            out_of_memory_dropped:
+                description:
+                - "Out-of-Memory Dropped"
+                type: str
+            queue_len_exceed_dropped:
+                description:
+                - "Queue Length Exceed Dropped"
+                type: str
+            out_of_order_dropped:
+                description:
+                - "Packet Out-of-Order Dropped"
+                type: str
+            header_insertion_failed:
+                description:
+                - "Buff Insertion Failed"
+                type: str
+            header_removal_failed:
+                description:
+                - "Buff Removal Failed"
+                type: str
 
 '''
 
@@ -275,6 +295,21 @@ def get_argspec():
                 'type': 'str',
             },
             'radius_response_dropped': {
+                'type': 'str',
+            },
+            'out_of_memory_dropped': {
+                'type': 'str',
+            },
+            'queue_len_exceed_dropped': {
+                'type': 'str',
+            },
+            'out_of_order_dropped': {
+                'type': 'str',
+            },
+            'header_insertion_failed': {
+                'type': 'str',
+            },
+            'header_removal_failed': {
                 'type': 'str',
             }
         }

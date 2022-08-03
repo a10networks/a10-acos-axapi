@@ -75,6 +75,16 @@ options:
         - "Customized tag"
         type: str
         required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'Failed'= some-help-string;"
+                type: str
     member_list:
         description:
         - "Field member_list"
@@ -88,6 +98,20 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            Failed:
+                description:
+                - "some-help-string"
+                type: str
+            pool_group_name:
+                description:
+                - "Specify pool group name"
                 type: str
 
 '''
@@ -146,6 +170,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "member_list",
     "pool_group_name",
+    "sampling_enable",
+    "stats",
     "user_tag",
     "uuid",
     "vrid",
@@ -190,6 +216,13 @@ def get_argspec():
         'user_tag': {
             'type': 'str',
         },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'Failed']
+            }
+        },
         'member_list': {
             'type': 'list',
             'pool_name': {
@@ -198,6 +231,16 @@ def get_argspec():
             },
             'uuid': {
                 'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'Failed': {
+                'type': 'str',
+            },
+            'pool_group_name': {
+                'type': 'str',
+                'required': True,
             }
         }
     })
@@ -377,6 +420,14 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info[
                     "pool-group-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "stats":
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
+                                                       params=module.params)
+                result["axapi_calls"].append(get_type_result)
+                info = get_type_result["response_body"]
+                result["acos_info"] = info["pool-group"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

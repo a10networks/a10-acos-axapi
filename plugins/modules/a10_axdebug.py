@@ -179,6 +179,10 @@ options:
                 description:
                 - "Only for current-slot of chassis"
                 type: bool
+            no_stop:
+                description:
+                - "Non-stop execution"
+                type: bool
     filter_config_list:
         description:
         - "Field filter_config_list"
@@ -545,6 +549,9 @@ def get_argspec():
                 'type': 'str',
             },
             'current_slot': {
+                'type': 'bool',
+            },
+            'no_stop': {
                 'type': 'bool',
             }
         },

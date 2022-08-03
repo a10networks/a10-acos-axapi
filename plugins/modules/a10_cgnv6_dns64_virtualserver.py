@@ -567,6 +567,15 @@ def get_argspec():
                         'choices':
                         ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
                     },
+                    'real_curr_conn': {
+                        'type': 'int',
+                    },
+                    'int_curr_conn': {
+                        'type': 'int',
+                    },
+                    'curr_conn_overflow': {
+                        'type': 'int',
+                    },
                     'loc_list': {
                         'type': 'str',
                     },
@@ -904,6 +913,111 @@ def get_argspec():
                         },
                         'header_length_long': {
                             'type': 'int',
+                        },
+                        'req_get': {
+                            'type': 'int',
+                        },
+                        'req_head': {
+                            'type': 'int',
+                        },
+                        'req_put': {
+                            'type': 'int',
+                        },
+                        'req_post': {
+                            'type': 'int',
+                        },
+                        'req_trace': {
+                            'type': 'int',
+                        },
+                        'req_options': {
+                            'type': 'int',
+                        },
+                        'req_connect': {
+                            'type': 'int',
+                        },
+                        'req_delete': {
+                            'type': 'int',
+                        },
+                        'req_unknown': {
+                            'type': 'int',
+                        },
+                        'req_track': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_1k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_2k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_4k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_8k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_16k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_32k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_64k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_256k': {
+                            'type': 'int',
+                        },
+                        'rsp_sz_gt_256k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_512': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_1k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_2k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_4k': {
+                            'type': 'int',
+                        },
+                        'chunk_sz_gt_4k': {
+                            'type': 'int',
+                        },
+                        'req_sz_1k': {
+                            'type': 'int',
+                        },
+                        'req_sz_2k': {
+                            'type': 'int',
+                        },
+                        'req_sz_4k': {
+                            'type': 'int',
+                        },
+                        'req_sz_8k': {
+                            'type': 'int',
+                        },
+                        'req_sz_16k': {
+                            'type': 'int',
+                        },
+                        'req_sz_32k': {
+                            'type': 'int',
+                        },
+                        'req_sz_64k': {
+                            'type': 'int',
+                        },
+                        'req_sz_256k': {
+                            'type': 'int',
+                        },
+                        'req_sz_gt_256k': {
+                            'type': 'int',
+                        },
+                        'req_content_len': {
+                            'type': 'int',
+                        },
+                        'rsp_chunk': {
+                            'type': 'int',
                         }
                     },
                     'cpu_count': {
@@ -918,8 +1032,8 @@ def get_argspec():
                     'http_vport': {
                         'type': 'bool',
                     },
-                    'real_curr_conn': {
-                        'type': 'int',
+                    'clear_curr_conn': {
+                        'type': 'bool',
                     }
                 }
             }

@@ -65,10 +65,11 @@ options:
         - "SAML metadata local file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "SAML metadata file size in byte"
-        type: int
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
+          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
         required: False
     file_handle:
         description:
@@ -79,12 +80,6 @@ options:
         description:
         - "Verify metadata's XML signature"
         type: bool
-        required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
-        type: str
         required: False
     dst_file:
         description:
@@ -166,7 +161,6 @@ AVAILABLE_PROPERTIES = [
     "file",
     "file_handle",
     "oper",
-    "size",
     "uuid",
     "verify_xml_signature",
 ]
@@ -203,15 +197,6 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
-        'file_handle': {
-            'type': 'str',
-        },
-        'verify_xml_signature': {
-            'type': 'bool',
-        },
         'action': {
             'type':
             'str',
@@ -219,6 +204,12 @@ def get_argspec():
                 'create', 'import', 'export', 'copy', 'rename', 'check',
                 'replace', 'delete'
             ]
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'verify_xml_signature': {
+            'type': 'bool',
         },
         'dst_file': {
             'type': 'str',

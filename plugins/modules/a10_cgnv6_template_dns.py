@@ -149,6 +149,10 @@ options:
                 description:
                 - "Disable Always try DNS Compression"
                 type: bool
+            deep_check_qr:
+                description:
+                - "Check DNS Question Record"
+                type: bool
             deep_check_rr_disable:
                 description:
                 - "Disable Check DNS Response Records"
@@ -156,6 +160,14 @@ options:
             drop_cname_disable:
                 description:
                 - "Disable Drop DNS CNAME Response"
+                type: bool
+            edns_append:
+                description:
+                - "Append EDNS Record when send A Query to server"
+                type: bool
+            fast_append:
+                description:
+                - "Append translated Records when original Response only has Answer Section"
                 type: bool
             ignore_rcode3_disable:
                 description:
@@ -402,10 +414,19 @@ def get_argspec():
             'compress_disable': {
                 'type': 'bool',
             },
+            'deep_check_qr': {
+                'type': 'bool',
+            },
             'deep_check_rr_disable': {
                 'type': 'bool',
             },
             'drop_cname_disable': {
+                'type': 'bool',
+            },
+            'edns_append': {
+                'type': 'bool',
+            },
+            'fast_append': {
                 'type': 'bool',
             },
             'ignore_rcode3_disable': {

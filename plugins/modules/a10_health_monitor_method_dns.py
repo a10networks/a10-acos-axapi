@@ -96,6 +96,10 @@ options:
                 - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
           [0,15]))"
                 type: str
+            dns_ipv4_fqdn:
+                description:
+                - "Specify fully qualified domain name expected in DNS response answer"
+                type: str
     dns_ipv4_recurse:
         description:
         - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
@@ -122,6 +126,10 @@ options:
                 - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
           [0,15]))"
                 type: str
+            dns_ipv6_fqdn:
+                description:
+                - "Specify fully qualified domain name expected in DNS response answer"
+                type: str
     dns_ipv6_recurse:
         description:
         - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
@@ -142,6 +150,13 @@ options:
         - "Specify DNS port, default is 53 (DNS Port(default 53))"
         type: int
         required: False
+    dns_domain_type:
+        description:
+        - "'A'= Used for storing Ipv4 address (default); 'CNAME'= Canonical name for a DNS
+          alias; 'SOA'= Start of authority; 'PTR'= Domain name pointer; 'MX'= Mail
+          exchanger; 'TXT'= Text string; 'AAAA'= Used for storing Ipv6 128-bits address;"
+        type: str
+        required: False
     dns_domain_expect:
         description:
         - "Field dns_domain_expect"
@@ -153,6 +168,18 @@ options:
                 - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
           [0,15]))"
                 type: str
+            dns_domain_fqdn:
+                description:
+                - "Specify fully qualified domain name expected in DNS response answer"
+                type: str
+            dns_domain_ipv4:
+                description:
+                - "Specify expected resolved IPv4 address"
+                type: str
+            dns_domain_ipv6:
+                description:
+                - "Specify expected resolved IPv6 address"
+                type: str
     dns_domain_recurse:
         description:
         - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
@@ -162,13 +189,6 @@ options:
         description:
         - "Configure DNS transport over TCP, default is UDP"
         type: bool
-        required: False
-    dns_domain_type:
-        description:
-        - "'A'= Used for storing Ipv4 address (default); 'CNAME'= Canonical name for a DNS
-          alias; 'SOA'= Start of authority; 'PTR'= Domain name pointer; 'MX'= Mail
-          exchanger; 'TXT'= Text string; 'AAAA'= Used for storing Ipv6 128-bits address;"
-        type: str
         required: False
     uuid:
         description:
@@ -296,6 +316,9 @@ def get_argspec():
             'type': 'dict',
             'dns_ipv4_response': {
                 'type': 'str',
+            },
+            'dns_ipv4_fqdn': {
+                'type': 'str',
             }
         },
         'dns_ipv4_recurse': {
@@ -312,6 +335,9 @@ def get_argspec():
             'type': 'dict',
             'dns_ipv6_response': {
                 'type': 'str',
+            },
+            'dns_ipv6_fqdn': {
+                'type': 'str',
             }
         },
         'dns_ipv6_recurse': {
@@ -327,9 +353,22 @@ def get_argspec():
         'dns_domain_port': {
             'type': 'int',
         },
+        'dns_domain_type': {
+            'type': 'str',
+            'choices': ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
+        },
         'dns_domain_expect': {
             'type': 'dict',
             'dns_domain_response': {
+                'type': 'str',
+            },
+            'dns_domain_fqdn': {
+                'type': 'str',
+            },
+            'dns_domain_ipv4': {
+                'type': 'str',
+            },
+            'dns_domain_ipv6': {
                 'type': 'str',
             }
         },
@@ -339,10 +378,6 @@ def get_argspec():
         },
         'dns_domain_tcp': {
             'type': 'bool',
-        },
-        'dns_domain_type': {
-            'type': 'str',
-            'choices': ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
         },
         'uuid': {
             'type': 'str',

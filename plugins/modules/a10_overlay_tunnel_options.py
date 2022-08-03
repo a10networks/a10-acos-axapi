@@ -80,6 +80,11 @@ options:
         - "MAC to be used with Gateway segment Id (MAC Address for the Gateway segment)"
         type: str
         required: False
+    fragmentation_mode_inner:
+        description:
+        - "Enable the inner-fragmentation"
+        type: bool
+        required: False
     vxlan_dest_port:
         description:
         - "VXLAN UDP Destination Port (UDP Port Number (default 4789))"
@@ -145,6 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "fragmentation_mode_inner",
     "gateway_mac",
     "ip_dscp_preserve",
     "nvgre_disable_flow_id",
@@ -194,6 +200,9 @@ def get_argspec():
         },
         'gateway_mac': {
             'type': 'str',
+        },
+        'fragmentation_mode_inner': {
+            'type': 'bool',
         },
         'vxlan_dest_port': {
             'type': 'int',

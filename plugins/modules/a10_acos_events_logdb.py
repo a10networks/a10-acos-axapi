@@ -60,11 +60,6 @@ options:
         - "Enable logging for all widgets"
         type: bool
         required: False
-    enable_file_inspection:
-        description:
-        - "Enable file-inspection logging"
-        type: bool
-        required: False
     enable_ssli:
         description:
         - "Enable SSLi logging"
@@ -75,6 +70,11 @@ options:
         - "Enable SMTP logging"
         type: bool
         required: False
+    enable_mqtt:
+        description:
+        - "Enable MQTT logging"
+        type: bool
+        required: False
     enable_fw:
         description:
         - "Enable Firewall logging"
@@ -83,6 +83,11 @@ options:
     enable_http_forward_proxy:
         description:
         - "Enable HTTP forward proxy logging"
+        type: bool
+        required: False
+    enable_link_cost:
+        description:
+        - "Enable link-cost logging"
         type: bool
         required: False
     enable_cgn:
@@ -152,9 +157,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "enable_all",
     "enable_cgn",
-    "enable_file_inspection",
     "enable_fw",
     "enable_http_forward_proxy",
+    "enable_link_cost",
+    "enable_mqtt",
     "enable_smtp",
     "enable_ssli",
     "uuid",
@@ -189,19 +195,22 @@ def get_argspec():
         'enable_all': {
             'type': 'bool',
         },
-        'enable_file_inspection': {
-            'type': 'bool',
-        },
         'enable_ssli': {
             'type': 'bool',
         },
         'enable_smtp': {
             'type': 'bool',
         },
+        'enable_mqtt': {
+            'type': 'bool',
+        },
         'enable_fw': {
             'type': 'bool',
         },
         'enable_http_forward_proxy': {
+            'type': 'bool',
+        },
+        'enable_link_cost': {
             'type': 'bool',
         },
         'enable_cgn': {

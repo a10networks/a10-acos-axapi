@@ -90,6 +90,11 @@ options:
                 description:
                 - "'all'= all; 'request'= Request; 'success'= Success; 'failure'= Failure;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -170,6 +175,7 @@ AVAILABLE_PROPERTIES = [
     "application_server",
     "authentication_uri",
     "name",
+    "packet_capture_template",
     "sampling_enable",
     "stats",
     "user_tag",
@@ -225,6 +231,9 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['all', 'request', 'success', 'failure']
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

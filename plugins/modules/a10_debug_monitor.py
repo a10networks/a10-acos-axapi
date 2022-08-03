@@ -21,6 +21,7 @@ options:
         choices:
           - noop
           - present
+          - absent
         type: str
         required: True
     ansible_host:
@@ -68,6 +69,21 @@ options:
         description:
         - "CPU id to debug (0,1,...)"
         type: int
+        required: False
+    timeout:
+        description:
+        - "timeout to stop debug monitor in minutes"
+        type: int
+        required: False
+    filesize:
+        description:
+        - "maximum file size to save debug messages (MB)"
+        type: int
+        required: False
+    no_stop:
+        description:
+        - "Donot spawn another rimacli"
+        type: bool
         required: False
     uuid:
         description:
@@ -132,6 +148,9 @@ AVAILABLE_PROPERTIES = [
     "all_slots",
     "cpuid",
     "filename",
+    "filesize",
+    "no_stop",
+    "timeout",
     "uuid",
 ]
 
@@ -141,7 +160,9 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
         a10_partition=dict(
             type='str',
@@ -167,6 +188,15 @@ def get_argspec():
         },
         'cpuid': {
             'type': 'int',
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'filesize': {
+            'type': 'int',
+        },
+        'no_stop': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
@@ -245,6 +275,28 @@ def present(module, result, existing_config):
     return result
 
 
+def delete(module, result):
+    try:
+        call_result = api_client.delete(module.client, existing_url(module))
+        result["axapi_calls"].append(call_result)
+        result["changed"] = True
+    except a10_ex.NotFound:
+        result["changed"] = False
+    return result
+
+
+def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
+    if module.check_mode:
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
+
+
 def run_command(module):
     result = dict(changed=False,
                   messages="",
@@ -303,6 +355,9 @@ def run_command(module):
 
         if state == 'present':
             result = present(module, result, existing_config)
+
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
         if state == 'noop':
             if module.params.get("get_type") == "single":

@@ -78,6 +78,18 @@ options:
                 description:
                 - "Field device_list"
                 type: list
+            cluster_mode:
+                description:
+                - "Field cluster_mode"
+                type: str
+            follow_shared_redirection:
+                description:
+                - "Field follow_shared_redirection"
+                type: int
+            follow_shared_session_sync:
+                description:
+                - "Field follow_shared_session_sync"
+                type: int
             l2redirect:
                 description:
                 - "Field l2redirect"
@@ -102,6 +114,30 @@ options:
                 description:
                 - "Field l2redirect_vlan"
                 type: int
+            advertised_redirect_ip_list:
+                description:
+                - "Field advertised_redirect_ip_list"
+                type: list
+            dest_redirect_ip_list:
+                description:
+                - "Field dest_redirect_ip_list"
+                type: list
+            active_interface_list:
+                description:
+                - "Field active_interface_list"
+                type: list
+            advertised_session_sync_ip_list:
+                description:
+                - "Field advertised_session_sync_ip_list"
+                type: list
+            dest_session_sync_ip_list:
+                description:
+                - "Field dest_session_sync_ip_list"
+                type: list
+            exclude_interface_ip_list:
+                description:
+                - "Field exclude_interface_ip_list"
+                type: list
 
 '''
 
@@ -213,6 +249,15 @@ def get_argspec():
                     'type': 'int',
                 }
             },
+            'cluster_mode': {
+                'type': 'str',
+            },
+            'follow_shared_redirection': {
+                'type': 'int',
+            },
+            'follow_shared_session_sync': {
+                'type': 'int',
+            },
             'l2redirect': {
                 'type': 'int',
             },
@@ -230,6 +275,51 @@ def get_argspec():
             },
             'l2redirect_vlan': {
                 'type': 'int',
+            },
+            'advertised_redirect_ip_list': {
+                'type': 'list',
+                'ip': {
+                    'type': 'str',
+                }
+            },
+            'dest_redirect_ip_list': {
+                'type': 'list',
+                'device_id': {
+                    'type': 'int',
+                },
+                'direction': {
+                    'type': 'str',
+                },
+                'ip': {
+                    'type': 'str',
+                }
+            },
+            'active_interface_list': {
+                'type': 'list',
+                'interface': {
+                    'type': 'str',
+                }
+            },
+            'advertised_session_sync_ip_list': {
+                'type': 'list',
+                'ip': {
+                    'type': 'str',
+                }
+            },
+            'dest_session_sync_ip_list': {
+                'type': 'list',
+                'device_id': {
+                    'type': 'int',
+                },
+                'ip': {
+                    'type': 'str',
+                }
+            },
+            'exclude_interface_ip_list': {
+                'type': 'list',
+                'ip': {
+                    'type': 'str',
+                }
             }
         }
     })

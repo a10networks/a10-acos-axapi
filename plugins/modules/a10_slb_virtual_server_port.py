@@ -71,16 +71,15 @@ options:
           IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
           'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
           'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'=
-          [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load
+          Port; 'https'= HTTPS port; 'imap'= imap proxy port; 'mlb'= Message based load
           balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
           'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
           Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
           'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
           protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
-          SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
-          Port; 'fast-fix'= Fast FIX port;"
+          'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
+          'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
+          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port;"
         type: str
         required: True
     range:
@@ -92,6 +91,11 @@ options:
         description:
         - "Alternate Virtual Port"
         type: bool
+        required: False
+    proxy_layer:
+        description:
+        - "'v1'= Force using old proxy; 'v2'= Force using new proxy;"
+        type: str
         required: False
     optimization_level:
         description:
@@ -173,6 +177,11 @@ options:
         - "'enable'= Enable; 'disable'= Disable;"
         type: str
         required: False
+    l7_service_chain:
+        description:
+        - "Field l7_service_chain"
+        type: bool
+        required: False
     def_selection_if_pref_failed:
         description:
         - "'def-selection-if-pref-failed'= Use default server selection method if prefer
@@ -203,6 +212,11 @@ options:
     force_routing_mode:
         description:
         - "Force routing mode"
+        type: bool
+        required: False
+    one_server_conn:
+        description:
+        - "Support server that allow only one connection"
         type: bool
         required: False
     rate:
@@ -261,9 +275,19 @@ options:
         - "expand syn-cookie with timestamp and wscale"
         type: bool
         required: False
-    acl_id_list:
+    showtech_print_extended_stats:
         description:
-        - "Field acl_id_list"
+        - "Enable print extended stats in showtech for dns vports"
+        type: bool
+        required: False
+    attack_detection:
+        description:
+        - "Enable analytics"
+        type: bool
+        required: False
+    acl_list:
+        description:
+        - "Field acl_list"
         type: list
         required: False
         suboptions:
@@ -271,6 +295,18 @@ options:
                 description:
                 - "ACL id VPORT"
                 type: int
+            acl_name:
+                description:
+                - "Apply an access list name (Named Access List)"
+                type: str
+            acl_id_shared:
+                description:
+                - "acl id"
+                type: int
+            acl_name_shared:
+                description:
+                - "Apply an access list name (Named Access List)"
+                type: str
             acl_id_src_nat_pool:
                 description:
                 - "Policy based Source NAT (NAT Pool or Pool Group)"
@@ -290,10 +326,6 @@ options:
             acl_id_seq_num_shared:
                 description:
                 - "Specify ACL precedence (sequence-number)"
-                type: int
-            acl_id_shared:
-                description:
-                - "acl id"
                 type: int
             v_acl_id_src_nat_pool:
                 description:
@@ -315,16 +347,6 @@ options:
                 description:
                 - "Specify ACL precedence (sequence-number)"
                 type: int
-    acl_name_list:
-        description:
-        - "Field acl_name_list"
-        type: list
-        required: False
-        suboptions:
-            acl_name:
-                description:
-                - "Apply an access list name (Named Access List)"
-                type: str
             acl_name_src_nat_pool:
                 description:
                 - "Policy based Source NAT (NAT Pool or Pool Group)"
@@ -345,10 +367,6 @@ options:
                 description:
                 - "Specify ACL precedence (sequence-number)"
                 type: int
-            acl_name_shared:
-                description:
-                - "Apply an access list name (Named Access List)"
-                type: str
             v_acl_name_src_nat_pool:
                 description:
                 - "Policy based Source NAT (NAT Pool or Pool Group)"
@@ -403,6 +421,11 @@ options:
         - "Don't automatically mark vport up when aFleX is bound"
         type: bool
         required: False
+    enable_scaleout:
+        description:
+        - "Field enable_scaleout"
+        type: bool
+        required: False
     scaleout_bucket_count:
         description:
         - "Number of traffic buckets"
@@ -436,6 +459,11 @@ options:
     precedence:
         description:
         - "Set auto NAT pool as higher precedence for source NAT"
+        type: bool
+        required: False
+    ip_smart_rr:
+        description:
+        - "Use IP address round-robin behavior"
         type: bool
         required: False
     use_cgnv6:
@@ -493,6 +521,11 @@ options:
           Name)"
         type: str
         required: False
+    reselection:
+        description:
+        - "'disable'= disable;"
+        type: str
+        required: False
     eth_fwd:
         description:
         - "Ethernet interface number"
@@ -515,6 +548,16 @@ options:
         required: False
     template_sip:
         description:
+        - "SIP Template Name"
+        type: str
+        required: False
+    p_template_sip_shared:
+        description:
+        - "SIP Template Name"
+        type: bool
+        required: False
+    template_sip_shared:
+        description:
         - "SIP template"
         type: str
         required: False
@@ -523,9 +566,29 @@ options:
         - "SMPP template"
         type: str
         required: False
+    shared_partition_smpp_template:
+        description:
+        - "Reference a smpp template from shared partition"
+        type: bool
+        required: False
+    template_smpp_shared:
+        description:
+        - "SMPP Template Name"
+        type: str
+        required: False
     template_dblb:
         description:
         - "DBLB Template (DBLB template name)"
+        type: str
+        required: False
+    shared_partition_dblb_template:
+        description:
+        - "Reference a dblb template from shared partition"
+        type: bool
+        required: False
+    template_dblb_shared:
+        description:
+        - "DBLB Template Name"
         type: str
         required: False
     template_connection_reuse:
@@ -638,9 +701,34 @@ options:
         - "IMAP/POP3 Template (IMAP/POP3 Config Name)"
         type: str
         required: False
+    shared_partition_imap_pop3_template:
+        description:
+        - "Reference a IMAP/POP3 template from shared partition"
+        type: bool
+        required: False
+    template_imap_pop3_shared:
+        description:
+        - "IMAP/POP3 Template Name"
+        type: str
+        required: False
     template_smtp:
         description:
         - "SMTP Template (SMTP Config Name)"
+        type: str
+        required: False
+    shared_partition_smtp_template:
+        description:
+        - "Reference a SMTP template from shared partition"
+        type: bool
+        required: False
+    template_smtp_shared:
+        description:
+        - "SMTP Template Name"
+        type: str
+        required: False
+    template_mqtt:
+        description:
+        - "MQTT Template (MQTT Config Name)"
         type: str
         required: False
     template_http:
@@ -703,9 +791,19 @@ options:
         - "ICAP respmod service template (respmod-icap template name)"
         type: str
         required: False
-    template_file_inspection:
+    template_doh:
         description:
-        - "File Inspection service template (file-inspection template name)"
+        - "DNS over HTTP(s) Template Name"
+        type: str
+        required: False
+    shared_partition_doh_template:
+        description:
+        - "Reference a DNS over HTTP(s) template from shared partition"
+        type: bool
+        required: False
+    template_doh_shared:
+        description:
+        - "DNS over HTTP(s) Template Name"
         type: str
         required: False
     template_server_ssl:
@@ -828,9 +926,24 @@ options:
         - "Cache Template Name"
         type: str
         required: False
+    template_ram_cache:
+        description:
+        - "RAM caching template (Cache Template Name)"
+        type: str
+        required: False
     template_fix:
         description:
         - "FIX template (FIX Template Name)"
+        type: str
+        required: False
+    shared_partition_fix_template:
+        description:
+        - "Reference a FIX template from shared partition"
+        type: bool
+        required: False
+    template_fix_shared:
+        description:
+        - "FIX Template Name"
         type: str
         required: False
     waf_template:
@@ -914,6 +1027,36 @@ options:
         - "enable dynamic memory compute on virtual port"
         type: bool
         required: False
+    substitute_source_mac:
+        description:
+        - "Substitute Source MAC Address to that of the outgoing interface"
+        type: bool
+        required: False
+    ignore_global:
+        description:
+        - "Ignore global substitute-source-mac"
+        type: bool
+        required: False
+    aflex_table_entry_syn_disable:
+        description:
+        - "Disable aFlex entry sync for this port"
+        type: bool
+        required: False
+    aflex_table_entry_syn_enable:
+        description:
+        - "Enable aFlex entry sync for this port"
+        type: bool
+        required: False
+    gtp_session_lb:
+        description:
+        - "Enable GTP Session Load Balancing"
+        type: bool
+        required: False
+    reply_acme_challenge:
+        description:
+        - "Reply ACME http-01 challenge. This option only takes effect in HTTP port 80"
+        type: bool
+        required: False
     resolve_web_cat_list:
         description:
         - "Web Category List name"
@@ -967,20 +1110,48 @@ options:
           'total_rev_pkts_out'= Packets processed in reverse direction (outbound);
           'curr_req_rate'= Current request rate; 'curr_resp'= Current response;
           'total_resp'= Total response; 'total_resp_succ'= Total successful responses;
-          'curr_resp_rate'= Current response rate; 'curr_conn_overflow'= Current
-          connection counter overflow count; 'dnsrrl_total_allowed'= DNS Response-Rate-
-          Limiting Total Responses Allowed; 'dnsrrl_total_dropped'= DNS Response-Rate-
-          Limiting Total Responses Dropped; 'dnsrrl_total_slipped'= DNS Response-Rate-
-          Limiting Total Responses Slipped; 'dnsrrl_bad_fqdn'= DNS Response-Rate-Limiting
-          Bad FQDN; 'throughput-bits-per-sec'= Throughput in bits/sec; 'dynamic-memory-
-          alloc'= dynamic memory (bytes) allocated by the vport; 'dynamic-memory-free'=
-          dynamic memory (bytes) allocated by the vport; 'dynamic-memory'= dynamic memory
-          (bytes) used by the vport(alloc-free); 'ip_only_lb_fwd_bytes'= IP-Only-LB Bytes
-          processed in forward direction; 'ip_only_lb_rev_bytes'= IP-Only-LB Bytes
-          processed in reverse direction; 'ip_only_lb_fwd_pkts'= IP-Only-LB Packets
+          'curr_resp_rate'= Current response rate; 'dnsrrl_total_allowed'= DNS Response-
+          Rate-Limiting Total Responses Allowed; 'dnsrrl_total_dropped'= DNS Response-
+          Rate-Limiting Total Responses Dropped; 'dnsrrl_total_slipped'= DNS Response-
+          Rate-Limiting Total Responses Slipped; 'dnsrrl_bad_fqdn'= DNS Response-Rate-
+          Limiting Bad FQDN; 'throughput-bits-per-sec'= Throughput in bits/sec; 'dynamic-
+          memory-alloc'= dynamic memory (bytes) allocated by the vport; 'dynamic-memory-
+          free'= dynamic memory (bytes) allocated by the vport; 'dynamic-memory'= dynamic
+          memory (bytes) used by the vport(alloc-free); 'ip_only_lb_fwd_bytes'= IP-Only-
+          LB Bytes processed in forward direction; 'ip_only_lb_rev_bytes'= IP-Only-LB
+          Bytes processed in reverse direction; 'ip_only_lb_fwd_pkts'= IP-Only-LB Packets
           processed in forward direction; 'ip_only_lb_rev_pkts'= IP-Only-LB Packets
-          processed in reverse direction;"
+          processed in reverse direction; 'total_dns_filter_type_drop'= Total DNS Filter
+          Type Drop; 'total_dns_filter_class_drop'= Total DNS Filter Class Drop;
+          'dns_filter_type_a_drop'= DNS Filter Type A Drop; 'dns_filter_type_aaaa_drop'=
+          DNS Filter Type AAAA Drop; 'dns_filter_type_cname_drop'= DNS Filter Type CNAME
+          Drop; 'dns_filter_type_mx_drop'= DNS Filter Type MX Drop;
+          'dns_filter_type_ns_drop'= DNS Filter Type NS Drop; 'dns_filter_type_srv_drop'=
+          DNS Filter Type SRV Drop; 'dns_filter_type_ptr_drop'= DNS Filter Type PTR Drop;
+          'dns_filter_type_soa_drop'= DNS Filter Type SOA Drop;
+          'dns_filter_type_txt_drop'= DNS Filter Type TXT Drop;
+          'dns_filter_type_any_drop'= DNS Filter Type Any Drop;
+          'dns_filter_type_others_drop'= DNS Filter Type OTHERS Drop;
+          'dns_filter_class_internet_drop'= DNS Filter Class INTERNET Drop;
+          'dns_filter_class_chaos_drop'= DNS Filter Class CHAOS Drop;
+          'dns_filter_class_hesiod_drop'= DNS Filter Class HESIOD Drop;
+          'dns_filter_class_none_drop'= DNS Filter Class NONE Drop;
+          'dns_filter_class_any_drop'= DNS Filter Class ANY Drop;
+          'dns_filter_class_others_drop'= DNS Filter Class OTHERS Drop;
+          'dns_rpz_action_drop'= DNS RPZ Action Drop; 'dns_rpz_action_pass_thru'= DNS RPZ
+          Action Pass Through; 'dns_rpz_action_tcp_only'= DNS RPZ Action TCP Only;
+          'dns_rpz_action_nxdomain'= DNS RPZ Action NXDOMAIN; 'dns_rpz_action_nodata'=
+          DNS RPZ Action NODATA; 'dns_rpz_action_local_data'= DNS RPZ Action Local Data;
+          'dns_rpz_trigger_client_ip'= DNS RPZ Trigger Client IP;
+          'dns_rpz_trigger_resp_ip'= DNS RPZ Trigger Response IP;
+          'dns_rpz_trigger_ns_ip'= DNS RPZ Trigger NS IP; 'dns_rpz_trigger_qname'= DNS
+          RPZ Trigger Qname IP; 'dns_rpz_trigger_ns_name'= DNS RPZ Trigger NS Name;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     oper:
         description:
         - "Field oper"
@@ -991,6 +1162,18 @@ options:
                 description:
                 - "Field state"
                 type: str
+            real_curr_conn:
+                description:
+                - "Field real_curr_conn"
+                type: int
+            int_curr_conn:
+                description:
+                - "Field int_curr_conn"
+                type: int
+            curr_conn_overflow:
+                description:
+                - "Field curr_conn_overflow"
+                type: int
             loc_list:
                 description:
                 - "Field loc_list"
@@ -1051,10 +1234,10 @@ options:
                 description:
                 - "Field http_vport"
                 type: bool
-            real_curr_conn:
+            clear_curr_conn:
                 description:
-                - "Field real_curr_conn"
-                type: int
+                - "Field clear_curr_conn"
+                type: bool
             port_number:
                 description:
                 - "Port"
@@ -1065,16 +1248,15 @@ options:
           IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
           'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
           'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'=
-          [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load
+          Port; 'https'= HTTPS port; 'imap'= imap proxy port; 'mlb'= Message based load
           balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
           'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
           Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
           'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
           protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
-          SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
-          Port; 'fast-fix'= Fast FIX port;"
+          'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
+          'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
+          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port;"
                 type: str
     stats:
         description:
@@ -1258,10 +1440,6 @@ options:
                 description:
                 - "Current response rate"
                 type: str
-            curr_conn_overflow:
-                description:
-                - "Current connection counter overflow count"
-                type: str
             dnsrrl_total_allowed:
                 description:
                 - "DNS Response-Rate-Limiting Total Responses Allowed"
@@ -1302,6 +1480,126 @@ options:
                 description:
                 - "IP-Only-LB Packets processed in reverse direction"
                 type: str
+            total_dns_filter_type_drop:
+                description:
+                - "Total DNS Filter Type Drop"
+                type: str
+            total_dns_filter_class_drop:
+                description:
+                - "Total DNS Filter Class Drop"
+                type: str
+            dns_filter_type_a_drop:
+                description:
+                - "DNS Filter Type A Drop"
+                type: str
+            dns_filter_type_aaaa_drop:
+                description:
+                - "DNS Filter Type AAAA Drop"
+                type: str
+            dns_filter_type_cname_drop:
+                description:
+                - "DNS Filter Type CNAME Drop"
+                type: str
+            dns_filter_type_mx_drop:
+                description:
+                - "DNS Filter Type MX Drop"
+                type: str
+            dns_filter_type_ns_drop:
+                description:
+                - "DNS Filter Type NS Drop"
+                type: str
+            dns_filter_type_srv_drop:
+                description:
+                - "DNS Filter Type SRV Drop"
+                type: str
+            dns_filter_type_ptr_drop:
+                description:
+                - "DNS Filter Type PTR Drop"
+                type: str
+            dns_filter_type_soa_drop:
+                description:
+                - "DNS Filter Type SOA Drop"
+                type: str
+            dns_filter_type_txt_drop:
+                description:
+                - "DNS Filter Type TXT Drop"
+                type: str
+            dns_filter_type_any_drop:
+                description:
+                - "DNS Filter Type Any Drop"
+                type: str
+            dns_filter_type_others_drop:
+                description:
+                - "DNS Filter Type OTHERS Drop"
+                type: str
+            dns_filter_class_internet_drop:
+                description:
+                - "DNS Filter Class INTERNET Drop"
+                type: str
+            dns_filter_class_chaos_drop:
+                description:
+                - "DNS Filter Class CHAOS Drop"
+                type: str
+            dns_filter_class_hesiod_drop:
+                description:
+                - "DNS Filter Class HESIOD Drop"
+                type: str
+            dns_filter_class_none_drop:
+                description:
+                - "DNS Filter Class NONE Drop"
+                type: str
+            dns_filter_class_any_drop:
+                description:
+                - "DNS Filter Class ANY Drop"
+                type: str
+            dns_filter_class_others_drop:
+                description:
+                - "DNS Filter Class OTHERS Drop"
+                type: str
+            dns_rpz_action_drop:
+                description:
+                - "DNS RPZ Action Drop"
+                type: str
+            dns_rpz_action_pass_thru:
+                description:
+                - "DNS RPZ Action Pass Through"
+                type: str
+            dns_rpz_action_tcp_only:
+                description:
+                - "DNS RPZ Action TCP Only"
+                type: str
+            dns_rpz_action_nxdomain:
+                description:
+                - "DNS RPZ Action NXDOMAIN"
+                type: str
+            dns_rpz_action_nodata:
+                description:
+                - "DNS RPZ Action NODATA"
+                type: str
+            dns_rpz_action_local_data:
+                description:
+                - "DNS RPZ Action Local Data"
+                type: str
+            dns_rpz_trigger_client_ip:
+                description:
+                - "DNS RPZ Trigger Client IP"
+                type: str
+            dns_rpz_trigger_resp_ip:
+                description:
+                - "DNS RPZ Trigger Response IP"
+                type: str
+            dns_rpz_trigger_ns_ip:
+                description:
+                - "DNS RPZ Trigger NS IP"
+                type: str
+            dns_rpz_trigger_qname:
+                description:
+                - "DNS RPZ Trigger Qname IP"
+                type: str
+            dns_rpz_trigger_ns_name:
+                description:
+                - "DNS RPZ Trigger NS Name"
+                type: str
             port_number:
                 description:
                 - "Port"
@@ -1312,16 +1610,15 @@ options:
           IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
           'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
           'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'=
-          [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load
+          Port; 'https'= HTTPS port; 'imap'= imap proxy port; 'mlb'= Message based load
           balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
           'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
           Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
           'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
           protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
-          SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
-          Port; 'fast-fix'= Fast FIX port;"
+          'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
+          'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
+          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port;"
                 type: str
 
 '''
@@ -1378,14 +1675,16 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "acl_id_list",
-    "acl_name_list",
+    "acl_list",
     "action",
     "aflex_scripts",
+    "aflex_table_entry_syn_disable",
+    "aflex_table_entry_syn_enable",
     "alt_protocol1",
     "alt_protocol2",
     "alternate_port",
     "alternate_port_number",
+    "attack_detection",
     "auth_cfg",
     "auto",
     "clientip_sticky_nat",
@@ -1393,17 +1692,22 @@ AVAILABLE_PROPERTIES = [
     "cpu_compute",
     "def_selection_if_pref_failed",
     "enable_playerid_check",
+    "enable_scaleout",
     "eth_fwd",
     "eth_rev",
     "expand",
     "extended_stats",
     "force_routing_mode",
     "gslb_enable",
+    "gtp_session_lb",
     "ha_conn_mirror",
+    "ignore_global",
     "ip_map_list",
     "ip_only_lb",
+    "ip_smart_rr",
     "ipinip",
     "l7_hardware_assist",
+    "l7_service_chain",
     "memory_compute",
     "message_switching",
     "name",
@@ -1411,8 +1715,11 @@ AVAILABLE_PROPERTIES = [
     "no_dest_nat",
     "no_logging",
     "on_syn",
+    "one_server_conn",
     "oper",
     "optimization_level",
+    "p_template_sip_shared",
+    "packet_capture_template",
     "persist_type",
     "pool",
     "pool_shared",
@@ -1420,10 +1727,13 @@ AVAILABLE_PROPERTIES = [
     "port_translation",
     "precedence",
     "protocol",
+    "proxy_layer",
     "range",
     "rate",
     "redirect_to_https",
+    "reply_acme_challenge",
     "req_fail",
+    "reselection",
     "reset",
     "reset_on_server_selection_fail",
     "resolve_web_cat_list",
@@ -1438,12 +1748,16 @@ AVAILABLE_PROPERTIES = [
     "shared_partition_cache_template",
     "shared_partition_client_ssl_template",
     "shared_partition_connection_reuse_template",
+    "shared_partition_dblb_template",
     "shared_partition_diameter_template",
     "shared_partition_dns_template",
+    "shared_partition_doh_template",
     "shared_partition_dynamic_service_template",
     "shared_partition_external_service_template",
+    "shared_partition_fix_template",
     "shared_partition_http_policy_template",
     "shared_partition_http_template",
+    "shared_partition_imap_pop3_template",
     "shared_partition_persist_cookie_template",
     "shared_partition_persist_destination_ip_template",
     "shared_partition_persist_source_ip_template",
@@ -1451,14 +1765,18 @@ AVAILABLE_PROPERTIES = [
     "shared_partition_policy_template",
     "shared_partition_pool",
     "shared_partition_server_ssl_template",
+    "shared_partition_smpp_template",
+    "shared_partition_smtp_template",
     "shared_partition_tcp",
     "shared_partition_tcp_proxy_template",
     "shared_partition_udp",
     "shared_partition_virtual_port_template",
+    "showtech_print_extended_stats",
     "skip_rev_hash",
     "snat_on_vip",
     "stats",
     "stats_data_action",
+    "substitute_source_mac",
     "support_http2",
     "syn_cookie",
     "template_cache",
@@ -1469,22 +1787,27 @@ AVAILABLE_PROPERTIES = [
     "template_connection_reuse",
     "template_connection_reuse_shared",
     "template_dblb",
+    "template_dblb_shared",
     "template_diameter",
     "template_diameter_shared",
     "template_dns",
     "template_dns_shared",
+    "template_doh",
+    "template_doh_shared",
     "template_dynamic_service",
     "template_dynamic_service_shared",
     "template_external_service",
     "template_external_service_shared",
-    "template_file_inspection",
     "template_fix",
+    "template_fix_shared",
     "template_ftp",
     "template_http",
     "template_http_policy",
     "template_http_policy_shared",
     "template_http_shared",
     "template_imap_pop3",
+    "template_imap_pop3_shared",
+    "template_mqtt",
     "template_persist_cookie",
     "template_persist_cookie_shared",
     "template_persist_destination_ip",
@@ -1495,6 +1818,7 @@ AVAILABLE_PROPERTIES = [
     "template_persist_ssl_sid_shared",
     "template_policy",
     "template_policy_shared",
+    "template_ram_cache",
     "template_reqmod_icap",
     "template_respmod_icap",
     "template_scaleout",
@@ -1502,8 +1826,11 @@ AVAILABLE_PROPERTIES = [
     "template_server_ssl",
     "template_server_ssl_shared",
     "template_sip",
+    "template_sip_shared",
     "template_smpp",
+    "template_smpp_shared",
     "template_smtp",
+    "template_smtp_shared",
     "template_ssli",
     "template_tcp",
     "template_tcp_proxy",
@@ -1568,9 +1895,9 @@ def get_argspec():
             'choices': [
                 'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
                 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp',
-                'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'ssh',
+                'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius',
+                'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys',
+                'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh',
                 'tcp-proxy', 'tftp', 'fast-fix'
             ]
         },
@@ -1579,6 +1906,10 @@ def get_argspec():
         },
         'alternate_port': {
             'type': 'bool',
+        },
+        'proxy_layer': {
+            'type': 'str',
+            'choices': ['v1', 'v2']
         },
         'optimization_level': {
             'type': 'str',
@@ -1632,6 +1963,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable', 'disable']
         },
+        'l7_service_chain': {
+            'type': 'bool',
+        },
         'def_selection_if_pref_failed': {
             'type':
             'str',
@@ -1653,6 +1987,9 @@ def get_argspec():
             'type': 'bool',
         },
         'force_routing_mode': {
+            'type': 'bool',
+        },
+        'one_server_conn': {
             'type': 'bool',
         },
         'rate': {
@@ -1689,10 +2026,25 @@ def get_argspec():
         'expand': {
             'type': 'bool',
         },
-        'acl_id_list': {
+        'showtech_print_extended_stats': {
+            'type': 'bool',
+        },
+        'attack_detection': {
+            'type': 'bool',
+        },
+        'acl_list': {
             'type': 'list',
             'acl_id': {
                 'type': 'int',
+            },
+            'acl_name': {
+                'type': 'str',
+            },
+            'acl_id_shared': {
+                'type': 'int',
+            },
+            'acl_name_shared': {
+                'type': 'str',
             },
             'acl_id_src_nat_pool': {
                 'type': 'str',
@@ -1709,9 +2061,6 @@ def get_argspec():
             'acl_id_seq_num_shared': {
                 'type': 'int',
             },
-            'acl_id_shared': {
-                'type': 'int',
-            },
             'v_acl_id_src_nat_pool': {
                 'type': 'str',
             },
@@ -1726,12 +2075,6 @@ def get_argspec():
             },
             'v_acl_id_seq_num_shared': {
                 'type': 'int',
-            }
-        },
-        'acl_name_list': {
-            'type': 'list',
-            'acl_name': {
-                'type': 'str',
             },
             'acl_name_src_nat_pool': {
                 'type': 'str',
@@ -1747,9 +2090,6 @@ def get_argspec():
             },
             'acl_name_seq_num_shared': {
                 'type': 'int',
-            },
-            'acl_name_shared': {
-                'type': 'str',
             },
             'v_acl_name_src_nat_pool': {
                 'type': 'str',
@@ -1788,6 +2128,9 @@ def get_argspec():
         'no_auto_up_on_aflex': {
             'type': 'bool',
         },
+        'enable_scaleout': {
+            'type': 'bool',
+        },
         'scaleout_bucket_count': {
             'type': 'int',
         },
@@ -1807,6 +2150,9 @@ def get_argspec():
             'type': 'bool',
         },
         'precedence': {
+            'type': 'bool',
+        },
+        'ip_smart_rr': {
             'type': 'bool',
         },
         'use_cgnv6': {
@@ -1844,6 +2190,10 @@ def get_argspec():
         'server_group': {
             'type': 'str',
         },
+        'reselection': {
+            'type': 'str',
+            'choices': ['disable']
+        },
         'eth_fwd': {
             'type': 'str',
         },
@@ -1859,10 +2209,28 @@ def get_argspec():
         'template_sip': {
             'type': 'str',
         },
+        'p_template_sip_shared': {
+            'type': 'bool',
+        },
+        'template_sip_shared': {
+            'type': 'str',
+        },
         'template_smpp': {
             'type': 'str',
         },
+        'shared_partition_smpp_template': {
+            'type': 'bool',
+        },
+        'template_smpp_shared': {
+            'type': 'str',
+        },
         'template_dblb': {
+            'type': 'str',
+        },
+        'shared_partition_dblb_template': {
+            'type': 'bool',
+        },
+        'template_dblb_shared': {
             'type': 'str',
         },
         'template_connection_reuse': {
@@ -1931,7 +2299,22 @@ def get_argspec():
         'template_imap_pop3': {
             'type': 'str',
         },
+        'shared_partition_imap_pop3_template': {
+            'type': 'bool',
+        },
+        'template_imap_pop3_shared': {
+            'type': 'str',
+        },
         'template_smtp': {
+            'type': 'str',
+        },
+        'shared_partition_smtp_template': {
+            'type': 'bool',
+        },
+        'template_smtp_shared': {
+            'type': 'str',
+        },
+        'template_mqtt': {
             'type': 'str',
         },
         'template_http': {
@@ -1970,7 +2353,13 @@ def get_argspec():
         'template_respmod_icap': {
             'type': 'str',
         },
-        'template_file_inspection': {
+        'template_doh': {
+            'type': 'str',
+        },
+        'shared_partition_doh_template': {
+            'type': 'bool',
+        },
+        'template_doh_shared': {
             'type': 'str',
         },
         'template_server_ssl': {
@@ -2045,7 +2434,16 @@ def get_argspec():
         'template_cache_shared': {
             'type': 'str',
         },
+        'template_ram_cache': {
+            'type': 'str',
+        },
         'template_fix': {
+            'type': 'str',
+        },
+        'shared_partition_fix_template': {
+            'type': 'bool',
+        },
+        'template_fix_shared': {
             'type': 'str',
         },
         'waf_template': {
@@ -2096,6 +2494,24 @@ def get_argspec():
         'memory_compute': {
             'type': 'bool',
         },
+        'substitute_source_mac': {
+            'type': 'bool',
+        },
+        'ignore_global': {
+            'type': 'bool',
+        },
+        'aflex_table_entry_syn_disable': {
+            'type': 'bool',
+        },
+        'aflex_table_entry_syn_enable': {
+            'type': 'bool',
+        },
+        'gtp_session_lb': {
+            'type': 'bool',
+        },
+        'reply_acme_challenge': {
+            'type': 'bool',
+        },
         'resolve_web_cat_list': {
             'type': 'str',
         },
@@ -2128,21 +2544,49 @@ def get_argspec():
                     'total_fwd_pkts_out', 'total_rev_bytes_out',
                     'total_rev_pkts_out', 'curr_req_rate', 'curr_resp',
                     'total_resp', 'total_resp_succ', 'curr_resp_rate',
-                    'curr_conn_overflow', 'dnsrrl_total_allowed',
-                    'dnsrrl_total_dropped', 'dnsrrl_total_slipped',
-                    'dnsrrl_bad_fqdn', 'throughput-bits-per-sec',
-                    'dynamic-memory-alloc', 'dynamic-memory-free',
-                    'dynamic-memory', 'ip_only_lb_fwd_bytes',
-                    'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts',
-                    'ip_only_lb_rev_pkts'
+                    'dnsrrl_total_allowed', 'dnsrrl_total_dropped',
+                    'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn',
+                    'throughput-bits-per-sec', 'dynamic-memory-alloc',
+                    'dynamic-memory-free', 'dynamic-memory',
+                    'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes',
+                    'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts',
+                    'total_dns_filter_type_drop',
+                    'total_dns_filter_class_drop', 'dns_filter_type_a_drop',
+                    'dns_filter_type_aaaa_drop', 'dns_filter_type_cname_drop',
+                    'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop',
+                    'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop',
+                    'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop',
+                    'dns_filter_type_any_drop', 'dns_filter_type_others_drop',
+                    'dns_filter_class_internet_drop',
+                    'dns_filter_class_chaos_drop',
+                    'dns_filter_class_hesiod_drop',
+                    'dns_filter_class_none_drop', 'dns_filter_class_any_drop',
+                    'dns_filter_class_others_drop', 'dns_rpz_action_drop',
+                    'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only',
+                    'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata',
+                    'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip',
+                    'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip',
+                    'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'oper': {
             'type': 'dict',
             'state': {
                 'type': 'str',
                 'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+            },
+            'real_curr_conn': {
+                'type': 'int',
+            },
+            'int_curr_conn': {
+                'type': 'int',
+            },
+            'curr_conn_overflow': {
+                'type': 'int',
             },
             'loc_list': {
                 'type': 'str',
@@ -2479,7 +2923,328 @@ def get_argspec():
                 'stream_closed': {
                     'type': 'int',
                 },
+                'jsi_requests': {
+                    'type': 'int',
+                },
+                'jsi_responses': {
+                    'type': 'int',
+                },
+                'jsi_pri_requests': {
+                    'type': 'int',
+                },
+                'jsi_api_requests': {
+                    'type': 'int',
+                },
+                'jsi_api_responses': {
+                    'type': 'int',
+                },
+                'jsi_api_no_auth_hdr': {
+                    'type': 'int',
+                },
+                'jsi_api_no_token': {
+                    'type': 'int',
+                },
+                'jsi_skip_no_fi': {
+                    'type': 'int',
+                },
+                'jsi_skip_no_ua': {
+                    'type': 'int',
+                },
+                'jsi_skip_not_browser': {
+                    'type': 'int',
+                },
+                'jsi_hash_add_fails': {
+                    'type': 'int',
+                },
+                'jsi_hash_lookup_fails': {
+                    'type': 'int',
+                },
                 'header_length_long': {
+                    'type': 'int',
+                },
+                'req_get': {
+                    'type': 'int',
+                },
+                'req_head': {
+                    'type': 'int',
+                },
+                'req_put': {
+                    'type': 'int',
+                },
+                'req_post': {
+                    'type': 'int',
+                },
+                'req_trace': {
+                    'type': 'int',
+                },
+                'req_options': {
+                    'type': 'int',
+                },
+                'req_connect': {
+                    'type': 'int',
+                },
+                'req_delete': {
+                    'type': 'int',
+                },
+                'req_unknown': {
+                    'type': 'int',
+                },
+                'req_track': {
+                    'type': 'int',
+                },
+                'rsp_sz_1k': {
+                    'type': 'int',
+                },
+                'rsp_sz_2k': {
+                    'type': 'int',
+                },
+                'rsp_sz_4k': {
+                    'type': 'int',
+                },
+                'rsp_sz_8k': {
+                    'type': 'int',
+                },
+                'rsp_sz_16k': {
+                    'type': 'int',
+                },
+                'rsp_sz_32k': {
+                    'type': 'int',
+                },
+                'rsp_sz_64k': {
+                    'type': 'int',
+                },
+                'rsp_sz_256k': {
+                    'type': 'int',
+                },
+                'rsp_sz_gt_256k': {
+                    'type': 'int',
+                },
+                'chunk_sz_512': {
+                    'type': 'int',
+                },
+                'chunk_sz_1k': {
+                    'type': 'int',
+                },
+                'chunk_sz_2k': {
+                    'type': 'int',
+                },
+                'chunk_sz_4k': {
+                    'type': 'int',
+                },
+                'chunk_sz_gt_4k': {
+                    'type': 'int',
+                },
+                'req_sz_1k': {
+                    'type': 'int',
+                },
+                'req_sz_2k': {
+                    'type': 'int',
+                },
+                'req_sz_4k': {
+                    'type': 'int',
+                },
+                'req_sz_8k': {
+                    'type': 'int',
+                },
+                'req_sz_16k': {
+                    'type': 'int',
+                },
+                'req_sz_32k': {
+                    'type': 'int',
+                },
+                'req_sz_64k': {
+                    'type': 'int',
+                },
+                'req_sz_256k': {
+                    'type': 'int',
+                },
+                'req_sz_gt_256k': {
+                    'type': 'int',
+                },
+                'req_content_len': {
+                    'type': 'int',
+                },
+                'rsp_chunk': {
+                    'type': 'int',
+                },
+                'doh_req': {
+                    'type': 'int',
+                },
+                'doh_req_get': {
+                    'type': 'int',
+                },
+                'doh_req_post': {
+                    'type': 'int',
+                },
+                'doh_non_doh_req': {
+                    'type': 'int',
+                },
+                'doh_non_doh_req_get': {
+                    'type': 'int',
+                },
+                'doh_non_doh_req_post': {
+                    'type': 'int',
+                },
+                'doh_resp': {
+                    'type': 'int',
+                },
+                'doh_tc_resp': {
+                    'type': 'int',
+                },
+                'doh_udp_dns_req': {
+                    'type': 'int',
+                },
+                'doh_udp_dns_resp': {
+                    'type': 'int',
+                },
+                'doh_tcp_dns_req': {
+                    'type': 'int',
+                },
+                'doh_tcp_dns_resp': {
+                    'type': 'int',
+                },
+                'doh_req_send_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_send_failed': {
+                    'type': 'int',
+                },
+                'doh_malloc_fail': {
+                    'type': 'int',
+                },
+                'doh_req_udp_retry': {
+                    'type': 'int',
+                },
+                'doh_req_udp_retry_fail': {
+                    'type': 'int',
+                },
+                'doh_req_tcp_retry': {
+                    'type': 'int',
+                },
+                'doh_req_tcp_retry_fail': {
+                    'type': 'int',
+                },
+                'doh_snat_failed': {
+                    'type': 'int',
+                },
+                'doh_path_not_found': {
+                    'type': 'int',
+                },
+                'doh_get_dns_arg_failed': {
+                    'type': 'int',
+                },
+                'doh_get_base64_decode_failed': {
+                    'type': 'int',
+                },
+                'doh_post_content_type_mismatch': {
+                    'type': 'int',
+                },
+                'doh_post_payload_not_found': {
+                    'type': 'int',
+                },
+                'doh_post_payload_extract_failed': {
+                    'type': 'int',
+                },
+                'doh_non_doh_method': {
+                    'type': 'int',
+                },
+                'doh_tcp_send_failed': {
+                    'type': 'int',
+                },
+                'doh_udp_send_failed': {
+                    'type': 'int',
+                },
+                'doh_query_time_out': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_a': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_aaaa': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_ns': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_cname': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_any': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_srv': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_mx': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_soa': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_others': {
+                    'type': 'int',
+                },
+                'doh_resp_setup_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_header_alloc_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_que_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_udp_frags': {
+                    'type': 'int',
+                },
+                'doh_resp_tcp_frags': {
+                    'type': 'int',
+                },
+                'doh_serv_sel_failed': {
+                    'type': 'int',
+                },
+                'doh_retry_w_tcp': {
+                    'type': 'int',
+                },
+                'doh_get_uri_too_long': {
+                    'type': 'int',
+                },
+                'doh_post_payload_too_large': {
+                    'type': 'int',
+                },
+                'doh_dns_malformed_query': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_format': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_server': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_name': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_type': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_refuse': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_yxdomain': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_yxrrset': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_nxrrset': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_notauth': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_notzone': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_other': {
                     'type': 'int',
                 }
             },
@@ -2495,8 +3260,8 @@ def get_argspec():
             'http_vport': {
                 'type': 'bool',
             },
-            'real_curr_conn': {
-                'type': 'int',
+            'clear_curr_conn': {
+                'type': 'bool',
             },
             'port_number': {
                 'type': 'int',
@@ -2510,9 +3275,9 @@ def get_argspec():
                 'choices': [
                     'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
                     'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
-                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
+                    'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius',
+                    'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy',
+                    'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli',
                     'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
                 ]
             }
@@ -2651,9 +3416,6 @@ def get_argspec():
             'curr_resp_rate': {
                 'type': 'str',
             },
-            'curr_conn_overflow': {
-                'type': 'str',
-            },
             'dnsrrl_total_allowed': {
                 'type': 'str',
             },
@@ -2684,6 +3446,96 @@ def get_argspec():
             'ip_only_lb_rev_pkts': {
                 'type': 'str',
             },
+            'total_dns_filter_type_drop': {
+                'type': 'str',
+            },
+            'total_dns_filter_class_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_a_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_aaaa_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_cname_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_mx_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_ns_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_srv_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_ptr_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_soa_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_txt_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_any_drop': {
+                'type': 'str',
+            },
+            'dns_filter_type_others_drop': {
+                'type': 'str',
+            },
+            'dns_filter_class_internet_drop': {
+                'type': 'str',
+            },
+            'dns_filter_class_chaos_drop': {
+                'type': 'str',
+            },
+            'dns_filter_class_hesiod_drop': {
+                'type': 'str',
+            },
+            'dns_filter_class_none_drop': {
+                'type': 'str',
+            },
+            'dns_filter_class_any_drop': {
+                'type': 'str',
+            },
+            'dns_filter_class_others_drop': {
+                'type': 'str',
+            },
+            'dns_rpz_action_drop': {
+                'type': 'str',
+            },
+            'dns_rpz_action_pass_thru': {
+                'type': 'str',
+            },
+            'dns_rpz_action_tcp_only': {
+                'type': 'str',
+            },
+            'dns_rpz_action_nxdomain': {
+                'type': 'str',
+            },
+            'dns_rpz_action_nodata': {
+                'type': 'str',
+            },
+            'dns_rpz_action_local_data': {
+                'type': 'str',
+            },
+            'dns_rpz_trigger_client_ip': {
+                'type': 'str',
+            },
+            'dns_rpz_trigger_resp_ip': {
+                'type': 'str',
+            },
+            'dns_rpz_trigger_ns_ip': {
+                'type': 'str',
+            },
+            'dns_rpz_trigger_qname': {
+                'type': 'str',
+            },
+            'dns_rpz_trigger_ns_name': {
+                'type': 'str',
+            },
             'port_number': {
                 'type': 'int',
                 'required': True,
@@ -2696,9 +3548,9 @@ def get_argspec():
                 'choices': [
                     'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
                     'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
-                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
+                    'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius',
+                    'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy',
+                    'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli',
                     'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
                 ]
             }

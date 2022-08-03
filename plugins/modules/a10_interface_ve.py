@@ -65,6 +65,18 @@ options:
         - "Name for the interface"
         type: str
         required: False
+    port_scan_detection:
+        description:
+        - "'enable'= Enable port scan detection; 'disable'= Disable port scan
+          detection(default);"
+        type: str
+        required: False
+    ping_sweep_detection:
+        description:
+        - "'enable'= Enable ping sweep detection; 'disable'= Disable ping sweep
+          detection(default);"
+        type: str
+        required: False
     l3_vlan_fwd_disable:
         description:
         - "Disable L3 forwarding between VLANs for incoming packets on this interface"
@@ -208,6 +220,10 @@ options:
             ttl_ignore:
                 description:
                 - "Ignore TTL decrement for a received packet"
+                type: bool
+            syn_cookie:
+                description:
+                - "Enable SYN-cookie on the interface"
                 type: bool
             slb_partition_redirect:
                 description:
@@ -564,6 +580,22 @@ options:
                 description:
                 - "Field user_trunk_id"
                 type: int
+            ip_unnumbered_oper:
+                description:
+                - "Field ip_unnumbered_oper"
+                type: int
+            ip_unnumbered_enabled:
+                description:
+                - "Field ip_unnumbered_enabled"
+                type: int
+            ip_unnumbered_mac_learned:
+                description:
+                - "Field ip_unnumbered_mac_learned"
+                type: int
+            ip_unnumbered_peer_lla:
+                description:
+                - "Field ip_unnumbered_peer_lla"
+                type: str
             ifnum:
                 description:
                 - "Virtual ethernet interface number"
@@ -710,6 +742,8 @@ AVAILABLE_PROPERTIES = [
     "name",
     "nptv6",
     "oper",
+    "ping_sweep_detection",
+    "port_scan_detection",
     "sampling_enable",
     "stats",
     "trap_source",
@@ -749,6 +783,14 @@ def get_argspec():
         },
         'name': {
             'type': 'str',
+        },
+        'port_scan_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'ping_sweep_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         },
         'l3_vlan_fwd_disable': {
             'type': 'bool',
@@ -853,6 +895,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'ttl_ignore': {
+                'type': 'bool',
+            },
+            'syn_cookie': {
                 'type': 'bool',
             },
             'slb_partition_redirect': {
@@ -1762,6 +1807,18 @@ def get_argspec():
             },
             'user_trunk_id': {
                 'type': 'int',
+            },
+            'ip_unnumbered_oper': {
+                'type': 'int',
+            },
+            'ip_unnumbered_enabled': {
+                'type': 'int',
+            },
+            'ip_unnumbered_mac_learned': {
+                'type': 'int',
+            },
+            'ip_unnumbered_peer_lla': {
+                'type': 'str',
             },
             'ifnum': {
                 'type': 'int',

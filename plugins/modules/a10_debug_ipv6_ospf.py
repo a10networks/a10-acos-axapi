@@ -55,12 +55,21 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    dumy:
+        description:
+        - "Dummy"
+        type: bool
+        required: False
     all:
         description:
         - "Field all"
         type: dict
         required: False
         suboptions:
+            dumy:
+                description:
+                - "Dummy"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -71,6 +80,10 @@ options:
         type: dict
         required: False
         suboptions:
+            dumy:
+                description:
+                - "Dummy"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -322,6 +335,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "all",
     "bfd",
+    "dumy",
     "events",
     "ifsm",
     "lsa",
@@ -357,14 +371,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'dumy': {
+            'type': 'bool',
+        },
         'all': {
             'type': 'dict',
+            'dumy': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             }
         },
         'bfd': {
             'type': 'dict',
+            'dumy': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             }

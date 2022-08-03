@@ -174,6 +174,11 @@ options:
           'accounting-success'= Accounting Success; 'accounting-failure'= Accounting
           Failure;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -294,6 +299,7 @@ AVAILABLE_PROPERTIES = [
     "host",
     "interval",
     "name",
+    "packet_capture_template",
     "port",
     "port_hm",
     "port_hm_disable",
@@ -406,6 +412,9 @@ def get_argspec():
                     'accounting-failure'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

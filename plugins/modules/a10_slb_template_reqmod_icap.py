@@ -90,6 +90,17 @@ options:
                 description:
                 - "IP prefix mask"
                 type: str
+    failure_action:
+        description:
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
+        type: str
+        required: False
+    timeout:
+        description:
+        - "Timeout value 1 - 200 in units of 200ms, default is 5 (default is 1000ms) (1 -
+          200 in units of 200ms, default is 5 (1000ms))"
+        type: int
+        required: False
     action:
         description:
         - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
@@ -154,11 +165,6 @@ options:
         description:
         - "Source IP Persistence Template Name"
         type: str
-        required: False
-    cylance:
-        description:
-        - "cylance external server"
-        type: bool
         required: False
     disable_http_server_reset:
         description:
@@ -243,9 +249,9 @@ AVAILABLE_PROPERTIES = [
     "action",
     "allowed_http_methods",
     "bypass_ip_cfg",
-    "cylance",
     "disable_http_server_reset",
     "fail_close",
+    "failure_action",
     "include_protocol_in_uri",
     "log_only_allowed_method",
     "logging",
@@ -261,6 +267,7 @@ AVAILABLE_PROPERTIES = [
     "tcp_proxy",
     "template_persist_source_ip_shared",
     "template_tcp_proxy_shared",
+    "timeout",
     "user_tag",
     "uuid",
     "x_auth_url",
@@ -314,6 +321,13 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'failure_action': {
+            'type': 'str',
+            'choices': ['continue', 'drop', 'reset']
+        },
+        'timeout': {
+            'type': 'int',
+        },
         'action': {
             'type': 'str',
             'choices': ['continue', 'drop', 'reset']
@@ -353,9 +367,6 @@ def get_argspec():
         },
         'template_persist_source_ip_shared': {
             'type': 'str',
-        },
-        'cylance': {
-            'type': 'bool',
         },
         'disable_http_server_reset': {
             'type': 'bool',

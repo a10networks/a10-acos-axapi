@@ -70,6 +70,16 @@ options:
         - "Debug logs for scaleout packet flow"
         type: bool
         required: False
+    session_sync:
+        description:
+        - " Debug logs for scaleout session sync events"
+        type: bool
+        required: False
+    debug_level:
+        description:
+        - "Debug level (Level 1-3)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -131,8 +141,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "config",
+    "debug_level",
     "event",
     "packet",
+    "session_sync",
     "uuid",
 ]
 
@@ -170,6 +182,12 @@ def get_argspec():
         },
         'packet': {
             'type': 'bool',
+        },
+        'session_sync': {
+            'type': 'bool',
+        },
+        'debug_level': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

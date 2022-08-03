@@ -187,361 +187,892 @@ def get_argspec():
                 'req_denied': {
                     'type': 'str',
                 },
-                'bot_check_succ': {
+                'resp_denied': {
                     'type': 'str',
                 },
-                'bot_check_fail': {
+                'brute_force_success': {
                     'type': 'str',
                 },
-                'form_consistency_succ': {
+                'brute_force_violation': {
                     'type': 'str',
                 },
-                'form_consistency_fail': {
+                'brute_force_challenge_cookie_sent': {
                     'type': 'str',
                 },
-                'form_csrf_tag_succ': {
+                'brute_force_challenge_cookie_success': {
                     'type': 'str',
                 },
-                'form_csrf_tag_fail': {
+                'brute_force_challenge_cookie_violation': {
                     'type': 'str',
                 },
-                'url_check_succ': {
+                'brute_force_challenge_javascript_sent': {
                     'type': 'str',
                 },
-                'url_check_fail': {
+                'brute_force_challenge_javascript_success': {
                     'type': 'str',
                 },
-                'url_check_learn': {
+                'brute_force_challenge_javascript_violation': {
                     'type': 'str',
                 },
-                'buf_ovf_url_len_fail': {
+                'brute_force_challenge_captcha_sent': {
                     'type': 'str',
                 },
-                'buf_ovf_cookie_len_fail': {
+                'brute_force_challenge_captcha_success': {
                     'type': 'str',
                 },
-                'buf_ovf_hdrs_len_fail': {
+                'brute_force_challenge_captcha_violation': {
                     'type': 'str',
                 },
-                'buf_ovf_post_size_fail': {
+                'brute_force_lockout_limit_success': {
                     'type': 'str',
                 },
-                'max_cookies_fail': {
+                'brute_force_lockout_limit_violation': {
                     'type': 'str',
                 },
-                'max_hdrs_fail': {
+                'brute_force_challenge_limit_success': {
                     'type': 'str',
                 },
-                'http_method_check_succ': {
+                'brute_force_challenge_limit_violation': {
                     'type': 'str',
                 },
-                'http_method_check_fail': {
+                'brute_force_response_codes_triggered': {
                     'type': 'str',
                 },
-                'http_check_succ': {
+                'brute_force_response_headers_triggered': {
                     'type': 'str',
                 },
-                'http_check_fail': {
+                'brute_force_response_string_triggered': {
                     'type': 'str',
                 },
-                'referer_check_succ': {
+                'cookie_security_encrypt_success': {
                     'type': 'str',
                 },
-                'referer_check_fail': {
+                'cookie_security_encrypt_violation': {
                     'type': 'str',
                 },
-                'referer_check_redirect': {
+                'cookie_security_encrypt_limit_exceeded': {
                     'type': 'str',
                 },
-                'uri_wlist_succ': {
+                'cookie_security_encrypt_skip_rcache': {
                     'type': 'str',
                 },
-                'uri_wlist_fail': {
+                'cookie_security_decrypt_success': {
                     'type': 'str',
                 },
-                'uri_blist_succ': {
+                'cookie_security_decrypt_violation': {
                     'type': 'str',
                 },
-                'uri_blist_fail': {
+                'cookie_security_sign_success': {
                     'type': 'str',
                 },
-                'post_form_check_succ': {
+                'cookie_security_sign_violation': {
                     'type': 'str',
                 },
-                'post_form_check_sanitize': {
+                'cookie_security_sign_limit_exceeded': {
                     'type': 'str',
                 },
-                'post_form_check_reject': {
+                'cookie_security_sign_skip_rcache': {
                     'type': 'str',
                 },
-                'ccn_mask_amex': {
+                'cookie_security_signature_check_success': {
                     'type': 'str',
                 },
-                'ccn_mask_diners': {
+                'cookie_security_signature_check_violation': {
                     'type': 'str',
                 },
-                'ccn_mask_visa': {
+                'cookie_security_add_http_only_success': {
                     'type': 'str',
                 },
-                'ccn_mask_mastercard': {
+                'cookie_security_add_http_only_violation': {
                     'type': 'str',
                 },
-                'ccn_mask_discover': {
+                'cookie_security_add_secure_success': {
                     'type': 'str',
                 },
-                'ccn_mask_jcb': {
+                'cookie_security_add_secure_violation': {
                     'type': 'str',
                 },
-                'ssn_mask': {
+                'cookie_security_missing_cookie_success': {
                     'type': 'str',
                 },
-                'pcre_mask': {
+                'cookie_security_missing_cookie_violation': {
                     'type': 'str',
                 },
-                'cookie_encrypt_succ': {
+                'cookie_security_unrecognized_cookie_success': {
                     'type': 'str',
                 },
-                'cookie_encrypt_fail': {
+                'cookie_security_unrecognized_cookie_violation': {
                     'type': 'str',
                 },
-                'cookie_encrypt_limit_exceeded': {
+                'cookie_security_cookie_policy_success': {
                     'type': 'str',
                 },
-                'cookie_encrypt_skip_rcache': {
+                'cookie_security_cookie_policy_violation': {
                     'type': 'str',
                 },
-                'cookie_decrypt_succ': {
+                'cookie_security_persistent_cookies': {
                     'type': 'str',
                 },
-                'cookie_decrypt_fail': {
+                'cookie_security_persistent_cookies_encrypted': {
                     'type': 'str',
                 },
-                'sqlia_chk_url_succ': {
+                'cookie_security_persistent_cookies_signed': {
                     'type': 'str',
                 },
-                'sqlia_chk_url_sanitize': {
+                'cookie_security_session_cookies': {
                     'type': 'str',
                 },
-                'sqlia_chk_url_reject': {
+                'cookie_security_session_cookies_encrypted': {
                     'type': 'str',
                 },
-                'sqlia_chk_post_succ': {
+                'cookie_security_session_cookies_signed': {
                     'type': 'str',
                 },
-                'sqlia_chk_post_sanitize': {
+                'cookie_security_allowed_session_cookies': {
                     'type': 'str',
                 },
-                'sqlia_chk_post_reject': {
+                'cookie_security_allowed_persistent_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_cookie_succ': {
+                'cookie_security_disallowed_session_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_cookie_sanitize': {
+                'cookie_security_disallowed_persistent_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_cookie_reject': {
+                'cookie_security_allowed_session_set_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_url_succ': {
+                'cookie_security_allowed_persistent_set_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_url_sanitize': {
+                'cookie_security_disallowed_session_set_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_url_reject': {
+                'cookie_security_disallowed_persistent_set_cookies': {
                     'type': 'str',
                 },
-                'xss_chk_post_succ': {
+                'csp_header_violation': {
                     'type': 'str',
                 },
-                'xss_chk_post_sanitize': {
+                'csp_header_success': {
                     'type': 'str',
                 },
-                'xss_chk_post_reject': {
+                'csp_header_inserted': {
                     'type': 'str',
                 },
-                'resp_code_hidden': {
+                'form_csrf_tag_success': {
                     'type': 'str',
                 },
-                'resp_hdrs_filtered': {
+                'form_csrf_tag_violation': {
                     'type': 'str',
                 },
-                'learn_updates': {
+                'form_consistency_success': {
                     'type': 'str',
                 },
-                'num_drops': {
+                'form_consistency_violation': {
                     'type': 'str',
                 },
-                'num_resets': {
+                'form_tag_inserted': {
                     'type': 'str',
                 },
-                'form_non_ssl_reject': {
+                'form_non_ssl_success': {
                     'type': 'str',
                 },
-                'form_non_post_reject': {
+                'form_non_ssl_violation': {
                     'type': 'str',
                 },
-                'sess_check_none': {
+                'form_request_non_post_success': {
                     'type': 'str',
                 },
-                'sess_check_succ': {
+                'form_request_non_post_violation': {
                     'type': 'str',
                 },
-                'sess_check_fail': {
+                'form_check_success': {
                     'type': 'str',
                 },
-                'soap_check_succ': {
+                'form_check_violation': {
                     'type': 'str',
                 },
-                'soap_check_failure': {
+                'form_check_sanitize': {
                     'type': 'str',
                 },
-                'wsdl_fail': {
+                'form_non_masked_password_success': {
                     'type': 'str',
                 },
-                'wsdl_succ': {
+                'form_non_masked_password_violation': {
                     'type': 'str',
                 },
-                'xml_schema_fail': {
+                'form_non_ssl_password_success': {
                     'type': 'str',
                 },
-                'xml_schema_succ': {
+                'form_non_ssl_password_violation': {
                     'type': 'str',
                 },
-                'xml_sqlia_chk_fail': {
+                'form_password_autocomplete_success': {
                     'type': 'str',
                 },
-                'xml_sqlia_chk_succ': {
+                'form_password_autocomplete_violation': {
                     'type': 'str',
                 },
-                'xml_xss_chk_fail': {
-                    'type': 'str',
-                },
-                'xml_xss_chk_succ': {
-                    'type': 'str',
-                },
-                'json_check_failure': {
-                    'type': 'str',
-                },
-                'json_check_succ': {
-                    'type': 'str',
-                },
-                'xml_check_failure': {
-                    'type': 'str',
-                },
-                'xml_check_succ': {
-                    'type': 'str',
-                },
-                'buf_ovf_cookie_value_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_cookies_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_hdr_name_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_hdr_value_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_max_data_parse_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_line_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_parameter_name_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_parameter_value_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_parameter_total_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_query_len_fail': {
-                    'type': 'str',
-                },
-                'max_entities_fail': {
-                    'type': 'str',
-                },
-                'max_parameters_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_cookie_name_len_fail': {
-                    'type': 'str',
-                },
-                'xml_limit_attr': {
-                    'type': 'str',
-                },
-                'xml_limit_attr_name_len': {
-                    'type': 'str',
-                },
-                'xml_limit_attr_value_len': {
-                    'type': 'str',
-                },
-                'xml_limit_cdata_len': {
-                    'type': 'str',
-                },
-                'xml_limit_elem': {
-                    'type': 'str',
-                },
-                'xml_limit_elem_child': {
-                    'type': 'str',
-                },
-                'xml_limit_elem_depth': {
-                    'type': 'str',
-                },
-                'xml_limit_elem_name_len': {
-                    'type': 'str',
-                },
-                'xml_limit_entity_exp': {
-                    'type': 'str',
-                },
-                'xml_limit_entity_exp_depth': {
-                    'type': 'str',
-                },
-                'xml_limit_namespace': {
-                    'type': 'str',
-                },
-                'xml_limit_namespace_uri_len': {
-                    'type': 'str',
-                },
-                'json_limit_array_value_count': {
-                    'type': 'str',
-                },
-                'json_limit_depth': {
-                    'type': 'str',
-                },
-                'json_limit_object_member_count': {
-                    'type': 'str',
-                },
-                'json_limit_string': {
-                    'type': 'str',
-                },
-                'form_non_masked_password': {
-                    'type': 'str',
-                },
-                'form_non_ssl_password': {
-                    'type': 'str',
-                },
-                'form_password_autocomplete': {
-                    'type': 'str',
-                },
-                'redirect_wlist_succ': {
-                    'type': 'str',
-                },
-                'redirect_wlist_fail': {
-                    'type': 'str',
-                },
-                'redirect_wlist_learn': {
+                'form_set_no_cache_success': {
                     'type': 'str',
                 },
                 'form_set_no_cache': {
                     'type': 'str',
                 },
-                'resp_denied': {
+                'dlp_ccn_success': {
+                    'type': 'str',
+                },
+                'dlp_ccn_amex_violation': {
+                    'type': 'str',
+                },
+                'dlp_ccn_amex_masked': {
+                    'type': 'str',
+                },
+                'dlp_ccn_diners_violation': {
+                    'type': 'str',
+                },
+                'dlp_ccn_diners_masked': {
+                    'type': 'str',
+                },
+                'dlp_ccn_visa_violation': {
+                    'type': 'str',
+                },
+                'dlp_ccn_visa_masked': {
+                    'type': 'str',
+                },
+                'dlp_ccn_mastercard_violation': {
+                    'type': 'str',
+                },
+                'dlp_ccn_mastercard_masked': {
+                    'type': 'str',
+                },
+                'dlp_ccn_discover_violation': {
+                    'type': 'str',
+                },
+                'dlp_ccn_discover_masked': {
+                    'type': 'str',
+                },
+                'dlp_ccn_jcb_violation': {
+                    'type': 'str',
+                },
+                'dlp_ccn_jcb_masked': {
+                    'type': 'str',
+                },
+                'dlp_ssn_success': {
+                    'type': 'str',
+                },
+                'dlp_ssn_violation': {
+                    'type': 'str',
+                },
+                'dlp_pcre_success': {
+                    'type': 'str',
+                },
+                'dlp_pcre_violation': {
+                    'type': 'str',
+                },
+                'dlp_pcre_masked': {
+                    'type': 'str',
+                },
+                'evasion_check_apache_whitespace_success': {
+                    'type': 'str',
+                },
+                'evasion_check_apache_whitespace_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_decode_entities_success': {
+                    'type': 'str',
+                },
+                'evasion_check_decode_entities_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_decode_escaped_chars_success': {
+                    'type': 'str',
+                },
+                'evasion_check_decode_escaped_chars_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_decode_unicode_chars_success': {
+                    'type': 'str',
+                },
+                'evasion_check_decode_unicode_chars_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_dir_traversal_success': {
+                    'type': 'str',
+                },
+                'evasion_check_dir_traversal_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_high_ascii_bytes_success': {
+                    'type': 'str',
+                },
+                'evasion_check_high_ascii_bytes_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_invalid_hex_encoding_success': {
+                    'type': 'str',
+                },
+                'evasion_check_invalid_hex_encoding_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_multiple_encoding_levels_success': {
+                    'type': 'str',
+                },
+                'evasion_check_multiple_encoding_levels_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_multiple_slashes_success': {
+                    'type': 'str',
+                },
+                'evasion_check_multiple_slashes_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_max_levels_success': {
+                    'type': 'str',
+                },
+                'evasion_check_max_levels_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_remove_comments_success': {
+                    'type': 'str',
+                },
+                'evasion_check_remove_comments_violation': {
+                    'type': 'str',
+                },
+                'evasion_check_remove_spaces_success': {
+                    'type': 'str',
+                },
+                'evasion_check_remove_spaces_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_content_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_content_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookie_header_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookie_header_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookie_name_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookie_name_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookie_value_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookie_value_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookies_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookies_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookies_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_cookies_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_data_parse_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_data_parse_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_entities_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_entities_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_header_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_header_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_header_name_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_header_name_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_header_value_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_header_value_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_headers_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_headers_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_headers_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_headers_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_param_name_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_param_name_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_param_value_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_param_value_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_params_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_params_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_params_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_params_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_post_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_post_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_query_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_query_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_request_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_request_length_violation': {
+                    'type': 'str',
+                },
+                'http_limit_max_request_line_length_success': {
+                    'type': 'str',
+                },
+                'http_limit_max_request_line_length_violation': {
+                    'type': 'str',
+                },
+                'max_url_length_success': {
+                    'type': 'str',
+                },
+                'max_url_length_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_allowed_headers_success': {
+                    'type': 'str',
+                },
+                'http_protocol_allowed_headers_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_allowed_versions_success': {
+                    'type': 'str',
+                },
+                'http_protocol_allowed_versions_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_allowed_method_check_success': {
+                    'type': 'str',
+                },
+                'http_protocol_allowed_method_check_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_bad_multipart_request_success': {
+                    'type': 'str',
+                },
+                'http_protocol_bad_multipart_request_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_get_with_content_success': {
+                    'type': 'str',
+                },
+                'http_protocol_get_with_content_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_head_with_content_success': {
+                    'type': 'str',
+                },
+                'http_protocol_head_with_content_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_host_header_with_ip_success': {
+                    'type': 'str',
+                },
+                'http_protocol_host_header_with_ip_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_invalid_url_encoding_success': {
+                    'type': 'str',
+                },
+                'http_protocol_invalid_url_encoding_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_content_length_success': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_content_length_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_header_success': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_header_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_parameter_success': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_parameter_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_request_success': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_request_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_request_line_success': {
+                    'type': 'str',
+                },
+                'http_protocol_malformed_request_line_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_missing_header_value_success': {
+                    'type': 'str',
+                },
+                'http_protocol_missing_header_value_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_missing_host_header_success': {
+                    'type': 'str',
+                },
+                'http_protocol_missing_host_header_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_multiple_content_length_success': {
+                    'type': 'str',
+                },
+                'http_protocol_multiple_content_length_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_post_with_0_content_success': {
+                    'type': 'str',
+                },
+                'http_protocol_post_with_0_content_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_post_without_content_success': {
+                    'type': 'str',
+                },
+                'http_protocol_post_without_content_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_success': {
+                    'type': 'str',
+                },
+                'http_protocol_violation': {
+                    'type': 'str',
+                },
+                'json_check_format_success': {
+                    'type': 'str',
+                },
+                'json_check_format_violation': {
+                    'type': 'str',
+                },
+                'json_check_max_array_value_count_success': {
+                    'type': 'str',
+                },
+                'json_check_max_array_value_count_violation': {
+                    'type': 'str',
+                },
+                'json_check_max_depth_success': {
+                    'type': 'str',
+                },
+                'json_check_max_depth_violation': {
+                    'type': 'str',
+                },
+                'json_check_max_object_member_count_success': {
+                    'type': 'str',
+                },
+                'json_check_max_object_member_count_violation': {
+                    'type': 'str',
+                },
+                'json_check_max_string_success': {
+                    'type': 'str',
+                },
+                'json_check_max_string_violation': {
+                    'type': 'str',
+                },
+                'request_check_bot_success': {
+                    'type': 'str',
+                },
+                'request_check_bot_violation': {
+                    'type': 'str',
+                },
+                'request_check_redirect_wlist_success': {
+                    'type': 'str',
+                },
+                'request_check_redirect_wlist_violation': {
+                    'type': 'str',
+                },
+                'request_check_redirect_wlist_learn': {
+                    'type': 'str',
+                },
+                'request_check_referer_success': {
+                    'type': 'str',
+                },
+                'request_check_referer_violation': {
+                    'type': 'str',
+                },
+                'request_check_referer_redirect': {
+                    'type': 'str',
+                },
+                'request_check_session_check_none': {
+                    'type': 'str',
+                },
+                'request_check_session_check_success': {
+                    'type': 'str',
+                },
+                'request_check_session_check_violation': {
+                    'type': 'str',
+                },
+                'request_check_sqlia_url_success': {
+                    'type': 'str',
+                },
+                'request_check_sqlia_url_violation': {
+                    'type': 'str',
+                },
+                'request_check_sqlia_url_sanitize': {
+                    'type': 'str',
+                },
+                'request_check_sqlia_post_body_success': {
+                    'type': 'str',
+                },
+                'request_check_sqlia_post_body_violation': {
+                    'type': 'str',
+                },
+                'request_check_sqlia_post_body_sanitize': {
+                    'type': 'str',
+                },
+                'request_check_url_list_success': {
+                    'type': 'str',
+                },
+                'request_check_url_list_violation': {
+                    'type': 'str',
+                },
+                'request_check_url_list_learn': {
+                    'type': 'str',
+                },
+                'request_check_url_whitelist_success': {
+                    'type': 'str',
+                },
+                'request_check_url_whitelist_violation': {
+                    'type': 'str',
+                },
+                'request_check_url_blacklist_success': {
+                    'type': 'str',
+                },
+                'request_check_url_blacklist_violation': {
+                    'type': 'str',
+                },
+                'request_check_xss_cookie_success': {
+                    'type': 'str',
+                },
+                'request_check_xss_cookie_violation': {
+                    'type': 'str',
+                },
+                'request_check_xss_cookie_sanitize': {
+                    'type': 'str',
+                },
+                'request_check_xss_url_success': {
+                    'type': 'str',
+                },
+                'request_check_xss_url_violation': {
+                    'type': 'str',
+                },
+                'request_check_xss_url_sanitize': {
+                    'type': 'str',
+                },
+                'request_check_xss_post_body_success': {
+                    'type': 'str',
+                },
+                'request_check_xss_post_body_violation': {
+                    'type': 'str',
+                },
+                'request_check_xss_post_body_sanitize': {
+                    'type': 'str',
+                },
+                'response_cloaking_hide_status_code_success': {
+                    'type': 'str',
+                },
+                'response_cloaking_hide_status_code_violation': {
+                    'type': 'str',
+                },
+                'response_cloaking_filter_headers_success': {
+                    'type': 'str',
+                },
+                'response_cloaking_filter_headers_violation': {
+                    'type': 'str',
+                },
+                'soap_check_success': {
+                    'type': 'str',
+                },
+                'soap_check_violation': {
+                    'type': 'str',
+                },
+                'xml_check_format_success': {
+                    'type': 'str',
+                },
+                'xml_check_format_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_attr_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_attr_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_attr_name_len_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_attr_name_len_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_attr_value_len_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_attr_value_len_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_cdata_len_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_cdata_len_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_child_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_child_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_depth_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_depth_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_name_len_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_elem_name_len_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_exp_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_exp_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_exp_depth_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_exp_depth_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_namespace_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_namespace_violation': {
+                    'type': 'str',
+                },
+                'xml_check_namespace_uri_len_success': {
+                    'type': 'str',
+                },
+                'xml_check_namespace_uri_len_violation': {
+                    'type': 'str',
+                },
+                'xml_check_sqlia_success': {
+                    'type': 'str',
+                },
+                'xml_check_sqlia_violation': {
+                    'type': 'str',
+                },
+                'xml_check_xss_success': {
+                    'type': 'str',
+                },
+                'xml_check_xss_violation': {
+                    'type': 'str',
+                },
+                'xml_content_check_schema_success': {
+                    'type': 'str',
+                },
+                'xml_content_check_schema_violation': {
+                    'type': 'str',
+                },
+                'xml_content_check_wsdl_success': {
+                    'type': 'str',
+                },
+                'xml_content_check_wsdl_violation': {
+                    'type': 'str',
+                },
+                'learning_list_full': {
+                    'type': 'str',
+                },
+                'action_allow': {
+                    'type': 'str',
+                },
+                'action_deny_200': {
+                    'type': 'str',
+                },
+                'action_deny_403': {
+                    'type': 'str',
+                },
+                'action_deny_redirect': {
+                    'type': 'str',
+                },
+                'action_deny_reset': {
+                    'type': 'str',
+                },
+                'action_drop': {
+                    'type': 'str',
+                },
+                'action_deny_custom_response': {
+                    'type': 'str',
+                },
+                'action_learn': {
+                    'type': 'str',
+                },
+                'action_log': {
+                    'type': 'str',
+                },
+                'policy_limit_exceeded': {
                     'type': 'str',
                 },
                 'sessions_alloc': {
@@ -556,25 +1087,106 @@ def get_argspec():
                 'too_many_sessions': {
                     'type': 'str',
                 },
-                'called': {
+                'regex_violation': {
                     'type': 'str',
                 },
-                'permitted': {
+                'request_check_command_injection_cookies_success': {
                     'type': 'str',
                 },
-                'brute_force_success': {
+                'request_check_command_injection_cookies_violation': {
                     'type': 'str',
                 },
-                'brute_force_fail': {
+                'request_check_command_injection_headers_success': {
                     'type': 'str',
                 },
-                'challenge_cookie_sent': {
+                'request_check_command_injection_headers_violation': {
                     'type': 'str',
                 },
-                'challenge_javascript_sent': {
+                'request_check_command_injection_uri_query_success': {
                     'type': 'str',
                 },
-                'challenge_captcha_sent': {
+                'request_check_command_injection_uri_query_violation': {
+                    'type': 'str',
+                },
+                'request_check_command_injection_form_body_success': {
+                    'type': 'str',
+                },
+                'request_check_command_injection_form_body_violation': {
+                    'type': 'str',
+                },
+                'cookie_security_decrypt_in_grace_period_violation': {
+                    'type': 'str',
+                },
+                'form_response_non_post_success': {
+                    'type': 'str',
+                },
+                'form_response_non_post_violation': {
+                    'type': 'str',
+                },
+                'form_response_non_post_sanitize': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_decl_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_decl_violation': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_depth_success': {
+                    'type': 'str',
+                },
+                'xml_check_max_entity_depth_violation': {
+                    'type': 'str',
+                },
+                'response_action_allow': {
+                    'type': 'str',
+                },
+                'response_action_deny_200': {
+                    'type': 'str',
+                },
+                'response_action_deny_403': {
+                    'type': 'str',
+                },
+                'response_action_deny_redirect': {
+                    'type': 'str',
+                },
+                'response_action_deny_reset': {
+                    'type': 'str',
+                },
+                'response_action_drop': {
+                    'type': 'str',
+                },
+                'response_action_deny_custom_response': {
+                    'type': 'str',
+                },
+                'response_action_learn': {
+                    'type': 'str',
+                },
+                'response_action_log': {
+                    'type': 'str',
+                },
+                'http_protocol_post_without_content_type_success': {
+                    'type': 'str',
+                },
+                'http_protocol_post_without_content_type_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_body_without_content_type_success': {
+                    'type': 'str',
+                },
+                'http_protocol_body_without_content_type_violation': {
+                    'type': 'str',
+                },
+                'http_protocol_non_ssl_cookie_prefix_success': {
+                    'type': 'str',
+                },
+                'http_protocol_non_ssl_cookie_prefix_violation': {
+                    'type': 'str',
+                },
+                'cookie_security_add_samesite_success': {
+                    'type': 'str',
+                },
+                'cookie_security_add_samesite_violation': {
                     'type': 'str',
                 }
             }

@@ -65,6 +65,10 @@ options:
                 description:
                 - "SYN cookie expire threshold (seconds (default is 4))"
                 type: int
+            sack_enable:
+                description:
+                - "Enable HW Syn-Cookie SACK support"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
@@ -159,6 +163,9 @@ def get_argspec():
             'type': 'dict',
             'threshold': {
                 'type': 'int',
+            },
+            'sack_enable': {
+                'type': 'bool',
             }
         },
         'uuid': {

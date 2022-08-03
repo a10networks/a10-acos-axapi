@@ -104,7 +104,8 @@ options:
           Identity (IMEI); 'imsi'= International Mobile Subscriber Identity (IMSI);
           'msisdn'= Mobile Subscriber Integrated Services Digital Network-Number
           (MSISDN); 'custom1'= Customized attribute 1; 'custom2'= Customized attribute 2;
-          'custom3'= Customized attribute 3;"
+          'custom3'= Customized attribute 3; 'custom4'= Customized attribute 4;
+          'custom5'= Customized attribute 5; 'custom6'= Customized attribute 6;"
                 type: str
             prefix_length:
                 description:
@@ -178,7 +179,14 @@ options:
         - "'msisdn'= Clear using MSISDN; 'imei'= Clear using IMEI; 'imsi'= Clear using
           IMSI; 'custom1'= Clear using CUSTOM1 attribute configured; 'custom2'= Clear
           using CUSTOM2 attribute configured; 'custom3'= Clear using CUSTOM3 attribute
-          configured;"
+          configured; 'custom4'= Clear using CUSTOM4 attribute configured; 'custom5'=
+          Clear using CUSTOM5 attribute configured; 'custom6'= Clear using CUSTOM6
+          attribute configured;"
+        type: str
+        required: False
+    custom_attribute_name:
+        description:
+        - "Clear using customized attribute"
         type: str
         required: False
     uuid:
@@ -220,7 +228,8 @@ options:
           RADIUS packets redirected (SO); 'radius-packets-redirect-fail-dropped'= RADIUS
           packets dropped due to redirect failure (SO); 'radius-packets-process-local'=
           RADIUS packets processed locally without redirection (SO); 'radius-packets-
-          dropped-not-lo'= RADIUS packets dropped dest not loopback (SO);"
+          dropped-not-lo'= RADIUS packets dropped dest not loopback (SO); 'radius-inter-
+          card-dup-redir'= RADIUS packet dropped as redirected by other blade (SO);"
                 type: str
     oper:
         description:
@@ -318,14 +327,6 @@ options:
                 description:
                 - "Radius Request has Invalid Key Field"
                 type: str
-            smp_created:
-                description:
-                - "RADIUS SMP Created"
-                type: str
-            smp_deleted:
-                description:
-                - "RADIUS SMP Deleted"
-                type: str
 
 '''
 
@@ -387,6 +388,7 @@ AVAILABLE_PROPERTIES = [
     "accounting_stop",
     "attribute",
     "attribute_name",
+    "custom_attribute_name",
     "disable_reply",
     "encrypted",
     "listen_port",
@@ -466,7 +468,8 @@ def get_argspec():
                 'str',
                 'choices': [
                     'inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei',
-                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3'
+                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3',
+                    'custom4', 'custom5', 'custom6'
                 ]
             },
             'prefix_length': {
@@ -519,9 +522,15 @@ def get_argspec():
             'choices': ['ignore', 'delete-entries-using-attribute']
         },
         'attribute_name': {
+            'type':
+            'str',
+            'choices': [
+                'msisdn', 'imei', 'imsi', 'custom1', 'custom2', 'custom3',
+                'custom4', 'custom5', 'custom6'
+            ]
+        },
+        'custom_attribute_name': {
             'type': 'str',
-            'choices':
-            ['msisdn', 'imei', 'imsi', 'custom1', 'custom2', 'custom3']
         },
         'uuid': {
             'type': 'str',
@@ -550,7 +559,8 @@ def get_argspec():
                     'radius-packets-redirected',
                     'radius-packets-redirect-fail-dropped',
                     'radius-packets-process-local',
-                    'radius-packets-dropped-not-lo'
+                    'radius-packets-dropped-not-lo',
+                    'radius-inter-card-dup-redir'
                 ]
             }
         },
@@ -583,6 +593,15 @@ def get_argspec():
                     'type': 'str',
                 },
                 'custom3_attr_value': {
+                    'type': 'str',
+                },
+                'custom4_attr_value': {
+                    'type': 'str',
+                },
+                'custom5_attr_value': {
+                    'type': 'str',
+                },
+                'custom6_attr_value': {
                     'type': 'str',
                 },
                 'is_obsolete': {
@@ -650,12 +669,6 @@ def get_argspec():
                 'type': 'str',
             },
             'invalid_key': {
-                'type': 'str',
-            },
-            'smp_created': {
-                'type': 'str',
-            },
-            'smp_deleted': {
                 'type': 'str',
             }
         }

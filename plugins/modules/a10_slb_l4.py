@@ -131,9 +131,22 @@ options:
           'synreceived_hw'= TCP SYN (HW SYN cookie); 'dns_id_switch'= DNS query id
           switch; 'server_down_del'= Server Down Del switch; 'dnssec_switch'= DNSSEC SG
           switch; 'rate_drop_reset_unkn'= Rate Drop reset; 'tcp_connections_closed'= TCP
-          Connections Closed; 'snat_force_preserve_alloc'= Snat port preserve allocated;
+          Connections Closed; 'gtp_c_invalid_port'= Invalid Packet Received on GTP VIP;
+          'gtp_c_invalid_header'= Invalid Header Received on GTP VIP;
+          'gtp_c_invalid_message'= Non Create Session/PDP Context Request/Response
+          Received on GTP VIP; 'reselect_svrselfail'= Server reselect failure;
+          'snat_port_overload_fail'= Snat port overload fail;
+          'snat_force_preserve_alloc'= Snat port preserve allocated;
           'snat_force_preserve_free'= Snat port preserve freed;
-          'snat_port_overload_fail'= Snat port overload fail;"
+          'slb_gtp_proxy_pkt_rcv_rr'= SLB GTP proxy packet received on RR;
+          'slb_gtp_proxy_smp_match'= SLB GTP proxy helper session found;
+          'slb_gtp_proxy_smp_no_match'= SLB GTP proxy helper session not found;
+          'slb_gtp_proxy_c_process_local_rr'= SLB GTP proxy messageprocessed locally on
+          RR; 'slb_gtp_proxy_smp_creation_failed'= SLB GTP proxy helper session creation
+          failed; 'slb_gtp_proxy_smp_created'= SLB GTP proxy helper session created;
+          'slb_gtp_proxy_smp_free_not_found'= SLB GTP proxy session helper not found
+          during cleanup; 'slb_gtp_proxy_smp_freed'= SLB GTP proxy session helper freed;
+          'slb_gtp_proxy_retx_requests'= SLB GTP proxy retx requests;"
                 type: str
     oper:
         description:
@@ -615,6 +628,26 @@ options:
                 description:
                 - "TCP Connections Closed"
                 type: str
+            gtp_c_invalid_port:
+                description:
+                - "Invalid Packet Received on GTP VIP"
+                type: str
+            gtp_c_invalid_header:
+                description:
+                - "Invalid Header Received on GTP VIP"
+                type: str
+            gtp_c_invalid_message:
+                description:
+                - "Non Create Session/PDP Context Request/Response Received on GTP VIP"
+                type: str
+            reselect_svrselfail:
+                description:
+                - "Server reselect failure"
+                type: str
+            snat_port_overload_fail:
+                description:
+                - "Snat port overload fail"
+                type: str
             snat_force_preserve_alloc:
                 description:
                 - "Snat port preserve allocated"
@@ -623,9 +656,37 @@ options:
                 description:
                 - "Snat port preserve freed"
                 type: str
-            snat_port_overload_fail:
+            slb_gtp_proxy_smp_match:
                 description:
-                - "Snat port overload fail"
+                - "SLB GTP proxy helper session found"
+                type: str
+            slb_gtp_proxy_smp_no_match:
+                description:
+                - "SLB GTP proxy helper session not found"
+                type: str
+            slb_gtp_proxy_c_process_local_rr:
+                description:
+                - "SLB GTP proxy messageprocessed locally on RR"
+                type: str
+            slb_gtp_proxy_smp_creation_failed:
+                description:
+                - "SLB GTP proxy helper session creation failed"
+                type: str
+            slb_gtp_proxy_smp_created:
+                description:
+                - "SLB GTP proxy helper session created"
+                type: str
+            slb_gtp_proxy_smp_free_not_found:
+                description:
+                - "SLB GTP proxy session helper not found during cleanup"
+                type: str
+            slb_gtp_proxy_smp_freed:
+                description:
+                - "SLB GTP proxy session helper freed"
+                type: str
+            slb_gtp_proxy_retx_requests:
+                description:
+                - "SLB GTP proxy retx requests"
                 type: str
 
 '''
@@ -769,8 +830,17 @@ def get_argspec():
                     'syncookie_buff_queue', 'skip_insert_client_ip',
                     'synreceived_hw', 'dns_id_switch', 'server_down_del',
                     'dnssec_switch', 'rate_drop_reset_unkn',
-                    'tcp_connections_closed', 'snat_force_preserve_alloc',
-                    'snat_force_preserve_free', 'snat_port_overload_fail'
+                    'tcp_connections_closed', 'gtp_c_invalid_port',
+                    'gtp_c_invalid_header', 'gtp_c_invalid_message',
+                    'reselect_svrselfail', 'snat_port_overload_fail',
+                    'snat_force_preserve_alloc', 'snat_force_preserve_free',
+                    'slb_gtp_proxy_pkt_rcv_rr', 'slb_gtp_proxy_smp_match',
+                    'slb_gtp_proxy_smp_no_match',
+                    'slb_gtp_proxy_c_process_local_rr',
+                    'slb_gtp_proxy_smp_creation_failed',
+                    'slb_gtp_proxy_smp_created',
+                    'slb_gtp_proxy_smp_free_not_found',
+                    'slb_gtp_proxy_smp_freed', 'slb_gtp_proxy_retx_requests'
                 ]
             }
         },
@@ -1114,13 +1184,52 @@ def get_argspec():
                 'tcp_connections_closed': {
                     'type': 'int',
                 },
+                'gtp_c_invalid_port': {
+                    'type': 'int',
+                },
+                'gtp_c_invalid_header': {
+                    'type': 'int',
+                },
+                'gtp_c_invalid_message': {
+                    'type': 'int',
+                },
+                'reselect_svrselfail': {
+                    'type': 'int',
+                },
+                'snat_port_overload_fail': {
+                    'type': 'int',
+                },
                 'snat_force_preserve_alloc': {
                     'type': 'int',
                 },
                 'snat_force_preserve_free': {
                     'type': 'int',
                 },
-                'snat_port_overload_fail': {
+                'slb_gtp_proxy_pkt_rcv_rr': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_smp_match': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_smp_no_match': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_c_process_local_rr': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_smp_creation_failed': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_smp_created': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_smp_free_not_found': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_smp_freed': {
+                    'type': 'int',
+                },
+                'slb_gtp_proxy_retx_requests': {
                     'type': 'int',
                 }
             },
@@ -1475,13 +1584,49 @@ def get_argspec():
             'tcp_connections_closed': {
                 'type': 'str',
             },
+            'gtp_c_invalid_port': {
+                'type': 'str',
+            },
+            'gtp_c_invalid_header': {
+                'type': 'str',
+            },
+            'gtp_c_invalid_message': {
+                'type': 'str',
+            },
+            'reselect_svrselfail': {
+                'type': 'str',
+            },
+            'snat_port_overload_fail': {
+                'type': 'str',
+            },
             'snat_force_preserve_alloc': {
                 'type': 'str',
             },
             'snat_force_preserve_free': {
                 'type': 'str',
             },
-            'snat_port_overload_fail': {
+            'slb_gtp_proxy_smp_match': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_smp_no_match': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_c_process_local_rr': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_smp_creation_failed': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_smp_created': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_smp_free_not_found': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_smp_freed': {
+                'type': 'str',
+            },
+            'slb_gtp_proxy_retx_requests': {
                 'type': 'str',
             }
         }

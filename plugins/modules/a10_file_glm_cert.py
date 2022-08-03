@@ -70,19 +70,14 @@ options:
         - "glm license local file name"
         type: str
         required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
-        type: str
-        required: False
     action:
         description:
         - "'import'= import;"
         type: str
         required: False
-    dst_file:
+    file_handle:
         description:
-        - "destination file name for copy and rename action"
+        - "full path of the uploaded file"
         type: str
         required: False
 
@@ -142,7 +137,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "action",
     "device",
-    "dst_file",
     "file",
     "file_handle",
 ]
@@ -182,14 +176,11 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'file_handle': {
-            'type': 'str',
-        },
         'action': {
             'type': 'str',
             'choices': ['import']
         },
-        'dst_file': {
+        'file_handle': {
             'type': 'str',
         }
     })

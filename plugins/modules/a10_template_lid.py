@@ -66,6 +66,52 @@ options:
           (default=off)"
         type: bool
         required: False
+    limit_rate:
+        description:
+        - "'limit-pps'= Enable Packets Per Second Rate Limit; 'limit-throughput'= Enable
+          Throughput Rate Limit;"
+        type: str
+        required: False
+    uplink_pps:
+        description:
+        - "Uplink PPS limit (Number of Packets per second)"
+        type: int
+        required: False
+    downlink_pps:
+        description:
+        - "Downlink PPS limit (Number of Packets per second)"
+        type: int
+        required: False
+    ddos_protection_factor:
+        description:
+        - "Enable DDoS Protection (Multiplier of the downlink PPS)"
+        type: int
+        required: False
+    total_pps:
+        description:
+        - "Total PPS limit (Number of Packets per second)"
+        type: int
+        required: False
+    uplink_throughput:
+        description:
+        - "Uplink Throughput limit (Mega Bits per second)"
+        type: int
+        required: False
+    downlink_throughput:
+        description:
+        - "Downlink Throughput limit (Mega Bits per second)"
+        type: int
+        required: False
+    total_throughput:
+        description:
+        - "Total Throughput limit (Mega Bits per second)"
+        type: int
+        required: False
+    limit_cps:
+        description:
+        - "Enable Connections Per Second Rate Limit (Number of Connections per second)"
+        type: int
+        required: False
     src_ip:
         description:
         - "Field src_ip"
@@ -84,10 +130,6 @@ options:
                 description:
                 - "Source prefix length"
                 type: int
-            enable_high_perf:
-                description:
-                - "Enable High Perf"
-                type: bool
     uuid:
         description:
         - "uuid of the object"
@@ -153,9 +195,18 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "ddos_protection_factor",
+    "downlink_pps",
+    "downlink_throughput",
     "lid_number",
+    "limit_cps",
+    "limit_rate",
     "respond_to_user_mac",
     "src_ip",
+    "total_pps",
+    "total_throughput",
+    "uplink_pps",
+    "uplink_throughput",
     "user_tag",
     "uuid",
 ]
@@ -193,6 +244,34 @@ def get_argspec():
         'respond_to_user_mac': {
             'type': 'bool',
         },
+        'limit_rate': {
+            'type': 'str',
+            'choices': ['limit-pps', 'limit-throughput']
+        },
+        'uplink_pps': {
+            'type': 'int',
+        },
+        'downlink_pps': {
+            'type': 'int',
+        },
+        'ddos_protection_factor': {
+            'type': 'int',
+        },
+        'total_pps': {
+            'type': 'int',
+        },
+        'uplink_throughput': {
+            'type': 'int',
+        },
+        'downlink_throughput': {
+            'type': 'int',
+        },
+        'total_throughput': {
+            'type': 'int',
+        },
+        'limit_cps': {
+            'type': 'int',
+        },
         'src_ip': {
             'type': 'dict',
             'concurrent_sessions': {
@@ -203,9 +282,6 @@ def get_argspec():
             },
             'prefix_length': {
                 'type': 'int',
-            },
-            'enable_high_perf': {
-                'type': 'bool',
             }
         },
         'uuid': {

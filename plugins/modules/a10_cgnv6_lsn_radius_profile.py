@@ -69,9 +69,11 @@ options:
             attribute:
                 description:
                 - "'custom1'= Configure RADIUS Attribute Custom 1; 'custom2'= Configure RADIUS
-          Attribute Custom 2; 'custom3'= Configure RADIUS Attribute Custom 3; 'imei'=
-          Configure RADIUS Attribute IMEI; 'imsi'= Configure RADIUS Attribute IMSI;
-          'msisdn'= Configure RADIUS Attribute MSISDN; 'default'= Configure default;"
+          Attribute Custom 2; 'custom3'= Configure RADIUS Attribute Custom 3; 'custom4'=
+          Configure RADIUS Attribute Custom 4; 'custom5'= Configure RADIUS Attribute
+          Custom 5; 'custom6'= Configure RADIUS Attribute Custom 6; 'imei'= Configure
+          RADIUS Attribute IMEI; 'imsi'= Configure RADIUS Attribute IMSI; 'msisdn'=
+          Configure RADIUS Attribute MSISDN; 'default'= Configure default;"
                 type: str
             starts_with:
                 description:
@@ -200,8 +202,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'custom1', 'custom2', 'custom3', 'imei', 'imsi', 'msisdn',
-                    'default'
+                    'custom1', 'custom2', 'custom3', 'custom4', 'custom5',
+                    'custom6', 'imei', 'imsi', 'msisdn', 'default'
                 ]
             },
             'starts_with': {

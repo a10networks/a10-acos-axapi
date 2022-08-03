@@ -60,6 +60,11 @@ options:
         - "Use management port to connect"
         type: bool
         required: False
+    glm_source_url:
+        description:
+        - "Change GLM source url"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -126,8 +131,17 @@ options:
         suboptions:
             feature_name:
                 description:
-                - "'app-fw'= Application Firewall Configuration;"
+                - "'app-fw'= Application Firewall Configuration; 'ca-bundle'= CA Certificate
+          Bundle; 'a10-threat-intel'= A10 Threat intel class list;"
                 type: str
+            debug:
+                description:
+                - "Enable libcurl debug option"
+                type: bool
+            disable_ssl_verify:
+                description:
+                - "Disable peer server certificate verification"
+                type: bool
             schedule:
                 description:
                 - "Field schedule"
@@ -165,7 +179,21 @@ options:
         suboptions:
             feature_name:
                 description:
-                - "'app-fw'= Application Firewall;"
+                - "'app-fw'= Application Firewall; 'ca-bundle'= CA Certificate Bundle;
+          'a10-threat-intel'= A10 Threat intel class list;"
+                type: str
+            prod_ver:
+                description:
+                - "update to this specific version, if this option is not configured, update to
+          the latest version"
+                type: str
+            from_staging_server:
+                description:
+                - "Get files from GLM Staging storage"
+                type: bool
+            stage_ver:
+                description:
+                - "update this specific version"
                 type: str
     checknow:
         description:
@@ -185,7 +213,8 @@ options:
         suboptions:
             feature_name:
                 description:
-                - "'app-fw'= Application Firewall;"
+                - "'app-fw'= Application Firewall; 'a10-threat-intel'= A10 Threat intel class
+          list;"
                 type: str
     reset:
         description:
@@ -195,7 +224,7 @@ options:
         suboptions:
             feature_name:
                 description:
-                - "'app-fw'= Application Firewall;"
+                - "'app-fw'= Application Firewall; 'ca-bundle'= CA Certificate Bundle;"
                 type: str
 
 '''
@@ -255,6 +284,7 @@ AVAILABLE_PROPERTIES = [
     "check_now",
     "checknow",
     "config_list",
+    "glm_source_url",
     "info",
     "proxy_server",
     "reset",
@@ -291,6 +321,9 @@ def get_argspec():
     rv.update({
         'use_mgmt_port': {
             'type': 'bool',
+        },
+        'glm_source_url': {
+            'type': 'str',
         },
         'uuid': {
             'type': 'str',
@@ -337,7 +370,13 @@ def get_argspec():
             'feature_name': {
                 'type': 'str',
                 'required': True,
-                'choices': ['app-fw']
+                'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
+            },
+            'debug': {
+                'type': 'bool',
+            },
+            'disable_ssl_verify': {
+                'type': 'bool',
             },
             'schedule': {
                 'type': 'bool',
@@ -370,7 +409,16 @@ def get_argspec():
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
-                'choices': ['app-fw']
+                'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
+            },
+            'prod_ver': {
+                'type': 'str',
+            },
+            'from_staging_server': {
+                'type': 'bool',
+            },
+            'stage_ver': {
+                'type': 'str',
             }
         },
         'checknow': {
@@ -383,14 +431,14 @@ def get_argspec():
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
-                'choices': ['app-fw']
+                'choices': ['app-fw', 'a10-threat-intel']
             }
         },
         'reset': {
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
-                'choices': ['app-fw']
+                'choices': ['app-fw', 'ca-bundle']
             }
         }
     })

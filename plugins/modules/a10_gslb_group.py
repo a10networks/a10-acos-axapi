@@ -105,6 +105,13 @@ options:
         - "Discover member via DNS Protocol"
         type: bool
         required: False
+    resolve_as:
+        description:
+        - "'resolve-to-ipv4'= Use A Query only to resolve FQDN (Default Query type);
+          'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-
+          ipv6'= Use A as well as AAAA Query to resolve FQDN;"
+        type: str
+        required: False
     enable:
         description:
         - "Join GSLB Group"
@@ -122,6 +129,16 @@ options:
         required: False
         suboptions:
             primary:
+                description:
+                - "Specify Primary controller's IP address"
+                type: str
+    primary_ipv6_list:
+        description:
+        - "Field primary_ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            primary_ipv6:
                 description:
                 - "Specify Primary controller's IP address"
                 type: str
@@ -217,8 +234,10 @@ AVAILABLE_PROPERTIES = [
     "learn",
     "mgmt_interface",
     "name",
+    "primary_ipv6_list",
     "primary_list",
     "priority",
+    "resolve_as",
     "standalone",
     "suffix",
     "user_tag",
@@ -282,6 +301,12 @@ def get_argspec():
         'dns_discover': {
             'type': 'bool',
         },
+        'resolve_as': {
+            'type':
+            'str',
+            'choices':
+            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
+        },
         'enable': {
             'type': 'bool',
         },
@@ -291,6 +316,12 @@ def get_argspec():
         'primary_list': {
             'type': 'list',
             'primary': {
+                'type': 'str',
+            }
+        },
+        'primary_ipv6_list': {
+            'type': 'list',
+            'primary_ipv6': {
                 'type': 'str',
             }
         },

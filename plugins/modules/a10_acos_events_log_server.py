@@ -70,6 +70,11 @@ options:
         - "IP Address"
         type: str
         required: False
+    fqdn_name:
+        description:
+        - "Server hostname"
+        type: str
+        required: False
     resolve_as:
         description:
         - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use
@@ -224,6 +229,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "action",
+    "fqdn_name",
     "health_check",
     "health_check_disable",
     "host",
@@ -271,6 +277,9 @@ def get_argspec():
             'type': 'str',
         },
         'host': {
+            'type': 'str',
+        },
+        'fqdn_name': {
             'type': 'str',
         },
         'resolve_as': {

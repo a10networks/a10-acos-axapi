@@ -55,6 +55,18 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    port_scan_detection:
+        description:
+        - "'enable'= Enable port scan detection; 'disable'= Disable port scan
+          detection(default);"
+        type: str
+        required: False
+    ping_sweep_detection:
+        description:
+        - "'enable'= Enable ping sweep detection; 'disable'= Disable ping sweep
+          detection(default);"
+        type: str
+        required: False
     extended_stats:
         description:
         - "Enable global slb extended statistics"
@@ -106,6 +118,11 @@ options:
         - "'local'= Maximum local rate; 'remote'= Maximum remote rate;  (Maximum rates)"
         type: str
         required: False
+    auto_translate_port:
+        description:
+        - "Auto Translate Port range"
+        type: bool
+        required: False
     range:
         description:
         - "auto translate port range"
@@ -121,14 +138,39 @@ options:
         - "port range end"
         type: int
         required: False
+    use_default_sess_count:
+        description:
+        - "Use default session count"
+        type: bool
+        required: False
+    per_thr_percent:
+        description:
+        - "Percentage of default session count to use for per thread session table size"
+        type: int
+        required: False
     dsr_health_check_enable:
         description:
         - "Enable dsr-health-check (direct server return health check)"
         type: bool
         required: False
+    one_server_conn_hm_rate:
+        description:
+        - "One Server Conn Health Check Rate"
+        type: int
+        required: False
+    aflex_table_entry_aging_interval:
+        description:
+        - "aFleX table entry aging interval in second"
+        type: int
+        required: False
     override_port:
         description:
         - "Enable override port in DSR health check mode"
+        type: bool
+        required: False
+    health_check_to_all_vip:
+        description:
+        - "Field health_check_to_all_vip"
         type: bool
         required: False
     reset_stale_session:
@@ -158,6 +200,12 @@ options:
           300 seconds)"
         type: int
         required: False
+    dns_cache_age_min_threshold:
+        description:
+        - "Set DNS cache entry age minimum threshold, default is 0 seconds (1-1000000
+          seconds, default is 0 seconds)"
+        type: int
+        required: False
     compress_block_size:
         description:
         - "Set compression block size (Compression block size in bytes)"
@@ -178,6 +226,13 @@ options:
         description:
         - "Honor the server reponse TTL"
         type: bool
+        required: False
+    recursive_ns_cache:
+        description:
+        - "'honor-packet-ttl'= Honor the lowest TTL among NS records in the server
+          response; 'honor-age-config'= Honor the ttl/age settings based on acos dns
+          cache configuration;"
+        type: str
         required: False
     buff_thresh:
         description:
@@ -238,13 +293,18 @@ options:
         required: False
     msl_time:
         description:
-        - "Configure maximum session life, default is 2 seconds (1-40 seconds, default is
+        - "Configure maximum session life, default is 2 seconds (1-39 seconds, default is
           2 seconds)"
         type: int
         required: False
     fast_path_disable:
         description:
         - "Disable fast path in SLB processing"
+        type: bool
+        required: False
+    http_fast_enable:
+        description:
+        - "Enable Http Fast in SLB processing"
         type: bool
         required: False
     l2l3_trunk_lb_disable:
@@ -276,6 +336,16 @@ options:
         description:
         - "Disable adaptive resource check based on buffer usage"
         type: bool
+        required: False
+    ddos_pkt_size_thresh:
+        description:
+        - "Set data packet size threshold for DDOS, default is 64 bytes"
+        type: int
+        required: False
+    ddos_pkt_count_thresh:
+        description:
+        - "Set packet count threshold for DDOS, default is 100"
+        type: int
         required: False
     snat_on_vip:
         description:
@@ -322,6 +392,31 @@ options:
         - "Enable SLB scale out"
         type: bool
         required: False
+    scale_out_traffic_map:
+        description:
+        - "Set SLB scaleout traffic-map"
+        type: bool
+        required: False
+    show_slb_server_legacy_cmd:
+        description:
+        - "Enable show slb server legacy command"
+        type: bool
+        required: False
+    show_slb_service_group_legacy_cmd:
+        description:
+        - "Enable show slb service-group legacy command"
+        type: bool
+        required: False
+    show_slb_virtual_server_legacy_cmd:
+        description:
+        - "Enable show slb virtual-server legacy command"
+        type: bool
+        required: False
+    traffic_map_type:
+        description:
+        - "'vport'= traffic-map per vport; 'global'= global traffic-map;"
+        type: str
+        required: False
     sort_res:
         description:
         - "Enable SLB sorting of resource names"
@@ -361,16 +456,47 @@ options:
         - "Enable SSLi SNI hash table"
         type: bool
         required: False
+    ssli_cert_not_ready_inspect_timeout:
+        description:
+        - "SSLI asynchronized connection timeout, default is 10 seconds (seconds, set to 0
+          for never timeout)"
+        type: int
+        required: False
+    ssli_cert_not_ready_inspect_limit:
+        description:
+        - "SSLI asynchronized connection max number, default is 2000 (set to 0 for
+          unlimited size)"
+        type: int
+        required: False
     software:
         description:
         - "Software"
         type: bool
         required: False
-    ecmp_hash:
+    software_tls13:
         description:
-        - "'system-default'= Use system default ecmp hashing algorithm; 'connection-
-          based'= Use connection information for hashing;"
-        type: str
+        - "Software TLS1.3"
+        type: bool
+        required: False
+    QAT:
+        description:
+        - "HW assisted QAT SSL module"
+        type: bool
+        required: False
+    N5_new:
+        description:
+        - "HW assisted N5 SSL module with TLS 1.3 and TLS 1.2 support using OpenSSL 1.1.1"
+        type: bool
+        required: False
+    N5_old:
+        description:
+        - "HW assisted N5 SSL module with TLS 1.2 support using OpenSSL 0.9.7"
+        type: bool
+        required: False
+    substitute_source_mac:
+        description:
+        - "Substitute Source MAC Address to that of the outgoing interface"
+        type: bool
         required: False
     drop_icmp_to_vip_when_vip_down:
         description:
@@ -387,15 +513,18 @@ options:
         - "Enable stateless service groups to be assigned to multiple L2/L3 DSR VIPs"
         type: bool
         required: False
-    disable_persist_scoring:
+    ecmp_hash:
         description:
-        - "Disable Persist Scoring"
-        type: bool
+        - "'system-default'= Use system default ecmp hashing algorithm; 'connection-
+          based'= Use connection information for hashing;"
+        type: str
         required: False
-    ipv4_offset:
+    service_group_on_no_dest_nat_vports:
         description:
-        - "IPv4 Octet Offset for Hash"
-        type: int
+        - "'allow-same'= Allow the binding service-group on no-dest-nat virtual ports;
+          'enforce-different'= Enforce that the same service-group can not be bound on
+          different no-dest-nat virtual ports;"
+        type: str
         required: False
     disable_port_masking:
         description:
@@ -412,18 +541,47 @@ options:
                 description:
                 - "Field range"
                 type: list
-    service_group_on_no_dest_nat_vports:
+    disable_persist_scoring:
         description:
-        - "'allow-same'= Allow the binding service-group on no-dest-nat virtual ports;
-          'enforce-different'= Enforce that the same service-group can not be bound on
-          different no-dest-nat virtual ports;"
-        type: str
+        - "Disable Persist Scoring"
+        type: bool
+        required: False
+    ipv4_offset:
+        description:
+        - "IPv4 Octet Offset for Hash"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    aflex_table_entry_sync:
+        description:
+        - "Field aflex_table_entry_sync"
+        type: dict
+        required: False
+        suboptions:
+            aflex_table_entry_sync_enable:
+                description:
+                - "Enable aflex table sync"
+                type: bool
+            aflex_table_entry_sync_max_key_len:
+                description:
+                - "aflex table entry max key length to sync"
+                type: int
+            aflex_table_entry_sync_max_value_len:
+                description:
+                - "aflex table entry max value length to sync"
+                type: int
+            aflex_table_entry_sync_min_lifetime:
+                description:
+                - "aflex table entry minimum lifetime to sync"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     conn_rate_limit:
         description:
         - "Field conn_rate_limit"
@@ -513,9 +671,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "aflex_table_entry_aging_interval",
+    "aflex_table_entry_sync",
     "after_disable",
     "allow_in_gateway_mode",
     "auto_nat_no_ip_refresh",
+    "auto_translate_port",
     "buff_thresh",
     "buff_thresh_hw_buff",
     "buff_thresh_relieve_thresh",
@@ -523,12 +684,15 @@ AVAILABLE_PROPERTIES = [
     "buff_thresh_sys_buff_low",
     "compress_block_size",
     "conn_rate_limit",
+    "ddos_pkt_count_thresh",
+    "ddos_pkt_size_thresh",
     "ddos_protection",
     "disable_adaptive_resource_check",
     "disable_persist_scoring",
     "disable_port_masking",
     "disable_server_auto_reselect",
     "dns_cache_age",
+    "dns_cache_age_min_threshold",
     "dns_cache_enable",
     "dns_cache_entry_size",
     "dns_response_rate_limiting",
@@ -544,7 +708,9 @@ AVAILABLE_PROPERTIES = [
     "gateway_health_check",
     "graceful_shutdown",
     "graceful_shutdown_enable",
+    "health_check_to_all_vip",
     "honor_server_response_ttl",
+    "http_fast_enable",
     "hw_compression",
     "hw_syn_rr",
     "interval",
@@ -558,30 +724,48 @@ AVAILABLE_PROPERTIES = [
     "max_remote_rate",
     "msl_time",
     "mss_table",
+    "N5_new",
+    "N5_old",
     "no_auto_up_on_aflex",
+    "one_server_conn_hm_rate",
     "oper",
     "override_port",
+    "per_thr_percent",
+    "ping_sweep_detection",
     "pkt_rate_for_reset_unknown_conn",
     "player_id_check_enable",
+    "port_scan_detection",
+    "QAT",
     "range",
     "range_end",
     "range_start",
     "rate_limit_logging",
+    "recursive_ns_cache",
     "reset_stale_session",
     "resolve_port_conflict",
     "response_type",
     "scale_out",
+    "scale_out_traffic_map",
     "service_group_on_no_dest_nat_vports",
+    "show_slb_server_legacy_cmd",
+    "show_slb_service_group_legacy_cmd",
+    "show_slb_virtual_server_legacy_cmd",
     "snat_gwy_for_l3",
     "snat_on_vip",
     "snat_preserve",
     "software",
+    "software_tls13",
     "sort_res",
+    "ssli_cert_not_ready_inspect_limit",
+    "ssli_cert_not_ready_inspect_timeout",
     "ssli_sni_hash_enable",
     "stateless_sg_multi_binding",
     "stats_data_disable",
+    "substitute_source_mac",
     "timeout",
+    "traffic_map_type",
     "ttl_threshold",
+    "use_default_sess_count",
     "use_mss_tab",
     "uuid",
 ]
@@ -612,6 +796,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'port_scan_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'ping_sweep_detection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
         'extended_stats': {
             'type': 'bool',
         },
@@ -644,6 +836,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['local', 'remote']
         },
+        'auto_translate_port': {
+            'type': 'bool',
+        },
         'range': {
             'type': 'int',
         },
@@ -653,10 +848,25 @@ def get_argspec():
         'range_end': {
             'type': 'int',
         },
+        'use_default_sess_count': {
+            'type': 'bool',
+        },
+        'per_thr_percent': {
+            'type': 'int',
+        },
         'dsr_health_check_enable': {
             'type': 'bool',
         },
+        'one_server_conn_hm_rate': {
+            'type': 'int',
+        },
+        'aflex_table_entry_aging_interval': {
+            'type': 'int',
+        },
         'override_port': {
+            'type': 'bool',
+        },
+        'health_check_to_all_vip': {
             'type': 'bool',
         },
         'reset_stale_session': {
@@ -675,6 +885,9 @@ def get_argspec():
         'dns_cache_age': {
             'type': 'int',
         },
+        'dns_cache_age_min_threshold': {
+            'type': 'int',
+        },
         'compress_block_size': {
             'type': 'int',
         },
@@ -686,6 +899,10 @@ def get_argspec():
         },
         'honor_server_response_ttl': {
             'type': 'bool',
+        },
+        'recursive_ns_cache': {
+            'type': 'str',
+            'choices': ['honor-packet-ttl', 'honor-age-config']
         },
         'buff_thresh': {
             'type': 'bool',
@@ -726,6 +943,9 @@ def get_argspec():
         'fast_path_disable': {
             'type': 'bool',
         },
+        'http_fast_enable': {
+            'type': 'bool',
+        },
         'l2l3_trunk_lb_disable': {
             'type': 'bool',
         },
@@ -743,6 +963,12 @@ def get_argspec():
         },
         'disable_adaptive_resource_check': {
             'type': 'bool',
+        },
+        'ddos_pkt_size_thresh': {
+            'type': 'int',
+        },
+        'ddos_pkt_count_thresh': {
+            'type': 'int',
         },
         'snat_on_vip': {
             'type': 'bool',
@@ -770,6 +996,22 @@ def get_argspec():
         },
         'scale_out': {
             'type': 'bool',
+        },
+        'scale_out_traffic_map': {
+            'type': 'bool',
+        },
+        'show_slb_server_legacy_cmd': {
+            'type': 'bool',
+        },
+        'show_slb_service_group_legacy_cmd': {
+            'type': 'bool',
+        },
+        'show_slb_virtual_server_legacy_cmd': {
+            'type': 'bool',
+        },
+        'traffic_map_type': {
+            'type': 'str',
+            'choices': ['vport', 'global']
         },
         'sort_res': {
             'type': 'bool',
@@ -807,12 +1049,29 @@ def get_argspec():
         'ssli_sni_hash_enable': {
             'type': 'bool',
         },
+        'ssli_cert_not_ready_inspect_timeout': {
+            'type': 'int',
+        },
+        'ssli_cert_not_ready_inspect_limit': {
+            'type': 'int',
+        },
         'software': {
             'type': 'bool',
         },
-        'ecmp_hash': {
-            'type': 'str',
-            'choices': ['system-default', 'connection-based']
+        'software_tls13': {
+            'type': 'bool',
+        },
+        'QAT': {
+            'type': 'bool',
+        },
+        'N5_new': {
+            'type': 'bool',
+        },
+        'N5_old': {
+            'type': 'bool',
+        },
+        'substitute_source_mac': {
+            'type': 'bool',
         },
         'drop_icmp_to_vip_when_vip_down': {
             'type': 'bool',
@@ -823,11 +1082,13 @@ def get_argspec():
         'stateless_sg_multi_binding': {
             'type': 'bool',
         },
-        'disable_persist_scoring': {
-            'type': 'bool',
+        'ecmp_hash': {
+            'type': 'str',
+            'choices': ['system-default', 'connection-based']
         },
-        'ipv4_offset': {
-            'type': 'int',
+        'service_group_on_no_dest_nat_vports': {
+            'type': 'str',
+            'choices': ['allow-same', 'enforce-different']
         },
         'disable_port_masking': {
             'type': 'bool',
@@ -844,12 +1105,32 @@ def get_argspec():
                 }
             }
         },
-        'service_group_on_no_dest_nat_vports': {
-            'type': 'str',
-            'choices': ['allow-same', 'enforce-different']
+        'disable_persist_scoring': {
+            'type': 'bool',
+        },
+        'ipv4_offset': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',
+        },
+        'aflex_table_entry_sync': {
+            'type': 'dict',
+            'aflex_table_entry_sync_enable': {
+                'type': 'bool',
+            },
+            'aflex_table_entry_sync_max_key_len': {
+                'type': 'int',
+            },
+            'aflex_table_entry_sync_max_value_len': {
+                'type': 'int',
+            },
+            'aflex_table_entry_sync_min_lifetime': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         },
         'conn_rate_limit': {
             'type': 'dict',

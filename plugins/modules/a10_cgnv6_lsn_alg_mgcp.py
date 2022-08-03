@@ -126,6 +126,14 @@ options:
                 description:
                 - "MGCP RSIP"
                 type: str
+            parse_error:
+                description:
+                - "MGCP Message Parse Error"
+                type: str
+            tcp_out_of_order_drop:
+                description:
+                - "TCP Out-of-Order Drop"
+                type: str
 
 '''
 
@@ -263,6 +271,12 @@ def get_argspec():
                 'type': 'str',
             },
             'rsip': {
+                'type': 'str',
+            },
+            'parse_error': {
+                'type': 'str',
+            },
+            'tcp_out_of_order_drop': {
                 'type': 'str',
             }
         }

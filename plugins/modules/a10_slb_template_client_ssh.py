@@ -99,15 +99,15 @@ options:
         suboptions:
             successful_handshakes:
                 description:
-                - "Field successful_handshakes"
+                - "some help string"
                 type: str
             failed_handshakes:
                 description:
-                - "Field failed_handshakes"
+                - "some help string"
                 type: str
             forwarding_errors:
                 description:
-                - "Field forwarding_errors"
+                - "some help string"
                 type: str
             name:
                 description:

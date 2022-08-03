@@ -65,25 +65,20 @@ options:
         - "Specify the Program Name"
         type: str
         required: False
-    size:
-        description:
-        - "syslog file size in byte"
-        type: int
-        required: False
     description:
         description:
         - "Describe the Program Function briefly"
-        type: str
-        required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
         type: str
         required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
           rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
         type: str
         required: False
     dst_file:
@@ -167,7 +162,6 @@ AVAILABLE_PROPERTIES = [
     "file",
     "file_handle",
     "oper",
-    "size",
     "uuid",
 ]
 
@@ -203,13 +197,7 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
         'description': {
-            'type': 'str',
-        },
-        'file_handle': {
             'type': 'str',
         },
         'action': {
@@ -219,6 +207,9 @@ def get_argspec():
                 'create', 'import', 'export', 'copy', 'rename', 'check',
                 'replace', 'delete'
             ]
+        },
+        'file_handle': {
+            'type': 'str',
         },
         'dst_file': {
             'type': 'str',

@@ -60,6 +60,13 @@ options:
         - "Specify log message-id lineage"
         type: str
         required: True
+    message_id_scope_route:
+        description:
+        - "'all'= Log messages at this level and all sub-trees; 'node-only'= Log messages
+          at this node only; 'children-only'= Log messages at all sub-trees only; 'log-
+          field-only'= This is a log-field (Default);"
+        type: str
+        required: True
     uuid:
         description:
         - "uuid of the object"
@@ -79,6 +86,10 @@ options:
             severity:
                 description:
                 - "Field severity"
+                type: dict
+            log_route:
+                description:
+                - "Field log_route"
                 type: dict
 
 '''
@@ -136,6 +147,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "log_msg",
+    "message_id_scope_route",
     "property",
     "user_tag",
     "uuid",
@@ -171,6 +183,11 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'message_id_scope_route': {
+            'type': 'str',
+            'required': True,
+            'choices': ['all', 'node-only', 'children-only', 'log-field-only']
+        },
         'uuid': {
             'type': 'str',
         },
@@ -192,6 +209,17 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                 }
+            },
+            'log_route': {
+                'type': 'dict',
+                'log_route_val': {
+                    'type': 'str',
+                    'choices':
+                    ['local-only', 'remote-only', 'local-and-remote']
+                },
+                'uuid': {
+                    'type': 'str',
+                }
             }
         }
     })
@@ -201,10 +229,11 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/acos-events/message-id/{log-msg}"
+    url_base = "/axapi/v3/acos-events/message-id/{log-msg}+{message-id-scope-route}"
 
     f_dict = {}
     f_dict["log-msg"] = module.params["log_msg"]
+    f_dict["message-id-scope-route"] = module.params["message_id_scope_route"]
 
     return url_base.format(**f_dict)
 
@@ -212,10 +241,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/acos-events/message-id/{log-msg}"
+    url_base = "/axapi/v3/acos-events/message-id/{log-msg}+{message-id-scope-route}"
 
     f_dict = {}
     f_dict["log-msg"] = ""
+    f_dict["message-id-scope-route"] = ""
 
     return url_base.format(**f_dict)
 

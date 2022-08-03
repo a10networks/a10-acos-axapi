@@ -55,10 +55,10 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    ifnum:
+    ifname:
         description:
-        - "Lif interface number"
-        type: int
+        - "Lif interface name"
+        type: str
         required: True
     mtu:
         description:
@@ -68,6 +68,11 @@ options:
     action:
         description:
         - "'enable'= Enable; 'disable'= Disable;"
+        type: str
+        required: False
+    name:
+        description:
+        - "Name for the interface"
         type: str
         required: False
     access_list:
@@ -102,14 +107,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num_pkts'= num_pkts; 'num_total_bytes'= num_total_bytes;
-          'num_unicast_pkts'= num_unicast_pkts; 'num_broadcast_pkts'= num_broadcast_pkts;
-          'num_multicast_pkts'= num_multicast_pkts; 'num_tx_pkts'= num_tx_pkts;
-          'num_total_tx_bytes'= num_total_tx_bytes; 'num_unicast_tx_pkts'=
-          num_unicast_tx_pkts; 'num_broadcast_tx_pkts'= num_broadcast_tx_pkts;
-          'num_multicast_tx_pkts'= num_multicast_tx_pkts; 'dropped_dis_rx_pkts'=
-          dropped_dis_rx_pkts; 'dropped_rx_pkts'= dropped_rx_pkts; 'dropped_dis_tx_pkts'=
-          dropped_dis_tx_pkts; 'dropped_tx_pkts'= dropped_tx_pkts;"
+                - "'all'= all; 'num_pkts'= some help string; 'num_total_bytes'= some help string;
+          'num_unicast_pkts'= some help string; 'num_broadcast_pkts'= some help string;
+          'num_multicast_pkts'= some help string; 'num_tx_pkts'= some help string;
+          'num_total_tx_bytes'= some help string; 'num_unicast_tx_pkts'= some help
+          string; 'num_broadcast_tx_pkts'= some help string; 'num_multicast_tx_pkts'=
+          some help string; 'dropped_dis_rx_pkts'= some help string; 'dropped_rx_pkts'=
+          some help string; 'dropped_dis_tx_pkts'= some help string; 'dropped_tx_pkts'=
+          some help string; 'dropped_rx_pkts_gre_key'= some help string;"
                 type: str
     ip:
         description:
@@ -153,6 +158,10 @@ options:
                 description:
                 - "Maximum Response Time (Max Response Time (Default is 100))"
                 type: int
+            unnumbered:
+                description:
+                - "Set the interface as unnumbered"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -164,6 +173,40 @@ options:
             rip:
                 description:
                 - "Field rip"
+                type: dict
+            ospf:
+                description:
+                - "Field ospf"
+                type: dict
+    ipv6:
+        description:
+        - "Field ipv6"
+        type: dict
+        required: False
+        suboptions:
+            address_list:
+                description:
+                - "Field address_list"
+                type: list
+            ipv6_enable:
+                description:
+                - "Enable IPv6 processing"
+                type: bool
+            inside:
+                description:
+                - "Configure interface as inside"
+                type: bool
+            outside:
+                description:
+                - "Configure interface as outside"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            router:
+                description:
+                - "Field router"
                 type: dict
             ospf:
                 description:
@@ -282,6 +325,26 @@ options:
                 description:
                 - "Field state"
                 type: str
+            line_protocol:
+                description:
+                - "Field line_protocol"
+                type: str
+            link_type:
+                description:
+                - "Field link_type"
+                type: str
+            encapsulation_type:
+                description:
+                - "Field encapsulation_type"
+                type: str
+            member_id:
+                description:
+                - "Field member_id"
+                type: str
+            keep_alive:
+                description:
+                - "Field keep_alive"
+                type: str
             mac:
                 description:
                 - "Field mac"
@@ -322,10 +385,30 @@ options:
                 description:
                 - "Field ipv6_list"
                 type: list
-            ifnum:
+            ipv6_link_local:
                 description:
-                - "Lif interface number"
+                - "Field ipv6_link_local"
+                type: str
+            ipv6_link_local_prefix:
+                description:
+                - "Field ipv6_link_local_prefix"
+                type: str
+            ipv6_link_local_type:
+                description:
+                - "Field ipv6_link_local_type"
+                type: str
+            ipv6_link_local_scope:
+                description:
+                - "Field ipv6_link_local_scope"
+                type: str
+            ip_unnumbered_enabled:
+                description:
+                - "Field ip_unnumbered_enabled"
                 type: int
+            ifname:
+                description:
+                - "Lif interface name"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -334,64 +417,68 @@ options:
         suboptions:
             num_pkts:
                 description:
-                - "Field num_pkts"
+                - "some help string"
                 type: str
             num_total_bytes:
                 description:
-                - "Field num_total_bytes"
+                - "some help string"
                 type: str
             num_unicast_pkts:
                 description:
-                - "Field num_unicast_pkts"
+                - "some help string"
                 type: str
             num_broadcast_pkts:
                 description:
-                - "Field num_broadcast_pkts"
+                - "some help string"
                 type: str
             num_multicast_pkts:
                 description:
-                - "Field num_multicast_pkts"
+                - "some help string"
                 type: str
             num_tx_pkts:
                 description:
-                - "Field num_tx_pkts"
+                - "some help string"
                 type: str
             num_total_tx_bytes:
                 description:
-                - "Field num_total_tx_bytes"
+                - "some help string"
                 type: str
             num_unicast_tx_pkts:
                 description:
-                - "Field num_unicast_tx_pkts"
+                - "some help string"
                 type: str
             num_broadcast_tx_pkts:
                 description:
-                - "Field num_broadcast_tx_pkts"
+                - "some help string"
                 type: str
             num_multicast_tx_pkts:
                 description:
-                - "Field num_multicast_tx_pkts"
+                - "some help string"
                 type: str
             dropped_dis_rx_pkts:
                 description:
-                - "Field dropped_dis_rx_pkts"
+                - "some help string"
                 type: str
             dropped_rx_pkts:
                 description:
-                - "Field dropped_rx_pkts"
+                - "some help string"
                 type: str
             dropped_dis_tx_pkts:
                 description:
-                - "Field dropped_dis_tx_pkts"
+                - "some help string"
                 type: str
             dropped_tx_pkts:
                 description:
-                - "Field dropped_tx_pkts"
+                - "some help string"
                 type: str
-            ifnum:
+            dropped_rx_pkts_gre_key:
                 description:
-                - "Lif interface number"
-                type: int
+                - "some help string"
+                type: str
+            ifname:
+                description:
+                - "Lif interface name"
+                type: str
 
 '''
 
@@ -450,10 +537,12 @@ AVAILABLE_PROPERTIES = [
     "access_list",
     "action",
     "bfd",
-    "ifnum",
+    "ifname",
     "ip",
+    "ipv6",
     "isis",
     "mtu",
+    "name",
     "oper",
     "sampling_enable",
     "stats",
@@ -487,8 +576,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ifnum': {
-            'type': 'int',
+        'ifname': {
+            'type': 'str',
             'required': True,
         },
         'mtu': {
@@ -497,6 +586,9 @@ def get_argspec():
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable']
+        },
+        'name': {
+            'type': 'str',
         },
         'access_list': {
             'type': 'dict',
@@ -524,7 +616,8 @@ def get_argspec():
                     'num_total_tx_bytes', 'num_unicast_tx_pkts',
                     'num_broadcast_tx_pkts', 'num_multicast_tx_pkts',
                     'dropped_dis_rx_pkts', 'dropped_rx_pkts',
-                    'dropped_dis_tx_pkts', 'dropped_tx_pkts'
+                    'dropped_dis_tx_pkts', 'dropped_tx_pkts',
+                    'dropped_rx_pkts_gre_key'
                 ]
             }
         },
@@ -562,6 +655,9 @@ def get_argspec():
             },
             'max_resp_time': {
                 'type': 'int',
+            },
+            'unnumbered': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
@@ -802,6 +898,185 @@ def get_argspec():
                 }
             }
         },
+        'ipv6': {
+            'type': 'dict',
+            'address_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                },
+                'anycast': {
+                    'type': 'bool',
+                },
+                'link_local': {
+                    'type': 'bool',
+                }
+            },
+            'ipv6_enable': {
+                'type': 'bool',
+            },
+            'inside': {
+                'type': 'bool',
+            },
+            'outside': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'router': {
+                'type': 'dict',
+                'ripng': {
+                    'type': 'dict',
+                    'rip': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'ospf': {
+                    'type': 'dict',
+                    'area_list': {
+                        'type': 'list',
+                        'area_id_num': {
+                            'type': 'int',
+                        },
+                        'area_id_addr': {
+                            'type': 'str',
+                        },
+                        'tag': {
+                            'type': 'str',
+                        },
+                        'instance_id': {
+                            'type': 'int',
+                        }
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'isis': {
+                    'type': 'dict',
+                    'tag': {
+                        'type': 'str',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'ospf': {
+                'type': 'dict',
+                'network_list': {
+                    'type': 'list',
+                    'broadcast_type': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'broadcast', 'non-broadcast', 'point-to-point',
+                            'point-to-multipoint'
+                        ]
+                    },
+                    'p2mp_nbma': {
+                        'type': 'bool',
+                    },
+                    'network_instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'bfd': {
+                    'type': 'bool',
+                },
+                'disable': {
+                    'type': 'bool',
+                },
+                'cost_cfg': {
+                    'type': 'list',
+                    'cost': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'dead_interval_cfg': {
+                    'type': 'list',
+                    'dead_interval': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'hello_interval_cfg': {
+                    'type': 'list',
+                    'hello_interval': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'mtu_ignore_cfg': {
+                    'type': 'list',
+                    'mtu_ignore': {
+                        'type': 'bool',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'neighbor_cfg': {
+                    'type': 'list',
+                    'neighbor': {
+                        'type': 'str',
+                    },
+                    'neig_inst': {
+                        'type': 'int',
+                    },
+                    'neighbor_cost': {
+                        'type': 'int',
+                    },
+                    'neighbor_poll_interval': {
+                        'type': 'int',
+                    },
+                    'neighbor_priority': {
+                        'type': 'int',
+                    }
+                },
+                'priority_cfg': {
+                    'type': 'list',
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'retransmit_interval_cfg': {
+                    'type': 'list',
+                    'retransmit_interval': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'transmit_delay_cfg': {
+                    'type': 'list',
+                    'transmit_delay': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
         'bfd': {
             'type': 'dict',
             'authentication': {
@@ -1007,6 +1282,23 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['up', 'disabled', 'down']
             },
+            'line_protocol': {
+                'type': 'str',
+                'choices': ['UP', 'DOWN']
+            },
+            'link_type': {
+                'type': 'str',
+            },
+            'encapsulation_type': {
+                'type': 'str',
+                'choices': ['DOT1Q', 'GRE', 'NO-ENCAP']
+            },
+            'member_id': {
+                'type': 'str',
+            },
+            'keep_alive': {
+                'type': 'str',
+            },
             'mac': {
                 'type': 'str',
             },
@@ -1052,8 +1344,23 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'ifnum': {
+            'ipv6_link_local': {
+                'type': 'str',
+            },
+            'ipv6_link_local_prefix': {
+                'type': 'str',
+            },
+            'ipv6_link_local_type': {
+                'type': 'str',
+            },
+            'ipv6_link_local_scope': {
+                'type': 'str',
+            },
+            'ip_unnumbered_enabled': {
                 'type': 'int',
+            },
+            'ifname': {
+                'type': 'str',
                 'required': True,
             }
         },
@@ -1101,8 +1408,11 @@ def get_argspec():
             'dropped_tx_pkts': {
                 'type': 'str',
             },
-            'ifnum': {
-                'type': 'int',
+            'dropped_rx_pkts_gre_key': {
+                'type': 'str',
+            },
+            'ifname': {
+                'type': 'str',
                 'required': True,
             }
         }
@@ -1113,10 +1423,10 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/interface/lif/{ifnum}"
+    url_base = "/axapi/v3/interface/lif/{ifname}"
 
     f_dict = {}
-    f_dict["ifnum"] = module.params["ifnum"]
+    f_dict["ifname"] = module.params["ifname"]
 
     return url_base.format(**f_dict)
 
@@ -1124,10 +1434,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/lif/{ifnum}"
+    url_base = "/axapi/v3/interface/lif/{ifname}"
 
     f_dict = {}
-    f_dict["ifnum"] = ""
+    f_dict["ifname"] = ""
 
     return url_base.format(**f_dict)
 

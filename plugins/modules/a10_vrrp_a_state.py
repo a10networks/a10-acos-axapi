@@ -160,11 +160,40 @@ options:
           'sync_tx_mon_entity'= Acos Monitoring Entities Sync Messages Sent;
           'sync_rx_mon_entity'= Acos monitoring Entities Sync Messages Received;
           'sync_rx_ext_fw_gtp_log_info'= FW GTP Log Info Received;
+          'sync_rx_ext_fw_gtp_u_info'= FW GTP U Info Received;
+          'sync_rx_ext_fw_gtp_ext_info'= FW GTP Ext Info Received;
+          'sync_rx_ext_fw_gtp_log_ext_info'= FW GTP Ext Log Info Received;
           'sync_rx_ddos_drop_counter'= Conn Sync receive ddos protect packet;
           'sync_rx_invalid_sync_packet_counter'= Conn Sync receive invalid packet;
-          'sync_rx_bad_protocol_counter'= Conn Sync receive packet with bad protocol;
-          'sync_rx_no_vgrp_counter'= Conn Sync receive packet with non-existing group;
-          'sync_rx_by_inactive_peer_counter'= Conn Sync receive packet by inactive peer;
+          'sync_pkt_empty_buff_counter'= Conn Sync drop sending packet for empty buffer;
+          'sync_pkt_no_sending_vgrp_counter'= Conn Sync drop sending packet for invalid
+          sending virtual group; 'sync_pkt_no_receiving_vgrp_counter'= Conn Sync drop
+          sending packet for invalid receiving virtual group;
+          'query_pkt_no_receiving_ip_counter'= Conn Sync drop sending packet for invalid
+          receiving ip; 'sync_pkt_failed_buff_copy_counter'= Conn Sync drop sending
+          packet for failure in sending buffer copy; 'sync_rx_bad_protocol_counter'= Conn
+          Sync receive packet with bad protocol; 'sync_rx_no_vgrp_counter'= Conn Sync
+          receive packet with no virtual group; 'sync_rx_by_inactive_peer_counter'= Conn
+          Sync receive packet by inactive peer; 'sync_rx_table_entry_update_counter'=
+          Conn Sync receive packet with table entry update;
+          'sync_rx_table_entry_create_counter'= Conn Sync receive packet with table entry
+          create;"
+                type: str
+            counters2:
+                description:
+                - "'sync_rx_table_entry_del_counter'= Conn Sync receive packet with table entry
+          delete; 'sync_rx_aflex_update_counter'= Conn Sync receive packet with aflex
+          update; 'sync_rx_aflex_create_counter'= Conn Sync receive packet with aflex
+          create; 'sync_rx_aflex_del_counter'= Conn Sync receive packet with aflex
+          delete; 'sync_rx_aflex_frag_counter'= Conn Sync receive packet with aflex
+          fragment; 'query_rx_invalid_partition_counter'= Conn Sync receive query packet
+          with invalid partition; 'query_rx_invalid_ha_group_counter'= Conn Sync receive
+          query packet with invalid ha group; 'query_rx_invalid_sync_version_counter'=
+          Conn Sync receive query packet with invalid sync version;
+          'query_rx_invalid_msg_dir_counter'= Conn Sync receive query packet with invalid
+          message dir; 'sync_rx_out_of_order_pkt_counter'= total number of out of order
+          packets received; 'sync_rx_unreached_pkt_counter'= total number of unreached
+          packets; 'sync_rx_ext_fw_gtp_echo_ext_info'= FW GTP Echo Ext Info Received;
           'sync_rx_smp_create_counter'= Sync Create SMP Session Pkts Received counter;
           'sync_rx_smp_delete_counter'= Sync Delete SMP Session Pkts Received counter;
           'sync_rx_smp_update_counter'= Sync Update SMP Session Pkts Received counter;
@@ -172,7 +201,39 @@ options:
           'sync_tx_smp_delete_counter'= Sync Delete SMP Session Pkts Sent counter;
           'sync_tx_smp_update_counter'= Sync Update SMP Session Pkts Sent counter;
           'sync_rx_smp_clear_counter'= Sync Clear SMP Session Pkts Received counter;
-          'sync_tx_smp_clear_counter'= Sync Clear SMP Session Pkts Sent counter;"
+          'sync_tx_smp_clear_counter'= Sync Clear SMP Session Pkts Sent counter;
+          'sync_rx_ext_fw_so_shadow_ext_info'= FW Scaleout Shadow Ext Info Received;
+          'sync_tx_aflex_table_entry_add_counter'= Sync send packet with aflex table
+          entry add; 'sync_rx_aflex_table_entry_add_counter'= Sync receive packet with
+          aflex table entry add; 'sync_tx_aflex_table_entry_append_counter'= Sync send
+          packet with aflex table entry append;
+          'sync_rx_aflex_table_entry_append_counter'= Sync receive packet with aflex
+          table entry append; 'sync_tx_aflex_table_entry_delete_counter'= Sync send
+          packet with aflex table entry delete;
+          'sync_rx_aflex_table_entry_delete_counter'= Sync receive packet with aflex
+          table entry delete; 'sync_tx_aflex_table_entry_incr_counter'= Sync send packet
+          with aflex table entry incr; 'sync_rx_aflex_table_entry_incr_counter'= Sync
+          receive packet with aflex table entry incr;
+          'sync_tx_aflex_table_entry_lookup_counter'= Sync send packet with aflex table
+          entry lookup; 'sync_rx_aflex_table_entry_lookup_counter'= Sync receive packet
+          with aflex table entry lookup; 'sync_tx_aflex_table_entry_lifetime_counter'=
+          Sync send packet with aflex table entry lifetime;
+          'sync_rx_aflex_table_entry_lifetime_counter'= Sync receive packet with aflex
+          table entry lifetime; 'sync_tx_aflex_table_entry_replace_counter'= Sync send
+          packet with aflex table entry replace;
+          'sync_rx_aflex_table_entry_replace_counter'= Sync receive packet with aflex
+          table entry replace; 'sync_tx_aflex_table_entry_set_counter'= Sync send packet
+          with aflex table entry set; 'sync_rx_aflex_table_entry_set_counter'= Sync
+          receive packet with aflex table entry set;
+          'sync_tx_aflex_table_entry_timeout_counter'= Sync send packet with aflex table
+          entry timeout; 'sync_rx_aflex_table_entry_timeout_counter'= Sync receive packet
+          with aflex table entry timeout; 'sync_tx_aflex_table_entry_fastsync_counter'=
+          Sync send packet with aflex table entry fast sync;
+          'sync_rx_aflex_table_entry_fastsync_counter'= Sync receive packet with aflex
+          table entry fast sync; 'sync_tx_aflex_table_entry_error_counter'= Error on send
+          packet with aflex table entry;
+          'sync_tx_aflex_table_entry_not_eligible_counter'= send of aflex table entry not
+          eligible; 'sync_rx_ext_fw_limit_entry'= Sync FW Limit Entry Info Failure;"
                 type: str
     stats:
         description:
@@ -584,6 +645,18 @@ options:
                 description:
                 - "FW GTP Log Info Received"
                 type: str
+            sync_rx_ext_fw_gtp_u_info:
+                description:
+                - "FW GTP U Info Received"
+                type: str
+            sync_rx_ext_fw_gtp_ext_info:
+                description:
+                - "FW GTP Ext Info Received"
+                type: str
+            sync_rx_ext_fw_gtp_log_ext_info:
+                description:
+                - "FW GTP Ext Log Info Received"
+                type: str
             sync_rx_ddos_drop_counter:
                 description:
                 - "Conn Sync receive ddos protect packet"
@@ -592,17 +665,93 @@ options:
                 description:
                 - "Conn Sync receive invalid packet"
                 type: str
+            sync_pkt_empty_buff_counter:
+                description:
+                - "Conn Sync drop sending packet for empty buffer"
+                type: str
+            sync_pkt_no_sending_vgrp_counter:
+                description:
+                - "Conn Sync drop sending packet for invalid sending virtual group"
+                type: str
+            sync_pkt_no_receiving_vgrp_counter:
+                description:
+                - "Conn Sync drop sending packet for invalid receiving virtual group"
+                type: str
+            query_pkt_no_receiving_ip_counter:
+                description:
+                - "Conn Sync drop sending packet for invalid receiving ip"
+                type: str
+            sync_pkt_failed_buff_copy_counter:
+                description:
+                - "Conn Sync drop sending packet for failure in sending buffer copy"
+                type: str
             sync_rx_bad_protocol_counter:
                 description:
                 - "Conn Sync receive packet with bad protocol"
                 type: str
             sync_rx_no_vgrp_counter:
                 description:
-                - "Conn Sync receive packet with non-existing group"
+                - "Conn Sync receive packet with no virtual group"
                 type: str
             sync_rx_by_inactive_peer_counter:
                 description:
                 - "Conn Sync receive packet by inactive peer"
+                type: str
+            sync_rx_table_entry_update_counter:
+                description:
+                - "Conn Sync receive packet with table entry update"
+                type: str
+            sync_rx_table_entry_create_counter:
+                description:
+                - "Conn Sync receive packet with table entry create"
+                type: str
+            sync_rx_table_entry_del_counter:
+                description:
+                - "Conn Sync receive packet with table entry delete"
+                type: str
+            sync_rx_aflex_update_counter:
+                description:
+                - "Conn Sync receive packet with aflex update"
+                type: str
+            sync_rx_aflex_create_counter:
+                description:
+                - "Conn Sync receive packet with aflex create"
+                type: str
+            sync_rx_aflex_del_counter:
+                description:
+                - "Conn Sync receive packet with aflex delete"
+                type: str
+            sync_rx_aflex_frag_counter:
+                description:
+                - "Conn Sync receive packet with aflex fragment"
+                type: str
+            query_rx_invalid_partition_counter:
+                description:
+                - "Conn Sync receive query packet with invalid partition"
+                type: str
+            query_rx_invalid_ha_group_counter:
+                description:
+                - "Conn Sync receive query packet with invalid ha group"
+                type: str
+            query_rx_invalid_sync_version_counter:
+                description:
+                - "Conn Sync receive query packet with invalid sync version"
+                type: str
+            query_rx_invalid_msg_dir_counter:
+                description:
+                - "Conn Sync receive query packet with invalid message dir"
+                type: str
+            sync_rx_out_of_order_pkt_counter:
+                description:
+                - "total number of out of order packets received"
+                type: str
+            sync_rx_unreached_pkt_counter:
+                description:
+                - "total number of unreached packets"
+                type: str
+            sync_rx_ext_fw_gtp_echo_ext_info:
+                description:
+                - "FW GTP Echo Ext Info Received"
                 type: str
             sync_rx_smp_create_counter:
                 description:
@@ -635,6 +784,102 @@ options:
             sync_tx_smp_clear_counter:
                 description:
                 - "Sync Clear SMP Session Pkts Sent counter"
+                type: str
+            sync_rx_ext_fw_so_shadow_ext_info:
+                description:
+                - "FW Scaleout Shadow Ext Info Received"
+                type: str
+            sync_tx_aflex_table_entry_add_counter:
+                description:
+                - "Sync send packet with aflex table entry add"
+                type: str
+            sync_rx_aflex_table_entry_add_counter:
+                description:
+                - "Sync receive packet with aflex table entry add"
+                type: str
+            sync_tx_aflex_table_entry_append_counter:
+                description:
+                - "Sync send packet with aflex table entry append"
+                type: str
+            sync_rx_aflex_table_entry_append_counter:
+                description:
+                - "Sync receive packet with aflex table entry append"
+                type: str
+            sync_tx_aflex_table_entry_delete_counter:
+                description:
+                - "Sync send packet with aflex table entry delete"
+                type: str
+            sync_rx_aflex_table_entry_delete_counter:
+                description:
+                - "Sync receive packet with aflex table entry delete"
+                type: str
+            sync_tx_aflex_table_entry_incr_counter:
+                description:
+                - "Sync send packet with aflex table entry incr"
+                type: str
+            sync_rx_aflex_table_entry_incr_counter:
+                description:
+                - "Sync receive packet with aflex table entry incr"
+                type: str
+            sync_tx_aflex_table_entry_lookup_counter:
+                description:
+                - "Sync send packet with aflex table entry lookup"
+                type: str
+            sync_rx_aflex_table_entry_lookup_counter:
+                description:
+                - "Sync receive packet with aflex table entry lookup"
+                type: str
+            sync_tx_aflex_table_entry_lifetime_counter:
+                description:
+                - "Sync send packet with aflex table entry lifetime"
+                type: str
+            sync_rx_aflex_table_entry_lifetime_counter:
+                description:
+                - "Sync receive packet with aflex table entry lifetime"
+                type: str
+            sync_tx_aflex_table_entry_replace_counter:
+                description:
+                - "Sync send packet with aflex table entry replace"
+                type: str
+            sync_rx_aflex_table_entry_replace_counter:
+                description:
+                - "Sync receive packet with aflex table entry replace"
+                type: str
+            sync_tx_aflex_table_entry_set_counter:
+                description:
+                - "Sync send packet with aflex table entry set"
+                type: str
+            sync_rx_aflex_table_entry_set_counter:
+                description:
+                - "Sync receive packet with aflex table entry set"
+                type: str
+            sync_tx_aflex_table_entry_timeout_counter:
+                description:
+                - "Sync send packet with aflex table entry timeout"
+                type: str
+            sync_rx_aflex_table_entry_timeout_counter:
+                description:
+                - "Sync receive packet with aflex table entry timeout"
+                type: str
+            sync_tx_aflex_table_entry_fastsync_counter:
+                description:
+                - "Sync send packet with aflex table entry fast sync"
+                type: str
+            sync_rx_aflex_table_entry_fastsync_counter:
+                description:
+                - "Sync receive packet with aflex table entry fast sync"
+                type: str
+            sync_tx_aflex_table_entry_error_counter:
+                description:
+                - "Error on send packet with aflex table entry"
+                type: str
+            sync_tx_aflex_table_entry_not_eligible_counter:
+                description:
+                - "send of aflex table entry not eligible"
+                type: str
+            sync_rx_ext_fw_limit_entry:
+                description:
+                - "Sync FW Limit Entry Info Failure"
                 type: str
 
 '''
@@ -796,14 +1041,64 @@ def get_argspec():
                     'sync_rx_ext_fw_gtp_info', 'sync_rx_not_expect_sync_pkt',
                     'sync_rx_ext_fw_apps', 'sync_tx_mon_entity',
                     'sync_rx_mon_entity', 'sync_rx_ext_fw_gtp_log_info',
+                    'sync_rx_ext_fw_gtp_u_info', 'sync_rx_ext_fw_gtp_ext_info',
+                    'sync_rx_ext_fw_gtp_log_ext_info',
                     'sync_rx_ddos_drop_counter',
                     'sync_rx_invalid_sync_packet_counter',
+                    'sync_pkt_empty_buff_counter',
+                    'sync_pkt_no_sending_vgrp_counter',
+                    'sync_pkt_no_receiving_vgrp_counter',
+                    'query_pkt_no_receiving_ip_counter',
+                    'sync_pkt_failed_buff_copy_counter',
                     'sync_rx_bad_protocol_counter', 'sync_rx_no_vgrp_counter',
                     'sync_rx_by_inactive_peer_counter',
+                    'sync_rx_table_entry_update_counter',
+                    'sync_rx_table_entry_create_counter'
+                ]
+            },
+            'counters2': {
+                'type':
+                'str',
+                'choices': [
+                    'sync_rx_table_entry_del_counter',
+                    'sync_rx_aflex_update_counter',
+                    'sync_rx_aflex_create_counter',
+                    'sync_rx_aflex_del_counter', 'sync_rx_aflex_frag_counter',
+                    'query_rx_invalid_partition_counter',
+                    'query_rx_invalid_ha_group_counter',
+                    'query_rx_invalid_sync_version_counter',
+                    'query_rx_invalid_msg_dir_counter',
+                    'sync_rx_out_of_order_pkt_counter',
+                    'sync_rx_unreached_pkt_counter',
+                    'sync_rx_ext_fw_gtp_echo_ext_info',
                     'sync_rx_smp_create_counter', 'sync_rx_smp_delete_counter',
                     'sync_rx_smp_update_counter', 'sync_tx_smp_create_counter',
                     'sync_tx_smp_delete_counter', 'sync_tx_smp_update_counter',
-                    'sync_rx_smp_clear_counter', 'sync_tx_smp_clear_counter'
+                    'sync_rx_smp_clear_counter', 'sync_tx_smp_clear_counter',
+                    'sync_rx_ext_fw_so_shadow_ext_info',
+                    'sync_tx_aflex_table_entry_add_counter',
+                    'sync_rx_aflex_table_entry_add_counter',
+                    'sync_tx_aflex_table_entry_append_counter',
+                    'sync_rx_aflex_table_entry_append_counter',
+                    'sync_tx_aflex_table_entry_delete_counter',
+                    'sync_rx_aflex_table_entry_delete_counter',
+                    'sync_tx_aflex_table_entry_incr_counter',
+                    'sync_rx_aflex_table_entry_incr_counter',
+                    'sync_tx_aflex_table_entry_lookup_counter',
+                    'sync_rx_aflex_table_entry_lookup_counter',
+                    'sync_tx_aflex_table_entry_lifetime_counter',
+                    'sync_rx_aflex_table_entry_lifetime_counter',
+                    'sync_tx_aflex_table_entry_replace_counter',
+                    'sync_rx_aflex_table_entry_replace_counter',
+                    'sync_tx_aflex_table_entry_set_counter',
+                    'sync_rx_aflex_table_entry_set_counter',
+                    'sync_tx_aflex_table_entry_timeout_counter',
+                    'sync_rx_aflex_table_entry_timeout_counter',
+                    'sync_tx_aflex_table_entry_fastsync_counter',
+                    'sync_rx_aflex_table_entry_fastsync_counter',
+                    'sync_tx_aflex_table_entry_error_counter',
+                    'sync_tx_aflex_table_entry_not_eligible_counter',
+                    'sync_rx_ext_fw_limit_entry'
                 ]
             }
         },
@@ -1112,10 +1407,34 @@ def get_argspec():
             'sync_rx_ext_fw_gtp_log_info': {
                 'type': 'str',
             },
+            'sync_rx_ext_fw_gtp_u_info': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_gtp_ext_info': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_gtp_log_ext_info': {
+                'type': 'str',
+            },
             'sync_rx_ddos_drop_counter': {
                 'type': 'str',
             },
             'sync_rx_invalid_sync_packet_counter': {
+                'type': 'str',
+            },
+            'sync_pkt_empty_buff_counter': {
+                'type': 'str',
+            },
+            'sync_pkt_no_sending_vgrp_counter': {
+                'type': 'str',
+            },
+            'sync_pkt_no_receiving_vgrp_counter': {
+                'type': 'str',
+            },
+            'query_pkt_no_receiving_ip_counter': {
+                'type': 'str',
+            },
+            'sync_pkt_failed_buff_copy_counter': {
                 'type': 'str',
             },
             'sync_rx_bad_protocol_counter': {
@@ -1125,6 +1444,48 @@ def get_argspec():
                 'type': 'str',
             },
             'sync_rx_by_inactive_peer_counter': {
+                'type': 'str',
+            },
+            'sync_rx_table_entry_update_counter': {
+                'type': 'str',
+            },
+            'sync_rx_table_entry_create_counter': {
+                'type': 'str',
+            },
+            'sync_rx_table_entry_del_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_update_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_create_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_del_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_frag_counter': {
+                'type': 'str',
+            },
+            'query_rx_invalid_partition_counter': {
+                'type': 'str',
+            },
+            'query_rx_invalid_ha_group_counter': {
+                'type': 'str',
+            },
+            'query_rx_invalid_sync_version_counter': {
+                'type': 'str',
+            },
+            'query_rx_invalid_msg_dir_counter': {
+                'type': 'str',
+            },
+            'sync_rx_out_of_order_pkt_counter': {
+                'type': 'str',
+            },
+            'sync_rx_unreached_pkt_counter': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_gtp_echo_ext_info': {
                 'type': 'str',
             },
             'sync_rx_smp_create_counter': {
@@ -1149,6 +1510,78 @@ def get_argspec():
                 'type': 'str',
             },
             'sync_tx_smp_clear_counter': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_so_shadow_ext_info': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_add_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_add_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_append_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_append_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_delete_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_delete_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_incr_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_incr_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_lookup_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_lookup_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_lifetime_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_lifetime_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_replace_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_replace_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_set_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_set_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_timeout_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_timeout_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_fastsync_counter': {
+                'type': 'str',
+            },
+            'sync_rx_aflex_table_entry_fastsync_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_error_counter': {
+                'type': 'str',
+            },
+            'sync_tx_aflex_table_entry_not_eligible_counter': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_limit_entry': {
                 'type': 'str',
             }
         }

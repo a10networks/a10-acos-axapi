@@ -58,7 +58,7 @@ options:
     count:
         description:
         - "Maximum packets to capture. Default is 3000 (Specify maximum packet number. For
-          umlimited, specify 0)"
+          unlimited, specify 0)"
         type: int
         required: False
     detail:
@@ -86,12 +86,42 @@ options:
         - "Ethernet interface number"
         type: str
         required: False
+    ve:
+        description:
+        - "ve number"
+        type: int
+        required: False
     arp:
         description:
         - "ARP"
         type: bool
         required: False
     all:
+        description:
+        - "All"
+        type: bool
+        required: False
+    all_ipv4:
+        description:
+        - "All"
+        type: bool
+        required: False
+    all_ipv6:
+        description:
+        - "All"
+        type: bool
+        required: False
+    all_udp_ports:
+        description:
+        - "All"
+        type: bool
+        required: False
+    all_tcp_ports:
+        description:
+        - "All"
+        type: bool
+        required: False
+    all_sctp_ports:
         description:
         - "All"
         type: bool
@@ -144,6 +174,11 @@ options:
     udp:
         description:
         - "Field udp"
+        type: bool
+        required: False
+    sctp:
+        description:
+        - "Field sctp"
         type: bool
         required: False
     uuid:
@@ -207,6 +242,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "all",
+    "all_ipv4",
+    "all_ipv6",
+    "all_sctp_ports",
+    "all_tcp_ports",
+    "all_udp_ports",
     "arp",
     "count",
     "detail",
@@ -222,9 +262,11 @@ AVAILABLE_PROPERTIES = [
     "l4_protocol",
     "neighbor",
     "port_range",
+    "sctp",
     "tcp",
     "udp",
     "uuid",
+    "ve",
 ]
 
 
@@ -271,10 +313,28 @@ def get_argspec():
         'ethernet': {
             'type': 'str',
         },
+        've': {
+            'type': 'int',
+        },
         'arp': {
             'type': 'bool',
         },
         'all': {
+            'type': 'bool',
+        },
+        'all_ipv4': {
+            'type': 'bool',
+        },
+        'all_ipv6': {
+            'type': 'bool',
+        },
+        'all_udp_ports': {
+            'type': 'bool',
+        },
+        'all_tcp_ports': {
+            'type': 'bool',
+        },
+        'all_sctp_ports': {
             'type': 'bool',
         },
         'ip': {
@@ -305,6 +365,9 @@ def get_argspec():
             'type': 'int',
         },
         'udp': {
+            'type': 'bool',
+        },
+        'sctp': {
             'type': 'bool',
         },
         'uuid': {

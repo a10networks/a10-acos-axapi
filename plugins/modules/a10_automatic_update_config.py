@@ -57,9 +57,20 @@ options:
         required: False
     feature_name:
         description:
-        - "'app-fw'= Application Firewall Configuration;"
+        - "'app-fw'= Application Firewall Configuration; 'ca-bundle'= CA Certificate
+          Bundle; 'a10-threat-intel'= A10 Threat intel class list;"
         type: str
         required: True
+    debug:
+        description:
+        - "Enable libcurl debug option"
+        type: bool
+        required: False
+    disable_ssl_verify:
+        description:
+        - "Disable peer server certificate verification"
+        type: bool
+        required: False
     schedule:
         description:
         - "Field schedule"
@@ -153,6 +164,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "daily",
     "day_time",
+    "debug",
+    "disable_ssl_verify",
     "feature_name",
     "schedule",
     "uuid",
@@ -190,7 +203,13 @@ def get_argspec():
         'feature_name': {
             'type': 'str',
             'required': True,
-            'choices': ['app-fw']
+            'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
+        },
+        'debug': {
+            'type': 'bool',
+        },
+        'disable_ssl_verify': {
+            'type': 'bool',
         },
         'schedule': {
             'type': 'bool',

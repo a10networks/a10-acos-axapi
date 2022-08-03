@@ -88,8 +88,18 @@ options:
         suboptions:
             port_contains:
                 description:
-                - "Mark server up if response string contains another string (Specify the string)"
+                - "Mark server up if response string contains string (Specify the string)"
                 type: str
+    maintenance:
+        description:
+        - "Specify response text for maintenance"
+        type: bool
+        required: False
+    maintenance_text:
+        description:
+        - "Specify text for maintenance"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -150,6 +160,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "maintenance",
+    "maintenance_text",
     "method_tcp",
     "port_halfopen",
     "port_resp",
@@ -201,6 +213,12 @@ def get_argspec():
             'port_contains': {
                 'type': 'str',
             }
+        },
+        'maintenance': {
+            'type': 'bool',
+        },
+        'maintenance_text': {
+            'type': 'str',
         },
         'uuid': {
             'type': 'str',

@@ -77,7 +77,11 @@ options:
           authz-fail'= Total SAML Single-Sign-On Authorization Fail; 'acs-error'= Total
           SAML Single-Sign-On Error; 'slo-req'= Total Single Logout Request; 'slo-
           success'= Total Single Logout Success; 'slo-error'= Total Single Logout Error;
-          'other-error'= Total Other Error;"
+          'sp-slo-req'= Total SP-initiated Single Logout Request; 'glo-slo-success'=
+          Total Global Logout Success; 'loc-slo-success'= Total Local Logout Success;
+          'par-slo-success'= Total Partial Logout Success; 'relay-req'= some help string;
+          'relay-success'= some help string; 'relay-fail'= some help string; 'relay-
+          error'= some help string; 'other-error'= Total Other Error;"
                 type: str
     stats:
         description:
@@ -136,6 +140,38 @@ options:
             slo_error:
                 description:
                 - "Total Single Logout Error"
+                type: str
+            sp_slo_req:
+                description:
+                - "Total SP-initiated Single Logout Request"
+                type: str
+            glo_slo_success:
+                description:
+                - "Total Global Logout Success"
+                type: str
+            loc_slo_success:
+                description:
+                - "Total Local Logout Success"
+                type: str
+            par_slo_success:
+                description:
+                - "Total Partial Logout Success"
+                type: str
+            relay_req:
+                description:
+                - "some help string"
+                type: str
+            relay_success:
+                description:
+                - "some help string"
+                type: str
+            relay_fail:
+                description:
+                - "some help string"
+                type: str
+            relay_error:
+                description:
+                - "some help string"
                 type: str
             other_error:
                 description:
@@ -240,7 +276,10 @@ def get_argspec():
                     'sp-metadata-export-req', 'sp-metadata-export-success',
                     'login-auth-req', 'login-auth-resp', 'acs-req',
                     'acs-success', 'acs-authz-fail', 'acs-error', 'slo-req',
-                    'slo-success', 'slo-error', 'other-error'
+                    'slo-success', 'slo-error', 'sp-slo-req',
+                    'glo-slo-success', 'loc-slo-success', 'par-slo-success',
+                    'relay-req', 'relay-success', 'relay-fail', 'relay-error',
+                    'other-error'
                 ]
             }
         },
@@ -283,6 +322,30 @@ def get_argspec():
                 'type': 'str',
             },
             'slo_error': {
+                'type': 'str',
+            },
+            'sp_slo_req': {
+                'type': 'str',
+            },
+            'glo_slo_success': {
+                'type': 'str',
+            },
+            'loc_slo_success': {
+                'type': 'str',
+            },
+            'par_slo_success': {
+                'type': 'str',
+            },
+            'relay_req': {
+                'type': 'str',
+            },
+            'relay_success': {
+                'type': 'str',
+            },
+            'relay_fail': {
+                'type': 'str',
+            },
+            'relay_error': {
                 'type': 'str',
             },
             'other_error': {

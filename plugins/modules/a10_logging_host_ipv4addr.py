@@ -75,6 +75,11 @@ options:
         - "Use TCP as transport protocol"
         type: bool
         required: False
+    over_tls:
+        description:
+        - "Enable remote logging over TLS session"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -136,6 +141,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "host_ipv4",
+    "over_tls",
     "port",
     "tcp",
     "use_mgmt_port",
@@ -179,6 +185,9 @@ def get_argspec():
             'type': 'int',
         },
         'tcp': {
+            'type': 'bool',
+        },
+        'over_tls': {
             'type': 'bool',
         },
         'uuid': {

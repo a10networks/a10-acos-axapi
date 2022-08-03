@@ -66,13 +66,13 @@ options:
         type: dict
         required: False
         suboptions:
-            Total:
+            Total_Routes:
                 description:
-                - "Field Total"
+                - "Field Total_Routes"
                 type: int
-            Total Paths:
+            Total_Paths:
                 description:
-                - "Field Total Paths"
+                - "Field Total_Paths"
                 type: int
             IPv6_fib:
                 description:
@@ -168,7 +168,7 @@ def get_argspec():
         },
         'oper': {
             'type': 'dict',
-            'Total': {
+            'Total_Routes': {
                 'type': 'int',
             },
             'Total_Paths': {

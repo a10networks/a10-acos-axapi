@@ -179,18 +179,29 @@ options:
                 description:
                 - "'all'= all; 'hits'= Cache hits; 'miss'= Cache misses; 'bytes_served'= Bytes
           served from cache; 'total_req'= Total requests received; 'caching_req'= Total
-          requests to cache; 'nc_req_header'= nc_req_header; 'nc_res_header'=
-          nc_res_header; 'rv_success'= rv_success; 'rv_failure'= rv_failure;
-          'ims_request'= ims_request; 'nm_response'= nm_response; 'rsp_type_CL'=
-          rsp_type_CL; 'rsp_type_CE'= rsp_type_CE; 'rsp_type_304'= rsp_type_304;
-          'rsp_type_other'= rsp_type_other; 'rsp_no_compress'= rsp_no_compress;
-          'rsp_gzip'= rsp_gzip; 'rsp_deflate'= rsp_deflate; 'rsp_other'= rsp_other;
-          'nocache_match'= nocache_match; 'match'= match; 'invalidate_match'=
-          invalidate_match; 'content_toobig'= content_toobig; 'content_toosmall'=
-          content_toosmall; 'entry_create_failures'= entry_create_failures; 'mem_size'=
-          mem_size; 'entry_num'= entry_num; 'replaced_entry'= replaced_entry;
-          'aging_entry'= aging_entry; 'cleaned_entry'= cleaned_entry;"
+          requests to cache; 'nc_req_header'= slbTemplateCacheNcReqHeader, help
+          nc_req_header; 'nc_res_header'= slbTemplateCacheNcResHeader, help
+          nc_res_header; 'rv_success'= some help string; 'rv_failure'=
+          slbTemplateCacheRvFailure, help rv_failure; 'ims_request'= some help string;
+          'nm_response'= some help string; 'rsp_type_CL'= some help string;
+          'rsp_type_CE'= some help string; 'rsp_type_304'= some help string;
+          'rsp_type_other'= some help string; 'rsp_no_compress'= some help string;
+          'rsp_gzip'= some help string; 'rsp_deflate'= some help string; 'rsp_other'=
+          some help string; 'nocache_match'= some help string; 'match'= some help string;
+          'invalidate_match'= some help string; 'content_toobig'=
+          slbTemplateCacheContentToobig, help content_toobig; 'content_toosmall'=
+          slbTemplateCacheContentToosmall, help content_toosmall;
+          'entry_create_failures'= slbTemplateCacheEntryCreateFailures, help
+          entry_create_failures; 'mem_size'= some help string; 'entry_num'= some help
+          string; 'replaced_entry'= some help string; 'aging_entry'= some help string;
+          'cleaned_entry'= some help string; 'rsp_type_stream'= some help string;
+          'header_save_error'= some help string;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -219,103 +230,111 @@ options:
                 type: str
             nc_req_header:
                 description:
-                - "Field nc_req_header"
+                - "slbTemplateCacheNcReqHeader, help nc_req_header"
                 type: str
             nc_res_header:
                 description:
-                - "Field nc_res_header"
+                - "slbTemplateCacheNcResHeader, help nc_res_header"
                 type: str
             rv_success:
                 description:
-                - "Field rv_success"
+                - "some help string"
                 type: str
             rv_failure:
                 description:
-                - "Field rv_failure"
+                - "slbTemplateCacheRvFailure, help rv_failure"
                 type: str
             ims_request:
                 description:
-                - "Field ims_request"
+                - "some help string"
                 type: str
             nm_response:
                 description:
-                - "Field nm_response"
+                - "some help string"
                 type: str
             rsp_type_CL:
                 description:
-                - "Field rsp_type_CL"
+                - "some help string"
                 type: str
             rsp_type_CE:
                 description:
-                - "Field rsp_type_CE"
+                - "some help string"
                 type: str
             rsp_type_304:
                 description:
-                - "Field rsp_type_304"
+                - "some help string"
                 type: str
             rsp_type_other:
                 description:
-                - "Field rsp_type_other"
+                - "some help string"
                 type: str
             rsp_no_compress:
                 description:
-                - "Field rsp_no_compress"
+                - "some help string"
                 type: str
             rsp_gzip:
                 description:
-                - "Field rsp_gzip"
+                - "some help string"
                 type: str
             rsp_deflate:
                 description:
-                - "Field rsp_deflate"
+                - "some help string"
                 type: str
             rsp_other:
                 description:
-                - "Field rsp_other"
+                - "some help string"
                 type: str
             nocache_match:
                 description:
-                - "Field nocache_match"
+                - "some help string"
                 type: str
             match:
                 description:
-                - "Field match"
+                - "some help string"
                 type: str
             invalidate_match:
                 description:
-                - "Field invalidate_match"
+                - "some help string"
                 type: str
             content_toobig:
                 description:
-                - "Field content_toobig"
+                - "slbTemplateCacheContentToobig, help content_toobig"
                 type: str
             content_toosmall:
                 description:
-                - "Field content_toosmall"
+                - "slbTemplateCacheContentToosmall, help content_toosmall"
                 type: str
             entry_create_failures:
                 description:
-                - "Field entry_create_failures"
+                - "slbTemplateCacheEntryCreateFailures, help entry_create_failures"
                 type: str
             mem_size:
                 description:
-                - "Field mem_size"
+                - "some help string"
                 type: str
             entry_num:
                 description:
-                - "Field entry_num"
+                - "some help string"
                 type: str
             replaced_entry:
                 description:
-                - "Field replaced_entry"
+                - "some help string"
                 type: str
             aging_entry:
                 description:
-                - "Field aging_entry"
+                - "some help string"
                 type: str
             cleaned_entry:
                 description:
-                - "Field cleaned_entry"
+                - "some help string"
+                type: str
+            rsp_type_stream:
+                description:
+                - "some help string"
+                type: str
+            header_save_error:
+                description:
+                - "some help string"
                 type: str
             name:
                 description:
@@ -387,6 +406,7 @@ AVAILABLE_PROPERTIES = [
     "max_content_size",
     "min_content_size",
     "name",
+    "packet_capture_template",
     "remove_cookies",
     "replacement_policy",
     "sampling_enable",
@@ -506,9 +526,13 @@ def get_argspec():
                     'rsp_deflate', 'rsp_other', 'nocache_match', 'match',
                     'invalidate_match', 'content_toobig', 'content_toosmall',
                     'entry_create_failures', 'mem_size', 'entry_num',
-                    'replaced_entry', 'aging_entry', 'cleaned_entry'
+                    'replaced_entry', 'aging_entry', 'cleaned_entry',
+                    'rsp_type_stream', 'header_save_error'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',
@@ -600,6 +624,12 @@ def get_argspec():
                 'type': 'str',
             },
             'cleaned_entry': {
+                'type': 'str',
+            },
+            'rsp_type_stream': {
+                'type': 'str',
+            },
+            'header_save_error': {
                 'type': 'str',
             },
             'name': {

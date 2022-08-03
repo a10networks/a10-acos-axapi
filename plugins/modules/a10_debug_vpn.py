@@ -60,6 +60,16 @@ options:
         - "Debug level (Level 1-4)"
         type: int
         required: False
+    ike_gateway:
+        description:
+        - "Specify IKE gateway name (gateway filter name)"
+        type: str
+        required: False
+    strict:
+        description:
+        - "Only record the logs that can match Ike-gateway name"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -120,7 +130,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "ike_gateway",
     "level",
+    "strict",
     "uuid",
 ]
 
@@ -152,6 +164,12 @@ def get_argspec():
     rv.update({
         'level': {
             'type': 'int',
+        },
+        'ike_gateway': {
+            'type': 'str',
+        },
+        'strict': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

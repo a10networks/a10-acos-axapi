@@ -89,6 +89,11 @@ options:
         - "'both'= both; 'receive'= receive; 'send'= send;"
         type: str
         required: False
+    graceful_restart:
+        description:
+        - "enable graceful-restart helper for this neighbor"
+        type: bool
+        required: False
     default_originate:
         description:
         - "Originate default route to this neighbor"
@@ -136,6 +141,11 @@ options:
     maximum_prefix_thres:
         description:
         - "threshold-value, 1 to 100 percent"
+        type: int
+        required: False
+    restart_min:
+        description:
+        - "restart value, 1 to 1440 minutes"
         type: int
         required: False
     next_hop_self:
@@ -263,6 +273,7 @@ AVAILABLE_PROPERTIES = [
     "allowas_in_count",
     "default_originate",
     "distribute_lists",
+    "graceful_restart",
     "inbound",
     "maximum_prefix",
     "maximum_prefix_thres",
@@ -274,6 +285,7 @@ AVAILABLE_PROPERTIES = [
     "peer_group_name",
     "prefix_list_direction",
     "remove_private_as",
+    "restart_min",
     "route_map",
     "send_community_val",
     "unsuppress_map",
@@ -325,6 +337,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['both', 'receive', 'send']
         },
+        'graceful_restart': {
+            'type': 'bool',
+        },
         'default_originate': {
             'type': 'bool',
         },
@@ -355,6 +370,9 @@ def get_argspec():
             'type': 'int',
         },
         'maximum_prefix_thres': {
+            'type': 'int',
+        },
+        'restart_min': {
             'type': 'int',
         },
         'next_hop_self': {

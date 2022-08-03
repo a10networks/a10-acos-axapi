@@ -239,6 +239,9 @@ def get_argspec():
                 'web_category': {
                     'type': 'str',
                 },
+                'web_reputation': {
+                    'type': 'str',
+                },
                 'ssl_status': {
                     'type': 'str',
                 }

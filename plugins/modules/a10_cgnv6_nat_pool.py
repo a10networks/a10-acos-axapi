@@ -57,7 +57,7 @@ options:
         required: False
     pool_name:
         description:
-        - "Specify pool name or pool group"
+        - "Specify pool name"
         type: str
         required: True
     start_address:
@@ -175,7 +175,7 @@ options:
                 type: list
             pool_name:
                 description:
-                - "Specify pool name or pool group"
+                - "Specify pool name"
                 type: str
     stats:
         description:
@@ -235,6 +235,18 @@ options:
                 description:
                 - "UDP Hit Full"
                 type: str
+            udp_port_overloaded:
+                description:
+                - "UDP Port Overloaded"
+                type: str
+            udp_port_overload_create:
+                description:
+                - "UDP Port Overloading Session Created"
+                type: str
+            udp_port_overload_free:
+                description:
+                - "UDP Port Overloading Session Freed"
+                type: str
             tcp:
                 description:
                 - "TCP"
@@ -259,6 +271,18 @@ options:
                 description:
                 - "TCP Hit Full"
                 type: str
+            tcp_port_overloaded:
+                description:
+                - "TCP Port Overloaded"
+                type: str
+            tcp_port_overload_create:
+                description:
+                - "TCP Port Overloading Session Created"
+                type: str
+            tcp_port_overload_free:
+                description:
+                - "TCP Port Overloading Session Freed"
+                type: str
             ip_used:
                 description:
                 - "IP Used"
@@ -273,7 +297,7 @@ options:
                 type: str
             pool_name:
                 description:
-                - "Specify pool name or pool group"
+                - "Specify pool name"
                 type: str
 
 '''
@@ -490,6 +514,9 @@ def get_argspec():
                 'udp_hit_full': {
                     'type': 'int',
                 },
+                'udp_port_overloaded': {
+                    'type': 'int',
+                },
                 'tcp_used': {
                     'type': 'int',
                 },
@@ -506,6 +533,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'tcp_hit_full': {
+                    'type': 'int',
+                },
+                'tcp_port_overloaded': {
                     'type': 'int',
                 },
                 'rtsp_used': {
@@ -561,6 +591,15 @@ def get_argspec():
             'udp_hit_full': {
                 'type': 'str',
             },
+            'udp_port_overloaded': {
+                'type': 'str',
+            },
+            'udp_port_overload_create': {
+                'type': 'str',
+            },
+            'udp_port_overload_free': {
+                'type': 'str',
+            },
             'tcp': {
                 'type': 'str',
             },
@@ -577,6 +616,15 @@ def get_argspec():
                 'type': 'str',
             },
             'tcp_hit_full': {
+                'type': 'str',
+            },
+            'tcp_port_overloaded': {
+                'type': 'str',
+            },
+            'tcp_port_overload_create': {
+                'type': 'str',
+            },
+            'tcp_port_overload_free': {
                 'type': 'str',
             },
             'ip_used': {

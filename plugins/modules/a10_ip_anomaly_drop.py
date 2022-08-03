@@ -151,21 +151,26 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'land'= land; 'emp_frg'= emp_frg; 'emp_mic_frg'= emp_mic_frg;
-          'opt'= opt; 'frg'= frg; 'bad_ip_hdrlen'= bad_ip_hdrlen; 'bad_ip_flg'=
-          bad_ip_flg; 'bad_ip_ttl'= bad_ip_ttl; 'no_ip_payload'= no_ip_payload;
-          'over_ip_payload'= over_ip_payload; 'bad_ip_payload_len'= bad_ip_payload_len;
-          'bad_ip_frg_offset'= bad_ip_frg_offset; 'csum'= csum; 'pod'= pod;
-          'bad_tcp_urg_offset'= bad_tcp_urg_offset; 'tcp_sht_hdr'= tcp_sht_hdr;
-          'tcp_bad_iplen'= tcp_bad_iplen; 'tcp_null_frg'= tcp_null_frg; 'tcp_null_scan'=
-          tcp_null_scan; 'tcp_syn_fin'= tcp_syn_fin; 'tcp_xmas'= tcp_xmas;
-          'tcp_xmas_scan'= tcp_xmas_scan; 'tcp_syn_frg'= tcp_syn_frg; 'tcp_frg_hdr'=
-          tcp_frg_hdr; 'tcp_bad_csum'= tcp_bad_csum; 'udp_srt_hdr'= udp_srt_hdr;
-          'udp_bad_len'= udp_bad_len; 'udp_kerb_frg'= udp_kerb_frg; 'udp_port_lb'=
-          udp_port_lb; 'udp_bad_csum'= udp_bad_csum; 'runt_ip_hdr'= runt_ip_hdr;
-          'runt_tcp_udp_hdr'= runt_tcp_udp_hdr; 'ipip_tnl_msmtch'= ipip_tnl_msmtch;
-          'tcp_opt_err'= tcp_opt_err; 'ipip_tnl_err'= ipip_tnl_err; 'vxlan_err'=
-          vxlan_err; 'nvgre_err'= nvgre_err; 'gre_pptp_err'= gre_pptp_err;"
+                - "'all'= all; 'land'= Land Attack Drop; 'emp_frg'= Empty Fragment Drop;
+          'emp_mic_frg'= Micro Fragment Drop; 'opt'= IPv4 Options Drop; 'frg'= IPv4
+          Fragment Drop; 'bad_ip_hdrlen'= Bad IP Header Len Drop; 'bad_ip_flg'= Bad IP
+          Flags Drop; 'bad_ip_ttl'= Bad IP TTL Drop; 'no_ip_payload'= No IP Payload drop;
+          'over_ip_payload'= Oversize IP Payload Drop; 'bad_ip_payload_len'= Bad IP
+          Payload Len Drop; 'bad_ip_frg_offset'= Bad IP Fragment Offset Drop; 'csum'= Bad
+          IP Checksum Drop; 'pod'= ICMP Ping of Death Drop; 'bad_tcp_urg_offset'= TCP Bad
+          Urgent Offset Drop; 'tcp_sht_hdr'= TCP Short Header Drop; 'tcp_bad_iplen'= TCP
+          Bad IP Length Drop; 'tcp_null_frg'= TCP Null Flags Drop; 'tcp_null_scan'= TCP
+          Null Scan Drop; 'tcp_syn_fin'= TCP Syn and Fin Drop; 'tcp_xmas'= TCP XMAS Flags
+          Drop; 'tcp_xmas_scan'= TCP XMAS Scan Drop; 'tcp_syn_frg'= TCP Syn Fragment
+          Drop; 'tcp_frg_hdr'= TCP Fragmented Header Drop; 'tcp_bad_csum'= TCP Bad
+          Checksum Drop; 'udp_srt_hdr'= UDP Short Header Drop; 'udp_bad_len'= UDP Bad
+          Length Drop; 'udp_kerb_frg'= UDP Kerberos Fragment Drop; 'udp_port_lb'= UDP
+          Port Loopback Drop; 'udp_bad_csum'= UDP Bad Checksum Drop; 'runt_ip_hdr'= Runt
+          IP Header Drop; 'runt_tcp_udp_hdr'= Runt TCP/UDP Header Drop;
+          'ipip_tnl_msmtch'= IP-over-IP Tunnel Mismatch Drop; 'tcp_opt_err'= TCP Option
+          Error Drop; 'ipip_tnl_err'= IP-over-IP Tunnel Error Drop; 'vxlan_err'= VXLAN
+          Tunnel Error Drop; 'nvgre_err'= GRE Tunnel Error Drop; 'gre_pptp_err'= GRE PPTP
+          Error Drop;"
                 type: str
     stats:
         description:
@@ -175,155 +180,155 @@ options:
         suboptions:
             land:
                 description:
-                - "Field land"
+                - "Land Attack Drop"
                 type: str
             emp_frg:
                 description:
-                - "Field emp_frg"
+                - "Empty Fragment Drop"
                 type: str
             emp_mic_frg:
                 description:
-                - "Field emp_mic_frg"
+                - "Micro Fragment Drop"
                 type: str
             opt:
                 description:
-                - "Field opt"
+                - "IPv4 Options Drop"
                 type: str
             frg:
                 description:
-                - "Field frg"
+                - "IPv4 Fragment Drop"
                 type: str
             bad_ip_hdrlen:
                 description:
-                - "Field bad_ip_hdrlen"
+                - "Bad IP Header Len Drop"
                 type: str
             bad_ip_flg:
                 description:
-                - "Field bad_ip_flg"
+                - "Bad IP Flags Drop"
                 type: str
             bad_ip_ttl:
                 description:
-                - "Field bad_ip_ttl"
+                - "Bad IP TTL Drop"
                 type: str
             no_ip_payload:
                 description:
-                - "Field no_ip_payload"
+                - "No IP Payload drop"
                 type: str
             over_ip_payload:
                 description:
-                - "Field over_ip_payload"
+                - "Oversize IP Payload Drop"
                 type: str
             bad_ip_payload_len:
                 description:
-                - "Field bad_ip_payload_len"
+                - "Bad IP Payload Len Drop"
                 type: str
             bad_ip_frg_offset:
                 description:
-                - "Field bad_ip_frg_offset"
+                - "Bad IP Fragment Offset Drop"
                 type: str
             csum:
                 description:
-                - "Field csum"
+                - "Bad IP Checksum Drop"
                 type: str
             pod:
                 description:
-                - "Field pod"
+                - "ICMP Ping of Death Drop"
                 type: str
             bad_tcp_urg_offset:
                 description:
-                - "Field bad_tcp_urg_offset"
+                - "TCP Bad Urgent Offset Drop"
                 type: str
             tcp_sht_hdr:
                 description:
-                - "Field tcp_sht_hdr"
+                - "TCP Short Header Drop"
                 type: str
             tcp_bad_iplen:
                 description:
-                - "Field tcp_bad_iplen"
+                - "TCP Bad IP Length Drop"
                 type: str
             tcp_null_frg:
                 description:
-                - "Field tcp_null_frg"
+                - "TCP Null Flags Drop"
                 type: str
             tcp_null_scan:
                 description:
-                - "Field tcp_null_scan"
+                - "TCP Null Scan Drop"
                 type: str
             tcp_syn_fin:
                 description:
-                - "Field tcp_syn_fin"
+                - "TCP Syn and Fin Drop"
                 type: str
             tcp_xmas:
                 description:
-                - "Field tcp_xmas"
+                - "TCP XMAS Flags Drop"
                 type: str
             tcp_xmas_scan:
                 description:
-                - "Field tcp_xmas_scan"
+                - "TCP XMAS Scan Drop"
                 type: str
             tcp_syn_frg:
                 description:
-                - "Field tcp_syn_frg"
+                - "TCP Syn Fragment Drop"
                 type: str
             tcp_frg_hdr:
                 description:
-                - "Field tcp_frg_hdr"
+                - "TCP Fragmented Header Drop"
                 type: str
             tcp_bad_csum:
                 description:
-                - "Field tcp_bad_csum"
+                - "TCP Bad Checksum Drop"
                 type: str
             udp_srt_hdr:
                 description:
-                - "Field udp_srt_hdr"
+                - "UDP Short Header Drop"
                 type: str
             udp_bad_len:
                 description:
-                - "Field udp_bad_len"
+                - "UDP Bad Length Drop"
                 type: str
             udp_kerb_frg:
                 description:
-                - "Field udp_kerb_frg"
+                - "UDP Kerberos Fragment Drop"
                 type: str
             udp_port_lb:
                 description:
-                - "Field udp_port_lb"
+                - "UDP Port Loopback Drop"
                 type: str
             udp_bad_csum:
                 description:
-                - "Field udp_bad_csum"
+                - "UDP Bad Checksum Drop"
                 type: str
             runt_ip_hdr:
                 description:
-                - "Field runt_ip_hdr"
+                - "Runt IP Header Drop"
                 type: str
             runt_tcp_udp_hdr:
                 description:
-                - "Field runt_tcp_udp_hdr"
+                - "Runt TCP/UDP Header Drop"
                 type: str
             ipip_tnl_msmtch:
                 description:
-                - "Field ipip_tnl_msmtch"
+                - "IP-over-IP Tunnel Mismatch Drop"
                 type: str
             tcp_opt_err:
                 description:
-                - "Field tcp_opt_err"
+                - "TCP Option Error Drop"
                 type: str
             ipip_tnl_err:
                 description:
-                - "Field ipip_tnl_err"
+                - "IP-over-IP Tunnel Error Drop"
                 type: str
             vxlan_err:
                 description:
-                - "Field vxlan_err"
+                - "VXLAN Tunnel Error Drop"
                 type: str
             nvgre_err:
                 description:
-                - "Field nvgre_err"
+                - "GRE Tunnel Error Drop"
                 type: str
             gre_pptp_err:
                 description:
-                - "Field gre_pptp_err"
+                - "GRE PPTP Error Drop"
                 type: str
 
 '''

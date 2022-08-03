@@ -74,6 +74,18 @@ options:
                 description:
                 - "Field session_count"
                 type: int
+            nat44_total_session_count:
+                description:
+                - "Field nat44_total_session_count"
+                type: int
+            nat64_total_session_count:
+                description:
+                - "Field nat64_total_session_count"
+                type: int
+            dslite_total_session_count:
+                description:
+                - "Field dslite_total_session_count"
+                type: int
             session_type:
                 description:
                 - "Field session_type"
@@ -273,6 +285,15 @@ def get_argspec():
                 }
             },
             'session_count': {
+                'type': 'int',
+            },
+            'nat44_total_session_count': {
+                'type': 'int',
+            },
+            'nat64_total_session_count': {
+                'type': 'int',
+            },
+            'dslite_total_session_count': {
                 'type': 'int',
             },
             'session_type': {

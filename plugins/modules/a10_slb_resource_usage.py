@@ -125,6 +125,11 @@ options:
         - "Total configurable Server SSL Templates in the System"
         type: int
         required: False
+    link_cost_template_count:
+        description:
+        - "Total configurable Link-cost Templates in the System"
+        type: int
+        required: False
     service_group_count:
         description:
         - "Total Service Groups in the System"
@@ -143,6 +148,61 @@ options:
     virtual_server_count:
         description:
         - "Total Virtual Servers in the System"
+        type: int
+        required: False
+    gslb_site_count:
+        description:
+        - "Total GSLB sites in the System"
+        type: int
+        required: False
+    gslb_device_count:
+        description:
+        - "Total GSLB devices in the System"
+        type: int
+        required: False
+    gslb_service_ip_count:
+        description:
+        - "Total GSLB service-ip in the System"
+        type: int
+        required: False
+    gslb_service_port_count:
+        description:
+        - "Total GSLB service-port in the System"
+        type: int
+        required: False
+    gslb_zone_count:
+        description:
+        - "Total GSLB zones in the System"
+        type: int
+        required: False
+    gslb_service_count:
+        description:
+        - "Total GSLB services in the System"
+        type: int
+        required: False
+    gslb_policy_count:
+        description:
+        - "Total GSLB policies in the System"
+        type: int
+        required: False
+    gslb_geo_location_count:
+        description:
+        - "Total GSLB geo-location in the System"
+        type: int
+        required: False
+    gslb_ip_list_count:
+        description:
+        - "Total GSLB ip-list in the System"
+        type: int
+        required: False
+    gslb_template_count:
+        description:
+        - "Total GSLB templates in the System"
+        type: int
+        required: False
+    gslb_svc_group_count:
+        description:
+        - "Total GSLB services in the System"
         type: int
         required: False
     health_monitor_count:
@@ -338,6 +398,18 @@ options:
             server_ssl_template_default:
                 description:
                 - "Field server_ssl_template_default"
+                type: int
+            link_cost_template_min:
+                description:
+                - "Field link_cost_template_min"
+                type: int
+            link_cost_template_max:
+                description:
+                - "Field link_cost_template_max"
+                type: int
+            link_cost_template_default:
+                description:
+                - "Field link_cost_template_default"
                 type: int
             stream_template_min:
                 description:
@@ -616,8 +688,20 @@ AVAILABLE_PROPERTIES = [
     "fast_tcp_template_count",
     "fast_udp_template_count",
     "fix_template_count",
+    "gslb_device_count",
+    "gslb_geo_location_count",
+    "gslb_ip_list_count",
+    "gslb_policy_count",
+    "gslb_service_count",
+    "gslb_service_ip_count",
+    "gslb_service_port_count",
+    "gslb_site_count",
+    "gslb_svc_group_count",
+    "gslb_template_count",
+    "gslb_zone_count",
     "health_monitor_count",
     "http_template_count",
+    "link_cost_template_count",
     "nat_pool_addr_count",
     "oper",
     "pbslb_subnet_count",
@@ -703,6 +787,9 @@ def get_argspec():
         'server_ssl_template_count': {
             'type': 'int',
         },
+        'link_cost_template_count': {
+            'type': 'int',
+        },
         'service_group_count': {
             'type': 'int',
         },
@@ -713,6 +800,39 @@ def get_argspec():
             'type': 'int',
         },
         'virtual_server_count': {
+            'type': 'int',
+        },
+        'gslb_site_count': {
+            'type': 'int',
+        },
+        'gslb_device_count': {
+            'type': 'int',
+        },
+        'gslb_service_ip_count': {
+            'type': 'int',
+        },
+        'gslb_service_port_count': {
+            'type': 'int',
+        },
+        'gslb_zone_count': {
+            'type': 'int',
+        },
+        'gslb_service_count': {
+            'type': 'int',
+        },
+        'gslb_policy_count': {
+            'type': 'int',
+        },
+        'gslb_geo_location_count': {
+            'type': 'int',
+        },
+        'gslb_ip_list_count': {
+            'type': 'int',
+        },
+        'gslb_template_count': {
+            'type': 'int',
+        },
+        'gslb_svc_group_count': {
             'type': 'int',
         },
         'health_monitor_count': {
@@ -853,6 +973,15 @@ def get_argspec():
                 'type': 'int',
             },
             'server_ssl_template_default': {
+                'type': 'int',
+            },
+            'link_cost_template_min': {
+                'type': 'int',
+            },
+            'link_cost_template_max': {
+                'type': 'int',
+            },
+            'link_cost_template_default': {
                 'type': 'int',
             },
             'stream_template_min': {

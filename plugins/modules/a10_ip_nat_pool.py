@@ -138,19 +138,19 @@ options:
         suboptions:
             Port_Usage:
                 description:
-                - "Field Port_Usage"
+                - "some help string"
                 type: str
             Total_Used:
                 description:
-                - "Field Total_Used"
+                - "some help string"
                 type: str
             Total_Freed:
                 description:
-                - "Field Total_Freed"
+                - "some help string"
                 type: str
             Failed:
                 description:
-                - "Field Failed"
+                - "some help string"
                 type: str
             pool_name:
                 description:

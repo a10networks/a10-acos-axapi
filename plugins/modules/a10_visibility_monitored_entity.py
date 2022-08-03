@@ -84,9 +84,9 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    topk:
+    mon_topk:
         description:
-        - "Field topk"
+        - "Field mon_topk"
         type: dict
         required: False
         suboptions:
@@ -104,9 +104,9 @@ options:
         type: dict
         required: False
         suboptions:
-            topk:
+            mon_topk:
                 description:
-                - "Field topk"
+                - "Field mon_topk"
                 type: dict
     oper:
         description:
@@ -134,9 +134,9 @@ options:
                 description:
                 - "Field sessions"
                 type: dict
-            topk:
+            mon_topk:
                 description:
-                - "Field topk"
+                - "Field mon_topk"
                 type: dict
             secondary:
                 description:
@@ -198,10 +198,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "detail",
+    "mon_topk",
     "oper",
     "secondary",
     "sessions",
-    "topk",
     "uuid",
 ]
 
@@ -252,7 +252,7 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'topk': {
+        'mon_topk': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
@@ -266,7 +266,7 @@ def get_argspec():
         },
         'secondary': {
             'type': 'dict',
-            'topk': {
+            'mon_topk': {
                 'type': 'dict',
                 'uuid': {
                     'type': 'str',
@@ -677,7 +677,7 @@ def get_argspec():
                     }
                 }
             },
-            'topk': {
+            'mon_topk': {
                 'type': 'dict',
                 'oper': {
                     'type': 'dict',
@@ -742,7 +742,7 @@ def get_argspec():
                 'oper': {
                     'type': 'dict',
                 },
-                'topk': {
+                'mon_topk': {
                     'type': 'dict',
                     'oper': {
                         'type': 'dict',

@@ -62,8 +62,13 @@ options:
         required: False
     msl_time:
         description:
-        - "Configure maximum session life, default is 2 seconds (1-40 seconds, default is
+        - "Configure maximum session life, default is 2 seconds (1-39 seconds, default is
           2 seconds)"
+        type: int
+        required: False
+    timer_wheel_walk_limit:
+        description:
+        - "Set timer wheel walk limit (0-1024, 0 is unlimited, default is 100)"
         type: int
         required: False
     uuid:
@@ -128,6 +133,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "log_session_on_established",
     "msl_time",
+    "timer_wheel_walk_limit",
     "uuid",
 ]
 
@@ -161,6 +167,9 @@ def get_argspec():
             'type': 'bool',
         },
         'msl_time': {
+            'type': 'int',
+        },
+        'timer_wheel_walk_limit': {
             'type': 'int',
         },
         'uuid': {

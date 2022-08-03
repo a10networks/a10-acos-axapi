@@ -90,6 +90,14 @@ options:
                 description:
                 - "Field platform"
                 type: str
+            burst:
+                description:
+                - "Field burst"
+                type: str
+            version:
+                description:
+                - "Field version"
+                type: str
             glm_ping_interval:
                 description:
                 - "Field glm_ping_interval"
@@ -224,6 +232,12 @@ def get_argspec():
                 'type': 'str',
             },
             'platform': {
+                'type': 'str',
+            },
+            'burst': {
+                'type': 'str',
+            },
+            'version': {
                 'type': 'str',
             },
             'glm_ping_interval': {

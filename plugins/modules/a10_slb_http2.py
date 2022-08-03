@@ -116,9 +116,10 @@ options:
           'continuation_before_headers'= CONTINUATION frame with no headers frame;
           'invalid_frame_during_headers'= frame before headers were complete;
           'headers_after_continuation'= headers frame before CONTINUATION was complete;
-          'invalid_push_promise'= unexpected PUSH_PROMISE frame; 'invalid_stream_id'=
-          received invalid stream ID; 'headers_interleaved'= headers interleaved on
-          streams; 'trailers_no_end_stream'= trailers not marked as end-of-stream;
+          'push_promise_frame_sent'= Push Promise Frame Sent; 'invalid_push_promise'=
+          unexpected PUSH_PROMISE frame; 'invalid_stream_id'= received invalid stream ID;
+          'headers_interleaved'= headers interleaved on streams;
+          'trailers_no_end_stream'= trailers not marked as end-of-stream;
           'invalid_setting_value'= invalid setting-frame value; 'invalid_window_update'=
           window-update value out of range; 'frame_header_bytes_received'= frame header
           bytes received; 'frame_header_bytes_sent'= frame header bytes sent;
@@ -144,7 +145,8 @@ options:
           COMPRESSION_ERROR; 'err_sent_connect_err'= Error Sent - CONNECT_ERROR;
           'err_sent_your_calm'= Error Sent - ENHANCE_YOUR_CALM;
           'err_sent_inadequate_security'= Error Sent - INADEQUATE_SECURITY;
-          'err_sent_http11_required'= Error Sent - HTTP_1_1_REQUIRED;"
+          'err_sent_http11_required'= Error Sent - HTTP_1_1_REQUIRED; 'http2_rejected'=
+          HTTP2 Rejected;"
                 type: str
     oper:
         description:
@@ -446,6 +448,10 @@ options:
                 description:
                 - "headers frame before CONTINUATION was complete"
                 type: str
+            push_promise_frame_sent:
+                description:
+                - "Push Promise Frame Sent"
+                type: str
             invalid_push_promise:
                 description:
                 - "unexpected PUSH_PROMISE frame"
@@ -606,6 +612,10 @@ options:
                 description:
                 - "Error Sent - HTTP_1_1_REQUIRED"
                 type: str
+            http2_rejected:
+                description:
+                - "HTTP2 Rejected"
+                type: str
 
 '''
 
@@ -739,26 +749,27 @@ def get_argspec():
                     'exceeds_max_window_size_stream', 'stream_closed',
                     'continuation_before_headers',
                     'invalid_frame_during_headers',
-                    'headers_after_continuation', 'invalid_push_promise',
-                    'invalid_stream_id', 'headers_interleaved',
-                    'trailers_no_end_stream', 'invalid_setting_value',
-                    'invalid_window_update', 'frame_header_bytes_received',
-                    'frame_header_bytes_sent', 'control_bytes_received',
-                    'control_bytes_sent', 'header_bytes_received',
-                    'header_bytes_sent', 'data_bytes_received',
-                    'data_bytes_sent', 'total_bytes_received',
-                    'total_bytes_sent', 'peak_proxy', 'control_frame_sent',
-                    'continuation_frame_sent', 'data_frame_sent',
-                    'headers_frame_sent', 'priority_frame_sent',
-                    'settings_ack_rcvd', 'empty_settings_rcvd',
-                    'alloc_fail_total', 'err_rcvd_total', 'err_sent_total',
-                    'err_sent_proto_err', 'err_sent_internal_err',
-                    'err_sent_flow_control', 'err_sent_setting_timeout',
-                    'err_sent_stream_closed', 'err_sent_frame_size_err',
-                    'err_sent_refused_stream', 'err_sent_cancel',
-                    'err_sent_compression_err', 'err_sent_connect_err',
-                    'err_sent_your_calm', 'err_sent_inadequate_security',
-                    'err_sent_http11_required'
+                    'headers_after_continuation', 'push_promise_frame_sent',
+                    'invalid_push_promise', 'invalid_stream_id',
+                    'headers_interleaved', 'trailers_no_end_stream',
+                    'invalid_setting_value', 'invalid_window_update',
+                    'frame_header_bytes_received', 'frame_header_bytes_sent',
+                    'control_bytes_received', 'control_bytes_sent',
+                    'header_bytes_received', 'header_bytes_sent',
+                    'data_bytes_received', 'data_bytes_sent',
+                    'total_bytes_received', 'total_bytes_sent', 'peak_proxy',
+                    'control_frame_sent', 'continuation_frame_sent',
+                    'data_frame_sent', 'headers_frame_sent',
+                    'priority_frame_sent', 'settings_ack_rcvd',
+                    'empty_settings_rcvd', 'alloc_fail_total',
+                    'err_rcvd_total', 'err_sent_total', 'err_sent_proto_err',
+                    'err_sent_internal_err', 'err_sent_flow_control',
+                    'err_sent_setting_timeout', 'err_sent_stream_closed',
+                    'err_sent_frame_size_err', 'err_sent_refused_stream',
+                    'err_sent_cancel', 'err_sent_compression_err',
+                    'err_sent_connect_err', 'err_sent_your_calm',
+                    'err_sent_inadequate_security', 'err_sent_http11_required',
+                    'http2_rejected'
                 ]
             }
         },
@@ -962,6 +973,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'headers_after_continuation': {
+                    'type': 'int',
+                },
+                'push_promise_frame_sent': {
                     'type': 'int',
                 },
                 'invalid_push_promise': {
@@ -1313,6 +1327,9 @@ def get_argspec():
             'headers_after_continuation': {
                 'type': 'str',
             },
+            'push_promise_frame_sent': {
+                'type': 'str',
+            },
             'invalid_push_promise': {
                 'type': 'str',
             },
@@ -1431,6 +1448,9 @@ def get_argspec():
                 'type': 'str',
             },
             'err_sent_http11_required': {
+                'type': 'str',
+            },
+            'http2_rejected': {
                 'type': 'str',
             }
         }

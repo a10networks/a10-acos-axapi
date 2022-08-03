@@ -59,6 +59,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    enable:
+        description:
+        - "Field enable"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -145,6 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "enable",
     "template_list",
     "uuid",
 ]
@@ -173,6 +179,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'enable': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },

@@ -728,13 +728,6 @@ def get_argspec():
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
                 }
             },
             'dns_a_record_ipv4_list': {
@@ -769,13 +762,6 @@ def get_argspec():
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
                 }
             },
             'dns_a_record_ipv6_list': {
@@ -810,13 +796,6 @@ def get_argspec():
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
                 }
             }
         },

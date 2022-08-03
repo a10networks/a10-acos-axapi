@@ -98,6 +98,11 @@ options:
         - "Set GUI login message"
         type: str
         required: False
+    pre_login_message:
+        description:
+        - "Set Pre GUI login message"
+        type: str
+        required: False
     secure_server_disable:
         description:
         - "Disable"
@@ -108,6 +113,41 @@ options:
         - "Disable"
         type: bool
         required: False
+    max_keep_alive_requests:
+        description:
+        - "Set MaxKeepAliveRequests (MaxKeepAliveRequests (default 100))"
+        type: int
+        required: False
+    keep_alive_timeout:
+        description:
+        - "Set KeepAliveTimeout in seconds (KeepAliveTimeout in seconds (default 30))"
+        type: int
+        required: False
+    mpm_max_conn:
+        description:
+        - "Set Max Connections of MPM"
+        type: int
+        required: False
+    mpm_min_spare_conn:
+        description:
+        - "Set Min Spare Connections of MPM"
+        type: int
+        required: False
+    mpm_max_conn_per_child:
+        description:
+        - "Set Max Connections Per Child of MPM"
+        type: int
+        required: False
+    public_apis:
+        description:
+        - "Field public_apis"
+        type: list
+        required: False
+        suboptions:
+            api_uri:
+                description:
+                - "API URI"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -203,8 +243,15 @@ AVAILABLE_PROPERTIES = [
     "axapi_session_limit",
     "gui_idle",
     "gui_session_limit",
+    "keep_alive_timeout",
     "login_message",
+    "max_keep_alive_requests",
+    "mpm_max_conn",
+    "mpm_max_conn_per_child",
+    "mpm_min_spare_conn",
     "port",
+    "pre_login_message",
+    "public_apis",
     "secure",
     "secure_port",
     "secure_server_disable",
@@ -262,11 +309,35 @@ def get_argspec():
         'login_message': {
             'type': 'str',
         },
+        'pre_login_message': {
+            'type': 'str',
+        },
         'secure_server_disable': {
             'type': 'bool',
         },
         'server_disable': {
             'type': 'bool',
+        },
+        'max_keep_alive_requests': {
+            'type': 'int',
+        },
+        'keep_alive_timeout': {
+            'type': 'int',
+        },
+        'mpm_max_conn': {
+            'type': 'int',
+        },
+        'mpm_min_spare_conn': {
+            'type': 'int',
+        },
+        'mpm_max_conn_per_child': {
+            'type': 'int',
+        },
+        'public_apis': {
+            'type': 'list',
+            'api_uri': {
+                'type': 'str',
+            }
         },
         'uuid': {
             'type': 'str',

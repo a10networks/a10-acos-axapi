@@ -60,14 +60,31 @@ options:
         - "IPsec name"
         type: str
         required: True
-    ike_gateway:
-        description:
-        - "Gateway to use for IPsec SA"
-        type: str
-        required: False
     mode:
         description:
         - "'tunnel'= Encapsulating the packet in IPsec tunnel mode (Default);"
+        type: str
+        required: False
+    dscp:
+        description:
+        - "'default'= Default dscp (000000); 'af11'= AF11 (001010); 'af12'= AF12 (001100);
+          'af13'= AF13 (001110); 'af21'= AF21 (010010); 'af22'= AF22 (010100); 'af23'=
+          AF23 (010110); 'af31'= AF31 (011010); 'af32'= AF32 (011100); 'af33'= AF33
+          (011110); 'af41'= AF41 (100010); 'af42'= AF42 (100100); 'af43'= AF43 (100110);
+          'cs1'= CS1 (001000); 'cs2'= CS2 (010000); 'cs3'= CS3 (011000); 'cs4'= CS4
+          (100000); 'cs5'= CS5 (101000); 'cs6'= CS6 (110000); 'cs7'= CS7 (111000); 'ef'=
+          EF (101110); '0'= 000000; '1'= 000001; '2'= 000010; '3'= 000011; '4'= 000100;
+          '5'= 000101; '6'= 000110; '7'= 000111; '8'= 001000; '9'= 001001; '10'= 001010;
+          '11'= 001011; '12'= 001100; '13'= 001101; '14'= 001110; '15'= 001111; '16'=
+          010000; '17'= 010001; '18'= 010010; '19'= 010011; '20'= 010100; '21'= 010101;
+          '22'= 010110; '23'= 010111; '24'= 011000; '25'= 011001; '26'= 011010; '27'=
+          011011; '28'= 011100; '29'= 011101; '30'= 011110; '31'= 011111; '32'= 100000;
+          '33'= 100001; '34'= 100010; '35'= 100011; '36'= 100100; '37'= 100101; '38'=
+          100110; '39'= 100111; '40'= 101000; '41'= 101001; '42'= 101010; '43'= 101011;
+          '44'= 101100; '45'= 101101; '46'= 101110; '47'= 101111; '48'= 110000; '49'=
+          110001; '50'= 110010; '51'= 110011; '52'= 110100; '53'= 110101; '54'= 110110;
+          '55'= 110111; '56'= 111000; '57'= 111001; '58'= 111010; '59'= 111011; '60'=
+          111100; '61'= 111101; '62'= 111110; '63'= 111111;"
         type: str
         required: False
     proto:
@@ -159,6 +176,11 @@ options:
                 description:
                 - "Field ipv6"
                 type: dict
+    enforce_traffic_selector:
+        description:
+        - "Enforce Traffic Selector"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -187,14 +209,17 @@ options:
           frag Success; 'prefrag-error'= Pre-frag Error; 'cavium-bytes-encrypted'= CAVIUM
           Encrypted Bytes; 'cavium-bytes-decrypted'= CAVIUM Decrypted Bytes; 'cavium-
           packets-encrypted'= CAVIUM Encrypted Packets; 'cavium-packets-decrypted'=
-          CAVIUM Decrypted Packets; 'tunnel-intf-down'= Packet dropped= Tunnel Interface
-          Down; 'pkt-fail-prep-to-send'= Packet dropped= Failed in prepare to send; 'no-
-          next-hop'= Packet dropped= No next hop; 'invalid-tunnel-id'= Packet dropped=
-          Invalid tunnel ID; 'no-tunnel-found'= Packet dropped= No tunnel found; 'pkt-
-          fail-to-send'= Packet dropped= Failed to send; 'frag-after-encap-frag-packets'=
-          Frag-after-encap Fragment Generated; 'frag-received'= Fragment Received;
-          'sequence-num'= Sequence Number; 'sequence-num-rollover'= Sequence Number
-          Rollover; 'packets-err-nh-check'= Next Header Check Error;"
+          CAVIUM Decrypted Packets; 'qat-bytes-encrypted'= QAT Encrypted Bytes; 'qat-
+          bytes-decrypted'= QAT Decrypted Bytes; 'qat-packets-encrypted'= QAT Encrypted
+          Packets; 'qat-packets-decrypted'= QAT Decrypted Packets; 'tunnel-intf-down'=
+          Packet dropped= Tunnel Interface Down; 'pkt-fail-prep-to-send'= Packet dropped=
+          Failed in prepare to send; 'no-next-hop'= Packet dropped= No next hop;
+          'invalid-tunnel-id'= Packet dropped= Invalid tunnel ID; 'no-tunnel-found'=
+          Packet dropped= No tunnel found; 'pkt-fail-to-send'= Packet dropped= Failed to
+          send; 'frag-after-encap-frag-packets'= Frag-after-encap Fragment Generated;
+          'frag-received'= Fragment Received; 'sequence-num'= Sequence Number; 'sequence-
+          num-rollover'= Sequence Number Rollover; 'packets-err-nh-check'= Next Header
+          Check Error;"
                 type: str
     bind_tunnel:
         description:
@@ -218,72 +243,46 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    ipsec_gateway:
+        description:
+        - "Field ipsec_gateway"
+        type: dict
+        required: False
+        suboptions:
+            ike_gateway:
+                description:
+                - "Gateway to use for IPsec SA"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
         type: dict
         required: False
         suboptions:
-            Status:
+            remote_ts_filter:
                 description:
-                - "Field Status"
+                - "Field remote_ts_filter"
                 type: str
-            SA_Index:
+            remote_ts_v6_filter:
                 description:
-                - "Field SA_Index"
-                type: int
-            Local_IP:
-                description:
-                - "Field Local_IP"
+                - "Field remote_ts_v6_filter"
                 type: str
-            Peer_IP:
+            in_spi_filter:
                 description:
-                - "Field Peer_IP"
+                - "Field in_spi_filter"
                 type: str
-            Local_SPI:
+            out_spi_filter:
                 description:
-                - "Field Local_SPI"
+                - "Field out_spi_filter"
                 type: str
-            Remote_SPI:
+            SA_List:
                 description:
-                - "Field Remote_SPI"
-                type: str
-            Protocol:
-                description:
-                - "Field Protocol"
-                type: str
-            Mode:
-                description:
-                - "Field Mode"
-                type: str
-            Encryption_Algorithm:
-                description:
-                - "Field Encryption_Algorithm"
-                type: str
-            Hash_Algorithm:
-                description:
-                - "Field Hash_Algorithm"
-                type: str
-            DH_Group:
-                description:
-                - "Field DH_Group"
-                type: int
-            NAT_Traversal:
-                description:
-                - "Field NAT_Traversal"
-                type: int
-            Anti_Replay:
-                description:
-                - "Field Anti_Replay"
-                type: str
-            Lifetime:
-                description:
-                - "Field Lifetime"
-                type: int
-            Lifebytes:
-                description:
-                - "Field Lifebytes"
-                type: str
+                - "Field SA_List"
+                type: list
             name:
                 description:
                 - "IPsec name"
@@ -365,6 +364,22 @@ options:
             cavium_packets_decrypted:
                 description:
                 - "CAVIUM Decrypted Packets"
+                type: str
+            qat_bytes_encrypted:
+                description:
+                - "QAT Encrypted Bytes"
+                type: str
+            qat_bytes_decrypted:
+                description:
+                - "QAT Decrypted Bytes"
+                type: str
+            qat_packets_encrypted:
+                description:
+                - "QAT Encrypted Packets"
+                type: str
+            qat_packets_decrypted:
+                description:
+                - "QAT Decrypted Packets"
                 type: str
             tunnel_intf_down:
                 description:
@@ -472,8 +487,10 @@ AVAILABLE_PROPERTIES = [
     "anti_replay_window",
     "bind_tunnel",
     "dh_group",
+    "dscp",
     "enc_cfg",
-    "ike_gateway",
+    "enforce_traffic_selector",
+    "ipsec_gateway",
     "lifebytes",
     "lifetime",
     "mode",
@@ -519,12 +536,24 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'ike_gateway': {
-            'type': 'str',
-        },
         'mode': {
             'type': 'str',
             'choices': ['tunnel']
+        },
+        'dscp': {
+            'type':
+            'str',
+            'choices': [
+                'default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23',
+                'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2',
+                'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef', '0', '1', '2', '3',
+                '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14',
+                '15', '16', '17', '18', '19', '20', '21', '22', '23', '24',
+                '25', '26', '27', '28', '29', '30', '31', '32', '33', '34',
+                '35', '36', '37', '38', '39', '40', '41', '42', '43', '44',
+                '45', '46', '47', '48', '49', '50', '51', '52', '53', '54',
+                '55', '56', '57', '58', '59', '60', '61', '62', '63'
+            ]
         },
         'proto': {
             'type': 'str',
@@ -586,7 +615,10 @@ def get_argspec():
                 'local_port': {
                     'type': 'int',
                 },
-                'remote': {
+                'remote_ipv4_assigned': {
+                    'type': 'bool',
+                },
+                'remote_ip': {
                     'type': 'str',
                 },
                 'remote_netmask': {
@@ -607,7 +639,10 @@ def get_argspec():
                 'local_portv6': {
                     'type': 'int',
                 },
-                'remotev6': {
+                'remote_ipv6_assigned': {
+                    'type': 'bool',
+                },
+                'remote_ipv6': {
                     'type': 'str',
                 },
                 'remote_portv6': {
@@ -617,6 +652,9 @@ def get_argspec():
                     'type': 'int',
                 }
             }
+        },
+        'enforce_traffic_selector': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
@@ -638,6 +676,8 @@ def get_argspec():
                     'bytes-decrypted', 'prefrag-success', 'prefrag-error',
                     'cavium-bytes-encrypted', 'cavium-bytes-decrypted',
                     'cavium-packets-encrypted', 'cavium-packets-decrypted',
+                    'qat-bytes-encrypted', 'qat-bytes-decrypted',
+                    'qat-packets-encrypted', 'qat-packets-decrypted',
                     'tunnel-intf-down', 'pkt-fail-prep-to-send', 'no-next-hop',
                     'invalid-tunnel-id', 'no-tunnel-found', 'pkt-fail-to-send',
                     'frag-after-encap-frag-packets', 'frag-received',
@@ -661,52 +701,190 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'ipsec_gateway': {
+            'type': 'dict',
+            'ike_gateway': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
-            'Status': {
+            'remote_ts_filter': {
                 'type': 'str',
             },
-            'SA_Index': {
-                'type': 'int',
-            },
-            'Local_IP': {
+            'remote_ts_v6_filter': {
                 'type': 'str',
             },
-            'Peer_IP': {
+            'in_spi_filter': {
                 'type': 'str',
             },
-            'Local_SPI': {
+            'out_spi_filter': {
                 'type': 'str',
             },
-            'Remote_SPI': {
-                'type': 'str',
-            },
-            'Protocol': {
-                'type': 'str',
-            },
-            'Mode': {
-                'type': 'str',
-            },
-            'Encryption_Algorithm': {
-                'type': 'str',
-            },
-            'Hash_Algorithm': {
-                'type': 'str',
-            },
-            'DH_Group': {
-                'type': 'int',
-            },
-            'NAT_Traversal': {
-                'type': 'int',
-            },
-            'Anti_Replay': {
-                'type': 'str',
-            },
-            'Lifetime': {
-                'type': 'int',
-            },
-            'Lifebytes': {
-                'type': 'str',
+            'SA_List': {
+                'type': 'list',
+                'Status': {
+                    'type': 'str',
+                },
+                'SA_Index': {
+                    'type': 'int',
+                },
+                'TS_Proto': {
+                    'type': 'int',
+                },
+                'Local_IP': {
+                    'type': 'str',
+                },
+                'Local_Port': {
+                    'type': 'int',
+                },
+                'Peer_IP': {
+                    'type': 'str',
+                },
+                'Peer_Port': {
+                    'type': 'int',
+                },
+                'Local_SPI': {
+                    'type': 'str',
+                },
+                'Remote_SPI': {
+                    'type': 'str',
+                },
+                'Protocol': {
+                    'type': 'str',
+                },
+                'Mode': {
+                    'type': 'str',
+                },
+                'Encryption_Algorithm': {
+                    'type': 'str',
+                },
+                'Hash_Algorithm': {
+                    'type': 'str',
+                },
+                'Lifetime': {
+                    'type': 'int',
+                },
+                'Lifebytes': {
+                    'type': 'str',
+                },
+                'DH_Group': {
+                    'type': 'int',
+                },
+                'NAT_Traversal': {
+                    'type': 'int',
+                },
+                'Anti_Replay': {
+                    'type': 'str',
+                },
+                'packets_encrypted': {
+                    'type': 'int',
+                },
+                'packets_decrypted': {
+                    'type': 'int',
+                },
+                'anti_replay_num': {
+                    'type': 'int',
+                },
+                'rekey_num': {
+                    'type': 'int',
+                },
+                'packets_err_inactive': {
+                    'type': 'int',
+                },
+                'packets_err_encryption': {
+                    'type': 'int',
+                },
+                'packets_err_pad_check': {
+                    'type': 'int',
+                },
+                'packets_err_pkt_sanity': {
+                    'type': 'int',
+                },
+                'packets_err_icv_check': {
+                    'type': 'int',
+                },
+                'packets_err_lifetime_lifebytes': {
+                    'type': 'str',
+                },
+                'bytes_encrypted': {
+                    'type': 'int',
+                },
+                'bytes_decrypted': {
+                    'type': 'int',
+                },
+                'prefrag_success': {
+                    'type': 'int',
+                },
+                'prefrag_error': {
+                    'type': 'int',
+                },
+                'cavium_bytes_encrypted': {
+                    'type': 'int',
+                },
+                'cavium_bytes_decrypted': {
+                    'type': 'int',
+                },
+                'cavium_packets_encrypted': {
+                    'type': 'int',
+                },
+                'cavium_packets_decrypted': {
+                    'type': 'int',
+                },
+                'qat_bytes_encrypted': {
+                    'type': 'int',
+                },
+                'qat_bytes_decrypted': {
+                    'type': 'int',
+                },
+                'qat_packets_encrypted': {
+                    'type': 'int',
+                },
+                'qat_packets_decrypted': {
+                    'type': 'int',
+                },
+                'tunnel_intf_down': {
+                    'type': 'int',
+                },
+                'pkt_fail_prep_to_send': {
+                    'type': 'int',
+                },
+                'no_next_hop': {
+                    'type': 'int',
+                },
+                'invalid_tunnel_id': {
+                    'type': 'int',
+                },
+                'no_tunnel_found': {
+                    'type': 'int',
+                },
+                'pkt_fail_to_send': {
+                    'type': 'int',
+                },
+                'frag_after_encap_frag_packets': {
+                    'type': 'int',
+                },
+                'frag_received': {
+                    'type': 'int',
+                },
+                'sequence_num': {
+                    'type': 'int',
+                },
+                'sequence_num_rollover': {
+                    'type': 'int',
+                },
+                'packets_err_nh_check': {
+                    'type': 'int',
+                },
+                'enforce_ts_encap_drop': {
+                    'type': 'int',
+                },
+                'enforce_ts_decap_drop': {
+                    'type': 'int',
+                }
             },
             'name': {
                 'type': 'str',
@@ -767,6 +945,18 @@ def get_argspec():
                 'type': 'str',
             },
             'cavium_packets_decrypted': {
+                'type': 'str',
+            },
+            'qat_bytes_encrypted': {
+                'type': 'str',
+            },
+            'qat_bytes_decrypted': {
+                'type': 'str',
+            },
+            'qat_packets_encrypted': {
+                'type': 'str',
+            },
+            'qat_packets_decrypted': {
                 'type': 'str',
             },
             'tunnel_intf_down': {

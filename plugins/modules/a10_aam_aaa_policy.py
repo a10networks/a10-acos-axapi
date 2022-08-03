@@ -82,6 +82,11 @@ options:
           Matching Authentication Template; 'req-bypass'= Request Bypassed; 'req-skip'=
           Request Skipped; 'error'= Error; 'failure-bypass'= Auth Failure Bypass;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     aaa_rule_list:
         description:
         - "Field aaa_rule_list"
@@ -134,9 +139,13 @@ options:
                 description:
                 - "Specify authorization policy to bind to the AAA rule"
                 type: str
+            captcha_authz_policy:
+                description:
+                - "Specify authorization policy for CAPTCHA (Authorization policy name)"
+                type: str
             auth_failure_bypass:
                 description:
-                - "Forward client’s request even though authentication has failed"
+                - "Forward client request even though authentication has failed"
                 type: bool
             uuid:
                 description:
@@ -249,6 +258,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "aaa_rule_list",
     "name",
+    "packet_capture_template",
     "sampling_enable",
     "stats",
     "user_tag",
@@ -301,6 +311,9 @@ def get_argspec():
                     'req-skip', 'error', 'failure-bypass'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'aaa_rule_list': {
             'type': 'list',
@@ -371,6 +384,9 @@ def get_argspec():
                 'type': 'str',
             },
             'authorize_policy': {
+                'type': 'str',
+            },
+            'captcha_authz_policy': {
                 'type': 'str',
             },
             'auth_failure_bypass': {

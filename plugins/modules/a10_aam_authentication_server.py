@@ -387,6 +387,9 @@ def get_argspec():
                             'pw_change_success', 'pw_change_failure'
                         ]
                     }
+                },
+                'packet_capture_template': {
+                    'type': 'str',
                 }
             }
         },
@@ -470,6 +473,9 @@ def get_argspec():
                             'stapling-fail'
                         ]
                     }
+                },
+                'packet_capture_template': {
+                    'type': 'str',
                 }
             }
         },
@@ -573,6 +579,9 @@ def get_argspec():
                             'accounting-success', 'accounting-failure'
                         ]
                     }
+                },
+                'packet_capture_template': {
+                    'type': 'str',
                 }
             }
         },
@@ -609,7 +618,14 @@ def get_argspec():
                         'ntlm-response-other', 'ntlm-job-start-error',
                         'ntlm-polling-control-error', 'kerberos-pw-expiry',
                         'kerberos-pw-change-success',
-                        'kerberos-pw-change-failure'
+                        'kerberos-pw-change-failure',
+                        'kerberos-validate-kdc-success',
+                        'kerberos-validate-kdc-failure',
+                        'kerberos-generate-kdc-keytab-success',
+                        'kerberos-generate-kdc-keytab-failure',
+                        'kerberos-delete-kdc-keytab-success',
+                        'kerberos-delete-kdc-keytab-failure',
+                        'kerberos-kdc-keytab-count'
                     ]
                 }
             },
@@ -659,6 +675,27 @@ def get_argspec():
                     },
                     'kerberos_password_change_port': {
                         'type': 'int',
+                    },
+                    'kdc_validate': {
+                        'type': 'bool',
+                    },
+                    'kerberos_kdc_validation': {
+                        'type': 'dict',
+                        'kdc_spn': {
+                            'type': 'str',
+                        },
+                        'kdc_account': {
+                            'type': 'str',
+                        },
+                        'kdc_password': {
+                            'type': 'bool',
+                        },
+                        'kdc_pwd': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
+                        }
                     }
                 },
                 'realm': {
@@ -696,9 +733,13 @@ def get_argspec():
                             'ntlm_prepare_req_success',
                             'ntlm_prepare_req_error', 'ntlm_auth_success',
                             'ntlm_auth_failure', 'ntlm_timeout_error',
-                            'ntlm_other_error'
+                            'ntlm_other_error', 'krb_validate_kdc_success',
+                            'krb_validate_kdc_failure'
                         ]
                     }
+                },
+                'packet_capture_template': {
+                    'type': 'str',
                 }
             }
         },

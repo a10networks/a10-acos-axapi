@@ -186,6 +186,18 @@ options:
                 description:
                 - "Field ipv6_neighbor_list"
                 type: list
+            ethernet_neighbor_ipv6_list:
+                description:
+                - "Field ethernet_neighbor_ipv6_list"
+                type: list
+            ve_neighbor_ipv6_list:
+                description:
+                - "Field ve_neighbor_ipv6_list"
+                type: list
+            trunk_neighbor_ipv6_list:
+                description:
+                - "Field trunk_neighbor_ipv6_list"
+                type: list
     redistribute:
         description:
         - "Field redistribute"
@@ -555,6 +567,9 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['both', 'receive', 'send']
                 },
+                'graceful_restart': {
+                    'type': 'bool',
+                },
                 'default_originate': {
                     'type': 'bool',
                 },
@@ -585,6 +600,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'restart_min': {
                     'type': 'int',
                 },
                 'next_hop_self': {
@@ -652,6 +670,9 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['both', 'receive', 'send']
                 },
+                'graceful_restart': {
+                    'type': 'bool',
+                },
                 'default_originate': {
                     'type': 'bool',
                 },
@@ -682,6 +703,9 @@ def get_argspec():
                     'type': 'int',
                 },
                 'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'restart_min': {
                     'type': 'int',
                 },
                 'next_hop_self': {
@@ -722,6 +746,45 @@ def get_argspec():
                 },
                 'weight': {
                     'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ethernet_neighbor_ipv6_list': {
+                'type': 'list',
+                'ethernet': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'peer_group_name': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            've_neighbor_ipv6_list': {
+                'type': 'list',
+                've': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'peer_group_name': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'trunk_neighbor_ipv6_list': {
+                'type': 'list',
+                'trunk': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'peer_group_name': {
+                    'type': 'str',
                 },
                 'uuid': {
                     'type': 'str',

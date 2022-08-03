@@ -75,7 +75,8 @@ options:
         - "'preshare-key'= Authenticate the remote gateway using a pre-shared key
           (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA
           certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA
-          certificate;"
+          certificate; 'eap-radius'= Authenticate the remote gateway using an EAP Radius
+          server; 'eap-tls'= Authenticate the remote gateway using EAP TLS;"
         type: str
         required: False
     preshare_key_value:
@@ -88,6 +89,11 @@ options:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED pre-shared key string)"
         type: str
+        required: False
+    interface_management:
+        description:
+        - "only handle traffic on management interface, share partition only"
+        type: bool
         required: False
     key:
         description:
@@ -111,6 +117,10 @@ options:
         type: dict
         required: False
         suboptions:
+            default:
+                description:
+                - "Default VRRP-A vrid"
+                type: bool
             vrid_num:
                 description:
                 - "Specify ha VRRP-A vrid"
@@ -250,6 +260,45 @@ options:
                 description:
                 - "Retry times"
                 type: int
+    disable_rekey:
+        description:
+        - "Disable initiating rekey"
+        type: bool
+        required: False
+    configuration_payload:
+        description:
+        - "'dhcp'= Enable DHCP configuration-payload; 'radius'= Enable RADIUS
+          configuration-payload;"
+        type: str
+        required: False
+    dhcp_server:
+        description:
+        - "Field dhcp_server"
+        type: dict
+        required: False
+        suboptions:
+            pri:
+                description:
+                - "Field pri"
+                type: dict
+            sec:
+                description:
+                - "Field sec"
+                type: dict
+    radius_server:
+        description:
+        - "Field radius_server"
+        type: dict
+        required: False
+        suboptions:
+            radius_pri:
+                description:
+                - "Primary RADIUS Authentication Server"
+                type: str
+            radius_sec:
+                description:
+                - "Secondary RADIUS Authentication Server"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -310,42 +359,22 @@ options:
         type: dict
         required: False
         suboptions:
-            Initiator_SPI:
+            remote_ip_filter:
                 description:
-                - "Field Initiator_SPI"
+                - "Field remote_ip_filter"
                 type: str
-            Responder_SPI:
+            remote_id_filter:
                 description:
-                - "Field Responder_SPI"
+                - "Field remote_id_filter"
                 type: str
-            Local_IP:
+            brief_filter:
                 description:
-                - "Field Local_IP"
+                - "Field brief_filter"
                 type: str
-            Remote_IP:
+            SA_List:
                 description:
-                - "Field Remote_IP"
-                type: str
-            Encryption:
-                description:
-                - "Field Encryption"
-                type: str
-            Hash:
-                description:
-                - "Field Hash"
-                type: str
-            Lifetime:
-                description:
-                - "Field Lifetime"
-                type: int
-            Status:
-                description:
-                - "Field Status"
-                type: str
-            NAT_Traversal:
-                description:
-                - "Field NAT_Traversal"
-                type: int
+                - "Field SA_List"
+                type: list
             name:
                 description:
                 - "IKE-gateway name"
@@ -624,10 +653,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "auth_method",
+    "configuration_payload",
     "dh_group",
+    "dhcp_server",
+    "disable_rekey",
     "dpd",
     "enc_cfg",
     "ike_version",
+    "interface_management",
     "key",
     "key_passphrase",
     "key_passphrase_encrypted",
@@ -641,6 +674,7 @@ AVAILABLE_PROPERTIES = [
     "oper",
     "preshare_key_encrypted",
     "preshare_key_value",
+    "radius_server",
     "remote_address",
     "remote_ca_cert",
     "remote_id",
@@ -690,14 +724,21 @@ def get_argspec():
             'choices': ['main', 'aggressive']
         },
         'auth_method': {
-            'type': 'str',
-            'choices': ['preshare-key', 'rsa-signature', 'ecdsa-signature']
+            'type':
+            'str',
+            'choices': [
+                'preshare-key', 'rsa-signature', 'ecdsa-signature',
+                'eap-radius', 'eap-tls'
+            ]
         },
         'preshare_key_value': {
             'type': 'str',
         },
         'preshare_key_encrypted': {
             'type': 'str',
+        },
+        'interface_management': {
+            'type': 'bool',
         },
         'key': {
             'type': 'str',
@@ -710,6 +751,9 @@ def get_argspec():
         },
         'vrid': {
             'type': 'dict',
+            'default': {
+                'type': 'bool',
+            },
             'vrid_num': {
                 'type': 'int',
             }
@@ -797,6 +841,37 @@ def get_argspec():
                 'type': 'int',
             }
         },
+        'disable_rekey': {
+            'type': 'bool',
+        },
+        'configuration_payload': {
+            'type': 'str',
+            'choices': ['dhcp', 'radius']
+        },
+        'dhcp_server': {
+            'type': 'dict',
+            'pri': {
+                'type': 'dict',
+                'dhcp_pri_ipv4': {
+                    'type': 'str',
+                }
+            },
+            'sec': {
+                'type': 'dict',
+                'dhcp_sec_ipv4': {
+                    'type': 'str',
+                }
+            }
+        },
+        'radius_server': {
+            'type': 'dict',
+            'radius_pri': {
+                'type': 'str',
+            },
+            'radius_sec': {
+                'type': 'str',
+            }
+        },
         'uuid': {
             'type': 'str',
         },
@@ -838,32 +913,50 @@ def get_argspec():
         },
         'oper': {
             'type': 'dict',
-            'Initiator_SPI': {
+            'remote_ip_filter': {
                 'type': 'str',
             },
-            'Responder_SPI': {
+            'remote_id_filter': {
                 'type': 'str',
             },
-            'Local_IP': {
+            'brief_filter': {
                 'type': 'str',
             },
-            'Remote_IP': {
-                'type': 'str',
-            },
-            'Encryption': {
-                'type': 'str',
-            },
-            'Hash': {
-                'type': 'str',
-            },
-            'Lifetime': {
-                'type': 'int',
-            },
-            'Status': {
-                'type': 'str',
-            },
-            'NAT_Traversal': {
-                'type': 'int',
+            'SA_List': {
+                'type': 'list',
+                'Initiator_SPI': {
+                    'type': 'str',
+                },
+                'Responder_SPI': {
+                    'type': 'str',
+                },
+                'Local_IP': {
+                    'type': 'str',
+                },
+                'Remote_IP': {
+                    'type': 'str',
+                },
+                'Encryption': {
+                    'type': 'str',
+                },
+                'Hash': {
+                    'type': 'str',
+                },
+                'Lifetime': {
+                    'type': 'int',
+                },
+                'Status': {
+                    'type': 'str',
+                },
+                'NAT_Traversal': {
+                    'type': 'int',
+                },
+                'Remote_ID': {
+                    'type': 'str',
+                },
+                'DH_Group': {
+                    'type': 'int',
+                }
             },
             'name': {
                 'type': 'str',

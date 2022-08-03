@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_debug_sctp
 description:
-    - Debug SCTP packets
+    - Debug SCTP
 author: A10 Networks 2021
 options:
     state:
@@ -54,6 +54,16 @@ options:
         description:
         - Destination/target partition for object/command
         type: str
+        required: False
+    packet:
+        description:
+        - "Debug SCTP packet"
+        type: bool
+        required: False
+    level:
+        description:
+        - "Debug level (Level 1= Errors  Level 2= Minimal_info  Level 3= Detailed_info)"
+        type: int
         required: False
     uuid:
         description:
@@ -115,6 +125,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "level",
+    "packet",
     "uuid",
 ]
 
@@ -143,9 +155,17 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {
-        'type': 'str',
-    }})
+    rv.update({
+        'packet': {
+            'type': 'bool',
+        },
+        'level': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
 
 
@@ -169,10 +189,23 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["sctp"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["sctp"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["sctp"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):

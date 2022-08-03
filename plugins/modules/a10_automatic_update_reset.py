@@ -57,7 +57,7 @@ options:
         required: False
     feature_name:
         description:
-        - "'app-fw'= Application Firewall;"
+        - "'app-fw'= Application Firewall; 'ca-bundle'= CA Certificate Bundle;"
         type: str
         required: False
 
@@ -143,7 +143,11 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'feature_name': {'type': 'str', 'choices': ['app-fw']}})
+    rv.update(
+        {'feature_name': {
+            'type': 'str',
+            'choices': ['app-fw', 'ca-bundle']
+        }})
     return rv
 
 

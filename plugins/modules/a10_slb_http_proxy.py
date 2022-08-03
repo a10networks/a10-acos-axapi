@@ -76,7 +76,7 @@ options:
           buff; 'fwdreq_fail_rport'= Fwd req fail - rport; 'fwdreq_fail_route'= Fwd req
           fail - route; 'fwdreq_fail_persist'= Fwd req fail - persist;
           'fwdreq_fail_server'= Fwd req fail - server; 'fwdreq_fail_tuple'= Fwd req fail
-          - tuple; 'fwdreqdata_fail'= fwdreqdata_fail; 'req_retran'= Packets retrans;
+          - tuple; 'fwdreqdata_fail'= some help string; 'req_retran'= Packets retrans;
           'req_ofo'= Packets ofo; 'server_resel'= Server reselection; 'svr_prem_close'=
           Server premature close; 'new_svrconn'= Server conn made; 'snat_fail'= Source
           NAT failure; 'tcpoutrst'= Out RSTs; 'full_proxy'= Full proxy tot;
@@ -170,39 +170,91 @@ options:
           CL/CE; 'compress_ratio_too_high'= Compress ratio too high; 'cache_rsp'= HTTP
           req (cache succ); 'close_on_ddos'= Close on DDoS; 'req_http10_keepalive'= 1.0
           Keepalive; 'req_sz_1k'= Req less than equal to 1K; 'req_sz_2k'= Req less than
-          equal to 2K; 'req_sz_4k'= Req less than equal to 4K;"
+          equal to 2K;"
                 type: str
             counters2:
                 description:
-                - "'req_sz_8k'= Req less than equal to 8K; 'req_sz_16k'= Req less than equal to
-          16K; 'req_sz_32k'= Req less than equal to 32K; 'req_sz_64k'= Req less than
-          equal to 64K; 'req_sz_256k'= Req less than equal to 256K; 'req_sz_gt_256k'= Req
-          greater than 256K; 'rsp_sz_1k'= Resp less than equal to 1K; 'rsp_sz_2k'= Resp
-          less than equal to 2K; 'rsp_sz_4k'= Resp less than equal to 4K; 'rsp_sz_8k'=
-          Resp less than equal to 8K; 'rsp_sz_16k'= Resp less than equal to 16K;
-          'rsp_sz_32k'= Resp less than equal to 32K; 'rsp_sz_64k'= Resp less than equal
-          to 64K; 'rsp_sz_256k'= Resp less than equal to 256K; 'rsp_sz_gt_256k'= Resp
-          greater than 256K; 'chunk_sz_512'= Chunk less than equal to 512; 'chunk_sz_1k'=
-          Chunk less than equal to 1K; 'chunk_sz_2k'= Chunk less than equal to 2K;
-          'chunk_sz_4k'= Chunk less than equal to 4K; 'chunk_sz_gt_4k'= Chunk greater
-          than 4K; 'pconn_connecting'= pconn connecting; 'pconn_connected'= pconn
-          connected; 'pconn_connecting_failed'= pconn conn failed; 'chunk_bad'= Bad
-          Chunk; 'req_10u'= Rsp time less than 10u; 'req_20u'= Rsp time less than 20u;
-          'req_50u'= Rsp time less than 50u; 'req_100u'= Rsp time less than 100u;
-          'req_200u'= Rsp time less than 200u; 'req_500u'= Rsp time less than 500u;
-          'req_1m'= Rsp time less than 1m; 'req_2m'= Rsp time less than 2m; 'req_5m'= Rsp
-          time less than 5m; 'req_10m'= Rsp time less than 10m; 'req_20m'= Rsp time less
-          than 20m; 'req_50m'= Rsp time less than 50m; 'req_100m'= Rsp time less than
-          100m; 'req_200m'= Rsp time less than 200m; 'req_500m'= Rsp time less than 500m;
-          'req_1s'= Rsp time less than 1s; 'req_2s'= Rsp time less than 2s; 'req_5s'= Rsp
-          time less than 5s; 'req_over_5s'= Rsp time greater than equal to 5s;
-          'insert_client_port'= Insert client Port; 'req_track'= Method TRACK;
+                - "'req_sz_4k'= Req less than equal to 4K; 'req_sz_8k'= Req less than equal to 8K;
+          'req_sz_16k'= Req less than equal to 16K; 'req_sz_32k'= Req less than equal to
+          32K; 'req_sz_64k'= Req less than equal to 64K; 'req_sz_256k'= Req less than
+          equal to 256K; 'req_sz_gt_256k'= Req greater than 256K; 'rsp_sz_1k'= Resp less
+          than equal to 1K; 'rsp_sz_2k'= Resp less than equal to 2K; 'rsp_sz_4k'= Resp
+          less than equal to 4K; 'rsp_sz_8k'= Resp less than equal to 8K; 'rsp_sz_16k'=
+          Resp less than equal to 16K; 'rsp_sz_32k'= Resp less than equal to 32K;
+          'rsp_sz_64k'= Resp less than equal to 64K; 'rsp_sz_256k'= Resp less than equal
+          to 256K; 'rsp_sz_gt_256k'= Resp greater than 256K; 'chunk_sz_512'= Chunk less
+          than equal to 512; 'chunk_sz_1k'= Chunk less than equal to 1K; 'chunk_sz_2k'=
+          Chunk less than equal to 2K; 'chunk_sz_4k'= Chunk less than equal to 4K;
+          'chunk_sz_gt_4k'= Chunk greater than 4K; 'pconn_connecting'= pconn connecting;
+          'pconn_connected'= pconn connected; 'pconn_connecting_failed'= pconn conn
+          failed; 'chunk_bad'= Bad Chunk; 'req_10u'= Rsp time less than 10u; 'req_20u'=
+          Rsp time less than 20u; 'req_50u'= Rsp time less than 50u; 'req_100u'= Rsp time
+          less than 100u; 'req_200u'= Rsp time less than 200u; 'req_500u'= Rsp time less
+          than 500u; 'req_1m'= Rsp time less than 1m; 'req_2m'= Rsp time less than 2m;
+          'req_5m'= Rsp time less than 5m; 'req_10m'= Rsp time less than 10m; 'req_20m'=
+          Rsp time less than 20m; 'req_50m'= Rsp time less than 50m; 'req_100m'= Rsp time
+          less than 100m; 'req_200m'= Rsp time less than 200m; 'req_500m'= Rsp time less
+          than 500m; 'req_1s'= Rsp time less than 1s; 'req_2s'= Rsp time less than 2s;
+          'req_5s'= Rsp time less than 5s; 'req_over_5s'= Rsp time greater than equal to
+          5s; 'insert_client_port'= Insert client Port; 'req_track'= Method TRACK;
           'connect_req'= Total HTTP CONNECT requests; 'req_enter_ssli'= Total HTTP
           requests enter SSLi; 'non_http_bypass'= Non-HTTP bypass;
           'decompression_before'= Tot data before decompress; 'decompression_after'= Tot
           data after decompress; 'req_http2'= Request 2.0; 'response_http2'= Resp 2.0;
           'req_timeout_retry'= Retry on Req Timeout; 'req_timeout_close'= Close on Req
-          Timeout;"
+          Timeout; 'doh_req'= DoH Requests; 'doh_req_get'= DoH GET Requests;
+          'doh_req_post'= DoH POST Requests; 'doh_non_doh_req'= DoH non DoH Requests;
+          'doh_non_doh_req_get'= DoH non DoH GET Requests; 'doh_non_doh_req_post'= DoH
+          non DoH POST Requests; 'doh_resp'= DoH Responses; 'doh_tc_resp'= DoH TC
+          Responses; 'doh_udp_dns_req'= DoH UDP DNS Requests; 'doh_udp_dns_resp'= DoH UDP
+          DNS Responses; 'doh_tcp_dns_req'= DoH TCP DNS Requests; 'doh_tcp_dns_resp'= DoH
+          TCP DNS Responses; 'doh_req_send_failed'= DoH Request Send Failed;
+          'doh_resp_send_failed'= DoH Response Send Failed; 'doh_malloc_fail'= DoH Memory
+          alloc failed; 'doh_req_udp_retry'= DoH UDP Retry; 'doh_req_udp_retry_fail'= DoH
+          UDP Retry failed; 'doh_req_tcp_retry'= DoH TCP Retry; 'doh_req_tcp_retry_fail'=
+          DoH TCP Retry failed; 'doh_snat_failed'= DoH Source NAT failed;
+          'doh_path_not_found'= DoH URI Path not found; 'doh_get_dns_arg_failed'= DoH GET
+          dns arg not found in uri; 'doh_get_base64_decode_failed'= DoH GET base64url
+          decode failed; 'doh_post_content_type_mismatch'= DoH POST content-type not
+          found; 'doh_post_payload_not_found'= DoH POST payload not found;
+          'doh_post_payload_extract_failed'= DoH POST payload extract failed;
+          'doh_non_doh_method'= DoH Non DoH HTTP request method rcvd;
+          'doh_tcp_send_failed'= DoH serv TCP DNS send failed; 'doh_udp_send_failed'= DoH
+          serv UDP DNS send failed; 'doh_query_time_out'= DoH serv Query timed out;
+          'doh_dns_query_type_a'= DoH Query type A; 'doh_dns_query_type_aaaa'= DoH Query
+          type AAAA; 'doh_dns_query_type_ns'= DoH Query type NS;
+          'doh_dns_query_type_cname'= DoH Query type CNAME; 'doh_dns_query_type_any'= DoH
+          Query type ANY; 'doh_dns_query_type_srv'= DoH Query type SRV;
+          'doh_dns_query_type_mx'= DoH Query type MX; 'doh_dns_query_type_soa'= DoH Query
+          type SOA; 'doh_dns_query_type_others'= DoH Query type Others;
+          'doh_resp_setup_failed'= DoH Response setup failed;
+          'doh_resp_header_alloc_failed'= DoH Resp hdr alloc failed;
+          'doh_resp_que_failed'= DoH Resp queue failed; 'doh_resp_udp_frags'= DoH UDP
+          Frags Rcvd; 'doh_resp_tcp_frags'= DoH TCP Frags Rcvd; 'doh_serv_sel_failed'=
+          DoH Server Select Failed; 'doh_retry_w_tcp'= DoH Retry with TCP SG;
+          'doh_get_uri_too_long'= DoH GET URI too long; 'doh_post_payload_too_large'= DoH
+          POST Payload too large; 'doh_dns_malformed_query'= DoH DNS Malformed Query;
+          'doh_dns_resp_rcode_err_format'= DoH DNS Response rcode ERR_FORMAT;
+          'doh_dns_resp_rcode_err_server'= DoH DNS Response rcode ERR_SERVER;
+          'doh_dns_resp_rcode_err_name'= DoH DNS Response rcode ERR_NAME;
+          'doh_dns_resp_rcode_err_type'= DoH DNS Response rcode ERR_TYPE;
+          'doh_dns_resp_rcode_refuse'= DoH DNS Response rcode REFUSE;
+          'doh_dns_resp_rcode_yxdomain'= DoH DNS Response rcode YXDOMAIN;
+          'doh_dns_resp_rcode_yxrrset'= DoH DNS Response rcode YXRRSET;
+          'doh_dns_resp_rcode_nxrrset'= DoH DNS Response rcode NXRRSET;
+          'doh_dns_resp_rcode_notauth'= DoH DNS Response rcode NOTAUTH;
+          'doh_dns_resp_rcode_notzone'= DoH DNS Response rcode NOTZONE;
+          'doh_dns_resp_rcode_other'= DoH DNS Response rcode OTHER;
+          'h2up_content_length_alias'= HTTP2 content length alias;
+          'malformed_h2up_header_value'= Malformed HTTP2 header value;
+          'malformed_h2up_scheme_value'= Malformed HTTP2 scheme value;
+          'h2up_with_transfer_encoding'= HTTP2 with transfer-encoding header;
+          'multiple_content_length'= Multiple content-length headers;
+          'multiple_transfer_encoding'= Multiple transfer-encoding headers;
+          'transfer_encoding_and_content_length'= Transfer-encoding header with Content-
+          Length header; 'get_and_payload'= GET method with content-length header or
+          transfer-encoding header; 'h2up_with_host_and_auth'= HTTP2 with host header and
+          authority header;"
                 type: str
     oper:
         description:
@@ -274,7 +326,7 @@ options:
                 type: str
             fwdreqdata_fail:
                 description:
-                - "Field fwdreqdata_fail"
+                - "some help string"
                 type: str
             req_retran:
                 description:
@@ -316,6 +368,306 @@ options:
                 description:
                 - "Tot data after compress"
                 type: str
+            response_1xx:
+                description:
+                - "Status code 1XX"
+                type: str
+            response_100:
+                description:
+                - "Status code 100"
+                type: str
+            response_101:
+                description:
+                - "Status code 101"
+                type: str
+            response_102:
+                description:
+                - "Status code 102"
+                type: str
+            response_2xx:
+                description:
+                - "Status code 2XX"
+                type: str
+            response_200:
+                description:
+                - "Status code 200"
+                type: str
+            response_201:
+                description:
+                - "Status code 201"
+                type: str
+            response_202:
+                description:
+                - "Status code 202"
+                type: str
+            response_203:
+                description:
+                - "Status code 203"
+                type: str
+            response_204:
+                description:
+                - "Status code 204"
+                type: str
+            response_205:
+                description:
+                - "Status code 205"
+                type: str
+            response_206:
+                description:
+                - "Status code 206"
+                type: str
+            response_207:
+                description:
+                - "Status code 207"
+                type: str
+            response_3xx:
+                description:
+                - "Status code 3XX"
+                type: str
+            response_300:
+                description:
+                - "Status code 300"
+                type: str
+            response_301:
+                description:
+                - "Status code 301"
+                type: str
+            response_302:
+                description:
+                - "Status code 302"
+                type: str
+            response_303:
+                description:
+                - "Status code 303"
+                type: str
+            response_304:
+                description:
+                - "Status code 304"
+                type: str
+            response_305:
+                description:
+                - "Status code 305"
+                type: str
+            response_306:
+                description:
+                - "Status code 306"
+                type: str
+            response_307:
+                description:
+                - "Status code 307"
+                type: str
+            response_4xx:
+                description:
+                - "Status code 4XX"
+                type: str
+            response_400:
+                description:
+                - "Status code 400"
+                type: str
+            response_401:
+                description:
+                - "Status code 401"
+                type: str
+            response_402:
+                description:
+                - "Status code 402"
+                type: str
+            response_403:
+                description:
+                - "Status code 403"
+                type: str
+            response_404:
+                description:
+                - "Status code 404"
+                type: str
+            response_405:
+                description:
+                - "Status code 405"
+                type: str
+            response_406:
+                description:
+                - "Status code 406"
+                type: str
+            response_407:
+                description:
+                - "Status code 407"
+                type: str
+            response_408:
+                description:
+                - "Status code 408"
+                type: str
+            response_409:
+                description:
+                - "Status code 409"
+                type: str
+            response_410:
+                description:
+                - "Status code 410"
+                type: str
+            response_411:
+                description:
+                - "Status code 411"
+                type: str
+            response_412:
+                description:
+                - "Status code 412"
+                type: str
+            response_413:
+                description:
+                - "Status code 413"
+                type: str
+            response_414:
+                description:
+                - "Status code 414"
+                type: str
+            response_415:
+                description:
+                - "Status code 415"
+                type: str
+            response_416:
+                description:
+                - "Status code 416"
+                type: str
+            response_417:
+                description:
+                - "Status code 417"
+                type: str
+            response_418:
+                description:
+                - "Status code 418"
+                type: str
+            response_422:
+                description:
+                - "Status code 422"
+                type: str
+            response_423:
+                description:
+                - "Status code 423"
+                type: str
+            response_424:
+                description:
+                - "Status code 424"
+                type: str
+            response_425:
+                description:
+                - "Status code 425"
+                type: str
+            response_426:
+                description:
+                - "Status code 426"
+                type: str
+            response_449:
+                description:
+                - "Status code 449"
+                type: str
+            response_450:
+                description:
+                - "Status code 450"
+                type: str
+            response_5xx:
+                description:
+                - "Status code 5XX"
+                type: str
+            response_500:
+                description:
+                - "Status code 500"
+                type: str
+            response_501:
+                description:
+                - "Status code 501"
+                type: str
+            response_502:
+                description:
+                - "Status code 502"
+                type: str
+            response_503:
+                description:
+                - "Status code 503"
+                type: str
+            response_504:
+                description:
+                - "Status code 504"
+                type: str
+            response_505:
+                description:
+                - "Status code 505"
+                type: str
+            response_506:
+                description:
+                - "Status code 506"
+                type: str
+            response_507:
+                description:
+                - "Status code 507"
+                type: str
+            response_508:
+                description:
+                - "Status code 508"
+                type: str
+            response_509:
+                description:
+                - "Status code 509"
+                type: str
+            response_510:
+                description:
+                - "Status code 510"
+                type: str
+            response_6xx:
+                description:
+                - "Status code 6XX"
+                type: str
+            response_unknown:
+                description:
+                - "Status code unknown"
+                type: str
+            req_get:
+                description:
+                - "Method GET"
+                type: str
+            req_head:
+                description:
+                - "Method HEAD"
+                type: str
+            req_put:
+                description:
+                - "Method PUT"
+                type: str
+            req_post:
+                description:
+                - "Method POST"
+                type: str
+            req_trace:
+                description:
+                - "Method TRACE"
+                type: str
+            req_options:
+                description:
+                - "Method OPTIONS"
+                type: str
+            req_connect:
+                description:
+                - "Method CONNECT"
+                type: str
+            req_delete:
+                description:
+                - "Method DELETE"
+                type: str
+            req_unknown:
+                description:
+                - "Method UNKNOWN"
+                type: str
+            req_content_len:
+                description:
+                - "Req content len"
+                type: str
+            rsp_content_len:
+                description:
+                - "Resp content len"
+                type: str
+            rsp_chunk:
+                description:
+                - "Resp chunk encoding"
+                type: str
             cache_rsp:
                 description:
                 - "HTTP req (cache succ)"
@@ -323,6 +675,178 @@ options:
             close_on_ddos:
                 description:
                 - "Close on DDoS"
+                type: str
+            req_sz_1k:
+                description:
+                - "Req less than equal to 1K"
+                type: str
+            req_sz_2k:
+                description:
+                - "Req less than equal to 2K"
+                type: str
+            req_sz_4k:
+                description:
+                - "Req less than equal to 4K"
+                type: str
+            req_sz_8k:
+                description:
+                - "Req less than equal to 8K"
+                type: str
+            req_sz_16k:
+                description:
+                - "Req less than equal to 16K"
+                type: str
+            req_sz_32k:
+                description:
+                - "Req less than equal to 32K"
+                type: str
+            req_sz_64k:
+                description:
+                - "Req less than equal to 64K"
+                type: str
+            req_sz_256k:
+                description:
+                - "Req less than equal to 256K"
+                type: str
+            req_sz_gt_256k:
+                description:
+                - "Req greater than 256K"
+                type: str
+            rsp_sz_1k:
+                description:
+                - "Resp less than equal to 1K"
+                type: str
+            rsp_sz_2k:
+                description:
+                - "Resp less than equal to 2K"
+                type: str
+            rsp_sz_4k:
+                description:
+                - "Resp less than equal to 4K"
+                type: str
+            rsp_sz_8k:
+                description:
+                - "Resp less than equal to 8K"
+                type: str
+            rsp_sz_16k:
+                description:
+                - "Resp less than equal to 16K"
+                type: str
+            rsp_sz_32k:
+                description:
+                - "Resp less than equal to 32K"
+                type: str
+            rsp_sz_64k:
+                description:
+                - "Resp less than equal to 64K"
+                type: str
+            rsp_sz_256k:
+                description:
+                - "Resp less than equal to 256K"
+                type: str
+            rsp_sz_gt_256k:
+                description:
+                - "Resp greater than 256K"
+                type: str
+            chunk_sz_512:
+                description:
+                - "Chunk less than equal to 512"
+                type: str
+            chunk_sz_1k:
+                description:
+                - "Chunk less than equal to 1K"
+                type: str
+            chunk_sz_2k:
+                description:
+                - "Chunk less than equal to 2K"
+                type: str
+            chunk_sz_4k:
+                description:
+                - "Chunk less than equal to 4K"
+                type: str
+            chunk_sz_gt_4k:
+                description:
+                - "Chunk greater than 4K"
+                type: str
+            req_10u:
+                description:
+                - "Rsp time less than 10u"
+                type: str
+            req_20u:
+                description:
+                - "Rsp time less than 20u"
+                type: str
+            req_50u:
+                description:
+                - "Rsp time less than 50u"
+                type: str
+            req_100u:
+                description:
+                - "Rsp time less than 100u"
+                type: str
+            req_200u:
+                description:
+                - "Rsp time less than 200u"
+                type: str
+            req_500u:
+                description:
+                - "Rsp time less than 500u"
+                type: str
+            req_1m:
+                description:
+                - "Rsp time less than 1m"
+                type: str
+            req_2m:
+                description:
+                - "Rsp time less than 2m"
+                type: str
+            req_5m:
+                description:
+                - "Rsp time less than 5m"
+                type: str
+            req_10m:
+                description:
+                - "Rsp time less than 10m"
+                type: str
+            req_20m:
+                description:
+                - "Rsp time less than 20m"
+                type: str
+            req_50m:
+                description:
+                - "Rsp time less than 50m"
+                type: str
+            req_100m:
+                description:
+                - "Rsp time less than 100m"
+                type: str
+            req_200m:
+                description:
+                - "Rsp time less than 200m"
+                type: str
+            req_500m:
+                description:
+                - "Rsp time less than 500m"
+                type: str
+            req_1s:
+                description:
+                - "Rsp time less than 1s"
+                type: str
+            req_2s:
+                description:
+                - "Rsp time less than 2s"
+                type: str
+            req_5s:
+                description:
+                - "Rsp time less than 5s"
+                type: str
+            req_over_5s:
+                description:
+                - "Rsp time greater than equal to 5s"
+                type: str
+            req_track:
+                description:
+                - "Method TRACK"
                 type: str
             connect_req:
                 description:
@@ -347,6 +871,246 @@ options:
             response_http2:
                 description:
                 - "Resp 2.0"
+                type: str
+            doh_req:
+                description:
+                - "DoH Requests"
+                type: str
+            doh_req_get:
+                description:
+                - "DoH GET Requests"
+                type: str
+            doh_req_post:
+                description:
+                - "DoH POST Requests"
+                type: str
+            doh_non_doh_req:
+                description:
+                - "DoH non DoH Requests"
+                type: str
+            doh_non_doh_req_get:
+                description:
+                - "DoH non DoH GET Requests"
+                type: str
+            doh_non_doh_req_post:
+                description:
+                - "DoH non DoH POST Requests"
+                type: str
+            doh_resp:
+                description:
+                - "DoH Responses"
+                type: str
+            doh_tc_resp:
+                description:
+                - "DoH TC Responses"
+                type: str
+            doh_udp_dns_req:
+                description:
+                - "DoH UDP DNS Requests"
+                type: str
+            doh_udp_dns_resp:
+                description:
+                - "DoH UDP DNS Responses"
+                type: str
+            doh_tcp_dns_req:
+                description:
+                - "DoH TCP DNS Requests"
+                type: str
+            doh_tcp_dns_resp:
+                description:
+                - "DoH TCP DNS Responses"
+                type: str
+            doh_req_send_failed:
+                description:
+                - "DoH Request Send Failed"
+                type: str
+            doh_resp_send_failed:
+                description:
+                - "DoH Response Send Failed"
+                type: str
+            doh_malloc_fail:
+                description:
+                - "DoH Memory alloc failed"
+                type: str
+            doh_req_udp_retry:
+                description:
+                - "DoH UDP Retry"
+                type: str
+            doh_req_udp_retry_fail:
+                description:
+                - "DoH UDP Retry failed"
+                type: str
+            doh_req_tcp_retry:
+                description:
+                - "DoH TCP Retry"
+                type: str
+            doh_req_tcp_retry_fail:
+                description:
+                - "DoH TCP Retry failed"
+                type: str
+            doh_snat_failed:
+                description:
+                - "DoH Source NAT failed"
+                type: str
+            doh_path_not_found:
+                description:
+                - "DoH URI Path not found"
+                type: str
+            doh_get_dns_arg_failed:
+                description:
+                - "DoH GET dns arg not found in uri"
+                type: str
+            doh_get_base64_decode_failed:
+                description:
+                - "DoH GET base64url decode failed"
+                type: str
+            doh_post_content_type_mismatch:
+                description:
+                - "DoH POST content-type not found"
+                type: str
+            doh_post_payload_not_found:
+                description:
+                - "DoH POST payload not found"
+                type: str
+            doh_post_payload_extract_failed:
+                description:
+                - "DoH POST payload extract failed"
+                type: str
+            doh_non_doh_method:
+                description:
+                - "DoH Non DoH HTTP request method rcvd"
+                type: str
+            doh_tcp_send_failed:
+                description:
+                - "DoH serv TCP DNS send failed"
+                type: str
+            doh_udp_send_failed:
+                description:
+                - "DoH serv UDP DNS send failed"
+                type: str
+            doh_query_time_out:
+                description:
+                - "DoH serv Query timed out"
+                type: str
+            doh_dns_query_type_a:
+                description:
+                - "DoH Query type A"
+                type: str
+            doh_dns_query_type_aaaa:
+                description:
+                - "DoH Query type AAAA"
+                type: str
+            doh_dns_query_type_ns:
+                description:
+                - "DoH Query type NS"
+                type: str
+            doh_dns_query_type_cname:
+                description:
+                - "DoH Query type CNAME"
+                type: str
+            doh_dns_query_type_any:
+                description:
+                - "DoH Query type ANY"
+                type: str
+            doh_dns_query_type_srv:
+                description:
+                - "DoH Query type SRV"
+                type: str
+            doh_dns_query_type_mx:
+                description:
+                - "DoH Query type MX"
+                type: str
+            doh_dns_query_type_soa:
+                description:
+                - "DoH Query type SOA"
+                type: str
+            doh_dns_query_type_others:
+                description:
+                - "DoH Query type Others"
+                type: str
+            doh_resp_setup_failed:
+                description:
+                - "DoH Response setup failed"
+                type: str
+            doh_resp_header_alloc_failed:
+                description:
+                - "DoH Resp hdr alloc failed"
+                type: str
+            doh_resp_que_failed:
+                description:
+                - "DoH Resp queue failed"
+                type: str
+            doh_resp_udp_frags:
+                description:
+                - "DoH UDP Frags Rcvd"
+                type: str
+            doh_resp_tcp_frags:
+                description:
+                - "DoH TCP Frags Rcvd"
+                type: str
+            doh_serv_sel_failed:
+                description:
+                - "DoH Server Select Failed"
+                type: str
+            doh_retry_w_tcp:
+                description:
+                - "DoH Retry with TCP SG"
+                type: str
+            doh_get_uri_too_long:
+                description:
+                - "DoH GET URI too long"
+                type: str
+            doh_post_payload_too_large:
+                description:
+                - "DoH POST Payload too large"
+                type: str
+            doh_dns_malformed_query:
+                description:
+                - "DoH DNS Malformed Query"
+                type: str
+            doh_dns_resp_rcode_err_format:
+                description:
+                - "DoH DNS Response rcode ERR_FORMAT"
+                type: str
+            doh_dns_resp_rcode_err_server:
+                description:
+                - "DoH DNS Response rcode ERR_SERVER"
+                type: str
+            doh_dns_resp_rcode_err_name:
+                description:
+                - "DoH DNS Response rcode ERR_NAME"
+                type: str
+            doh_dns_resp_rcode_err_type:
+                description:
+                - "DoH DNS Response rcode ERR_TYPE"
+                type: str
+            doh_dns_resp_rcode_refuse:
+                description:
+                - "DoH DNS Response rcode REFUSE"
+                type: str
+            doh_dns_resp_rcode_yxdomain:
+                description:
+                - "DoH DNS Response rcode YXDOMAIN"
+                type: str
+            doh_dns_resp_rcode_yxrrset:
+                description:
+                - "DoH DNS Response rcode YXRRSET"
+                type: str
+            doh_dns_resp_rcode_nxrrset:
+                description:
+                - "DoH DNS Response rcode NXRRSET"
+                type: str
+            doh_dns_resp_rcode_notauth:
+                description:
+                - "DoH DNS Response rcode NOTAUTH"
+                type: str
+            doh_dns_resp_rcode_notzone:
+                description:
+                - "DoH DNS Response rcode NOTZONE"
+                type: str
+            doh_dns_resp_rcode_other:
+                description:
+                - "DoH DNS Response rcode OTHER"
                 type: str
 
 '''
@@ -517,28 +1281,67 @@ def get_argspec():
                     'compress_no_content_type', 'compress_resp_lt_min',
                     'compress_resp_no_cl_or_ce', 'compress_ratio_too_high',
                     'cache_rsp', 'close_on_ddos', 'req_http10_keepalive',
-                    'req_sz_1k', 'req_sz_2k', 'req_sz_4k'
+                    'req_sz_1k', 'req_sz_2k'
                 ]
             },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'req_sz_8k', 'req_sz_16k', 'req_sz_32k', 'req_sz_64k',
-                    'req_sz_256k', 'req_sz_gt_256k', 'rsp_sz_1k', 'rsp_sz_2k',
-                    'rsp_sz_4k', 'rsp_sz_8k', 'rsp_sz_16k', 'rsp_sz_32k',
-                    'rsp_sz_64k', 'rsp_sz_256k', 'rsp_sz_gt_256k',
-                    'chunk_sz_512', 'chunk_sz_1k', 'chunk_sz_2k',
-                    'chunk_sz_4k', 'chunk_sz_gt_4k', 'pconn_connecting',
-                    'pconn_connected', 'pconn_connecting_failed', 'chunk_bad',
-                    'req_10u', 'req_20u', 'req_50u', 'req_100u', 'req_200u',
-                    'req_500u', 'req_1m', 'req_2m', 'req_5m', 'req_10m',
-                    'req_20m', 'req_50m', 'req_100m', 'req_200m', 'req_500m',
-                    'req_1s', 'req_2s', 'req_5s', 'req_over_5s',
-                    'insert_client_port', 'req_track', 'connect_req',
-                    'req_enter_ssli', 'non_http_bypass',
-                    'decompression_before', 'decompression_after', 'req_http2',
-                    'response_http2', 'req_timeout_retry', 'req_timeout_close'
+                    'req_sz_4k', 'req_sz_8k', 'req_sz_16k', 'req_sz_32k',
+                    'req_sz_64k', 'req_sz_256k', 'req_sz_gt_256k', 'rsp_sz_1k',
+                    'rsp_sz_2k', 'rsp_sz_4k', 'rsp_sz_8k', 'rsp_sz_16k',
+                    'rsp_sz_32k', 'rsp_sz_64k', 'rsp_sz_256k',
+                    'rsp_sz_gt_256k', 'chunk_sz_512', 'chunk_sz_1k',
+                    'chunk_sz_2k', 'chunk_sz_4k', 'chunk_sz_gt_4k',
+                    'pconn_connecting', 'pconn_connected',
+                    'pconn_connecting_failed', 'chunk_bad', 'req_10u',
+                    'req_20u', 'req_50u', 'req_100u', 'req_200u', 'req_500u',
+                    'req_1m', 'req_2m', 'req_5m', 'req_10m', 'req_20m',
+                    'req_50m', 'req_100m', 'req_200m', 'req_500m', 'req_1s',
+                    'req_2s', 'req_5s', 'req_over_5s', 'insert_client_port',
+                    'req_track', 'connect_req', 'req_enter_ssli',
+                    'non_http_bypass', 'decompression_before',
+                    'decompression_after', 'req_http2', 'response_http2',
+                    'req_timeout_retry', 'req_timeout_close', 'doh_req',
+                    'doh_req_get', 'doh_req_post', 'doh_non_doh_req',
+                    'doh_non_doh_req_get', 'doh_non_doh_req_post', 'doh_resp',
+                    'doh_tc_resp', 'doh_udp_dns_req', 'doh_udp_dns_resp',
+                    'doh_tcp_dns_req', 'doh_tcp_dns_resp',
+                    'doh_req_send_failed', 'doh_resp_send_failed',
+                    'doh_malloc_fail', 'doh_req_udp_retry',
+                    'doh_req_udp_retry_fail', 'doh_req_tcp_retry',
+                    'doh_req_tcp_retry_fail', 'doh_snat_failed',
+                    'doh_path_not_found', 'doh_get_dns_arg_failed',
+                    'doh_get_base64_decode_failed',
+                    'doh_post_content_type_mismatch',
+                    'doh_post_payload_not_found',
+                    'doh_post_payload_extract_failed', 'doh_non_doh_method',
+                    'doh_tcp_send_failed', 'doh_udp_send_failed',
+                    'doh_query_time_out', 'doh_dns_query_type_a',
+                    'doh_dns_query_type_aaaa', 'doh_dns_query_type_ns',
+                    'doh_dns_query_type_cname', 'doh_dns_query_type_any',
+                    'doh_dns_query_type_srv', 'doh_dns_query_type_mx',
+                    'doh_dns_query_type_soa', 'doh_dns_query_type_others',
+                    'doh_resp_setup_failed', 'doh_resp_header_alloc_failed',
+                    'doh_resp_que_failed', 'doh_resp_udp_frags',
+                    'doh_resp_tcp_frags', 'doh_serv_sel_failed',
+                    'doh_retry_w_tcp', 'doh_get_uri_too_long',
+                    'doh_post_payload_too_large', 'doh_dns_malformed_query',
+                    'doh_dns_resp_rcode_err_format',
+                    'doh_dns_resp_rcode_err_server',
+                    'doh_dns_resp_rcode_err_name',
+                    'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse',
+                    'doh_dns_resp_rcode_yxdomain',
+                    'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset',
+                    'doh_dns_resp_rcode_notauth', 'doh_dns_resp_rcode_notzone',
+                    'doh_dns_resp_rcode_other', 'h2up_content_length_alias',
+                    'malformed_h2up_header_value',
+                    'malformed_h2up_scheme_value',
+                    'h2up_with_transfer_encoding', 'multiple_content_length',
+                    'multiple_transfer_encoding',
+                    'transfer_encoding_and_content_length', 'get_and_payload',
+                    'h2up_with_host_and_auth'
                 ]
             }
         },
@@ -1260,6 +2063,9 @@ def get_argspec():
                 'rsp_content_len': {
                     'type': 'int',
                 },
+                'req_content_len': {
+                    'type': 'int',
+                },
                 'rsp_chunk': {
                     'type': 'int',
                 },
@@ -1285,6 +2091,213 @@ def get_argspec():
                     'type': 'int',
                 },
                 'req_timeout_close': {
+                    'type': 'int',
+                },
+                'doh_req': {
+                    'type': 'int',
+                },
+                'doh_req_get': {
+                    'type': 'int',
+                },
+                'doh_req_post': {
+                    'type': 'int',
+                },
+                'doh_non_doh_req': {
+                    'type': 'int',
+                },
+                'doh_non_doh_req_get': {
+                    'type': 'int',
+                },
+                'doh_non_doh_req_post': {
+                    'type': 'int',
+                },
+                'doh_resp': {
+                    'type': 'int',
+                },
+                'doh_tc_resp': {
+                    'type': 'int',
+                },
+                'doh_udp_dns_req': {
+                    'type': 'int',
+                },
+                'doh_udp_dns_resp': {
+                    'type': 'int',
+                },
+                'doh_tcp_dns_req': {
+                    'type': 'int',
+                },
+                'doh_tcp_dns_resp': {
+                    'type': 'int',
+                },
+                'doh_req_send_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_send_failed': {
+                    'type': 'int',
+                },
+                'doh_malloc_fail': {
+                    'type': 'int',
+                },
+                'doh_req_udp_retry': {
+                    'type': 'int',
+                },
+                'doh_req_udp_retry_fail': {
+                    'type': 'int',
+                },
+                'doh_req_tcp_retry': {
+                    'type': 'int',
+                },
+                'doh_req_tcp_retry_fail': {
+                    'type': 'int',
+                },
+                'doh_snat_failed': {
+                    'type': 'int',
+                },
+                'doh_path_not_found': {
+                    'type': 'int',
+                },
+                'doh_get_dns_arg_failed': {
+                    'type': 'int',
+                },
+                'doh_get_base64_decode_failed': {
+                    'type': 'int',
+                },
+                'doh_post_content_type_mismatch': {
+                    'type': 'int',
+                },
+                'doh_post_payload_not_found': {
+                    'type': 'int',
+                },
+                'doh_post_payload_extract_failed': {
+                    'type': 'int',
+                },
+                'doh_non_doh_method': {
+                    'type': 'int',
+                },
+                'doh_tcp_send_failed': {
+                    'type': 'int',
+                },
+                'doh_udp_send_failed': {
+                    'type': 'int',
+                },
+                'doh_query_time_out': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_a': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_aaaa': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_ns': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_cname': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_any': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_srv': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_mx': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_soa': {
+                    'type': 'int',
+                },
+                'doh_dns_query_type_others': {
+                    'type': 'int',
+                },
+                'doh_resp_setup_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_header_alloc_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_que_failed': {
+                    'type': 'int',
+                },
+                'doh_resp_udp_frags': {
+                    'type': 'int',
+                },
+                'doh_resp_tcp_frags': {
+                    'type': 'int',
+                },
+                'doh_serv_sel_failed': {
+                    'type': 'int',
+                },
+                'doh_retry_w_tcp': {
+                    'type': 'int',
+                },
+                'doh_get_uri_too_long': {
+                    'type': 'int',
+                },
+                'doh_post_payload_too_large': {
+                    'type': 'int',
+                },
+                'doh_dns_malformed_query': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_format': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_server': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_name': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_err_type': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_refuse': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_yxdomain': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_yxrrset': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_nxrrset': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_notauth': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_notzone': {
+                    'type': 'int',
+                },
+                'doh_dns_resp_rcode_other': {
+                    'type': 'int',
+                },
+                'h2up_content_length_alias': {
+                    'type': 'int',
+                },
+                'malformed_h2up_header_value': {
+                    'type': 'int',
+                },
+                'malformed_h2up_scheme_value': {
+                    'type': 'int',
+                },
+                'h2up_with_transfer_encoding': {
+                    'type': 'int',
+                },
+                'multiple_content_length': {
+                    'type': 'int',
+                },
+                'multiple_transfer_encoding': {
+                    'type': 'int',
+                },
+                'transfer_encoding_and_content_length': {
+                    'type': 'int',
+                },
+                'get_and_payload': {
+                    'type': 'int',
+                },
+                'h2up_with_host_and_auth': {
                     'type': 'int',
                 }
             },
@@ -1363,10 +2376,364 @@ def get_argspec():
             'compression_after': {
                 'type': 'str',
             },
+            'response_1xx': {
+                'type': 'str',
+            },
+            'response_100': {
+                'type': 'str',
+            },
+            'response_101': {
+                'type': 'str',
+            },
+            'response_102': {
+                'type': 'str',
+            },
+            'response_2xx': {
+                'type': 'str',
+            },
+            'response_200': {
+                'type': 'str',
+            },
+            'response_201': {
+                'type': 'str',
+            },
+            'response_202': {
+                'type': 'str',
+            },
+            'response_203': {
+                'type': 'str',
+            },
+            'response_204': {
+                'type': 'str',
+            },
+            'response_205': {
+                'type': 'str',
+            },
+            'response_206': {
+                'type': 'str',
+            },
+            'response_207': {
+                'type': 'str',
+            },
+            'response_3xx': {
+                'type': 'str',
+            },
+            'response_300': {
+                'type': 'str',
+            },
+            'response_301': {
+                'type': 'str',
+            },
+            'response_302': {
+                'type': 'str',
+            },
+            'response_303': {
+                'type': 'str',
+            },
+            'response_304': {
+                'type': 'str',
+            },
+            'response_305': {
+                'type': 'str',
+            },
+            'response_306': {
+                'type': 'str',
+            },
+            'response_307': {
+                'type': 'str',
+            },
+            'response_4xx': {
+                'type': 'str',
+            },
+            'response_400': {
+                'type': 'str',
+            },
+            'response_401': {
+                'type': 'str',
+            },
+            'response_402': {
+                'type': 'str',
+            },
+            'response_403': {
+                'type': 'str',
+            },
+            'response_404': {
+                'type': 'str',
+            },
+            'response_405': {
+                'type': 'str',
+            },
+            'response_406': {
+                'type': 'str',
+            },
+            'response_407': {
+                'type': 'str',
+            },
+            'response_408': {
+                'type': 'str',
+            },
+            'response_409': {
+                'type': 'str',
+            },
+            'response_410': {
+                'type': 'str',
+            },
+            'response_411': {
+                'type': 'str',
+            },
+            'response_412': {
+                'type': 'str',
+            },
+            'response_413': {
+                'type': 'str',
+            },
+            'response_414': {
+                'type': 'str',
+            },
+            'response_415': {
+                'type': 'str',
+            },
+            'response_416': {
+                'type': 'str',
+            },
+            'response_417': {
+                'type': 'str',
+            },
+            'response_418': {
+                'type': 'str',
+            },
+            'response_422': {
+                'type': 'str',
+            },
+            'response_423': {
+                'type': 'str',
+            },
+            'response_424': {
+                'type': 'str',
+            },
+            'response_425': {
+                'type': 'str',
+            },
+            'response_426': {
+                'type': 'str',
+            },
+            'response_449': {
+                'type': 'str',
+            },
+            'response_450': {
+                'type': 'str',
+            },
+            'response_5xx': {
+                'type': 'str',
+            },
+            'response_500': {
+                'type': 'str',
+            },
+            'response_501': {
+                'type': 'str',
+            },
+            'response_502': {
+                'type': 'str',
+            },
+            'response_503': {
+                'type': 'str',
+            },
+            'response_504': {
+                'type': 'str',
+            },
+            'response_505': {
+                'type': 'str',
+            },
+            'response_506': {
+                'type': 'str',
+            },
+            'response_507': {
+                'type': 'str',
+            },
+            'response_508': {
+                'type': 'str',
+            },
+            'response_509': {
+                'type': 'str',
+            },
+            'response_510': {
+                'type': 'str',
+            },
+            'response_6xx': {
+                'type': 'str',
+            },
+            'response_unknown': {
+                'type': 'str',
+            },
+            'req_get': {
+                'type': 'str',
+            },
+            'req_head': {
+                'type': 'str',
+            },
+            'req_put': {
+                'type': 'str',
+            },
+            'req_post': {
+                'type': 'str',
+            },
+            'req_trace': {
+                'type': 'str',
+            },
+            'req_options': {
+                'type': 'str',
+            },
+            'req_connect': {
+                'type': 'str',
+            },
+            'req_delete': {
+                'type': 'str',
+            },
+            'req_unknown': {
+                'type': 'str',
+            },
+            'req_content_len': {
+                'type': 'str',
+            },
+            'rsp_content_len': {
+                'type': 'str',
+            },
+            'rsp_chunk': {
+                'type': 'str',
+            },
             'cache_rsp': {
                 'type': 'str',
             },
             'close_on_ddos': {
+                'type': 'str',
+            },
+            'req_sz_1k': {
+                'type': 'str',
+            },
+            'req_sz_2k': {
+                'type': 'str',
+            },
+            'req_sz_4k': {
+                'type': 'str',
+            },
+            'req_sz_8k': {
+                'type': 'str',
+            },
+            'req_sz_16k': {
+                'type': 'str',
+            },
+            'req_sz_32k': {
+                'type': 'str',
+            },
+            'req_sz_64k': {
+                'type': 'str',
+            },
+            'req_sz_256k': {
+                'type': 'str',
+            },
+            'req_sz_gt_256k': {
+                'type': 'str',
+            },
+            'rsp_sz_1k': {
+                'type': 'str',
+            },
+            'rsp_sz_2k': {
+                'type': 'str',
+            },
+            'rsp_sz_4k': {
+                'type': 'str',
+            },
+            'rsp_sz_8k': {
+                'type': 'str',
+            },
+            'rsp_sz_16k': {
+                'type': 'str',
+            },
+            'rsp_sz_32k': {
+                'type': 'str',
+            },
+            'rsp_sz_64k': {
+                'type': 'str',
+            },
+            'rsp_sz_256k': {
+                'type': 'str',
+            },
+            'rsp_sz_gt_256k': {
+                'type': 'str',
+            },
+            'chunk_sz_512': {
+                'type': 'str',
+            },
+            'chunk_sz_1k': {
+                'type': 'str',
+            },
+            'chunk_sz_2k': {
+                'type': 'str',
+            },
+            'chunk_sz_4k': {
+                'type': 'str',
+            },
+            'chunk_sz_gt_4k': {
+                'type': 'str',
+            },
+            'req_10u': {
+                'type': 'str',
+            },
+            'req_20u': {
+                'type': 'str',
+            },
+            'req_50u': {
+                'type': 'str',
+            },
+            'req_100u': {
+                'type': 'str',
+            },
+            'req_200u': {
+                'type': 'str',
+            },
+            'req_500u': {
+                'type': 'str',
+            },
+            'req_1m': {
+                'type': 'str',
+            },
+            'req_2m': {
+                'type': 'str',
+            },
+            'req_5m': {
+                'type': 'str',
+            },
+            'req_10m': {
+                'type': 'str',
+            },
+            'req_20m': {
+                'type': 'str',
+            },
+            'req_50m': {
+                'type': 'str',
+            },
+            'req_100m': {
+                'type': 'str',
+            },
+            'req_200m': {
+                'type': 'str',
+            },
+            'req_500m': {
+                'type': 'str',
+            },
+            'req_1s': {
+                'type': 'str',
+            },
+            'req_2s': {
+                'type': 'str',
+            },
+            'req_5s': {
+                'type': 'str',
+            },
+            'req_over_5s': {
+                'type': 'str',
+            },
+            'req_track': {
                 'type': 'str',
             },
             'connect_req': {
@@ -1385,6 +2752,186 @@ def get_argspec():
                 'type': 'str',
             },
             'response_http2': {
+                'type': 'str',
+            },
+            'doh_req': {
+                'type': 'str',
+            },
+            'doh_req_get': {
+                'type': 'str',
+            },
+            'doh_req_post': {
+                'type': 'str',
+            },
+            'doh_non_doh_req': {
+                'type': 'str',
+            },
+            'doh_non_doh_req_get': {
+                'type': 'str',
+            },
+            'doh_non_doh_req_post': {
+                'type': 'str',
+            },
+            'doh_resp': {
+                'type': 'str',
+            },
+            'doh_tc_resp': {
+                'type': 'str',
+            },
+            'doh_udp_dns_req': {
+                'type': 'str',
+            },
+            'doh_udp_dns_resp': {
+                'type': 'str',
+            },
+            'doh_tcp_dns_req': {
+                'type': 'str',
+            },
+            'doh_tcp_dns_resp': {
+                'type': 'str',
+            },
+            'doh_req_send_failed': {
+                'type': 'str',
+            },
+            'doh_resp_send_failed': {
+                'type': 'str',
+            },
+            'doh_malloc_fail': {
+                'type': 'str',
+            },
+            'doh_req_udp_retry': {
+                'type': 'str',
+            },
+            'doh_req_udp_retry_fail': {
+                'type': 'str',
+            },
+            'doh_req_tcp_retry': {
+                'type': 'str',
+            },
+            'doh_req_tcp_retry_fail': {
+                'type': 'str',
+            },
+            'doh_snat_failed': {
+                'type': 'str',
+            },
+            'doh_path_not_found': {
+                'type': 'str',
+            },
+            'doh_get_dns_arg_failed': {
+                'type': 'str',
+            },
+            'doh_get_base64_decode_failed': {
+                'type': 'str',
+            },
+            'doh_post_content_type_mismatch': {
+                'type': 'str',
+            },
+            'doh_post_payload_not_found': {
+                'type': 'str',
+            },
+            'doh_post_payload_extract_failed': {
+                'type': 'str',
+            },
+            'doh_non_doh_method': {
+                'type': 'str',
+            },
+            'doh_tcp_send_failed': {
+                'type': 'str',
+            },
+            'doh_udp_send_failed': {
+                'type': 'str',
+            },
+            'doh_query_time_out': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_a': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_aaaa': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_ns': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_cname': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_any': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_srv': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_mx': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_soa': {
+                'type': 'str',
+            },
+            'doh_dns_query_type_others': {
+                'type': 'str',
+            },
+            'doh_resp_setup_failed': {
+                'type': 'str',
+            },
+            'doh_resp_header_alloc_failed': {
+                'type': 'str',
+            },
+            'doh_resp_que_failed': {
+                'type': 'str',
+            },
+            'doh_resp_udp_frags': {
+                'type': 'str',
+            },
+            'doh_resp_tcp_frags': {
+                'type': 'str',
+            },
+            'doh_serv_sel_failed': {
+                'type': 'str',
+            },
+            'doh_retry_w_tcp': {
+                'type': 'str',
+            },
+            'doh_get_uri_too_long': {
+                'type': 'str',
+            },
+            'doh_post_payload_too_large': {
+                'type': 'str',
+            },
+            'doh_dns_malformed_query': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_err_format': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_err_server': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_err_name': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_err_type': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_refuse': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_yxdomain': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_yxrrset': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_nxrrset': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_notauth': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_notzone': {
+                'type': 'str',
+            },
+            'doh_dns_resp_rcode_other': {
                 'type': 'str',
             }
         }

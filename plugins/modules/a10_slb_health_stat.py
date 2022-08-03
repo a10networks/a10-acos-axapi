@@ -84,7 +84,9 @@ options:
           Total number; 'status_up'= Number of status ups; 'status_down'= Number of
           status downs; 'status_unkn'= Number of status unknowns; 'status_other'= Number
           of other status; 'running_time'= Running time; 'config_health_rate'= Config
-          health rate;"
+          health rate; 'ssl_post_handshake_packet'= Number of ssl post handshake packets
+          before client sends request; 'timeout_with_packet'= Number of pin timeouts
+          while socket has packets;"
                 type: str
     oper:
         description:
@@ -96,6 +98,46 @@ options:
                 description:
                 - "Field health_check_list"
                 type: list
+            num_pins:
+                description:
+                - "Field num_pins"
+                type: int
+            num_pins_stat_up:
+                description:
+                - "Field num_pins_stat_up"
+                type: int
+            num_pins_stat_down:
+                description:
+                - "Field num_pins_stat_down"
+                type: int
+            num_pins_stat_unkn:
+                description:
+                - "Field num_pins_stat_unkn"
+                type: int
+            num_pins_stat_else:
+                description:
+                - "Field num_pins_stat_else"
+                type: int
+            num_ssl_tickets:
+                description:
+                - "Field num_ssl_tickets"
+                type: int
+            total_stat:
+                description:
+                - "Field total_stat"
+                type: int
+            method:
+                description:
+                - "Field method"
+                type: str
+            clear_ssl_ticket:
+                description:
+                - "Field clear_ssl_ticket"
+                type: int
+            monitor:
+                description:
+                - "Field monitor"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -214,6 +256,14 @@ options:
                 description:
                 - "Config health rate"
                 type: str
+            ssl_post_handshake_packet:
+                description:
+                - "Number of ssl post handshake packets before client sends request"
+                type: str
+            timeout_with_packet:
+                description:
+                - "Number of pin timeouts while socket has packets"
+                type: str
 
 '''
 
@@ -319,7 +369,8 @@ def get_argspec():
                     'sock_close_without_notify', 'curr_health_rate',
                     'ext_health_rate', 'ext_health_rate_val', 'total_number',
                     'status_up', 'status_down', 'status_unkn', 'status_other',
-                    'running_time', 'config_health_rate'
+                    'running_time', 'config_health_rate',
+                    'ssl_post_handshake_packet', 'timeout_with_packet'
                 ]
             }
         },
@@ -365,7 +416,53 @@ def get_argspec():
                 },
                 'server': {
                     'type': 'str',
+                },
+                'ssl_version': {
+                    'type': 'str',
+                },
+                'ssl_cipher': {
+                    'type': 'str',
+                },
+                'ssl_ticket': {
+                    'type': 'int',
                 }
+            },
+            'num_pins': {
+                'type': 'int',
+            },
+            'num_pins_stat_up': {
+                'type': 'int',
+            },
+            'num_pins_stat_down': {
+                'type': 'int',
+            },
+            'num_pins_stat_unkn': {
+                'type': 'int',
+            },
+            'num_pins_stat_else': {
+                'type': 'int',
+            },
+            'num_ssl_tickets': {
+                'type': 'int',
+            },
+            'total_stat': {
+                'type': 'int',
+            },
+            'method': {
+                'type':
+                'str',
+                'choices': [
+                    'icmp', 'tcp', 'udp', 'http', 'ftp', 'snmp', 'smtp', 'dns',
+                    'pop3', 'imap', 'sip', 'radius', 'ldap', 'rtsp',
+                    'database', 'external', 'ntp', 'compound', 'https',
+                    'kerberos-kdc', 'tacplus'
+                ]
+            },
+            'clear_ssl_ticket': {
+                'type': 'int',
+            },
+            'monitor': {
+                'type': 'str',
             }
         },
         'stats': {
@@ -452,6 +549,12 @@ def get_argspec():
                 'type': 'str',
             },
             'config_health_rate': {
+                'type': 'str',
+            },
+            'ssl_post_handshake_packet': {
+                'type': 'str',
+            },
+            'timeout_with_packet': {
                 'type': 'str',
             }
         }

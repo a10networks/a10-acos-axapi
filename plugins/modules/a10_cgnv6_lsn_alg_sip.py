@@ -173,6 +173,14 @@ options:
                 description:
                 - "SIP Method UNKNOWN"
                 type: str
+            parse_error:
+                description:
+                - "SIP Message Parse Error"
+                type: str
+            tcp_out_of_order_drop:
+                description:
+                - "TCP Out-of-Order Drop"
+                type: str
 
 '''
 
@@ -345,6 +353,12 @@ def get_argspec():
                 'type': 'str',
             },
             'method_unknown': {
+                'type': 'str',
+            },
+            'parse_error': {
+                'type': 'str',
+            },
+            'tcp_out_of_order_drop': {
                 'type': 'str',
             }
         }

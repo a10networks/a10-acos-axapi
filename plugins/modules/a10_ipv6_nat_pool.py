@@ -114,8 +114,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'Port-Usage'= Port-Usage; 'Total-Used'= Total-Used; 'Total-Freed'=
-          Total-Freed; 'Failed'= Failed;"
+                - "'all'= all; 'Port-Usage'= some help string; 'Total-Used'= some help string;
+          'Total-Freed'= some help string; 'Failed'= some help string;"
                 type: str
     oper:
         description:
@@ -139,19 +139,19 @@ options:
         suboptions:
             Port_Usage:
                 description:
-                - "Field Port_Usage"
+                - "some help string"
                 type: str
             Total_Used:
                 description:
-                - "Field Total_Used"
+                - "some help string"
                 type: str
             Total_Freed:
                 description:
-                - "Field Total_Freed"
+                - "some help string"
                 type: str
             Failed:
                 description:
-                - "Field Failed"
+                - "some help string"
                 type: str
             pool_name:
                 description:

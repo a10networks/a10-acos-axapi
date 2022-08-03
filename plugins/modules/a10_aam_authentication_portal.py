@@ -134,6 +134,28 @@ options:
                 description:
                 - "Specify passcode variable name in default logon page (Default= passcode)"
                 type: str
+            enable_CAPTCHA:
+                description:
+                - "Enable CAPTCHA in deafult logon page"
+                type: bool
+            captcha_type:
+                description:
+                - "'reCAPTCHAv2-checkbox'= Google reCAPTCHAv2 Checkbox; 'reCAPTCHAv2-invisible'=
+          Google reCAPTCHAv2 Invisible; 'reCAPTCHAv3'= Google reCAPTCHAv3;"
+                type: str
+            site_key_string:
+                description:
+                - "Site key string"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            reCAPTCHA_cfg:
+                description:
+                - "Field reCAPTCHA_cfg"
+                type: dict
             submit_text:
                 description:
                 - "Specify submit button text in default logon page (Default= Log In)"
@@ -619,6 +641,41 @@ def get_argspec():
             },
             'passcode_var': {
                 'type': 'str',
+            },
+            'enable_CAPTCHA': {
+                'type': 'bool',
+            },
+            'captcha_type': {
+                'type':
+                'str',
+                'choices': [
+                    'reCAPTCHAv2-checkbox', 'reCAPTCHAv2-invisible',
+                    'reCAPTCHAv3'
+                ]
+            },
+            'site_key_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
+            'reCAPTCHA_cfg': {
+                'type': 'dict',
+                'reCAPTCHA_theme': {
+                    'type': 'str',
+                    'choices': ['light', 'dark']
+                },
+                'reCAPTCHA_size': {
+                    'type': 'str',
+                    'choices': ['normal', 'compact']
+                },
+                'reCAPTCHA_badge': {
+                    'type': 'str',
+                    'choices': ['bottom-left', 'bottom-right']
+                },
+                'reCAPTCHA_action': {
+                    'type': 'str',
+                }
             },
             'submit_text': {
                 'type': 'str',

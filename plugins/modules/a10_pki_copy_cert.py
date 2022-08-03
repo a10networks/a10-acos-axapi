@@ -61,7 +61,7 @@ options:
         required: False
     rotation:
         description:
-        - "Specify rotation number of SCEP generated certificate file"
+        - "Specify rotation number of SCEP/CMP generated certificate file"
         type: int
         required: False
     dest_cert:

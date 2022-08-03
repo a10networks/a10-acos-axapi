@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    max_auth_resp_size:
+        description:
+        - "Specify the max auth resp size in bytes(from authd to a10lb), default is 64KB"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -234,6 +239,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "max_auth_resp_size",
     "sampling_enable",
     "stats",
     "uuid",
@@ -265,6 +271,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'max_auth_resp_size': {
+            'type': 'int',
+        },
         'uuid': {
             'type': 'str',
         },

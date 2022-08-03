@@ -167,6 +167,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -441,6 +445,9 @@ def get_argspec():
                         'accounting-success', 'accounting-failure'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'stats': {

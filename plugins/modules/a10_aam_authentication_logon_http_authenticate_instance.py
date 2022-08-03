@@ -109,6 +109,11 @@ options:
                 - "'all'= all; 'spn_krb_request'= SPN Kerberos Request; 'spn_krb_success'= SPN
           Kerberos Success; 'spn_krb_faiure'= SPN Kerberos Failure;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     stats:
         description:
         - "Field stats"
@@ -190,6 +195,7 @@ AVAILABLE_PROPERTIES = [
     "auth_method",
     "duration",
     "name",
+    "packet_capture_template",
     "retry",
     "sampling_enable",
     "stats",
@@ -293,6 +299,9 @@ def get_argspec():
                     'spn_krb_faiure'
                 ]
             }
+        },
+        'packet_capture_template': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',

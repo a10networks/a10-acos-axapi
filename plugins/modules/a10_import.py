@@ -114,11 +114,6 @@ options:
         - "Black white List File"
         type: str
         required: False
-    file_inspection_bw_list:
-        description:
-        - "Black white List File"
-        type: str
-        required: False
     class_list:
         description:
         - "Class List File"
@@ -194,6 +189,11 @@ options:
         - "GLM certificate"
         type: str
         required: False
+    bios_file:
+        description:
+        - "BIOS Image file"
+        type: str
+        required: False
     auth_jwks:
         description:
         - "JSON web key"
@@ -223,6 +223,11 @@ options:
     web_category_license:
         description:
         - "License file to enable web-category feature"
+        type: str
+        required: False
+    rpz:
+        description:
+        - "Response Policy Zone File"
         type: str
         required: False
     terminal:
@@ -462,6 +467,7 @@ AVAILABLE_PROPERTIES = [
     "auth_portal",
     "auth_portal_image",
     "auth_saml_idp",
+    "bios_file",
     "bw_list",
     "ca_cert",
     "certificate_type",
@@ -472,7 +478,6 @@ AVAILABLE_PROPERTIES = [
     "cloud_creds",
     "dnssec_dnskey",
     "dnssec_ds",
-    "file_inspection_bw_list",
     "geo_location",
     "glm_cert",
     "glm_license",
@@ -486,6 +491,7 @@ AVAILABLE_PROPERTIES = [
     "pfx_password",
     "policy",
     "remote_file",
+    "rpz",
     "secured",
     "ssl_cert",
     "ssl_cert_key",
@@ -566,9 +572,6 @@ def get_argspec():
         'bw_list': {
             'type': 'str',
         },
-        'file_inspection_bw_list': {
-            'type': 'str',
-        },
         'class_list': {
             'type': 'str',
         },
@@ -614,6 +617,9 @@ def get_argspec():
         'glm_cert': {
             'type': 'str',
         },
+        'bios_file': {
+            'type': 'str',
+        },
         'auth_jwks': {
             'type': 'str',
         },
@@ -633,6 +639,9 @@ def get_argspec():
             'type': 'bool',
         },
         'web_category_license': {
+            'type': 'str',
+        },
+        'rpz': {
             'type': 'str',
         },
         'terminal': {

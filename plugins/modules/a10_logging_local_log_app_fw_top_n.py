@@ -98,6 +98,14 @@ options:
                 description:
                 - "Field client_ip"
                 type: str
+            threat_category:
+                description:
+                - "Field threat_category"
+                type: str
+            threat_category_match:
+                description:
+                - "Field threat_category_match"
+                type: str
             action:
                 description:
                 - "Field action"
@@ -222,6 +230,12 @@ def get_argspec():
                 'type': 'str',
             },
             'client_ip': {
+                'type': 'str',
+            },
+            'threat_category': {
+                'type': 'str',
+            },
+            'threat_category_match': {
                 'type': 'str',
             },
             'action': {

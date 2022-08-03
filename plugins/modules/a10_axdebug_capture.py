@@ -75,6 +75,11 @@ options:
         - "Only for current-slot of chassis"
         type: bool
         required: False
+    no_stop:
+        description:
+        - "Non-stop execution"
+        type: bool
+        required: False
 
 '''
 
@@ -133,6 +138,7 @@ AVAILABLE_PROPERTIES = [
     "brief",
     "current_slot",
     "detail",
+    "no_stop",
     "save",
 ]
 
@@ -172,6 +178,9 @@ def get_argspec():
             'type': 'str',
         },
         'current_slot': {
+            'type': 'bool',
+        },
+        'no_stop': {
             'type': 'bool',
         }
     })

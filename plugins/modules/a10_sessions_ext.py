@@ -176,6 +176,9 @@ def get_argspec():
                 },
                 'cpu_round_robin_fail': {
                     'type': 'int',
+                },
+                'alloc_exceed': {
+                    'type': 'int',
                 }
             }
         }

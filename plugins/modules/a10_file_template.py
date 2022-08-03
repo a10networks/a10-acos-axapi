@@ -65,10 +65,10 @@ options:
         - "aflex local file name"
         type: str
         required: False
-    size:
+    act_type:
         description:
-        - "aflex file size in byte"
-        type: int
+        - "Specify ACT package type (i.e. slug/destination name)"
+        type: str
         required: False
     action:
         description:
@@ -97,6 +97,10 @@ options:
         type: dict
         required: False
         suboptions:
+            single_act_upgrade_support:
+                description:
+                - "Field single_act_upgrade_support"
+                type: str
             file_list:
                 description:
                 - "Field file_list"
@@ -156,12 +160,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "act_type",
     "action",
     "dst_file",
     "file",
     "file_handle",
     "oper",
-    "size",
     "uuid",
 ]
 
@@ -197,8 +201,8 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
+        'act_type': {
+            'type': 'str',
         },
         'action': {
             'type':
@@ -219,6 +223,9 @@ def get_argspec():
         },
         'oper': {
             'type': 'dict',
+            'single_act_upgrade_support': {
+                'type': 'str',
+            },
             'file_list': {
                 'type': 'list',
                 'file': {

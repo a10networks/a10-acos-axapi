@@ -752,6 +752,78 @@ options:
                 description:
                 - "LSN LID Pass-through"
                 type: str
+            standby_class_list_drop:
+                description:
+                - "HA Standby Class-List drop"
+                type: str
+            sip_alg_quota_inc_failure:
+                description:
+                - "SIP ALG User-Quota Exceeded"
+                type: str
+            sip_alg_alloc_rtp_rtcp_port_failure:
+                description:
+                - "SIP ALG Alloc RTP/RTCP NAT Ports Failure"
+                type: str
+            sip_alg_alloc_single_port_failure:
+                description:
+                - "SIP ALG Alloc Single RTP or RTCP NAT Port Failure"
+                type: str
+            sip_alg_create_single_fullcone_failure:
+                description:
+                - "SIP ALG Create Single RTP or RTCP Full-cone Session Failure"
+                type: str
+            sip_alg_create_rtp_fullcone_failure:
+                description:
+                - "SIP ALG Create RTP Full-cone Session Failure"
+                type: str
+            sip_alg_create_rtcp_fullcone_failure:
+                description:
+                - "SIP ALG Create RTCP Full-cone Session Failure"
+                type: str
+            h323_alg_alloc_single_port_failure:
+                description:
+                - "H323 ALG Alloc Single RTP or RTCP NAT Port Failure"
+                type: str
+            h323_alg_create_single_fullcone_failure:
+                description:
+                - "H323 ALG Create Single RTP or RTCP Full-cone Session Failure"
+                type: str
+            h323_alg_create_rtp_fullcone_failure:
+                description:
+                - "H323 ALG Create RTP Full-cone Session Failure"
+                type: str
+            h323_alg_create_rtcp_fullcone_failure:
+                description:
+                - "H323 ALG Create RTCP Full-cone Session Failure"
+                type: str
+            port_overloading_out_of_memory:
+                description:
+                - "Port Overloading Out of Memory"
+                type: str
+            port_overloading_inc_overflow:
+                description:
+                - "Port Overloading Inc Overflow"
+                type: str
+            fullcone_ext_mem_alloc_failure:
+                description:
+                - "LSN Fullcone Extension Memory Allocate Failure"
+                type: str
+            fullcone_ext_mem_alloc_init_faulure:
+                description:
+                - "LSN Fullcone Extension Initialization Failure"
+                type: str
+            mgcp_alg_create_rtp_fullcone_failure:
+                description:
+                - "MGCP ALG Create RTP Full-cone Session Failure"
+                type: str
+            mgcp_alg_create_rtcp_fullcone_failure:
+                description:
+                - "MGCP ALG Create RTCP Full-cone Session Failure"
+                type: str
+            mgcp_alg_port_pair_alloc_from_quota_partition_error:
+                description:
+                - "MGCP ALG Port Pair Allocated From Quota Partition Error"
+                type: str
             user_quota_unusable_drop:
                 description:
                 - "User-Quota Unusable Drop"
@@ -759,6 +831,10 @@ options:
             user_quota_unusable:
                 description:
                 - "User-Quota Marked Unusable"
+                type: str
+            adc_port_allocation_failed:
+                description:
+                - "ADC Port Allocation Failed"
                 type: str
             fwd_ingress_packets_tcp:
                 description:
@@ -1585,10 +1661,67 @@ def get_argspec():
             'lid_pass_through': {
                 'type': 'str',
             },
+            'standby_class_list_drop': {
+                'type': 'str',
+            },
+            'sip_alg_quota_inc_failure': {
+                'type': 'str',
+            },
+            'sip_alg_alloc_rtp_rtcp_port_failure': {
+                'type': 'str',
+            },
+            'sip_alg_alloc_single_port_failure': {
+                'type': 'str',
+            },
+            'sip_alg_create_single_fullcone_failure': {
+                'type': 'str',
+            },
+            'sip_alg_create_rtp_fullcone_failure': {
+                'type': 'str',
+            },
+            'sip_alg_create_rtcp_fullcone_failure': {
+                'type': 'str',
+            },
+            'h323_alg_alloc_single_port_failure': {
+                'type': 'str',
+            },
+            'h323_alg_create_single_fullcone_failure': {
+                'type': 'str',
+            },
+            'h323_alg_create_rtp_fullcone_failure': {
+                'type': 'str',
+            },
+            'h323_alg_create_rtcp_fullcone_failure': {
+                'type': 'str',
+            },
+            'port_overloading_out_of_memory': {
+                'type': 'str',
+            },
+            'port_overloading_inc_overflow': {
+                'type': 'str',
+            },
+            'fullcone_ext_mem_alloc_failure': {
+                'type': 'str',
+            },
+            'fullcone_ext_mem_alloc_init_faulure': {
+                'type': 'str',
+            },
+            'mgcp_alg_create_rtp_fullcone_failure': {
+                'type': 'str',
+            },
+            'mgcp_alg_create_rtcp_fullcone_failure': {
+                'type': 'str',
+            },
+            'mgcp_alg_port_pair_alloc_from_quota_partition_error': {
+                'type': 'str',
+            },
             'user_quota_unusable_drop': {
                 'type': 'str',
             },
             'user_quota_unusable': {
+                'type': 'str',
+            },
+            'adc_port_allocation_failed': {
                 'type': 'str',
             },
             'fwd_ingress_packets_tcp': {

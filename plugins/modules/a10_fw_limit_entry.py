@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_fw_limit_entry
 description:
-    - Rate Limit Information
+    - Concurrent Session Limit Information
 author: A10 Networks 2021
 options:
     state:
@@ -86,18 +86,6 @@ options:
                 description:
                 - "Field prefix_len4"
                 type: int
-            pps:
-                description:
-                - "Field pps"
-                type: bool
-            throughput:
-                description:
-                - "Field throughput"
-                type: bool
-            user_quota:
-                description:
-                - "Field user_quota"
-                type: bool
             limit_entry_count:
                 description:
                 - "Field limit_entry_count"
@@ -209,9 +197,6 @@ def get_argspec():
                 'max_count': {
                     'type': 'int',
                 },
-                'ref_count': {
-                    'type': 'int',
-                },
                 'ntype': {
                     'type': 'str',
                 }
@@ -227,15 +212,6 @@ def get_argspec():
             },
             'prefix_len4': {
                 'type': 'int',
-            },
-            'pps': {
-                'type': 'bool',
-            },
-            'throughput': {
-                'type': 'bool',
-            },
-            'user_quota': {
-                'type': 'bool',
             },
             'limit_entry_count': {
                 'type': 'int',

@@ -65,11 +65,6 @@ options:
         - "aflex local file name"
         type: str
         required: False
-    size:
-        description:
-        - "aflex file size in byte"
-        type: int
-        required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
@@ -166,7 +161,6 @@ AVAILABLE_PROPERTIES = [
     "file",
     "file_handle",
     "oper",
-    "size",
     "skip_backup",
     "uuid",
 ]
@@ -202,9 +196,6 @@ def get_argspec():
         },
         'file': {
             'type': 'str',
-        },
-        'size': {
-            'type': 'int',
         },
         'action': {
             'type':

@@ -200,6 +200,9 @@ def get_argspec():
                 'pps': {
                     'type': 'int',
                 },
+                'expiration': {
+                    'type': 'int',
+                },
                 'is_deleted': {
                     'type': 'int',
                 }

@@ -84,58 +84,81 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'pr-acos-harmony-topic'= PR topic counter from acos to harmony;
-          'avro-device-status-topic'= AVRO device status from acos to harmony; 'avro-
-          partition-metrics-topic'= AVRO partition metrics from acos to harmony; 'avro-
-          generic-sent'= Telemetry exported via avro; 'pr-acos-harmony-topic-enqueue-
-          err'= PR topic to harmony enqueue error; 'pr-acos-harmony-topic-dequeue-err'=
-          PR topic to harmony  dequeue error; 'avro-generic-failed-encoding'= Telemetry
-          exported via avro failed encoding; 'avro-generic-failed-sending'= Telemetry
-          exported via avro failed sending; 'avro-device-status-topic-enqueue-err'= AVRO
-          device status enqueue error; 'avro-device-status-topic-dequeue-err'= AVRO
-          device status dequeue error; 'avro-partition-metrics-topic-enqueue-err'= Part
-          metrics dropped,enq error on acos queues; 'avro-partition-metrics-topic-
-          dequeue-err'= Part metrics dropped,enq error analytics queues; 'kafka-unknown-
-          topic-dequeue-err'= Unknown type dropped,enq error analytics queues; 'kafka-
-          broker-down'= Telemetry drop because kafka broker is down; 'kafka-queue-full-
-          err'= Telemetry drop because kafka Queue is full; 'pr-throttle-drop'= L7 PR
-          dropped,log throttling; 'pr-not-allowed-drop'= PR drop because not allowed to
-          log; 'pr-be-ttfb-anomaly'= PR back-end ttfb is negative; 'pr-be-ttlb-anomaly'=
-          PR back-end ttlb is negative; 'pr-in-latency-threshold-exceed'= PR in latency
-          threshold exceeded; 'pr-out-latency-threshold-exceed'= PR out latency threshold
-          exceeded; 'pr-out-latency-anomaly'= PR out latency negative; 'pr-in-latency-
-          anomaly'= PR in latency negative; 'kafka-topic-error'= Telemetry dropped
-          because kafka topic not created; 'pc-encoding-failed'= Telemetry exported via
-          avro failed encoding; 'pc-acos-harmony-topic'= PC topic counter from acos to
-          harmony; 'pc-acos-harmony-topic-dequeue-err'= PC topic to harmony  dequeue
-          error; 'cgn-pc-acos-harmony-topic'= CGN PC topic counter from acos to harmony;
-          'cgn-pc-acos-harmony-topic-dequeue-err'= CGN PC topic to harmony dequeue error;
-          'cgn-pe-acos-harmony-topic'= CGN PE topic counter from acos to harmony; 'cgn-
-          pe-acos-harmony-topic-dequeue-err'= CGN PE topic to harmony dequeue error; 'fw-
-          pc-acos-harmony-topic'= FW PC topic counter from acos to harmony; 'fw-pc-acos-
-          harmony-topic-dequeue-err'= FW PC topic to harmony dequeue error; 'fw-deny-pc-
-          acos-harmony-topic'= FW DENY PC topic counter from acos to harmony; 'fw-deny-
-          pc-acos-harmony-topic-dequeue-err'= FW DENY PC logs dropped,enq error analytics
-          queues; 'fw-rst-pc-acos-harmony-topic'= FW RST PC topic counter from acos to
-          harmony; 'fw-rst-pc-acos-harmony-topic-dequeue-err'= FW RST PC topic to harmony
-          dequeue error; 'cgn-summary-error-acos-harmony-topic'= CGN Summary PE topic
-          counter from acos to harmony; 'cgn-summary-error-acos-harmony-topic-dequeue-
-          err'= CGN Summary PE topic to harmony dequeue error; 'rule-set-application-
-          metrics-topic'= AppFW metrics from acos to harmony; 'rule-set-application-
-          metrics-topic-dequeue-err'= AppFW metrics dequeue error; 'slb-ssl-stats-
-          metrics-topic'= SSL stats metrics from acos to harmony; 'slb-ssl-stats-metrics-
-          topic-dequeue-err'= SSL stats metrics dequeue error; 'slb-client-ssl-counters-
-          metrics-topic'= Client SSL counters metrics from acos to harmony; 'slb-client-
-          ssl-counters-metrics-topic-dequeue-err'= Cilent SSL metrics dropped,enq error
-          analytics qs; 'slb-server-ssl-counters-metrics-topic'= Server SSL counters
-          metrics from acos to harmony; 'slb-server-ssl-counters-metrics-topic-dequeue-
-          err'= Server SSL metrics dropped,enq error analytics qs; 'pc-throttle-drop'= PC
-          drop due to throttling; 'metrics-dropped-pt-missing'= Partition-Tenant mapping
-          not saved on HC; 'ssli-pc-acos-harmony-topic'= SSLi PC topic counter from acos
-          to harmony; 'ssli-pc-acos-harmony-topic-dequeue-err'= SSLi PC topic to harmony
-          dequeue error; 'ssli-pe-acos-harmony-topic'= SSLi PE topic counter from acos to
-          harmony; 'ssli-pe-acos-harmony-topic-dequeue-err'= SSLi PE topic to harmony
-          dequeue error; 'analytics-bus-restart'= Analytics bus restart count;"
+                - "'all'= all; 'pr-acos-harmony-topic'= L7 PR logs sent; 'avro-device-status-
+          topic'= Device Status Metrics sent; 'avro-partition-metrics-topic'= Partition
+          Metrics sent; 'avro-generic-sent'= Generic Metrics sent; 'pr-acos-harmony-
+          topic-enqueue-err'= L7 PR dropped,enq error on acos queues; 'pr-acos-harmony-
+          topic-dequeue-err'= L7 PR dropped,enq error analytics queues; 'avro-generic-
+          failed-encoding'= Generic Metrics dropped,encoding error; 'avro-generic-failed-
+          sending'= Generic Metrics dropped,sending failure; 'avro-device-status-topic-
+          enqueue-err'= Device Status dropped,enq error on acos queues; 'avro-device-
+          status-topic-dequeue-err'= Device Status dropped,enq error analytics queues;
+          'avro-partition-metrics-topic-enqueue-err'= Part metrics dropped,enq error on
+          acos queues; 'avro-partition-metrics-topic-dequeue-err'= Part metrics
+          dropped,enq error analytics queues; 'kafka-unknown-topic-dequeue-err'= Unknown
+          type dropped,enq error analytics queues; 'kafka-broker-down'= Messages
+          dropped,analytics down; 'kafka-queue-full-err'= Messages dropped,acos analytics
+          queue full; 'pr-throttle-drop'= L7 PR dropped,log throttling; 'pr-not-allowed-
+          drop'= L7 PR dropped, not allowed to be sent; 'pr-be-ttfb-anomaly'= L7 PR back-
+          end ttfb is negative; 'pr-be-ttlb-anomaly'= L7 PR back-end ttlb is negative;
+          'pr-in-latency-threshold-exceed'= L7 PR on latency threshold exceeded; 'pr-out-
+          latency-threshold-exceed'= L7 PR out latency threshold exceeded; 'pr-out-
+          latency-anomaly'= L7 PR out latency negative; 'pr-in-latency-anomaly'= L7 PR on
+          latency negative; 'kafka-topic-error'= Module not supported by analytics; 'pc-
+          encoding-failed'= L4 PC logs dropped,encoding error; 'pc-acos-harmony-topic'=
+          L4 PC logs sent; 'pc-acos-harmony-topic-dequeue-err'= L4 PC logs dropped,enq
+          error analytics queues; 'cgn-pc-acos-harmony-topic'= CGN PC logs sent; 'cgn-pc-
+          acos-harmony-topic-dequeue-err'= CGN PC logs dropped,enq error analytics
+          queues; 'cgn-pe-acos-harmony-topic'= CGN PE logs sent; 'cgn-pe-acos-harmony-
+          topic-dequeue-err'= CGN PE logs dropped,enq error analytics queues; 'fw-pc-
+          acos-harmony-topic'= FW PC logs sent; 'fw-pc-acos-harmony-topic-dequeue-err'=
+          FW PC logs dropped,enq error analytics queues; 'fw-deny-pc-acos-harmony-topic'=
+          FW DENY PC logs sent; 'fw-deny-pc-acos-harmony-topic-dequeue-err'= FW DENY PC
+          logs dropped,enq error analytics queues; 'fw-rst-pc-acos-harmony-topic'= FW RST
+          PC logs sent; 'fw-rst-pc-acos-harmony-topic-dequeue-err'= FW RST PC logs
+          dropped,enq error analytics queues; 'cgn-summary-error-acos-harmony-topic'= CGN
+          PE logs sent; 'cgn-summary-error-acos-harmony-topic-dequeue-err'= CGN PE logs
+          dropped,enq error analytics queues; 'rule-set-application-metrics-topic'= AppFW
+          metrics sent; 'rule-set-application-metrics-topic-dequeue-err'= AppFW metrics
+          dropped,enq error analytics queues; 'slb-ssl-stats-metrics-topic'= SSL metrics
+          sent; 'slb-ssl-stats-metrics-topic-dequeue-err'= SSL metrics dropped,enq error
+          analytics queues; 'slb-client-ssl-counters-metrics-topic'= Client SSL metrics
+          sent; 'slb-client-ssl-counters-metrics-topic-dequeue-err'= Cilent SSL metrics
+          dropped,enq error analytics qs; 'slb-server-ssl-counters-metrics-topic'= Server
+          SSL metrics sent; 'slb-server-ssl-counters-metrics-topic-dequeue-err'= Server
+          SSL metrics dropped,enq error analytics qs; 'pc-throttle-drop'= L4 PC logs
+          dropped,throttling; 'metrics-dropped-pt-missing'= Metrics dropped,missing
+          partition tenant mapping; 'ssli-pc-acos-harmony-topic'= SSLi PC topic counter
+          from acos to harmony; 'ssli-pc-acos-harmony-topic-dequeue-err'= SSLi PC topic
+          to harmony dequeue error; 'ssli-pe-acos-harmony-topic'= SSLi PE topic counter
+          from acos to harmony; 'ssli-pe-acos-harmony-topic-dequeue-err'= SSLi PE topic
+          to harmony dequeue error; 'analytics-bus-restart'= Analytics bus restart count;
+          'waf-learn-pr-topic'= WAF learn topic counter; 'waf-learn-pr-topic-dequeue-
+          err'= WAF learn metrics dropped,enq error analytics qs; 'waf-events-topic'= WAF
+          events topic counter; 'waf-events-topic-dequeue-err'= WAF events metrics
+          dropped,enq error analytics qs; 'visibility-topn-harmony-topic'= Visibility
+          TopN sent; 'visibility-topn-harmony-topic-dequeue-err'= Visibility TopN metrics
+          dropped,enq error analytics qs; 'hc-logs-sent-to-master'= HC logs sent to
+          master; 'hc-logs-received-from-blade'= HC logs received from blade; 'hc-oper-
+          sent-to-master'= HC oper to master; 'hc-oper-received-from-blade'= HC oper
+          received from blade; 'hc-counters-sent-to-master'= HC counters sent to master;
+          'hc-counters-received-from-blade'= HC counters received from blade; 'hc-
+          counters-dropped-from-blade'= HC counters dropped from blade (uuid or size
+          mismatch); 'pe-acos-harmony-topic'= L7 PE logs sent; 'pe-acos-harmony-topic-
+          enqueue-err'= L7 PE dropped,enq error on acos queues; 'pe-acos-harmony-topic-
+          dequeue-err'= L7 PE dropped,enq error analytics queues; 'vpn-ipsec-sa-metrics-
+          topic'= IPSec SA metrics sent; 'vpn-ipsec-sa-metrics-topic-dequeue-err'= IPSec
+          SA metrics dropped,enq error analytics qs; 'vpn-ike-gateway-metrics-topic'= IKE
+          gateway metrics sent; 'vpn-ike-gateway-metrics-topic-dequeue-err'= IKE gateway
+          metrics dropped,enq error analytics qs; 'vpn-stats-metrics-topic'= VPN STATS
+          metrics sent; 'vpn-stats-metrics-topic-dequeue-err'= VPN STATS metrics
+          dropped,enq error analytics qs; 'cgn-port-usage-hstgrm-acos-harmony-topic'= CGN
+          Port Usage Histogram HC Export; 'cgn-port-usage-hstgrm-acos-harmony-topic-
+          dequeue-err'= CGN Port Usage Histogram HC Export Failed; 'avro-system-env-
+          topic'= System environment sent; 'avro-system-env-dequeue-err'= System
+          Environmet dropped,enq error analytics queues; 'cert-pinning-list-topic'= Cert-
+          pinning candidate list sent; 'cert-pinning-list-topic-dequeue-err'= Cert-
+          pinning candidate list dropped,enq error analytics queues;"
                 type: str
     oper:
         description:
@@ -155,43 +178,43 @@ options:
         suboptions:
             pr_acos_harmony_topic:
                 description:
-                - "PR topic counter from acos to harmony"
+                - "L7 PR logs sent"
                 type: str
             avro_device_status_topic:
                 description:
-                - "AVRO device status from acos to harmony"
+                - "Device Status Metrics sent"
                 type: str
             avro_partition_metrics_topic:
                 description:
-                - "AVRO partition metrics from acos to harmony"
+                - "Partition Metrics sent"
                 type: str
             avro_generic_sent:
                 description:
-                - "Telemetry exported via avro"
+                - "Generic Metrics sent"
                 type: str
             pr_acos_harmony_topic_enqueue_err:
                 description:
-                - "PR topic to harmony enqueue error"
+                - "L7 PR dropped,enq error on acos queues"
                 type: str
             pr_acos_harmony_topic_dequeue_err:
                 description:
-                - "PR topic to harmony  dequeue error"
+                - "L7 PR dropped,enq error analytics queues"
                 type: str
             avro_generic_failed_encoding:
                 description:
-                - "Telemetry exported via avro failed encoding"
+                - "Generic Metrics dropped,encoding error"
                 type: str
             avro_generic_failed_sending:
                 description:
-                - "Telemetry exported via avro failed sending"
+                - "Generic Metrics dropped,sending failure"
                 type: str
             avro_device_status_topic_enqueue_err:
                 description:
-                - "AVRO device status enqueue error"
+                - "Device Status dropped,enq error on acos queues"
                 type: str
             avro_device_status_topic_dequeue_err:
                 description:
-                - "AVRO device status dequeue error"
+                - "Device Status dropped,enq error analytics queues"
                 type: str
             avro_partition_metrics_topic_enqueue_err:
                 description:
@@ -207,11 +230,11 @@ options:
                 type: str
             kafka_broker_down:
                 description:
-                - "Telemetry drop because kafka broker is down"
+                - "Messages dropped,analytics down"
                 type: str
             kafka_queue_full_err:
                 description:
-                - "Telemetry drop because kafka Queue is full"
+                - "Messages dropped,acos analytics queue full"
                 type: str
             pr_throttle_drop:
                 description:
@@ -219,75 +242,75 @@ options:
                 type: str
             pr_not_allowed_drop:
                 description:
-                - "PR drop because not allowed to log"
+                - "L7 PR dropped, not allowed to be sent"
                 type: str
             pr_be_ttfb_anomaly:
                 description:
-                - "PR back-end ttfb is negative"
+                - "L7 PR back-end ttfb is negative"
                 type: str
             pr_be_ttlb_anomaly:
                 description:
-                - "PR back-end ttlb is negative"
+                - "L7 PR back-end ttlb is negative"
                 type: str
             pr_in_latency_threshold_exceed:
                 description:
-                - "PR in latency threshold exceeded"
+                - "L7 PR on latency threshold exceeded"
                 type: str
             pr_out_latency_threshold_exceed:
                 description:
-                - "PR out latency threshold exceeded"
+                - "L7 PR out latency threshold exceeded"
                 type: str
             pr_out_latency_anomaly:
                 description:
-                - "PR out latency negative"
+                - "L7 PR out latency negative"
                 type: str
             pr_in_latency_anomaly:
                 description:
-                - "PR in latency negative"
+                - "L7 PR on latency negative"
                 type: str
             kafka_topic_error:
                 description:
-                - "Telemetry dropped because kafka topic not created"
+                - "Module not supported by analytics"
                 type: str
             pc_encoding_failed:
                 description:
-                - "Telemetry exported via avro failed encoding"
+                - "L4 PC logs dropped,encoding error"
                 type: str
             pc_acos_harmony_topic:
                 description:
-                - "PC topic counter from acos to harmony"
+                - "L4 PC logs sent"
                 type: str
             pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "PC topic to harmony  dequeue error"
+                - "L4 PC logs dropped,enq error analytics queues"
                 type: str
             cgn_pc_acos_harmony_topic:
                 description:
-                - "CGN PC topic counter from acos to harmony"
+                - "CGN PC logs sent"
                 type: str
             cgn_pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "CGN PC topic to harmony dequeue error"
+                - "CGN PC logs dropped,enq error analytics queues"
                 type: str
             cgn_pe_acos_harmony_topic:
                 description:
-                - "CGN PE topic counter from acos to harmony"
+                - "CGN PE logs sent"
                 type: str
             cgn_pe_acos_harmony_topic_dequeue_err:
                 description:
-                - "CGN PE topic to harmony dequeue error"
+                - "CGN PE logs dropped,enq error analytics queues"
                 type: str
             fw_pc_acos_harmony_topic:
                 description:
-                - "FW PC topic counter from acos to harmony"
+                - "FW PC logs sent"
                 type: str
             fw_pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "FW PC topic to harmony dequeue error"
+                - "FW PC logs dropped,enq error analytics queues"
                 type: str
             fw_deny_pc_acos_harmony_topic:
                 description:
-                - "FW DENY PC topic counter from acos to harmony"
+                - "FW DENY PC logs sent"
                 type: str
             fw_deny_pc_acos_harmony_topic_dequeue_err:
                 description:
@@ -295,39 +318,39 @@ options:
                 type: str
             fw_rst_pc_acos_harmony_topic:
                 description:
-                - "FW RST PC topic counter from acos to harmony"
+                - "FW RST PC logs sent"
                 type: str
             fw_rst_pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "FW RST PC topic to harmony dequeue error"
+                - "FW RST PC logs dropped,enq error analytics queues"
                 type: str
             cgn_summary_error_acos_harmony_topic:
                 description:
-                - "CGN Summary PE topic counter from acos to harmony"
+                - "CGN PE logs sent"
                 type: str
             cgn_summary_error_acos_harmony_topic_dequeue_err:
                 description:
-                - "CGN Summary PE topic to harmony dequeue error"
+                - "CGN PE logs dropped,enq error analytics queues"
                 type: str
             rule_set_application_metrics_topic:
                 description:
-                - "AppFW metrics from acos to harmony"
+                - "AppFW metrics sent"
                 type: str
             rule_set_application_metrics_topic_dequeue_err:
                 description:
-                - "AppFW metrics dequeue error"
+                - "AppFW metrics dropped,enq error analytics queues"
                 type: str
             slb_ssl_stats_metrics_topic:
                 description:
-                - "SSL stats metrics from acos to harmony"
+                - "SSL metrics sent"
                 type: str
             slb_ssl_stats_metrics_topic_dequeue_err:
                 description:
-                - "SSL stats metrics dequeue error"
+                - "SSL metrics dropped,enq error analytics queues"
                 type: str
             slb_client_ssl_counters_metrics_topic:
                 description:
-                - "Client SSL counters metrics from acos to harmony"
+                - "Client SSL metrics sent"
                 type: str
             slb_client_ssl_counters_metrics_topic_dequeue_err:
                 description:
@@ -335,7 +358,7 @@ options:
                 type: str
             slb_server_ssl_counters_metrics_topic:
                 description:
-                - "Server SSL counters metrics from acos to harmony"
+                - "Server SSL metrics sent"
                 type: str
             slb_server_ssl_counters_metrics_topic_dequeue_err:
                 description:
@@ -343,11 +366,11 @@ options:
                 type: str
             pc_throttle_drop:
                 description:
-                - "PC drop due to throttling"
+                - "L4 PC logs dropped,throttling"
                 type: str
             metrics_dropped_pt_missing:
                 description:
-                - "Partition-Tenant mapping not saved on HC"
+                - "Metrics dropped,missing partition tenant mapping"
                 type: str
             ssli_pc_acos_harmony_topic:
                 description:
@@ -368,6 +391,118 @@ options:
             analytics_bus_restart:
                 description:
                 - "Analytics bus restart count"
+                type: str
+            waf_learn_pr_topic:
+                description:
+                - "WAF learn topic counter"
+                type: str
+            waf_learn_pr_topic_dequeue_err:
+                description:
+                - "WAF learn metrics dropped,enq error analytics qs"
+                type: str
+            waf_events_topic:
+                description:
+                - "WAF events topic counter"
+                type: str
+            waf_events_topic_dequeue_err:
+                description:
+                - "WAF events metrics dropped,enq error analytics qs"
+                type: str
+            visibility_topn_harmony_topic:
+                description:
+                - "Visibility TopN sent"
+                type: str
+            visibility_topn_harmony_topic_dequeue_err:
+                description:
+                - "Visibility TopN metrics dropped,enq error analytics qs"
+                type: str
+            hc_logs_sent_to_master:
+                description:
+                - "HC logs sent to master"
+                type: str
+            hc_logs_received_from_blade:
+                description:
+                - "HC logs received from blade"
+                type: str
+            hc_oper_sent_to_master:
+                description:
+                - "HC oper to master"
+                type: str
+            hc_oper_received_from_blade:
+                description:
+                - "HC oper received from blade"
+                type: str
+            hc_counters_sent_to_master:
+                description:
+                - "HC counters sent to master"
+                type: str
+            hc_counters_received_from_blade:
+                description:
+                - "HC counters received from blade"
+                type: str
+            hc_counters_dropped_from_blade:
+                description:
+                - "HC counters dropped from blade (uuid or size mismatch)"
+                type: str
+            pe_acos_harmony_topic:
+                description:
+                - "L7 PE logs sent"
+                type: str
+            pe_acos_harmony_topic_enqueue_err:
+                description:
+                - "L7 PE dropped,enq error on acos queues"
+                type: str
+            pe_acos_harmony_topic_dequeue_err:
+                description:
+                - "L7 PE dropped,enq error analytics queues"
+                type: str
+            vpn_ipsec_sa_metrics_topic:
+                description:
+                - "IPSec SA metrics sent"
+                type: str
+            vpn_ipsec_sa_metrics_topic_dequeue_err:
+                description:
+                - "IPSec SA metrics dropped,enq error analytics qs"
+                type: str
+            vpn_ike_gateway_metrics_topic:
+                description:
+                - "IKE gateway metrics sent"
+                type: str
+            vpn_ike_gateway_metrics_topic_dequeue_err:
+                description:
+                - "IKE gateway metrics dropped,enq error analytics qs"
+                type: str
+            vpn_stats_metrics_topic:
+                description:
+                - "VPN STATS metrics sent"
+                type: str
+            vpn_stats_metrics_topic_dequeue_err:
+                description:
+                - "VPN STATS metrics dropped,enq error analytics qs"
+                type: str
+            cgn_port_usage_hstgrm_acos_harmony_topic:
+                description:
+                - "CGN Port Usage Histogram HC Export"
+                type: str
+            cgn_port_usage_hstgrm_acos_harmony_topic_dequeue_err:
+                description:
+                - "CGN Port Usage Histogram HC Export Failed"
+                type: str
+            avro_system_env_topic:
+                description:
+                - "System environment sent"
+                type: str
+            avro_system_env_dequeue_err:
+                description:
+                - "System Environmet dropped,enq error analytics queues"
+                type: str
+            cert_pinning_list_topic:
+                description:
+                - "Cert-pinning candidate list sent"
+                type: str
+            cert_pinning_list_topic_dequeue_err:
+                description:
+                - "Cert-pinning candidate list dropped,enq error analytics queues"
                 type: str
 
 '''
@@ -521,7 +656,29 @@ def get_argspec():
                     'ssli-pc-acos-harmony-topic-dequeue-err',
                     'ssli-pe-acos-harmony-topic',
                     'ssli-pe-acos-harmony-topic-dequeue-err',
-                    'analytics-bus-restart'
+                    'analytics-bus-restart', 'waf-learn-pr-topic',
+                    'waf-learn-pr-topic-dequeue-err', 'waf-events-topic',
+                    'waf-events-topic-dequeue-err',
+                    'visibility-topn-harmony-topic',
+                    'visibility-topn-harmony-topic-dequeue-err',
+                    'hc-logs-sent-to-master', 'hc-logs-received-from-blade',
+                    'hc-oper-sent-to-master', 'hc-oper-received-from-blade',
+                    'hc-counters-sent-to-master',
+                    'hc-counters-received-from-blade',
+                    'hc-counters-dropped-from-blade', 'pe-acos-harmony-topic',
+                    'pe-acos-harmony-topic-enqueue-err',
+                    'pe-acos-harmony-topic-dequeue-err',
+                    'vpn-ipsec-sa-metrics-topic',
+                    'vpn-ipsec-sa-metrics-topic-dequeue-err',
+                    'vpn-ike-gateway-metrics-topic',
+                    'vpn-ike-gateway-metrics-topic-dequeue-err',
+                    'vpn-stats-metrics-topic',
+                    'vpn-stats-metrics-topic-dequeue-err',
+                    'cgn-port-usage-hstgrm-acos-harmony-topic',
+                    'cgn-port-usage-hstgrm-acos-harmony-topic-dequeue-err',
+                    'avro-system-env-topic', 'avro-system-env-dequeue-err',
+                    'cert-pinning-list-topic',
+                    'cert-pinning-list-topic-dequeue-err'
                 ]
             }
         },
@@ -694,6 +851,90 @@ def get_argspec():
                 'type': 'str',
             },
             'analytics_bus_restart': {
+                'type': 'str',
+            },
+            'waf_learn_pr_topic': {
+                'type': 'str',
+            },
+            'waf_learn_pr_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'waf_events_topic': {
+                'type': 'str',
+            },
+            'waf_events_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'visibility_topn_harmony_topic': {
+                'type': 'str',
+            },
+            'visibility_topn_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'hc_logs_sent_to_master': {
+                'type': 'str',
+            },
+            'hc_logs_received_from_blade': {
+                'type': 'str',
+            },
+            'hc_oper_sent_to_master': {
+                'type': 'str',
+            },
+            'hc_oper_received_from_blade': {
+                'type': 'str',
+            },
+            'hc_counters_sent_to_master': {
+                'type': 'str',
+            },
+            'hc_counters_received_from_blade': {
+                'type': 'str',
+            },
+            'hc_counters_dropped_from_blade': {
+                'type': 'str',
+            },
+            'pe_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'pe_acos_harmony_topic_enqueue_err': {
+                'type': 'str',
+            },
+            'pe_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'vpn_ipsec_sa_metrics_topic': {
+                'type': 'str',
+            },
+            'vpn_ipsec_sa_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'vpn_ike_gateway_metrics_topic': {
+                'type': 'str',
+            },
+            'vpn_ike_gateway_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'vpn_stats_metrics_topic': {
+                'type': 'str',
+            },
+            'vpn_stats_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_port_usage_hstgrm_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'cgn_port_usage_hstgrm_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'avro_system_env_topic': {
+                'type': 'str',
+            },
+            'avro_system_env_dequeue_err': {
+                'type': 'str',
+            },
+            'cert_pinning_list_topic': {
+                'type': 'str',
+            },
+            'cert_pinning_list_topic_dequeue_err': {
                 'type': 'str',
             }
         }

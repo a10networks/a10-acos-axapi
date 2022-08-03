@@ -84,11 +84,14 @@ options:
           triggered by aFleX; 'bypass-cert-subject-sessions'= Bypass Cert Subject
           sessions; 'bypass-cert-issuer-sessions'= Bypass Cert issuer sessions; 'bypass-
           cert-san-sessions'= Bypass Cert SAN sessions; 'bypass-no-sni-sessions'= Bypass
-          NO SNI sessions; 'reset-no-sni-sessions'= Reset No SNI sessions; 'bypass-
-          username-sessions'= Bypass Username sessions; 'bypass-ad-group-sessions'=
-          Bypass AD-group sessions; 'cert_in_cache'= Certificates in cache;
-          'tot_conn_in_buff'= Total buffered async connections; 'curr_conn_in_buff'=
-          Current buffered async connections;"
+          NO SNI sessions; 'reset-no-sni-sessions'= Reset No SNI sessions; 'bypass-esni-
+          sessions'= Bypass ESNI sessions; 'drop-esni-sessions'= Drop ESNI sessions;
+          'bypass-username-sessions'= Bypass Username sessions; 'bypass-ad-group-
+          sessions'= Bypass AD-group sessions; 'tot_conn_in_buff'= Total buffered async
+          connections; 'curr_conn_in_buff'= Current buffered async connections;
+          'async_conn_timeout'= SSLi Async connections failures due to timeout;
+          'async_conn_limit_drop'= SSLi Async connections failures due to limit;
+          'cert_in_cache'= Certificates in cache used by HC SSLi App;"
                 type: str
     stats:
         description:
@@ -196,6 +199,14 @@ options:
                 description:
                 - "Reset No SNI sessions"
                 type: str
+            bypass_esni_sessions:
+                description:
+                - "Bypass ESNI sessions"
+                type: str
+            drop_esni_sessions:
+                description:
+                - "Drop ESNI sessions"
+                type: str
             bypass_username_sessions:
                 description:
                 - "Bypass Username sessions"
@@ -204,10 +215,6 @@ options:
                 description:
                 - "Bypass AD-group sessions"
                 type: str
-            cert_in_cache:
-                description:
-                - "Certificates in cache"
-                type: str
             tot_conn_in_buff:
                 description:
                 - "Total buffered async connections"
@@ -215,6 +222,18 @@ options:
             curr_conn_in_buff:
                 description:
                 - "Current buffered async connections"
+                type: str
+            async_conn_timeout:
+                description:
+                - "SSLi Async connections failures due to timeout"
+                type: str
+            async_conn_limit_drop:
+                description:
+                - "SSLi Async connections failures due to limit"
+                type: str
+            cert_in_cache:
+                description:
+                - "Certificates in cache used by HC SSLi App"
                 type: str
 
 '''
@@ -324,8 +343,11 @@ def get_argspec():
                     'bypass-cert-subject-sessions',
                     'bypass-cert-issuer-sessions', 'bypass-cert-san-sessions',
                     'bypass-no-sni-sessions', 'reset-no-sni-sessions',
+                    'bypass-esni-sessions', 'drop-esni-sessions',
                     'bypass-username-sessions', 'bypass-ad-group-sessions',
-                    'cert_in_cache', 'tot_conn_in_buff', 'curr_conn_in_buff'
+                    'tot_conn_in_buff', 'curr_conn_in_buff',
+                    'async_conn_timeout', 'async_conn_limit_drop',
+                    'cert_in_cache'
                 ]
             }
         },
@@ -406,19 +428,31 @@ def get_argspec():
             'reset_no_sni_sessions': {
                 'type': 'str',
             },
+            'bypass_esni_sessions': {
+                'type': 'str',
+            },
+            'drop_esni_sessions': {
+                'type': 'str',
+            },
             'bypass_username_sessions': {
                 'type': 'str',
             },
             'bypass_ad_group_sessions': {
                 'type': 'str',
             },
-            'cert_in_cache': {
-                'type': 'str',
-            },
             'tot_conn_in_buff': {
                 'type': 'str',
             },
             'curr_conn_in_buff': {
+                'type': 'str',
+            },
+            'async_conn_timeout': {
+                'type': 'str',
+            },
+            'async_conn_limit_drop': {
+                'type': 'str',
+            },
+            'cert_in_cache': {
                 'type': 'str',
             }
         }

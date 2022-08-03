@@ -106,6 +106,20 @@ options:
                 description:
                 - "Define a VRRP-A VRID leader"
                 type: str
+    pair_follow:
+        description:
+        - "Field pair_follow"
+        type: dict
+        required: False
+        suboptions:
+            pair_follow:
+                description:
+                - "Follow other VRRP-A vrid"
+                type: bool
+            vrid_lead:
+                description:
+                - "Define a VRRP-A VRID leader"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -175,10 +189,22 @@ options:
             force_standby:
                 description:
                 - "Field force_standby"
-                type: int
+                type: str
+            init_status:
+                description:
+                - "Field init_status"
+                type: str
             became_active:
                 description:
                 - "Field became_active"
+                type: str
+            vrid_lead:
+                description:
+                - "Field vrid_lead"
+                type: str
+            active_standby_local:
+                description:
+                - "Field active_standby_local"
                 type: str
             peer_list:
                 description:
@@ -269,6 +295,7 @@ AVAILABLE_PROPERTIES = [
     "floating_ip",
     "follow",
     "oper",
+    "pair_follow",
     "preempt_mode",
     "sampling_enable",
     "stats",
@@ -363,6 +390,15 @@ def get_argspec():
         },
         'follow': {
             'type': 'dict',
+            'vrid_lead': {
+                'type': 'str',
+            }
+        },
+        'pair_follow': {
+            'type': 'dict',
+            'pair_follow': {
+                'type': 'bool',
+            },
             'vrid_lead': {
                 'type': 'str',
             }
@@ -545,24 +581,39 @@ def get_argspec():
                 'type': 'int',
             },
             'force_standby': {
-                'type': 'int',
+                'type': 'str',
+            },
+            'init_status': {
+                'type': 'str',
             },
             'became_active': {
                 'type': 'str',
             },
+            'vrid_lead': {
+                'type': 'str',
+            },
+            'active_standby_local': {
+                'type': 'str',
+            },
             'peer_list': {
                 'type': 'list',
-                'peer_unit': {
-                    'type': 'int',
-                },
                 'peer_state': {
                     'type': 'str',
                     'choices': ['Active', 'Standby']
+                },
+                'peer_unit': {
+                    'type': 'int',
                 },
                 'peer_weight': {
                     'type': 'int',
                 },
                 'peer_priority': {
+                    'type': 'int',
+                },
+                'active_standby_peer': {
+                    'type': 'str',
+                },
+                'peer_vrid': {
                     'type': 'int',
                 }
             },

@@ -240,6 +240,34 @@ options:
                 description:
                 - "Field check_inside_user"
                 type: bool
+            rev_dest_teid:
+                description:
+                - "Field rev_dest_teid"
+                type: int
+            msisdn:
+                description:
+                - "Field msisdn"
+                type: bool
+            msisdn_val:
+                description:
+                - "Field msisdn_val"
+                type: str
+            imsi:
+                description:
+                - "Field imsi"
+                type: bool
+            imsi_val:
+                description:
+                - "Field imsi_val"
+                type: str
+            gtp_msg_type:
+                description:
+                - "Field gtp_msg_type"
+                type: str
+            gtp_version:
+                description:
+                - "Field gtp_version"
+                type: str
             full_width:
                 description:
                 - "Field full_width"
@@ -443,6 +471,9 @@ def get_argspec():
                     'ext_field_val': {
                         'type': 'str',
                     }
+                },
+                'dns_id': {
+                    'type': 'int',
                 }
             },
             'total_sessions': {
@@ -463,7 +494,7 @@ def get_argspec():
                     'local', 'fw', 'clear-all', 'full-width', 'debug',
                     'application', 'ipsec', 'diameter', 'zone',
                     'source-port-rate-limit', 'source-port-rate-limitv4',
-                    'source-port-rate-limitv6'
+                    'source-port-rate-limitv6', 'gtp'
                 ]
             },
             'src_ipv4_addr': {
@@ -564,6 +595,27 @@ def get_argspec():
             'check_inside_user': {
                 'type': 'bool',
             },
+            'rev_dest_teid': {
+                'type': 'int',
+            },
+            'msisdn': {
+                'type': 'bool',
+            },
+            'msisdn_val': {
+                'type': 'str',
+            },
+            'imsi': {
+                'type': 'bool',
+            },
+            'imsi_val': {
+                'type': 'str',
+            },
+            'gtp_msg_type': {
+                'type': 'str',
+            },
+            'gtp_version': {
+                'type': 'str',
+            },
             'full_width': {
                 'type': 'bool',
             },
@@ -586,6 +638,9 @@ def get_argspec():
                             'type': 'int',
                         },
                         'cpu_round_robin_fail': {
+                            'type': 'int',
+                        },
+                        'alloc_exceed': {
                             'type': 'int',
                         }
                     }

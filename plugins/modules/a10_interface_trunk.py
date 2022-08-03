@@ -87,9 +87,19 @@ options:
           (Default= 10))"
         type: int
         required: False
+    use_hw_hash:
+        description:
+        - "Enable HW based load balacing decision rule"
+        type: bool
+        required: False
     do_auto_recovery:
         description:
         - "(Only for LACP trunks) Attempt auto-recovery after ports-treshold is triggered"
+        type: bool
+        required: False
+    sync_modify_disable:
+        description:
+        - "Disable SYNC bit modify for ports-threshold do-auto-recovery"
         type: bool
         required: False
     trap_source:
@@ -156,6 +166,27 @@ options:
                 description:
                 - "Apply an access list (Named Access List)"
                 type: str
+    virtual_wire:
+        description:
+        - "Mark trunk as a virtual wire interface"
+        type: bool
+        required: False
+    update_l2_info:
+        description:
+        - "Update and use received L2 information"
+        type: bool
+        required: False
+    vlan_learning:
+        description:
+        - "'enable'= Enable VLAN learning; 'disable'= Disable VLAN learning;"
+        type: str
+        required: False
+    mac_learning:
+        description:
+        - "'enable'= Enable MAC learning; 'disable'= Disable MAC learning; 'dmac-only'=
+          Enable destination MAC learning only;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -174,14 +205,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num_pkts'= num_pkts; 'num_total_bytes'= num_total_bytes;
-          'num_unicast_pkts'= num_unicast_pkts; 'num_broadcast_pkts'= num_broadcast_pkts;
-          'num_multicast_pkts'= num_multicast_pkts; 'num_tx_pkts'= num_tx_pkts;
-          'num_total_tx_bytes'= num_total_tx_bytes; 'num_unicast_tx_pkts'=
-          num_unicast_tx_pkts; 'num_broadcast_tx_pkts'= num_broadcast_tx_pkts;
-          'num_multicast_tx_pkts'= num_multicast_tx_pkts; 'dropped_dis_rx_pkts'=
-          dropped_dis_rx_pkts; 'dropped_rx_pkts'= dropped_rx_pkts; 'dropped_dis_tx_pkts'=
-          dropped_dis_tx_pkts; 'dropped_tx_pkts'= dropped_tx_pkts;"
+                - "'all'= all; 'num_pkts'= some help string; 'num_total_bytes'= some help string;
+          'num_unicast_pkts'= some help string; 'num_broadcast_pkts'= some help string;
+          'num_multicast_pkts'= some help string; 'num_tx_pkts'= some help string;
+          'num_total_tx_bytes'= some help string; 'num_unicast_tx_pkts'= some help
+          string; 'num_broadcast_tx_pkts'= some help string; 'num_multicast_tx_pkts'=
+          some help string; 'dropped_dis_rx_pkts'= some help string; 'dropped_rx_pkts'=
+          some help string; 'dropped_dis_tx_pkts'= some help string; 'dropped_tx_pkts'=
+          some help string;"
                 type: str
     ip:
         description:
@@ -224,6 +255,10 @@ options:
             ttl_ignore:
                 description:
                 - "Ignore TTL decrement for a received packet"
+                type: bool
+            syn_cookie:
+                description:
+                - "Enable SYN-cookie on the interface"
                 type: bool
             slb_partition_redirect:
                 description:
@@ -486,6 +521,32 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    spanning_tree:
+        description:
+        - "Field spanning_tree"
+        type: dict
+        required: False
+        suboptions:
+            auto_edge:
+                description:
+                - "Enable auto-edge"
+                type: bool
+            admin_edge:
+                description:
+                - "Enable admin-edge"
+                type: bool
+            instance_list:
+                description:
+                - "Field instance_list"
+                type: list
+            path_cost:
+                description:
+                - "Path cost (Limit)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -576,6 +637,22 @@ options:
                 description:
                 - "Field vlan_id"
                 type: int
+            ip_unnumbered_oper:
+                description:
+                - "Field ip_unnumbered_oper"
+                type: int
+            ip_unnumbered_enabled:
+                description:
+                - "Field ip_unnumbered_enabled"
+                type: int
+            ip_unnumbered_mac_learned:
+                description:
+                - "Field ip_unnumbered_mac_learned"
+                type: int
+            ip_unnumbered_peer_lla:
+                description:
+                - "Field ip_unnumbered_peer_lla"
+                type: str
             ifnum:
                 description:
                 - "Trunk interface number"
@@ -588,59 +665,59 @@ options:
         suboptions:
             num_pkts:
                 description:
-                - "Field num_pkts"
+                - "some help string"
                 type: str
             num_total_bytes:
                 description:
-                - "Field num_total_bytes"
+                - "some help string"
                 type: str
             num_unicast_pkts:
                 description:
-                - "Field num_unicast_pkts"
+                - "some help string"
                 type: str
             num_broadcast_pkts:
                 description:
-                - "Field num_broadcast_pkts"
+                - "some help string"
                 type: str
             num_multicast_pkts:
                 description:
-                - "Field num_multicast_pkts"
+                - "some help string"
                 type: str
             num_tx_pkts:
                 description:
-                - "Field num_tx_pkts"
+                - "some help string"
                 type: str
             num_total_tx_bytes:
                 description:
-                - "Field num_total_tx_bytes"
+                - "some help string"
                 type: str
             num_unicast_tx_pkts:
                 description:
-                - "Field num_unicast_tx_pkts"
+                - "some help string"
                 type: str
             num_broadcast_tx_pkts:
                 description:
-                - "Field num_broadcast_tx_pkts"
+                - "some help string"
                 type: str
             num_multicast_tx_pkts:
                 description:
-                - "Field num_multicast_tx_pkts"
+                - "some help string"
                 type: str
             dropped_dis_rx_pkts:
                 description:
-                - "Field dropped_dis_rx_pkts"
+                - "some help string"
                 type: str
             dropped_rx_pkts:
                 description:
-                - "Field dropped_rx_pkts"
+                - "some help string"
                 type: str
             dropped_dis_tx_pkts:
                 description:
-                - "Field dropped_dis_tx_pkts"
+                - "some help string"
                 type: str
             dropped_tx_pkts:
                 description:
-                - "Field dropped_tx_pkts"
+                - "some help string"
                 type: str
             ifnum:
                 description:
@@ -714,6 +791,7 @@ AVAILABLE_PROPERTIES = [
     "isis",
     "l3_vlan_fwd_disable",
     "lw_4o6",
+    "mac_learning",
     "map",
     "mtu",
     "name",
@@ -721,11 +799,17 @@ AVAILABLE_PROPERTIES = [
     "oper",
     "ports_threshold",
     "sampling_enable",
+    "spanning_tree",
     "stats",
+    "sync_modify_disable",
     "timer",
     "trap_source",
+    "update_l2_info",
+    "use_hw_hash",
     "user_tag",
     "uuid",
+    "virtual_wire",
+    "vlan_learning",
 ]
 
 
@@ -773,7 +857,13 @@ def get_argspec():
         'timer': {
             'type': 'int',
         },
+        'use_hw_hash': {
+            'type': 'bool',
+        },
         'do_auto_recovery': {
+            'type': 'bool',
+        },
+        'sync_modify_disable': {
             'type': 'bool',
         },
         'trap_source': {
@@ -815,6 +905,20 @@ def get_argspec():
             'acl_name': {
                 'type': 'str',
             }
+        },
+        'virtual_wire': {
+            'type': 'bool',
+        },
+        'update_l2_info': {
+            'type': 'bool',
+        },
+        'vlan_learning': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'mac_learning': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'dmac-only']
         },
         'uuid': {
             'type': 'str',
@@ -879,6 +983,9 @@ def get_argspec():
                 }
             },
             'ttl_ignore': {
+                'type': 'bool',
+            },
+            'syn_cookie': {
                 'type': 'bool',
             },
             'slb_partition_redirect': {
@@ -1722,6 +1829,30 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'spanning_tree': {
+            'type': 'dict',
+            'auto_edge': {
+                'type': 'bool',
+            },
+            'admin_edge': {
+                'type': 'bool',
+            },
+            'instance_list': {
+                'type': 'list',
+                'instance_start': {
+                    'type': 'int',
+                },
+                'mstp_path_cost': {
+                    'type': 'int',
+                }
+            },
+            'path_cost': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
             'state': {
@@ -1807,6 +1938,18 @@ def get_argspec():
             },
             'vlan_id': {
                 'type': 'int',
+            },
+            'ip_unnumbered_oper': {
+                'type': 'int',
+            },
+            'ip_unnumbered_enabled': {
+                'type': 'int',
+            },
+            'ip_unnumbered_mac_learned': {
+                'type': 'int',
+            },
+            'ip_unnumbered_peer_lla': {
+                'type': 'str',
             },
             'ifnum': {
                 'type': 'int',

@@ -97,6 +97,21 @@ options:
         - "Source NAT pool or pool group for fallback server"
         type: str
         required: False
+    proxy_chaining:
+        description:
+        - "Enable proxy chaining feature"
+        type: bool
+        required: False
+    proxy_chaining_bypass:
+        description:
+        - "Forward all https packets to upstream proxy"
+        type: bool
+        required: False
+    support_cert_fetch:
+        description:
+        - "Fetch server certificate by upstream proxy"
+        type: bool
+        required: False
     log:
         description:
         - "enable logging"
@@ -223,9 +238,12 @@ AVAILABLE_PROPERTIES = [
     "http_status_code",
     "log",
     "name",
+    "proxy_chaining",
+    "proxy_chaining_bypass",
     "real_sg",
     "sampling_enable",
     "stats",
+    "support_cert_fetch",
     "user_tag",
     "uuid",
 ]
@@ -282,6 +300,15 @@ def get_argspec():
         },
         'fall_back_snat': {
             'type': 'str',
+        },
+        'proxy_chaining': {
+            'type': 'bool',
+        },
+        'proxy_chaining_bypass': {
+            'type': 'bool',
+        },
+        'support_cert_fetch': {
+            'type': 'bool',
         },
         'log': {
             'type': 'bool',

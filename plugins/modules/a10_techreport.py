@@ -60,6 +60,11 @@ options:
         - "Disable the polling techreport"
         type: bool
         required: False
+    hang_recover_time:
+        description:
+        - "The time to recover device after showtech hang (in minutes)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -178,6 +183,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "disable",
+    "hang_recover_time",
     "interval",
     "max_logfile_size",
     "max_partitions",
@@ -213,6 +219,9 @@ def get_argspec():
     rv.update({
         'disable': {
             'type': 'bool',
+        },
+        'hang_recover_time': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

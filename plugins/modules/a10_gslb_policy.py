@@ -413,6 +413,10 @@ options:
                 description:
                 - "Provide TXT Records"
                 type: bool
+            server_custom:
+                description:
+                - "Provide Custom Records"
+                type: bool
             server_any:
                 description:
                 - "Provide All Records"
@@ -1032,6 +1036,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'server_txt': {
+                'type': 'bool',
+            },
+            'server_custom': {
                 'type': 'bool',
             },
             'server_any': {

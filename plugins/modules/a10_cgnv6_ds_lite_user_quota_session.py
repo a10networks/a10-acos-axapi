@@ -122,6 +122,10 @@ options:
                 description:
                 - "Field top_by_all_usage"
                 type: bool
+            top_sort_by_cli:
+                description:
+                - "Field top_sort_by_cli"
+                type: bool
             display_debug:
                 description:
                 - "Field display_debug"
@@ -290,6 +294,9 @@ def get_argspec():
                 'type': 'bool',
             },
             'top_by_all_usage': {
+                'type': 'bool',
+            },
+            'top_sort_by_cli': {
                 'type': 'bool',
             },
             'display_debug': {

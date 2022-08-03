@@ -70,6 +70,11 @@ options:
         - "Specify IP address"
         type: str
         required: False
+    target_floating_ipv6:
+        description:
+        - "Specify IPv6 address"
+        type: str
+        required: False
     cancel_migration:
         description:
         - "Cancel migration"
@@ -155,6 +160,7 @@ AVAILABLE_PROPERTIES = [
     "oper",
     "target_data_cpu",
     "target_floating_ipv4",
+    "target_floating_ipv6",
     "uuid",
 ]
 
@@ -188,6 +194,9 @@ def get_argspec():
             'type': 'int',
         },
         'target_floating_ipv4': {
+            'type': 'str',
+        },
+        'target_floating_ipv6': {
             'type': 'str',
         },
         'cancel_migration': {

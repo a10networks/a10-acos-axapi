@@ -222,7 +222,37 @@ options:
           sent'= Custom Dslite Port Batch V2 Deletion Records Sent; 'custom-port-
           batching-v2-dslite-deletion-records-sent-failure'= Custom Dslite Port Batch V2
           Deletion Records Failed; 'reduced-logs-by-destination'= Reduced Logs by
-          Destination Protocol and Port;"
+          Destination Protocol and Port; 'custom-gtp-c-tunnel-event-records-sent'= Custom
+          GTP C Tunnel Records Sent; 'custom-gtp-c-tunnel-event-records-sent-failure'=
+          Custom GTP C Tunnel Records Sent Failure; 'custom-gtp-u-tunnel-event-records-
+          sent'= Custom GTP U Tunnel Records Sent; 'custom-gtp-u-tunnel-event-records-
+          sent-failure'= Custom GTP U Tunnel Records Sent Failure; 'custom-gtp-deny-
+          event-records-sent'= Custom GTP Deny Records Sent; 'custom-gtp-deny-event-
+          records-sent-failure'= Custom GTP Deny Records Sent Failure; 'custom-gtp-info-
+          event-records-sent'= Custom GTP Info Records Sent; 'custom-gtp-info-event-
+          records-sent-failure'= Custom GTP Info Records Sent Failure; 'custom-fw-iddos-
+          entry-created-records-sent'= Custom FW iDDoS Entry Created Records Sent;
+          'custom-fw-iddos-entry-created-records-sent-failure'= Custom FW iDDoS Entry
+          Created Records Sent Failure; 'custom-fw-iddos-entry-deleted-records-sent'=
+          Custom FW iDDoS Entry Deleted Records Sent; 'custom-fw-iddos-entry-deleted-
+          records-sent-failure'= Custom FW iDDoS Entry Deleted Records Sent Failure;
+          'custom-fw-sesn-limit-exceeded-records-sent'= Custom FW Session Limit Exceeded
+          Records Sent; 'custom-fw-sesn-limit-exceeded-records-sent-failure'= Custom FW
+          Session Limit Exceeded Records Sent Failure; 'custom-nat-iddos-l3-entry-
+          created-records-sent'= Custom NAT iDDoS L3 Entry Created Records Sent; 'custom-
+          nat-iddos-l3-entry-created-records-sent-failure'= Custom NAT iDDoS L3 Entry
+          Created Records Sent Failure; 'custom-nat-iddos-l3-entry-deleted-records-sent'=
+          Custom NAT iDDoS L3 Entry Deleted Records Sent; 'custom-nat-iddos-l3-entry-
+          deleted-records-sent-failure'= Custom NAT iDDoS L3 Entry Deleted Records Sent
+          Failure; 'custom-nat-iddos-l4-entry-created-records-sent'= Custom NAT iDDoS L4
+          Entry Created Records Sent; 'custom-nat-iddos-l4-entry-created-records-sent-
+          failure'= Custom NAT iDDoS L4 Entry Created Records Sent Failure; 'custom-nat-
+          iddos-l4-entry-deleted-records-sent'= Custom NAT iDDoS L4 Entry Deleted Records
+          Sent; 'custom-nat-iddos-l4-entry-deleted-records-sent-failure'= Custom NAT
+          iDDoS L4 Entry Deleted Records Sent Failure; 'custom-gtp-rate-limit-periodic-
+          records-sent'= Custom GTP Rate Limit Periodic Records Sent; 'custom-gtp-rate-
+          limit-periodic-records-sent-failure'= Custom GTP Rate Limit Periodic Records
+          Sent Failure;"
                 type: str
     disable_log_by_destination:
         description:
@@ -860,6 +890,102 @@ options:
                 description:
                 - "Reduced Logs by Destination Protocol and Port"
                 type: str
+            custom_gtp_c_tunnel_event_records_sent:
+                description:
+                - "Custom GTP C Tunnel Records Sent"
+                type: str
+            custom_gtp_c_tunnel_event_records_sent_failure:
+                description:
+                - "Custom GTP C Tunnel Records Sent Failure"
+                type: str
+            custom_gtp_u_tunnel_event_records_sent:
+                description:
+                - "Custom GTP U Tunnel Records Sent"
+                type: str
+            custom_gtp_u_tunnel_event_records_sent_failure:
+                description:
+                - "Custom GTP U Tunnel Records Sent Failure"
+                type: str
+            custom_gtp_deny_event_records_sent:
+                description:
+                - "Custom GTP Deny Records Sent"
+                type: str
+            custom_gtp_deny_event_records_sent_failure:
+                description:
+                - "Custom GTP Deny Records Sent Failure"
+                type: str
+            custom_gtp_info_event_records_sent:
+                description:
+                - "Custom GTP Info Records Sent"
+                type: str
+            custom_gtp_info_event_records_sent_failure:
+                description:
+                - "Custom GTP Info Records Sent Failure"
+                type: str
+            custom_fw_iddos_entry_created_records_sent:
+                description:
+                - "Custom FW iDDoS Entry Created Records Sent"
+                type: str
+            custom_fw_iddos_entry_created_records_sent_failure:
+                description:
+                - "Custom FW iDDoS Entry Created Records Sent Failure"
+                type: str
+            custom_fw_iddos_entry_deleted_records_sent:
+                description:
+                - "Custom FW iDDoS Entry Deleted Records Sent"
+                type: str
+            custom_fw_iddos_entry_deleted_records_sent_failure:
+                description:
+                - "Custom FW iDDoS Entry Deleted Records Sent Failure"
+                type: str
+            custom_fw_sesn_limit_exceeded_records_sent:
+                description:
+                - "Custom FW Session Limit Exceeded Records Sent"
+                type: str
+            custom_fw_sesn_limit_exceeded_records_sent_failure:
+                description:
+                - "Custom FW Session Limit Exceeded Records Sent Failure"
+                type: str
+            custom_nat_iddos_l3_entry_created_records_sent:
+                description:
+                - "Custom NAT iDDoS L3 Entry Created Records Sent"
+                type: str
+            custom_nat_iddos_l3_entry_created_records_sent_failure:
+                description:
+                - "Custom NAT iDDoS L3 Entry Created Records Sent Failure"
+                type: str
+            custom_nat_iddos_l3_entry_deleted_records_sent:
+                description:
+                - "Custom NAT iDDoS L3 Entry Deleted Records Sent"
+                type: str
+            custom_nat_iddos_l3_entry_deleted_records_sent_failure:
+                description:
+                - "Custom NAT iDDoS L3 Entry Deleted Records Sent Failure"
+                type: str
+            custom_nat_iddos_l4_entry_created_records_sent:
+                description:
+                - "Custom NAT iDDoS L4 Entry Created Records Sent"
+                type: str
+            custom_nat_iddos_l4_entry_created_records_sent_failure:
+                description:
+                - "Custom NAT iDDoS L4 Entry Created Records Sent Failure"
+                type: str
+            custom_nat_iddos_l4_entry_deleted_records_sent:
+                description:
+                - "Custom NAT iDDoS L4 Entry Deleted Records Sent"
+                type: str
+            custom_nat_iddos_l4_entry_deleted_records_sent_failure:
+                description:
+                - "Custom NAT iDDoS L4 Entry Deleted Records Sent Failure"
+                type: str
+            custom_gtp_rate_limit_periodic_records_sent:
+                description:
+                - "Custom GTP Rate Limit Periodic Records Sent"
+                type: str
+            custom_gtp_rate_limit_periodic_records_sent_failure:
+                description:
+                - "Custom GTP Rate Limit Periodic Records Sent Failure"
+                type: str
             name:
                 description:
                 - "Name of netflow monitor"
@@ -1094,7 +1220,31 @@ def get_argspec():
                     'custom-port-batching-v2-nat64-deletion-records-sent-failure',
                     'custom-port-batching-v2-dslite-deletion-records-sent',
                     'custom-port-batching-v2-dslite-deletion-records-sent-failure',
-                    'reduced-logs-by-destination'
+                    'reduced-logs-by-destination',
+                    'custom-gtp-c-tunnel-event-records-sent',
+                    'custom-gtp-c-tunnel-event-records-sent-failure',
+                    'custom-gtp-u-tunnel-event-records-sent',
+                    'custom-gtp-u-tunnel-event-records-sent-failure',
+                    'custom-gtp-deny-event-records-sent',
+                    'custom-gtp-deny-event-records-sent-failure',
+                    'custom-gtp-info-event-records-sent',
+                    'custom-gtp-info-event-records-sent-failure',
+                    'custom-fw-iddos-entry-created-records-sent',
+                    'custom-fw-iddos-entry-created-records-sent-failure',
+                    'custom-fw-iddos-entry-deleted-records-sent',
+                    'custom-fw-iddos-entry-deleted-records-sent-failure',
+                    'custom-fw-sesn-limit-exceeded-records-sent',
+                    'custom-fw-sesn-limit-exceeded-records-sent-failure',
+                    'custom-nat-iddos-l3-entry-created-records-sent',
+                    'custom-nat-iddos-l3-entry-created-records-sent-failure',
+                    'custom-nat-iddos-l3-entry-deleted-records-sent',
+                    'custom-nat-iddos-l3-entry-deleted-records-sent-failure',
+                    'custom-nat-iddos-l4-entry-created-records-sent',
+                    'custom-nat-iddos-l4-entry-created-records-sent-failure',
+                    'custom-nat-iddos-l4-entry-deleted-records-sent',
+                    'custom-nat-iddos-l4-entry-deleted-records-sent-failure',
+                    'custom-gtp-rate-limit-periodic-records-sent',
+                    'custom-gtp-rate-limit-periodic-records-sent-failure'
                 ]
             }
         },
@@ -1313,7 +1463,14 @@ def get_argspec():
                         'port-batch-v2-nat64-creation',
                         'port-batch-v2-nat64-deletion',
                         'port-batch-v2-dslite-creation',
-                        'port-batch-v2-dslite-deletion'
+                        'port-batch-v2-dslite-deletion', 'gtp-c-tunnel-event',
+                        'gtp-u-tunnel-event', 'gtp-deny-event',
+                        'gtp-info-event', 'fw-ddos-entry-creation',
+                        'fw-ddos-entry-deletion', 'fw-session-limit-exceeded',
+                        'cgn-ddos-l3-entry-creation',
+                        'cgn-ddos-l3-entry-deletion',
+                        'cgn-ddos-l4-entry-creation',
+                        'cgn-ddos-l4-entry-deletion', 'gtp-rate-limit-periodic'
                     ]
                 },
                 'ipfix_template': {
@@ -1711,6 +1868,78 @@ def get_argspec():
                 'type': 'str',
             },
             'reduced_logs_by_destination': {
+                'type': 'str',
+            },
+            'custom_gtp_c_tunnel_event_records_sent': {
+                'type': 'str',
+            },
+            'custom_gtp_c_tunnel_event_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_gtp_u_tunnel_event_records_sent': {
+                'type': 'str',
+            },
+            'custom_gtp_u_tunnel_event_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_gtp_deny_event_records_sent': {
+                'type': 'str',
+            },
+            'custom_gtp_deny_event_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_gtp_info_event_records_sent': {
+                'type': 'str',
+            },
+            'custom_gtp_info_event_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_fw_iddos_entry_created_records_sent': {
+                'type': 'str',
+            },
+            'custom_fw_iddos_entry_created_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_fw_iddos_entry_deleted_records_sent': {
+                'type': 'str',
+            },
+            'custom_fw_iddos_entry_deleted_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_fw_sesn_limit_exceeded_records_sent': {
+                'type': 'str',
+            },
+            'custom_fw_sesn_limit_exceeded_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l3_entry_created_records_sent': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l3_entry_created_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l3_entry_deleted_records_sent': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l3_entry_deleted_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l4_entry_created_records_sent': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l4_entry_created_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l4_entry_deleted_records_sent': {
+                'type': 'str',
+            },
+            'custom_nat_iddos_l4_entry_deleted_records_sent_failure': {
+                'type': 'str',
+            },
+            'custom_gtp_rate_limit_periodic_records_sent': {
+                'type': 'str',
+            },
+            'custom_gtp_rate_limit_periodic_records_sent_failure': {
                 'type': 'str',
             },
             'name': {

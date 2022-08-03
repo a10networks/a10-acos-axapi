@@ -168,6 +168,9 @@ def get_argspec():
                 'server_name': {
                     'type': 'str',
                 },
+                'server_port': {
+                    'type': 'int',
+                },
                 'overall_status': {
                     'type': 'int',
                 },

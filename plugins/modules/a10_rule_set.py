@@ -92,6 +92,11 @@ options:
                 - "'all'= all; 'unmatched-drops'= Unmatched drops counter; 'permit'= Permitted
           counter; 'deny'= Denied counter; 'reset'= Reset counter;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     rule_list:
         description:
         - "Field rule_list"
@@ -109,6 +114,10 @@ options:
             status:
                 description:
                 - "'enable'= Enable rule; 'disable'= Disable rule;"
+                type: str
+            ip_version:
+                description:
+                - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
                 type: str
             action:
                 description:
@@ -128,7 +137,12 @@ options:
                 type: bool
             policy:
                 description:
-                - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet;"
+                - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet; 'ipsec'= Apply IPsec
+          encapsulation;"
+                type: str
+            vpn_ipsec_name:
+                description:
+                - "VPN IPsec name"
                 type: str
             forward_listen_on_port:
                 description:
@@ -172,7 +186,8 @@ options:
                 type: bool
             cgnv6_policy:
                 description:
-                - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT;"
+                - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT;
+          'ds-lite'= Apply CGNv6 DS-Lite;"
                 type: str
             cgnv6_fixed_nat_log:
                 description:
@@ -182,13 +197,29 @@ options:
                 description:
                 - "LSN LID"
                 type: int
+            cgnv6_ds_lite:
+                description:
+                - "'lsn-lid'= Apply specified CGNv6 LSN LID;"
+                type: str
+            cgnv6_ds_lite_lsn_lid:
+                description:
+                - "LSN LID"
+                type: int
+            inspect_payload:
+                description:
+                - "Enable DS-Lite tunnel inspection"
+                type: bool
+            cgnv6_ds_lite_log:
+                description:
+                - "Enable logging"
+                type: bool
             cgnv6_lsn_log:
                 description:
                 - "Enable logging"
                 type: bool
-            ip_version:
+            gtp_template:
                 description:
-                - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
+                - "Configure GTP Policy Template (GTP Template Policy Name)"
                 type: str
             src_class_list:
                 description:
@@ -286,6 +317,10 @@ options:
                 description:
                 - "TCP/UDP idle-timeout"
                 type: int
+            dscp_list:
+                description:
+                - "Field dscp_list"
+                type: list
             application_any:
                 description:
                 - "'any'= any;"
@@ -310,6 +345,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            action_group:
+                description:
+                - "Field action_group"
+                type: dict
             move_rule:
                 description:
                 - "Field move_rule"
@@ -587,6 +626,7 @@ AVAILABLE_PROPERTIES = [
     "application",
     "name",
     "oper",
+    "packet_capture_template",
     "remark",
     "rule_list",
     "rules_by_zone",
@@ -650,6 +690,9 @@ def get_argspec():
                 ['all', 'unmatched-drops', 'permit', 'deny', 'reset']
             }
         },
+        'packet_capture_template': {
+            'type': 'str',
+        },
         'rule_list': {
             'type': 'list',
             'name': {
@@ -662,6 +705,10 @@ def get_argspec():
             'status': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
+            },
+            'ip_version': {
+                'type': 'str',
+                'choices': ['v4', 'v6']
             },
             'action': {
                 'type': 'str',
@@ -678,7 +725,10 @@ def get_argspec():
             },
             'policy': {
                 'type': 'str',
-                'choices': ['cgnv6', 'forward']
+                'choices': ['cgnv6', 'forward', 'ipsec']
+            },
+            'vpn_ipsec_name': {
+                'type': 'str',
             },
             'forward_listen_on_port': {
                 'type': 'bool',
@@ -712,7 +762,7 @@ def get_argspec():
             },
             'cgnv6_policy': {
                 'type': 'str',
-                'choices': ['lsn-lid', 'fixed-nat']
+                'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']
             },
             'cgnv6_fixed_nat_log': {
                 'type': 'bool',
@@ -720,12 +770,24 @@ def get_argspec():
             'cgnv6_lsn_lid': {
                 'type': 'int',
             },
+            'cgnv6_ds_lite': {
+                'type': 'str',
+                'choices': ['lsn-lid']
+            },
+            'cgnv6_ds_lite_lsn_lid': {
+                'type': 'int',
+            },
+            'inspect_payload': {
+                'type': 'bool',
+            },
+            'cgnv6_ds_lite_log': {
+                'type': 'bool',
+            },
             'cgnv6_lsn_log': {
                 'type': 'bool',
             },
-            'ip_version': {
+            'gtp_template': {
                 'type': 'str',
-                'choices': ['v4', 'v6']
             },
             'src_class_list': {
                 'type': 'str',
@@ -935,14 +997,30 @@ def get_argspec():
                 },
                 'alg': {
                     'type': 'str',
-                    'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP']
-                },
-                'gtp_template': {
-                    'type': 'str',
+                    'choices':
+                    ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP', 'ESP']
                 }
             },
             'idle_timeout': {
                 'type': 'int',
+            },
+            'dscp_list': {
+                'type': 'list',
+                'dscp_value': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
+                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
+                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef'
+                    ]
+                },
+                'dscp_range_start': {
+                    'type': 'int',
+                },
+                'dscp_range_end': {
+                    'type': 'int',
+                }
             },
             'application_any': {
                 'type': 'str',
@@ -961,24 +1039,26 @@ def get_argspec():
                     'str',
                     'choices': [
                         'aaa', 'adult-content', 'advertising',
+                        'application-enforcing-tls',
                         'analytics-and-statistics', 'anonymizers-and-proxies',
-                        'audio-chat', 'basic', 'blog', 'cdn', 'chat',
-                        'classified-ads', 'cloud-based-services',
-                        'crowdfunding', 'cryptocurrency', 'database',
-                        'disposable-email', 'ebook-reader', 'email',
-                        'enterprise', 'file-management', 'file-transfer',
-                        'forum', 'gaming',
+                        'audio-chat', 'basic', 'blog', 'cdn',
+                        'certification-authority', 'chat', 'classified-ads',
+                        'cloud-based-services', 'crowdfunding',
+                        'cryptocurrency', 'database', 'disposable-email',
+                        'ebook-reader', 'education', 'email', 'enterprise',
+                        'file-management', 'file-transfer', 'forum', 'gaming',
+                        'healthcare',
                         'instant-messaging-and-multimedia-conferencing',
-                        'internet-of-things', 'mobile', 'map-service',
+                        'internet-of-things', 'map-service', 'mobile',
                         'multimedia-streaming', 'networking', 'news-portal',
-                        'peer-to-peer', 'remote-access', 'scada',
-                        'social-networks', 'software-update',
-                        'standards-based', 'transportation', 'video-chat',
-                        'voip', 'vpn-tunnels', 'web', 'web-e-commerce',
-                        'web-search-engines', 'web-websites', 'webmails',
-                        'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs',
-                        'web-ext-business-and-economy', 'web-ext-cdns',
-                        'web-ext-collaboration',
+                        'payment-service', 'peer-to-peer', 'remote-access',
+                        'scada', 'social-networks', 'software-update',
+                        'speedtest', 'standards-based', 'transportation',
+                        'video-chat', 'voip', 'vpn-tunnels', 'web',
+                        'web-e-commerce', 'web-search-engines', 'web-websites',
+                        'webmails', 'web-ext-adult', 'web-ext-auctions',
+                        'web-ext-blogs', 'web-ext-business-and-economy',
+                        'web-ext-cdns', 'web-ext-collaboration',
                         'web-ext-computer-and-internet-info',
                         'web-ext-computer-and-internet-security',
                         'web-ext-dating', 'web-ext-educational-institutions',
@@ -1027,8 +1107,69 @@ def get_argspec():
                         'active-session-udp', 'active-session-icmp',
                         'active-session-other', 'session-tcp', 'session-udp',
                         'session-icmp', 'session-other', 'active-session-sctp',
-                        'session-sctp', 'hitcount-timestamp'
+                        'session-sctp', 'hitcount-timestamp',
+                        'rate-limit-drops'
                     ]
+                }
+            },
+            'action_group': {
+                'type': 'dict',
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['permit', 'deny', 'reset']
+                },
+                'permit_log': {
+                    'type': 'bool',
+                },
+                'reset_log': {
+                    'type': 'bool',
+                },
+                'deny_log': {
+                    'type': 'bool',
+                },
+                'listen_on_port': {
+                    'type': 'bool',
+                },
+                'forward': {
+                    'type': 'bool',
+                },
+                'ipsec': {
+                    'type': 'bool',
+                },
+                'vpn_ipsec_name': {
+                    'type': 'str',
+                },
+                'cgnv6': {
+                    'type': 'bool',
+                },
+                'cgnv6_policy': {
+                    'type': 'str',
+                    'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']
+                },
+                'cgnv6_lsn_lid': {
+                    'type': 'int',
+                },
+                'cgnv6_ds_lite': {
+                    'type': 'str',
+                    'choices': ['lsn-lid']
+                },
+                'cgnv6_ds_lite_lsn_lid': {
+                    'type': 'int',
+                },
+                'inspect_payload': {
+                    'type': 'bool',
+                },
+                'permit_limit_policy': {
+                    'type': 'int',
+                },
+                'permit_respond_to_user_mac': {
+                    'type': 'bool',
+                },
+                'reset_respond_to_user_mac': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
                 }
             },
             'move_rule': {
@@ -1242,6 +1383,9 @@ def get_argspec():
                     },
                     'sessiontotal': {
                         'type': 'int',
+                    },
+                    'ratelimitdrops': {
+                        'type': 'int',
                     }
                 }
             },
@@ -1280,6 +1424,12 @@ def get_argspec():
                             'service_list': {
                                 'type': 'list',
                                 'service': {
+                                    'type': 'str',
+                                }
+                            },
+                            'dscp_list': {
+                                'type': 'list',
+                                'dscp': {
                                     'type': 'str',
                                 }
                             }
@@ -1417,6 +1567,9 @@ def get_argspec():
                         'type': 'str',
                     },
                     'hitcount_timestamp': {
+                        'type': 'str',
+                    },
+                    'rate_limit_drops': {
                         'type': 'str',
                     }
                 }

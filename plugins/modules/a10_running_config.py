@@ -60,6 +60,11 @@ options:
         - "Show aFleX scripts"
         type: bool
         required: False
+    class_list:
+        description:
+        - "Show class-list files"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -121,6 +126,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "aflex",
+    "class_list",
     "uuid",
 ]
 
@@ -151,6 +157,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update({
         'aflex': {
+            'type': 'bool',
+        },
+        'class_list': {
             'type': 'bool',
         },
         'uuid': {

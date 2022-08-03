@@ -70,15 +70,15 @@ options:
         - "Config admin user password"
         type: str
         required: False
+    encrypted:
+        description:
+        - "Specify an ENCRYPTED password string (System admin user password)"
+        type: str
+        required: False
     action:
         description:
         - "'enable'= Enable user; 'disable'= Disable user;"
         type: str
-        required: False
-    unlock:
-        description:
-        - "Unlock admin user"
-        type: bool
         required: False
     trusted_host:
         description:
@@ -122,6 +122,16 @@ options:
                 description:
                 - "Partition Name"
                 type: str
+    privilege_shell:
+        description:
+        - "Set shell privilege"
+        type: bool
+        required: False
+    privilege_shell_root:
+        description:
+        - "Set shell root privilege"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -157,6 +167,32 @@ options:
             show:
                 description:
                 - "Show authorized aws accesskey"
+                type: bool
+    azure_cred:
+        description:
+        - "Field azure_cred"
+        type: dict
+        required: False
+        suboptions:
+            nimport:
+                description:
+                - "Import an azure-credentials"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            file_url:
+                description:
+                - "File URL"
+                type: str
+            delete:
+                description:
+                - "Delete an authorized Azure credentials"
+                type: bool
+            show:
+                description:
+                - "Show authorized azure credentials"
                 type: bool
     ssh_pubkey:
         description:
@@ -275,16 +311,19 @@ AVAILABLE_PROPERTIES = [
     "access_list",
     "action",
     "aws_accesskey",
+    "azure_cred",
+    "encrypted",
     "passwd_string",
     "password",
     "password_key",
     "privilege_global",
     "privilege_list",
+    "privilege_shell",
+    "privilege_shell_root",
     "ssh_pubkey",
     "trusted_host",
     "trusted_host_acl_id",
     "trusted_host_cidr",
-    "unlock",
     "user",
     "user_tag",
     "uuid",
@@ -326,12 +365,12 @@ def get_argspec():
         'passwd_string': {
             'type': 'str',
         },
+        'encrypted': {
+            'type': 'str',
+        },
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable']
-        },
-        'unlock': {
-            'type': 'bool',
         },
         'trusted_host': {
             'type': 'bool',
@@ -363,6 +402,12 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'privilege_shell': {
+            'type': 'bool',
+        },
+        'privilege_shell_root': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
@@ -370,6 +415,24 @@ def get_argspec():
             'type': 'str',
         },
         'aws_accesskey': {
+            'type': 'dict',
+            'nimport': {
+                'type': 'bool',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'file_url': {
+                'type': 'str',
+            },
+            'delete': {
+                'type': 'bool',
+            },
+            'show': {
+                'type': 'bool',
+            }
+        },
+        'azure_cred': {
             'type': 'dict',
             'nimport': {
                 'type': 'bool',

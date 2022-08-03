@@ -70,11 +70,31 @@ options:
         - "IP address"
         type: str
         required: False
+    ipv6_address:
+        description:
+        - "IPv6 address"
+        type: str
+        required: False
     admin_preference:
         description:
         - "Specify administrative preference (Specify admin-preference value,default is
           100)"
         type: int
+        required: False
+    session_number:
+        description:
+        - "Field session_number"
+        type: int
+        required: False
+    session_utilization:
+        description:
+        - "Field session_utilization"
+        type: int
+        required: False
+    rdt_type:
+        description:
+        - "'rdt'= rdt; 'site-rdt'= site-rdt;"
+        type: str
         required: False
     client_ip:
         description:
@@ -84,6 +104,11 @@ options:
     rdt_value:
         description:
         - "Specify Round-delay-time"
+        type: int
+        required: False
+    probe_timer:
+        description:
+        - "Field probe_timer"
         type: int
         required: False
     auto_detect:
@@ -278,13 +303,18 @@ AVAILABLE_PROPERTIES = [
     "gateway_ip_addr",
     "health_check_action",
     "ip_address",
+    "ipv6_address",
     "max_client",
     "msg_format_acos_2x",
     "oper",
+    "probe_timer",
     "proto_aging_fast",
     "proto_aging_time",
     "proto_compatible",
+    "rdt_type",
     "rdt_value",
+    "session_number",
+    "session_utilization",
     "user_tag",
     "uuid",
     "vip_server",
@@ -323,13 +353,29 @@ def get_argspec():
         'ip_address': {
             'type': 'str',
         },
+        'ipv6_address': {
+            'type': 'str',
+        },
         'admin_preference': {
             'type': 'int',
+        },
+        'session_number': {
+            'type': 'int',
+        },
+        'session_utilization': {
+            'type': 'int',
+        },
+        'rdt_type': {
+            'type': 'str',
+            'choices': ['rdt', 'site-rdt']
         },
         'client_ip': {
             'type': 'str',
         },
         'rdt_value': {
+            'type': 'int',
+        },
+        'probe_timer': {
             'type': 'int',
         },
         'auto_detect': {

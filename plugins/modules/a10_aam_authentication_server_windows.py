@@ -95,7 +95,14 @@ options:
           polling-control-error'= Total NTLM Polling Control Error; 'kerberos-pw-expiry'=
           Total Kerberos password expiry; 'kerberos-pw-change-success'= Total Kerberos
           password change success; 'kerberos-pw-change-failure'= Total Kerberos password
-          change failure;"
+          change failure; 'kerberos-validate-kdc-success'= Total Kerberos KDC Validation
+          Success; 'kerberos-validate-kdc-failure'= Total Kerberos KDC Validation
+          Failure; 'kerberos-generate-kdc-keytab-success'= Total Kerberos KDC Keytab
+          Generation Success; 'kerberos-generate-kdc-keytab-failure'= Total Kerberos KDC
+          Keytab Generation Failure; 'kerberos-delete-kdc-keytab-success'= Total Kerberos
+          KDC Keytab Deletion Success; 'kerberos-delete-kdc-keytab-failure'= Total
+          Kerberos KDC Keytab Deletion Failure; 'kerberos-kdc-keytab-count'= Current
+          Kerberos KDC Keytab Count;"
                 type: str
     instance_list:
         description:
@@ -147,6 +154,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -293,6 +304,34 @@ options:
                 description:
                 - "Total Kerberos password change failure"
                 type: str
+            kerberos_validate_kdc_success:
+                description:
+                - "Total Kerberos KDC Validation Success"
+                type: str
+            kerberos_validate_kdc_failure:
+                description:
+                - "Total Kerberos KDC Validation Failure"
+                type: str
+            kerberos_generate_kdc_keytab_success:
+                description:
+                - "Total Kerberos KDC Keytab Generation Success"
+                type: str
+            kerberos_generate_kdc_keytab_failure:
+                description:
+                - "Total Kerberos KDC Keytab Generation Failure"
+                type: str
+            kerberos_delete_kdc_keytab_success:
+                description:
+                - "Total Kerberos KDC Keytab Deletion Success"
+                type: str
+            kerberos_delete_kdc_keytab_failure:
+                description:
+                - "Total Kerberos KDC Keytab Deletion Failure"
+                type: str
+            kerberos_kdc_keytab_count:
+                description:
+                - "Current Kerberos KDC Keytab Count"
+                type: str
             instance_list:
                 description:
                 - "Field instance_list"
@@ -412,7 +451,14 @@ def get_argspec():
                     'ntlm-response-error', 'ntlm-response-timeout',
                     'ntlm-response-other', 'ntlm-job-start-error',
                     'ntlm-polling-control-error', 'kerberos-pw-expiry',
-                    'kerberos-pw-change-success', 'kerberos-pw-change-failure'
+                    'kerberos-pw-change-success', 'kerberos-pw-change-failure',
+                    'kerberos-validate-kdc-success',
+                    'kerberos-validate-kdc-failure',
+                    'kerberos-generate-kdc-keytab-success',
+                    'kerberos-generate-kdc-keytab-failure',
+                    'kerberos-delete-kdc-keytab-success',
+                    'kerberos-delete-kdc-keytab-failure',
+                    'kerberos-kdc-keytab-count'
                 ]
             }
         },
@@ -462,6 +508,27 @@ def get_argspec():
                 },
                 'kerberos_password_change_port': {
                     'type': 'int',
+                },
+                'kdc_validate': {
+                    'type': 'bool',
+                },
+                'kerberos_kdc_validation': {
+                    'type': 'dict',
+                    'kdc_spn': {
+                        'type': 'str',
+                    },
+                    'kdc_account': {
+                        'type': 'str',
+                    },
+                    'kdc_password': {
+                        'type': 'bool',
+                    },
+                    'kdc_pwd': {
+                        'type': 'str',
+                    },
+                    'encrypted': {
+                        'type': 'str',
+                    }
                 }
             },
             'realm': {
@@ -497,9 +564,13 @@ def get_argspec():
                         'ntlm_session_setup_failure',
                         'ntlm_prepare_req_success', 'ntlm_prepare_req_error',
                         'ntlm_auth_success', 'ntlm_auth_failure',
-                        'ntlm_timeout_error', 'ntlm_other_error'
+                        'ntlm_timeout_error', 'ntlm_other_error',
+                        'krb_validate_kdc_success', 'krb_validate_kdc_failure'
                     ]
                 }
+            },
+            'packet_capture_template': {
+                'type': 'str',
             }
         },
         'stats': {
@@ -609,6 +680,27 @@ def get_argspec():
             'kerberos_pw_change_failure': {
                 'type': 'str',
             },
+            'kerberos_validate_kdc_success': {
+                'type': 'str',
+            },
+            'kerberos_validate_kdc_failure': {
+                'type': 'str',
+            },
+            'kerberos_generate_kdc_keytab_success': {
+                'type': 'str',
+            },
+            'kerberos_generate_kdc_keytab_failure': {
+                'type': 'str',
+            },
+            'kerberos_delete_kdc_keytab_success': {
+                'type': 'str',
+            },
+            'kerberos_delete_kdc_keytab_failure': {
+                'type': 'str',
+            },
+            'kerberos_kdc_keytab_count': {
+                'type': 'str',
+            },
             'instance_list': {
                 'type': 'list',
                 'name': {
@@ -666,6 +758,12 @@ def get_argspec():
                         'type': 'str',
                     },
                     'ntlm_other_error': {
+                        'type': 'str',
+                    },
+                    'krb_validate_kdc_success': {
+                        'type': 'str',
+                    },
+                    'krb_validate_kdc_failure': {
                         'type': 'str',
                     }
                 }

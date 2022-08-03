@@ -65,20 +65,15 @@ options:
         - "class list local file name"
         type: str
         required: False
-    size:
-        description:
-        - "class list file size in byte"
-        type: int
-        required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
-        type: str
-        required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
           rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
         type: str
         required: False
     user_tag:
@@ -166,7 +161,6 @@ AVAILABLE_PROPERTIES = [
     "file",
     "file_handle",
     "oper",
-    "size",
     "user_tag",
     "uuid",
 ]
@@ -203,12 +197,6 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
-        'file_handle': {
-            'type': 'str',
-        },
         'action': {
             'type':
             'str',
@@ -216,6 +204,9 @@ def get_argspec():
                 'create', 'import', 'export', 'copy', 'rename', 'check',
                 'replace', 'delete'
             ]
+        },
+        'file_handle': {
+            'type': 'str',
         },
         'user_tag': {
             'type': 'str',

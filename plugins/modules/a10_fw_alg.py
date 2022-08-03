@@ -164,6 +164,24 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    esp:
+        description:
+        - "Field esp"
+        type: dict
+        required: False
+        suboptions:
+            default_port_disable:
+                description:
+                - "'default-port-disable'= Disable ESP ALG default port 500;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     icmp:
         description:
         - "Field icmp"
@@ -234,6 +252,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "dns",
+    "esp",
     "ftp",
     "icmp",
     "pptp",
@@ -451,6 +470,29 @@ def get_argspec():
             },
             'uuid': {
                 'type': 'str',
+            }
+        },
+        'esp': {
+            'type': 'dict',
+            'default_port_disable': {
+                'type': 'str',
+                'choices': ['default-port-disable']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'session-created', 'helper-created',
+                        'helper-freed', 'helper-freed-used',
+                        'helper-freed-unused', 'helper-already-used',
+                        'helper-in-rml'
+                    ]
+                }
             }
         },
         'icmp': {

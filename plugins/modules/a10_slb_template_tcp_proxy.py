@@ -157,6 +157,11 @@ options:
         - "Enable Nagle Algorithm"
         type: bool
         required: False
+    naked_ack_on_handshake:
+        description:
+        - "Send naked ack before data during 3-way handshake"
+        type: bool
+        required: False
     qos:
         description:
         - "QOS level (number)"
@@ -388,6 +393,7 @@ AVAILABLE_PROPERTIES = [
     "min_rto",
     "mss",
     "nagle",
+    "naked_ack_on_handshake",
     "name",
     "proxy_header",
     "psh_flag_optimization",
@@ -491,6 +497,9 @@ def get_argspec():
             'type': 'bool',
         },
         'nagle': {
+            'type': 'bool',
+        },
+        'naked_ack_on_handshake': {
             'type': 'bool',
         },
         'qos': {

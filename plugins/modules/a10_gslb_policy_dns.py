@@ -234,6 +234,11 @@ options:
         - "Provide TXT Records"
         type: bool
         required: False
+    server_custom:
+        description:
+        - "Provide Custom Records"
+        type: bool
+        required: False
     server_any:
         description:
         - "Provide All Records"
@@ -458,6 +463,7 @@ AVAILABLE_PROPERTIES = [
     "server_auto_ns",
     "server_auto_ptr",
     "server_cname",
+    "server_custom",
     "server_full_list",
     "server_mode_only",
     "server_mx",
@@ -606,6 +612,9 @@ def get_argspec():
             'type': 'bool',
         },
         'server_txt': {
+            'type': 'bool',
+        },
+        'server_custom': {
             'type': 'bool',
         },
         'server_any': {

@@ -198,6 +198,18 @@ options:
                 description:
                 - "Field bypass_list"
                 type: list
+            alldynamic:
+                description:
+                - "Field alldynamic"
+                type: int
+            mcpld_type:
+                description:
+                - "Field mcpld_type"
+                type: int
+            mcpld_date:
+                description:
+                - "Field mcpld_date"
+                type: str
 
 '''
 
@@ -340,6 +352,9 @@ def get_argspec():
                 },
                 'unknown_ssl_cards': {
                     'type': 'int',
+                },
+                'coleto_ssl_cards': {
+                    'type': 'int',
                 }
             },
             'octeon': {
@@ -440,6 +455,15 @@ def get_argspec():
                 'bypass_info': {
                     'type': 'str',
                 }
+            },
+            'alldynamic': {
+                'type': 'int',
+            },
+            'mcpld_type': {
+                'type': 'int',
+            },
+            'mcpld_date': {
+                'type': 'str',
             }
         }
     })

@@ -91,8 +91,8 @@ options:
         suboptions:
             lif:
                 description:
-                - "LIF Interface (Logical tunnel interface number)"
-                type: int
+                - "LIF Interface (Logical tunnel interface name)"
+                type: str
             description_nexthop_lif:
                 description:
                 - "Description for static route"
@@ -259,7 +259,7 @@ def get_argspec():
         'ip_nexthop_lif': {
             'type': 'list',
             'lif': {
-                'type': 'int',
+                'type': 'str',
             },
             'description_nexthop_lif': {
                 'type': 'str',

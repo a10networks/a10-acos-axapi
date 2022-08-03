@@ -106,10 +106,6 @@ options:
                 description:
                 - "Field sec_gui_version"
                 type: str
-            cylance_version:
-                description:
-                - "Field cylance_version"
-                type: str
             firmware_version:
                 description:
                 - "Field firmware_version"
@@ -141,6 +137,10 @@ options:
             sys_poll_mode:
                 description:
                 - "Field sys_poll_mode"
+                type: str
+            product:
+                description:
+                - "Field product"
                 type: str
             hw_code:
                 description:
@@ -190,6 +190,10 @@ options:
                 description:
                 - "Field hostname"
                 type: str
+            alldynamic:
+                description:
+                - "Field alldynamic"
+                type: int
 
 '''
 
@@ -310,9 +314,6 @@ def get_argspec():
             'sec_gui_version': {
                 'type': 'str',
             },
-            'cylance_version': {
-                'type': 'str',
-            },
             'firmware_version': {
                 'type': 'str',
             },
@@ -335,6 +336,9 @@ def get_argspec():
                 'type': 'str',
             },
             'sys_poll_mode': {
+                'type': 'str',
+            },
+            'product': {
                 'type': 'str',
             },
             'hw_code': {
@@ -372,6 +376,9 @@ def get_argspec():
             },
             'hostname': {
                 'type': 'str',
+            },
+            'alldynamic': {
+                'type': 'int',
             }
         }
     })

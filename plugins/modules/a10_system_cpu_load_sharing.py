@@ -88,6 +88,16 @@ options:
                 - "CPU usage threshold (percentage) that will trigger the redistribution (default=
           75)"
                 type: int
+    tcp:
+        description:
+        - "Disallow redistribution of new TCP sessions"
+        type: bool
+        required: False
+    udp:
+        description:
+        - "Disallow redistribution of new UDP sessions"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -151,6 +161,8 @@ AVAILABLE_PROPERTIES = [
     "cpu_usage",
     "disable",
     "packets_per_second",
+    "tcp",
+    "udp",
     "uuid",
 ]
 
@@ -197,6 +209,12 @@ def get_argspec():
             'high': {
                 'type': 'int',
             }
+        },
+        'tcp': {
+            'type': 'bool',
+        },
+        'udp': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

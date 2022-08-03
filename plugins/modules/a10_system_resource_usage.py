@@ -107,6 +107,11 @@ options:
         - "Total entries for AC class-list"
         type: int
         required: False
+    class_list_entry_count:
+        description:
+        - "Total entries for class-list"
+        type: int
+        required: False
     max_aflex_authz_collection_number:
         description:
         - "Specify the maximum number of collections supported by aFleX authorization"
@@ -120,6 +125,26 @@ options:
     authz_policy_number:
         description:
         - "Specify the maximum number of authorization policies"
+        type: int
+        required: False
+    ipsec_sa_number:
+        description:
+        - "Specify the maximum number of IPsec SA"
+        type: int
+        required: False
+    ram_cache_memory_limit:
+        description:
+        - "Specify the maximum memory used by ram cache"
+        type: int
+        required: False
+    waf_template_count:
+        description:
+        - "Total configurable WAF Templates in the System"
+        type: int
+        required: False
+    auth_session_count:
+        description:
+        - "Total auth sessions in the system"
         type: int
         required: False
     uuid:
@@ -291,6 +316,66 @@ options:
                 description:
                 - "Field authz_policy_number_default"
                 type: int
+            ipsec_sa_number_min:
+                description:
+                - "Field ipsec_sa_number_min"
+                type: int
+            ipsec_sa_number_max:
+                description:
+                - "Field ipsec_sa_number_max"
+                type: int
+            ipsec_sa_number_default:
+                description:
+                - "Field ipsec_sa_number_default"
+                type: int
+            ram_cache_memory_limit_min:
+                description:
+                - "Field ram_cache_memory_limit_min"
+                type: int
+            ram_cache_memory_limit_max:
+                description:
+                - "Field ram_cache_memory_limit_max"
+                type: int
+            ram_cache_memory_limit_default:
+                description:
+                - "Field ram_cache_memory_limit_default"
+                type: int
+            waf_template_min:
+                description:
+                - "Field waf_template_min"
+                type: int
+            waf_template_max:
+                description:
+                - "Field waf_template_max"
+                type: int
+            waf_template_default:
+                description:
+                - "Field waf_template_default"
+                type: int
+            auth_session_count_min:
+                description:
+                - "Field auth_session_count_min"
+                type: int
+            auth_session_count_max:
+                description:
+                - "Field auth_session_count_max"
+                type: int
+            auth_session_count_default:
+                description:
+                - "Field auth_session_count_default"
+                type: int
+            class_list_entry_min:
+                description:
+                - "Field class_list_entry_min"
+                type: int
+            class_list_entry_max:
+                description:
+                - "Field class_list_entry_max"
+                type: int
+            class_list_entry_default:
+                description:
+                - "Field class_list_entry_default"
+                type: int
 
 '''
 
@@ -349,19 +434,24 @@ AVAILABLE_PROPERTIES = [
     "aflex_table_entry_count",
     "auth_portal_html_file_size",
     "auth_portal_image_file_size",
+    "auth_session_count",
     "authz_policy_number",
     "class_list_ac_entry_count",
+    "class_list_entry_count",
     "class_list_ipv6_addr_count",
+    "ipsec_sa_number",
     "l4_session_count",
     "max_aflex_authz_collection_number",
     "max_aflex_file_size",
     "nat_pool_addr_count",
     "oper",
     "radius_table_size",
+    "ram_cache_memory_limit",
     "ssl_context_memory",
     "ssl_dma_memory",
     "uuid",
     "visibility",
+    "waf_template_count",
 ]
 
 
@@ -420,6 +510,9 @@ def get_argspec():
         'class_list_ac_entry_count': {
             'type': 'int',
         },
+        'class_list_entry_count': {
+            'type': 'int',
+        },
         'max_aflex_authz_collection_number': {
             'type': 'int',
         },
@@ -427,6 +520,18 @@ def get_argspec():
             'type': 'int',
         },
         'authz_policy_number': {
+            'type': 'int',
+        },
+        'ipsec_sa_number': {
+            'type': 'int',
+        },
+        'ram_cache_memory_limit': {
+            'type': 'int',
+        },
+        'waf_template_count': {
+            'type': 'int',
+        },
+        'auth_session_count': {
             'type': 'int',
         },
         'uuid': {
@@ -549,6 +654,51 @@ def get_argspec():
                 'type': 'int',
             },
             'authz_policy_number_default': {
+                'type': 'int',
+            },
+            'ipsec_sa_number_min': {
+                'type': 'int',
+            },
+            'ipsec_sa_number_max': {
+                'type': 'int',
+            },
+            'ipsec_sa_number_default': {
+                'type': 'int',
+            },
+            'ram_cache_memory_limit_min': {
+                'type': 'int',
+            },
+            'ram_cache_memory_limit_max': {
+                'type': 'int',
+            },
+            'ram_cache_memory_limit_default': {
+                'type': 'int',
+            },
+            'waf_template_min': {
+                'type': 'int',
+            },
+            'waf_template_max': {
+                'type': 'int',
+            },
+            'waf_template_default': {
+                'type': 'int',
+            },
+            'auth_session_count_min': {
+                'type': 'int',
+            },
+            'auth_session_count_max': {
+                'type': 'int',
+            },
+            'auth_session_count_default': {
+                'type': 'int',
+            },
+            'class_list_entry_min': {
+                'type': 'int',
+            },
+            'class_list_entry_max': {
+                'type': 'int',
+            },
+            'class_list_entry_default': {
                 'type': 'int',
             }
         }

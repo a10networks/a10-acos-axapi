@@ -65,10 +65,11 @@ options:
         - "ssl key local file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "ssl key file size in byte"
-        type: int
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
+          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
         required: False
     file_handle:
         description:
@@ -79,12 +80,6 @@ options:
         description:
         - "Mark as non-exportable"
         type: bool
-        required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
-        type: str
         required: False
     dst_file:
         description:
@@ -171,7 +166,6 @@ AVAILABLE_PROPERTIES = [
     "file_handle",
     "oper",
     "secured",
-    "size",
     "uuid",
 ]
 
@@ -207,15 +201,6 @@ def get_argspec():
         'file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
-        },
-        'file_handle': {
-            'type': 'str',
-        },
-        'secured': {
-            'type': 'bool',
-        },
         'action': {
             'type':
             'str',
@@ -223,6 +208,12 @@ def get_argspec():
                 'create', 'import', 'export', 'copy', 'rename', 'check',
                 'replace', 'delete'
             ]
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'secured': {
+            'type': 'bool',
         },
         'dst_file': {
             'type': 'str',

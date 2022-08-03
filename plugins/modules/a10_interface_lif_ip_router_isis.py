@@ -55,7 +55,7 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    lif_ifnum:
+    lif_ifname:
         description:
         - Key to identify parent object
         type: str
@@ -163,17 +163,17 @@ def get_argspec():
         }
     })
     # Parent keys
-    rv.update(dict(lif_ifnum=dict(type='str', required=True), ))
+    rv.update(dict(lif_ifname=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/interface/lif/{lif_ifnum}/ip/router/isis"
+    url_base = "/axapi/v3/interface/lif/{lif_ifname}/ip/router/isis"
 
     f_dict = {}
-    f_dict["lif_ifnum"] = module.params["lif_ifnum"]
+    f_dict["lif_ifname"] = module.params["lif_ifname"]
 
     return url_base.format(**f_dict)
 
@@ -181,10 +181,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/lif/{lif_ifnum}/ip/router/isis"
+    url_base = "/axapi/v3/interface/lif/{lif_ifname}/ip/router/isis"
 
     f_dict = {}
-    f_dict["lif_ifnum"] = module.params["lif_ifnum"]
+    f_dict["lif_ifname"] = module.params["lif_ifname"]
 
     return url_base.format(**f_dict)
 

@@ -75,17 +75,6 @@ options:
         - "Customized tag"
         type: str
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        type: list
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'successful_handshakes'= successful_handshakes;
-          'failed_handshakes'= failed_handshakes; 'forwarding_errors'= forwarding_errors;"
-                type: str
     stats:
         description:
         - "Field stats"
@@ -94,15 +83,15 @@ options:
         suboptions:
             successful_handshakes:
                 description:
-                - "Field successful_handshakes"
+                - "some help string"
                 type: str
             failed_handshakes:
                 description:
-                - "Field failed_handshakes"
+                - "some help string"
                 type: str
             forwarding_errors:
                 description:
-                - "Field forwarding_errors"
+                - "some help string"
                 type: str
             name:
                 description:
@@ -165,7 +154,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "forward_proxy_enable",
     "name",
-    "sampling_enable",
     "stats",
     "user_tag",
     "uuid",
@@ -209,17 +197,6 @@ def get_argspec():
         },
         'user_tag': {
             'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'successful_handshakes', 'failed_handshakes',
-                    'forwarding_errors'
-                ]
-            }
         },
         'stats': {
             'type': 'dict',

@@ -428,6 +428,30 @@ def get_argspec():
                 },
                 'server_bytes': {
                     'type': 'str',
+                },
+                'aflex_switch': {
+                    'type': 'str',
+                },
+                'aflex_switch_ok': {
+                    'type': 'str',
+                },
+                'aflex_ehlo_sent': {
+                    'type': 'str',
+                },
+                'send_server_ehlo': {
+                    'type': 'str',
+                },
+                'fail_to_save_client_ehlo': {
+                    'type': 'str',
+                },
+                'aflex_mail_fail': {
+                    'type': 'str',
+                },
+                'drop_server_ehlo_ok': {
+                    'type': 'str',
+                },
+                'client_ehlo_saved': {
+                    'type': 'str',
                 }
             }
         }

@@ -74,8 +74,8 @@ options:
           Monitored Entity telemetry Metric IN SMALL pkt; 'in_frag'= Monitored Entity
           telemetry Metric IN frag; 'out_small_pkt'= Monitored Entity telemetry Metric
           OUT SMALL pkt; 'out_frag'= Monitored Entity telemetry Metric OUT frag; 'new-
-          conn'= Monitored Entity telemetry Metric New Sessions; 'concurrent-conn'=
-          concurrent-conn; 'in_bytes_per_out_bytes'= Monitored Entity telemetry Metric IN
+          conn'= Monitored Entity telemetry Metric New Sessions; 'concurrent-conn'= some
+          help string; 'in_bytes_per_out_bytes'= Monitored Entity telemetry Metric IN
           bytes per OUT bytes; 'drop_pkts_per_pkts'= Monitored Entity telemetry Metric
           Drop pkts per pkts; 'tcp_in_syn'= Monitored Entity telemetry Metric TCP IN syn;
           'tcp_out_syn'= Monitored Entity telemetry Metric TCP OUT syn; 'tcp_in_fin'=
@@ -140,7 +140,7 @@ options:
                 type: str
             concurrent_conn:
                 description:
-                - "Field concurrent_conn"
+                - "some help string"
                 type: str
             in_bytes_per_out_bytes:
                 description:

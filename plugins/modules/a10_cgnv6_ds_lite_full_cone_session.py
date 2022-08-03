@@ -74,6 +74,10 @@ options:
                 description:
                 - "Field session_count"
                 type: int
+            total_session_count:
+                description:
+                - "Field total_session_count"
+                type: int
             all_partitions:
                 description:
                 - "Field all_partitions"
@@ -280,6 +284,9 @@ def get_argspec():
                 }
             },
             'session_count': {
+                'type': 'int',
+            },
+            'total_session_count': {
                 'type': 'int',
             },
             'all_partitions': {

@@ -77,15 +77,15 @@ options:
           authentication service group name)"
         type: str
         required: False
+    jwt_authorization:
+        description:
+        - "Specify JWT authorization template (Specify JWT authorization template name)"
+        type: str
+        required: False
     extended_filter:
         description:
         - "Extended search filter. EX= Check whether user belongs to a nested group.
           (memberOf=1.2.840.113556.1.4.1941==$GROUP-DN)"
-        type: str
-        required: False
-    jwt_authorization:
-        description:
-        - "Specify JWT authorization template (Specify JWT authorization template name)"
         type: str
         required: False
     forward_policy_authorize_only:
@@ -137,6 +137,10 @@ options:
                 description:
                 - "IP address is transformed into network byte order"
                 type: bool
+            number_type:
+                description:
+                - "Attribute type is decimal number"
+                type: bool
             attr_str:
                 description:
                 - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
@@ -163,6 +167,17 @@ options:
             attr_ipv4:
                 description:
                 - "IPv4 address"
+                type: str
+            attr_number:
+                description:
+                - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal;
+          'less-than'= Operation type is less-than; 'more-than'= Operation type is more-
+          than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-
+          equal-to'= Operation type is more-thatn-equal-to;"
+                type: str
+            attr_number_val:
+                description:
+                - "Set attribute value"
                 type: str
             A10_AX_AUTH_URI:
                 description:
@@ -338,10 +353,10 @@ def get_argspec():
         'service_group': {
             'type': 'str',
         },
-        'extended_filter': {
+        'jwt_authorization': {
             'type': 'str',
         },
-        'jwt_authorization': {
+        'extended_filter': {
             'type': 'str',
         },
         'forward_policy_authorize_only': {
@@ -377,6 +392,9 @@ def get_argspec():
             'ip_type': {
                 'type': 'bool',
             },
+            'number_type': {
+                'type': 'bool',
+            },
             'attr_str': {
                 'type': 'str',
                 'choices': ['match', 'sub-string']
@@ -400,6 +418,17 @@ def get_argspec():
                 'choices': ['equal', 'not-equal']
             },
             'attr_ipv4': {
+                'type': 'str',
+            },
+            'attr_number': {
+                'type':
+                'str',
+                'choices': [
+                    'equal', 'not-equal', 'less-than', 'more-than',
+                    'less-than-equal-to', 'more-than-equal-to'
+                ]
+            },
+            'attr_number_val': {
                 'type': 'str',
             },
             'A10_AX_AUTH_URI': {

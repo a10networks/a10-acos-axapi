@@ -78,6 +78,10 @@ options:
                 description:
                 - "Field src_ip"
                 type: str
+            src_ipv6:
+                description:
+                - "Field src_ipv6"
+                type: str
             map_entries_list_head:
                 description:
                 - "Field map_entries_list_head"
@@ -183,6 +187,9 @@ def get_argspec():
                 'type': 'int',
             },
             'src_ip': {
+                'type': 'str',
+            },
+            'src_ipv6': {
                 'type': 'str',
             },
             'map_entries_list_head': {

@@ -61,17 +61,18 @@ options:
           CGNV6 NAT pool DDoS protection;"
         type: str
         required: False
-    logging:
+    logging_action:
         description:
-        - "Field logging"
-        type: dict
+        - "'enable'= enable CGN DDoS protection logging; 'disable'= Disable both local &
+          remote CGN DDoS protection logging;"
+        type: str
         required: False
-        suboptions:
-            logging_toggle:
-                description:
-                - "'enable'= Enable CGNV6 NAT pool DDoS protection logging (default); 'disable'=
-          Disable CGNV6 NAT pool DDoS protection logging;"
-                type: str
+    enable_action:
+        description:
+        - "'local'= Enable local logs only; 'remote'= Enable logging to remote server &
+          IPFIX; 'both'= Enable both local & remote logs;"
+        type: str
+        required: False
     packets_per_second:
         description:
         - "Field packets_per_second"
@@ -90,19 +91,50 @@ options:
                 description:
                 - "Configure packets-per-second threshold per TCP port (default= 3000)"
                 type: int
+            tcp_action:
+                description:
+                - "Field tcp_action"
+                type: dict
             udp:
                 description:
                 - "Configure packets-per-second threshold per UDP port (default= 3000)"
                 type: int
+            udp_action:
+                description:
+                - "Field udp_action"
+                type: dict
             other:
                 description:
                 - "Configure packets-per-second threshold for other L4 protocols(default 10000)"
                 type: int
+            other_action:
+                description:
+                - "Field other_action"
+                type: dict
             include_existing_session:
                 description:
                 - "Count traffic associated with existing session into the packets-per-second
           (Default= Disabled)"
                 type: bool
+    syn_cookie:
+        description:
+        - "Field syn_cookie"
+        type: dict
+        required: False
+        suboptions:
+            syn_cookie_enable:
+                description:
+                - "Enable CGNv6 Syn-Cookie Protection"
+                type: bool
+            syn_cookie_on_threshold:
+                description:
+                - "on-threshold for Syn-cookie (Decimal number)"
+                type: int
+            syn_cookie_on_timeout:
+                description:
+                - "on-timeout for Syn-cookie (Timeout in seconds, default is 120 seconds (2
+          minutes))"
+                type: int
     max_hw_entries:
         description:
         - "Configure maximum HW entries"
@@ -149,7 +181,11 @@ options:
           'entry_added_shadow'= Entry added shadow; 'entry_invalidated'= Entry
           invalidated; 'l3_entry_add_to_bgp_failure'= L3 Entry BGP add failures;
           'l3_entry_remove_from_bgp_failure'= L3 entry BGP remove failures;
-          'l3_entry_add_to_hw_failure'= L3 entry HW add failure;"
+          'l3_entry_add_to_hw_failure'= L3 entry HW add failure;
+          'syn_cookie_syn_ack_sent'= SYN cookie SYN ACK sent;
+          'syn_cookie_verification_passed'= SYN cookie verification passed;
+          'syn_cookie_verification_failed'= SYN cookie verification failed;
+          'syn_cookie_conn_setup_failed'= SYN cookie connection setup failed;"
                 type: str
     l4_entries:
         description:
@@ -327,6 +363,18 @@ options:
                 description:
                 - "L3 entry HW add failure"
                 type: str
+            syn_cookie_syn_ack_sent:
+                description:
+                - "SYN cookie SYN ACK sent"
+                type: str
+            syn_cookie_verification_passed:
+                description:
+                - "SYN cookie verification passed"
+                type: str
+            syn_cookie_verification_failed:
+                description:
+                - "SYN cookie verification failed"
+                type: str
 
 '''
 
@@ -383,13 +431,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "disable_nat_ip_by_bgp",
+    "enable_action",
     "ip_entries",
     "l4_entries",
-    "logging",
+    "logging_action",
     "max_hw_entries",
     "packets_per_second",
     "sampling_enable",
     "stats",
+    "syn_cookie",
     "toggle",
     "uuid",
     "zone",
@@ -425,12 +475,13 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable', 'disable']
         },
-        'logging': {
-            'type': 'dict',
-            'logging_toggle': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            }
+        'logging_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'enable_action': {
+            'type': 'str',
+            'choices': ['local', 'remote', 'both']
         },
         'packets_per_second': {
             'type': 'dict',
@@ -459,14 +510,56 @@ def get_argspec():
             'tcp': {
                 'type': 'int',
             },
+            'tcp_action': {
+                'type': 'dict',
+                'tcp_action_type': {
+                    'type': 'str',
+                    'choices': ['log', 'drop']
+                },
+                'tcp_expiration': {
+                    'type': 'int',
+                }
+            },
             'udp': {
                 'type': 'int',
+            },
+            'udp_action': {
+                'type': 'dict',
+                'udp_action_type': {
+                    'type': 'str',
+                    'choices': ['log', 'drop']
+                },
+                'udp_expiration': {
+                    'type': 'int',
+                }
             },
             'other': {
                 'type': 'int',
             },
+            'other_action': {
+                'type': 'dict',
+                'other_action_type': {
+                    'type': 'str',
+                    'choices': ['log', 'drop']
+                },
+                'other_expiration': {
+                    'type': 'int',
+                }
+            },
             'include_existing_session': {
                 'type': 'bool',
+            }
+        },
+        'syn_cookie': {
+            'type': 'dict',
+            'syn_cookie_enable': {
+                'type': 'bool',
+            },
+            'syn_cookie_on_threshold': {
+                'type': 'int',
+            },
+            'syn_cookie_on_timeout': {
+                'type': 'int',
             }
         },
         'max_hw_entries': {
@@ -502,7 +595,10 @@ def get_argspec():
                     'entry_added_shadow', 'entry_invalidated',
                     'l3_entry_add_to_bgp_failure',
                     'l3_entry_remove_from_bgp_failure',
-                    'l3_entry_add_to_hw_failure'
+                    'l3_entry_add_to_hw_failure', 'syn_cookie_syn_ack_sent',
+                    'syn_cookie_verification_passed',
+                    'syn_cookie_verification_failed',
+                    'syn_cookie_conn_setup_failed'
                 ]
             }
         },
@@ -629,6 +725,15 @@ def get_argspec():
                 'type': 'str',
             },
             'l3_entry_add_to_hw_failure': {
+                'type': 'str',
+            },
+            'syn_cookie_syn_ack_sent': {
+                'type': 'str',
+            },
+            'syn_cookie_verification_passed': {
+                'type': 'str',
+            },
+            'syn_cookie_verification_failed': {
                 'type': 'str',
             }
         }

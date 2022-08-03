@@ -122,7 +122,10 @@ options:
           Conn SPM Type 4 allocate; 'http-spm-free-type0'= HTTP Conn SPM Type 0 free;
           'http-spm-free-type1'= HTTP Conn SPM Type 1 free; 'http-spm-free-type2'= HTTP
           Conn SPM Type 2 free; 'http-spm-free-type3'= HTTP Conn SPM Type 3 free; 'http-
-          spm-free-type4'= HTTP Conn SPM Type 4 free;"
+          spm-free-type4'= HTTP Conn SPM Type 4 free; 'iddos-l3-entry-create'= iDDoS L3
+          Entry Created; 'iddos-l3-entry-delete'= iDDoS L3 Entry Deleted;
+          'iddos-l4-entry-create'= iDDoS L4 Entry Created; 'iddos-l4-entry-delete'= iDDoS
+          L4 Entry Deleted;"
                 type: str
     source_address:
         description:
@@ -368,6 +371,22 @@ options:
                 description:
                 - "UDP Port Batch Interim Updated"
                 type: str
+            iddos_l3_entry_create:
+                description:
+                - "iDDoS L3 Entry Created"
+                type: str
+            iddos_l3_entry_delete:
+                description:
+                - "iDDoS L3 Entry Deleted"
+                type: str
+            iddos_l4_entry_create:
+                description:
+                - "iDDoS L4 Entry Created"
+                type: str
+            iddos_l4_entry_delete:
+                description:
+                - "iDDoS L4 Entry Deleted"
+                type: str
 
 '''
 
@@ -510,7 +529,9 @@ def get_argspec():
                     'http-spm-alloc-type3', 'http-spm-alloc-type4',
                     'http-spm-free-type0', 'http-spm-free-type1',
                     'http-spm-free-type2', 'http-spm-free-type3',
-                    'http-spm-free-type4'
+                    'http-spm-free-type4', 'iddos-l3-entry-create',
+                    'iddos-l3-entry-delete', 'iddos-l4-entry-create',
+                    'iddos-l4-entry-delete'
                 ]
             }
         },
@@ -687,6 +708,18 @@ def get_argspec():
                 'type': 'str',
             },
             'udp_port_batch_interim_updated': {
+                'type': 'str',
+            },
+            'iddos_l3_entry_create': {
+                'type': 'str',
+            },
+            'iddos_l3_entry_delete': {
+                'type': 'str',
+            },
+            'iddos_l4_entry_create': {
+                'type': 'str',
+            },
+            'iddos_l4_entry_delete': {
                 'type': 'str',
             }
         }

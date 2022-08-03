@@ -413,7 +413,9 @@ options:
           size between 201 and 800; 'fnatdslite_rev_egress_pkt_size_range3'= Fixed DS-
           Lite Reverse Egress Packet size between 801 and 1550;
           'fnatdslite_rev_egress_pkt_size_range4'= Fixed DS-Lite Reverse Egress Packet
-          size between 1551 and 9000;"
+          size between 1551 and 9000; 'active-subscriber-added'= Active Subscriber Added;
+          'active-subscriber-removed'= Active Subscriber Removed; 'config-not-found-in-
+          ctx'= Fixed NAT Config Pointer Not Found in MY_CTX;"
                 type: str
     stats:
         description:
@@ -692,18 +694,6 @@ options:
             ha_session_user_quota_exceeded:
                 description:
                 - "HA Sessions User Quota Exceeded"
-                type: str
-            tcp_user_quota_exceeded:
-                description:
-                - "TCP User Quota Exceeded"
-                type: str
-            udp_user_quota_exceeded:
-                description:
-                - "UDP User Quota Exceeded"
-                type: str
-            icmp_user_quota_exceeded:
-                description:
-                - "ICMP User Quota Exceeded"
                 type: str
             fnat44_fwd_ingress_packets_tcp:
                 description:
@@ -1281,6 +1271,14 @@ options:
                 description:
                 - "Fixed DS-Lite Reverse Egress Packet size between 1551 and 9000"
                 type: str
+            active_subscriber_added:
+                description:
+                - "Active Subscriber Added"
+                type: str
+            active_subscriber_removed:
+                description:
+                - "Active Subscriber Removed"
+                type: str
 
 '''
 
@@ -1677,7 +1675,9 @@ def get_argspec():
                     'fnatdslite_rev_egress_pkt_size_range1',
                     'fnatdslite_rev_egress_pkt_size_range2',
                     'fnatdslite_rev_egress_pkt_size_range3',
-                    'fnatdslite_rev_egress_pkt_size_range4'
+                    'fnatdslite_rev_egress_pkt_size_range4',
+                    'active-subscriber-added', 'active-subscriber-removed',
+                    'config-not-found-in-ctx'
                 ]
             }
         },
@@ -1885,15 +1885,6 @@ def get_argspec():
                 'type': 'str',
             },
             'ha_session_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'tcp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'udp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'icmp_user_quota_exceeded': {
                 'type': 'str',
             },
             'fnat44_fwd_ingress_packets_tcp': {
@@ -2326,6 +2317,12 @@ def get_argspec():
                 'type': 'str',
             },
             'fnatdslite_rev_egress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'active_subscriber_added': {
+                'type': 'str',
+            },
+            'active_subscriber_removed': {
                 'type': 'str',
             }
         }

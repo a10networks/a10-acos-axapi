@@ -60,6 +60,11 @@ options:
         - "The password"
         type: str
         required: False
+    encrypted:
+        description:
+        - "Specific an ENCRYPTED password string (The ENCRYPTED password string)"
+        type: str
+        required: False
 
 '''
 
@@ -115,6 +120,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "encrypted",
     "password",
 ]
 
@@ -143,9 +149,14 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'password': {
-        'type': 'str',
-    }})
+    rv.update({
+        'password': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        }
+    })
     return rv
 
 

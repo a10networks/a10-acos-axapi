@@ -124,6 +124,10 @@ options:
                 description:
                 - "Configure the normal prompt format"
                 type: bool
+            ha_status:
+                description:
+                - "Display HA status in prompt, eg. Active, Standby, ForcedStandby"
+                type: bool
             hostname:
                 description:
                 - "Display hostname in prompt"
@@ -274,6 +278,9 @@ def get_argspec():
         'prompt_cfg': {
             'type': 'dict',
             'prompt': {
+                'type': 'bool',
+            },
+            'ha_status': {
                 'type': 'bool',
             },
             'hostname': {

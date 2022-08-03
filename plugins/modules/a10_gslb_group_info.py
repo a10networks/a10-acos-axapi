@@ -189,6 +189,9 @@ def get_argspec():
                 'address': {
                     'type': 'str',
                 },
+                'ipv6_address': {
+                    'type': 'str',
+                },
                 'connect_success': {
                     'type': 'int',
                 },

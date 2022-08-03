@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_config_sync_status
 description:
-    - display config sync status for all partitions
+    - Display config sync status for all partitions
 author: A10 Networks 2021
 options:
     state:

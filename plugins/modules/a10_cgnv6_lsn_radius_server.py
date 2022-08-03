@@ -104,7 +104,8 @@ options:
           Identity (IMEI); 'imsi'= International Mobile Subscriber Identity (IMSI);
           'msisdn'= Mobile Subscriber Integrated Services Digital Network-Number
           (MSISDN); 'custom1'= Customized attribute 1; 'custom2'= Customized attribute 2;
-          'custom3'= Customized attribute 3;"
+          'custom3'= Customized attribute 3; 'custom4'= Customized attribute 4;
+          'custom5'= Customized attribute 5; 'custom6'= Customized attribute 6;"
                 type: str
             prefix_length:
                 description:
@@ -223,7 +224,8 @@ options:
           RADIUS packets redirected (SO); 'radius-packets-redirect-fail-dropped'= RADIUS
           packets dropped due to redirect failure (SO); 'radius-packets-process-local'=
           RADIUS packets processed locally without redirection (SO); 'radius-packets-
-          dropped-not-lo'= RADIUS packets dropped dest not loopback (SO);"
+          dropped-not-lo'= RADIUS packets dropped dest not loopback (SO); 'radius-inter-
+          card-dup-redir'= RADIUS packet dropped as redirected by other blade (SO);"
                 type: str
     oper:
         description:
@@ -470,7 +472,8 @@ def get_argspec():
                 'str',
                 'choices': [
                     'inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei',
-                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3'
+                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3',
+                    'custom4', 'custom5', 'custom6'
                 ]
             },
             'prefix_length': {
@@ -556,7 +559,8 @@ def get_argspec():
                     'radius-packets-redirected',
                     'radius-packets-redirect-fail-dropped',
                     'radius-packets-process-local',
-                    'radius-packets-dropped-not-lo'
+                    'radius-packets-dropped-not-lo',
+                    'radius-inter-card-dup-redir'
                 ]
             }
         },
@@ -589,6 +593,15 @@ def get_argspec():
                     'type': 'str',
                 },
                 'custom3_attr_value': {
+                    'type': 'str',
+                },
+                'custom4_attr_value': {
+                    'type': 'str',
+                },
+                'custom5_attr_value': {
+                    'type': 'str',
+                },
+                'custom6_attr_value': {
                     'type': 'str',
                 },
                 'is_obsolete': {

@@ -60,6 +60,62 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    tickTime:
+        description:
+        - "Field tickTime"
+        type: int
+        required: False
+    initLimit:
+        description:
+        - "Field initLimit"
+        type: int
+        required: False
+    syncLimit:
+        description:
+        - "Field syncLimit"
+        type: int
+        required: False
+    minSessionTimeout:
+        description:
+        - "Field minSessionTimeout"
+        type: int
+        required: False
+    maxSessionTimeout:
+        description:
+        - "Field maxSessionTimeout"
+        type: int
+        required: False
+    client_recv_timeout:
+        description:
+        - "Field client_recv_timeout"
+        type: int
+        required: False
+    clientPort:
+        description:
+        - "client session port"
+        type: int
+        required: False
+    loopback_intf_support:
+        description:
+        - "support loopback interface for scaleout database (enabled by default)"
+        type: bool
+        required: False
+    broken_detect_timeout:
+        description:
+        - "database connection broken detection timeout (mseconds) (12000 mseconds for
+          default)"
+        type: int
+        required: False
+    more_election_packet:
+        description:
+        - "send more election packet in election period (enabled by default)"
+        type: bool
+        required: False
+    elect_conn_timeout:
+        description:
+        - "election connection timeout (mseconds) (1200 for default)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -120,6 +176,17 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
+    "broken_detect_timeout",
+    "client_recv_timeout",
+    "clientPort",
+    "elect_conn_timeout",
+    "initLimit",
+    "loopback_intf_support",
+    "maxSessionTimeout",
+    "minSessionTimeout",
+    "more_election_packet",
+    "syncLimit",
+    "tickTime",
     "uuid",
 ]
 
@@ -148,9 +215,44 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {
-        'type': 'str',
-    }})
+    rv.update({
+        'tickTime': {
+            'type': 'int',
+        },
+        'initLimit': {
+            'type': 'int',
+        },
+        'syncLimit': {
+            'type': 'int',
+        },
+        'minSessionTimeout': {
+            'type': 'int',
+        },
+        'maxSessionTimeout': {
+            'type': 'int',
+        },
+        'client_recv_timeout': {
+            'type': 'int',
+        },
+        'clientPort': {
+            'type': 'int',
+        },
+        'loopback_intf_support': {
+            'type': 'bool',
+        },
+        'broken_detect_timeout': {
+            'type': 'int',
+        },
+        'more_election_packet': {
+            'type': 'bool',
+        },
+        'elect_conn_timeout': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv
@@ -178,10 +280,23 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["db-config"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["db-config"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["db-config"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
