@@ -26,13 +26,22 @@ class ActionModule(ActionBase):
         self._append_module_args(module_args, required_args)
         return self._execute_module(task_vars=task_vars, module_args=module_args)
 
+    def _get_host_var(self, task_vars, name):
+        """ function returns templated variable by parsing inventory_file for given host
+        """
+        return self._templar.template(
+            task_vars.get(name),
+            convert_bare=True,
+            fail_on_undefined=True
+          )
+
     def _get_required_params(self, task_vars):
         """ function returns required argument by parsing inventory_file for given host
         """
-        ip = task_vars.get("ansible_host")
-        username = task_vars.get("ansible_username")
-        password = task_vars.get("ansible_password")
-        port = task_vars.get("ansible_port")
+        ip = self._get_host_var(task_vars, "ansible_host")
+        username = self._get_host_var(task_vars, "ansible_username")
+        password = self._get_host_var(task_vars, "ansible_password")
+        port = self._get_host_var(task_vars, "ansible_port")
 
         return ip, username, password, port
 
