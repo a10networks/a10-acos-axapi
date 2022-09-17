@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_port_reservation
 description:
@@ -154,18 +155,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "inside",
-    "inside_addr",
-    "inside_end_port",
-    "inside_start_port",
-    "nat",
-    "nat_end_port",
-    "nat_start_port",
-    "tunnel_dest_address",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["inside", "inside_addr", "inside_end_port", "inside_start_port", "nat", "nat_end_port", "nat_start_port", "tunnel_dest_address", "uuid", ]
 
 
 def get_default_argspec():
@@ -173,61 +165,25 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'inside': {
-            'type': 'str',
-            'required': True,
-        },
-        'tunnel_dest_address': {
-            'type': 'str',
-            'required': True,
-        },
-        'inside_addr': {
-            'type': 'str',
-            'required': True,
-        },
-        'inside_start_port': {
-            'type': 'int',
-            'required': True,
-        },
-        'inside_end_port': {
-            'type': 'int',
-            'required': True,
-        },
-        'nat': {
-            'type': 'str',
-            'required': True,
-        },
-        'nat_start_port': {
-            'type': 'int',
-            'required': True,
-        },
-        'nat_end_port': {
-            'type': 'int',
-            'required': True,
-        },
-        'uuid': {
-            'type': 'str',
-        }
+    rv.update({'inside': {'type': 'str', 'required': True, },
+        'tunnel_dest_address': {'type': 'str', 'required': True, },
+        'inside_addr': {'type': 'str', 'required': True, },
+        'inside_start_port': {'type': 'int', 'required': True, },
+        'inside_end_port': {'type': 'int', 'required': True, },
+        'nat': {'type': 'str', 'required': True, },
+        'nat_start_port': {'type': 'int', 'required': True, },
+        'nat_end_port': {'type': 'int', 'required': True, },
+        'uuid': {'type': 'str', }
     })
     return rv
 
@@ -235,17 +191,41 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
+    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel_dest_address}+{inside_addr}+{inside_start_port}+{inside_end_port}+{nat}+{nat_start_port}+{nat_end_port}"
 
     f_dict = {}
-    f_dict["inside"] = module.params["inside"]
-    f_dict["tunnel-dest-address"] = module.params["tunnel_dest_address"]
-    f_dict["inside-addr"] = module.params["inside_addr"]
-    f_dict["inside-start-port"] = module.params["inside_start_port"]
-    f_dict["inside-end-port"] = module.params["inside_end_port"]
-    f_dict["nat"] = module.params["nat"]
-    f_dict["nat-start-port"] = module.params["nat_start_port"]
-    f_dict["nat-end-port"] = module.params["nat_end_port"]
+    if '/' in str(module.params["inside"]):
+        f_dict["inside"] = module.params["inside"].replace("/","%2F")
+    else:
+        f_dict["inside"] = module.params["inside"]
+    if '/' in str(module.params["tunnel_dest_address"]):
+        f_dict["tunnel_dest_address"] = module.params["tunnel_dest_address"].replace("/","%2F")
+    else:
+        f_dict["tunnel_dest_address"] = module.params["tunnel_dest_address"]
+    if '/' in str(module.params["inside_addr"]):
+        f_dict["inside_addr"] = module.params["inside_addr"].replace("/","%2F")
+    else:
+        f_dict["inside_addr"] = module.params["inside_addr"]
+    if '/' in str(module.params["inside_start_port"]):
+        f_dict["inside_start_port"] = module.params["inside_start_port"].replace("/","%2F")
+    else:
+        f_dict["inside_start_port"] = module.params["inside_start_port"]
+    if '/' in str(module.params["inside_end_port"]):
+        f_dict["inside_end_port"] = module.params["inside_end_port"].replace("/","%2F")
+    else:
+        f_dict["inside_end_port"] = module.params["inside_end_port"]
+    if '/' in str(module.params["nat"]):
+        f_dict["nat"] = module.params["nat"].replace("/","%2F")
+    else:
+        f_dict["nat"] = module.params["nat"]
+    if '/' in str(module.params["nat_start_port"]):
+        f_dict["nat_start_port"] = module.params["nat_start_port"].replace("/","%2F")
+    else:
+        f_dict["nat_start_port"] = module.params["nat_start_port"]
+    if '/' in str(module.params["nat_end_port"]):
+        f_dict["nat_end_port"] = module.params["nat_end_port"].replace("/","%2F")
+    else:
+        f_dict["nat_end_port"] = module.params["nat_end_port"]
 
     return url_base.format(**f_dict)
 
@@ -253,17 +233,17 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
+    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel_dest_address}+{inside_addr}+{inside_start_port}+{inside_end_port}+{nat}+{nat_start_port}+{nat_end_port}"
 
     f_dict = {}
     f_dict["inside"] = ""
-    f_dict["tunnel-dest-address"] = ""
-    f_dict["inside-addr"] = ""
-    f_dict["inside-start-port"] = ""
-    f_dict["inside-end-port"] = ""
+    f_dict["tunnel_dest_address"] = ""
+    f_dict["inside_addr"] = ""
+    f_dict["inside_start_port"] = ""
+    f_dict["inside_end_port"] = ""
     f_dict["nat"] = ""
-    f_dict["nat-start-port"] = ""
-    f_dict["nat-end-port"] = ""
+    f_dict["nat_start_port"] = ""
+    f_dict["nat_end_port"] = ""
 
     return url_base.format(**f_dict)
 
@@ -290,7 +270,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -301,14 +282,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("port-reservation", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("port-reservation", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -342,12 +323,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -362,16 +345,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -380,15 +363,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -405,20 +388,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "port-reservation"] if info != "NotFound" else info
+                result["acos_info"] = info["port-reservation"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "port-reservation-list"] if info != "NotFound" else info
+                result["acos_info"] = info["port-reservation-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -431,11 +410,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_proxy
 description:
@@ -266,12 +267,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -279,145 +277,19 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num', 'tcp_event', 'est_event', 'data_event',
-                    'client_fin', 'server_fin', 'wbuf_event', 'err_event',
-                    'no_mem', 'client_rst', 'server_rst',
-                    'queue_depth_over_limit', 'event_failed', 'conn_not_exist',
-                    'service_alloc_cb', 'service_alloc_cb_failed',
-                    'service_free_cb', 'service_free_cb_failed',
-                    'est_cb_failed', 'data_cb_failed', 'wbuf_cb_failed',
-                    'err_cb_failed', 'start_server_conn',
-                    'start_server_conn_succ', 'start_server_conn_no_route',
-                    'start_server_conn_fail_mem',
-                    'start_server_conn_fail_snat',
-                    'start_server_conn_fail_persist',
-                    'start_server_conn_fail_server',
-                    'start_server_conn_fail_tuple', 'line_too_long'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'tcp_event': {
-                'type': 'str',
-            },
-            'est_event': {
-                'type': 'str',
-            },
-            'data_event': {
-                'type': 'str',
-            },
-            'client_fin': {
-                'type': 'str',
-            },
-            'server_fin': {
-                'type': 'str',
-            },
-            'wbuf_event': {
-                'type': 'str',
-            },
-            'err_event': {
-                'type': 'str',
-            },
-            'no_mem': {
-                'type': 'str',
-            },
-            'client_rst': {
-                'type': 'str',
-            },
-            'server_rst': {
-                'type': 'str',
-            },
-            'queue_depth_over_limit': {
-                'type': 'str',
-            },
-            'event_failed': {
-                'type': 'str',
-            },
-            'conn_not_exist': {
-                'type': 'str',
-            },
-            'service_alloc_cb': {
-                'type': 'str',
-            },
-            'service_alloc_cb_failed': {
-                'type': 'str',
-            },
-            'service_free_cb': {
-                'type': 'str',
-            },
-            'service_free_cb_failed': {
-                'type': 'str',
-            },
-            'est_cb_failed': {
-                'type': 'str',
-            },
-            'data_cb_failed': {
-                'type': 'str',
-            },
-            'wbuf_cb_failed': {
-                'type': 'str',
-            },
-            'err_cb_failed': {
-                'type': 'str',
-            },
-            'start_server_conn': {
-                'type': 'str',
-            },
-            'start_server_conn_succ': {
-                'type': 'str',
-            },
-            'start_server_conn_no_route': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_mem': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_snat': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_persist': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_server': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_tuple': {
-                'type': 'str',
-            },
-            'line_too_long': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num', 'tcp_event', 'est_event', 'data_event', 'client_fin', 'server_fin', 'wbuf_event', 'err_event', 'no_mem', 'client_rst', 'server_rst', 'queue_depth_over_limit', 'event_failed', 'conn_not_exist', 'service_alloc_cb', 'service_alloc_cb_failed', 'service_free_cb', 'service_free_cb_failed', 'est_cb_failed', 'data_cb_failed', 'wbuf_cb_failed', 'err_cb_failed', 'start_server_conn', 'start_server_conn_succ', 'start_server_conn_no_route', 'start_server_conn_fail_mem', 'start_server_conn_fail_snat', 'start_server_conn_fail_persist', 'start_server_conn_fail_server', 'start_server_conn_fail_tuple', 'line_too_long']}},
+        'stats': {'type': 'dict', 'tcp_event': {'type': 'str', }, 'est_event': {'type': 'str', }, 'data_event': {'type': 'str', }, 'client_fin': {'type': 'str', }, 'server_fin': {'type': 'str', }, 'wbuf_event': {'type': 'str', }, 'err_event': {'type': 'str', }, 'no_mem': {'type': 'str', }, 'client_rst': {'type': 'str', }, 'server_rst': {'type': 'str', }, 'queue_depth_over_limit': {'type': 'str', }, 'event_failed': {'type': 'str', }, 'conn_not_exist': {'type': 'str', }, 'service_alloc_cb': {'type': 'str', }, 'service_alloc_cb_failed': {'type': 'str', }, 'service_free_cb': {'type': 'str', }, 'service_free_cb_failed': {'type': 'str', }, 'est_cb_failed': {'type': 'str', }, 'data_cb_failed': {'type': 'str', }, 'wbuf_cb_failed': {'type': 'str', }, 'err_cb_failed': {'type': 'str', }, 'start_server_conn': {'type': 'str', }, 'start_server_conn_succ': {'type': 'str', }, 'start_server_conn_no_route': {'type': 'str', }, 'start_server_conn_fail_mem': {'type': 'str', }, 'start_server_conn_fail_snat': {'type': 'str', }, 'start_server_conn_fail_persist': {'type': 'str', }, 'start_server_conn_fail_server': {'type': 'str', }, 'start_server_conn_fail_tuple': {'type': 'str', }, 'line_too_long': {'type': 'str', }}
     })
     return rv
 
@@ -464,7 +336,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -475,7 +348,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -515,12 +389,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -535,16 +411,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -553,15 +429,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -578,28 +454,22 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "proxy"] if info != "NotFound" else info
+                result["acos_info"] = info["proxy"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "proxy-list"] if info != "NotFound" else info
+                result["acos_info"] = info["proxy-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["proxy"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["proxy"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -612,11 +482,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

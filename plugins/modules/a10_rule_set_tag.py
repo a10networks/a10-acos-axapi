@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_rule_set_tag
 description:
@@ -1147,11 +1148,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -1161,799 +1160,21 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'categorystat1': {
-                'type': 'str',
-            },
-            'categorystat2': {
-                'type': 'str',
-            },
-            'categorystat3': {
-                'type': 'str',
-            },
-            'categorystat4': {
-                'type': 'str',
-            },
-            'categorystat5': {
-                'type': 'str',
-            },
-            'categorystat6': {
-                'type': 'str',
-            },
-            'categorystat7': {
-                'type': 'str',
-            },
-            'categorystat8': {
-                'type': 'str',
-            },
-            'categorystat9': {
-                'type': 'str',
-            },
-            'categorystat10': {
-                'type': 'str',
-            },
-            'categorystat11': {
-                'type': 'str',
-            },
-            'categorystat12': {
-                'type': 'str',
-            },
-            'categorystat13': {
-                'type': 'str',
-            },
-            'categorystat14': {
-                'type': 'str',
-            },
-            'categorystat15': {
-                'type': 'str',
-            },
-            'categorystat16': {
-                'type': 'str',
-            },
-            'categorystat17': {
-                'type': 'str',
-            },
-            'categorystat18': {
-                'type': 'str',
-            },
-            'categorystat19': {
-                'type': 'str',
-            },
-            'categorystat20': {
-                'type': 'str',
-            },
-            'categorystat21': {
-                'type': 'str',
-            },
-            'categorystat22': {
-                'type': 'str',
-            },
-            'categorystat23': {
-                'type': 'str',
-            },
-            'categorystat24': {
-                'type': 'str',
-            },
-            'categorystat25': {
-                'type': 'str',
-            },
-            'categorystat26': {
-                'type': 'str',
-            },
-            'categorystat27': {
-                'type': 'str',
-            },
-            'categorystat28': {
-                'type': 'str',
-            },
-            'categorystat29': {
-                'type': 'str',
-            },
-            'categorystat30': {
-                'type': 'str',
-            },
-            'categorystat31': {
-                'type': 'str',
-            },
-            'categorystat32': {
-                'type': 'str',
-            },
-            'categorystat33': {
-                'type': 'str',
-            },
-            'categorystat34': {
-                'type': 'str',
-            },
-            'categorystat35': {
-                'type': 'str',
-            },
-            'categorystat36': {
-                'type': 'str',
-            },
-            'categorystat37': {
-                'type': 'str',
-            },
-            'categorystat38': {
-                'type': 'str',
-            },
-            'categorystat39': {
-                'type': 'str',
-            },
-            'categorystat40': {
-                'type': 'str',
-            },
-            'categorystat41': {
-                'type': 'str',
-            },
-            'categorystat42': {
-                'type': 'str',
-            },
-            'categorystat43': {
-                'type': 'str',
-            },
-            'categorystat44': {
-                'type': 'str',
-            },
-            'categorystat45': {
-                'type': 'str',
-            },
-            'categorystat46': {
-                'type': 'str',
-            },
-            'categorystat47': {
-                'type': 'str',
-            },
-            'categorystat48': {
-                'type': 'str',
-            },
-            'categorystat49': {
-                'type': 'str',
-            },
-            'categorystat50': {
-                'type': 'str',
-            },
-            'categorystat51': {
-                'type': 'str',
-            },
-            'categorystat52': {
-                'type': 'str',
-            },
-            'categorystat53': {
-                'type': 'str',
-            },
-            'categorystat54': {
-                'type': 'str',
-            },
-            'categorystat55': {
-                'type': 'str',
-            },
-            'categorystat56': {
-                'type': 'str',
-            },
-            'categorystat57': {
-                'type': 'str',
-            },
-            'categorystat58': {
-                'type': 'str',
-            },
-            'categorystat59': {
-                'type': 'str',
-            },
-            'categorystat60': {
-                'type': 'str',
-            },
-            'categorystat61': {
-                'type': 'str',
-            },
-            'categorystat62': {
-                'type': 'str',
-            },
-            'categorystat63': {
-                'type': 'str',
-            },
-            'categorystat64': {
-                'type': 'str',
-            },
-            'categorystat65': {
-                'type': 'str',
-            },
-            'categorystat66': {
-                'type': 'str',
-            },
-            'categorystat67': {
-                'type': 'str',
-            },
-            'categorystat68': {
-                'type': 'str',
-            },
-            'categorystat69': {
-                'type': 'str',
-            },
-            'categorystat70': {
-                'type': 'str',
-            },
-            'categorystat71': {
-                'type': 'str',
-            },
-            'categorystat72': {
-                'type': 'str',
-            },
-            'categorystat73': {
-                'type': 'str',
-            },
-            'categorystat74': {
-                'type': 'str',
-            },
-            'categorystat75': {
-                'type': 'str',
-            },
-            'categorystat76': {
-                'type': 'str',
-            },
-            'categorystat77': {
-                'type': 'str',
-            },
-            'categorystat78': {
-                'type': 'str',
-            },
-            'categorystat79': {
-                'type': 'str',
-            },
-            'categorystat80': {
-                'type': 'str',
-            },
-            'categorystat81': {
-                'type': 'str',
-            },
-            'categorystat82': {
-                'type': 'str',
-            },
-            'categorystat83': {
-                'type': 'str',
-            },
-            'categorystat84': {
-                'type': 'str',
-            },
-            'categorystat85': {
-                'type': 'str',
-            },
-            'categorystat86': {
-                'type': 'str',
-            },
-            'categorystat87': {
-                'type': 'str',
-            },
-            'categorystat88': {
-                'type': 'str',
-            },
-            'categorystat89': {
-                'type': 'str',
-            },
-            'categorystat90': {
-                'type': 'str',
-            },
-            'categorystat91': {
-                'type': 'str',
-            },
-            'categorystat92': {
-                'type': 'str',
-            },
-            'categorystat93': {
-                'type': 'str',
-            },
-            'categorystat94': {
-                'type': 'str',
-            },
-            'categorystat95': {
-                'type': 'str',
-            },
-            'categorystat96': {
-                'type': 'str',
-            },
-            'categorystat97': {
-                'type': 'str',
-            },
-            'categorystat98': {
-                'type': 'str',
-            },
-            'categorystat99': {
-                'type': 'str',
-            },
-            'categorystat100': {
-                'type': 'str',
-            },
-            'categorystat101': {
-                'type': 'str',
-            },
-            'categorystat102': {
-                'type': 'str',
-            },
-            'categorystat103': {
-                'type': 'str',
-            },
-            'categorystat104': {
-                'type': 'str',
-            },
-            'categorystat105': {
-                'type': 'str',
-            },
-            'categorystat106': {
-                'type': 'str',
-            },
-            'categorystat107': {
-                'type': 'str',
-            },
-            'categorystat108': {
-                'type': 'str',
-            },
-            'categorystat109': {
-                'type': 'str',
-            },
-            'categorystat110': {
-                'type': 'str',
-            },
-            'categorystat111': {
-                'type': 'str',
-            },
-            'categorystat112': {
-                'type': 'str',
-            },
-            'categorystat113': {
-                'type': 'str',
-            },
-            'categorystat114': {
-                'type': 'str',
-            },
-            'categorystat115': {
-                'type': 'str',
-            },
-            'categorystat116': {
-                'type': 'str',
-            },
-            'categorystat117': {
-                'type': 'str',
-            },
-            'categorystat118': {
-                'type': 'str',
-            },
-            'categorystat119': {
-                'type': 'str',
-            },
-            'categorystat120': {
-                'type': 'str',
-            },
-            'categorystat121': {
-                'type': 'str',
-            },
-            'categorystat122': {
-                'type': 'str',
-            },
-            'categorystat123': {
-                'type': 'str',
-            },
-            'categorystat124': {
-                'type': 'str',
-            },
-            'categorystat125': {
-                'type': 'str',
-            },
-            'categorystat126': {
-                'type': 'str',
-            },
-            'categorystat127': {
-                'type': 'str',
-            },
-            'categorystat128': {
-                'type': 'str',
-            },
-            'categorystat129': {
-                'type': 'str',
-            },
-            'categorystat130': {
-                'type': 'str',
-            },
-            'categorystat131': {
-                'type': 'str',
-            },
-            'categorystat132': {
-                'type': 'str',
-            },
-            'categorystat133': {
-                'type': 'str',
-            },
-            'categorystat134': {
-                'type': 'str',
-            },
-            'categorystat135': {
-                'type': 'str',
-            },
-            'categorystat136': {
-                'type': 'str',
-            },
-            'categorystat137': {
-                'type': 'str',
-            },
-            'categorystat138': {
-                'type': 'str',
-            },
-            'categorystat139': {
-                'type': 'str',
-            },
-            'categorystat140': {
-                'type': 'str',
-            },
-            'categorystat141': {
-                'type': 'str',
-            },
-            'categorystat142': {
-                'type': 'str',
-            },
-            'categorystat143': {
-                'type': 'str',
-            },
-            'categorystat144': {
-                'type': 'str',
-            },
-            'categorystat145': {
-                'type': 'str',
-            },
-            'categorystat146': {
-                'type': 'str',
-            },
-            'categorystat147': {
-                'type': 'str',
-            },
-            'categorystat148': {
-                'type': 'str',
-            },
-            'categorystat149': {
-                'type': 'str',
-            },
-            'categorystat150': {
-                'type': 'str',
-            },
-            'categorystat151': {
-                'type': 'str',
-            },
-            'categorystat152': {
-                'type': 'str',
-            },
-            'categorystat153': {
-                'type': 'str',
-            },
-            'categorystat154': {
-                'type': 'str',
-            },
-            'categorystat155': {
-                'type': 'str',
-            },
-            'categorystat156': {
-                'type': 'str',
-            },
-            'categorystat157': {
-                'type': 'str',
-            },
-            'categorystat158': {
-                'type': 'str',
-            },
-            'categorystat159': {
-                'type': 'str',
-            },
-            'categorystat160': {
-                'type': 'str',
-            },
-            'categorystat161': {
-                'type': 'str',
-            },
-            'categorystat162': {
-                'type': 'str',
-            },
-            'categorystat163': {
-                'type': 'str',
-            },
-            'categorystat164': {
-                'type': 'str',
-            },
-            'categorystat165': {
-                'type': 'str',
-            },
-            'categorystat166': {
-                'type': 'str',
-            },
-            'categorystat167': {
-                'type': 'str',
-            },
-            'categorystat168': {
-                'type': 'str',
-            },
-            'categorystat169': {
-                'type': 'str',
-            },
-            'categorystat170': {
-                'type': 'str',
-            },
-            'categorystat171': {
-                'type': 'str',
-            },
-            'categorystat172': {
-                'type': 'str',
-            },
-            'categorystat173': {
-                'type': 'str',
-            },
-            'categorystat174': {
-                'type': 'str',
-            },
-            'categorystat175': {
-                'type': 'str',
-            },
-            'categorystat176': {
-                'type': 'str',
-            },
-            'categorystat177': {
-                'type': 'str',
-            },
-            'categorystat178': {
-                'type': 'str',
-            },
-            'categorystat179': {
-                'type': 'str',
-            },
-            'categorystat180': {
-                'type': 'str',
-            },
-            'categorystat181': {
-                'type': 'str',
-            },
-            'categorystat182': {
-                'type': 'str',
-            },
-            'categorystat183': {
-                'type': 'str',
-            },
-            'categorystat184': {
-                'type': 'str',
-            },
-            'categorystat185': {
-                'type': 'str',
-            },
-            'categorystat186': {
-                'type': 'str',
-            },
-            'categorystat187': {
-                'type': 'str',
-            },
-            'categorystat188': {
-                'type': 'str',
-            },
-            'categorystat189': {
-                'type': 'str',
-            },
-            'categorystat190': {
-                'type': 'str',
-            },
-            'categorystat191': {
-                'type': 'str',
-            },
-            'categorystat192': {
-                'type': 'str',
-            },
-            'categorystat193': {
-                'type': 'str',
-            },
-            'categorystat194': {
-                'type': 'str',
-            },
-            'categorystat195': {
-                'type': 'str',
-            },
-            'categorystat196': {
-                'type': 'str',
-            },
-            'categorystat197': {
-                'type': 'str',
-            },
-            'categorystat198': {
-                'type': 'str',
-            },
-            'categorystat199': {
-                'type': 'str',
-            },
-            'categorystat200': {
-                'type': 'str',
-            },
-            'categorystat201': {
-                'type': 'str',
-            },
-            'categorystat202': {
-                'type': 'str',
-            },
-            'categorystat203': {
-                'type': 'str',
-            },
-            'categorystat204': {
-                'type': 'str',
-            },
-            'categorystat205': {
-                'type': 'str',
-            },
-            'categorystat206': {
-                'type': 'str',
-            },
-            'categorystat207': {
-                'type': 'str',
-            },
-            'categorystat208': {
-                'type': 'str',
-            },
-            'categorystat209': {
-                'type': 'str',
-            },
-            'categorystat210': {
-                'type': 'str',
-            },
-            'categorystat211': {
-                'type': 'str',
-            },
-            'categorystat212': {
-                'type': 'str',
-            },
-            'categorystat213': {
-                'type': 'str',
-            },
-            'categorystat214': {
-                'type': 'str',
-            },
-            'categorystat215': {
-                'type': 'str',
-            },
-            'categorystat216': {
-                'type': 'str',
-            },
-            'categorystat217': {
-                'type': 'str',
-            },
-            'categorystat218': {
-                'type': 'str',
-            },
-            'categorystat219': {
-                'type': 'str',
-            },
-            'categorystat220': {
-                'type': 'str',
-            },
-            'categorystat221': {
-                'type': 'str',
-            },
-            'categorystat222': {
-                'type': 'str',
-            },
-            'categorystat223': {
-                'type': 'str',
-            },
-            'categorystat224': {
-                'type': 'str',
-            },
-            'categorystat225': {
-                'type': 'str',
-            },
-            'categorystat226': {
-                'type': 'str',
-            },
-            'categorystat227': {
-                'type': 'str',
-            },
-            'categorystat228': {
-                'type': 'str',
-            },
-            'categorystat229': {
-                'type': 'str',
-            },
-            'categorystat230': {
-                'type': 'str',
-            },
-            'categorystat231': {
-                'type': 'str',
-            },
-            'categorystat232': {
-                'type': 'str',
-            },
-            'categorystat233': {
-                'type': 'str',
-            },
-            'categorystat234': {
-                'type': 'str',
-            },
-            'categorystat235': {
-                'type': 'str',
-            },
-            'categorystat236': {
-                'type': 'str',
-            },
-            'categorystat237': {
-                'type': 'str',
-            },
-            'categorystat238': {
-                'type': 'str',
-            },
-            'categorystat239': {
-                'type': 'str',
-            },
-            'categorystat240': {
-                'type': 'str',
-            },
-            'categorystat241': {
-                'type': 'str',
-            },
-            'categorystat242': {
-                'type': 'str',
-            },
-            'categorystat243': {
-                'type': 'str',
-            },
-            'categorystat244': {
-                'type': 'str',
-            },
-            'categorystat245': {
-                'type': 'str',
-            },
-            'categorystat246': {
-                'type': 'str',
-            },
-            'categorystat247': {
-                'type': 'str',
-            },
-            'categorystat248': {
-                'type': 'str',
-            },
-            'categorystat249': {
-                'type': 'str',
-            },
-            'categorystat250': {
-                'type': 'str',
-            },
-            'categorystat251': {
-                'type': 'str',
-            },
-            'categorystat252': {
-                'type': 'str',
-            },
-            'categorystat253': {
-                'type': 'str',
-            },
-            'categorystat254': {
-                'type': 'str',
-            },
-            'categorystat255': {
-                'type': 'str',
-            },
-            'categorystat256': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'stats': {'type': 'dict', 'categorystat1': {'type': 'str', }, 'categorystat2': {'type': 'str', }, 'categorystat3': {'type': 'str', }, 'categorystat4': {'type': 'str', }, 'categorystat5': {'type': 'str', }, 'categorystat6': {'type': 'str', }, 'categorystat7': {'type': 'str', }, 'categorystat8': {'type': 'str', }, 'categorystat9': {'type': 'str', }, 'categorystat10': {'type': 'str', }, 'categorystat11': {'type': 'str', }, 'categorystat12': {'type': 'str', }, 'categorystat13': {'type': 'str', }, 'categorystat14': {'type': 'str', }, 'categorystat15': {'type': 'str', }, 'categorystat16': {'type': 'str', }, 'categorystat17': {'type': 'str', }, 'categorystat18': {'type': 'str', }, 'categorystat19': {'type': 'str', }, 'categorystat20': {'type': 'str', }, 'categorystat21': {'type': 'str', }, 'categorystat22': {'type': 'str', }, 'categorystat23': {'type': 'str', }, 'categorystat24': {'type': 'str', }, 'categorystat25': {'type': 'str', }, 'categorystat26': {'type': 'str', }, 'categorystat27': {'type': 'str', }, 'categorystat28': {'type': 'str', }, 'categorystat29': {'type': 'str', }, 'categorystat30': {'type': 'str', }, 'categorystat31': {'type': 'str', }, 'categorystat32': {'type': 'str', }, 'categorystat33': {'type': 'str', }, 'categorystat34': {'type': 'str', }, 'categorystat35': {'type': 'str', }, 'categorystat36': {'type': 'str', }, 'categorystat37': {'type': 'str', }, 'categorystat38': {'type': 'str', }, 'categorystat39': {'type': 'str', }, 'categorystat40': {'type': 'str', }, 'categorystat41': {'type': 'str', }, 'categorystat42': {'type': 'str', }, 'categorystat43': {'type': 'str', }, 'categorystat44': {'type': 'str', }, 'categorystat45': {'type': 'str', }, 'categorystat46': {'type': 'str', }, 'categorystat47': {'type': 'str', }, 'categorystat48': {'type': 'str', }, 'categorystat49': {'type': 'str', }, 'categorystat50': {'type': 'str', }, 'categorystat51': {'type': 'str', }, 'categorystat52': {'type': 'str', }, 'categorystat53': {'type': 'str', }, 'categorystat54': {'type': 'str', }, 'categorystat55': {'type': 'str', }, 'categorystat56': {'type': 'str', }, 'categorystat57': {'type': 'str', }, 'categorystat58': {'type': 'str', }, 'categorystat59': {'type': 'str', }, 'categorystat60': {'type': 'str', }, 'categorystat61': {'type': 'str', }, 'categorystat62': {'type': 'str', }, 'categorystat63': {'type': 'str', }, 'categorystat64': {'type': 'str', }, 'categorystat65': {'type': 'str', }, 'categorystat66': {'type': 'str', }, 'categorystat67': {'type': 'str', }, 'categorystat68': {'type': 'str', }, 'categorystat69': {'type': 'str', }, 'categorystat70': {'type': 'str', }, 'categorystat71': {'type': 'str', }, 'categorystat72': {'type': 'str', }, 'categorystat73': {'type': 'str', }, 'categorystat74': {'type': 'str', }, 'categorystat75': {'type': 'str', }, 'categorystat76': {'type': 'str', }, 'categorystat77': {'type': 'str', }, 'categorystat78': {'type': 'str', }, 'categorystat79': {'type': 'str', }, 'categorystat80': {'type': 'str', }, 'categorystat81': {'type': 'str', }, 'categorystat82': {'type': 'str', }, 'categorystat83': {'type': 'str', }, 'categorystat84': {'type': 'str', }, 'categorystat85': {'type': 'str', }, 'categorystat86': {'type': 'str', }, 'categorystat87': {'type': 'str', }, 'categorystat88': {'type': 'str', }, 'categorystat89': {'type': 'str', }, 'categorystat90': {'type': 'str', }, 'categorystat91': {'type': 'str', }, 'categorystat92': {'type': 'str', }, 'categorystat93': {'type': 'str', }, 'categorystat94': {'type': 'str', }, 'categorystat95': {'type': 'str', }, 'categorystat96': {'type': 'str', }, 'categorystat97': {'type': 'str', }, 'categorystat98': {'type': 'str', }, 'categorystat99': {'type': 'str', }, 'categorystat100': {'type': 'str', }, 'categorystat101': {'type': 'str', }, 'categorystat102': {'type': 'str', }, 'categorystat103': {'type': 'str', }, 'categorystat104': {'type': 'str', }, 'categorystat105': {'type': 'str', }, 'categorystat106': {'type': 'str', }, 'categorystat107': {'type': 'str', }, 'categorystat108': {'type': 'str', }, 'categorystat109': {'type': 'str', }, 'categorystat110': {'type': 'str', }, 'categorystat111': {'type': 'str', }, 'categorystat112': {'type': 'str', }, 'categorystat113': {'type': 'str', }, 'categorystat114': {'type': 'str', }, 'categorystat115': {'type': 'str', }, 'categorystat116': {'type': 'str', }, 'categorystat117': {'type': 'str', }, 'categorystat118': {'type': 'str', }, 'categorystat119': {'type': 'str', }, 'categorystat120': {'type': 'str', }, 'categorystat121': {'type': 'str', }, 'categorystat122': {'type': 'str', }, 'categorystat123': {'type': 'str', }, 'categorystat124': {'type': 'str', }, 'categorystat125': {'type': 'str', }, 'categorystat126': {'type': 'str', }, 'categorystat127': {'type': 'str', }, 'categorystat128': {'type': 'str', }, 'categorystat129': {'type': 'str', }, 'categorystat130': {'type': 'str', }, 'categorystat131': {'type': 'str', }, 'categorystat132': {'type': 'str', }, 'categorystat133': {'type': 'str', }, 'categorystat134': {'type': 'str', }, 'categorystat135': {'type': 'str', }, 'categorystat136': {'type': 'str', }, 'categorystat137': {'type': 'str', }, 'categorystat138': {'type': 'str', }, 'categorystat139': {'type': 'str', }, 'categorystat140': {'type': 'str', }, 'categorystat141': {'type': 'str', }, 'categorystat142': {'type': 'str', }, 'categorystat143': {'type': 'str', }, 'categorystat144': {'type': 'str', }, 'categorystat145': {'type': 'str', }, 'categorystat146': {'type': 'str', }, 'categorystat147': {'type': 'str', }, 'categorystat148': {'type': 'str', }, 'categorystat149': {'type': 'str', }, 'categorystat150': {'type': 'str', }, 'categorystat151': {'type': 'str', }, 'categorystat152': {'type': 'str', }, 'categorystat153': {'type': 'str', }, 'categorystat154': {'type': 'str', }, 'categorystat155': {'type': 'str', }, 'categorystat156': {'type': 'str', }, 'categorystat157': {'type': 'str', }, 'categorystat158': {'type': 'str', }, 'categorystat159': {'type': 'str', }, 'categorystat160': {'type': 'str', }, 'categorystat161': {'type': 'str', }, 'categorystat162': {'type': 'str', }, 'categorystat163': {'type': 'str', }, 'categorystat164': {'type': 'str', }, 'categorystat165': {'type': 'str', }, 'categorystat166': {'type': 'str', }, 'categorystat167': {'type': 'str', }, 'categorystat168': {'type': 'str', }, 'categorystat169': {'type': 'str', }, 'categorystat170': {'type': 'str', }, 'categorystat171': {'type': 'str', }, 'categorystat172': {'type': 'str', }, 'categorystat173': {'type': 'str', }, 'categorystat174': {'type': 'str', }, 'categorystat175': {'type': 'str', }, 'categorystat176': {'type': 'str', }, 'categorystat177': {'type': 'str', }, 'categorystat178': {'type': 'str', }, 'categorystat179': {'type': 'str', }, 'categorystat180': {'type': 'str', }, 'categorystat181': {'type': 'str', }, 'categorystat182': {'type': 'str', }, 'categorystat183': {'type': 'str', }, 'categorystat184': {'type': 'str', }, 'categorystat185': {'type': 'str', }, 'categorystat186': {'type': 'str', }, 'categorystat187': {'type': 'str', }, 'categorystat188': {'type': 'str', }, 'categorystat189': {'type': 'str', }, 'categorystat190': {'type': 'str', }, 'categorystat191': {'type': 'str', }, 'categorystat192': {'type': 'str', }, 'categorystat193': {'type': 'str', }, 'categorystat194': {'type': 'str', }, 'categorystat195': {'type': 'str', }, 'categorystat196': {'type': 'str', }, 'categorystat197': {'type': 'str', }, 'categorystat198': {'type': 'str', }, 'categorystat199': {'type': 'str', }, 'categorystat200': {'type': 'str', }, 'categorystat201': {'type': 'str', }, 'categorystat202': {'type': 'str', }, 'categorystat203': {'type': 'str', }, 'categorystat204': {'type': 'str', }, 'categorystat205': {'type': 'str', }, 'categorystat206': {'type': 'str', }, 'categorystat207': {'type': 'str', }, 'categorystat208': {'type': 'str', }, 'categorystat209': {'type': 'str', }, 'categorystat210': {'type': 'str', }, 'categorystat211': {'type': 'str', }, 'categorystat212': {'type': 'str', }, 'categorystat213': {'type': 'str', }, 'categorystat214': {'type': 'str', }, 'categorystat215': {'type': 'str', }, 'categorystat216': {'type': 'str', }, 'categorystat217': {'type': 'str', }, 'categorystat218': {'type': 'str', }, 'categorystat219': {'type': 'str', }, 'categorystat220': {'type': 'str', }, 'categorystat221': {'type': 'str', }, 'categorystat222': {'type': 'str', }, 'categorystat223': {'type': 'str', }, 'categorystat224': {'type': 'str', }, 'categorystat225': {'type': 'str', }, 'categorystat226': {'type': 'str', }, 'categorystat227': {'type': 'str', }, 'categorystat228': {'type': 'str', }, 'categorystat229': {'type': 'str', }, 'categorystat230': {'type': 'str', }, 'categorystat231': {'type': 'str', }, 'categorystat232': {'type': 'str', }, 'categorystat233': {'type': 'str', }, 'categorystat234': {'type': 'str', }, 'categorystat235': {'type': 'str', }, 'categorystat236': {'type': 'str', }, 'categorystat237': {'type': 'str', }, 'categorystat238': {'type': 'str', }, 'categorystat239': {'type': 'str', }, 'categorystat240': {'type': 'str', }, 'categorystat241': {'type': 'str', }, 'categorystat242': {'type': 'str', }, 'categorystat243': {'type': 'str', }, 'categorystat244': {'type': 'str', }, 'categorystat245': {'type': 'str', }, 'categorystat246': {'type': 'str', }, 'categorystat247': {'type': 'str', }, 'categorystat248': {'type': 'str', }, 'categorystat249': {'type': 'str', }, 'categorystat250': {'type': 'str', }, 'categorystat251': {'type': 'str', }, 'categorystat252': {'type': 'str', }, 'categorystat253': {'type': 'str', }, 'categorystat254': {'type': 'str', }, 'categorystat255': {'type': 'str', }, 'categorystat256': {'type': 'str', }}
     })
     # Parent keys
-    rv.update(dict(rule_set_name=dict(type='str', required=True), ))
+    rv.update(dict(
+        rule_set_name=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -1963,7 +1184,10 @@ def existing_url(module):
     url_base = "/axapi/v3/rule-set/{rule_set_name}/tag"
 
     f_dict = {}
-    f_dict["rule_set_name"] = module.params["rule_set_name"]
+    if '/' in module.params["rule_set_name"]:
+        f_dict["rule_set_name"] = module.params["rule_set_name"].replace("/","%2F")
+    else:
+        f_dict["rule_set_name"] = module.params["rule_set_name"]
 
     return url_base.format(**f_dict)
 
@@ -1988,7 +1212,8 @@ def report_changes(module, result, existing_config):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1999,7 +1224,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -2017,12 +1243,14 @@ def present(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -2037,16 +1265,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -2055,15 +1283,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -2077,28 +1305,22 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["tag"] if info != "NotFound" else info
+                result["acos_info"] = info["tag"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "tag-list"] if info != "NotFound" else info
+                result["acos_info"] = info["tag-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["tag"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["tag"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -2111,11 +1333,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()
