@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_conn_reuse
 description:
@@ -168,13 +169,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "dummy",
-    "trigger_stats_inc",
-    "trigger_stats_rate",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -182,65 +179,25 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'dummy': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'trigger_stats_inc': {
-            'type': 'dict',
-            'ntermi_err': {
-                'type': 'bool',
-            },
-            'pause_conn_fail': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'trigger_stats_rate': {
-            'type': 'dict',
-            'threshold_exceeded_by': {
-                'type': 'int',
-            },
-            'duration': {
-                'type': 'int',
-            },
-            'ntermi_err': {
-                'type': 'bool',
-            },
-            'pause_conn_fail': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        }
+    rv.update({'dummy': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'trigger_stats_inc': {'type': 'dict', 'ntermi_err': {'type': 'bool', }, 'pause_conn_fail': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'trigger_stats_rate': {'type': 'dict', 'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'ntermi_err': {'type': 'bool', }, 'pause_conn_fail': {'type': 'bool', }, 'uuid': {'type': 'str', }}
     })
     # Parent keys
-    rv.update(dict(template_name=dict(type='str', required=True), ))
+    rv.update(dict(
+        template_name=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -250,7 +207,10 @@ def existing_url(module):
     url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/slb-conn-reuse"
 
     f_dict = {}
-    f_dict["template_name"] = module.params["template_name"]
+    if '/' in module.params["template_name"]:
+        f_dict["template_name"] = module.params["template_name"].replace("/","%2F")
+    else:
+        f_dict["template_name"] = module.params["template_name"]
 
     return url_base.format(**f_dict)
 
@@ -288,7 +248,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -299,14 +260,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("slb-conn-reuse", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("slb-conn-reuse", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -340,12 +301,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -360,16 +323,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -378,15 +341,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -403,20 +366,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "slb-conn-reuse"] if info != "NotFound" else info
+                result["acos_info"] = info["slb-conn-reuse"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "slb-conn-reuse-list"] if info != "NotFound" else info
+                result["acos_info"] = info["slb-conn-reuse-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -429,11 +388,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()
