@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_template_client_ssl
 description:
@@ -1819,6 +1818,22 @@ options:
                 description:
                 - "Server Name Partition Shared"
                 type: bool
+            sni_template:
+                description:
+                - "Template associated to SNI"
+                type: bool
+            sni_template_client_ssl:
+                description:
+                - "Client SSL Template Name"
+                type: str
+            sni_shared_partition_client_ssl_template:
+                description:
+                - "Reference a Client SSL template from shared partition"
+                type: bool
+            sni_template_client_ssl_shared_name:
+                description:
+                - "Client SSL Template Name"
+                type: str
             server_name_regex:
                 description:
                 - "Server name indication in Client hello extension with regular expression
@@ -1854,6 +1869,22 @@ options:
                 description:
                 - "Server Name Partition Shared"
                 type: bool
+            sni_regex_template:
+                description:
+                - "Template associated to SNI regex"
+                type: bool
+            sni_regex_template_client_ssl:
+                description:
+                - "Client SSL Template Name"
+                type: str
+            sni_regex_shared_partition_client_ssl_template:
+                description:
+                - "Reference a Client SSL template from shared partition"
+                type: bool
+            sni_regex_template_client_ssl_shared_name:
+                description:
+                - "Client SSL Template Name"
+                type: str
     server_name_auto_map:
         description:
         - "Enable automatic mapping of server name indication in Client hello extension"
@@ -2498,9 +2529,195 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ad_group_list", "alert_type", "auth_sg", "auth_sg_dn", "auth_sg_filter", "auth_username", "auth_username_attribute", "authen_name", "authorization", "bypass_cert_issuer_class_list_name", "bypass_cert_issuer_multi_class_list", "bypass_cert_san_class_list_name", "bypass_cert_san_multi_class_list", "bypass_cert_subject_class_list_name", "bypass_cert_subject_multi_class_list", "ca_certs", "cache_persistence_list_name", "case_insensitive", "cert_revoke_action", "cert_unknown_action", "certificate_issuer_contains_list", "certificate_issuer_ends_with_list", "certificate_issuer_equals_list", "certificate_issuer_starts_with_list", "certificate_list", "certificate_san_contains_list", "certificate_san_ends_with_list", "certificate_san_equals_list", "certificate_san_starts_with_list", "certificate_subject_contains_list", "certificate_subject_ends_with_list", "certificate_subject_equals_list", "certificate_subject_starts_with_list", "chain_cert", "chain_cert_shared_str", "cipher_without_prio_list", "class_list_name", "client_auth_case_insensitive", "client_auth_class_list", "client_auth_contains_list", "client_auth_ends_with_list", "client_auth_equals_list", "client_auth_starts_with_list", "client_certificate", "close_notify", "contains_list", "crl_certs", "dgversion", "dh_type", "direct_client_server_auth", "disable_sslv3", "early_data", "ec_list", "enable_ssli_ftp_alg", "enable_tls_alert_logging", "ends_with_list", "equals_list", "exception_ad_group_list", "exception_certificate_issuer_cl_name", "exception_certificate_san_cl_name", "exception_certificate_subject_cl_name", "exception_sni_cl_name", "exception_user_name_list", "exception_web_category", "exception_web_reputation", "expire_hours", "forward_encrypted", "forward_passphrase", "forward_proxy_alt_sign", "forward_proxy_block_message", "forward_proxy_ca_cert", "forward_proxy_ca_key", "forward_proxy_cert_cache_limit", "forward_proxy_cert_cache_timeout", "forward_proxy_cert_expiry", "forward_proxy_cert_not_ready_action", "forward_proxy_cert_revoke_action", "forward_proxy_cert_unknown_action", "forward_proxy_crl_disable", "forward_proxy_decrypted_dscp", "forward_proxy_decrypted_dscp_bypass", "forward_proxy_enable", "forward_proxy_esni_action", "forward_proxy_failsafe_disable", "forward_proxy_hash_persistence_interval", "forward_proxy_log_disable", "forward_proxy_no_shared_cipher_action", "forward_proxy_no_sni_action", "forward_proxy_ocsp_disable", "forward_proxy_require_sni_cert_matched", "forward_proxy_selfsign_redir", "forward_proxy_ssl_version", "forward_proxy_trusted_ca_lists", "forward_proxy_verify_cert_fail_action", "fp_alt_cert", "fp_alt_chain_cert", "fp_alt_encrypted", "fp_alt_key", "fp_alt_passphrase", "fp_alt_shared", "fp_ca_certificate", "fp_ca_certificate_shared", "fp_ca_chain_cert", "fp_ca_key", "fp_ca_key_encrypted", "fp_ca_key_passphrase", "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name", "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type", "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ldap_base_dn_from_cert", "ldap_search_filter", "local_logging", "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth", "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days", "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation", ]
+AVAILABLE_PROPERTIES = [
+    "ad_group_list",
+    "alert_type",
+    "auth_sg",
+    "auth_sg_dn",
+    "auth_sg_filter",
+    "auth_username",
+    "auth_username_attribute",
+    "authen_name",
+    "authorization",
+    "bypass_cert_issuer_class_list_name",
+    "bypass_cert_issuer_multi_class_list",
+    "bypass_cert_san_class_list_name",
+    "bypass_cert_san_multi_class_list",
+    "bypass_cert_subject_class_list_name",
+    "bypass_cert_subject_multi_class_list",
+    "ca_certs",
+    "cache_persistence_list_name",
+    "case_insensitive",
+    "cert_revoke_action",
+    "cert_unknown_action",
+    "certificate_issuer_contains_list",
+    "certificate_issuer_ends_with_list",
+    "certificate_issuer_equals_list",
+    "certificate_issuer_starts_with_list",
+    "certificate_list",
+    "certificate_san_contains_list",
+    "certificate_san_ends_with_list",
+    "certificate_san_equals_list",
+    "certificate_san_starts_with_list",
+    "certificate_subject_contains_list",
+    "certificate_subject_ends_with_list",
+    "certificate_subject_equals_list",
+    "certificate_subject_starts_with_list",
+    "chain_cert",
+    "chain_cert_shared_str",
+    "cipher_without_prio_list",
+    "class_list_name",
+    "client_auth_case_insensitive",
+    "client_auth_class_list",
+    "client_auth_contains_list",
+    "client_auth_ends_with_list",
+    "client_auth_equals_list",
+    "client_auth_starts_with_list",
+    "client_certificate",
+    "close_notify",
+    "contains_list",
+    "crl_certs",
+    "dgversion",
+    "dh_type",
+    "direct_client_server_auth",
+    "disable_sslv3",
+    "early_data",
+    "ec_list",
+    "enable_ssli_ftp_alg",
+    "enable_tls_alert_logging",
+    "ends_with_list",
+    "equals_list",
+    "exception_ad_group_list",
+    "exception_certificate_issuer_cl_name",
+    "exception_certificate_san_cl_name",
+    "exception_certificate_subject_cl_name",
+    "exception_sni_cl_name",
+    "exception_user_name_list",
+    "exception_web_category",
+    "exception_web_reputation",
+    "expire_hours",
+    "forward_encrypted",
+    "forward_passphrase",
+    "forward_proxy_alt_sign",
+    "forward_proxy_block_message",
+    "forward_proxy_ca_cert",
+    "forward_proxy_ca_key",
+    "forward_proxy_cert_cache_limit",
+    "forward_proxy_cert_cache_timeout",
+    "forward_proxy_cert_expiry",
+    "forward_proxy_cert_not_ready_action",
+    "forward_proxy_cert_revoke_action",
+    "forward_proxy_cert_unknown_action",
+    "forward_proxy_crl_disable",
+    "forward_proxy_decrypted_dscp",
+    "forward_proxy_decrypted_dscp_bypass",
+    "forward_proxy_enable",
+    "forward_proxy_esni_action",
+    "forward_proxy_failsafe_disable",
+    "forward_proxy_hash_persistence_interval",
+    "forward_proxy_log_disable",
+    "forward_proxy_no_shared_cipher_action",
+    "forward_proxy_no_sni_action",
+    "forward_proxy_ocsp_disable",
+    "forward_proxy_require_sni_cert_matched",
+    "forward_proxy_selfsign_redir",
+    "forward_proxy_ssl_version",
+    "forward_proxy_trusted_ca_lists",
+    "forward_proxy_verify_cert_fail_action",
+    "fp_alt_cert",
+    "fp_alt_chain_cert",
+    "fp_alt_encrypted",
+    "fp_alt_key",
+    "fp_alt_passphrase",
+    "fp_alt_shared",
+    "fp_ca_certificate",
+    "fp_ca_certificate_shared",
+    "fp_ca_chain_cert",
+    "fp_ca_key",
+    "fp_ca_key_encrypted",
+    "fp_ca_key_passphrase",
+    "fp_ca_key_shared",
+    "fp_ca_shared",
+    "fp_cert_ext_aia_ca_issuers",
+    "fp_cert_ext_aia_ocsp",
+    "fp_cert_ext_crldp",
+    "fp_cert_fetch_autonat",
+    "fp_cert_fetch_autonat_precedence",
+    "fp_cert_fetch_natpool_name",
+    "fp_cert_fetch_natpool_name_shared",
+    "fp_cert_fetch_natpool_precedence",
+    "fp_esni_action",
+    "handshake_logging_enable",
+    "hsm_type",
+    "inspect_certificate_issuer_cl_name",
+    "inspect_certificate_san_cl_name",
+    "inspect_certificate_subject_cl_name",
+    "inspect_list_name",
+    "ldap_base_dn_from_cert",
+    "ldap_search_filter",
+    "local_logging",
+    "multi_class_list",
+    "name",
+    "no_anti_replay",
+    "no_shared_cipher_action",
+    "non_ssl_bypass_l4session",
+    "non_ssl_bypass_service_group",
+    "notafter",
+    "notafterday",
+    "notaftermonth",
+    "notafteryear",
+    "notbefore",
+    "notbeforeday",
+    "notbeforemonth",
+    "notbeforeyear",
+    "ocsp_stapling",
+    "ocspst_ca_cert",
+    "ocspst_ocsp",
+    "ocspst_sg",
+    "ocspst_sg_days",
+    "ocspst_sg_hours",
+    "ocspst_sg_minutes",
+    "ocspst_sg_timeout",
+    "ocspst_srvr",
+    "ocspst_srvr_days",
+    "ocspst_srvr_hours",
+    "ocspst_srvr_minutes",
+    "ocspst_srvr_timeout",
+    "oper",
+    "renegotiation_disable",
+    "req_ca_lists",
+    "require_web_category",
+    "server_name_auto_map",
+    "server_name_list",
+    "session_cache_size",
+    "session_cache_timeout",
+    "session_ticket_disable",
+    "session_ticket_lifetime",
+    "shared_partition_cipher_template",
+    "shared_partition_pool",
+    "sni_bypass_enable_log",
+    "sni_bypass_expired_cert",
+    "sni_bypass_explicit_list",
+    "sni_bypass_missing_cert",
+    "sni_enable_log",
+    "ssl_false_start_disable",
+    "ssli_logging",
+    "sslilogging",
+    "sslv2_bypass_service_group",
+    "starts_with_list",
+    "stats",
+    "template_cipher",
+    "template_cipher_shared",
+    "template_hsm",
+    "user_name_list",
+    "user_tag",
+    "uuid",
+    "verify_cert_fail_action",
+    "version",
+    "web_category",
+    "web_reputation",
+]
 
 
 def get_default_argspec():
@@ -2508,202 +2725,1687 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'auth_username': {'type': 'str', },
-        'ca_certs': {'type': 'list', 'ca_cert': {'type': 'str', }, 'ca_shared': {'type': 'bool', }, 'client_ocsp': {'type': 'bool', }, 'client_ocsp_srvr': {'type': 'str', }, 'client_ocsp_sg': {'type': 'str', }},
-        'chain_cert': {'type': 'str', },
-        'chain_cert_shared_str': {'type': 'str', },
-        'dh_type': {'type': 'str', 'choices': ['1024', '1024-dsa', '2048']},
-        'ec_list': {'type': 'list', 'ec': {'type': 'str', 'choices': ['secp256r1', 'secp384r1']}},
-        'local_logging': {'type': 'bool', },
-        'ocsp_stapling': {'type': 'bool', },
-        'ocspst_ca_cert': {'type': 'str', },
-        'ocspst_ocsp': {'type': 'bool', },
-        'ocspst_srvr': {'type': 'str', },
-        'ocspst_srvr_days': {'type': 'int', },
-        'ocspst_srvr_hours': {'type': 'int', },
-        'ocspst_srvr_minutes': {'type': 'int', },
-        'ocspst_srvr_timeout': {'type': 'int', },
-        'ocspst_sg': {'type': 'str', },
-        'ocspst_sg_days': {'type': 'int', },
-        'ocspst_sg_hours': {'type': 'int', },
-        'ocspst_sg_minutes': {'type': 'int', },
-        'ocspst_sg_timeout': {'type': 'int', },
-        'ssli_logging': {'type': 'bool', },
-        'sslilogging': {'type': 'str', 'choices': ['disable', 'all']},
-        'client_certificate': {'type': 'str', 'choices': ['Ignore', 'Require', 'Request']},
-        'req_ca_lists': {'type': 'list', 'client_certificate_Request_CA': {'type': 'str', }, 'client_cert_req_ca_shared': {'type': 'bool', }},
-        'close_notify': {'type': 'bool', },
-        'crl_certs': {'type': 'list', 'crl': {'type': 'str', }, 'crl_shared': {'type': 'bool', }},
-        'forward_proxy_ca_cert': {'type': 'str', },
-        'fp_ca_shared': {'type': 'bool', },
-        'forward_proxy_ca_key': {'type': 'str', },
-        'forward_passphrase': {'type': 'str', },
-        'forward_encrypted': {'type': 'str', },
-        'fp_ca_key_shared': {'type': 'bool', },
-        'fp_ca_certificate': {'type': 'str', },
-        'fp_ca_key': {'type': 'str', },
-        'fp_ca_key_passphrase': {'type': 'str', },
-        'fp_ca_key_encrypted': {'type': 'str', },
-        'fp_ca_chain_cert': {'type': 'str', },
-        'fp_ca_certificate_shared': {'type': 'bool', },
-        'forward_proxy_alt_sign': {'type': 'bool', },
-        'fp_alt_cert': {'type': 'str', },
-        'fp_alt_key': {'type': 'str', },
-        'fp_alt_passphrase': {'type': 'str', },
-        'fp_alt_encrypted': {'type': 'str', },
-        'fp_alt_chain_cert': {'type': 'str', },
-        'fp_alt_shared': {'type': 'bool', },
-        'forward_proxy_trusted_ca_lists': {'type': 'list', 'forward_proxy_trusted_ca': {'type': 'str', }, 'fp_trusted_ca_shared': {'type': 'bool', }},
-        'forward_proxy_decrypted_dscp': {'type': 'int', },
-        'forward_proxy_decrypted_dscp_bypass': {'type': 'int', },
-        'enable_tls_alert_logging': {'type': 'bool', },
-        'alert_type': {'type': 'str', 'choices': ['fatal']},
-        'forward_proxy_verify_cert_fail_action': {'type': 'bool', },
-        'verify_cert_fail_action': {'type': 'str', 'choices': ['bypass', 'continue', 'drop', 'block']},
-        'forward_proxy_cert_revoke_action': {'type': 'bool', },
-        'cert_revoke_action': {'type': 'str', 'choices': ['bypass', 'continue', 'drop', 'block']},
-        'forward_proxy_no_shared_cipher_action': {'type': 'bool', },
-        'no_shared_cipher_action': {'type': 'str', 'choices': ['bypass', 'drop']},
-        'forward_proxy_esni_action': {'type': 'bool', },
-        'fp_esni_action': {'type': 'str', 'choices': ['bypass', 'drop']},
-        'forward_proxy_cert_unknown_action': {'type': 'bool', },
-        'cert_unknown_action': {'type': 'str', 'choices': ['bypass', 'continue', 'drop', 'block']},
-        'forward_proxy_block_message': {'type': 'str', },
-        'cache_persistence_list_name': {'type': 'str', },
-        'fp_cert_ext_crldp': {'type': 'str', },
-        'fp_cert_ext_aia_ocsp': {'type': 'str', },
-        'fp_cert_ext_aia_ca_issuers': {'type': 'str', },
-        'notbefore': {'type': 'bool', },
-        'notbeforeday': {'type': 'int', },
-        'notbeforemonth': {'type': 'int', },
-        'notbeforeyear': {'type': 'int', },
-        'notafter': {'type': 'bool', },
-        'notafterday': {'type': 'int', },
-        'notaftermonth': {'type': 'int', },
-        'notafteryear': {'type': 'int', },
-        'forward_proxy_hash_persistence_interval': {'type': 'int', },
-        'forward_proxy_ssl_version': {'type': 'int', },
-        'forward_proxy_ocsp_disable': {'type': 'bool', },
-        'forward_proxy_crl_disable': {'type': 'bool', },
-        'forward_proxy_cert_cache_timeout': {'type': 'int', },
-        'forward_proxy_cert_cache_limit': {'type': 'int', },
-        'forward_proxy_cert_expiry': {'type': 'bool', },
-        'expire_hours': {'type': 'int', },
-        'forward_proxy_enable': {'type': 'bool', },
-        'handshake_logging_enable': {'type': 'bool', },
-        'forward_proxy_selfsign_redir': {'type': 'bool', },
-        'forward_proxy_failsafe_disable': {'type': 'bool', },
-        'forward_proxy_log_disable': {'type': 'bool', },
-        'fp_cert_fetch_natpool_name': {'type': 'str', },
-        'shared_partition_pool': {'type': 'bool', },
-        'fp_cert_fetch_natpool_name_shared': {'type': 'str', },
-        'fp_cert_fetch_natpool_precedence': {'type': 'bool', },
-        'fp_cert_fetch_autonat': {'type': 'str', 'choices': ['auto']},
-        'fp_cert_fetch_autonat_precedence': {'type': 'bool', },
-        'forward_proxy_no_sni_action': {'type': 'str', 'choices': ['intercept', 'bypass', 'reset']},
-        'case_insensitive': {'type': 'bool', },
-        'class_list_name': {'type': 'str', },
-        'multi_class_list': {'type': 'list', 'multi_clist_name': {'type': 'str', }},
-        'user_name_list': {'type': 'str', },
-        'ad_group_list': {'type': 'str', },
-        'exception_user_name_list': {'type': 'str', },
-        'exception_ad_group_list': {'type': 'str', },
-        'exception_sni_cl_name': {'type': 'str', },
-        'inspect_list_name': {'type': 'str', },
-        'inspect_certificate_subject_cl_name': {'type': 'str', },
-        'inspect_certificate_issuer_cl_name': {'type': 'str', },
-        'inspect_certificate_san_cl_name': {'type': 'str', },
-        'contains_list': {'type': 'list', 'contains': {'type': 'str', }},
-        'ends_with_list': {'type': 'list', 'ends_with': {'type': 'str', }},
-        'equals_list': {'type': 'list', 'equals': {'type': 'str', }},
-        'starts_with_list': {'type': 'list', 'starts_with': {'type': 'str', }},
-        'certificate_subject_contains_list': {'type': 'list', 'certificate_subject_contains': {'type': 'str', }},
-        'bypass_cert_subject_class_list_name': {'type': 'str', },
-        'bypass_cert_subject_multi_class_list': {'type': 'list', 'bypass_cert_subject_multi_class_list_name': {'type': 'str', }},
-        'exception_certificate_subject_cl_name': {'type': 'str', },
-        'certificate_subject_ends_with_list': {'type': 'list', 'certificate_subject_ends_with': {'type': 'str', }},
-        'certificate_subject_equals_list': {'type': 'list', 'certificate_subject_equals': {'type': 'str', }},
-        'certificate_subject_starts_with_list': {'type': 'list', 'certificate_subject_starts': {'type': 'str', }},
-        'certificate_issuer_contains_list': {'type': 'list', 'certificate_issuer_contains': {'type': 'str', }},
-        'bypass_cert_issuer_class_list_name': {'type': 'str', },
-        'bypass_cert_issuer_multi_class_list': {'type': 'list', 'bypass_cert_issuer_multi_class_list_name': {'type': 'str', }},
-        'exception_certificate_issuer_cl_name': {'type': 'str', },
-        'certificate_issuer_ends_with_list': {'type': 'list', 'certificate_issuer_ends_with': {'type': 'str', }},
-        'certificate_issuer_equals_list': {'type': 'list', 'certificate_issuer_equals': {'type': 'str', }},
-        'certificate_issuer_starts_with_list': {'type': 'list', 'certificate_issuer_starts': {'type': 'str', }},
-        'certificate_san_contains_list': {'type': 'list', 'certificate_san_contains': {'type': 'str', }},
-        'bypass_cert_san_class_list_name': {'type': 'str', },
-        'bypass_cert_san_multi_class_list': {'type': 'list', 'bypass_cert_san_multi_class_list_name': {'type': 'str', }},
-        'exception_certificate_san_cl_name': {'type': 'str', },
-        'certificate_san_ends_with_list': {'type': 'list', 'certificate_san_ends_with': {'type': 'str', }},
-        'certificate_san_equals_list': {'type': 'list', 'certificate_san_equals': {'type': 'str', }},
-        'certificate_san_starts_with_list': {'type': 'list', 'certificate_san_starts': {'type': 'str', }},
-        'client_auth_case_insensitive': {'type': 'bool', },
-        'client_auth_class_list': {'type': 'str', },
-        'client_auth_contains_list': {'type': 'list', 'client_auth_contains': {'type': 'str', }},
-        'client_auth_ends_with_list': {'type': 'list', 'client_auth_ends_with': {'type': 'str', }},
-        'client_auth_equals_list': {'type': 'list', 'client_auth_equals': {'type': 'str', }},
-        'client_auth_starts_with_list': {'type': 'list', 'client_auth_starts_with': {'type': 'str', }},
-        'forward_proxy_cert_not_ready_action': {'type': 'str', 'choices': ['bypass', 'reset', 'intercept']},
-        'web_reputation': {'type': 'dict', 'bypass_trustworthy': {'type': 'bool', }, 'bypass_low_risk': {'type': 'bool', }, 'bypass_moderate_risk': {'type': 'bool', }, 'bypass_suspicious': {'type': 'bool', }, 'bypass_malicious': {'type': 'bool', }, 'bypass_threshold': {'type': 'int', }},
-        'exception_web_reputation': {'type': 'dict', 'exception_trustworthy': {'type': 'bool', }, 'exception_low_risk': {'type': 'bool', }, 'exception_moderate_risk': {'type': 'bool', }, 'exception_suspicious': {'type': 'bool', }, 'exception_malicious': {'type': 'bool', }, 'exception_threshold': {'type': 'int', }},
-        'web_category': {'type': 'dict', 'uncategorized': {'type': 'bool', }, 'real_estate': {'type': 'bool', }, 'computer_and_internet_security': {'type': 'bool', }, 'financial_services': {'type': 'bool', }, 'business_and_economy': {'type': 'bool', }, 'computer_and_internet_info': {'type': 'bool', }, 'auctions': {'type': 'bool', }, 'shopping': {'type': 'bool', }, 'cult_and_occult': {'type': 'bool', }, 'travel': {'type': 'bool', }, 'drugs': {'type': 'bool', }, 'adult_and_pornography': {'type': 'bool', }, 'home_and_garden': {'type': 'bool', }, 'military': {'type': 'bool', }, 'social_network': {'type': 'bool', }, 'dead_sites': {'type': 'bool', }, 'stock_advice_and_tools': {'type': 'bool', }, 'training_and_tools': {'type': 'bool', }, 'dating': {'type': 'bool', }, 'sex_education': {'type': 'bool', }, 'religion': {'type': 'bool', }, 'entertainment_and_arts': {'type': 'bool', }, 'personal_sites_and_blogs': {'type': 'bool', }, 'legal': {'type': 'bool', }, 'local_information': {'type': 'bool', }, 'streaming_media': {'type': 'bool', }, 'job_search': {'type': 'bool', }, 'gambling': {'type': 'bool', }, 'translation': {'type': 'bool', }, 'reference_and_research': {'type': 'bool', }, 'shareware_and_freeware': {'type': 'bool', }, 'peer_to_peer': {'type': 'bool', }, 'marijuana': {'type': 'bool', }, 'hacking': {'type': 'bool', }, 'games': {'type': 'bool', }, 'philosophy_and_politics': {'type': 'bool', }, 'weapons': {'type': 'bool', }, 'pay_to_surf': {'type': 'bool', }, 'hunting_and_fishing': {'type': 'bool', }, 'society': {'type': 'bool', }, 'educational_institutions': {'type': 'bool', }, 'online_greeting_cards': {'type': 'bool', }, 'sports': {'type': 'bool', }, 'swimsuits_and_intimate_apparel': {'type': 'bool', }, 'questionable': {'type': 'bool', }, 'kids': {'type': 'bool', }, 'hate_and_racism': {'type': 'bool', }, 'personal_storage': {'type': 'bool', }, 'violence': {'type': 'bool', }, 'keyloggers_and_monitoring': {'type': 'bool', }, 'search_engines': {'type': 'bool', }, 'internet_portals': {'type': 'bool', }, 'web_advertisements': {'type': 'bool', }, 'cheating': {'type': 'bool', }, 'gross': {'type': 'bool', }, 'web_based_email': {'type': 'bool', }, 'malware_sites': {'type': 'bool', }, 'phishing_and_other_fraud': {'type': 'bool', }, 'proxy_avoid_and_anonymizers': {'type': 'bool', }, 'spyware_and_adware': {'type': 'bool', }, 'music': {'type': 'bool', }, 'government': {'type': 'bool', }, 'nudity': {'type': 'bool', }, 'news_and_media': {'type': 'bool', }, 'illegal': {'type': 'bool', }, 'cdns': {'type': 'bool', }, 'internet_communications': {'type': 'bool', }, 'bot_nets': {'type': 'bool', }, 'abortion': {'type': 'bool', }, 'health_and_medicine': {'type': 'bool', }, 'confirmed_spam_sources': {'type': 'bool', }, 'spam_urls': {'type': 'bool', }, 'unconfirmed_spam_sources': {'type': 'bool', }, 'open_http_proxies': {'type': 'bool', }, 'dynamic_comment': {'type': 'bool', }, 'parked_domains': {'type': 'bool', }, 'alcohol_and_tobacco': {'type': 'bool', }, 'private_ip_addresses': {'type': 'bool', }, 'image_and_video_search': {'type': 'bool', }, 'fashion_and_beauty': {'type': 'bool', }, 'recreation_and_hobbies': {'type': 'bool', }, 'motor_vehicles': {'type': 'bool', }, 'web_hosting_sites': {'type': 'bool', }, 'food_and_dining': {'type': 'bool', }, 'nudity_artistic': {'type': 'bool', }, 'illegal_pornography': {'type': 'bool', }},
-        'exception_web_category': {'type': 'dict', 'exception_uncategorized': {'type': 'bool', }, 'exception_real_estate': {'type': 'bool', }, 'exception_computer_and_internet_security': {'type': 'bool', }, 'exception_financial_services': {'type': 'bool', }, 'exception_business_and_economy': {'type': 'bool', }, 'exception_computer_and_internet_info': {'type': 'bool', }, 'exception_auctions': {'type': 'bool', }, 'exception_shopping': {'type': 'bool', }, 'exception_cult_and_occult': {'type': 'bool', }, 'exception_travel': {'type': 'bool', }, 'exception_drugs': {'type': 'bool', }, 'exception_adult_and_pornography': {'type': 'bool', }, 'exception_home_and_garden': {'type': 'bool', }, 'exception_military': {'type': 'bool', }, 'exception_social_network': {'type': 'bool', }, 'exception_dead_sites': {'type': 'bool', }, 'exception_stock_advice_and_tools': {'type': 'bool', }, 'exception_training_and_tools': {'type': 'bool', }, 'exception_dating': {'type': 'bool', }, 'exception_sex_education': {'type': 'bool', }, 'exception_religion': {'type': 'bool', }, 'exception_entertainment_and_arts': {'type': 'bool', }, 'exception_personal_sites_and_blogs': {'type': 'bool', }, 'exception_legal': {'type': 'bool', }, 'exception_local_information': {'type': 'bool', }, 'exception_streaming_media': {'type': 'bool', }, 'exception_job_search': {'type': 'bool', }, 'exception_gambling': {'type': 'bool', }, 'exception_translation': {'type': 'bool', }, 'exception_reference_and_research': {'type': 'bool', }, 'exception_shareware_and_freeware': {'type': 'bool', }, 'exception_peer_to_peer': {'type': 'bool', }, 'exception_marijuana': {'type': 'bool', }, 'exception_hacking': {'type': 'bool', }, 'exception_games': {'type': 'bool', }, 'exception_philosophy_and_politics': {'type': 'bool', }, 'exception_weapons': {'type': 'bool', }, 'exception_pay_to_surf': {'type': 'bool', }, 'exception_hunting_and_fishing': {'type': 'bool', }, 'exception_society': {'type': 'bool', }, 'exception_educational_institutions': {'type': 'bool', }, 'exception_online_greeting_cards': {'type': 'bool', }, 'exception_sports': {'type': 'bool', }, 'exception_swimsuits_and_intimate_apparel': {'type': 'bool', }, 'exception_questionable': {'type': 'bool', }, 'exception_kids': {'type': 'bool', }, 'exception_hate_and_racism': {'type': 'bool', }, 'exception_personal_storage': {'type': 'bool', }, 'exception_violence': {'type': 'bool', }, 'exception_keyloggers_and_monitoring': {'type': 'bool', }, 'exception_search_engines': {'type': 'bool', }, 'exception_internet_portals': {'type': 'bool', }, 'exception_web_advertisements': {'type': 'bool', }, 'exception_cheating': {'type': 'bool', }, 'exception_gross': {'type': 'bool', }, 'exception_web_based_email': {'type': 'bool', }, 'exception_malware_sites': {'type': 'bool', }, 'exception_phishing_and_other_fraud': {'type': 'bool', }, 'exception_proxy_avoid_and_anonymizers': {'type': 'bool', }, 'exception_spyware_and_adware': {'type': 'bool', }, 'exception_music': {'type': 'bool', }, 'exception_government': {'type': 'bool', }, 'exception_nudity': {'type': 'bool', }, 'exception_news_and_media': {'type': 'bool', }, 'exception_illegal': {'type': 'bool', }, 'exception_cdns': {'type': 'bool', }, 'exception_internet_communications': {'type': 'bool', }, 'exception_bot_nets': {'type': 'bool', }, 'exception_abortion': {'type': 'bool', }, 'exception_health_and_medicine': {'type': 'bool', }, 'exception_confirmed_spam_sources': {'type': 'bool', }, 'exception_spam_urls': {'type': 'bool', }, 'exception_unconfirmed_spam_sources': {'type': 'bool', }, 'exception_open_http_proxies': {'type': 'bool', }, 'exception_dynamic_comment': {'type': 'bool', }, 'exception_parked_domains': {'type': 'bool', }, 'exception_alcohol_and_tobacco': {'type': 'bool', }, 'exception_private_ip_addresses': {'type': 'bool', }, 'exception_image_and_video_search': {'type': 'bool', }, 'exception_fashion_and_beauty': {'type': 'bool', }, 'exception_recreation_and_hobbies': {'type': 'bool', }, 'exception_motor_vehicles': {'type': 'bool', }, 'exception_web_hosting_sites': {'type': 'bool', }, 'exception_food_and_dining': {'type': 'bool', }, 'exception_nudity_artistic': {'type': 'bool', }, 'exception_illegal_pornography': {'type': 'bool', }},
-        'require_web_category': {'type': 'bool', },
-        'forward_proxy_require_sni_cert_matched': {'type': 'str', 'choices': ['no-match-action-inspect', 'no-match-action-drop']},
-        'template_cipher': {'type': 'str', },
-        'shared_partition_cipher_template': {'type': 'bool', },
-        'template_cipher_shared': {'type': 'str', },
-        'template_hsm': {'type': 'str', },
-        'hsm_type': {'type': 'str', 'choices': ['thales-embed', 'thales-hwcrhk']},
-        'cipher_without_prio_list': {'type': 'list', 'cipher_wo_prio': {'type': 'str', 'choices': ['SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5', 'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA', 'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256', 'TLS1_RSA_AES_256_SHA256', 'TLS1_DHE_RSA_AES_128_GCM_SHA256', 'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256', 'TLS1_DHE_RSA_AES_256_GCM_SHA384', 'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_SHA', 'TLS1_ECDHE_ECDSA_AES_128_SHA256', 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA', 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_RSA_AES_128_SHA', 'TLS1_ECDHE_RSA_AES_128_SHA256', 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_GCM_SHA256', 'TLS1_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA384', 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256', 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256', 'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256']}},
-        'server_name_list': {'type': 'list', 'server_name': {'type': 'str', }, 'server_cert': {'type': 'str', }, 'server_chain': {'type': 'str', }, 'server_key': {'type': 'str', }, 'server_passphrase': {'type': 'str', }, 'server_encrypted': {'type': 'str', }, 'server_name_alternate': {'type': 'bool', }, 'server_shared': {'type': 'bool', }, 'server_name_regex': {'type': 'str', }, 'server_cert_regex': {'type': 'str', }, 'server_chain_regex': {'type': 'str', }, 'server_key_regex': {'type': 'str', }, 'server_passphrase_regex': {'type': 'str', }, 'server_encrypted_regex': {'type': 'str', }, 'server_name_regex_alternate': {'type': 'bool', }, 'server_shared_regex': {'type': 'bool', }},
-        'server_name_auto_map': {'type': 'bool', },
-        'sni_enable_log': {'type': 'bool', },
-        'sni_bypass_missing_cert': {'type': 'bool', },
-        'sni_bypass_expired_cert': {'type': 'bool', },
-        'sni_bypass_explicit_list': {'type': 'str', },
-        'sni_bypass_enable_log': {'type': 'bool', },
-        'direct_client_server_auth': {'type': 'bool', },
-        'session_cache_size': {'type': 'int', },
-        'session_cache_timeout': {'type': 'int', },
-        'session_ticket_disable': {'type': 'bool', },
-        'session_ticket_lifetime': {'type': 'int', },
-        'ssl_false_start_disable': {'type': 'bool', },
-        'disable_sslv3': {'type': 'bool', },
-        'version': {'type': 'int', },
-        'dgversion': {'type': 'int', },
-        'renegotiation_disable': {'type': 'bool', },
-        'sslv2_bypass_service_group': {'type': 'str', },
-        'authorization': {'type': 'bool', },
-        'authen_name': {'type': 'str', },
-        'ldap_base_dn_from_cert': {'type': 'bool', },
-        'ldap_search_filter': {'type': 'str', },
-        'auth_sg': {'type': 'str', },
-        'auth_sg_dn': {'type': 'bool', },
-        'auth_sg_filter': {'type': 'str', },
-        'auth_username_attribute': {'type': 'str', },
-        'non_ssl_bypass_service_group': {'type': 'str', },
-        'non_ssl_bypass_l4session': {'type': 'bool', },
-        'enable_ssli_ftp_alg': {'type': 'int', },
-        'early_data': {'type': 'bool', },
-        'no_anti_replay': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'certificate_list': {'type': 'list', 'cert': {'type': 'str', 'required': True, }, 'key': {'type': 'str', }, 'passphrase': {'type': 'str', }, 'key_encrypted': {'type': 'str', }, 'chain_cert': {'type': 'str', }, 'shared': {'type': 'bool', }, 'uuid': {'type': 'str', }},
-        'oper': {'type': 'dict', 'cert_status_list': {'type': 'list', 'cert_status_name': {'type': 'str', }, 'cert_status_status': {'type': 'str', }, 'cert_status_age': {'type': 'int', }, 'cert_status_next_update': {'type': 'str', }, 'cert_status_responder': {'type': 'str', }}, 'name': {'type': 'str', 'required': True, }},
-        'stats': {'type': 'dict', 'real_estate': {'type': 'str', }, 'computer_and_internet_security': {'type': 'str', }, 'financial_services': {'type': 'str', }, 'business_and_economy': {'type': 'str', }, 'computer_and_internet_info': {'type': 'str', }, 'auctions': {'type': 'str', }, 'shopping': {'type': 'str', }, 'cult_and_occult': {'type': 'str', }, 'travel': {'type': 'str', }, 'drugs': {'type': 'str', }, 'adult_and_pornography': {'type': 'str', }, 'home_and_garden': {'type': 'str', }, 'military': {'type': 'str', }, 'social_network': {'type': 'str', }, 'dead_sites': {'type': 'str', }, 'stock_advice_and_tools': {'type': 'str', }, 'training_and_tools': {'type': 'str', }, 'dating': {'type': 'str', }, 'sex_education': {'type': 'str', }, 'religion': {'type': 'str', }, 'entertainment_and_arts': {'type': 'str', }, 'personal_sites_and_blogs': {'type': 'str', }, 'legal': {'type': 'str', }, 'local_information': {'type': 'str', }, 'streaming_media': {'type': 'str', }, 'job_search': {'type': 'str', }, 'gambling': {'type': 'str', }, 'translation': {'type': 'str', }, 'reference_and_research': {'type': 'str', }, 'shareware_and_freeware': {'type': 'str', }, 'peer_to_peer': {'type': 'str', }, 'marijuana': {'type': 'str', }, 'hacking': {'type': 'str', }, 'games': {'type': 'str', }, 'philosophy_and_politics': {'type': 'str', }, 'weapons': {'type': 'str', }, 'pay_to_surf': {'type': 'str', }, 'hunting_and_fishing': {'type': 'str', }, 'society': {'type': 'str', }, 'educational_institutions': {'type': 'str', }, 'online_greeting_cards': {'type': 'str', }, 'sports': {'type': 'str', }, 'swimsuits_and_intimate_apparel': {'type': 'str', }, 'questionable': {'type': 'str', }, 'kids': {'type': 'str', }, 'hate_and_racism': {'type': 'str', }, 'personal_storage': {'type': 'str', }, 'violence': {'type': 'str', }, 'keyloggers_and_monitoring': {'type': 'str', }, 'search_engines': {'type': 'str', }, 'internet_portals': {'type': 'str', }, 'web_advertisements': {'type': 'str', }, 'cheating': {'type': 'str', }, 'gross': {'type': 'str', }, 'web_based_email': {'type': 'str', }, 'malware_sites': {'type': 'str', }, 'phishing_and_other_fraud': {'type': 'str', }, 'proxy_avoid_and_anonymizers': {'type': 'str', }, 'spyware_and_adware': {'type': 'str', }, 'music': {'type': 'str', }, 'government': {'type': 'str', }, 'nudity': {'type': 'str', }, 'news_and_media': {'type': 'str', }, 'illegal': {'type': 'str', }, 'CDNs': {'type': 'str', }, 'internet_communications': {'type': 'str', }, 'bot_nets': {'type': 'str', }, 'abortion': {'type': 'str', }, 'health_and_medicine': {'type': 'str', }, 'confirmed_SPAM_sources': {'type': 'str', }, 'SPAM_URLs': {'type': 'str', }, 'unconfirmed_SPAM_sources': {'type': 'str', }, 'open_HTTP_proxies': {'type': 'str', }, 'dynamic_comment': {'type': 'str', }, 'parked_domains': {'type': 'str', }, 'alcohol_and_tobacco': {'type': 'str', }, 'private_IP_addresses': {'type': 'str', }, 'image_and_video_search': {'type': 'str', }, 'fashion_and_beauty': {'type': 'str', }, 'recreation_and_hobbies': {'type': 'str', }, 'motor_vehicles': {'type': 'str', }, 'web_hosting_sites': {'type': 'str', }, 'food_and_dining': {'type': 'str', }, 'nudity_artistic': {'type': 'str', }, 'illegal_pornography': {'type': 'str', }, 'uncategorised': {'type': 'str', }, 'other_category': {'type': 'str', }, 'trustworthy': {'type': 'str', }, 'low_risk': {'type': 'str', }, 'moderate_risk': {'type': 'str', }, 'suspicious': {'type': 'str', }, 'malicious': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'auth_username': {
+            'type': 'str',
+        },
+        'ca_certs': {
+            'type': 'list',
+            'ca_cert': {
+                'type': 'str',
+            },
+            'ca_shared': {
+                'type': 'bool',
+            },
+            'client_ocsp': {
+                'type': 'bool',
+            },
+            'client_ocsp_srvr': {
+                'type': 'str',
+            },
+            'client_ocsp_sg': {
+                'type': 'str',
+            }
+        },
+        'chain_cert': {
+            'type': 'str',
+        },
+        'chain_cert_shared_str': {
+            'type': 'str',
+        },
+        'dh_type': {
+            'type': 'str',
+            'choices': ['1024', '1024-dsa', '2048']
+        },
+        'ec_list': {
+            'type': 'list',
+            'ec': {
+                'type': 'str',
+                'choices': ['secp256r1', 'secp384r1']
+            }
+        },
+        'local_logging': {
+            'type': 'bool',
+        },
+        'ocsp_stapling': {
+            'type': 'bool',
+        },
+        'ocspst_ca_cert': {
+            'type': 'str',
+        },
+        'ocspst_ocsp': {
+            'type': 'bool',
+        },
+        'ocspst_srvr': {
+            'type': 'str',
+        },
+        'ocspst_srvr_days': {
+            'type': 'int',
+        },
+        'ocspst_srvr_hours': {
+            'type': 'int',
+        },
+        'ocspst_srvr_minutes': {
+            'type': 'int',
+        },
+        'ocspst_srvr_timeout': {
+            'type': 'int',
+        },
+        'ocspst_sg': {
+            'type': 'str',
+        },
+        'ocspst_sg_days': {
+            'type': 'int',
+        },
+        'ocspst_sg_hours': {
+            'type': 'int',
+        },
+        'ocspst_sg_minutes': {
+            'type': 'int',
+        },
+        'ocspst_sg_timeout': {
+            'type': 'int',
+        },
+        'ssli_logging': {
+            'type': 'bool',
+        },
+        'sslilogging': {
+            'type': 'str',
+            'choices': ['disable', 'all']
+        },
+        'client_certificate': {
+            'type': 'str',
+            'choices': ['Ignore', 'Require', 'Request']
+        },
+        'req_ca_lists': {
+            'type': 'list',
+            'client_certificate_Request_CA': {
+                'type': 'str',
+            },
+            'client_cert_req_ca_shared': {
+                'type': 'bool',
+            }
+        },
+        'close_notify': {
+            'type': 'bool',
+        },
+        'crl_certs': {
+            'type': 'list',
+            'crl': {
+                'type': 'str',
+            },
+            'crl_shared': {
+                'type': 'bool',
+            }
+        },
+        'forward_proxy_ca_cert': {
+            'type': 'str',
+        },
+        'fp_ca_shared': {
+            'type': 'bool',
+        },
+        'forward_proxy_ca_key': {
+            'type': 'str',
+        },
+        'forward_passphrase': {
+            'type': 'str',
+        },
+        'forward_encrypted': {
+            'type': 'str',
+        },
+        'fp_ca_key_shared': {
+            'type': 'bool',
+        },
+        'fp_ca_certificate': {
+            'type': 'str',
+        },
+        'fp_ca_key': {
+            'type': 'str',
+        },
+        'fp_ca_key_passphrase': {
+            'type': 'str',
+        },
+        'fp_ca_key_encrypted': {
+            'type': 'str',
+        },
+        'fp_ca_chain_cert': {
+            'type': 'str',
+        },
+        'fp_ca_certificate_shared': {
+            'type': 'bool',
+        },
+        'forward_proxy_alt_sign': {
+            'type': 'bool',
+        },
+        'fp_alt_cert': {
+            'type': 'str',
+        },
+        'fp_alt_key': {
+            'type': 'str',
+        },
+        'fp_alt_passphrase': {
+            'type': 'str',
+        },
+        'fp_alt_encrypted': {
+            'type': 'str',
+        },
+        'fp_alt_chain_cert': {
+            'type': 'str',
+        },
+        'fp_alt_shared': {
+            'type': 'bool',
+        },
+        'forward_proxy_trusted_ca_lists': {
+            'type': 'list',
+            'forward_proxy_trusted_ca': {
+                'type': 'str',
+            },
+            'fp_trusted_ca_shared': {
+                'type': 'bool',
+            }
+        },
+        'forward_proxy_decrypted_dscp': {
+            'type': 'int',
+        },
+        'forward_proxy_decrypted_dscp_bypass': {
+            'type': 'int',
+        },
+        'enable_tls_alert_logging': {
+            'type': 'bool',
+        },
+        'alert_type': {
+            'type': 'str',
+            'choices': ['fatal']
+        },
+        'forward_proxy_verify_cert_fail_action': {
+            'type': 'bool',
+        },
+        'verify_cert_fail_action': {
+            'type': 'str',
+            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'forward_proxy_cert_revoke_action': {
+            'type': 'bool',
+        },
+        'cert_revoke_action': {
+            'type': 'str',
+            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'forward_proxy_no_shared_cipher_action': {
+            'type': 'bool',
+        },
+        'no_shared_cipher_action': {
+            'type': 'str',
+            'choices': ['bypass', 'drop']
+        },
+        'forward_proxy_esni_action': {
+            'type': 'bool',
+        },
+        'fp_esni_action': {
+            'type': 'str',
+            'choices': ['bypass', 'drop']
+        },
+        'forward_proxy_cert_unknown_action': {
+            'type': 'bool',
+        },
+        'cert_unknown_action': {
+            'type': 'str',
+            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'forward_proxy_block_message': {
+            'type': 'str',
+        },
+        'cache_persistence_list_name': {
+            'type': 'str',
+        },
+        'fp_cert_ext_crldp': {
+            'type': 'str',
+        },
+        'fp_cert_ext_aia_ocsp': {
+            'type': 'str',
+        },
+        'fp_cert_ext_aia_ca_issuers': {
+            'type': 'str',
+        },
+        'notbefore': {
+            'type': 'bool',
+        },
+        'notbeforeday': {
+            'type': 'int',
+        },
+        'notbeforemonth': {
+            'type': 'int',
+        },
+        'notbeforeyear': {
+            'type': 'int',
+        },
+        'notafter': {
+            'type': 'bool',
+        },
+        'notafterday': {
+            'type': 'int',
+        },
+        'notaftermonth': {
+            'type': 'int',
+        },
+        'notafteryear': {
+            'type': 'int',
+        },
+        'forward_proxy_hash_persistence_interval': {
+            'type': 'int',
+        },
+        'forward_proxy_ssl_version': {
+            'type': 'int',
+        },
+        'forward_proxy_ocsp_disable': {
+            'type': 'bool',
+        },
+        'forward_proxy_crl_disable': {
+            'type': 'bool',
+        },
+        'forward_proxy_cert_cache_timeout': {
+            'type': 'int',
+        },
+        'forward_proxy_cert_cache_limit': {
+            'type': 'int',
+        },
+        'forward_proxy_cert_expiry': {
+            'type': 'bool',
+        },
+        'expire_hours': {
+            'type': 'int',
+        },
+        'forward_proxy_enable': {
+            'type': 'bool',
+        },
+        'handshake_logging_enable': {
+            'type': 'bool',
+        },
+        'forward_proxy_selfsign_redir': {
+            'type': 'bool',
+        },
+        'forward_proxy_failsafe_disable': {
+            'type': 'bool',
+        },
+        'forward_proxy_log_disable': {
+            'type': 'bool',
+        },
+        'fp_cert_fetch_natpool_name': {
+            'type': 'str',
+        },
+        'shared_partition_pool': {
+            'type': 'bool',
+        },
+        'fp_cert_fetch_natpool_name_shared': {
+            'type': 'str',
+        },
+        'fp_cert_fetch_natpool_precedence': {
+            'type': 'bool',
+        },
+        'fp_cert_fetch_autonat': {
+            'type': 'str',
+            'choices': ['auto']
+        },
+        'fp_cert_fetch_autonat_precedence': {
+            'type': 'bool',
+        },
+        'forward_proxy_no_sni_action': {
+            'type': 'str',
+            'choices': ['intercept', 'bypass', 'reset']
+        },
+        'case_insensitive': {
+            'type': 'bool',
+        },
+        'class_list_name': {
+            'type': 'str',
+        },
+        'multi_class_list': {
+            'type': 'list',
+            'multi_clist_name': {
+                'type': 'str',
+            }
+        },
+        'user_name_list': {
+            'type': 'str',
+        },
+        'ad_group_list': {
+            'type': 'str',
+        },
+        'exception_user_name_list': {
+            'type': 'str',
+        },
+        'exception_ad_group_list': {
+            'type': 'str',
+        },
+        'exception_sni_cl_name': {
+            'type': 'str',
+        },
+        'inspect_list_name': {
+            'type': 'str',
+        },
+        'inspect_certificate_subject_cl_name': {
+            'type': 'str',
+        },
+        'inspect_certificate_issuer_cl_name': {
+            'type': 'str',
+        },
+        'inspect_certificate_san_cl_name': {
+            'type': 'str',
+        },
+        'contains_list': {
+            'type': 'list',
+            'contains': {
+                'type': 'str',
+            }
+        },
+        'ends_with_list': {
+            'type': 'list',
+            'ends_with': {
+                'type': 'str',
+            }
+        },
+        'equals_list': {
+            'type': 'list',
+            'equals': {
+                'type': 'str',
+            }
+        },
+        'starts_with_list': {
+            'type': 'list',
+            'starts_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_subject_contains_list': {
+            'type': 'list',
+            'certificate_subject_contains': {
+                'type': 'str',
+            }
+        },
+        'bypass_cert_subject_class_list_name': {
+            'type': 'str',
+        },
+        'bypass_cert_subject_multi_class_list': {
+            'type': 'list',
+            'bypass_cert_subject_multi_class_list_name': {
+                'type': 'str',
+            }
+        },
+        'exception_certificate_subject_cl_name': {
+            'type': 'str',
+        },
+        'certificate_subject_ends_with_list': {
+            'type': 'list',
+            'certificate_subject_ends_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_subject_equals_list': {
+            'type': 'list',
+            'certificate_subject_equals': {
+                'type': 'str',
+            }
+        },
+        'certificate_subject_starts_with_list': {
+            'type': 'list',
+            'certificate_subject_starts': {
+                'type': 'str',
+            }
+        },
+        'certificate_issuer_contains_list': {
+            'type': 'list',
+            'certificate_issuer_contains': {
+                'type': 'str',
+            }
+        },
+        'bypass_cert_issuer_class_list_name': {
+            'type': 'str',
+        },
+        'bypass_cert_issuer_multi_class_list': {
+            'type': 'list',
+            'bypass_cert_issuer_multi_class_list_name': {
+                'type': 'str',
+            }
+        },
+        'exception_certificate_issuer_cl_name': {
+            'type': 'str',
+        },
+        'certificate_issuer_ends_with_list': {
+            'type': 'list',
+            'certificate_issuer_ends_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_issuer_equals_list': {
+            'type': 'list',
+            'certificate_issuer_equals': {
+                'type': 'str',
+            }
+        },
+        'certificate_issuer_starts_with_list': {
+            'type': 'list',
+            'certificate_issuer_starts': {
+                'type': 'str',
+            }
+        },
+        'certificate_san_contains_list': {
+            'type': 'list',
+            'certificate_san_contains': {
+                'type': 'str',
+            }
+        },
+        'bypass_cert_san_class_list_name': {
+            'type': 'str',
+        },
+        'bypass_cert_san_multi_class_list': {
+            'type': 'list',
+            'bypass_cert_san_multi_class_list_name': {
+                'type': 'str',
+            }
+        },
+        'exception_certificate_san_cl_name': {
+            'type': 'str',
+        },
+        'certificate_san_ends_with_list': {
+            'type': 'list',
+            'certificate_san_ends_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_san_equals_list': {
+            'type': 'list',
+            'certificate_san_equals': {
+                'type': 'str',
+            }
+        },
+        'certificate_san_starts_with_list': {
+            'type': 'list',
+            'certificate_san_starts': {
+                'type': 'str',
+            }
+        },
+        'client_auth_case_insensitive': {
+            'type': 'bool',
+        },
+        'client_auth_class_list': {
+            'type': 'str',
+        },
+        'client_auth_contains_list': {
+            'type': 'list',
+            'client_auth_contains': {
+                'type': 'str',
+            }
+        },
+        'client_auth_ends_with_list': {
+            'type': 'list',
+            'client_auth_ends_with': {
+                'type': 'str',
+            }
+        },
+        'client_auth_equals_list': {
+            'type': 'list',
+            'client_auth_equals': {
+                'type': 'str',
+            }
+        },
+        'client_auth_starts_with_list': {
+            'type': 'list',
+            'client_auth_starts_with': {
+                'type': 'str',
+            }
+        },
+        'forward_proxy_cert_not_ready_action': {
+            'type': 'str',
+            'choices': ['bypass', 'reset', 'intercept']
+        },
+        'web_reputation': {
+            'type': 'dict',
+            'bypass_trustworthy': {
+                'type': 'bool',
+            },
+            'bypass_low_risk': {
+                'type': 'bool',
+            },
+            'bypass_moderate_risk': {
+                'type': 'bool',
+            },
+            'bypass_suspicious': {
+                'type': 'bool',
+            },
+            'bypass_malicious': {
+                'type': 'bool',
+            },
+            'bypass_threshold': {
+                'type': 'int',
+            }
+        },
+        'exception_web_reputation': {
+            'type': 'dict',
+            'exception_trustworthy': {
+                'type': 'bool',
+            },
+            'exception_low_risk': {
+                'type': 'bool',
+            },
+            'exception_moderate_risk': {
+                'type': 'bool',
+            },
+            'exception_suspicious': {
+                'type': 'bool',
+            },
+            'exception_malicious': {
+                'type': 'bool',
+            },
+            'exception_threshold': {
+                'type': 'int',
+            }
+        },
+        'web_category': {
+            'type': 'dict',
+            'uncategorized': {
+                'type': 'bool',
+            },
+            'real_estate': {
+                'type': 'bool',
+            },
+            'computer_and_internet_security': {
+                'type': 'bool',
+            },
+            'financial_services': {
+                'type': 'bool',
+            },
+            'business_and_economy': {
+                'type': 'bool',
+            },
+            'computer_and_internet_info': {
+                'type': 'bool',
+            },
+            'auctions': {
+                'type': 'bool',
+            },
+            'shopping': {
+                'type': 'bool',
+            },
+            'cult_and_occult': {
+                'type': 'bool',
+            },
+            'travel': {
+                'type': 'bool',
+            },
+            'drugs': {
+                'type': 'bool',
+            },
+            'adult_and_pornography': {
+                'type': 'bool',
+            },
+            'home_and_garden': {
+                'type': 'bool',
+            },
+            'military': {
+                'type': 'bool',
+            },
+            'social_network': {
+                'type': 'bool',
+            },
+            'dead_sites': {
+                'type': 'bool',
+            },
+            'stock_advice_and_tools': {
+                'type': 'bool',
+            },
+            'training_and_tools': {
+                'type': 'bool',
+            },
+            'dating': {
+                'type': 'bool',
+            },
+            'sex_education': {
+                'type': 'bool',
+            },
+            'religion': {
+                'type': 'bool',
+            },
+            'entertainment_and_arts': {
+                'type': 'bool',
+            },
+            'personal_sites_and_blogs': {
+                'type': 'bool',
+            },
+            'legal': {
+                'type': 'bool',
+            },
+            'local_information': {
+                'type': 'bool',
+            },
+            'streaming_media': {
+                'type': 'bool',
+            },
+            'job_search': {
+                'type': 'bool',
+            },
+            'gambling': {
+                'type': 'bool',
+            },
+            'translation': {
+                'type': 'bool',
+            },
+            'reference_and_research': {
+                'type': 'bool',
+            },
+            'shareware_and_freeware': {
+                'type': 'bool',
+            },
+            'peer_to_peer': {
+                'type': 'bool',
+            },
+            'marijuana': {
+                'type': 'bool',
+            },
+            'hacking': {
+                'type': 'bool',
+            },
+            'games': {
+                'type': 'bool',
+            },
+            'philosophy_and_politics': {
+                'type': 'bool',
+            },
+            'weapons': {
+                'type': 'bool',
+            },
+            'pay_to_surf': {
+                'type': 'bool',
+            },
+            'hunting_and_fishing': {
+                'type': 'bool',
+            },
+            'society': {
+                'type': 'bool',
+            },
+            'educational_institutions': {
+                'type': 'bool',
+            },
+            'online_greeting_cards': {
+                'type': 'bool',
+            },
+            'sports': {
+                'type': 'bool',
+            },
+            'swimsuits_and_intimate_apparel': {
+                'type': 'bool',
+            },
+            'questionable': {
+                'type': 'bool',
+            },
+            'kids': {
+                'type': 'bool',
+            },
+            'hate_and_racism': {
+                'type': 'bool',
+            },
+            'personal_storage': {
+                'type': 'bool',
+            },
+            'violence': {
+                'type': 'bool',
+            },
+            'keyloggers_and_monitoring': {
+                'type': 'bool',
+            },
+            'search_engines': {
+                'type': 'bool',
+            },
+            'internet_portals': {
+                'type': 'bool',
+            },
+            'web_advertisements': {
+                'type': 'bool',
+            },
+            'cheating': {
+                'type': 'bool',
+            },
+            'gross': {
+                'type': 'bool',
+            },
+            'web_based_email': {
+                'type': 'bool',
+            },
+            'malware_sites': {
+                'type': 'bool',
+            },
+            'phishing_and_other_fraud': {
+                'type': 'bool',
+            },
+            'proxy_avoid_and_anonymizers': {
+                'type': 'bool',
+            },
+            'spyware_and_adware': {
+                'type': 'bool',
+            },
+            'music': {
+                'type': 'bool',
+            },
+            'government': {
+                'type': 'bool',
+            },
+            'nudity': {
+                'type': 'bool',
+            },
+            'news_and_media': {
+                'type': 'bool',
+            },
+            'illegal': {
+                'type': 'bool',
+            },
+            'cdns': {
+                'type': 'bool',
+            },
+            'internet_communications': {
+                'type': 'bool',
+            },
+            'bot_nets': {
+                'type': 'bool',
+            },
+            'abortion': {
+                'type': 'bool',
+            },
+            'health_and_medicine': {
+                'type': 'bool',
+            },
+            'confirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'spam_urls': {
+                'type': 'bool',
+            },
+            'unconfirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'open_http_proxies': {
+                'type': 'bool',
+            },
+            'dynamic_comment': {
+                'type': 'bool',
+            },
+            'parked_domains': {
+                'type': 'bool',
+            },
+            'alcohol_and_tobacco': {
+                'type': 'bool',
+            },
+            'private_ip_addresses': {
+                'type': 'bool',
+            },
+            'image_and_video_search': {
+                'type': 'bool',
+            },
+            'fashion_and_beauty': {
+                'type': 'bool',
+            },
+            'recreation_and_hobbies': {
+                'type': 'bool',
+            },
+            'motor_vehicles': {
+                'type': 'bool',
+            },
+            'web_hosting_sites': {
+                'type': 'bool',
+            },
+            'food_and_dining': {
+                'type': 'bool',
+            },
+            'nudity_artistic': {
+                'type': 'bool',
+            },
+            'illegal_pornography': {
+                'type': 'bool',
+            }
+        },
+        'exception_web_category': {
+            'type': 'dict',
+            'exception_uncategorized': {
+                'type': 'bool',
+            },
+            'exception_real_estate': {
+                'type': 'bool',
+            },
+            'exception_computer_and_internet_security': {
+                'type': 'bool',
+            },
+            'exception_financial_services': {
+                'type': 'bool',
+            },
+            'exception_business_and_economy': {
+                'type': 'bool',
+            },
+            'exception_computer_and_internet_info': {
+                'type': 'bool',
+            },
+            'exception_auctions': {
+                'type': 'bool',
+            },
+            'exception_shopping': {
+                'type': 'bool',
+            },
+            'exception_cult_and_occult': {
+                'type': 'bool',
+            },
+            'exception_travel': {
+                'type': 'bool',
+            },
+            'exception_drugs': {
+                'type': 'bool',
+            },
+            'exception_adult_and_pornography': {
+                'type': 'bool',
+            },
+            'exception_home_and_garden': {
+                'type': 'bool',
+            },
+            'exception_military': {
+                'type': 'bool',
+            },
+            'exception_social_network': {
+                'type': 'bool',
+            },
+            'exception_dead_sites': {
+                'type': 'bool',
+            },
+            'exception_stock_advice_and_tools': {
+                'type': 'bool',
+            },
+            'exception_training_and_tools': {
+                'type': 'bool',
+            },
+            'exception_dating': {
+                'type': 'bool',
+            },
+            'exception_sex_education': {
+                'type': 'bool',
+            },
+            'exception_religion': {
+                'type': 'bool',
+            },
+            'exception_entertainment_and_arts': {
+                'type': 'bool',
+            },
+            'exception_personal_sites_and_blogs': {
+                'type': 'bool',
+            },
+            'exception_legal': {
+                'type': 'bool',
+            },
+            'exception_local_information': {
+                'type': 'bool',
+            },
+            'exception_streaming_media': {
+                'type': 'bool',
+            },
+            'exception_job_search': {
+                'type': 'bool',
+            },
+            'exception_gambling': {
+                'type': 'bool',
+            },
+            'exception_translation': {
+                'type': 'bool',
+            },
+            'exception_reference_and_research': {
+                'type': 'bool',
+            },
+            'exception_shareware_and_freeware': {
+                'type': 'bool',
+            },
+            'exception_peer_to_peer': {
+                'type': 'bool',
+            },
+            'exception_marijuana': {
+                'type': 'bool',
+            },
+            'exception_hacking': {
+                'type': 'bool',
+            },
+            'exception_games': {
+                'type': 'bool',
+            },
+            'exception_philosophy_and_politics': {
+                'type': 'bool',
+            },
+            'exception_weapons': {
+                'type': 'bool',
+            },
+            'exception_pay_to_surf': {
+                'type': 'bool',
+            },
+            'exception_hunting_and_fishing': {
+                'type': 'bool',
+            },
+            'exception_society': {
+                'type': 'bool',
+            },
+            'exception_educational_institutions': {
+                'type': 'bool',
+            },
+            'exception_online_greeting_cards': {
+                'type': 'bool',
+            },
+            'exception_sports': {
+                'type': 'bool',
+            },
+            'exception_swimsuits_and_intimate_apparel': {
+                'type': 'bool',
+            },
+            'exception_questionable': {
+                'type': 'bool',
+            },
+            'exception_kids': {
+                'type': 'bool',
+            },
+            'exception_hate_and_racism': {
+                'type': 'bool',
+            },
+            'exception_personal_storage': {
+                'type': 'bool',
+            },
+            'exception_violence': {
+                'type': 'bool',
+            },
+            'exception_keyloggers_and_monitoring': {
+                'type': 'bool',
+            },
+            'exception_search_engines': {
+                'type': 'bool',
+            },
+            'exception_internet_portals': {
+                'type': 'bool',
+            },
+            'exception_web_advertisements': {
+                'type': 'bool',
+            },
+            'exception_cheating': {
+                'type': 'bool',
+            },
+            'exception_gross': {
+                'type': 'bool',
+            },
+            'exception_web_based_email': {
+                'type': 'bool',
+            },
+            'exception_malware_sites': {
+                'type': 'bool',
+            },
+            'exception_phishing_and_other_fraud': {
+                'type': 'bool',
+            },
+            'exception_proxy_avoid_and_anonymizers': {
+                'type': 'bool',
+            },
+            'exception_spyware_and_adware': {
+                'type': 'bool',
+            },
+            'exception_music': {
+                'type': 'bool',
+            },
+            'exception_government': {
+                'type': 'bool',
+            },
+            'exception_nudity': {
+                'type': 'bool',
+            },
+            'exception_news_and_media': {
+                'type': 'bool',
+            },
+            'exception_illegal': {
+                'type': 'bool',
+            },
+            'exception_cdns': {
+                'type': 'bool',
+            },
+            'exception_internet_communications': {
+                'type': 'bool',
+            },
+            'exception_bot_nets': {
+                'type': 'bool',
+            },
+            'exception_abortion': {
+                'type': 'bool',
+            },
+            'exception_health_and_medicine': {
+                'type': 'bool',
+            },
+            'exception_confirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'exception_spam_urls': {
+                'type': 'bool',
+            },
+            'exception_unconfirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'exception_open_http_proxies': {
+                'type': 'bool',
+            },
+            'exception_dynamic_comment': {
+                'type': 'bool',
+            },
+            'exception_parked_domains': {
+                'type': 'bool',
+            },
+            'exception_alcohol_and_tobacco': {
+                'type': 'bool',
+            },
+            'exception_private_ip_addresses': {
+                'type': 'bool',
+            },
+            'exception_image_and_video_search': {
+                'type': 'bool',
+            },
+            'exception_fashion_and_beauty': {
+                'type': 'bool',
+            },
+            'exception_recreation_and_hobbies': {
+                'type': 'bool',
+            },
+            'exception_motor_vehicles': {
+                'type': 'bool',
+            },
+            'exception_web_hosting_sites': {
+                'type': 'bool',
+            },
+            'exception_food_and_dining': {
+                'type': 'bool',
+            },
+            'exception_nudity_artistic': {
+                'type': 'bool',
+            },
+            'exception_illegal_pornography': {
+                'type': 'bool',
+            }
+        },
+        'require_web_category': {
+            'type': 'bool',
+        },
+        'forward_proxy_require_sni_cert_matched': {
+            'type': 'str',
+            'choices': ['no-match-action-inspect', 'no-match-action-drop']
+        },
+        'template_cipher': {
+            'type': 'str',
+        },
+        'shared_partition_cipher_template': {
+            'type': 'bool',
+        },
+        'template_cipher_shared': {
+            'type': 'str',
+        },
+        'template_hsm': {
+            'type': 'str',
+        },
+        'hsm_type': {
+            'type': 'str',
+            'choices': ['thales-embed', 'thales-hwcrhk']
+        },
+        'cipher_without_prio_list': {
+            'type': 'list',
+            'cipher_wo_prio': {
+                'type':
+                'str',
+                'choices': [
+                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5',
+                    'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA',
+                    'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256',
+                    'TLS1_RSA_AES_256_SHA256',
+                    'TLS1_DHE_RSA_AES_128_GCM_SHA256',
+                    'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256',
+                    'TLS1_DHE_RSA_AES_256_GCM_SHA384',
+                    'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256',
+                    'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256',
+                    'TLS1_ECDHE_ECDSA_AES_128_SHA',
+                    'TLS1_ECDHE_ECDSA_AES_128_SHA256',
+                    'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384',
+                    'TLS1_ECDHE_ECDSA_AES_256_SHA',
+                    'TLS1_ECDHE_RSA_AES_128_GCM_SHA256',
+                    'TLS1_ECDHE_RSA_AES_128_SHA',
+                    'TLS1_ECDHE_RSA_AES_128_SHA256',
+                    'TLS1_ECDHE_RSA_AES_256_GCM_SHA384',
+                    'TLS1_ECDHE_RSA_AES_256_SHA',
+                    'TLS1_RSA_AES_128_GCM_SHA256',
+                    'TLS1_RSA_AES_256_GCM_SHA384',
+                    'TLS1_ECDHE_RSA_AES_256_SHA384',
+                    'TLS1_ECDHE_ECDSA_AES_256_SHA384',
+                    'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
+                ]
+            }
+        },
+        'server_name_list': {
+            'type': 'list',
+            'server_name': {
+                'type': 'str',
+            },
+            'server_cert': {
+                'type': 'str',
+            },
+            'server_chain': {
+                'type': 'str',
+            },
+            'server_key': {
+                'type': 'str',
+            },
+            'server_passphrase': {
+                'type': 'str',
+            },
+            'server_encrypted': {
+                'type': 'str',
+            },
+            'server_name_alternate': {
+                'type': 'bool',
+            },
+            'server_shared': {
+                'type': 'bool',
+            },
+            'sni_template': {
+                'type': 'bool',
+            },
+            'sni_template_client_ssl': {
+                'type': 'str',
+            },
+            'sni_shared_partition_client_ssl_template': {
+                'type': 'bool',
+            },
+            'sni_template_client_ssl_shared_name': {
+                'type': 'str',
+            },
+            'server_name_regex': {
+                'type': 'str',
+            },
+            'server_cert_regex': {
+                'type': 'str',
+            },
+            'server_chain_regex': {
+                'type': 'str',
+            },
+            'server_key_regex': {
+                'type': 'str',
+            },
+            'server_passphrase_regex': {
+                'type': 'str',
+            },
+            'server_encrypted_regex': {
+                'type': 'str',
+            },
+            'server_name_regex_alternate': {
+                'type': 'bool',
+            },
+            'server_shared_regex': {
+                'type': 'bool',
+            },
+            'sni_regex_template': {
+                'type': 'bool',
+            },
+            'sni_regex_template_client_ssl': {
+                'type': 'str',
+            },
+            'sni_regex_shared_partition_client_ssl_template': {
+                'type': 'bool',
+            },
+            'sni_regex_template_client_ssl_shared_name': {
+                'type': 'str',
+            }
+        },
+        'server_name_auto_map': {
+            'type': 'bool',
+        },
+        'sni_enable_log': {
+            'type': 'bool',
+        },
+        'sni_bypass_missing_cert': {
+            'type': 'bool',
+        },
+        'sni_bypass_expired_cert': {
+            'type': 'bool',
+        },
+        'sni_bypass_explicit_list': {
+            'type': 'str',
+        },
+        'sni_bypass_enable_log': {
+            'type': 'bool',
+        },
+        'direct_client_server_auth': {
+            'type': 'bool',
+        },
+        'session_cache_size': {
+            'type': 'int',
+        },
+        'session_cache_timeout': {
+            'type': 'int',
+        },
+        'session_ticket_disable': {
+            'type': 'bool',
+        },
+        'session_ticket_lifetime': {
+            'type': 'int',
+        },
+        'ssl_false_start_disable': {
+            'type': 'bool',
+        },
+        'disable_sslv3': {
+            'type': 'bool',
+        },
+        'version': {
+            'type': 'int',
+        },
+        'dgversion': {
+            'type': 'int',
+        },
+        'renegotiation_disable': {
+            'type': 'bool',
+        },
+        'sslv2_bypass_service_group': {
+            'type': 'str',
+        },
+        'authorization': {
+            'type': 'bool',
+        },
+        'authen_name': {
+            'type': 'str',
+        },
+        'ldap_base_dn_from_cert': {
+            'type': 'bool',
+        },
+        'ldap_search_filter': {
+            'type': 'str',
+        },
+        'auth_sg': {
+            'type': 'str',
+        },
+        'auth_sg_dn': {
+            'type': 'bool',
+        },
+        'auth_sg_filter': {
+            'type': 'str',
+        },
+        'auth_username_attribute': {
+            'type': 'str',
+        },
+        'non_ssl_bypass_service_group': {
+            'type': 'str',
+        },
+        'non_ssl_bypass_l4session': {
+            'type': 'bool',
+        },
+        'enable_ssli_ftp_alg': {
+            'type': 'int',
+        },
+        'early_data': {
+            'type': 'bool',
+        },
+        'no_anti_replay': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'certificate_list': {
+            'type': 'list',
+            'cert': {
+                'type': 'str',
+                'required': True,
+            },
+            'key': {
+                'type': 'str',
+            },
+            'passphrase': {
+                'type': 'str',
+            },
+            'key_encrypted': {
+                'type': 'str',
+            },
+            'chain_cert': {
+                'type': 'str',
+            },
+            'shared': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'cert_status_list': {
+                'type': 'list',
+                'cert_status_name': {
+                    'type': 'str',
+                },
+                'cert_status_status': {
+                    'type': 'str',
+                },
+                'cert_status_age': {
+                    'type': 'int',
+                },
+                'cert_status_next_update': {
+                    'type': 'str',
+                },
+                'cert_status_responder': {
+                    'type': 'str',
+                }
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'real_estate': {
+                'type': 'str',
+            },
+            'computer_and_internet_security': {
+                'type': 'str',
+            },
+            'financial_services': {
+                'type': 'str',
+            },
+            'business_and_economy': {
+                'type': 'str',
+            },
+            'computer_and_internet_info': {
+                'type': 'str',
+            },
+            'auctions': {
+                'type': 'str',
+            },
+            'shopping': {
+                'type': 'str',
+            },
+            'cult_and_occult': {
+                'type': 'str',
+            },
+            'travel': {
+                'type': 'str',
+            },
+            'drugs': {
+                'type': 'str',
+            },
+            'adult_and_pornography': {
+                'type': 'str',
+            },
+            'home_and_garden': {
+                'type': 'str',
+            },
+            'military': {
+                'type': 'str',
+            },
+            'social_network': {
+                'type': 'str',
+            },
+            'dead_sites': {
+                'type': 'str',
+            },
+            'stock_advice_and_tools': {
+                'type': 'str',
+            },
+            'training_and_tools': {
+                'type': 'str',
+            },
+            'dating': {
+                'type': 'str',
+            },
+            'sex_education': {
+                'type': 'str',
+            },
+            'religion': {
+                'type': 'str',
+            },
+            'entertainment_and_arts': {
+                'type': 'str',
+            },
+            'personal_sites_and_blogs': {
+                'type': 'str',
+            },
+            'legal': {
+                'type': 'str',
+            },
+            'local_information': {
+                'type': 'str',
+            },
+            'streaming_media': {
+                'type': 'str',
+            },
+            'job_search': {
+                'type': 'str',
+            },
+            'gambling': {
+                'type': 'str',
+            },
+            'translation': {
+                'type': 'str',
+            },
+            'reference_and_research': {
+                'type': 'str',
+            },
+            'shareware_and_freeware': {
+                'type': 'str',
+            },
+            'peer_to_peer': {
+                'type': 'str',
+            },
+            'marijuana': {
+                'type': 'str',
+            },
+            'hacking': {
+                'type': 'str',
+            },
+            'games': {
+                'type': 'str',
+            },
+            'philosophy_and_politics': {
+                'type': 'str',
+            },
+            'weapons': {
+                'type': 'str',
+            },
+            'pay_to_surf': {
+                'type': 'str',
+            },
+            'hunting_and_fishing': {
+                'type': 'str',
+            },
+            'society': {
+                'type': 'str',
+            },
+            'educational_institutions': {
+                'type': 'str',
+            },
+            'online_greeting_cards': {
+                'type': 'str',
+            },
+            'sports': {
+                'type': 'str',
+            },
+            'swimsuits_and_intimate_apparel': {
+                'type': 'str',
+            },
+            'questionable': {
+                'type': 'str',
+            },
+            'kids': {
+                'type': 'str',
+            },
+            'hate_and_racism': {
+                'type': 'str',
+            },
+            'personal_storage': {
+                'type': 'str',
+            },
+            'violence': {
+                'type': 'str',
+            },
+            'keyloggers_and_monitoring': {
+                'type': 'str',
+            },
+            'search_engines': {
+                'type': 'str',
+            },
+            'internet_portals': {
+                'type': 'str',
+            },
+            'web_advertisements': {
+                'type': 'str',
+            },
+            'cheating': {
+                'type': 'str',
+            },
+            'gross': {
+                'type': 'str',
+            },
+            'web_based_email': {
+                'type': 'str',
+            },
+            'malware_sites': {
+                'type': 'str',
+            },
+            'phishing_and_other_fraud': {
+                'type': 'str',
+            },
+            'proxy_avoid_and_anonymizers': {
+                'type': 'str',
+            },
+            'spyware_and_adware': {
+                'type': 'str',
+            },
+            'music': {
+                'type': 'str',
+            },
+            'government': {
+                'type': 'str',
+            },
+            'nudity': {
+                'type': 'str',
+            },
+            'news_and_media': {
+                'type': 'str',
+            },
+            'illegal': {
+                'type': 'str',
+            },
+            'CDNs': {
+                'type': 'str',
+            },
+            'internet_communications': {
+                'type': 'str',
+            },
+            'bot_nets': {
+                'type': 'str',
+            },
+            'abortion': {
+                'type': 'str',
+            },
+            'health_and_medicine': {
+                'type': 'str',
+            },
+            'confirmed_SPAM_sources': {
+                'type': 'str',
+            },
+            'SPAM_URLs': {
+                'type': 'str',
+            },
+            'unconfirmed_SPAM_sources': {
+                'type': 'str',
+            },
+            'open_HTTP_proxies': {
+                'type': 'str',
+            },
+            'dynamic_comment': {
+                'type': 'str',
+            },
+            'parked_domains': {
+                'type': 'str',
+            },
+            'alcohol_and_tobacco': {
+                'type': 'str',
+            },
+            'private_IP_addresses': {
+                'type': 'str',
+            },
+            'image_and_video_search': {
+                'type': 'str',
+            },
+            'fashion_and_beauty': {
+                'type': 'str',
+            },
+            'recreation_and_hobbies': {
+                'type': 'str',
+            },
+            'motor_vehicles': {
+                'type': 'str',
+            },
+            'web_hosting_sites': {
+                'type': 'str',
+            },
+            'food_and_dining': {
+                'type': 'str',
+            },
+            'nudity_artistic': {
+                'type': 'str',
+            },
+            'illegal_pornography': {
+                'type': 'str',
+            },
+            'uncategorised': {
+                'type': 'str',
+            },
+            'other_category': {
+                'type': 'str',
+            },
+            'trustworthy': {
+                'type': 'str',
+            },
+            'low_risk': {
+                'type': 'str',
+            },
+            'moderate_risk': {
+                'type': 'str',
+            },
+            'suspicious': {
+                'type': 'str',
+            },
+            'malicious': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
+        }
     })
     return rv
 
@@ -2715,7 +4417,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
 
@@ -2755,8 +4457,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -2767,14 +4468,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("client-ssl", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("client-ssl", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -2808,14 +4509,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -2830,16 +4529,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -2848,15 +4547,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -2873,28 +4572,36 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["client-ssl"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "client-ssl"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["client-ssl-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "client-ssl-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module),
+                get_oper_result = api_client.get_oper(module.client,
+                                                      existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["client-ssl"]["oper"] if info != "NotFound" else info
+                result["acos_info"] = info["client-ssl"][
+                    "oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["client-ssl"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["client-ssl"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -2907,9 +4614,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

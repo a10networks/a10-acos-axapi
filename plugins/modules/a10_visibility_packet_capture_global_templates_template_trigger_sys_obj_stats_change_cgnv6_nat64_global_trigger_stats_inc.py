@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_nat64_global_trigger_stats_inc
 description:
@@ -61,6 +60,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    user_quota_failure:
+        description:
+        - "Enable automatic packet-capture for User-Quota Creation Failed"
+        type: bool
+        required: False
     nat_port_unavailable_tcp:
         description:
         - "Enable automatic packet-capture for TCP NAT Port Unavailable"
@@ -76,14 +80,60 @@ options:
         - "Enable automatic packet-capture for ICMP NAT Port Unavailable"
         type: bool
         required: False
-    extended_quota_exceeded:
+    new_user_resource_unavailable:
         description:
-        - "Enable automatic packet-capture for Extended User-Quota Exceeded"
+        - "Enable automatic packet-capture for New User NAT Resource Unavailable"
         type: bool
         required: False
     fullcone_failure:
         description:
         - "Enable automatic packet-capture for Full-cone Session Creation Failed"
+        type: bool
+        required: False
+    fullcone_self_hairpinning_drop:
+        description:
+        - "Enable automatic packet-capture for Self-Hairpinning Drop"
+        type: bool
+        required: False
+    eif_limit_exceeded:
+        description:
+        - "Enable automatic packet-capture for Endpoint-Independent Filtering Inbound
+          Limit Exceeded"
+        type: bool
+        required: False
+    nat_pool_unusable:
+        description:
+        - "Enable automatic packet-capture for NAT Pool Unusable"
+        type: bool
+        required: False
+    ha_nat_pool_unusable:
+        description:
+        - "Enable automatic packet-capture for HA NAT Pool Unusable"
+        type: bool
+        required: False
+    ha_nat_pool_batch_type_mismatch:
+        description:
+        - "Enable automatic packet-capture for HA NAT Pool Batch Type Mismatch"
+        type: bool
+        required: False
+    no_radius_profile_match:
+        description:
+        - "Enable automatic packet-capture for No RADIUS Profile Match"
+        type: bool
+        required: False
+    no_class_list_match:
+        description:
+        - "Enable automatic packet-capture for No Class-List Match"
+        type: bool
+        required: False
+    user_quota_unusable_drop:
+        description:
+        - "Enable automatic packet-capture for User-Quota Unusable Drop"
+        type: bool
+        required: False
+    user_quota_unusable:
+        description:
+        - "Enable automatic packet-capture for User-Quota Marked Unusable"
         type: bool
         required: False
     uuid:
@@ -144,9 +194,25 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["extended_quota_exceeded", "fullcone_failure", "nat_port_unavailable_icmp", "nat_port_unavailable_tcp", "nat_port_unavailable_udp", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "eif_limit_exceeded",
+    "fullcone_failure",
+    "fullcone_self_hairpinning_drop",
+    "ha_nat_pool_batch_type_mismatch",
+    "ha_nat_pool_unusable",
+    "nat_pool_unusable",
+    "nat_port_unavailable_icmp",
+    "nat_port_unavailable_tcp",
+    "nat_port_unavailable_udp",
+    "new_user_resource_unavailable",
+    "no_class_list_match",
+    "no_radius_profile_match",
+    "user_quota_failure",
+    "user_quota_unusable",
+    "user_quota_unusable_drop",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -154,27 +220,77 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'nat_port_unavailable_tcp': {'type': 'bool', },
-        'nat_port_unavailable_udp': {'type': 'bool', },
-        'nat_port_unavailable_icmp': {'type': 'bool', },
-        'extended_quota_exceeded': {'type': 'bool', },
-        'fullcone_failure': {'type': 'bool', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'user_quota_failure': {
+            'type': 'bool',
+        },
+        'nat_port_unavailable_tcp': {
+            'type': 'bool',
+        },
+        'nat_port_unavailable_udp': {
+            'type': 'bool',
+        },
+        'nat_port_unavailable_icmp': {
+            'type': 'bool',
+        },
+        'new_user_resource_unavailable': {
+            'type': 'bool',
+        },
+        'fullcone_failure': {
+            'type': 'bool',
+        },
+        'fullcone_self_hairpinning_drop': {
+            'type': 'bool',
+        },
+        'eif_limit_exceeded': {
+            'type': 'bool',
+        },
+        'nat_pool_unusable': {
+            'type': 'bool',
+        },
+        'ha_nat_pool_unusable': {
+            'type': 'bool',
+        },
+        'ha_nat_pool_batch_type_mismatch': {
+            'type': 'bool',
+        },
+        'no_radius_profile_match': {
+            'type': 'bool',
+        },
+        'no_class_list_match': {
+            'type': 'bool',
+        },
+        'user_quota_unusable_drop': {
+            'type': 'bool',
+        },
+        'user_quota_unusable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -185,7 +301,8 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/","%2F")
+        f_dict["template_name"] = module.params["template_name"].replace(
+            "/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -225,8 +342,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -237,14 +353,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-inc", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -278,14 +394,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -300,16 +414,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -318,15 +432,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -343,16 +457,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -365,9 +483,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

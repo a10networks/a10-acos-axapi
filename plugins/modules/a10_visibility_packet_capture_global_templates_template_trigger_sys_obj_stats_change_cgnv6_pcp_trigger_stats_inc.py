@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_pcp_trigger_stats_inc
 description:
@@ -61,9 +60,91 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    pkt_not_request_drop:
+        description:
+        - "Enable automatic packet-capture for Packet Not a PCP Request"
+        type: bool
+        required: False
+    pkt_too_short_drop:
+        description:
+        - "Enable automatic packet-capture for Packet Too Short"
+        type: bool
+        required: False
+    noroute_drop:
+        description:
+        - "Enable automatic packet-capture for Response No Route"
+        type: bool
+        required: False
+    unsupported_version:
+        description:
+        - "Enable automatic packet-capture for Unsupported PCP version"
+        type: bool
+        required: False
+    not_authorized:
+        description:
+        - "Enable automatic packet-capture for PCP Request Not Authorized"
+        type: bool
+        required: False
+    malform_request:
+        description:
+        - "Enable automatic packet-capture for PCP Request Malformed"
+        type: bool
+        required: False
+    unsupp_opcode:
+        description:
+        - "Enable automatic packet-capture for Unsupported PCP Opcode"
+        type: bool
+        required: False
+    unsupp_option:
+        description:
+        - "Enable automatic packet-capture for Unsupported PCP Option"
+        type: bool
+        required: False
+    malform_option:
+        description:
+        - "Enable automatic packet-capture for PCP Option Malformed"
+        type: bool
+        required: False
+    no_resources:
+        description:
+        - "Enable automatic packet-capture for No System or NAT Resources"
+        type: bool
+        required: False
+    unsupp_protocol:
+        description:
+        - "Enable automatic packet-capture for Unsupported Mapping Protocol"
+        type: bool
+        required: False
+    cannot_provide_suggest:
+        description:
+        - "Enable automatic packet-capture for Cannot Provide Suggested Port When
+          PREFER_FAILURE"
+        type: bool
+        required: False
+    address_mismatch:
+        description:
+        - "Enable automatic packet-capture for PCP Client Address Mismatch"
+        type: bool
+        required: False
+    excessive_remote_peers:
+        description:
+        - "Enable automatic packet-capture for Excessive Remote Peers"
+        type: bool
+        required: False
+    pkt_not_from_nat_inside:
+        description:
+        - "Enable automatic packet-capture for Packet Dropped For Not Coming From NAT
+          Inside"
+        type: bool
+        required: False
     l4_process_error:
         description:
         - "Enable automatic packet-capture for L3/L4 Process Error"
+        type: bool
+        required: False
+    internal_error_drop:
+        description:
+        - "Enable automatic packet-capture for Internal Error"
         type: bool
         required: False
     unsol_ance_sent_fail:
@@ -129,9 +210,28 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["l4_process_error", "unsol_ance_sent_fail", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "address_mismatch",
+    "cannot_provide_suggest",
+    "excessive_remote_peers",
+    "internal_error_drop",
+    "l4_process_error",
+    "malform_option",
+    "malform_request",
+    "no_resources",
+    "noroute_drop",
+    "not_authorized",
+    "pkt_not_from_nat_inside",
+    "pkt_not_request_drop",
+    "pkt_too_short_drop",
+    "unsol_ance_sent_fail",
+    "unsupp_opcode",
+    "unsupp_option",
+    "unsupp_protocol",
+    "unsupported_version",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -139,24 +239,86 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'l4_process_error': {'type': 'bool', },
-        'unsol_ance_sent_fail': {'type': 'bool', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'pkt_not_request_drop': {
+            'type': 'bool',
+        },
+        'pkt_too_short_drop': {
+            'type': 'bool',
+        },
+        'noroute_drop': {
+            'type': 'bool',
+        },
+        'unsupported_version': {
+            'type': 'bool',
+        },
+        'not_authorized': {
+            'type': 'bool',
+        },
+        'malform_request': {
+            'type': 'bool',
+        },
+        'unsupp_opcode': {
+            'type': 'bool',
+        },
+        'unsupp_option': {
+            'type': 'bool',
+        },
+        'malform_option': {
+            'type': 'bool',
+        },
+        'no_resources': {
+            'type': 'bool',
+        },
+        'unsupp_protocol': {
+            'type': 'bool',
+        },
+        'cannot_provide_suggest': {
+            'type': 'bool',
+        },
+        'address_mismatch': {
+            'type': 'bool',
+        },
+        'excessive_remote_peers': {
+            'type': 'bool',
+        },
+        'pkt_not_from_nat_inside': {
+            'type': 'bool',
+        },
+        'l4_process_error': {
+            'type': 'bool',
+        },
+        'internal_error_drop': {
+            'type': 'bool',
+        },
+        'unsol_ance_sent_fail': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -167,7 +329,8 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/","%2F")
+        f_dict["template_name"] = module.params["template_name"].replace(
+            "/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -207,8 +370,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -219,14 +381,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-inc", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -260,14 +422,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -282,16 +442,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -300,15 +460,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -325,16 +485,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -347,9 +511,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

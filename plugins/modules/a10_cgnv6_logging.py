@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_logging
 description:
@@ -364,6 +363,10 @@ options:
                 description:
                 - "Reduced Logs by Destination Protocol and Port"
                 type: str
+            interim_update_scheduled:
+                description:
+                - "Port Allocation Interim Update Scheduled"
+                type: str
             tcp_port_batch_interim_updated:
                 description:
                 - "TCP Port Batch Interim Updated"
@@ -441,9 +444,16 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["nat_quota_exceeded", "nat_resource_exhausted", "sampling_enable", "source_address", "stats", "tcp_svr_status", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "nat_quota_exceeded",
+    "nat_resource_exhausted",
+    "sampling_enable",
+    "source_address",
+    "stats",
+    "tcp_svr_status",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -451,23 +461,275 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'tcp-session-created', 'tcp-session-deleted', 'tcp-port-allocated', 'tcp-port-freed', 'tcp-port-batch-allocated', 'tcp-port-batch-freed', 'udp-session-created', 'udp-session-deleted', 'udp-port-allocated', 'udp-port-freed', 'udp-port-batch-allocated', 'udp-port-batch-freed', 'icmp-session-created', 'icmp-session-deleted', 'icmp-resource-allocated', 'icmp-resource-freed', 'icmpv6-session-created', 'icmpv6-session-deleted', 'icmpv6-resource-allocated', 'icmpv6-resource-freed', 'gre-session-created', 'gre-session-deleted', 'gre-resource-allocated', 'gre-resource-freed', 'esp-session-created', 'esp-session-deleted', 'esp-resource-allocated', 'esp-resource-freed', 'fixed-nat-user-ports', 'fixed-nat-disable-config-logged', 'fixed-nat-disable-config-logs-sent', 'fixed-nat-periodic-config-logs-sent', 'fixed-nat-periodic-config-logged', 'fixed-nat-interim-updated', 'enhanced-user-log', 'log-sent', 'log-dropped', 'conn-tcp-established', 'conn-tcp-dropped', 'tcp-port-overloading-allocated', 'tcp-port-overloading-freed', 'udp-port-overloading-allocated', 'udp-port-overloading-freed', 'http-request-logged', 'reduced-logs-by-destination', 'out-of-buffers', 'add-msg-failed', 'rtsp-port-allocated', 'rtsp-port-freed', 'conn-tcp-create-failed', 'ipv4-frag-applied', 'ipv4-frag-failed', 'ipv6-frag-applied', 'ipv6-frag-failed', 'interim-update-scheduled', 'interim-update-schedule-failed', 'interim-update-terminated', 'interim-update-memory-freed', 'interim-update-no-buff-retried', 'tcp-port-batch-interim-updated', 'udp-port-batch-interim-updated', 'port-block-accounting-freed', 'port-block-accounting-allocated', 'log-message-too-long', 'http-out-of-order-dropped', 'http-alloc-failed', 'http-frag-merge-failed-dropped', 'http-malloc', 'http-mfree', 'http-spm-alloc-type0', 'http-spm-alloc-type1', 'http-spm-alloc-type2', 'http-spm-alloc-type3', 'http-spm-alloc-type4', 'http-spm-free-type0', 'http-spm-free-type1', 'http-spm-free-type2', 'http-spm-free-type3', 'http-spm-free-type4', 'iddos-l3-entry-create', 'iddos-l3-entry-delete', 'iddos-l4-entry-create', 'iddos-l4-entry-delete']}},
-        'source_address': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'tcp_svr_status': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'nat_resource_exhausted': {'type': 'dict', 'level': {'type': 'str', 'choices': ['warning', 'critical', 'notice']}, 'uuid': {'type': 'str', }},
-        'nat_quota_exceeded': {'type': 'dict', 'level': {'type': 'str', 'choices': ['warning', 'critical', 'notice']}, 'uuid': {'type': 'str', }},
-        'stats': {'type': 'dict', 'tcp_session_created': {'type': 'str', }, 'tcp_session_deleted': {'type': 'str', }, 'tcp_port_allocated': {'type': 'str', }, 'tcp_port_freed': {'type': 'str', }, 'tcp_port_batch_allocated': {'type': 'str', }, 'tcp_port_batch_freed': {'type': 'str', }, 'udp_session_created': {'type': 'str', }, 'udp_session_deleted': {'type': 'str', }, 'udp_port_allocated': {'type': 'str', }, 'udp_port_freed': {'type': 'str', }, 'udp_port_batch_allocated': {'type': 'str', }, 'udp_port_batch_freed': {'type': 'str', }, 'icmp_session_created': {'type': 'str', }, 'icmp_session_deleted': {'type': 'str', }, 'icmp_resource_allocated': {'type': 'str', }, 'icmp_resource_freed': {'type': 'str', }, 'icmpv6_session_created': {'type': 'str', }, 'icmpv6_session_deleted': {'type': 'str', }, 'icmpv6_resource_allocated': {'type': 'str', }, 'icmpv6_resource_freed': {'type': 'str', }, 'gre_session_created': {'type': 'str', }, 'gre_session_deleted': {'type': 'str', }, 'gre_resource_allocated': {'type': 'str', }, 'gre_resource_freed': {'type': 'str', }, 'esp_session_created': {'type': 'str', }, 'esp_session_deleted': {'type': 'str', }, 'esp_resource_allocated': {'type': 'str', }, 'esp_resource_freed': {'type': 'str', }, 'fixed_nat_user_ports': {'type': 'str', }, 'fixed_nat_disable_config_logged': {'type': 'str', }, 'fixed_nat_disable_config_logs_sent': {'type': 'str', }, 'fixed_nat_periodic_config_logs_sent': {'type': 'str', }, 'fixed_nat_periodic_config_logged': {'type': 'str', }, 'fixed_nat_interim_updated': {'type': 'str', }, 'enhanced_user_log': {'type': 'str', }, 'log_sent': {'type': 'str', }, 'log_dropped': {'type': 'str', }, 'conn_tcp_established': {'type': 'str', }, 'conn_tcp_dropped': {'type': 'str', }, 'tcp_port_overloading_allocated': {'type': 'str', }, 'tcp_port_overloading_freed': {'type': 'str', }, 'udp_port_overloading_allocated': {'type': 'str', }, 'udp_port_overloading_freed': {'type': 'str', }, 'http_request_logged': {'type': 'str', }, 'reduced_logs_by_destination': {'type': 'str', }, 'tcp_port_batch_interim_updated': {'type': 'str', }, 'udp_port_batch_interim_updated': {'type': 'str', }, 'iddos_l3_entry_create': {'type': 'str', }, 'iddos_l3_entry_delete': {'type': 'str', }, 'iddos_l4_entry_create': {'type': 'str', }, 'iddos_l4_entry_delete': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'tcp-session-created', 'tcp-session-deleted',
+                    'tcp-port-allocated', 'tcp-port-freed',
+                    'tcp-port-batch-allocated', 'tcp-port-batch-freed',
+                    'udp-session-created', 'udp-session-deleted',
+                    'udp-port-allocated', 'udp-port-freed',
+                    'udp-port-batch-allocated', 'udp-port-batch-freed',
+                    'icmp-session-created', 'icmp-session-deleted',
+                    'icmp-resource-allocated', 'icmp-resource-freed',
+                    'icmpv6-session-created', 'icmpv6-session-deleted',
+                    'icmpv6-resource-allocated', 'icmpv6-resource-freed',
+                    'gre-session-created', 'gre-session-deleted',
+                    'gre-resource-allocated', 'gre-resource-freed',
+                    'esp-session-created', 'esp-session-deleted',
+                    'esp-resource-allocated', 'esp-resource-freed',
+                    'fixed-nat-user-ports', 'fixed-nat-disable-config-logged',
+                    'fixed-nat-disable-config-logs-sent',
+                    'fixed-nat-periodic-config-logs-sent',
+                    'fixed-nat-periodic-config-logged',
+                    'fixed-nat-interim-updated', 'enhanced-user-log',
+                    'log-sent', 'log-dropped', 'conn-tcp-established',
+                    'conn-tcp-dropped', 'tcp-port-overloading-allocated',
+                    'tcp-port-overloading-freed',
+                    'udp-port-overloading-allocated',
+                    'udp-port-overloading-freed', 'http-request-logged',
+                    'reduced-logs-by-destination', 'out-of-buffers',
+                    'add-msg-failed', 'rtsp-port-allocated', 'rtsp-port-freed',
+                    'conn-tcp-create-failed', 'ipv4-frag-applied',
+                    'ipv4-frag-failed', 'ipv6-frag-applied',
+                    'ipv6-frag-failed', 'interim-update-scheduled',
+                    'interim-update-schedule-failed',
+                    'interim-update-terminated', 'interim-update-memory-freed',
+                    'interim-update-no-buff-retried',
+                    'tcp-port-batch-interim-updated',
+                    'udp-port-batch-interim-updated',
+                    'port-block-accounting-freed',
+                    'port-block-accounting-allocated', 'log-message-too-long',
+                    'http-out-of-order-dropped', 'http-alloc-failed',
+                    'http-frag-merge-failed-dropped', 'http-malloc',
+                    'http-mfree', 'http-spm-alloc-type0',
+                    'http-spm-alloc-type1', 'http-spm-alloc-type2',
+                    'http-spm-alloc-type3', 'http-spm-alloc-type4',
+                    'http-spm-free-type0', 'http-spm-free-type1',
+                    'http-spm-free-type2', 'http-spm-free-type3',
+                    'http-spm-free-type4', 'iddos-l3-entry-create',
+                    'iddos-l3-entry-delete', 'iddos-l4-entry-create',
+                    'iddos-l4-entry-delete'
+                ]
+            }
+        },
+        'source_address': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'tcp_svr_status': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'nat_resource_exhausted': {
+            'type': 'dict',
+            'level': {
+                'type': 'str',
+                'choices': ['warning', 'critical', 'notice']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'nat_quota_exceeded': {
+            'type': 'dict',
+            'level': {
+                'type': 'str',
+                'choices': ['warning', 'critical', 'notice']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'tcp_session_created': {
+                'type': 'str',
+            },
+            'tcp_session_deleted': {
+                'type': 'str',
+            },
+            'tcp_port_allocated': {
+                'type': 'str',
+            },
+            'tcp_port_freed': {
+                'type': 'str',
+            },
+            'tcp_port_batch_allocated': {
+                'type': 'str',
+            },
+            'tcp_port_batch_freed': {
+                'type': 'str',
+            },
+            'udp_session_created': {
+                'type': 'str',
+            },
+            'udp_session_deleted': {
+                'type': 'str',
+            },
+            'udp_port_allocated': {
+                'type': 'str',
+            },
+            'udp_port_freed': {
+                'type': 'str',
+            },
+            'udp_port_batch_allocated': {
+                'type': 'str',
+            },
+            'udp_port_batch_freed': {
+                'type': 'str',
+            },
+            'icmp_session_created': {
+                'type': 'str',
+            },
+            'icmp_session_deleted': {
+                'type': 'str',
+            },
+            'icmp_resource_allocated': {
+                'type': 'str',
+            },
+            'icmp_resource_freed': {
+                'type': 'str',
+            },
+            'icmpv6_session_created': {
+                'type': 'str',
+            },
+            'icmpv6_session_deleted': {
+                'type': 'str',
+            },
+            'icmpv6_resource_allocated': {
+                'type': 'str',
+            },
+            'icmpv6_resource_freed': {
+                'type': 'str',
+            },
+            'gre_session_created': {
+                'type': 'str',
+            },
+            'gre_session_deleted': {
+                'type': 'str',
+            },
+            'gre_resource_allocated': {
+                'type': 'str',
+            },
+            'gre_resource_freed': {
+                'type': 'str',
+            },
+            'esp_session_created': {
+                'type': 'str',
+            },
+            'esp_session_deleted': {
+                'type': 'str',
+            },
+            'esp_resource_allocated': {
+                'type': 'str',
+            },
+            'esp_resource_freed': {
+                'type': 'str',
+            },
+            'fixed_nat_user_ports': {
+                'type': 'str',
+            },
+            'fixed_nat_disable_config_logged': {
+                'type': 'str',
+            },
+            'fixed_nat_disable_config_logs_sent': {
+                'type': 'str',
+            },
+            'fixed_nat_periodic_config_logs_sent': {
+                'type': 'str',
+            },
+            'fixed_nat_periodic_config_logged': {
+                'type': 'str',
+            },
+            'fixed_nat_interim_updated': {
+                'type': 'str',
+            },
+            'enhanced_user_log': {
+                'type': 'str',
+            },
+            'log_sent': {
+                'type': 'str',
+            },
+            'log_dropped': {
+                'type': 'str',
+            },
+            'conn_tcp_established': {
+                'type': 'str',
+            },
+            'conn_tcp_dropped': {
+                'type': 'str',
+            },
+            'tcp_port_overloading_allocated': {
+                'type': 'str',
+            },
+            'tcp_port_overloading_freed': {
+                'type': 'str',
+            },
+            'udp_port_overloading_allocated': {
+                'type': 'str',
+            },
+            'udp_port_overloading_freed': {
+                'type': 'str',
+            },
+            'http_request_logged': {
+                'type': 'str',
+            },
+            'reduced_logs_by_destination': {
+                'type': 'str',
+            },
+            'interim_update_scheduled': {
+                'type': 'str',
+            },
+            'tcp_port_batch_interim_updated': {
+                'type': 'str',
+            },
+            'udp_port_batch_interim_updated': {
+                'type': 'str',
+            },
+            'iddos_l3_entry_create': {
+                'type': 'str',
+            },
+            'iddos_l3_entry_delete': {
+                'type': 'str',
+            },
+            'iddos_l4_entry_create': {
+                'type': 'str',
+            },
+            'iddos_l4_entry_delete': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -514,8 +776,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -526,8 +787,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -567,14 +827,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -589,16 +847,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -607,15 +865,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -632,22 +890,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["logging"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "logging"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["logging-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "logging-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["logging"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["logging"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -660,9 +924,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

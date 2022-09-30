@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_interface_loopback_ip
 description:
@@ -191,9 +190,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address_list", "ospf", "rip", "router", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "address_list",
+    "ospf",
+    "rip",
+    "router",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -201,26 +205,258 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'address_list': {'type': 'list', 'ipv4_address': {'type': 'str', }, 'ipv4_netmask': {'type': 'str', }},
-        'uuid': {'type': 'str', },
-        'router': {'type': 'dict', 'isis': {'type': 'dict', 'tag': {'type': 'str', }, 'uuid': {'type': 'str', }}},
-        'rip': {'type': 'dict', 'authentication': {'type': 'dict', 'str': {'type': 'dict', 'string': {'type': 'str', }}, 'mode': {'type': 'dict', 'mode': {'type': 'str', 'choices': ['md5', 'text']}}, 'key_chain': {'type': 'dict', 'key_chain': {'type': 'str', }}}, 'send_packet': {'type': 'bool', }, 'receive_packet': {'type': 'bool', }, 'send_cfg': {'type': 'dict', 'send': {'type': 'bool', }, 'version': {'type': 'str', 'choices': ['1', '2', '1-compatible', '1-2']}}, 'receive_cfg': {'type': 'dict', 'receive': {'type': 'bool', }, 'version': {'type': 'str', 'choices': ['1', '2', '1-2']}}, 'split_horizon_cfg': {'type': 'dict', 'state': {'type': 'str', 'choices': ['poisoned', 'disable', 'enable']}}, 'uuid': {'type': 'str', }},
-        'ospf': {'type': 'dict', 'ospf_global': {'type': 'dict', 'authentication_cfg': {'type': 'dict', 'authentication': {'type': 'bool', }, 'value': {'type': 'str', 'choices': ['message-digest', 'null']}}, 'authentication_key': {'type': 'str', }, 'bfd_cfg': {'type': 'dict', 'bfd': {'type': 'bool', }, 'disable': {'type': 'bool', }}, 'cost': {'type': 'int', }, 'database_filter_cfg': {'type': 'dict', 'database_filter': {'type': 'str', 'choices': ['all']}, 'out': {'type': 'bool', }}, 'dead_interval': {'type': 'int', }, 'disable': {'type': 'str', 'choices': ['all']}, 'hello_interval': {'type': 'int', }, 'message_digest_cfg': {'type': 'list', 'message_digest_key': {'type': 'int', }, 'md5': {'type': 'dict', 'md5_value': {'type': 'str', }, 'encrypted': {'type': 'str', }}}, 'mtu': {'type': 'int', }, 'mtu_ignore': {'type': 'bool', }, 'priority': {'type': 'int', }, 'retransmit_interval': {'type': 'int', }, 'transmit_delay': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'ospf_ip_list': {'type': 'list', 'ip_addr': {'type': 'str', 'required': True, }, 'authentication': {'type': 'bool', }, 'value': {'type': 'str', 'choices': ['message-digest', 'null']}, 'authentication_key': {'type': 'str', }, 'cost': {'type': 'int', }, 'database_filter': {'type': 'str', 'choices': ['all']}, 'out': {'type': 'bool', }, 'dead_interval': {'type': 'int', }, 'hello_interval': {'type': 'int', }, 'message_digest_cfg': {'type': 'list', 'message_digest_key': {'type': 'int', }, 'md5_value': {'type': 'str', }, 'encrypted': {'type': 'str', }}, 'mtu_ignore': {'type': 'bool', }, 'priority': {'type': 'int', }, 'retransmit_interval': {'type': 'int', }, 'transmit_delay': {'type': 'int', }, 'uuid': {'type': 'str', }}}
+    rv.update({
+        'address_list': {
+            'type': 'list',
+            'ipv4_address': {
+                'type': 'str',
+            },
+            'ipv4_netmask': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'router': {
+            'type': 'dict',
+            'isis': {
+                'type': 'dict',
+                'tag': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'rip': {
+            'type': 'dict',
+            'authentication': {
+                'type': 'dict',
+                'str': {
+                    'type': 'dict',
+                    'string': {
+                        'type': 'str',
+                    }
+                },
+                'mode': {
+                    'type': 'dict',
+                    'mode': {
+                        'type': 'str',
+                        'choices': ['md5', 'text']
+                    }
+                },
+                'key_chain': {
+                    'type': 'dict',
+                    'key_chain': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'send_packet': {
+                'type': 'bool',
+            },
+            'receive_packet': {
+                'type': 'bool',
+            },
+            'send_cfg': {
+                'type': 'dict',
+                'send': {
+                    'type': 'bool',
+                },
+                'version': {
+                    'type': 'str',
+                    'choices': ['1', '2', '1-compatible', '1-2']
+                }
+            },
+            'receive_cfg': {
+                'type': 'dict',
+                'receive': {
+                    'type': 'bool',
+                },
+                'version': {
+                    'type': 'str',
+                    'choices': ['1', '2', '1-2']
+                }
+            },
+            'split_horizon_cfg': {
+                'type': 'dict',
+                'state': {
+                    'type': 'str',
+                    'choices': ['poisoned', 'disable', 'enable']
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ospf': {
+            'type': 'dict',
+            'ospf_global': {
+                'type': 'dict',
+                'authentication_cfg': {
+                    'type': 'dict',
+                    'authentication': {
+                        'type': 'bool',
+                    },
+                    'value': {
+                        'type': 'str',
+                        'choices': ['message-digest', 'null']
+                    }
+                },
+                'authentication_key': {
+                    'type': 'str',
+                },
+                'bfd_cfg': {
+                    'type': 'dict',
+                    'bfd': {
+                        'type': 'bool',
+                    },
+                    'disable': {
+                        'type': 'bool',
+                    }
+                },
+                'cost': {
+                    'type': 'int',
+                },
+                'database_filter_cfg': {
+                    'type': 'dict',
+                    'database_filter': {
+                        'type': 'str',
+                        'choices': ['all']
+                    },
+                    'out': {
+                        'type': 'bool',
+                    }
+                },
+                'dead_interval': {
+                    'type': 'int',
+                },
+                'disable': {
+                    'type': 'str',
+                    'choices': ['all']
+                },
+                'hello_interval': {
+                    'type': 'int',
+                },
+                'message_digest_cfg': {
+                    'type': 'list',
+                    'message_digest_key': {
+                        'type': 'int',
+                    },
+                    'md5': {
+                        'type': 'dict',
+                        'md5_value': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'mtu': {
+                    'type': 'int',
+                },
+                'mtu_ignore': {
+                    'type': 'bool',
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'retransmit_interval': {
+                    'type': 'int',
+                },
+                'transmit_delay': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ospf_ip_list': {
+                'type': 'list',
+                'ip_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'authentication': {
+                    'type': 'bool',
+                },
+                'value': {
+                    'type': 'str',
+                    'choices': ['message-digest', 'null']
+                },
+                'authentication_key': {
+                    'type': 'str',
+                },
+                'cost': {
+                    'type': 'int',
+                },
+                'database_filter': {
+                    'type': 'str',
+                    'choices': ['all']
+                },
+                'out': {
+                    'type': 'bool',
+                },
+                'dead_interval': {
+                    'type': 'int',
+                },
+                'hello_interval': {
+                    'type': 'int',
+                },
+                'message_digest_cfg': {
+                    'type': 'list',
+                    'message_digest_key': {
+                        'type': 'int',
+                    },
+                    'md5_value': {
+                        'type': 'str',
+                    },
+                    'encrypted': {
+                        'type': 'str',
+                    }
+                },
+                'mtu_ignore': {
+                    'type': 'bool',
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'retransmit_interval': {
+                    'type': 'int',
+                },
+                'transmit_delay': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        }
     })
     # Parent keys
-    rv.update(dict(
-        loopback_ifnum=dict(type='str', required=True),
-    ))
+    rv.update(dict(loopback_ifnum=dict(type='str', required=True), ))
     return rv
 
 
@@ -231,7 +467,8 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["loopback_ifnum"]:
-        f_dict["loopback_ifnum"] = module.params["loopback_ifnum"].replace("/","%2F")
+        f_dict["loopback_ifnum"] = module.params["loopback_ifnum"].replace(
+            "/", "%2F")
     else:
         f_dict["loopback_ifnum"] = module.params["loopback_ifnum"]
 
@@ -271,8 +508,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -283,8 +519,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -324,14 +559,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -346,16 +579,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -364,15 +597,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -389,16 +622,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["ip"] if info != "NotFound" else info
+                result[
+                    "acos_info"] = info["ip"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["ip-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "ip-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -411,9 +648,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_ip_anomaly_drop
 description:
@@ -384,9 +383,25 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bad_content", "drop_all", "frag", "ip_option", "land_attack", "out_of_sequence", "packet_deformity", "ping_of_death", "sampling_enable", "security_attack", "stats", "tcp_no_flag", "tcp_syn_fin", "tcp_syn_frag", "uuid", "zero_window", ]
+AVAILABLE_PROPERTIES = [
+    "bad_content",
+    "drop_all",
+    "frag",
+    "ip_option",
+    "land_attack",
+    "out_of_sequence",
+    "packet_deformity",
+    "ping_of_death",
+    "sampling_enable",
+    "security_attack",
+    "stats",
+    "tcp_no_flag",
+    "tcp_syn_fin",
+    "tcp_syn_frag",
+    "uuid",
+    "zero_window",
+]
 
 
 def get_default_argspec():
@@ -394,32 +409,218 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'packet_deformity': {'type': 'dict', 'packet_deformity_layer_3': {'type': 'bool', }, 'packet_deformity_layer_4': {'type': 'bool', }},
-        'security_attack': {'type': 'dict', 'security_attack_layer_3': {'type': 'bool', }, 'security_attack_layer_4': {'type': 'bool', }},
-        'bad_content': {'type': 'int', },
-        'drop_all': {'type': 'bool', },
-        'frag': {'type': 'bool', },
-        'ip_option': {'type': 'bool', },
-        'land_attack': {'type': 'bool', },
-        'out_of_sequence': {'type': 'int', },
-        'ping_of_death': {'type': 'bool', },
-        'tcp_no_flag': {'type': 'bool', },
-        'tcp_syn_fin': {'type': 'bool', },
-        'tcp_syn_frag': {'type': 'bool', },
-        'zero_window': {'type': 'int', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'land', 'emp_frg', 'emp_mic_frg', 'opt', 'frg', 'bad_ip_hdrlen', 'bad_ip_flg', 'bad_ip_ttl', 'no_ip_payload', 'over_ip_payload', 'bad_ip_payload_len', 'bad_ip_frg_offset', 'csum', 'pod', 'bad_tcp_urg_offset', 'tcp_sht_hdr', 'tcp_bad_iplen', 'tcp_null_frg', 'tcp_null_scan', 'tcp_syn_fin', 'tcp_xmas', 'tcp_xmas_scan', 'tcp_syn_frg', 'tcp_frg_hdr', 'tcp_bad_csum', 'udp_srt_hdr', 'udp_bad_len', 'udp_kerb_frg', 'udp_port_lb', 'udp_bad_csum', 'runt_ip_hdr', 'runt_tcp_udp_hdr', 'ipip_tnl_msmtch', 'tcp_opt_err', 'ipip_tnl_err', 'vxlan_err', 'nvgre_err', 'gre_pptp_err']}},
-        'stats': {'type': 'dict', 'land': {'type': 'str', }, 'emp_frg': {'type': 'str', }, 'emp_mic_frg': {'type': 'str', }, 'opt': {'type': 'str', }, 'frg': {'type': 'str', }, 'bad_ip_hdrlen': {'type': 'str', }, 'bad_ip_flg': {'type': 'str', }, 'bad_ip_ttl': {'type': 'str', }, 'no_ip_payload': {'type': 'str', }, 'over_ip_payload': {'type': 'str', }, 'bad_ip_payload_len': {'type': 'str', }, 'bad_ip_frg_offset': {'type': 'str', }, 'csum': {'type': 'str', }, 'pod': {'type': 'str', }, 'bad_tcp_urg_offset': {'type': 'str', }, 'tcp_sht_hdr': {'type': 'str', }, 'tcp_bad_iplen': {'type': 'str', }, 'tcp_null_frg': {'type': 'str', }, 'tcp_null_scan': {'type': 'str', }, 'tcp_syn_fin': {'type': 'str', }, 'tcp_xmas': {'type': 'str', }, 'tcp_xmas_scan': {'type': 'str', }, 'tcp_syn_frg': {'type': 'str', }, 'tcp_frg_hdr': {'type': 'str', }, 'tcp_bad_csum': {'type': 'str', }, 'udp_srt_hdr': {'type': 'str', }, 'udp_bad_len': {'type': 'str', }, 'udp_kerb_frg': {'type': 'str', }, 'udp_port_lb': {'type': 'str', }, 'udp_bad_csum': {'type': 'str', }, 'runt_ip_hdr': {'type': 'str', }, 'runt_tcp_udp_hdr': {'type': 'str', }, 'ipip_tnl_msmtch': {'type': 'str', }, 'tcp_opt_err': {'type': 'str', }, 'ipip_tnl_err': {'type': 'str', }, 'vxlan_err': {'type': 'str', }, 'nvgre_err': {'type': 'str', }, 'gre_pptp_err': {'type': 'str', }}
+    rv.update({
+        'packet_deformity': {
+            'type': 'dict',
+            'packet_deformity_layer_3': {
+                'type': 'bool',
+            },
+            'packet_deformity_layer_4': {
+                'type': 'bool',
+            }
+        },
+        'security_attack': {
+            'type': 'dict',
+            'security_attack_layer_3': {
+                'type': 'bool',
+            },
+            'security_attack_layer_4': {
+                'type': 'bool',
+            }
+        },
+        'bad_content': {
+            'type': 'int',
+        },
+        'drop_all': {
+            'type': 'bool',
+        },
+        'frag': {
+            'type': 'bool',
+        },
+        'ip_option': {
+            'type': 'bool',
+        },
+        'land_attack': {
+            'type': 'bool',
+        },
+        'out_of_sequence': {
+            'type': 'int',
+        },
+        'ping_of_death': {
+            'type': 'bool',
+        },
+        'tcp_no_flag': {
+            'type': 'bool',
+        },
+        'tcp_syn_fin': {
+            'type': 'bool',
+        },
+        'tcp_syn_frag': {
+            'type': 'bool',
+        },
+        'zero_window': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'land', 'emp_frg', 'emp_mic_frg', 'opt', 'frg',
+                    'bad_ip_hdrlen', 'bad_ip_flg', 'bad_ip_ttl',
+                    'no_ip_payload', 'over_ip_payload', 'bad_ip_payload_len',
+                    'bad_ip_frg_offset', 'csum', 'pod', 'bad_tcp_urg_offset',
+                    'tcp_sht_hdr', 'tcp_bad_iplen', 'tcp_null_frg',
+                    'tcp_null_scan', 'tcp_syn_fin', 'tcp_xmas',
+                    'tcp_xmas_scan', 'tcp_syn_frg', 'tcp_frg_hdr',
+                    'tcp_bad_csum', 'udp_srt_hdr', 'udp_bad_len',
+                    'udp_kerb_frg', 'udp_port_lb', 'udp_bad_csum',
+                    'runt_ip_hdr', 'runt_tcp_udp_hdr', 'ipip_tnl_msmtch',
+                    'tcp_opt_err', 'ipip_tnl_err', 'vxlan_err', 'nvgre_err',
+                    'gre_pptp_err'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'land': {
+                'type': 'str',
+            },
+            'emp_frg': {
+                'type': 'str',
+            },
+            'emp_mic_frg': {
+                'type': 'str',
+            },
+            'opt': {
+                'type': 'str',
+            },
+            'frg': {
+                'type': 'str',
+            },
+            'bad_ip_hdrlen': {
+                'type': 'str',
+            },
+            'bad_ip_flg': {
+                'type': 'str',
+            },
+            'bad_ip_ttl': {
+                'type': 'str',
+            },
+            'no_ip_payload': {
+                'type': 'str',
+            },
+            'over_ip_payload': {
+                'type': 'str',
+            },
+            'bad_ip_payload_len': {
+                'type': 'str',
+            },
+            'bad_ip_frg_offset': {
+                'type': 'str',
+            },
+            'csum': {
+                'type': 'str',
+            },
+            'pod': {
+                'type': 'str',
+            },
+            'bad_tcp_urg_offset': {
+                'type': 'str',
+            },
+            'tcp_sht_hdr': {
+                'type': 'str',
+            },
+            'tcp_bad_iplen': {
+                'type': 'str',
+            },
+            'tcp_null_frg': {
+                'type': 'str',
+            },
+            'tcp_null_scan': {
+                'type': 'str',
+            },
+            'tcp_syn_fin': {
+                'type': 'str',
+            },
+            'tcp_xmas': {
+                'type': 'str',
+            },
+            'tcp_xmas_scan': {
+                'type': 'str',
+            },
+            'tcp_syn_frg': {
+                'type': 'str',
+            },
+            'tcp_frg_hdr': {
+                'type': 'str',
+            },
+            'tcp_bad_csum': {
+                'type': 'str',
+            },
+            'udp_srt_hdr': {
+                'type': 'str',
+            },
+            'udp_bad_len': {
+                'type': 'str',
+            },
+            'udp_kerb_frg': {
+                'type': 'str',
+            },
+            'udp_port_lb': {
+                'type': 'str',
+            },
+            'udp_bad_csum': {
+                'type': 'str',
+            },
+            'runt_ip_hdr': {
+                'type': 'str',
+            },
+            'runt_tcp_udp_hdr': {
+                'type': 'str',
+            },
+            'ipip_tnl_msmtch': {
+                'type': 'str',
+            },
+            'tcp_opt_err': {
+                'type': 'str',
+            },
+            'ipip_tnl_err': {
+                'type': 'str',
+            },
+            'vxlan_err': {
+                'type': 'str',
+            },
+            'nvgre_err': {
+                'type': 'str',
+            },
+            'gre_pptp_err': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -466,8 +667,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -478,14 +678,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("anomaly-drop", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("anomaly-drop", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -519,14 +719,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -541,16 +739,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -559,15 +757,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -584,22 +782,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["anomaly-drop"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "anomaly-drop"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["anomaly-drop-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "anomaly-drop-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["anomaly-drop"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["anomaly-drop"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -612,9 +816,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_ssl_error_trigger_stats_inc
 description:
@@ -1344,9 +1343,255 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["app_data_in_handshake", "attempt_to_reuse_sess_in_diff_context", "bad_alert_record", "bad_authentication_type", "bad_change_cipher_spec", "bad_checksum", "bad_data_returned_by_callback", "bad_decompression", "bad_dh_g_length", "bad_dh_p_length", "bad_dh_pub_key_length", "bad_digest_length", "bad_dsa_signature", "bad_ecc_cert", "bad_ecdsa_sig", "bad_ecpoint", "bad_handshake_length", "bad_hello_request", "bad_length", "bad_mac_decode", "bad_message_type", "bad_packet_length", "bad_protocol_version_counter", "bad_response_argument", "bad_rsa_decrypt", "bad_rsa_e_length", "bad_rsa_encrypt", "bad_rsa_modulus_length", "bad_rsa_signature", "bad_signature", "bad_ssl_filetype", "bad_ssl_session_id_length", "bad_state", "bad_write_retry", "bio_not_set", "block_cipher_pad_is_wrong", "bn_lib", "ca_dn_length_mismatch", "ca_dn_too_long", "ccs_received_early", "cert_length_mismatch", "certificate_verify_failed", "challenge_is_different", "cipher_code_wrong_length", "cipher_or_hash_unavailable", "cipher_table_src_error", "clienthello_tlsext", "compressed_length_too_long", "compression_failure", "compression_library_error", "connection_id_is_different", "connection_type_not_set", "cookie_mismatch", "data_between_ccs_and_finished", "data_length_too_long", "decryption_failed", "decryption_failed_or_bad_record_mac", "dh_public_value_length_is_wrong", "digest_check_failed", "encrypted_length_too_long", "error_generating_tmp_rsa_key", "error_in_received_cipher_list", "excessive_message_size", "extra_data_in_message", "got_a_fin_before_a_ccs", "http_request", "https_proxy_request", "illegal_padding", "inappropriate_fallback", "invalid_challenge_length", "invalid_command", "invalid_purpose", "invalid_status_response", "invalid_trust", "key_arg_too_long", "krb5", "krb5_client_cc_principal", "krb5_client_get_cred", "krb5_client_init", "krb5_client_mk_req", "krb5_server_bad_ticket", "krb5_server_init", "krb5_server_rd_req", "krb5_server_tkt_expired", "krb5_server_tkt_not_yet_valid", "krb5_server_tkt_skew", "length_mismatch", "length_too_short", "library_bug", "library_has_no_ciphers", "mast_key_too_long", "message_too_long", "missing_dh_dsa_cert", "missing_dh_key", "missing_dh_rsa_cert", "missing_dsa_signing_cert", "missing_export_tmp_dh_key", "missing_export_tmp_rsa_key", "missing_rsa_certificate", "missing_rsa_encrypting_cert", "missing_rsa_signing_cert", "missing_tmp_dh_key", "missing_tmp_rsa_key", "missing_tmp_rsa_pkey", "missing_verify_message", "multiple_sgc_restarts", "no_certificate_assigned", "no_certificate_returned", "no_certificate_set", "no_certificate_specified", "no_certificates_returned", "no_cipher_list", "no_cipher_match", "no_ciphers_available", "no_ciphers_passed", "no_ciphers_specified", "no_client_cert_received", "no_compression_specified", "no_method_specified", "no_private_key_assigned", "no_privatekey", "no_protocols_available", "no_publickey", "no_required_digest", "no_shared_cipher", "no_verify_callback", "non_sslv2_initial_packet", "null_ssl_ctx", "null_ssl_method_passed", "old_session_cipher_not_returned", "packet_length_too_long", "parse_tlsext", "path_too_long", "peer_did_not_return_a_certificate", "peer_error", "peer_error_certificate", "peer_error_no_certificate", "peer_error_no_cipher", "peer_error_unsupported_certificate_type", "pre_mac_length_too_long", "problems_mapping_cipher_functions", "protocol_is_shutdown", "public_key_encrypt_error", "public_key_is_not_rsa", "public_key_not_rsa", "read_bio_not_set", "read_wrong_packet_type", "record_length_mismatch", "record_too_large", "record_too_small", "required_cipher_missing", "reuse_cert_length_not_zero", "reuse_cert_type_not_zero", "reuse_cipher_list_not_zero", "scsv_received_when_renegotiating", "serverhello_tlsext", "session_id_context_uninitialized", "short_read", "signature_for_non_signing_certificate", "ssl_ctx_has_no_default_ssl_version", "ssl_handshake_failure", "ssl_library_has_no_ciphers", "ssl_session_id_callback_failed", "ssl_session_id_conflict", "ssl_session_id_context_too_long", "ssl_session_id_has_bad_length", "ssl_session_id_is_different", "ssl2_connection_id_too_long", "ssl23_doing_session_id_reuse", "ssl3_ext_invalid_servername", "ssl3_ext_invalid_servername_type", "ssl3_session_id_too_long", "ssl3_session_id_too_short", "sslv3_alert_bad_certificate", "sslv3_alert_bad_record_mac", "sslv3_alert_certificate_expired", "sslv3_alert_certificate_revoked", "sslv3_alert_certificate_unknown", "sslv3_alert_decompression_failure", "sslv3_alert_handshake_failure", "sslv3_alert_illegal_parameter", "sslv3_alert_no_certificate", "sslv3_alert_peer_error_cert", "sslv3_alert_peer_error_no_cert", "sslv3_alert_peer_error_no_cipher", "sslv3_alert_peer_error_unsupp_cert_type", "sslv3_alert_unexpected_msg", "sslv3_alert_unknown_remote_err_type", "sslv3_alert_unspported_cert", "tls_client_cert_req_with_anon_cipher", "tls_invalid_ecpointformat_list", "tls_peer_did_not_respond_with_cert_list", "tls_rsa_encrypted_value_length_is_wrong", "tlsv1_alert_access_denied", "tlsv1_alert_decode_error", "tlsv1_alert_decrypt_error", "tlsv1_alert_decryption_failed", "tlsv1_alert_export_restriction", "tlsv1_alert_insufficient_security", "tlsv1_alert_internal_error", "tlsv1_alert_no_renegotiation", "tlsv1_alert_protocol_version", "tlsv1_alert_record_overflow", "tlsv1_alert_unknown_ca", "tlsv1_alert_user_cancelled", "tried_to_use_unsupported_cipher", "unable_to_decode_dh_certs", "unable_to_extract_public_key", "unable_to_find_dh_parameters", "unable_to_find_public_key_parameters", "unable_to_find_ssl_method", "unable_to_load_ssl2_md5_routines", "unable_to_load_ssl3_md5_routines", "unable_to_load_ssl3_sha1_routines", "unexpected_message", "unexpected_record", "uninitialized", "unknown_alert_type", "unknown_certificate_type", "unknown_cipher_returned", "unknown_cipher_type", "unknown_key_exchange_type", "unknown_pkey_type", "unknown_protocol", "unknown_remote_error_type", "unknown_ssl_version", "unknown_state", "unsupported_cipher", "unsupported_compression_algorithm", "unsupported_digest_type", "unsupported_elliptic_curve", "unsupported_option", "unsupported_protocol", "unsupported_ssl_version", "unsupported_status_type", "uuid", "write_bio_not_set", "wrong_cipher_returned", "wrong_counter_of_key_bits", "wrong_message_type", "wrong_signature_length", "wrong_signature_size", "wrong_ssl_version", "wrong_version_counter", "x509_lib", "x509_verification_setup_problems", ]
+AVAILABLE_PROPERTIES = [
+    "app_data_in_handshake",
+    "attempt_to_reuse_sess_in_diff_context",
+    "bad_alert_record",
+    "bad_authentication_type",
+    "bad_change_cipher_spec",
+    "bad_checksum",
+    "bad_data_returned_by_callback",
+    "bad_decompression",
+    "bad_dh_g_length",
+    "bad_dh_p_length",
+    "bad_dh_pub_key_length",
+    "bad_digest_length",
+    "bad_dsa_signature",
+    "bad_ecc_cert",
+    "bad_ecdsa_sig",
+    "bad_ecpoint",
+    "bad_handshake_length",
+    "bad_hello_request",
+    "bad_length",
+    "bad_mac_decode",
+    "bad_message_type",
+    "bad_packet_length",
+    "bad_protocol_version_counter",
+    "bad_response_argument",
+    "bad_rsa_decrypt",
+    "bad_rsa_e_length",
+    "bad_rsa_encrypt",
+    "bad_rsa_modulus_length",
+    "bad_rsa_signature",
+    "bad_signature",
+    "bad_ssl_filetype",
+    "bad_ssl_session_id_length",
+    "bad_state",
+    "bad_write_retry",
+    "bio_not_set",
+    "block_cipher_pad_is_wrong",
+    "bn_lib",
+    "ca_dn_length_mismatch",
+    "ca_dn_too_long",
+    "ccs_received_early",
+    "cert_length_mismatch",
+    "certificate_verify_failed",
+    "challenge_is_different",
+    "cipher_code_wrong_length",
+    "cipher_or_hash_unavailable",
+    "cipher_table_src_error",
+    "clienthello_tlsext",
+    "compressed_length_too_long",
+    "compression_failure",
+    "compression_library_error",
+    "connection_id_is_different",
+    "connection_type_not_set",
+    "cookie_mismatch",
+    "data_between_ccs_and_finished",
+    "data_length_too_long",
+    "decryption_failed",
+    "decryption_failed_or_bad_record_mac",
+    "dh_public_value_length_is_wrong",
+    "digest_check_failed",
+    "encrypted_length_too_long",
+    "error_generating_tmp_rsa_key",
+    "error_in_received_cipher_list",
+    "excessive_message_size",
+    "extra_data_in_message",
+    "got_a_fin_before_a_ccs",
+    "http_request",
+    "https_proxy_request",
+    "illegal_padding",
+    "inappropriate_fallback",
+    "invalid_challenge_length",
+    "invalid_command",
+    "invalid_purpose",
+    "invalid_status_response",
+    "invalid_trust",
+    "key_arg_too_long",
+    "krb5",
+    "krb5_client_cc_principal",
+    "krb5_client_get_cred",
+    "krb5_client_init",
+    "krb5_client_mk_req",
+    "krb5_server_bad_ticket",
+    "krb5_server_init",
+    "krb5_server_rd_req",
+    "krb5_server_tkt_expired",
+    "krb5_server_tkt_not_yet_valid",
+    "krb5_server_tkt_skew",
+    "length_mismatch",
+    "length_too_short",
+    "library_bug",
+    "library_has_no_ciphers",
+    "mast_key_too_long",
+    "message_too_long",
+    "missing_dh_dsa_cert",
+    "missing_dh_key",
+    "missing_dh_rsa_cert",
+    "missing_dsa_signing_cert",
+    "missing_export_tmp_dh_key",
+    "missing_export_tmp_rsa_key",
+    "missing_rsa_certificate",
+    "missing_rsa_encrypting_cert",
+    "missing_rsa_signing_cert",
+    "missing_tmp_dh_key",
+    "missing_tmp_rsa_key",
+    "missing_tmp_rsa_pkey",
+    "missing_verify_message",
+    "multiple_sgc_restarts",
+    "no_certificate_assigned",
+    "no_certificate_returned",
+    "no_certificate_set",
+    "no_certificate_specified",
+    "no_certificates_returned",
+    "no_cipher_list",
+    "no_cipher_match",
+    "no_ciphers_available",
+    "no_ciphers_passed",
+    "no_ciphers_specified",
+    "no_client_cert_received",
+    "no_compression_specified",
+    "no_method_specified",
+    "no_private_key_assigned",
+    "no_privatekey",
+    "no_protocols_available",
+    "no_publickey",
+    "no_required_digest",
+    "no_shared_cipher",
+    "no_verify_callback",
+    "non_sslv2_initial_packet",
+    "null_ssl_ctx",
+    "null_ssl_method_passed",
+    "old_session_cipher_not_returned",
+    "packet_length_too_long",
+    "parse_tlsext",
+    "path_too_long",
+    "peer_did_not_return_a_certificate",
+    "peer_error",
+    "peer_error_certificate",
+    "peer_error_no_certificate",
+    "peer_error_no_cipher",
+    "peer_error_unsupported_certificate_type",
+    "pre_mac_length_too_long",
+    "problems_mapping_cipher_functions",
+    "protocol_is_shutdown",
+    "public_key_encrypt_error",
+    "public_key_is_not_rsa",
+    "public_key_not_rsa",
+    "read_bio_not_set",
+    "read_wrong_packet_type",
+    "record_length_mismatch",
+    "record_too_large",
+    "record_too_small",
+    "required_cipher_missing",
+    "reuse_cert_length_not_zero",
+    "reuse_cert_type_not_zero",
+    "reuse_cipher_list_not_zero",
+    "scsv_received_when_renegotiating",
+    "serverhello_tlsext",
+    "session_id_context_uninitialized",
+    "short_read",
+    "signature_for_non_signing_certificate",
+    "ssl_ctx_has_no_default_ssl_version",
+    "ssl_handshake_failure",
+    "ssl_library_has_no_ciphers",
+    "ssl_session_id_callback_failed",
+    "ssl_session_id_conflict",
+    "ssl_session_id_context_too_long",
+    "ssl_session_id_has_bad_length",
+    "ssl_session_id_is_different",
+    "ssl2_connection_id_too_long",
+    "ssl23_doing_session_id_reuse",
+    "ssl3_ext_invalid_servername",
+    "ssl3_ext_invalid_servername_type",
+    "ssl3_session_id_too_long",
+    "ssl3_session_id_too_short",
+    "sslv3_alert_bad_certificate",
+    "sslv3_alert_bad_record_mac",
+    "sslv3_alert_certificate_expired",
+    "sslv3_alert_certificate_revoked",
+    "sslv3_alert_certificate_unknown",
+    "sslv3_alert_decompression_failure",
+    "sslv3_alert_handshake_failure",
+    "sslv3_alert_illegal_parameter",
+    "sslv3_alert_no_certificate",
+    "sslv3_alert_peer_error_cert",
+    "sslv3_alert_peer_error_no_cert",
+    "sslv3_alert_peer_error_no_cipher",
+    "sslv3_alert_peer_error_unsupp_cert_type",
+    "sslv3_alert_unexpected_msg",
+    "sslv3_alert_unknown_remote_err_type",
+    "sslv3_alert_unspported_cert",
+    "tls_client_cert_req_with_anon_cipher",
+    "tls_invalid_ecpointformat_list",
+    "tls_peer_did_not_respond_with_cert_list",
+    "tls_rsa_encrypted_value_length_is_wrong",
+    "tlsv1_alert_access_denied",
+    "tlsv1_alert_decode_error",
+    "tlsv1_alert_decrypt_error",
+    "tlsv1_alert_decryption_failed",
+    "tlsv1_alert_export_restriction",
+    "tlsv1_alert_insufficient_security",
+    "tlsv1_alert_internal_error",
+    "tlsv1_alert_no_renegotiation",
+    "tlsv1_alert_protocol_version",
+    "tlsv1_alert_record_overflow",
+    "tlsv1_alert_unknown_ca",
+    "tlsv1_alert_user_cancelled",
+    "tried_to_use_unsupported_cipher",
+    "unable_to_decode_dh_certs",
+    "unable_to_extract_public_key",
+    "unable_to_find_dh_parameters",
+    "unable_to_find_public_key_parameters",
+    "unable_to_find_ssl_method",
+    "unable_to_load_ssl2_md5_routines",
+    "unable_to_load_ssl3_md5_routines",
+    "unable_to_load_ssl3_sha1_routines",
+    "unexpected_message",
+    "unexpected_record",
+    "uninitialized",
+    "unknown_alert_type",
+    "unknown_certificate_type",
+    "unknown_cipher_returned",
+    "unknown_cipher_type",
+    "unknown_key_exchange_type",
+    "unknown_pkey_type",
+    "unknown_protocol",
+    "unknown_remote_error_type",
+    "unknown_ssl_version",
+    "unknown_state",
+    "unsupported_cipher",
+    "unsupported_compression_algorithm",
+    "unsupported_digest_type",
+    "unsupported_elliptic_curve",
+    "unsupported_option",
+    "unsupported_protocol",
+    "unsupported_ssl_version",
+    "unsupported_status_type",
+    "uuid",
+    "write_bio_not_set",
+    "wrong_cipher_returned",
+    "wrong_counter_of_key_bits",
+    "wrong_message_type",
+    "wrong_signature_length",
+    "wrong_signature_size",
+    "wrong_ssl_version",
+    "wrong_version_counter",
+    "x509_lib",
+    "x509_verification_setup_problems",
+]
 
 
 def get_default_argspec():
@@ -1354,267 +1599,767 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'app_data_in_handshake': {'type': 'bool', },
-        'attempt_to_reuse_sess_in_diff_context': {'type': 'bool', },
-        'bad_alert_record': {'type': 'bool', },
-        'bad_authentication_type': {'type': 'bool', },
-        'bad_change_cipher_spec': {'type': 'bool', },
-        'bad_checksum': {'type': 'bool', },
-        'bad_data_returned_by_callback': {'type': 'bool', },
-        'bad_decompression': {'type': 'bool', },
-        'bad_dh_g_length': {'type': 'bool', },
-        'bad_dh_pub_key_length': {'type': 'bool', },
-        'bad_dh_p_length': {'type': 'bool', },
-        'bad_digest_length': {'type': 'bool', },
-        'bad_dsa_signature': {'type': 'bool', },
-        'bad_hello_request': {'type': 'bool', },
-        'bad_length': {'type': 'bool', },
-        'bad_mac_decode': {'type': 'bool', },
-        'bad_message_type': {'type': 'bool', },
-        'bad_packet_length': {'type': 'bool', },
-        'bad_protocol_version_counter': {'type': 'bool', },
-        'bad_response_argument': {'type': 'bool', },
-        'bad_rsa_decrypt': {'type': 'bool', },
-        'bad_rsa_encrypt': {'type': 'bool', },
-        'bad_rsa_e_length': {'type': 'bool', },
-        'bad_rsa_modulus_length': {'type': 'bool', },
-        'bad_rsa_signature': {'type': 'bool', },
-        'bad_signature': {'type': 'bool', },
-        'bad_ssl_filetype': {'type': 'bool', },
-        'bad_ssl_session_id_length': {'type': 'bool', },
-        'bad_state': {'type': 'bool', },
-        'bad_write_retry': {'type': 'bool', },
-        'bio_not_set': {'type': 'bool', },
-        'block_cipher_pad_is_wrong': {'type': 'bool', },
-        'bn_lib': {'type': 'bool', },
-        'ca_dn_length_mismatch': {'type': 'bool', },
-        'ca_dn_too_long': {'type': 'bool', },
-        'ccs_received_early': {'type': 'bool', },
-        'certificate_verify_failed': {'type': 'bool', },
-        'cert_length_mismatch': {'type': 'bool', },
-        'challenge_is_different': {'type': 'bool', },
-        'cipher_code_wrong_length': {'type': 'bool', },
-        'cipher_or_hash_unavailable': {'type': 'bool', },
-        'cipher_table_src_error': {'type': 'bool', },
-        'compressed_length_too_long': {'type': 'bool', },
-        'compression_failure': {'type': 'bool', },
-        'compression_library_error': {'type': 'bool', },
-        'connection_id_is_different': {'type': 'bool', },
-        'connection_type_not_set': {'type': 'bool', },
-        'data_between_ccs_and_finished': {'type': 'bool', },
-        'data_length_too_long': {'type': 'bool', },
-        'decryption_failed': {'type': 'bool', },
-        'decryption_failed_or_bad_record_mac': {'type': 'bool', },
-        'dh_public_value_length_is_wrong': {'type': 'bool', },
-        'digest_check_failed': {'type': 'bool', },
-        'encrypted_length_too_long': {'type': 'bool', },
-        'error_generating_tmp_rsa_key': {'type': 'bool', },
-        'error_in_received_cipher_list': {'type': 'bool', },
-        'excessive_message_size': {'type': 'bool', },
-        'extra_data_in_message': {'type': 'bool', },
-        'got_a_fin_before_a_ccs': {'type': 'bool', },
-        'https_proxy_request': {'type': 'bool', },
-        'http_request': {'type': 'bool', },
-        'illegal_padding': {'type': 'bool', },
-        'inappropriate_fallback': {'type': 'bool', },
-        'invalid_challenge_length': {'type': 'bool', },
-        'invalid_command': {'type': 'bool', },
-        'invalid_purpose': {'type': 'bool', },
-        'invalid_status_response': {'type': 'bool', },
-        'invalid_trust': {'type': 'bool', },
-        'key_arg_too_long': {'type': 'bool', },
-        'krb5': {'type': 'bool', },
-        'krb5_client_cc_principal': {'type': 'bool', },
-        'krb5_client_get_cred': {'type': 'bool', },
-        'krb5_client_init': {'type': 'bool', },
-        'krb5_client_mk_req': {'type': 'bool', },
-        'krb5_server_bad_ticket': {'type': 'bool', },
-        'krb5_server_init': {'type': 'bool', },
-        'krb5_server_rd_req': {'type': 'bool', },
-        'krb5_server_tkt_expired': {'type': 'bool', },
-        'krb5_server_tkt_not_yet_valid': {'type': 'bool', },
-        'krb5_server_tkt_skew': {'type': 'bool', },
-        'length_mismatch': {'type': 'bool', },
-        'length_too_short': {'type': 'bool', },
-        'library_bug': {'type': 'bool', },
-        'library_has_no_ciphers': {'type': 'bool', },
-        'mast_key_too_long': {'type': 'bool', },
-        'message_too_long': {'type': 'bool', },
-        'missing_dh_dsa_cert': {'type': 'bool', },
-        'missing_dh_key': {'type': 'bool', },
-        'missing_dh_rsa_cert': {'type': 'bool', },
-        'missing_dsa_signing_cert': {'type': 'bool', },
-        'missing_export_tmp_dh_key': {'type': 'bool', },
-        'missing_export_tmp_rsa_key': {'type': 'bool', },
-        'missing_rsa_certificate': {'type': 'bool', },
-        'missing_rsa_encrypting_cert': {'type': 'bool', },
-        'missing_rsa_signing_cert': {'type': 'bool', },
-        'missing_tmp_dh_key': {'type': 'bool', },
-        'missing_tmp_rsa_key': {'type': 'bool', },
-        'missing_tmp_rsa_pkey': {'type': 'bool', },
-        'missing_verify_message': {'type': 'bool', },
-        'non_sslv2_initial_packet': {'type': 'bool', },
-        'no_certificates_returned': {'type': 'bool', },
-        'no_certificate_assigned': {'type': 'bool', },
-        'no_certificate_returned': {'type': 'bool', },
-        'no_certificate_set': {'type': 'bool', },
-        'no_certificate_specified': {'type': 'bool', },
-        'no_ciphers_available': {'type': 'bool', },
-        'no_ciphers_passed': {'type': 'bool', },
-        'no_ciphers_specified': {'type': 'bool', },
-        'no_cipher_list': {'type': 'bool', },
-        'no_cipher_match': {'type': 'bool', },
-        'no_client_cert_received': {'type': 'bool', },
-        'no_compression_specified': {'type': 'bool', },
-        'no_method_specified': {'type': 'bool', },
-        'no_privatekey': {'type': 'bool', },
-        'no_private_key_assigned': {'type': 'bool', },
-        'no_protocols_available': {'type': 'bool', },
-        'no_publickey': {'type': 'bool', },
-        'no_shared_cipher': {'type': 'bool', },
-        'no_verify_callback': {'type': 'bool', },
-        'null_ssl_ctx': {'type': 'bool', },
-        'null_ssl_method_passed': {'type': 'bool', },
-        'old_session_cipher_not_returned': {'type': 'bool', },
-        'packet_length_too_long': {'type': 'bool', },
-        'path_too_long': {'type': 'bool', },
-        'peer_did_not_return_a_certificate': {'type': 'bool', },
-        'peer_error': {'type': 'bool', },
-        'peer_error_certificate': {'type': 'bool', },
-        'peer_error_no_certificate': {'type': 'bool', },
-        'peer_error_no_cipher': {'type': 'bool', },
-        'peer_error_unsupported_certificate_type': {'type': 'bool', },
-        'pre_mac_length_too_long': {'type': 'bool', },
-        'problems_mapping_cipher_functions': {'type': 'bool', },
-        'protocol_is_shutdown': {'type': 'bool', },
-        'public_key_encrypt_error': {'type': 'bool', },
-        'public_key_is_not_rsa': {'type': 'bool', },
-        'public_key_not_rsa': {'type': 'bool', },
-        'read_bio_not_set': {'type': 'bool', },
-        'read_wrong_packet_type': {'type': 'bool', },
-        'record_length_mismatch': {'type': 'bool', },
-        'record_too_large': {'type': 'bool', },
-        'record_too_small': {'type': 'bool', },
-        'required_cipher_missing': {'type': 'bool', },
-        'reuse_cert_length_not_zero': {'type': 'bool', },
-        'reuse_cert_type_not_zero': {'type': 'bool', },
-        'reuse_cipher_list_not_zero': {'type': 'bool', },
-        'scsv_received_when_renegotiating': {'type': 'bool', },
-        'session_id_context_uninitialized': {'type': 'bool', },
-        'short_read': {'type': 'bool', },
-        'signature_for_non_signing_certificate': {'type': 'bool', },
-        'ssl23_doing_session_id_reuse': {'type': 'bool', },
-        'ssl2_connection_id_too_long': {'type': 'bool', },
-        'ssl3_session_id_too_long': {'type': 'bool', },
-        'ssl3_session_id_too_short': {'type': 'bool', },
-        'sslv3_alert_bad_certificate': {'type': 'bool', },
-        'sslv3_alert_bad_record_mac': {'type': 'bool', },
-        'sslv3_alert_certificate_expired': {'type': 'bool', },
-        'sslv3_alert_certificate_revoked': {'type': 'bool', },
-        'sslv3_alert_certificate_unknown': {'type': 'bool', },
-        'sslv3_alert_decompression_failure': {'type': 'bool', },
-        'sslv3_alert_handshake_failure': {'type': 'bool', },
-        'sslv3_alert_illegal_parameter': {'type': 'bool', },
-        'sslv3_alert_no_certificate': {'type': 'bool', },
-        'sslv3_alert_peer_error_cert': {'type': 'bool', },
-        'sslv3_alert_peer_error_no_cert': {'type': 'bool', },
-        'sslv3_alert_peer_error_no_cipher': {'type': 'bool', },
-        'sslv3_alert_peer_error_unsupp_cert_type': {'type': 'bool', },
-        'sslv3_alert_unexpected_msg': {'type': 'bool', },
-        'sslv3_alert_unknown_remote_err_type': {'type': 'bool', },
-        'sslv3_alert_unspported_cert': {'type': 'bool', },
-        'ssl_ctx_has_no_default_ssl_version': {'type': 'bool', },
-        'ssl_handshake_failure': {'type': 'bool', },
-        'ssl_library_has_no_ciphers': {'type': 'bool', },
-        'ssl_session_id_callback_failed': {'type': 'bool', },
-        'ssl_session_id_conflict': {'type': 'bool', },
-        'ssl_session_id_context_too_long': {'type': 'bool', },
-        'ssl_session_id_has_bad_length': {'type': 'bool', },
-        'ssl_session_id_is_different': {'type': 'bool', },
-        'tlsv1_alert_access_denied': {'type': 'bool', },
-        'tlsv1_alert_decode_error': {'type': 'bool', },
-        'tlsv1_alert_decryption_failed': {'type': 'bool', },
-        'tlsv1_alert_decrypt_error': {'type': 'bool', },
-        'tlsv1_alert_export_restriction': {'type': 'bool', },
-        'tlsv1_alert_insufficient_security': {'type': 'bool', },
-        'tlsv1_alert_internal_error': {'type': 'bool', },
-        'tlsv1_alert_no_renegotiation': {'type': 'bool', },
-        'tlsv1_alert_protocol_version': {'type': 'bool', },
-        'tlsv1_alert_record_overflow': {'type': 'bool', },
-        'tlsv1_alert_unknown_ca': {'type': 'bool', },
-        'tlsv1_alert_user_cancelled': {'type': 'bool', },
-        'tls_client_cert_req_with_anon_cipher': {'type': 'bool', },
-        'tls_peer_did_not_respond_with_cert_list': {'type': 'bool', },
-        'tls_rsa_encrypted_value_length_is_wrong': {'type': 'bool', },
-        'tried_to_use_unsupported_cipher': {'type': 'bool', },
-        'unable_to_decode_dh_certs': {'type': 'bool', },
-        'unable_to_extract_public_key': {'type': 'bool', },
-        'unable_to_find_dh_parameters': {'type': 'bool', },
-        'unable_to_find_public_key_parameters': {'type': 'bool', },
-        'unable_to_find_ssl_method': {'type': 'bool', },
-        'unable_to_load_ssl2_md5_routines': {'type': 'bool', },
-        'unable_to_load_ssl3_md5_routines': {'type': 'bool', },
-        'unable_to_load_ssl3_sha1_routines': {'type': 'bool', },
-        'unexpected_message': {'type': 'bool', },
-        'unexpected_record': {'type': 'bool', },
-        'uninitialized': {'type': 'bool', },
-        'unknown_alert_type': {'type': 'bool', },
-        'unknown_certificate_type': {'type': 'bool', },
-        'unknown_cipher_returned': {'type': 'bool', },
-        'unknown_cipher_type': {'type': 'bool', },
-        'unknown_key_exchange_type': {'type': 'bool', },
-        'unknown_pkey_type': {'type': 'bool', },
-        'unknown_protocol': {'type': 'bool', },
-        'unknown_remote_error_type': {'type': 'bool', },
-        'unknown_ssl_version': {'type': 'bool', },
-        'unknown_state': {'type': 'bool', },
-        'unsupported_cipher': {'type': 'bool', },
-        'unsupported_compression_algorithm': {'type': 'bool', },
-        'unsupported_option': {'type': 'bool', },
-        'unsupported_protocol': {'type': 'bool', },
-        'unsupported_ssl_version': {'type': 'bool', },
-        'unsupported_status_type': {'type': 'bool', },
-        'write_bio_not_set': {'type': 'bool', },
-        'wrong_cipher_returned': {'type': 'bool', },
-        'wrong_message_type': {'type': 'bool', },
-        'wrong_counter_of_key_bits': {'type': 'bool', },
-        'wrong_signature_length': {'type': 'bool', },
-        'wrong_signature_size': {'type': 'bool', },
-        'wrong_ssl_version': {'type': 'bool', },
-        'wrong_version_counter': {'type': 'bool', },
-        'x509_lib': {'type': 'bool', },
-        'x509_verification_setup_problems': {'type': 'bool', },
-        'clienthello_tlsext': {'type': 'bool', },
-        'parse_tlsext': {'type': 'bool', },
-        'serverhello_tlsext': {'type': 'bool', },
-        'ssl3_ext_invalid_servername': {'type': 'bool', },
-        'ssl3_ext_invalid_servername_type': {'type': 'bool', },
-        'multiple_sgc_restarts': {'type': 'bool', },
-        'tls_invalid_ecpointformat_list': {'type': 'bool', },
-        'bad_ecc_cert': {'type': 'bool', },
-        'bad_ecdsa_sig': {'type': 'bool', },
-        'bad_ecpoint': {'type': 'bool', },
-        'cookie_mismatch': {'type': 'bool', },
-        'unsupported_elliptic_curve': {'type': 'bool', },
-        'no_required_digest': {'type': 'bool', },
-        'unsupported_digest_type': {'type': 'bool', },
-        'bad_handshake_length': {'type': 'bool', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'app_data_in_handshake': {
+            'type': 'bool',
+        },
+        'attempt_to_reuse_sess_in_diff_context': {
+            'type': 'bool',
+        },
+        'bad_alert_record': {
+            'type': 'bool',
+        },
+        'bad_authentication_type': {
+            'type': 'bool',
+        },
+        'bad_change_cipher_spec': {
+            'type': 'bool',
+        },
+        'bad_checksum': {
+            'type': 'bool',
+        },
+        'bad_data_returned_by_callback': {
+            'type': 'bool',
+        },
+        'bad_decompression': {
+            'type': 'bool',
+        },
+        'bad_dh_g_length': {
+            'type': 'bool',
+        },
+        'bad_dh_pub_key_length': {
+            'type': 'bool',
+        },
+        'bad_dh_p_length': {
+            'type': 'bool',
+        },
+        'bad_digest_length': {
+            'type': 'bool',
+        },
+        'bad_dsa_signature': {
+            'type': 'bool',
+        },
+        'bad_hello_request': {
+            'type': 'bool',
+        },
+        'bad_length': {
+            'type': 'bool',
+        },
+        'bad_mac_decode': {
+            'type': 'bool',
+        },
+        'bad_message_type': {
+            'type': 'bool',
+        },
+        'bad_packet_length': {
+            'type': 'bool',
+        },
+        'bad_protocol_version_counter': {
+            'type': 'bool',
+        },
+        'bad_response_argument': {
+            'type': 'bool',
+        },
+        'bad_rsa_decrypt': {
+            'type': 'bool',
+        },
+        'bad_rsa_encrypt': {
+            'type': 'bool',
+        },
+        'bad_rsa_e_length': {
+            'type': 'bool',
+        },
+        'bad_rsa_modulus_length': {
+            'type': 'bool',
+        },
+        'bad_rsa_signature': {
+            'type': 'bool',
+        },
+        'bad_signature': {
+            'type': 'bool',
+        },
+        'bad_ssl_filetype': {
+            'type': 'bool',
+        },
+        'bad_ssl_session_id_length': {
+            'type': 'bool',
+        },
+        'bad_state': {
+            'type': 'bool',
+        },
+        'bad_write_retry': {
+            'type': 'bool',
+        },
+        'bio_not_set': {
+            'type': 'bool',
+        },
+        'block_cipher_pad_is_wrong': {
+            'type': 'bool',
+        },
+        'bn_lib': {
+            'type': 'bool',
+        },
+        'ca_dn_length_mismatch': {
+            'type': 'bool',
+        },
+        'ca_dn_too_long': {
+            'type': 'bool',
+        },
+        'ccs_received_early': {
+            'type': 'bool',
+        },
+        'certificate_verify_failed': {
+            'type': 'bool',
+        },
+        'cert_length_mismatch': {
+            'type': 'bool',
+        },
+        'challenge_is_different': {
+            'type': 'bool',
+        },
+        'cipher_code_wrong_length': {
+            'type': 'bool',
+        },
+        'cipher_or_hash_unavailable': {
+            'type': 'bool',
+        },
+        'cipher_table_src_error': {
+            'type': 'bool',
+        },
+        'compressed_length_too_long': {
+            'type': 'bool',
+        },
+        'compression_failure': {
+            'type': 'bool',
+        },
+        'compression_library_error': {
+            'type': 'bool',
+        },
+        'connection_id_is_different': {
+            'type': 'bool',
+        },
+        'connection_type_not_set': {
+            'type': 'bool',
+        },
+        'data_between_ccs_and_finished': {
+            'type': 'bool',
+        },
+        'data_length_too_long': {
+            'type': 'bool',
+        },
+        'decryption_failed': {
+            'type': 'bool',
+        },
+        'decryption_failed_or_bad_record_mac': {
+            'type': 'bool',
+        },
+        'dh_public_value_length_is_wrong': {
+            'type': 'bool',
+        },
+        'digest_check_failed': {
+            'type': 'bool',
+        },
+        'encrypted_length_too_long': {
+            'type': 'bool',
+        },
+        'error_generating_tmp_rsa_key': {
+            'type': 'bool',
+        },
+        'error_in_received_cipher_list': {
+            'type': 'bool',
+        },
+        'excessive_message_size': {
+            'type': 'bool',
+        },
+        'extra_data_in_message': {
+            'type': 'bool',
+        },
+        'got_a_fin_before_a_ccs': {
+            'type': 'bool',
+        },
+        'https_proxy_request': {
+            'type': 'bool',
+        },
+        'http_request': {
+            'type': 'bool',
+        },
+        'illegal_padding': {
+            'type': 'bool',
+        },
+        'inappropriate_fallback': {
+            'type': 'bool',
+        },
+        'invalid_challenge_length': {
+            'type': 'bool',
+        },
+        'invalid_command': {
+            'type': 'bool',
+        },
+        'invalid_purpose': {
+            'type': 'bool',
+        },
+        'invalid_status_response': {
+            'type': 'bool',
+        },
+        'invalid_trust': {
+            'type': 'bool',
+        },
+        'key_arg_too_long': {
+            'type': 'bool',
+        },
+        'krb5': {
+            'type': 'bool',
+        },
+        'krb5_client_cc_principal': {
+            'type': 'bool',
+        },
+        'krb5_client_get_cred': {
+            'type': 'bool',
+        },
+        'krb5_client_init': {
+            'type': 'bool',
+        },
+        'krb5_client_mk_req': {
+            'type': 'bool',
+        },
+        'krb5_server_bad_ticket': {
+            'type': 'bool',
+        },
+        'krb5_server_init': {
+            'type': 'bool',
+        },
+        'krb5_server_rd_req': {
+            'type': 'bool',
+        },
+        'krb5_server_tkt_expired': {
+            'type': 'bool',
+        },
+        'krb5_server_tkt_not_yet_valid': {
+            'type': 'bool',
+        },
+        'krb5_server_tkt_skew': {
+            'type': 'bool',
+        },
+        'length_mismatch': {
+            'type': 'bool',
+        },
+        'length_too_short': {
+            'type': 'bool',
+        },
+        'library_bug': {
+            'type': 'bool',
+        },
+        'library_has_no_ciphers': {
+            'type': 'bool',
+        },
+        'mast_key_too_long': {
+            'type': 'bool',
+        },
+        'message_too_long': {
+            'type': 'bool',
+        },
+        'missing_dh_dsa_cert': {
+            'type': 'bool',
+        },
+        'missing_dh_key': {
+            'type': 'bool',
+        },
+        'missing_dh_rsa_cert': {
+            'type': 'bool',
+        },
+        'missing_dsa_signing_cert': {
+            'type': 'bool',
+        },
+        'missing_export_tmp_dh_key': {
+            'type': 'bool',
+        },
+        'missing_export_tmp_rsa_key': {
+            'type': 'bool',
+        },
+        'missing_rsa_certificate': {
+            'type': 'bool',
+        },
+        'missing_rsa_encrypting_cert': {
+            'type': 'bool',
+        },
+        'missing_rsa_signing_cert': {
+            'type': 'bool',
+        },
+        'missing_tmp_dh_key': {
+            'type': 'bool',
+        },
+        'missing_tmp_rsa_key': {
+            'type': 'bool',
+        },
+        'missing_tmp_rsa_pkey': {
+            'type': 'bool',
+        },
+        'missing_verify_message': {
+            'type': 'bool',
+        },
+        'non_sslv2_initial_packet': {
+            'type': 'bool',
+        },
+        'no_certificates_returned': {
+            'type': 'bool',
+        },
+        'no_certificate_assigned': {
+            'type': 'bool',
+        },
+        'no_certificate_returned': {
+            'type': 'bool',
+        },
+        'no_certificate_set': {
+            'type': 'bool',
+        },
+        'no_certificate_specified': {
+            'type': 'bool',
+        },
+        'no_ciphers_available': {
+            'type': 'bool',
+        },
+        'no_ciphers_passed': {
+            'type': 'bool',
+        },
+        'no_ciphers_specified': {
+            'type': 'bool',
+        },
+        'no_cipher_list': {
+            'type': 'bool',
+        },
+        'no_cipher_match': {
+            'type': 'bool',
+        },
+        'no_client_cert_received': {
+            'type': 'bool',
+        },
+        'no_compression_specified': {
+            'type': 'bool',
+        },
+        'no_method_specified': {
+            'type': 'bool',
+        },
+        'no_privatekey': {
+            'type': 'bool',
+        },
+        'no_private_key_assigned': {
+            'type': 'bool',
+        },
+        'no_protocols_available': {
+            'type': 'bool',
+        },
+        'no_publickey': {
+            'type': 'bool',
+        },
+        'no_shared_cipher': {
+            'type': 'bool',
+        },
+        'no_verify_callback': {
+            'type': 'bool',
+        },
+        'null_ssl_ctx': {
+            'type': 'bool',
+        },
+        'null_ssl_method_passed': {
+            'type': 'bool',
+        },
+        'old_session_cipher_not_returned': {
+            'type': 'bool',
+        },
+        'packet_length_too_long': {
+            'type': 'bool',
+        },
+        'path_too_long': {
+            'type': 'bool',
+        },
+        'peer_did_not_return_a_certificate': {
+            'type': 'bool',
+        },
+        'peer_error': {
+            'type': 'bool',
+        },
+        'peer_error_certificate': {
+            'type': 'bool',
+        },
+        'peer_error_no_certificate': {
+            'type': 'bool',
+        },
+        'peer_error_no_cipher': {
+            'type': 'bool',
+        },
+        'peer_error_unsupported_certificate_type': {
+            'type': 'bool',
+        },
+        'pre_mac_length_too_long': {
+            'type': 'bool',
+        },
+        'problems_mapping_cipher_functions': {
+            'type': 'bool',
+        },
+        'protocol_is_shutdown': {
+            'type': 'bool',
+        },
+        'public_key_encrypt_error': {
+            'type': 'bool',
+        },
+        'public_key_is_not_rsa': {
+            'type': 'bool',
+        },
+        'public_key_not_rsa': {
+            'type': 'bool',
+        },
+        'read_bio_not_set': {
+            'type': 'bool',
+        },
+        'read_wrong_packet_type': {
+            'type': 'bool',
+        },
+        'record_length_mismatch': {
+            'type': 'bool',
+        },
+        'record_too_large': {
+            'type': 'bool',
+        },
+        'record_too_small': {
+            'type': 'bool',
+        },
+        'required_cipher_missing': {
+            'type': 'bool',
+        },
+        'reuse_cert_length_not_zero': {
+            'type': 'bool',
+        },
+        'reuse_cert_type_not_zero': {
+            'type': 'bool',
+        },
+        'reuse_cipher_list_not_zero': {
+            'type': 'bool',
+        },
+        'scsv_received_when_renegotiating': {
+            'type': 'bool',
+        },
+        'session_id_context_uninitialized': {
+            'type': 'bool',
+        },
+        'short_read': {
+            'type': 'bool',
+        },
+        'signature_for_non_signing_certificate': {
+            'type': 'bool',
+        },
+        'ssl23_doing_session_id_reuse': {
+            'type': 'bool',
+        },
+        'ssl2_connection_id_too_long': {
+            'type': 'bool',
+        },
+        'ssl3_session_id_too_long': {
+            'type': 'bool',
+        },
+        'ssl3_session_id_too_short': {
+            'type': 'bool',
+        },
+        'sslv3_alert_bad_certificate': {
+            'type': 'bool',
+        },
+        'sslv3_alert_bad_record_mac': {
+            'type': 'bool',
+        },
+        'sslv3_alert_certificate_expired': {
+            'type': 'bool',
+        },
+        'sslv3_alert_certificate_revoked': {
+            'type': 'bool',
+        },
+        'sslv3_alert_certificate_unknown': {
+            'type': 'bool',
+        },
+        'sslv3_alert_decompression_failure': {
+            'type': 'bool',
+        },
+        'sslv3_alert_handshake_failure': {
+            'type': 'bool',
+        },
+        'sslv3_alert_illegal_parameter': {
+            'type': 'bool',
+        },
+        'sslv3_alert_no_certificate': {
+            'type': 'bool',
+        },
+        'sslv3_alert_peer_error_cert': {
+            'type': 'bool',
+        },
+        'sslv3_alert_peer_error_no_cert': {
+            'type': 'bool',
+        },
+        'sslv3_alert_peer_error_no_cipher': {
+            'type': 'bool',
+        },
+        'sslv3_alert_peer_error_unsupp_cert_type': {
+            'type': 'bool',
+        },
+        'sslv3_alert_unexpected_msg': {
+            'type': 'bool',
+        },
+        'sslv3_alert_unknown_remote_err_type': {
+            'type': 'bool',
+        },
+        'sslv3_alert_unspported_cert': {
+            'type': 'bool',
+        },
+        'ssl_ctx_has_no_default_ssl_version': {
+            'type': 'bool',
+        },
+        'ssl_handshake_failure': {
+            'type': 'bool',
+        },
+        'ssl_library_has_no_ciphers': {
+            'type': 'bool',
+        },
+        'ssl_session_id_callback_failed': {
+            'type': 'bool',
+        },
+        'ssl_session_id_conflict': {
+            'type': 'bool',
+        },
+        'ssl_session_id_context_too_long': {
+            'type': 'bool',
+        },
+        'ssl_session_id_has_bad_length': {
+            'type': 'bool',
+        },
+        'ssl_session_id_is_different': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_access_denied': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_decode_error': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_decryption_failed': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_decrypt_error': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_export_restriction': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_insufficient_security': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_internal_error': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_no_renegotiation': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_protocol_version': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_record_overflow': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_unknown_ca': {
+            'type': 'bool',
+        },
+        'tlsv1_alert_user_cancelled': {
+            'type': 'bool',
+        },
+        'tls_client_cert_req_with_anon_cipher': {
+            'type': 'bool',
+        },
+        'tls_peer_did_not_respond_with_cert_list': {
+            'type': 'bool',
+        },
+        'tls_rsa_encrypted_value_length_is_wrong': {
+            'type': 'bool',
+        },
+        'tried_to_use_unsupported_cipher': {
+            'type': 'bool',
+        },
+        'unable_to_decode_dh_certs': {
+            'type': 'bool',
+        },
+        'unable_to_extract_public_key': {
+            'type': 'bool',
+        },
+        'unable_to_find_dh_parameters': {
+            'type': 'bool',
+        },
+        'unable_to_find_public_key_parameters': {
+            'type': 'bool',
+        },
+        'unable_to_find_ssl_method': {
+            'type': 'bool',
+        },
+        'unable_to_load_ssl2_md5_routines': {
+            'type': 'bool',
+        },
+        'unable_to_load_ssl3_md5_routines': {
+            'type': 'bool',
+        },
+        'unable_to_load_ssl3_sha1_routines': {
+            'type': 'bool',
+        },
+        'unexpected_message': {
+            'type': 'bool',
+        },
+        'unexpected_record': {
+            'type': 'bool',
+        },
+        'uninitialized': {
+            'type': 'bool',
+        },
+        'unknown_alert_type': {
+            'type': 'bool',
+        },
+        'unknown_certificate_type': {
+            'type': 'bool',
+        },
+        'unknown_cipher_returned': {
+            'type': 'bool',
+        },
+        'unknown_cipher_type': {
+            'type': 'bool',
+        },
+        'unknown_key_exchange_type': {
+            'type': 'bool',
+        },
+        'unknown_pkey_type': {
+            'type': 'bool',
+        },
+        'unknown_protocol': {
+            'type': 'bool',
+        },
+        'unknown_remote_error_type': {
+            'type': 'bool',
+        },
+        'unknown_ssl_version': {
+            'type': 'bool',
+        },
+        'unknown_state': {
+            'type': 'bool',
+        },
+        'unsupported_cipher': {
+            'type': 'bool',
+        },
+        'unsupported_compression_algorithm': {
+            'type': 'bool',
+        },
+        'unsupported_option': {
+            'type': 'bool',
+        },
+        'unsupported_protocol': {
+            'type': 'bool',
+        },
+        'unsupported_ssl_version': {
+            'type': 'bool',
+        },
+        'unsupported_status_type': {
+            'type': 'bool',
+        },
+        'write_bio_not_set': {
+            'type': 'bool',
+        },
+        'wrong_cipher_returned': {
+            'type': 'bool',
+        },
+        'wrong_message_type': {
+            'type': 'bool',
+        },
+        'wrong_counter_of_key_bits': {
+            'type': 'bool',
+        },
+        'wrong_signature_length': {
+            'type': 'bool',
+        },
+        'wrong_signature_size': {
+            'type': 'bool',
+        },
+        'wrong_ssl_version': {
+            'type': 'bool',
+        },
+        'wrong_version_counter': {
+            'type': 'bool',
+        },
+        'x509_lib': {
+            'type': 'bool',
+        },
+        'x509_verification_setup_problems': {
+            'type': 'bool',
+        },
+        'clienthello_tlsext': {
+            'type': 'bool',
+        },
+        'parse_tlsext': {
+            'type': 'bool',
+        },
+        'serverhello_tlsext': {
+            'type': 'bool',
+        },
+        'ssl3_ext_invalid_servername': {
+            'type': 'bool',
+        },
+        'ssl3_ext_invalid_servername_type': {
+            'type': 'bool',
+        },
+        'multiple_sgc_restarts': {
+            'type': 'bool',
+        },
+        'tls_invalid_ecpointformat_list': {
+            'type': 'bool',
+        },
+        'bad_ecc_cert': {
+            'type': 'bool',
+        },
+        'bad_ecdsa_sig': {
+            'type': 'bool',
+        },
+        'bad_ecpoint': {
+            'type': 'bool',
+        },
+        'cookie_mismatch': {
+            'type': 'bool',
+        },
+        'unsupported_elliptic_curve': {
+            'type': 'bool',
+        },
+        'no_required_digest': {
+            'type': 'bool',
+        },
+        'unsupported_digest_type': {
+            'type': 'bool',
+        },
+        'bad_handshake_length': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -1625,7 +2370,8 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/","%2F")
+        f_dict["template_name"] = module.params["template_name"].replace(
+            "/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -1665,8 +2411,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1677,14 +2422,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-inc", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -1718,14 +2463,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1740,16 +2483,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1758,15 +2501,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1783,16 +2526,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1805,9 +2552,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

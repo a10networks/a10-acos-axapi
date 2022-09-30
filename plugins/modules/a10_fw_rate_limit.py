@@ -9,11 +9,10 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_fw_rate_limit
 description:
-    - Rate Limit Information
+    - View Rate Limit Entries
 author: A10 Networks 2021
 options:
     state:
@@ -61,6 +60,16 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    summary:
+        description:
+        - "Field summary"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -83,6 +92,10 @@ options:
                 description:
                 - "Field v6_prefix"
                 type: str
+            summary:
+                description:
+                - "Field summary"
+                type: dict
 
 '''
 
@@ -136,9 +149,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "summary",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -146,18 +162,116 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'oper': {'type': 'dict', 'rate_limit_list': {'type': 'list', 'address': {'type': 'str', }, 'prefix_len': {'type': 'int', }, 'rule_name': {'type': 'str', }, 'ntype': {'type': 'str', }, 'cps': {'type': 'int', }, 'uplink_traffic_rate': {'type': 'int', }, 'downlink_traffic_rate': {'type': 'int', }, 'total_traffic_rate': {'type': 'int', }, 'drop_count': {'type': 'int', }}, 'v4_address': {'type': 'str', }, 'v4_netmask': {'type': 'str', }, 'v6_prefix': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'summary': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'rate_limit_list': {
+                'type': 'list',
+                'address': {
+                    'type': 'str',
+                },
+                'prefix_len': {
+                    'type': 'int',
+                },
+                'rule_name': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                },
+                'cps_received': {
+                    'type': 'int',
+                },
+                'cps_allowed': {
+                    'type': 'int',
+                },
+                'uplink_traffic_received': {
+                    'type': 'int',
+                },
+                'uplink_traffic_allowed': {
+                    'type': 'int',
+                },
+                'downlink_traffic_received': {
+                    'type': 'int',
+                },
+                'downlink_traffic_allowed': {
+                    'type': 'int',
+                },
+                'total_traffic_received': {
+                    'type': 'int',
+                },
+                'total_traffic_allowed': {
+                    'type': 'int',
+                },
+                'drop_count': {
+                    'type': 'int',
+                }
+            },
+            'v4_address': {
+                'type': 'str',
+            },
+            'v4_netmask': {
+                'type': 'str',
+            },
+            'v6_prefix': {
+                'type': 'str',
+            },
+            'summary': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'mem_reserved': {
+                        'type': 'int',
+                    },
+                    'mem_used': {
+                        'type': 'int',
+                    },
+                    'alloc_failures': {
+                        'type': 'int',
+                    },
+                    'total_num_entries': {
+                        'type': 'int',
+                    },
+                    'total_entries_scope_aggregate': {
+                        'type': 'int',
+                    },
+                    'total_entries_scope_subscriber_ip': {
+                        'type': 'int',
+                    },
+                    'total_entries_scope_subscriber_prefix': {
+                        'type': 'int',
+                    }
+                }
+            }
+        }
     })
     return rv
 
@@ -182,17 +296,29 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["rate-limit"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["rate-limit"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["rate-limit"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -203,14 +329,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("rate-limit", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("rate-limit", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -244,14 +370,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -266,16 +390,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -284,15 +408,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -309,22 +433,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["rate-limit"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "rate-limit"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["rate-limit-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "rate-limit-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module),
+                get_oper_result = api_client.get_oper(module.client,
+                                                      existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["rate-limit"]["oper"] if info != "NotFound" else info
+                result["acos_info"] = info["rate-limit"][
+                    "oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -337,9 +467,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

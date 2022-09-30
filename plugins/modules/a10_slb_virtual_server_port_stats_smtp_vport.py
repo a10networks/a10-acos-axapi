@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_smtp_vport
 description:
@@ -134,9 +133,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["stats", ]
+AVAILABLE_PROPERTIES = [
+    "stats",
+]
 
 
 def get_default_argspec():
@@ -144,24 +144,325 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'stats': {'type': 'dict', 'smtp_vport': {'type': 'dict', 'cmd_ehlo': {'type': 'str', }, 'cmd_helo': {'type': 'str', }, 'cmd_mail': {'type': 'str', }, 'cmd_rcpt': {'type': 'str', }, 'cmd_data': {'type': 'str', }, 'cmd_rset': {'type': 'str', }, 'cmd_vrfy': {'type': 'str', }, 'cmd_expn': {'type': 'str', }, 'cmd_help': {'type': 'str', }, 'cmd_noop': {'type': 'str', }, 'cmd_starttls': {'type': 'str', }, 'cmd_turn': {'type': 'str', }, 'cmd_etrn': {'type': 'str', }, 'cmd_quit': {'type': 'str', }, 'cmd_local': {'type': 'str', }, 'cmd_unknown': {'type': 'str', }, 'code_200': {'type': 'str', }, 'code_211': {'type': 'str', }, 'code_214': {'type': 'str', }, 'code_220': {'type': 'str', }, 'code_221': {'type': 'str', }, 'code_250': {'type': 'str', }, 'code_251': {'type': 'str', }, 'code_252': {'type': 'str', }, 'code_354': {'type': 'str', }, 'code_421': {'type': 'str', }, 'code_450': {'type': 'str', }, 'code_451': {'type': 'str', }, 'code_452': {'type': 'str', }, 'code_455': {'type': 'str', }, 'code_500': {'type': 'str', }, 'code_501': {'type': 'str', }, 'code_502': {'type': 'str', }, 'code_503': {'type': 'str', }, 'code_504': {'type': 'str', }, 'code_521': {'type': 'str', }, 'code_530': {'type': 'str', }, 'code_550': {'type': 'str', }, 'code_551': {'type': 'str', }, 'code_552': {'type': 'str', }, 'code_553': {'type': 'str', }, 'code_554': {'type': 'str', }, 'code_555': {'type': 'str', }, 'code_556': {'type': 'str', }, 'code_2xx': {'type': 'str', }, 'code_3xx': {'type': 'str', }, 'code_4xx': {'type': 'str', }, 'code_5xx': {'type': 'str', }, 'code_unknown': {'type': 'str', }, 'reply_10u': {'type': 'str', }, 'reply_20u': {'type': 'str', }, 'reply_50u': {'type': 'str', }, 'reply_100u': {'type': 'str', }, 'reply_200u': {'type': 'str', }, 'reply_500u': {'type': 'str', }, 'reply_1m': {'type': 'str', }, 'reply_2m': {'type': 'str', }, 'reply_5m': {'type': 'str', }, 'reply_10m': {'type': 'str', }, 'reply_20m': {'type': 'str', }, 'reply_50m': {'type': 'str', }, 'reply_100m': {'type': 'str', }, 'reply_200m': {'type': 'str', }, 'reply_500m': {'type': 'str', }, 'reply_1s': {'type': 'str', }, 'reply_2s': {'type': 'str', }, 'reply_5s': {'type': 'str', }, 'reply_over_5s': {'type': 'str', }, 'data_sz_1k': {'type': 'str', }, 'data_sz_2k': {'type': 'str', }, 'data_sz_4k': {'type': 'str', }, 'data_sz_8k': {'type': 'str', }, 'data_sz_16k': {'type': 'str', }, 'data_sz_32k': {'type': 'str', }, 'data_sz_64k': {'type': 'str', }, 'data_sz_128k': {'type': 'str', }, 'data_sz_256k': {'type': 'str', }, 'data_sz_512k': {'type': 'str', }, 'data_sz_1m': {'type': 'str', }, 'data_sz_gt_1m': {'type': 'str', }, 'total_commands': {'type': 'str', }, 'total_replies': {'type': 'str', }, 'curr_conn': {'type': 'str', }, 'total_conn': {'type': 'str', }, 'peak_conn': {'type': 'str', }, 'client_bytes': {'type': 'str', }, 'server_bytes': {'type': 'str', }, 'aflex_switch': {'type': 'str', }, 'aflex_switch_ok': {'type': 'str', }, 'aflex_ehlo_sent': {'type': 'str', }, 'send_server_ehlo': {'type': 'str', }, 'fail_to_save_client_ehlo': {'type': 'str', }, 'aflex_mail_fail': {'type': 'str', }, 'drop_server_ehlo_ok': {'type': 'str', }, 'client_ehlo_saved': {'type': 'str', }}}
+    rv.update({
+        'stats': {
+            'type': 'dict',
+            'smtp_vport': {
+                'type': 'dict',
+                'cmd_ehlo': {
+                    'type': 'str',
+                },
+                'cmd_helo': {
+                    'type': 'str',
+                },
+                'cmd_mail': {
+                    'type': 'str',
+                },
+                'cmd_rcpt': {
+                    'type': 'str',
+                },
+                'cmd_data': {
+                    'type': 'str',
+                },
+                'cmd_rset': {
+                    'type': 'str',
+                },
+                'cmd_vrfy': {
+                    'type': 'str',
+                },
+                'cmd_expn': {
+                    'type': 'str',
+                },
+                'cmd_help': {
+                    'type': 'str',
+                },
+                'cmd_noop': {
+                    'type': 'str',
+                },
+                'cmd_starttls': {
+                    'type': 'str',
+                },
+                'cmd_turn': {
+                    'type': 'str',
+                },
+                'cmd_etrn': {
+                    'type': 'str',
+                },
+                'cmd_quit': {
+                    'type': 'str',
+                },
+                'cmd_local': {
+                    'type': 'str',
+                },
+                'cmd_unknown': {
+                    'type': 'str',
+                },
+                'code_200': {
+                    'type': 'str',
+                },
+                'code_211': {
+                    'type': 'str',
+                },
+                'code_214': {
+                    'type': 'str',
+                },
+                'code_220': {
+                    'type': 'str',
+                },
+                'code_221': {
+                    'type': 'str',
+                },
+                'code_250': {
+                    'type': 'str',
+                },
+                'code_251': {
+                    'type': 'str',
+                },
+                'code_252': {
+                    'type': 'str',
+                },
+                'code_354': {
+                    'type': 'str',
+                },
+                'code_421': {
+                    'type': 'str',
+                },
+                'code_450': {
+                    'type': 'str',
+                },
+                'code_451': {
+                    'type': 'str',
+                },
+                'code_452': {
+                    'type': 'str',
+                },
+                'code_455': {
+                    'type': 'str',
+                },
+                'code_500': {
+                    'type': 'str',
+                },
+                'code_501': {
+                    'type': 'str',
+                },
+                'code_502': {
+                    'type': 'str',
+                },
+                'code_503': {
+                    'type': 'str',
+                },
+                'code_504': {
+                    'type': 'str',
+                },
+                'code_521': {
+                    'type': 'str',
+                },
+                'code_530': {
+                    'type': 'str',
+                },
+                'code_550': {
+                    'type': 'str',
+                },
+                'code_551': {
+                    'type': 'str',
+                },
+                'code_552': {
+                    'type': 'str',
+                },
+                'code_553': {
+                    'type': 'str',
+                },
+                'code_554': {
+                    'type': 'str',
+                },
+                'code_555': {
+                    'type': 'str',
+                },
+                'code_556': {
+                    'type': 'str',
+                },
+                'code_2xx': {
+                    'type': 'str',
+                },
+                'code_3xx': {
+                    'type': 'str',
+                },
+                'code_4xx': {
+                    'type': 'str',
+                },
+                'code_5xx': {
+                    'type': 'str',
+                },
+                'code_unknown': {
+                    'type': 'str',
+                },
+                'reply_10u': {
+                    'type': 'str',
+                },
+                'reply_20u': {
+                    'type': 'str',
+                },
+                'reply_50u': {
+                    'type': 'str',
+                },
+                'reply_100u': {
+                    'type': 'str',
+                },
+                'reply_200u': {
+                    'type': 'str',
+                },
+                'reply_500u': {
+                    'type': 'str',
+                },
+                'reply_1m': {
+                    'type': 'str',
+                },
+                'reply_2m': {
+                    'type': 'str',
+                },
+                'reply_5m': {
+                    'type': 'str',
+                },
+                'reply_10m': {
+                    'type': 'str',
+                },
+                'reply_20m': {
+                    'type': 'str',
+                },
+                'reply_50m': {
+                    'type': 'str',
+                },
+                'reply_100m': {
+                    'type': 'str',
+                },
+                'reply_200m': {
+                    'type': 'str',
+                },
+                'reply_500m': {
+                    'type': 'str',
+                },
+                'reply_1s': {
+                    'type': 'str',
+                },
+                'reply_2s': {
+                    'type': 'str',
+                },
+                'reply_5s': {
+                    'type': 'str',
+                },
+                'reply_over_5s': {
+                    'type': 'str',
+                },
+                'data_sz_1k': {
+                    'type': 'str',
+                },
+                'data_sz_2k': {
+                    'type': 'str',
+                },
+                'data_sz_4k': {
+                    'type': 'str',
+                },
+                'data_sz_8k': {
+                    'type': 'str',
+                },
+                'data_sz_16k': {
+                    'type': 'str',
+                },
+                'data_sz_32k': {
+                    'type': 'str',
+                },
+                'data_sz_64k': {
+                    'type': 'str',
+                },
+                'data_sz_128k': {
+                    'type': 'str',
+                },
+                'data_sz_256k': {
+                    'type': 'str',
+                },
+                'data_sz_512k': {
+                    'type': 'str',
+                },
+                'data_sz_1m': {
+                    'type': 'str',
+                },
+                'data_sz_gt_1m': {
+                    'type': 'str',
+                },
+                'total_commands': {
+                    'type': 'str',
+                },
+                'total_replies': {
+                    'type': 'str',
+                },
+                'curr_conn': {
+                    'type': 'str',
+                },
+                'total_conn': {
+                    'type': 'str',
+                },
+                'peak_conn': {
+                    'type': 'str',
+                },
+                'client_bytes': {
+                    'type': 'str',
+                },
+                'server_bytes': {
+                    'type': 'str',
+                },
+                'aflex_switch': {
+                    'type': 'str',
+                },
+                'aflex_switch_ok': {
+                    'type': 'str',
+                },
+                'aflex_ehlo_sent': {
+                    'type': 'str',
+                },
+                'send_server_ehlo': {
+                    'type': 'str',
+                },
+                'fail_to_save_client_ehlo': {
+                    'type': 'str',
+                },
+                'aflex_mail_fail': {
+                    'type': 'str',
+                },
+                'drop_server_ehlo_ok': {
+                    'type': 'str',
+                },
+                'client_ehlo_saved': {
+                    'type': 'str',
+                }
+            }
+        }
     })
     # Parent keys
-    rv.update(dict(
-        protocol=dict(type='str', required=True),
-        port_number=dict(type='str', required=True),
-        virtual_server_name=dict(type='str', required=True),
-    ))
+    rv.update(
+        dict(
+            protocol=dict(type='str', required=True),
+            port_number=dict(type='str', required=True),
+            virtual_server_name=dict(type='str', required=True),
+        ))
     return rv
 
 
@@ -172,15 +473,17 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["protocol"]:
-        f_dict["protocol"] = module.params["protocol"].replace("/","%2F")
+        f_dict["protocol"] = module.params["protocol"].replace("/", "%2F")
     else:
         f_dict["protocol"] = module.params["protocol"]
     if '/' in module.params["port_number"]:
-        f_dict["port_number"] = module.params["port_number"].replace("/","%2F")
+        f_dict["port_number"] = module.params["port_number"].replace(
+            "/", "%2F")
     else:
         f_dict["port_number"] = module.params["port_number"]
     if '/' in module.params["virtual_server_name"]:
-        f_dict["virtual_server_name"] = module.params["virtual_server_name"].replace("/","%2F")
+        f_dict["virtual_server_name"] = module.params[
+            "virtual_server_name"].replace("/", "%2F")
     else:
         f_dict["virtual_server_name"] = module.params["virtual_server_name"]
 
@@ -222,8 +525,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -234,8 +536,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -275,14 +576,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -297,16 +596,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -315,15 +614,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -340,22 +639,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["port"] if info != "NotFound" else info
+                result[
+                    "acos_info"] = info["port"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["port-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "port-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["port"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["port"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -368,9 +673,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

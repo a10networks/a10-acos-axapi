@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging
 description:
@@ -442,9 +441,34 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["batched_logging_disable", "custom", "disable_log_by_destination", "facility", "format", "include_destination", "include_http", "include_inside_user_mac", "include_partition_name", "include_port_block_account", "include_radius_attribute", "include_session_byte_count", "log", "log_receiver", "name", "resolution", "rfc_custom", "rule", "service_group", "severity", "shared", "source_address", "source_port", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "batched_logging_disable",
+    "custom",
+    "disable_log_by_destination",
+    "facility",
+    "format",
+    "include_destination",
+    "include_http",
+    "include_inside_user_mac",
+    "include_partition_name",
+    "include_port_block_account",
+    "include_radius_attribute",
+    "include_session_byte_count",
+    "log",
+    "log_receiver",
+    "name",
+    "resolution",
+    "rfc_custom",
+    "rule",
+    "service_group",
+    "severity",
+    "shared",
+    "source_address",
+    "source_port",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -452,41 +476,534 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'resolution': {'type': 'str', 'choices': ['seconds', '10-milliseconds']},
-        'log': {'type': 'dict', 'fixed_nat': {'type': 'dict', 'fixed_nat_http_requests': {'type': 'str', 'choices': ['host', 'url']}, 'fixed_nat_port_mappings': {'type': 'str', 'choices': ['both', 'creation']}, 'fixed_nat_sessions': {'type': 'bool', }, 'fixed_nat_merged_style': {'type': 'bool', }, 'user_ports': {'type': 'dict', 'user_ports': {'type': 'bool', }, 'days': {'type': 'int', }, 'start_time': {'type': 'str', }}}, 'one_to_one_nat': {'type': 'dict', 'one_to_one_nat_sessions': {'type': 'bool', }, 'one_to_one_merged_style': {'type': 'bool', }}, 'map_dhcpv6': {'type': 'dict', 'map_dhcpv6_prefix_all': {'type': 'bool', }, 'map_dhcpv6_msg_type': {'type': 'list', 'map_dhcpv6_msg_type': {'type': 'str', 'choices': ['prefix-assignment', 'prefix-renewal', 'prefix-release']}}}, 'http_requests': {'type': 'str', 'choices': ['host', 'url']}, 'port_mappings': {'type': 'str', 'choices': ['creation', 'disable', 'both']}, 'port_overloading': {'type': 'bool', }, 'user_data': {'type': 'bool', }, 'sessions': {'type': 'bool', }, 'merged_style': {'type': 'bool', }},
-        'include_destination': {'type': 'bool', },
-        'include_inside_user_mac': {'type': 'bool', },
-        'include_partition_name': {'type': 'bool', },
-        'include_session_byte_count': {'type': 'bool', },
-        'include_port_block_account': {'type': 'bool', },
-        'include_radius_attribute': {'type': 'dict', 'attr_cfg': {'type': 'list', 'attr': {'type': 'str', 'choices': ['imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6']}, 'attr_event': {'type': 'str', 'choices': ['http-requests', 'port-mappings', 'sessions', 'user-data']}}, 'no_quote': {'type': 'bool', }, 'insert_if_not_existing': {'type': 'bool', }, 'zero_in_custom_attr': {'type': 'bool', }, 'framed_ipv6_prefix': {'type': 'bool', }, 'prefix_length': {'type': 'str', 'choices': ['32', '48', '64', '80', '96', '112']}},
-        'include_http': {'type': 'dict', 'header_cfg': {'type': 'list', 'http_header': {'type': 'str', 'choices': ['cookie', 'referer', 'user-agent', 'header1', 'header2', 'header3']}, 'max_length': {'type': 'int', }, 'custom_header_name': {'type': 'str', }, 'custom_max_length': {'type': 'int', }}, 'l4_session_info': {'type': 'bool', }, 'method': {'type': 'bool', }, 'request_number': {'type': 'bool', }, 'file_extension': {'type': 'bool', }},
-        'rule': {'type': 'dict', 'rule_http_requests': {'type': 'dict', 'dest_port': {'type': 'list', 'dest_port_number': {'type': 'int', }, 'include_byte_count': {'type': 'bool', }}, 'log_every_http_request': {'type': 'bool', }, 'max_url_len': {'type': 'int', }, 'include_all_headers': {'type': 'bool', }, 'disable_sequence_check': {'type': 'bool', }}, 'interim_update_interval': {'type': 'int', }},
-        'facility': {'type': 'str', 'choices': ['kernel', 'user', 'mail', 'daemon', 'security-authorization', 'syslog', 'line-printer', 'news', 'uucp', 'cron', 'security-authorization-private', 'ftp', 'ntp', 'audit', 'alert', 'clock', 'local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']},
-        'severity': {'type': 'dict', 'severity_string': {'type': 'str', 'choices': ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'informational', 'debug']}, 'severity_val': {'type': 'int', }},
-        'format': {'type': 'str', 'choices': ['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']},
-        'batched_logging_disable': {'type': 'bool', },
-        'log_receiver': {'type': 'dict', 'radius': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }},
-        'service_group': {'type': 'str', },
-        'shared': {'type': 'bool', },
-        'source_port': {'type': 'dict', 'source_port_num': {'type': 'int', }, 'any': {'type': 'bool', }},
-        'rfc_custom': {'type': 'dict', 'header': {'type': 'dict', 'use_alternate_timestamp': {'type': 'bool', }}, 'message': {'type': 'dict', 'ipv6_tech': {'type': 'list', 'tech_type': {'type': 'str', 'choices': ['lsn', 'nat64', 'ds-lite', 'sixrd-nat64']}, 'fixed_nat_allocated': {'type': 'str', }, 'fixed_nat_freed': {'type': 'str', }, 'port_allocated': {'type': 'str', }, 'port_freed': {'type': 'str', }, 'port_batch_allocated': {'type': 'str', }, 'port_batch_freed': {'type': 'str', }, 'port_batch_v2_allocated': {'type': 'str', }, 'port_batch_v2_freed': {'type': 'str', }}, 'dhcpv6_map_prefix_assigned': {'type': 'str', }, 'dhcpv6_map_prefix_released': {'type': 'str', }, 'dhcpv6_map_prefix_renewed': {'type': 'str', }, 'http_request_got': {'type': 'str', }, 'session_created': {'type': 'str', }, 'session_deleted': {'type': 'str', }}},
-        'custom': {'type': 'dict', 'custom_header': {'type': 'str', 'choices': ['use-syslog-header']}, 'custom_message': {'type': 'dict', 'custom_dhcpv6_map_prefix_assigned': {'type': 'str', }, 'custom_dhcpv6_map_prefix_released': {'type': 'str', }, 'custom_dhcpv6_map_prefix_renewed': {'type': 'str', }, 'custom_fixed_nat_allocated': {'type': 'str', }, 'custom_fixed_nat_interim_update': {'type': 'str', }, 'custom_fixed_nat_freed': {'type': 'str', }, 'custom_http_request_got': {'type': 'str', }, 'custom_port_allocated': {'type': 'str', }, 'custom_port_batch_allocated': {'type': 'str', }, 'custom_port_batch_freed': {'type': 'str', }, 'custom_port_batch_v2_allocated': {'type': 'str', }, 'custom_port_batch_v2_freed': {'type': 'str', }, 'custom_port_batch_v2_interim_update': {'type': 'str', }, 'custom_port_freed': {'type': 'str', }, 'custom_session_created': {'type': 'str', }, 'custom_session_deleted': {'type': 'str', }}, 'custom_time_stamp_format': {'type': 'str', }},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'source_address': {'type': 'dict', 'ip': {'type': 'str', }, 'ipv6': {'type': 'str', }, 'uuid': {'type': 'str', }},
-        'disable_log_by_destination': {'type': 'dict', 'tcp_list': {'type': 'list', 'tcp_port_start': {'type': 'int', }, 'tcp_port_end': {'type': 'int', }}, 'udp_list': {'type': 'list', 'udp_port_start': {'type': 'int', }, 'udp_port_end': {'type': 'int', }}, 'icmp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'ip_list': {'type': 'list', 'ipv4_addr': {'type': 'str', 'required': True, }, 'tcp_list': {'type': 'list', 'tcp_port_start': {'type': 'int', }, 'tcp_port_end': {'type': 'int', }}, 'udp_list': {'type': 'list', 'udp_port_start': {'type': 'int', }, 'udp_port_end': {'type': 'int', }}, 'icmp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}, 'ip6_list': {'type': 'list', 'ipv6_addr': {'type': 'str', 'required': True, }, 'tcp_list': {'type': 'list', 'tcp_port_start': {'type': 'int', }, 'tcp_port_end': {'type': 'int', }}, 'udp_list': {'type': 'list', 'udp_port_start': {'type': 'int', }, 'udp_port_end': {'type': 'int', }}, 'icmp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'resolution': {
+            'type': 'str',
+            'choices': ['seconds', '10-milliseconds']
+        },
+        'log': {
+            'type': 'dict',
+            'fixed_nat': {
+                'type': 'dict',
+                'fixed_nat_http_requests': {
+                    'type': 'str',
+                    'choices': ['host', 'url']
+                },
+                'fixed_nat_port_mappings': {
+                    'type': 'str',
+                    'choices': ['both', 'creation']
+                },
+                'fixed_nat_sessions': {
+                    'type': 'bool',
+                },
+                'fixed_nat_merged_style': {
+                    'type': 'bool',
+                },
+                'user_ports': {
+                    'type': 'dict',
+                    'user_ports': {
+                        'type': 'bool',
+                    },
+                    'days': {
+                        'type': 'int',
+                    },
+                    'start_time': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'one_to_one_nat': {
+                'type': 'dict',
+                'one_to_one_nat_sessions': {
+                    'type': 'bool',
+                },
+                'one_to_one_merged_style': {
+                    'type': 'bool',
+                }
+            },
+            'map_dhcpv6': {
+                'type': 'dict',
+                'map_dhcpv6_prefix_all': {
+                    'type': 'bool',
+                },
+                'map_dhcpv6_msg_type': {
+                    'type': 'list',
+                    'map_dhcpv6_msg_type': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'prefix-assignment', 'prefix-renewal',
+                            'prefix-release'
+                        ]
+                    }
+                }
+            },
+            'http_requests': {
+                'type': 'str',
+                'choices': ['host', 'url']
+            },
+            'port_mappings': {
+                'type': 'str',
+                'choices': ['creation', 'disable', 'both']
+            },
+            'port_overloading': {
+                'type': 'bool',
+            },
+            'user_data': {
+                'type': 'bool',
+            },
+            'sessions': {
+                'type': 'bool',
+            },
+            'merged_style': {
+                'type': 'bool',
+            }
+        },
+        'include_destination': {
+            'type': 'bool',
+        },
+        'include_inside_user_mac': {
+            'type': 'bool',
+        },
+        'include_partition_name': {
+            'type': 'bool',
+        },
+        'include_session_byte_count': {
+            'type': 'bool',
+        },
+        'include_port_block_account': {
+            'type': 'bool',
+        },
+        'include_radius_attribute': {
+            'type': 'dict',
+            'attr_cfg': {
+                'type': 'list',
+                'attr': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'imei', 'imsi', 'msisdn', 'custom1', 'custom2',
+                        'custom3', 'custom4', 'custom5', 'custom6'
+                    ]
+                },
+                'attr_event': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'http-requests', 'port-mappings', 'sessions',
+                        'user-data'
+                    ]
+                }
+            },
+            'no_quote': {
+                'type': 'bool',
+            },
+            'insert_if_not_existing': {
+                'type': 'bool',
+            },
+            'zero_in_custom_attr': {
+                'type': 'bool',
+            },
+            'framed_ipv6_prefix': {
+                'type': 'bool',
+            },
+            'prefix_length': {
+                'type': 'str',
+                'choices': ['32', '48', '64', '80', '96', '112']
+            }
+        },
+        'include_http': {
+            'type': 'dict',
+            'header_cfg': {
+                'type': 'list',
+                'http_header': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'cookie', 'referer', 'user-agent', 'header1',
+                        'header2', 'header3'
+                    ]
+                },
+                'max_length': {
+                    'type': 'int',
+                },
+                'custom_header_name': {
+                    'type': 'str',
+                },
+                'custom_max_length': {
+                    'type': 'int',
+                }
+            },
+            'l4_session_info': {
+                'type': 'bool',
+            },
+            'method': {
+                'type': 'bool',
+            },
+            'request_number': {
+                'type': 'bool',
+            },
+            'file_extension': {
+                'type': 'bool',
+            }
+        },
+        'rule': {
+            'type': 'dict',
+            'rule_http_requests': {
+                'type': 'dict',
+                'dest_port': {
+                    'type': 'list',
+                    'dest_port_number': {
+                        'type': 'int',
+                    },
+                    'include_byte_count': {
+                        'type': 'bool',
+                    }
+                },
+                'log_every_http_request': {
+                    'type': 'bool',
+                },
+                'max_url_len': {
+                    'type': 'int',
+                },
+                'include_all_headers': {
+                    'type': 'bool',
+                },
+                'disable_sequence_check': {
+                    'type': 'bool',
+                }
+            },
+            'interim_update_interval': {
+                'type': 'int',
+            }
+        },
+        'facility': {
+            'type':
+            'str',
+            'choices': [
+                'kernel', 'user', 'mail', 'daemon', 'security-authorization',
+                'syslog', 'line-printer', 'news', 'uucp', 'cron',
+                'security-authorization-private', 'ftp', 'ntp', 'audit',
+                'alert', 'clock', 'local0', 'local1', 'local2', 'local3',
+                'local4', 'local5', 'local6', 'local7'
+            ]
+        },
+        'severity': {
+            'type': 'dict',
+            'severity_string': {
+                'type':
+                'str',
+                'choices': [
+                    'emergency', 'alert', 'critical', 'error', 'warning',
+                    'notice', 'informational', 'debug'
+                ]
+            },
+            'severity_val': {
+                'type': 'int',
+            }
+        },
+        'format': {
+            'type': 'str',
+            'choices':
+            ['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']
+        },
+        'batched_logging_disable': {
+            'type': 'bool',
+        },
+        'log_receiver': {
+            'type': 'dict',
+            'radius': {
+                'type': 'bool',
+            },
+            'secret_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            }
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'shared': {
+            'type': 'bool',
+        },
+        'source_port': {
+            'type': 'dict',
+            'source_port_num': {
+                'type': 'int',
+            },
+            'any': {
+                'type': 'bool',
+            }
+        },
+        'rfc_custom': {
+            'type': 'dict',
+            'header': {
+                'type': 'dict',
+                'use_alternate_timestamp': {
+                    'type': 'bool',
+                }
+            },
+            'message': {
+                'type': 'dict',
+                'ipv6_tech': {
+                    'type': 'list',
+                    'tech_type': {
+                        'type': 'str',
+                        'choices': ['lsn', 'nat64', 'ds-lite', 'sixrd-nat64']
+                    },
+                    'fixed_nat_allocated': {
+                        'type': 'str',
+                    },
+                    'fixed_nat_freed': {
+                        'type': 'str',
+                    },
+                    'port_allocated': {
+                        'type': 'str',
+                    },
+                    'port_freed': {
+                        'type': 'str',
+                    },
+                    'port_batch_allocated': {
+                        'type': 'str',
+                    },
+                    'port_batch_freed': {
+                        'type': 'str',
+                    },
+                    'port_batch_v2_allocated': {
+                        'type': 'str',
+                    },
+                    'port_batch_v2_freed': {
+                        'type': 'str',
+                    }
+                },
+                'dhcpv6_map_prefix_assigned': {
+                    'type': 'str',
+                },
+                'dhcpv6_map_prefix_released': {
+                    'type': 'str',
+                },
+                'dhcpv6_map_prefix_renewed': {
+                    'type': 'str',
+                },
+                'http_request_got': {
+                    'type': 'str',
+                },
+                'session_created': {
+                    'type': 'str',
+                },
+                'session_deleted': {
+                    'type': 'str',
+                }
+            }
+        },
+        'custom': {
+            'type': 'dict',
+            'custom_header': {
+                'type': 'str',
+                'choices': ['use-syslog-header']
+            },
+            'custom_message': {
+                'type': 'dict',
+                'custom_dhcpv6_map_prefix_assigned': {
+                    'type': 'str',
+                },
+                'custom_dhcpv6_map_prefix_released': {
+                    'type': 'str',
+                },
+                'custom_dhcpv6_map_prefix_renewed': {
+                    'type': 'str',
+                },
+                'custom_fixed_nat_allocated': {
+                    'type': 'str',
+                },
+                'custom_fixed_nat_interim_update': {
+                    'type': 'str',
+                },
+                'custom_fixed_nat_freed': {
+                    'type': 'str',
+                },
+                'custom_http_request_got': {
+                    'type': 'str',
+                },
+                'custom_port_allocated': {
+                    'type': 'str',
+                },
+                'custom_port_batch_allocated': {
+                    'type': 'str',
+                },
+                'custom_port_batch_freed': {
+                    'type': 'str',
+                },
+                'custom_port_batch_v2_allocated': {
+                    'type': 'str',
+                },
+                'custom_port_batch_v2_freed': {
+                    'type': 'str',
+                },
+                'custom_port_batch_v2_interim_update': {
+                    'type': 'str',
+                },
+                'custom_port_freed': {
+                    'type': 'str',
+                },
+                'custom_session_created': {
+                    'type': 'str',
+                },
+                'custom_session_deleted': {
+                    'type': 'str',
+                }
+            },
+            'custom_time_stamp_format': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'source_address': {
+            'type': 'dict',
+            'ip': {
+                'type': 'str',
+            },
+            'ipv6': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'disable_log_by_destination': {
+            'type': 'dict',
+            'tcp_list': {
+                'type': 'list',
+                'tcp_port_start': {
+                    'type': 'int',
+                },
+                'tcp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'udp_list': {
+                'type': 'list',
+                'udp_port_start': {
+                    'type': 'int',
+                },
+                'udp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'icmp': {
+                'type': 'bool',
+            },
+            'others': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'ip_list': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                    },
+                    'tcp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                    },
+                    'udp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'icmp': {
+                    'type': 'bool',
+                },
+                'others': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            },
+            'ip6_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                    },
+                    'tcp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                    },
+                    'udp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'icmp': {
+                    'type': 'bool',
+                },
+                'others': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            }
+        }
     })
     return rv
 
@@ -498,7 +1015,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
 
@@ -538,8 +1055,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -550,8 +1066,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -591,14 +1106,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -613,16 +1126,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -631,15 +1144,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -656,16 +1169,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["logging"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "logging"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["logging-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "logging-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -678,9 +1195,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()
