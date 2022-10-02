@@ -250,17 +250,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "dns",
-    "esp",
-    "ftp",
-    "icmp",
-    "pptp",
-    "rtsp",
-    "sip",
-    "tftp",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["dns", "esp", "ftp", "icmp", "pptp", "rtsp", "sip", "tftp", "uuid", ]
 
 
 def get_default_argspec():
@@ -268,21 +258,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -290,222 +273,150 @@ def get_argspec():
     rv.update({
         'uuid': {
             'type': 'str',
-        },
+            },
         'ftp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type':
                     'str',
                     'choices': [
-                        'all', 'client-port-request', 'client-eprt-request',
-                        'server-pasv-reply', 'server-epsv-reply',
-                        'port-retransmits', 'pasv-retransmits',
-                        'smp-app-type-mismatch',
-                        'retransmit-sanity-check-failure',
-                        'smp-conn-alloc-failure', 'port-helper-created',
-                        'pasv-helper-created', 'port-helper-acquire-in-del-q',
-                        'port-helper-acquire-already-used',
-                        'pasv-helper-acquire-in-del-q',
-                        'pasv-helper-acquire-already-used',
-                        'port-helper-freed-used', 'port-helper-freed-unused',
-                        'pasv-helper-freed-used', 'pasv-helper-freed-unused'
-                    ]
+                        'all', 'client-port-request', 'client-eprt-request', 'server-pasv-reply', 'server-epsv-reply', 'port-retransmits', 'pasv-retransmits', 'smp-app-type-mismatch', 'retransmit-sanity-check-failure', 'smp-conn-alloc-failure', 'port-helper-created', 'pasv-helper-created',
+                        'port-helper-acquire-in-del-q', 'port-helper-acquire-already-used', 'pasv-helper-acquire-in-del-q', 'pasv-helper-acquire-already-used', 'port-helper-freed-used', 'port-helper-freed-unused', 'pasv-helper-freed-used', 'pasv-helper-freed-unused'
+                        ]
+                    }
                 }
-            }
-        },
+            },
         'tftp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'session-created', 'helper-created',
-                        'helper-freed', 'helper-freed-used',
-                        'helper-freed-unused', 'helper-already-used',
-                        'helper-in-rml'
-                    ]
+                    'type': 'str',
+                    'choices': ['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml']
+                    }
                 }
-            }
-        },
+            },
         'rtsp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type':
                     'str',
                     'choices': [
-                        'all', 'transport-inserted', 'transport-freed',
-                        'transport-alloc-failure', 'data-session-created',
-                        'data-session-freed', 'ext-creation-failure',
-                        'transport-add-to-ext', 'transport-removed-from-ext',
-                        'transport-too-many', 'transport-already-in-ext',
-                        'transport-exists',
-                        'transport-link-ext-failure-control',
-                        'transport-link-ext-data',
-                        'transport-link-ext-failure-data',
-                        'transport-inserted-shadow', 'transport-creation-race',
-                        'transport-alloc-failure-shadow',
-                        'transport-put-in-del-q', 'transport-freed-shadow',
-                        'transport-acquired-from-control',
-                        'transport-found-from-prev-control',
-                        'transport-acquire-failure-from-control',
-                        'transport-released-from-control',
-                        'transport-double-release-from-control',
-                        'transport-acquired-from-data',
-                        'transport-acquire-failure-from-data',
-                        'transport-released-from-data',
-                        'transport-double-release-from-data',
-                        'transport-retry-lookup-on-data-free',
-                        'transport-not-found-on-data-free',
-                        'data-session-created-shadow',
-                        'data-session-freed-shadow',
-                        'ha-control-ext-creation-failure',
-                        'ha-control-session-created', 'ha-data-session-created'
-                    ]
+                        'all', 'transport-inserted', 'transport-freed', 'transport-alloc-failure', 'data-session-created', 'data-session-freed', 'ext-creation-failure', 'transport-add-to-ext', 'transport-removed-from-ext', 'transport-too-many', 'transport-already-in-ext', 'transport-exists',
+                        'transport-link-ext-failure-control', 'transport-link-ext-data', 'transport-link-ext-failure-data', 'transport-inserted-shadow', 'transport-creation-race', 'transport-alloc-failure-shadow', 'transport-put-in-del-q', 'transport-freed-shadow', 'transport-acquired-from-control',
+                        'transport-found-from-prev-control', 'transport-acquire-failure-from-control', 'transport-released-from-control', 'transport-double-release-from-control', 'transport-acquired-from-data', 'transport-acquire-failure-from-data', 'transport-released-from-data',
+                        'transport-double-release-from-data', 'transport-retry-lookup-on-data-free', 'transport-not-found-on-data-free', 'data-session-created-shadow', 'data-session-freed-shadow', 'ha-control-ext-creation-failure', 'ha-control-session-created', 'ha-data-session-created'
+                        ]
+                    }
                 }
-            }
-        },
+            },
         'pptp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type':
                     'str',
                     'choices': [
-                        'all', 'calls-established',
-                        'call-req-pns-call-id-mismatch',
-                        'call-reply-pns-call-id-mismatch',
-                        'gre-session-created', 'gre-session-freed',
-                        'call-req-retransmit', 'call-req-new',
-                        'call-req-ext-alloc-failure',
-                        'call-reply-call-id-unknown', 'call-reply-retransmit',
-                        'call-reply-ext-ext-alloc-failure',
-                        'smp-app-type-mismatch', 'smp-client-call-id-mismatch',
-                        'smp-sessions-created', 'smp-sessions-freed',
-                        'smp-alloc-failure', 'gre-conn-creation-failure',
-                        'gre-conn-ext-creation-failure', 'gre-no-fwd-route',
-                        'gre-no-rev-route', 'gre-no-control-conn',
-                        'gre-conn-already-exists', 'gre-free-no-ext',
-                        'gre-free-no-smp', 'gre-free-smp-app-type-mismatch',
-                        'control-freed', 'control-free-no-ext',
-                        'control-free-no-smp',
-                        'control-free-smp-app-type-mismatch'
-                    ]
+                        'all', 'calls-established', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'gre-session-created', 'gre-session-freed', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown', 'call-reply-retransmit',
+                        'call-reply-ext-ext-alloc-failure', 'smp-app-type-mismatch', 'smp-client-call-id-mismatch', 'smp-sessions-created', 'smp-sessions-freed', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route', 'gre-no-rev-route',
+                        'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch', 'control-freed', 'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
+                        ]
+                    }
                 }
-            }
-        },
+            },
         'sip': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type':
                     'str',
                     'choices': [
-                        'all', 'stat-request', 'stat-response',
-                        'method-register', 'method-invite', 'method-ack',
-                        'method-cancel', 'method-bye', 'method-options',
-                        'method-prack', 'method-subscribe', 'method-notify',
-                        'method-publish', 'method-info', 'method-refer',
-                        'method-message', 'method-update', 'method-unknown',
-                        'parse-error', 'keep-alive', 'contact-error',
-                        'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success',
-                        'rtp-port-failure', 'rtcp-port-failure',
-                        'contact-port-no-op', 'contact-port-success',
-                        'contact-port-failure', 'contact-new',
-                        'contact-alloc-failure', 'contact-eim',
-                        'contact-eim-set', 'rtp-new', 'rtp-alloc-failure',
-                        'rtp-eim', 'helper-found', 'helper-created',
-                        'helper-deleted', 'helper-freed', 'helper-failure'
-                    ]
+                        'all', 'stat-request', 'stat-response', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-options', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update',
+                        'method-unknown', 'parse-error', 'keep-alive', 'contact-error', 'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success', 'rtp-port-failure', 'rtcp-port-failure', 'contact-port-no-op', 'contact-port-success', 'contact-port-failure', 'contact-new', 'contact-alloc-failure',
+                        'contact-eim', 'contact-eim-set', 'rtp-new', 'rtp-alloc-failure', 'rtp-eim', 'helper-found', 'helper-created', 'helper-deleted', 'helper-freed', 'helper-failure'
+                        ]
+                    }
                 }
-            }
-        },
+            },
         'dns': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'esp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'session-created', 'helper-created',
-                        'helper-freed', 'helper-freed-used',
-                        'helper-freed-unused', 'helper-already-used',
-                        'helper-in-rml'
-                    ]
+                    'type': 'str',
+                    'choices': ['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml']
+                    }
                 }
-            }
-        },
+            },
         'icmp': {
             'type': 'dict',
             'disable': {
                 'type': 'str',
                 'choices': ['disable']
-            },
+                },
             'uuid': {
                 'type': 'str',
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -602,12 +513,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -622,16 +528,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -642,13 +546,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -665,20 +566,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["alg"] if info != "NotFound" else info
+                result["acos_info"] = info["alg"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "alg-list"] if info != "NotFound" else info
+                result["acos_info"] = info["alg-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -691,8 +588,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

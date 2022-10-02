@@ -219,19 +219,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "auto_detect",
-    "enable_list",
-    "limit",
-    "msg_format_acos_2x",
-    "oper",
-    "ping_site",
-    "secure",
-    "status_interval",
-    "use_mgmt_port",
-    "use_mgmt_port_for_all_partitions",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["auto_detect", "enable_list", "limit", "msg_format_acos_2x", "oper", "ping_site", "secure", "status_interval", "use_mgmt_port", "use_mgmt_port_for_all_partitions", "uuid", ]
 
 
 def get_default_argspec():
@@ -239,21 +227,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -261,149 +242,149 @@ def get_argspec():
     rv.update({
         'auto_detect': {
             'type': 'bool',
-        },
+            },
         'use_mgmt_port': {
             'type': 'bool',
-        },
+            },
         'use_mgmt_port_for_all_partitions': {
             'type': 'bool',
-        },
+            },
         'status_interval': {
             'type': 'int',
-        },
+            },
         'ping_site': {
             'type': 'str',
-        },
+            },
         'msg_format_acos_2x': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'enable_list': {
             'type': 'list',
             'ntype': {
                 'type': 'str',
                 'required': True,
                 'choices': ['controller', 'device']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'limit': {
             'type': 'dict',
             'ardt_query': {
                 'type': 'int',
-            },
+                },
             'ardt_response': {
                 'type': 'int',
-            },
+                },
             'ardt_session': {
                 'type': 'int',
-            },
+                },
             'conn_response': {
                 'type': 'int',
-            },
+                },
             'response': {
                 'type': 'int',
-            },
+                },
             'message': {
                 'type': 'int',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'secure': {
             'type': 'dict',
             'action': {
                 'type': 'str',
                 'choices': ['enable', 'disable', 'enable-fallback']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'oper': {
             'type': 'dict',
             'session_list': {
                 'type': 'list',
                 'protocol_info': {
                     'type': 'str',
-                },
+                    },
                 'state': {
                     'type': 'str',
-                },
+                    },
                 'session_id': {
                     'type': 'int',
-                },
+                    },
                 'connection_succeeded': {
                     'type': 'int',
-                },
+                    },
                 'connection_failed': {
                     'type': 'int',
-                },
+                    },
                 'open_packet_sent': {
                     'type': 'int',
-                },
+                    },
                 'open_packet_received': {
                     'type': 'int',
-                },
+                    },
                 'open_session_succeeded': {
                     'type': 'int',
-                },
+                    },
                 'open_session_failed': {
                     'type': 'int',
-                },
+                    },
                 'sessions_dropped': {
                     'type': 'int',
-                },
+                    },
                 'retry': {
                     'type': 'int',
-                },
+                    },
                 'update_packet_sent': {
                     'type': 'int',
-                },
+                    },
                 'update_packet_received': {
                     'type': 'int',
-                },
+                    },
                 'keepalive_packet_sent': {
                     'type': 'int',
-                },
+                    },
                 'keepalive_packet_received': {
                     'type': 'int',
-                },
+                    },
                 'notify_packet_sent': {
                     'type': 'int',
-                },
+                    },
                 'notify_packet_received': {
                     'type': 'int',
-                },
+                    },
                 'message_header_error': {
                     'type': 'int',
-                },
+                    },
                 'secure_negotiation_success': {
                     'type': 'int',
-                },
+                    },
                 'secure_negotiation_fail': {
                     'type': 'int',
-                },
+                    },
                 'ssl_handshake_success': {
                     'type': 'int',
-                },
+                    },
                 'ssl_handshake_fail': {
                     'type': 'int',
-                },
+                    },
                 'secure_state': {
                     'type': 'str',
-                },
+                    },
                 'secure_config': {
                     'type': 'str',
+                    }
                 }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -500,12 +481,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -520,16 +496,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -540,13 +514,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -563,28 +534,21 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "protocol"] if info != "NotFound" else info
+                result["acos_info"] = info["protocol"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "protocol-list"] if info != "NotFound" else info
+                result["acos_info"] = info["protocol-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["protocol"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["protocol"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -597,8 +561,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

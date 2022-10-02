@@ -310,46 +310,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ah_not_supported_with_gcm_gmac_sha2",
-    "bad_auth_type",
-    "bad_checksum",
-    "bad_encrypt_type",
-    "bad_encrypt_type_ctr_gcm",
-    "bad_esp_next_header",
-    "bad_frag_size_configuration",
-    "bad_fragment_size",
-    "bad_gre_header",
-    "bad_gre_protocol",
-    "bad_inline_data",
-    "bad_ip_payload_type",
-    "bad_ip_version",
-    "bad_ipcomp_configuration",
-    "bad_ipsec_auth",
-    "bad_ipsec_context",
-    "bad_ipsec_context_direction",
-    "bad_ipsec_context_flag_mismatch",
-    "bad_ipsec_padding",
-    "bad_ipsec_protocol",
-    "bad_ipsec_spi",
-    "bad_ipsec_unknown",
-    "bad_len",
-    "bad_min_frag_size_auth_sha384_512",
-    "bad_opcode",
-    "bad_selector_match",
-    "bad_sg_write_len",
-    "bad_srtp_auth_tag",
-    "dsiv_incorrect_param",
-    "dummy_payload",
-    "error_ipv6_decrypt_rh_segs_left_error",
-    "error_IPv6_extension_header_bad",
-    "ipcomp_payload",
-    "ipv6_extension_headers_too_big",
-    "ipv6_hop_by_hop_error",
-    "ipv6_outbound_rh_copy_addr_error",
-    "ipv6_rh_length_error",
-    "tfc_padding_with_prefrag_not_supported",
-    "uuid",
-]
+    "ah_not_supported_with_gcm_gmac_sha2", "bad_auth_type", "bad_checksum", "bad_encrypt_type", "bad_encrypt_type_ctr_gcm", "bad_esp_next_header", "bad_frag_size_configuration", "bad_fragment_size", "bad_gre_header", "bad_gre_protocol", "bad_inline_data", "bad_ip_payload_type", "bad_ip_version",
+    "bad_ipcomp_configuration", "bad_ipsec_auth", "bad_ipsec_context", "bad_ipsec_context_direction", "bad_ipsec_context_flag_mismatch", "bad_ipsec_padding", "bad_ipsec_protocol", "bad_ipsec_spi", "bad_ipsec_unknown", "bad_len", "bad_min_frag_size_auth_sha384_512", "bad_opcode",
+    "bad_selector_match", "bad_sg_write_len", "bad_srtp_auth_tag", "dsiv_incorrect_param", "dummy_payload", "error_ipv6_decrypt_rh_segs_left_error", "error_IPv6_extension_header_bad", "ipcomp_payload", "ipv6_extension_headers_too_big", "ipv6_hop_by_hop_error", "ipv6_outbound_rh_copy_addr_error",
+    "ipv6_rh_length_error", "tfc_padding_with_prefrag_not_supported", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -357,21 +322,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -379,122 +337,122 @@ def get_argspec():
     rv.update({
         'bad_opcode': {
             'type': 'bool',
-        },
+            },
         'bad_sg_write_len': {
             'type': 'bool',
-        },
+            },
         'bad_len': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_protocol': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_auth': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_padding': {
             'type': 'bool',
-        },
+            },
         'bad_ip_version': {
             'type': 'bool',
-        },
+            },
         'bad_auth_type': {
             'type': 'bool',
-        },
+            },
         'bad_encrypt_type': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_spi': {
             'type': 'bool',
-        },
+            },
         'bad_checksum': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_context': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_context_direction': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_context_flag_mismatch': {
             'type': 'bool',
-        },
+            },
         'ipcomp_payload': {
             'type': 'bool',
-        },
+            },
         'bad_selector_match': {
             'type': 'bool',
-        },
+            },
         'bad_fragment_size': {
             'type': 'bool',
-        },
+            },
         'bad_inline_data': {
             'type': 'bool',
-        },
+            },
         'bad_frag_size_configuration': {
             'type': 'bool',
-        },
+            },
         'dummy_payload': {
             'type': 'bool',
-        },
+            },
         'bad_ip_payload_type': {
             'type': 'bool',
-        },
+            },
         'bad_min_frag_size_auth_sha384_512': {
             'type': 'bool',
-        },
+            },
         'bad_esp_next_header': {
             'type': 'bool',
-        },
+            },
         'bad_gre_header': {
             'type': 'bool',
-        },
+            },
         'bad_gre_protocol': {
             'type': 'bool',
-        },
+            },
         'ipv6_extension_headers_too_big': {
             'type': 'bool',
-        },
+            },
         'ipv6_hop_by_hop_error': {
             'type': 'bool',
-        },
+            },
         'error_ipv6_decrypt_rh_segs_left_error': {
             'type': 'bool',
-        },
+            },
         'ipv6_rh_length_error': {
             'type': 'bool',
-        },
+            },
         'ipv6_outbound_rh_copy_addr_error': {
             'type': 'bool',
-        },
+            },
         'error_IPv6_extension_header_bad': {
             'type': 'bool',
-        },
+            },
         'bad_encrypt_type_ctr_gcm': {
             'type': 'bool',
-        },
+            },
         'ah_not_supported_with_gcm_gmac_sha2': {
             'type': 'bool',
-        },
+            },
         'tfc_padding_with_prefrag_not_supported': {
             'type': 'bool',
-        },
+            },
         'bad_srtp_auth_tag': {
             'type': 'bool',
-        },
+            },
         'bad_ipcomp_configuration': {
             'type': 'bool',
-        },
+            },
         'dsiv_incorrect_param': {
             'type': 'bool',
-        },
+            },
         'bad_ipsec_unknown': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        }
-    })
+            }
+        })
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
@@ -507,8 +465,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace(
-            "/", "%2F")
+        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -565,8 +522,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -600,12 +556,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -620,16 +571,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -640,13 +589,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -663,20 +609,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -689,8 +631,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

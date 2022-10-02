@@ -681,106 +681,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex_table_entry_aging_interval",
-    "aflex_table_entry_sync",
-    "after_disable",
-    "allow_in_gateway_mode",
-    "auto_nat_no_ip_refresh",
-    "auto_translate_port",
-    "buff_thresh",
-    "buff_thresh_hw_buff",
-    "buff_thresh_relieve_thresh",
-    "buff_thresh_sys_buff_high",
-    "buff_thresh_sys_buff_low",
-    "compress_block_size",
-    "conn_rate_limit",
-    "ddos_pkt_count_thresh",
-    "ddos_pkt_size_thresh",
-    "ddos_protection",
-    "disable_adaptive_resource_check",
-    "disable_persist_scoring",
-    "disable_port_masking",
-    "disable_server_auto_reselect",
-    "dns_cache_age",
-    "dns_cache_age_min_threshold",
-    "dns_cache_aging_weight",
-    "dns_cache_enable",
-    "dns_cache_entry_size",
-    "dns_response_rate_limiting",
-    "dns_vip_stateless",
-    "drop_icmp_to_vip_when_vip_down",
-    "dsr_health_check_enable",
-    "ecmp_hash",
-    "enable_l7_req_acct",
-    "entity",
-    "exclude_destination",
-    "extended_stats",
-    "fast_path_disable",
-    "gateway_health_check",
-    "graceful_shutdown",
-    "graceful_shutdown_enable",
-    "health_check_to_all_vip",
-    "honor_server_response_ttl",
-    "http_fast_enable",
-    "hw_compression",
-    "hw_syn_rr",
-    "interval",
-    "ipv4_offset",
-    "l2l3_trunk_lb_disable",
-    "log_for_reset_unknown_conn",
-    "low_latency",
-    "max_buff_queued_per_conn",
-    "max_http_header_count",
-    "max_local_rate",
-    "max_remote_rate",
-    "msl_time",
-    "mss_table",
-    "N5_new",
-    "N5_old",
-    "no_auto_up_on_aflex",
-    "one_server_conn_hm_rate",
-    "oper",
-    "override_port",
-    "pbslb_entry_age",
-    "per_thr_percent",
-    "ping_sweep_detection",
-    "pkt_rate_for_reset_unknown_conn",
-    "player_id_check_enable",
-    "port_scan_detection",
-    "QAT",
-    "range",
-    "range_end",
-    "range_start",
-    "rate_limit_logging",
-    "recursive_ns_cache",
-    "reset_stale_session",
-    "resolve_port_conflict",
-    "response_type",
-    "scale_out",
-    "scale_out_traffic_map",
-    "service_group_on_no_dest_nat_vports",
-    "show_slb_server_legacy_cmd",
-    "show_slb_service_group_legacy_cmd",
-    "show_slb_virtual_server_legacy_cmd",
-    "snat_gwy_for_l3",
-    "snat_on_vip",
-    "snat_preserve",
-    "software",
-    "software_tls13",
-    "sort_res",
-    "ssli_cert_not_ready_inspect_limit",
-    "ssli_cert_not_ready_inspect_timeout",
-    "ssli_sni_hash_enable",
-    "stateless_sg_multi_binding",
-    "stats_data_disable",
-    "substitute_source_mac",
-    "timeout",
-    "traffic_map_type",
-    "ttl_threshold",
-    "use_default_sess_count",
-    "use_mss_tab",
-    "uuid",
-]
+    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low",
+    "compress_block_size", "conn_rate_limit", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_age_min_threshold",
+    "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable",
+    "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency",
+    "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "N5_new", "N5_old", "no_auto_up_on_aflex", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "per_thr_percent", "ping_sweep_detection",
+    "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port_scan_detection", "QAT", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map",
+    "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "sort_res", "ssli_cert_not_ready_inspect_limit",
+    "ssli_cert_not_ready_inspect_timeout", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_mss_tab", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -788,21 +697,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -811,345 +713,345 @@ def get_argspec():
         'port_scan_detection': {
             'type': 'str',
             'choices': ['enable', 'disable']
-        },
+            },
         'ping_sweep_detection': {
             'type': 'str',
             'choices': ['enable', 'disable']
-        },
+            },
         'extended_stats': {
             'type': 'bool',
-        },
+            },
         'stats_data_disable': {
             'type': 'bool',
-        },
+            },
         'graceful_shutdown_enable': {
             'type': 'bool',
-        },
+            },
         'graceful_shutdown': {
             'type': 'int',
-        },
+            },
         'entity': {
             'type': 'str',
             'choices': ['server', 'virtual-server']
-        },
+            },
         'after_disable': {
             'type': 'bool',
-        },
+            },
         'rate_limit_logging': {
             'type': 'bool',
-        },
+            },
         'max_local_rate': {
             'type': 'int',
-        },
+            },
         'max_remote_rate': {
             'type': 'int',
-        },
+            },
         'exclude_destination': {
             'type': 'str',
             'choices': ['local', 'remote']
-        },
+            },
         'auto_translate_port': {
             'type': 'bool',
-        },
+            },
         'range': {
             'type': 'int',
-        },
+            },
         'range_start': {
             'type': 'int',
-        },
+            },
         'range_end': {
             'type': 'int',
-        },
+            },
         'use_default_sess_count': {
             'type': 'bool',
-        },
+            },
         'per_thr_percent': {
             'type': 'int',
-        },
+            },
         'dsr_health_check_enable': {
             'type': 'bool',
-        },
+            },
         'one_server_conn_hm_rate': {
             'type': 'int',
-        },
+            },
         'aflex_table_entry_aging_interval': {
             'type': 'int',
-        },
+            },
         'override_port': {
             'type': 'bool',
-        },
+            },
         'health_check_to_all_vip': {
             'type': 'bool',
-        },
+            },
         'reset_stale_session': {
             'type': 'bool',
-        },
+            },
         'dns_cache_enable': {
             'type': 'bool',
-        },
+            },
         'response_type': {
             'type': 'str',
             'choices': ['single-answer', 'round-robin']
-        },
+            },
         'ttl_threshold': {
             'type': 'int',
-        },
+            },
         'dns_cache_aging_weight': {
             'type': 'int',
-        },
+            },
         'dns_cache_age': {
             'type': 'int',
-        },
+            },
         'dns_cache_age_min_threshold': {
             'type': 'int',
-        },
+            },
         'compress_block_size': {
             'type': 'int',
-        },
+            },
         'dns_cache_entry_size': {
             'type': 'int',
-        },
+            },
         'dns_vip_stateless': {
             'type': 'bool',
-        },
+            },
         'honor_server_response_ttl': {
             'type': 'bool',
-        },
+            },
         'recursive_ns_cache': {
             'type': 'str',
             'choices': ['honor-packet-ttl', 'honor-age-config']
-        },
+            },
         'buff_thresh': {
             'type': 'bool',
-        },
+            },
         'buff_thresh_hw_buff': {
             'type': 'int',
-        },
+            },
         'buff_thresh_relieve_thresh': {
             'type': 'int',
-        },
+            },
         'buff_thresh_sys_buff_low': {
             'type': 'int',
-        },
+            },
         'buff_thresh_sys_buff_high': {
             'type': 'int',
-        },
+            },
         'max_buff_queued_per_conn': {
             'type': 'int',
-        },
+            },
         'pkt_rate_for_reset_unknown_conn': {
             'type': 'int',
-        },
+            },
         'log_for_reset_unknown_conn': {
             'type': 'bool',
-        },
+            },
         'gateway_health_check': {
             'type': 'bool',
-        },
+            },
         'interval': {
             'type': 'int',
-        },
+            },
         'timeout': {
             'type': 'int',
-        },
+            },
         'msl_time': {
             'type': 'int',
-        },
+            },
         'fast_path_disable': {
             'type': 'bool',
-        },
+            },
         'http_fast_enable': {
             'type': 'bool',
-        },
+            },
         'l2l3_trunk_lb_disable': {
             'type': 'bool',
-        },
+            },
         'snat_gwy_for_l3': {
             'type': 'bool',
-        },
+            },
         'allow_in_gateway_mode': {
             'type': 'bool',
-        },
+            },
         'disable_server_auto_reselect': {
             'type': 'bool',
-        },
+            },
         'enable_l7_req_acct': {
             'type': 'bool',
-        },
+            },
         'disable_adaptive_resource_check': {
             'type': 'bool',
-        },
+            },
         'ddos_pkt_size_thresh': {
             'type': 'int',
-        },
+            },
         'ddos_pkt_count_thresh': {
             'type': 'int',
-        },
+            },
         'snat_on_vip': {
             'type': 'bool',
-        },
+            },
         'low_latency': {
             'type': 'bool',
-        },
+            },
         'mss_table': {
             'type': 'int',
-        },
+            },
         'resolve_port_conflict': {
             'type': 'bool',
-        },
+            },
         'no_auto_up_on_aflex': {
             'type': 'bool',
-        },
+            },
         'hw_compression': {
             'type': 'bool',
-        },
+            },
         'hw_syn_rr': {
             'type': 'int',
-        },
+            },
         'max_http_header_count': {
             'type': 'int',
-        },
+            },
         'scale_out': {
             'type': 'bool',
-        },
+            },
         'scale_out_traffic_map': {
             'type': 'bool',
-        },
+            },
         'show_slb_server_legacy_cmd': {
             'type': 'bool',
-        },
+            },
         'show_slb_service_group_legacy_cmd': {
             'type': 'bool',
-        },
+            },
         'show_slb_virtual_server_legacy_cmd': {
             'type': 'bool',
-        },
+            },
         'traffic_map_type': {
             'type': 'str',
             'choices': ['vport', 'global']
-        },
+            },
         'sort_res': {
             'type': 'bool',
-        },
+            },
         'use_mss_tab': {
             'type': 'bool',
-        },
+            },
         'auto_nat_no_ip_refresh': {
             'type': 'str',
             'choices': ['enable', 'disable']
-        },
+            },
         'ddos_protection': {
             'type': 'dict',
             'ipd_enable_toggle': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
-            },
+                },
             'logging': {
                 'type': 'dict',
                 'ipd_logging_toggle': {
                     'type': 'str',
                     'choices': ['enable', 'disable']
-                }
-            },
+                    }
+                },
             'packets_per_second': {
                 'type': 'dict',
                 'ipd_tcp': {
                     'type': 'int',
-                },
+                    },
                 'ipd_udp': {
                     'type': 'int',
+                    }
                 }
-            }
-        },
+            },
         'ssli_sni_hash_enable': {
             'type': 'bool',
-        },
+            },
         'ssli_cert_not_ready_inspect_timeout': {
             'type': 'int',
-        },
+            },
         'ssli_cert_not_ready_inspect_limit': {
             'type': 'int',
-        },
+            },
         'software': {
             'type': 'bool',
-        },
+            },
         'software_tls13': {
             'type': 'bool',
-        },
+            },
         'QAT': {
             'type': 'bool',
-        },
+            },
         'N5_new': {
             'type': 'bool',
-        },
+            },
         'N5_old': {
             'type': 'bool',
-        },
+            },
         'substitute_source_mac': {
             'type': 'bool',
-        },
+            },
         'drop_icmp_to_vip_when_vip_down': {
             'type': 'bool',
-        },
+            },
         'player_id_check_enable': {
             'type': 'bool',
-        },
+            },
         'stateless_sg_multi_binding': {
             'type': 'bool',
-        },
+            },
         'ecmp_hash': {
             'type': 'str',
             'choices': ['system-default', 'connection-based']
-        },
+            },
         'service_group_on_no_dest_nat_vports': {
             'type': 'str',
             'choices': ['allow-same', 'enforce-different']
-        },
+            },
         'disable_port_masking': {
             'type': 'bool',
-        },
+            },
         'snat_preserve': {
             'type': 'dict',
             'range': {
                 'type': 'list',
                 'port1': {
                     'type': 'int',
-                },
+                    },
                 'port2': {
                     'type': 'int',
+                    }
                 }
-            }
-        },
+            },
         'disable_persist_scoring': {
             'type': 'bool',
-        },
+            },
         'ipv4_offset': {
             'type': 'int',
-        },
+            },
         'pbslb_entry_age': {
             'type': 'int',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'aflex_table_entry_sync': {
             'type': 'dict',
             'aflex_table_entry_sync_enable': {
                 'type': 'bool',
-            },
+                },
             'aflex_table_entry_sync_max_key_len': {
                 'type': 'int',
-            },
+                },
             'aflex_table_entry_sync_max_value_len': {
                 'type': 'int',
-            },
+                },
             'aflex_table_entry_sync_min_lifetime': {
                 'type': 'int',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'conn_rate_limit': {
             'type': 'dict',
             'src_ip_list': {
@@ -1157,52 +1059,52 @@ def get_argspec():
                 'disable_ipv6_support': {
                     'type': 'bool',
                     'required': True,
-                },
+                    },
                 'protocol': {
                     'type': 'str',
                     'required': True,
                     'choices': ['tcp', 'udp']
-                },
+                    },
                 'limit': {
                     'type': 'int',
-                },
+                    },
                 'limit_period': {
                     'type': 'str',
                     'choices': ['100', '1000']
-                },
+                    },
                 'shared': {
                     'type': 'bool',
-                },
+                    },
                 'exceed_action': {
                     'type': 'bool',
-                },
+                    },
                 'log': {
                     'type': 'bool',
-                },
+                    },
                 'lock_out': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
+                    }
                 }
-            }
-        },
+            },
         'dns_response_rate_limiting': {
             'type': 'dict',
             'max_table_entries': {
                 'type': 'int',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'oper': {
             'type': 'dict',
             'server_auto_reselect': {
                 'type': 'int',
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -1299,12 +1201,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1319,16 +1216,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1339,13 +1234,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1362,28 +1254,21 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "common"] if info != "NotFound" else info
+                result["acos_info"] = info["common"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "common-list"] if info != "NotFound" else info
+                result["acos_info"] = info["common-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["common"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["common"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1396,8 +1281,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

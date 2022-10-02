@@ -456,23 +456,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "disable",
-    "dns_mx_record_list",
-    "dns_ns_record_list",
-    "dns_soa_record",
-    "name",
-    "oper",
-    "policy",
-    "sampling_enable",
-    "service_list",
-    "stats",
-    "template",
-    "ttl",
-    "use_server_ttl",
-    "user_tag",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["disable", "dns_mx_record_list", "dns_ns_record_list", "dns_soa_record", "name", "oper", "policy", "sampling_enable", "service_list", "stats", "template", "ttl", "use_server_ttl", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -480,21 +464,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -503,185 +480,173 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
-        },
+            },
         'disable': {
             'type': 'bool',
-        },
+            },
         'policy': {
             'type': 'str',
-        },
+            },
         'template': {
             'type': 'dict',
             'dnssec': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'ttl': {
             'type': 'int',
-        },
+            },
         'use_server_ttl': {
             'type': 'bool',
-        },
+            },
         'dns_soa_record': {
             'type': 'dict',
             'soa_name': {
                 'type': 'str',
-            },
+                },
             'mail': {
                 'type': 'str',
-            },
+                },
             'expire': {
                 'type': 'int',
-            },
+                },
             'refresh': {
                 'type': 'int',
-            },
+                },
             'retry': {
                 'type': 'int',
-            },
+                },
             'serial': {
                 'type': 'int',
-            },
+                },
             'soa_ttl': {
                 'type': 'int',
-            },
+                },
             'external': {
                 'type': 'str',
-            },
+                },
             'ex_mail': {
                 'type': 'str',
-            },
+                },
             'ex_expire': {
                 'type': 'int',
-            },
+                },
             'ex_refresh': {
                 'type': 'int',
-            },
+                },
             'ex_retry': {
                 'type': 'int',
-            },
+                },
             'ex_serial': {
                 'type': 'int',
-            },
+                },
             'ex_soa_ttl': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'user_tag': {
             'type': 'str',
-        },
+            },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'received-query', 'sent-response',
-                    'proxy-mode-response', 'cache-mode-response',
-                    'server-mode-response', 'sticky-mode-response',
-                    'backup-mode-response'
-                ]
-            }
-        },
+                'type': 'str',
+                'choices': ['all', 'received-query', 'sent-response', 'proxy-mode-response', 'cache-mode-response', 'server-mode-response', 'sticky-mode-response', 'backup-mode-response']
+                }
+            },
         'dns_mx_record_list': {
             'type': 'list',
             'mx_name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'priority': {
                 'type': 'int',
-            },
+                },
             'ttl': {
                 'type': 'int',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
                     'choices': ['all', 'hits']
+                    }
                 }
-            }
-        },
+            },
         'dns_ns_record_list': {
             'type': 'list',
             'ns_name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'ttl': {
                 'type': 'int',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
                     'choices': ['all', 'hits']
+                    }
                 }
-            }
-        },
+            },
         'service_list': {
             'type': 'list',
             'service_port': {
                 'type': 'int',
                 'required': True,
-            },
+                },
             'service_name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'action': {
                 'type': 'str',
                 'choices': ['drop', 'forward', 'ignore', 'reject']
-            },
+                },
             'forward_type': {
                 'type': 'str',
                 'choices': ['both', 'query', 'response']
-            },
+                },
             'disable': {
                 'type': 'bool',
-            },
+                },
             'health_check_gateway': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
-            },
+                },
             'health_check_port': {
                 'type': 'list',
                 'health_check_port': {
                     'type': 'int',
-                }
-            },
+                    }
+                },
             'policy': {
                 'type': 'str',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'user_tag': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'received-query', 'sent-response',
-                        'proxy-mode-response', 'cache-mode-response',
-                        'server-mode-response', 'sticky-mode-response',
-                        'backup-mode-response'
-                    ]
-                }
-            },
+                    'type': 'str',
+                    'choices': ['all', 'received-query', 'sent-response', 'proxy-mode-response', 'cache-mode-response', 'server-mode-response', 'sticky-mode-response', 'backup-mode-response']
+                    }
+                },
             'dns_a_record': {
                 'type': 'dict',
                 'dns_a_record_srv_list': {
@@ -689,666 +654,665 @@ def get_argspec():
                     'svrname': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'no_resp': {
                         'type': 'bool',
-                    },
+                        },
                     'as_backup': {
                         'type': 'bool',
-                    },
+                        },
                     'weight': {
                         'type': 'int',
-                    },
+                        },
                     'ttl': {
                         'type': 'int',
-                    },
+                        },
                     'as_replace': {
                         'type': 'bool',
-                    },
+                        },
                     'disable': {
                         'type': 'bool',
-                    },
+                        },
                     'static': {
                         'type': 'bool',
-                    },
+                        },
                     'admin_ip': {
                         'type': 'int',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
-                    }
-                },
+                        }
+                    },
                 'dns_a_record_ipv4_list': {
                     'type': 'list',
                     'dns_a_record_ip': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'no_resp': {
                         'type': 'bool',
-                    },
+                        },
                     'as_backup': {
                         'type': 'bool',
-                    },
+                        },
                     'weight': {
                         'type': 'int',
-                    },
+                        },
                     'ttl': {
                         'type': 'int',
-                    },
+                        },
                     'as_replace': {
                         'type': 'bool',
-                    },
+                        },
                     'disable': {
                         'type': 'bool',
-                    },
+                        },
                     'static': {
                         'type': 'bool',
-                    },
+                        },
                     'admin_ip': {
                         'type': 'int',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
-                    }
-                },
+                        }
+                    },
                 'dns_a_record_ipv6_list': {
                     'type': 'list',
                     'dns_a_record_ipv6': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'no_resp': {
                         'type': 'bool',
-                    },
+                        },
                     'as_backup': {
                         'type': 'bool',
-                    },
+                        },
                     'weight': {
                         'type': 'int',
-                    },
+                        },
                     'ttl': {
                         'type': 'int',
-                    },
+                        },
                     'as_replace': {
                         'type': 'bool',
-                    },
+                        },
                     'disable': {
                         'type': 'bool',
-                    },
+                        },
                     'static': {
                         'type': 'bool',
-                    },
+                        },
                     'admin_ip': {
                         'type': 'int',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
+                        }
                     }
-                }
-            },
+                },
             'dns_cname_record_list': {
                 'type': 'list',
                 'alias_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'admin_preference': {
                     'type': 'int',
-                },
+                    },
                 'weight': {
                     'type': 'int',
-                },
+                    },
                 'as_backup': {
                     'type': 'bool',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'cname-hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_mx_record_list': {
                 'type': 'list',
                 'mx_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'priority': {
                     'type': 'int',
-                },
+                    },
                 'ttl': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_ns_record_list': {
                 'type': 'list',
                 'ns_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'ttl': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_ptr_record_list': {
                 'type': 'list',
                 'ptr_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'ttl': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_srv_record_list': {
                 'type': 'list',
                 'srv_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'port': {
                     'type': 'int',
                     'required': True,
-                },
+                    },
                 'priority': {
                     'type': 'int',
-                },
+                    },
                 'weight': {
                     'type': 'int',
-                },
+                    },
                 'ttl': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_naptr_record_list': {
                 'type': 'list',
                 'naptr_target': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'service_proto': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'flag': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'order': {
                     'type': 'int',
-                },
+                    },
                 'preference': {
                     'type': 'int',
-                },
+                    },
                 'regexp': {
                     'type': 'bool',
-                },
+                    },
                 'ttl': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'naptr-hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_txt_record_list': {
                 'type': 'list',
                 'record_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'txt_data': {
                     'type': 'str',
-                },
+                    },
                 'ttl': {
                     'type': 'int',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
                         'choices': ['all', 'hits']
+                        }
                     }
-                }
-            },
+                },
             'dns_record_list': {
                 'type': 'list',
                 'ntype': {
                     'type': 'int',
                     'required': True,
-                },
+                    },
                 'data': {
                     'type': 'str',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                }
-            },
+                    }
+                },
             'geo_location_list': {
                 'type': 'list',
                 'geo_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'alias': {
                     'type': 'list',
                     'alias': {
                         'type': 'str',
-                    }
-                },
+                        }
+                    },
                 'action': {
                     'type': 'bool',
-                },
+                    },
                 'action_type': {
                     'type': 'str',
-                    'choices':
-                    ['allow', 'drop', 'forward', 'ignore', 'reject']
-                },
+                    'choices': ['allow', 'drop', 'forward', 'ignore', 'reject']
+                    },
                 'forward_type': {
                     'type': 'str',
                     'choices': ['both', 'query', 'response']
-                },
+                    },
                 'policy': {
                     'type': 'str',
-                },
+                    },
                 'uuid': {
                     'type': 'str',
-                },
+                    },
                 'user_tag': {
                     'type': 'str',
+                    }
                 }
-            }
-        },
+            },
         'oper': {
             'type': 'dict',
             'state': {
                 'type': 'str',
-            },
+                },
             'name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'dns_mx_record_list': {
                 'type': 'list',
                 'mx_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'oper': {
                     'type': 'dict',
                     'last_server': {
                         'type': 'str',
+                        }
                     }
-                }
-            },
+                },
             'dns_ns_record_list': {
                 'type': 'list',
                 'ns_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'oper': {
                     'type': 'dict',
                     'last_server': {
                         'type': 'str',
+                        }
                     }
-                }
-            },
+                },
             'service_list': {
                 'type': 'list',
                 'service_port': {
                     'type': 'int',
                     'required': True,
-                },
+                    },
                 'service_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'oper': {
                     'type': 'dict',
                     'state': {
                         'type': 'str',
-                    },
+                        },
                     'cache_list': {
                         'type': 'list',
                         'alias': {
                             'type': 'str',
-                        },
+                            },
                         'cache_length': {
                             'type': 'int',
-                        },
+                            },
                         'cache_ttl': {
                             'type': 'int',
-                        },
+                            },
                         'cache_dns_flag': {
                             'type': 'str',
-                        },
+                            },
                         'question_records': {
                             'type': 'int',
-                        },
+                            },
                         'answer_records': {
                             'type': 'int',
-                        },
+                            },
                         'authority_records': {
                             'type': 'int',
-                        },
+                            },
                         'additional_records': {
                             'type': 'int',
-                        }
-                    },
+                            }
+                        },
                     'session_list': {
                         'type': 'list',
                         'client': {
                             'type': 'str',
-                        },
+                            },
                         'best': {
                             'type': 'str',
-                        },
+                            },
                         'mode': {
                             'type': 'str',
-                        },
+                            },
                         'hits': {
                             'type': 'int',
-                        },
+                            },
                         'last_second_hits': {
                             'type': 'int',
-                        },
+                            },
                         'ttl': {
                             'type': 'str',
-                        },
+                            },
                         'update': {
                             'type': 'int',
-                        },
+                            },
                         'aging': {
                             'type': 'int',
-                        }
-                    },
+                            }
+                        },
                     'matched': {
                         'type': 'int',
-                    },
+                        },
                     'total_sessions': {
                         'type': 'int',
-                    }
-                },
+                        }
+                    },
                 'dns_mx_record_list': {
                     'type': 'list',
                     'mx_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'oper': {
                         'type': 'dict',
                         'last_server': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_ns_record_list': {
                     'type': 'list',
                     'ns_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'oper': {
                         'type': 'dict',
                         'last_server': {
                             'type': 'str',
+                            }
                         }
                     }
                 }
-            }
-        },
+            },
         'stats': {
             'type': 'dict',
             'received_query': {
                 'type': 'str',
-            },
+                },
             'sent_response': {
                 'type': 'str',
-            },
+                },
             'proxy_mode_response': {
                 'type': 'str',
-            },
+                },
             'cache_mode_response': {
                 'type': 'str',
-            },
+                },
             'server_mode_response': {
                 'type': 'str',
-            },
+                },
             'sticky_mode_response': {
                 'type': 'str',
-            },
+                },
             'backup_mode_response': {
                 'type': 'str',
-            },
+                },
             'name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'dns_mx_record_list': {
                 'type': 'list',
                 'mx_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'stats': {
                     'type': 'dict',
                     'hits': {
                         'type': 'str',
+                        }
                     }
-                }
-            },
+                },
             'dns_ns_record_list': {
                 'type': 'list',
                 'ns_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'stats': {
                     'type': 'dict',
                     'hits': {
                         'type': 'str',
+                        }
                     }
-                }
-            },
+                },
             'service_list': {
                 'type': 'list',
                 'service_port': {
                     'type': 'int',
                     'required': True,
-                },
+                    },
                 'service_name': {
                     'type': 'str',
                     'required': True,
-                },
+                    },
                 'stats': {
                     'type': 'dict',
                     'received_query': {
                         'type': 'str',
-                    },
+                        },
                     'sent_response': {
                         'type': 'str',
-                    },
+                        },
                     'proxy_mode_response': {
                         'type': 'str',
-                    },
+                        },
                     'cache_mode_response': {
                         'type': 'str',
-                    },
+                        },
                     'server_mode_response': {
                         'type': 'str',
-                    },
+                        },
                     'sticky_mode_response': {
                         'type': 'str',
-                    },
+                        },
                     'backup_mode_response': {
                         'type': 'str',
-                    }
-                },
+                        }
+                    },
                 'dns_a_record': {
                     'type': 'dict',
-                },
+                    },
                 'dns_cname_record_list': {
                     'type': 'list',
                     'alias_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'cname_hits': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_mx_record_list': {
                     'type': 'list',
                     'mx_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'hits': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_ns_record_list': {
                     'type': 'list',
                     'ns_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'hits': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_ptr_record_list': {
                     'type': 'list',
                     'ptr_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'hits': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_srv_record_list': {
                     'type': 'list',
                     'srv_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'port': {
                         'type': 'int',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'hits': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_naptr_record_list': {
                     'type': 'list',
                     'naptr_target': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'service_proto': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'flag': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'naptr_hits': {
                             'type': 'str',
+                            }
                         }
-                    }
-                },
+                    },
                 'dns_txt_record_list': {
                     'type': 'list',
                     'record_name': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'stats': {
                         'type': 'dict',
                         'hits': {
                             'type': 'str',
+                            }
                         }
                     }
                 }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -1450,12 +1414,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1470,16 +1429,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1490,13 +1447,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1513,36 +1467,26 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["zone"] if info != "NotFound" else info
+                result["acos_info"] = info["zone"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "zone-list"] if info != "NotFound" else info
+                result["acos_info"] = info["zone-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["zone"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["zone"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["zone"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["zone"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1555,8 +1499,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

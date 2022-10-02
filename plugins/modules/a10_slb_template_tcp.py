@@ -221,28 +221,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "alive_if_active",
-    "del_session_on_server_down",
-    "disable",
-    "down",
-    "force_delete_timeout",
-    "force_delete_timeout_100ms",
-    "half_close_idle_timeout",
-    "half_open_idle_timeout",
-    "idle_timeout",
-    "initial_window_size",
-    "insert_client_ip",
-    "lan_fast_ack",
-    "logging",
-    "name",
-    "qos",
-    "re_select_if_server_down",
-    "reset_follow_fin",
-    "reset_fwd",
-    "reset_rev",
-    "user_tag",
-    "uuid",
-]
+    "alive_if_active", "del_session_on_server_down", "disable", "down", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "initial_window_size", "insert_client_ip", "lan_fast_ack", "logging", "name", "qos",
+    "re_select_if_server_down", "reset_follow_fin", "reset_fwd", "reset_rev", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -250,21 +231,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -273,69 +247,69 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
-        },
+            },
         'logging': {
             'type': 'str',
             'choices': ['init', 'term', 'both']
-        },
+            },
         'idle_timeout': {
             'type': 'int',
-        },
+            },
         'half_open_idle_timeout': {
             'type': 'int',
-        },
+            },
         'half_close_idle_timeout': {
             'type': 'int',
-        },
+            },
         'initial_window_size': {
             'type': 'int',
-        },
+            },
         'force_delete_timeout': {
             'type': 'int',
-        },
+            },
         'force_delete_timeout_100ms': {
             'type': 'int',
-        },
+            },
         'alive_if_active': {
             'type': 'bool',
-        },
+            },
         'qos': {
             'type': 'int',
-        },
+            },
         'insert_client_ip': {
             'type': 'bool',
-        },
+            },
         'lan_fast_ack': {
             'type': 'bool',
-        },
+            },
         'reset_fwd': {
             'type': 'bool',
-        },
+            },
         'reset_rev': {
             'type': 'bool',
-        },
+            },
         'reset_follow_fin': {
             'type': 'bool',
-        },
+            },
         'disable': {
             'type': 'bool',
-        },
+            },
         'down': {
             'type': 'bool',
-        },
+            },
         're_select_if_server_down': {
             'type': 'bool',
-        },
+            },
         'del_session_on_server_down': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'user_tag': {
             'type': 'str',
-        }
-    })
+            }
+        })
     return rv
 
 
@@ -437,12 +411,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -457,16 +426,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -477,13 +444,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -500,20 +464,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["tcp"] if info != "NotFound" else info
+                result["acos_info"] = info["tcp"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "tcp-list"] if info != "NotFound" else info
+                result["acos_info"] = info["tcp-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -526,8 +486,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

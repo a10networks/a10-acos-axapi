@@ -355,35 +355,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "admin_dn",
-    "admin_secret",
-    "auth_type",
-    "base",
-    "bind_with_dn",
-    "ca_cert",
-    "default_domain",
-    "derive_bind_dn",
-    "dn_attribute",
-    "encrypted",
-    "health_check",
-    "health_check_disable",
-    "health_check_string",
-    "host",
-    "ldaps_conn_reuse_idle_timeout",
-    "name",
-    "packet_capture_template",
-    "port",
-    "port_hm",
-    "port_hm_disable",
-    "prompt_pw_change_before_exp",
-    "protocol",
-    "pwdmaxage",
-    "sampling_enable",
-    "secret_string",
-    "stats",
-    "timeout",
-    "uuid",
-]
+    "admin_dn", "admin_secret", "auth_type", "base", "bind_with_dn", "ca_cert", "default_domain", "derive_bind_dn", "dn_attribute", "encrypted", "health_check", "health_check_disable", "health_check_string", "host", "ldaps_conn_reuse_idle_timeout", "name", "packet_capture_template", "port",
+    "port_hm", "port_hm_disable", "prompt_pw_change_before_exp", "protocol", "pwdmaxage", "sampling_enable", "secret_string", "stats", "timeout", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -391,21 +365,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -414,164 +381,160 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
-        },
+            },
         'host': {
             'type': 'dict',
             'hostip': {
                 'type': 'str',
-            },
+                },
             'hostipv6': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'base': {
             'type': 'str',
-        },
+            },
         'port': {
             'type': 'int',
-        },
+            },
         'port_hm': {
             'type': 'str',
-        },
+            },
         'port_hm_disable': {
             'type': 'bool',
-        },
+            },
         'pwdmaxage': {
             'type': 'int',
-        },
+            },
         'admin_dn': {
             'type': 'str',
-        },
+            },
         'admin_secret': {
             'type': 'bool',
-        },
+            },
         'secret_string': {
             'type': 'str',
-        },
+            },
         'encrypted': {
             'type': 'str',
-        },
+            },
         'timeout': {
             'type': 'int',
-        },
+            },
         'dn_attribute': {
             'type': 'str',
-        },
+            },
         'default_domain': {
             'type': 'str',
-        },
+            },
         'bind_with_dn': {
             'type': 'bool',
-        },
+            },
         'derive_bind_dn': {
             'type': 'dict',
             'username_attr': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'health_check': {
             'type': 'bool',
-        },
+            },
         'health_check_string': {
             'type': 'str',
-        },
+            },
         'health_check_disable': {
             'type': 'bool',
-        },
+            },
         'protocol': {
             'type': 'str',
             'choices': ['ldap', 'ldaps', 'starttls']
-        },
+            },
         'ca_cert': {
             'type': 'str',
-        },
+            },
         'ldaps_conn_reuse_idle_timeout': {
             'type': 'int',
-        },
+            },
         'auth_type': {
             'type': 'str',
             'choices': ['ad', 'open-ldap']
-        },
+            },
         'prompt_pw_change_before_exp': {
             'type': 'int',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
                 'type':
                 'str',
                 'choices': [
-                    'all', 'admin-bind-success', 'admin-bind-failure',
-                    'bind-success', 'bind-failure', 'search-success',
-                    'search-failure', 'authorize-success', 'authorize-failure',
-                    'timeout-error', 'other-error', 'request',
-                    'ssl-session-created', 'ssl-session-failure', 'pw_expiry',
+                    'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'ssl-session-created', 'ssl-session-failure', 'pw_expiry',
                     'pw_change_success', 'pw_change_failure'
-                ]
-            }
-        },
+                    ]
+                }
+            },
         'packet_capture_template': {
             'type': 'str',
-        },
+            },
         'stats': {
             'type': 'dict',
             'admin_bind_success': {
                 'type': 'str',
-            },
+                },
             'admin_bind_failure': {
                 'type': 'str',
-            },
+                },
             'bind_success': {
                 'type': 'str',
-            },
+                },
             'bind_failure': {
                 'type': 'str',
-            },
+                },
             'search_success': {
                 'type': 'str',
-            },
+                },
             'search_failure': {
                 'type': 'str',
-            },
+                },
             'authorize_success': {
                 'type': 'str',
-            },
+                },
             'authorize_failure': {
                 'type': 'str',
-            },
+                },
             'timeout_error': {
                 'type': 'str',
-            },
+                },
             'other_error': {
                 'type': 'str',
-            },
+                },
             'request': {
                 'type': 'str',
-            },
+                },
             'ssl_session_created': {
                 'type': 'str',
-            },
+                },
             'ssl_session_failure': {
                 'type': 'str',
-            },
+                },
             'pw_expiry': {
                 'type': 'str',
-            },
+                },
             'pw_change_success': {
                 'type': 'str',
-            },
+                },
             'pw_change_failure': {
                 'type': 'str',
-            },
+                },
             'name': {
                 'type': 'str',
                 'required': True,
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -673,12 +636,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -693,16 +651,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -713,13 +669,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -736,28 +689,21 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "instance"] if info != "NotFound" else info
+                result["acos_info"] = info["instance"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "instance-list"] if info != "NotFound" else info
+                result["acos_info"] = info["instance-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["instance"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["instance"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -770,8 +716,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

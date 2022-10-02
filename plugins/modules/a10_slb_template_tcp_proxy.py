@@ -364,54 +364,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ack_aggressiveness",
-    "alive_if_active",
-    "backend_wscale",
-    "del_session_on_server_down",
-    "disable",
-    "disable_abc",
-    "disable_sack",
-    "disable_tcp_timestamps",
-    "disable_window_scale",
-    "down",
-    "dynamic_buffer_allocation",
-    "early_retransmit",
-    "fin_timeout",
-    "force_delete_timeout",
-    "force_delete_timeout_100ms",
-    "half_close_idle_timeout",
-    "half_open_idle_timeout",
-    "idle_timeout",
-    "init_cwnd",
-    "initial_window_size",
-    "insert_client_ip",
-    "invalid_rate_limit",
-    "keepalive_interval",
-    "keepalive_probes",
-    "limited_slowstart",
-    "maxburst",
-    "min_rto",
-    "mss",
-    "nagle",
-    "naked_ack_on_handshake",
-    "name",
-    "proxy_header",
-    "psh_flag_optimization",
-    "qos",
-    "reassembly_limit",
-    "reassembly_timeout",
-    "receive_buffer",
-    "reno",
-    "reset_fwd",
-    "reset_rev",
-    "retransmit_retries",
-    "server_down_action",
-    "syn_retries",
-    "timewait",
-    "transmit_buffer",
-    "user_tag",
-    "uuid",
-]
+    "ack_aggressiveness", "alive_if_active", "backend_wscale", "del_session_on_server_down", "disable", "disable_abc", "disable_sack", "disable_tcp_timestamps", "disable_window_scale", "down", "dynamic_buffer_allocation", "early_retransmit", "fin_timeout", "force_delete_timeout",
+    "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "init_cwnd", "initial_window_size", "insert_client_ip", "invalid_rate_limit", "keepalive_interval", "keepalive_probes", "limited_slowstart", "maxburst", "min_rto", "mss", "nagle",
+    "naked_ack_on_handshake", "name", "proxy_header", "psh_flag_optimization", "qos", "reassembly_limit", "reassembly_timeout", "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "timewait", "transmit_buffer", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -419,21 +375,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -442,156 +391,156 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
-        },
+            },
         'ack_aggressiveness': {
             'type': 'str',
             'choices': ['low', 'medium', 'high']
-        },
+            },
         'backend_wscale': {
             'type': 'int',
-        },
+            },
         'dynamic_buffer_allocation': {
             'type': 'bool',
-        },
+            },
         'fin_timeout': {
             'type': 'int',
-        },
+            },
         'force_delete_timeout': {
             'type': 'int',
-        },
+            },
         'force_delete_timeout_100ms': {
             'type': 'int',
-        },
+            },
         'alive_if_active': {
             'type': 'bool',
-        },
+            },
         'idle_timeout': {
             'type': 'int',
-        },
+            },
         'server_down_action': {
             'type': 'str',
             'choices': ['FIN', 'RST']
-        },
+            },
         'half_open_idle_timeout': {
             'type': 'int',
-        },
+            },
         'half_close_idle_timeout': {
             'type': 'int',
-        },
+            },
         'init_cwnd': {
             'type': 'int',
-        },
+            },
         'initial_window_size': {
             'type': 'int',
-        },
+            },
         'keepalive_interval': {
             'type': 'int',
-        },
+            },
         'keepalive_probes': {
             'type': 'int',
-        },
+            },
         'mss': {
             'type': 'int',
-        },
+            },
         'psh_flag_optimization': {
             'type': 'bool',
-        },
+            },
         'nagle': {
             'type': 'bool',
-        },
+            },
         'naked_ack_on_handshake': {
             'type': 'bool',
-        },
+            },
         'qos': {
             'type': 'int',
-        },
+            },
         'receive_buffer': {
             'type': 'int',
-        },
+            },
         'reno': {
             'type': 'bool',
-        },
+            },
         'transmit_buffer': {
             'type': 'int',
-        },
+            },
         'reset_fwd': {
             'type': 'bool',
-        },
+            },
         'reset_rev': {
             'type': 'bool',
-        },
+            },
         'disable': {
             'type': 'bool',
-        },
+            },
         'down': {
             'type': 'bool',
-        },
+            },
         'del_session_on_server_down': {
             'type': 'bool',
-        },
+            },
         'retransmit_retries': {
             'type': 'int',
-        },
+            },
         'insert_client_ip': {
             'type': 'bool',
-        },
+            },
         'syn_retries': {
             'type': 'int',
-        },
+            },
         'timewait': {
             'type': 'int',
-        },
+            },
         'disable_tcp_timestamps': {
             'type': 'bool',
-        },
+            },
         'disable_window_scale': {
             'type': 'bool',
-        },
+            },
         'disable_sack': {
             'type': 'bool',
-        },
+            },
         'invalid_rate_limit': {
             'type': 'int',
-        },
+            },
         'disable_abc': {
             'type': 'bool',
-        },
+            },
         'reassembly_timeout': {
             'type': 'int',
-        },
+            },
         'reassembly_limit': {
             'type': 'int',
-        },
+            },
         'min_rto': {
             'type': 'int',
-        },
+            },
         'limited_slowstart': {
             'type': 'int',
-        },
+            },
         'early_retransmit': {
             'type': 'bool',
-        },
+            },
         'maxburst': {
             'type': 'int',
-        },
+            },
         'proxy_header': {
             'type': 'dict',
             'proxy_header_action': {
                 'type': 'str',
                 'choices': ['insert']
-            },
+                },
             'version': {
                 'type': 'str',
                 'choices': ['v1', 'v2']
-            }
-        },
+                }
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'user_tag': {
             'type': 'str',
-        }
-    })
+            }
+        })
     return rv
 
 
@@ -659,8 +608,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("tcp-proxy", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("tcp-proxy", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -694,12 +642,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -714,16 +657,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -734,13 +675,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -757,20 +695,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "tcp-proxy"] if info != "NotFound" else info
+                result["acos_info"] = info["tcp-proxy"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "tcp-proxy-list"] if info != "NotFound" else info
+                result["acos_info"] = info["tcp-proxy-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -783,8 +717,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

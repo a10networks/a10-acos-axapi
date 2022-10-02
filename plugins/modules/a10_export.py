@@ -361,54 +361,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex",
-    "auth_jwks",
-    "auth_portal",
-    "auth_portal_image",
-    "axdebug",
-    "bw_list",
-    "ca_cert",
-    "class_list",
-    "csr",
-    "debug_monitor",
-    "dnssec_dnskey",
-    "dnssec_ds",
-    "externalfilename",
-    "fixed_nat",
-    "fixed_nat_archive",
-    "geo_location",
-    "ip_map_list",
-    "ipsec_error_dump",
-    "local_uri_file",
-    "lw_4o6",
-    "lw_4o6_binding_table_validation_log",
-    "merged_pcap",
-    "mon_entity_debug_file",
-    "per_cpu",
-    "pktcapture_file",
-    "policy",
-    "profile",
-    "remote_file",
-    "rpz",
-    "running_config",
-    "saml_idp_name",
-    "ssl_cert",
-    "ssl_cert_key",
-    "ssl_crl",
-    "ssl_key",
-    "startup_config",
-    "status_check",
-    "store",
-    "store_name",
-    "syslog",
-    "tgz",
-    "thales_kmdata",
-    "thales_secworld",
-    "use_mgmt_port",
-    "visibility",
-    "wsdl",
-    "xml_schema",
-]
+    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "axdebug", "bw_list", "ca_cert", "class_list", "csr", "debug_monitor", "dnssec_dnskey", "dnssec_ds", "externalfilename", "fixed_nat", "fixed_nat_archive", "geo_location", "ip_map_list", "ipsec_error_dump", "local_uri_file", "lw_4o6",
+    "lw_4o6_binding_table_validation_log", "merged_pcap", "mon_entity_debug_file", "per_cpu", "pktcapture_file", "policy", "profile", "remote_file", "rpz", "running_config", "saml_idp_name", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "startup_config", "status_check", "store", "store_name",
+    "syslog", "tgz", "thales_kmdata", "thales_secworld", "use_mgmt_port", "visibility", "wsdl", "xml_schema",
+    ]
 
 
 def get_default_argspec():
@@ -418,17 +374,12 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -436,158 +387,158 @@ def get_argspec():
     rv.update({
         'axdebug': {
             'type': 'str',
-        },
+            },
         'ssl_key': {
             'type': 'str',
-        },
+            },
         'ssl_crl': {
             'type': 'str',
-        },
+            },
         'ssl_cert_key': {
             'type': 'str',
-        },
+            },
         'aflex': {
             'type': 'str',
-        },
+            },
         'xml_schema': {
             'type': 'str',
-        },
+            },
         'wsdl': {
             'type': 'str',
-        },
+            },
         'policy': {
             'type': 'str',
-        },
+            },
         'bw_list': {
             'type': 'str',
-        },
+            },
         'class_list': {
             'type': 'str',
-        },
+            },
         'lw_4o6': {
             'type': 'str',
-        },
+            },
         'lw_4o6_binding_table_validation_log': {
             'type': 'str',
-        },
+            },
         'fixed_nat': {
             'type': 'str',
-        },
+            },
         'fixed_nat_archive': {
             'type': 'str',
-        },
+            },
         'geo_location': {
             'type': 'str',
-        },
+            },
         'dnssec_dnskey': {
             'type': 'str',
-        },
+            },
         'dnssec_ds': {
             'type': 'str',
-        },
+            },
         'thales_secworld': {
             'type': 'str',
-        },
+            },
         'thales_kmdata': {
             'type': 'str',
-        },
+            },
         'auth_portal': {
             'type': 'str',
-        },
+            },
         'auth_portal_image': {
             'type': 'str',
-        },
+            },
         'saml_idp_name': {
             'type': 'str',
-        },
+            },
         'auth_jwks': {
             'type': 'str',
-        },
+            },
         'ipsec_error_dump': {
             'type': 'str',
-        },
+            },
         'ip_map_list': {
             'type': 'str',
-        },
+            },
         'local_uri_file': {
             'type': 'str',
-        },
+            },
         'ssl_cert': {
             'type': 'str',
-        },
+            },
         'ca_cert': {
             'type': 'str',
-        },
+            },
         'csr': {
             'type': 'str',
-        },
+            },
         'debug_monitor': {
             'type': 'str',
-        },
+            },
         'syslog': {
             'type': 'str',
-        },
+            },
         'running_config': {
             'type': 'bool',
-        },
+            },
         'startup_config': {
             'type': 'bool',
-        },
+            },
         'visibility': {
             'type': 'bool',
-        },
+            },
         'mon_entity_debug_file': {
             'type': 'str',
-        },
+            },
         'pktcapture_file': {
             'type': 'str',
-        },
+            },
         'profile': {
             'type': 'str',
-        },
+            },
         'status_check': {
             'type': 'bool',
-        },
+            },
         'merged_pcap': {
             'type': 'bool',
-        },
+            },
         'per_cpu': {
             'type': 'bool',
-        },
+            },
         'tgz': {
             'type': 'bool',
-        },
+            },
         'externalfilename': {
             'type': 'str',
-        },
+            },
         'rpz': {
             'type': 'str',
-        },
+            },
         'use_mgmt_port': {
             'type': 'bool',
-        },
+            },
         'remote_file': {
             'type': 'str',
-        },
+            },
         'store_name': {
             'type': 'str',
-        },
+            },
         'store': {
             'type': 'dict',
             'delete': {
                 'type': 'bool',
-            },
+                },
             'create': {
                 'type': 'bool',
-            },
+                },
             'name': {
                 'type': 'str',
-            },
+                },
             'remote_file': {
                 'type': 'str',
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -662,12 +613,7 @@ def present(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -682,16 +628,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -702,13 +646,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -722,20 +663,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "export"] if info != "NotFound" else info
+                result["acos_info"] = info["export"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "export-list"] if info != "NotFound" else info
+                result["acos_info"] = info["export-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -748,8 +685,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

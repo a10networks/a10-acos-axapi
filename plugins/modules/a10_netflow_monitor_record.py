@@ -229,27 +229,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "dslite",
-    "nat44",
-    "nat64",
-    "netflow_v5",
-    "netflow_v5_ext",
-    "port_batch_dslite",
-    "port_batch_nat44",
-    "port_batch_nat64",
-    "port_batch_v2_dslite",
-    "port_batch_v2_nat44",
-    "port_batch_v2_nat64",
-    "port_mapping_dslite",
-    "port_mapping_nat44",
-    "port_mapping_nat64",
-    "sesn_event_dslite",
-    "sesn_event_fw4",
-    "sesn_event_fw6",
-    "sesn_event_nat44",
-    "sesn_event_nat64",
-    "uuid",
-]
+    "dslite", "nat44", "nat64", "netflow_v5", "netflow_v5_ext", "port_batch_dslite", "port_batch_nat44", "port_batch_nat64", "port_batch_v2_dslite", "port_batch_v2_nat44", "port_batch_v2_nat64", "port_mapping_dslite", "port_mapping_nat44", "port_mapping_nat64", "sesn_event_dslite", "sesn_event_fw4",
+    "sesn_event_fw6", "sesn_event_nat44", "sesn_event_nat64", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -257,21 +239,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -279,79 +254,79 @@ def get_argspec():
     rv.update({
         'netflow_v5': {
             'type': 'bool',
-        },
+            },
         'netflow_v5_ext': {
             'type': 'bool',
-        },
+            },
         'nat44': {
             'type': 'bool',
-        },
+            },
         'nat64': {
             'type': 'bool',
-        },
+            },
         'dslite': {
             'type': 'bool',
-        },
+            },
         'sesn_event_nat44': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'sesn_event_nat64': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'sesn_event_dslite': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'sesn_event_fw4': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'sesn_event_fw6': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_mapping_nat44': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_mapping_nat64': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_mapping_dslite': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_batch_nat44': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_batch_nat64': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_batch_dslite': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_batch_v2_nat44': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_batch_v2_nat64': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'port_batch_v2_dslite': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
-        },
+            },
         'uuid': {
             'type': 'str',
-        }
-    })
+            }
+        })
     # Parent keys
     rv.update(dict(monitor_name=dict(type='str', required=True), ))
     return rv
@@ -364,8 +339,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["monitor_name"]:
-        f_dict["monitor_name"] = module.params["monitor_name"].replace(
-            "/", "%2F")
+        f_dict["monitor_name"] = module.params["monitor_name"].replace("/", "%2F")
     else:
         f_dict["monitor_name"] = module.params["monitor_name"]
 
@@ -456,12 +430,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -476,16 +445,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -496,13 +463,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -519,20 +483,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "record"] if info != "NotFound" else info
+                result["acos_info"] = info["record"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "record-list"] if info != "NotFound" else info
+                result["acos_info"] = info["record-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -545,8 +505,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

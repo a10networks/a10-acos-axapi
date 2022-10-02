@@ -453,66 +453,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "acos_application_only",
-    "activate",
-    "advertisement_interval",
-    "allowas_in",
-    "allowas_in_count",
-    "as_origination_interval",
-    "bfd",
-    "bfd_encrypted",
-    "bfd_value",
-    "collide_established",
-    "connect",
-    "default_originate",
-    "description",
-    "disallow_infinite_holdtime",
-    "distribute_lists",
-    "dont_capability_negotiate",
-    "dynamic",
-    "ebgp_multihop",
-    "ebgp_multihop_hop_count",
-    "enforce_multihop",
-    "ethernet",
-    "graceful_restart",
-    "inbound",
-    "key_id",
-    "key_type",
-    "lif",
-    "loopback",
-    "maximum_prefix",
-    "maximum_prefix_thres",
-    "multihop",
-    "nbr_remote_as",
-    "neighbor_filter_lists",
-    "neighbor_ipv4",
-    "neighbor_prefix_lists",
-    "neighbor_route_map_lists",
-    "next_hop_self",
-    "override_capability",
-    "pass_encrypted",
-    "pass_value",
-    "passive",
-    "peer_group_name",
-    "prefix_list_direction",
-    "remove_private_as",
-    "restart_min",
-    "route_map",
-    "route_refresh",
-    "send_community_val",
-    "shutdown",
-    "strict_capability_match",
-    "timers_holdtime",
-    "timers_keepalive",
-    "trunk",
-    "tunnel",
-    "unsuppress_map",
-    "update_source_ip",
-    "update_source_ipv6",
-    "uuid",
-    "ve",
-    "weight",
-]
+    "acos_application_only", "activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "bfd", "bfd_encrypted", "bfd_value", "collide_established", "connect", "default_originate", "description", "disallow_infinite_holdtime", "distribute_lists",
+    "dont_capability_negotiate", "dynamic", "ebgp_multihop", "ebgp_multihop_hop_count", "enforce_multihop", "ethernet", "graceful_restart", "inbound", "key_id", "key_type", "lif", "loopback", "maximum_prefix", "maximum_prefix_thres", "multihop", "nbr_remote_as", "neighbor_filter_lists",
+    "neighbor_ipv4", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "override_capability", "pass_encrypted", "pass_value", "passive", "peer_group_name", "prefix_list_direction", "remove_private_as", "restart_min", "route_map", "route_refresh", "send_community_val", "shutdown",
+    "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk", "tunnel", "unsuppress_map", "update_source_ip", "update_source_ipv6", "uuid", "ve", "weight",
+    ]
 
 
 def get_default_argspec():
@@ -520,21 +465,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -543,215 +481,213 @@ def get_argspec():
         'neighbor_ipv4': {
             'type': 'str',
             'required': True,
-        },
+            },
         'nbr_remote_as': {
             'type': 'int',
-        },
+            },
         'peer_group_name': {
             'type': 'str',
-        },
+            },
         'activate': {
             'type': 'bool',
-        },
+            },
         'advertisement_interval': {
             'type': 'int',
-        },
+            },
         'allowas_in': {
             'type': 'bool',
-        },
+            },
         'allowas_in_count': {
             'type': 'int',
-        },
+            },
         'as_origination_interval': {
             'type': 'int',
-        },
+            },
         'dynamic': {
             'type': 'bool',
-        },
+            },
         'prefix_list_direction': {
             'type': 'str',
             'choices': ['both', 'receive', 'send']
-        },
+            },
         'route_refresh': {
             'type': 'bool',
-        },
+            },
         'graceful_restart': {
             'type': 'bool',
-        },
+            },
         'collide_established': {
             'type': 'bool',
-        },
+            },
         'default_originate': {
             'type': 'bool',
-        },
+            },
         'route_map': {
             'type': 'str',
-        },
+            },
         'description': {
             'type': 'str',
-        },
+            },
         'disallow_infinite_holdtime': {
             'type': 'bool',
-        },
+            },
         'distribute_lists': {
             'type': 'list',
             'distribute_list': {
                 'type': 'str',
-            },
+                },
             'distribute_list_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
-            }
-        },
+                }
+            },
         'acos_application_only': {
             'type': 'bool',
-        },
+            },
         'dont_capability_negotiate': {
             'type': 'bool',
-        },
+            },
         'ebgp_multihop': {
             'type': 'bool',
-        },
+            },
         'ebgp_multihop_hop_count': {
             'type': 'int',
-        },
+            },
         'enforce_multihop': {
             'type': 'bool',
-        },
+            },
         'bfd': {
             'type': 'bool',
-        },
+            },
         'multihop': {
             'type': 'bool',
-        },
+            },
         'key_id': {
             'type': 'int',
-        },
+            },
         'key_type': {
-            'type':
-            'str',
-            'choices':
-            ['md5', 'meticulous-md5', 'meticulous-sha1', 'sha1', 'simple']
-        },
+            'type': 'str',
+            'choices': ['md5', 'meticulous-md5', 'meticulous-sha1', 'sha1', 'simple']
+            },
         'bfd_value': {
             'type': 'str',
-        },
+            },
         'bfd_encrypted': {
             'type': 'str',
-        },
+            },
         'neighbor_filter_lists': {
             'type': 'list',
             'filter_list': {
                 'type': 'str',
-            },
+                },
             'filter_list_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
-            }
-        },
+                }
+            },
         'maximum_prefix': {
             'type': 'int',
-        },
+            },
         'maximum_prefix_thres': {
             'type': 'int',
-        },
+            },
         'restart_min': {
             'type': 'int',
-        },
+            },
         'next_hop_self': {
             'type': 'bool',
-        },
+            },
         'override_capability': {
             'type': 'bool',
-        },
+            },
         'pass_value': {
             'type': 'str',
-        },
+            },
         'pass_encrypted': {
             'type': 'str',
-        },
+            },
         'passive': {
             'type': 'bool',
-        },
+            },
         'neighbor_prefix_lists': {
             'type': 'list',
             'nbr_prefix_list': {
                 'type': 'str',
-            },
+                },
             'nbr_prefix_list_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
-            }
-        },
+                }
+            },
         'remove_private_as': {
             'type': 'bool',
-        },
+            },
         'neighbor_route_map_lists': {
             'type': 'list',
             'nbr_route_map': {
                 'type': 'str',
-            },
+                },
             'nbr_rmap_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
-            }
-        },
+                }
+            },
         'send_community_val': {
             'type': 'str',
             'choices': ['both', 'none', 'standard', 'extended']
-        },
+            },
         'inbound': {
             'type': 'bool',
-        },
+            },
         'shutdown': {
             'type': 'bool',
-        },
+            },
         'strict_capability_match': {
             'type': 'bool',
-        },
+            },
         'timers_keepalive': {
             'type': 'int',
-        },
+            },
         'timers_holdtime': {
             'type': 'int',
-        },
+            },
         'connect': {
             'type': 'int',
-        },
+            },
         'unsuppress_map': {
             'type': 'str',
-        },
+            },
         'update_source_ip': {
             'type': 'str',
-        },
+            },
         'update_source_ipv6': {
             'type': 'str',
-        },
+            },
         'ethernet': {
             'type': 'str',
-        },
+            },
         'loopback': {
             'type': 'str',
-        },
+            },
         've': {
             'type': 'str',
-        },
+            },
         'trunk': {
             'type': 'str',
-        },
+            },
         'lif': {
             'type': 'str',
-        },
+            },
         'tunnel': {
             'type': 'str',
-        },
+            },
         'weight': {
             'type': 'int',
-        },
+            },
         'uuid': {
             'type': 'str',
-        }
-    })
+            }
+        })
     # Parent keys
     rv.update(dict(bgp_as_number=dict(type='str', required=True), ))
     return rv
@@ -764,13 +700,11 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["neighbor_ipv4"]):
-        f_dict["neighbor_ipv4"] = module.params["neighbor_ipv4"].replace(
-            "/", "%2F")
+        f_dict["neighbor_ipv4"] = module.params["neighbor_ipv4"].replace("/", "%2F")
     else:
         f_dict["neighbor_ipv4"] = module.params["neighbor_ipv4"]
     if '/' in module.params["bgp_as_number"]:
-        f_dict["bgp_as_number"] = module.params["bgp_as_number"].replace(
-            "/", "%2F")
+        f_dict["bgp_as_number"] = module.params["bgp_as_number"].replace("/", "%2F")
     else:
         f_dict["bgp_as_number"] = module.params["bgp_as_number"]
 
@@ -828,8 +762,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("ipv4-neighbor", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("ipv4-neighbor", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -863,12 +796,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -883,16 +811,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -903,13 +829,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -926,20 +849,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "ipv4-neighbor"] if info != "NotFound" else info
+                result["acos_info"] = info["ipv4-neighbor"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "ipv4-neighbor-list"] if info != "NotFound" else info
+                result["acos_info"] = info["ipv4-neighbor-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -952,8 +871,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

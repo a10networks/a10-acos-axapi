@@ -295,23 +295,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "name",
-    "oper",
-    "sampling_enable",
-    "shared_vlan",
-    "stats",
-    "tagged_eth_list",
-    "tagged_trunk_list",
-    "traffic_distribution_mode",
-    "untagged_eth_list",
-    "untagged_lif",
-    "untagged_trunk_list",
-    "user_tag",
-    "uuid",
-    "ve",
-    "vlan_num",
-]
+AVAILABLE_PROPERTIES = ["name", "oper", "sampling_enable", "shared_vlan", "stats", "tagged_eth_list", "tagged_trunk_list", "traffic_distribution_mode", "untagged_eth_list", "untagged_lif", "untagged_trunk_list", "user_tag", "uuid", "ve", "vlan_num", ]
 
 
 def get_default_argspec():
@@ -319,21 +303,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -342,149 +319,141 @@ def get_argspec():
         'vlan_num': {
             'type': 'int',
             'required': True,
-        },
+            },
         'shared_vlan': {
             'type': 'bool',
-        },
+            },
         'untagged_eth_list': {
             'type': 'list',
             'untagged_ethernet_start': {
                 'type': 'str',
-            },
+                },
             'untagged_ethernet_end': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'untagged_trunk_list': {
             'type': 'list',
             'untagged_trunk_start': {
                 'type': 'int',
-            },
+                },
             'untagged_trunk_end': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'untagged_lif': {
             'type': 'str',
-        },
+            },
         'tagged_eth_list': {
             'type': 'list',
             'tagged_ethernet_start': {
                 'type': 'str',
-            },
+                },
             'tagged_ethernet_end': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'tagged_trunk_list': {
             'type': 'list',
             'tagged_trunk_start': {
                 'type': 'int',
-            },
+                },
             'tagged_trunk_end': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         've': {
             'type': 'int',
-        },
+            },
         'name': {
             'type': 'str',
-        },
+            },
         'traffic_distribution_mode': {
-            'type':
-            'str',
-            'choices':
-            ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
-        },
+            'type': 'str',
+            'choices': ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'user_tag': {
             'type': 'str',
-        },
+            },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'broadcast_count', 'multicast_count',
-                    'ip_multicast_count', 'unknown_unicast_count',
-                    'mac_movement_count',
-                    'shared_vlan_partition_switched_counter'
-                ]
-            }
-        },
+                'type': 'str',
+                'choices': ['all', 'broadcast_count', 'multicast_count', 'ip_multicast_count', 'unknown_unicast_count', 'mac_movement_count', 'shared_vlan_partition_switched_counter']
+                }
+            },
         'oper': {
             'type': 'dict',
             'vlan_name': {
                 'type': 'str',
-            },
+                },
             've_num': {
                 'type': 'int',
-            },
+                },
             'is_shared_vlan': {
                 'type': 'str',
-            },
+                },
             'un_tagg_eth_ports': {
                 'type': 'dict',
                 'ports': {
                     'type': 'int',
-                }
-            },
+                    }
+                },
             'tagg_eth_ports': {
                 'type': 'dict',
                 'ports': {
                     'type': 'int',
-                }
-            },
+                    }
+                },
             'un_tagg_logical_ports': {
                 'type': 'dict',
                 'ports': {
                     'type': 'int',
-                }
-            },
+                    }
+                },
             'tagg_logical_ports': {
                 'type': 'dict',
                 'ports': {
                     'type': 'int',
-                }
-            },
+                    }
+                },
             'span_tree': {
                 'type': 'str',
-            },
+                },
             'vlan_num': {
                 'type': 'int',
                 'required': True,
-            }
-        },
+                }
+            },
         'stats': {
             'type': 'dict',
             'broadcast_count': {
                 'type': 'str',
-            },
+                },
             'multicast_count': {
                 'type': 'str',
-            },
+                },
             'ip_multicast_count': {
                 'type': 'str',
-            },
+                },
             'unknown_unicast_count': {
                 'type': 'str',
-            },
+                },
             'mac_movement_count': {
                 'type': 'str',
-            },
+                },
             'shared_vlan_partition_switched_counter': {
                 'type': 'str',
-            },
+                },
             'vlan_num': {
                 'type': 'int',
                 'required': True,
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -586,12 +555,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -606,16 +570,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -626,13 +588,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -649,36 +608,26 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["vlan"] if info != "NotFound" else info
+                result["acos_info"] = info["vlan"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "vlan-list"] if info != "NotFound" else info
+                result["acos_info"] = info["vlan-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["vlan"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["vlan"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["vlan"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["vlan"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -691,8 +640,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

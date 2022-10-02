@@ -139,13 +139,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "ip_addr",
-    "overlay_mac_addr",
-    "remote_vtep",
-    "uuid",
-    "vni",
-]
+AVAILABLE_PROPERTIES = ["ip_addr", "overlay_mac_addr", "remote_vtep", "uuid", "vni", ]
 
 
 def get_default_argspec():
@@ -153,46 +147,19 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ip_addr': {
-            'type': 'str',
-            'required': True,
-        },
-        'overlay_mac_addr': {
-            'type': 'str',
-            'required': True,
-        },
-        'vni': {
-            'type': 'int',
-            'required': True,
-        },
-        'remote_vtep': {
-            'type': 'str',
-            'required': True,
-        },
-        'uuid': {
-            'type': 'str',
-        }
-    })
+    rv.update({'ip_addr': {'type': 'str', 'required': True, }, 'overlay_mac_addr': {'type': 'str', 'required': True, }, 'vni': {'type': 'int', 'required': True, }, 'remote_vtep': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(vtep_id=dict(type='str', required=True), ))
     return rv
@@ -209,8 +176,7 @@ def existing_url(module):
     else:
         f_dict["ip_addr"] = module.params["ip_addr"]
     if '/' in str(module.params["overlay_mac_addr"]):
-        f_dict["overlay_mac_addr"] = module.params["overlay_mac_addr"].replace(
-            "/", "%2F")
+        f_dict["overlay_mac_addr"] = module.params["overlay_mac_addr"].replace("/", "%2F")
     else:
         f_dict["overlay_mac_addr"] = module.params["overlay_mac_addr"]
     if '/' in str(module.params["vni"]):
@@ -218,8 +184,7 @@ def existing_url(module):
     else:
         f_dict["vni"] = module.params["vni"]
     if '/' in str(module.params["remote_vtep"]):
-        f_dict["remote_vtep"] = module.params["remote_vtep"].replace(
-            "/", "%2F")
+        f_dict["remote_vtep"] = module.params["remote_vtep"].replace("/", "%2F")
     else:
         f_dict["remote_vtep"] = module.params["remote_vtep"]
     if '/' in module.params["vtep_id"]:
@@ -318,12 +283,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -338,16 +298,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -358,13 +316,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -381,20 +336,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["host"] if info != "NotFound" else info
+                result["acos_info"] = info["host"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "host-list"] if info != "NotFound" else info
+                result["acos_info"] = info["host-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -407,8 +358,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

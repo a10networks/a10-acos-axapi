@@ -291,17 +291,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "acos_event_log",
-    "action_list",
-    "filtering",
-    "local_logging",
-    "no_client_conn_reuse",
-    "require_web_category",
-    "san_filtering",
-    "source_list",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["acos_event_log", "action_list", "filtering", "local_logging", "no_client_conn_reuse", "require_web_category", "san_filtering", "source_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -309,21 +299,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -331,144 +314,128 @@ def get_argspec():
     rv.update({
         'no_client_conn_reuse': {
             'type': 'bool',
-        },
+            },
         'acos_event_log': {
             'type': 'bool',
-        },
+            },
         'local_logging': {
             'type': 'bool',
-        },
+            },
         'require_web_category': {
             'type': 'bool',
-        },
+            },
         'filtering': {
             'type': 'list',
             'ssli_url_filtering': {
-                'type':
-                'str',
-                'choices': [
-                    'bypassed-sni-disable', 'intercepted-sni-enable',
-                    'intercepted-http-disable', 'no-sni-allow'
-                ]
-            }
-        },
+                'type': 'str',
+                'choices': ['bypassed-sni-disable', 'intercepted-sni-enable', 'intercepted-http-disable', 'no-sni-allow']
+                }
+            },
         'san_filtering': {
             'type': 'list',
             'ssli_url_filtering_san': {
-                'type':
-                'str',
-                'choices': [
-                    'enable-san', 'bypassed-san-disable',
-                    'intercepted-san-enable', 'no-san-allow'
-                ]
-            }
-        },
+                'type': 'str',
+                'choices': ['enable-san', 'bypassed-san-disable', 'intercepted-san-enable', 'no-san-allow']
+                }
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'action_list': {
             'type': 'list',
             'name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'action1': {
-                'type':
-                'str',
-                'choices': [
-                    'forward-to-internet', 'forward-to-service-group',
-                    'forward-to-proxy', 'drop'
-                ]
-            },
+                'type': 'str',
+                'choices': ['forward-to-internet', 'forward-to-service-group', 'forward-to-proxy', 'drop']
+                },
             'fake_sg': {
                 'type': 'str',
-            },
+                },
             'real_sg': {
                 'type': 'str',
-            },
+                },
             'forward_snat': {
                 'type': 'str',
-            },
+                },
             'fall_back': {
                 'type': 'str',
-            },
+                },
             'fall_back_snat': {
                 'type': 'str',
-            },
+                },
             'proxy_chaining': {
                 'type': 'bool',
-            },
+                },
             'proxy_chaining_bypass': {
                 'type': 'bool',
-            },
+                },
             'support_cert_fetch': {
                 'type': 'bool',
-            },
+                },
             'log': {
                 'type': 'bool',
-            },
+                },
             'drop_response_code': {
                 'type': 'int',
-            },
+                },
             'drop_message': {
                 'type': 'str',
-            },
+                },
             'drop_redirect_url': {
                 'type': 'str',
-            },
+                },
             'http_status_code': {
                 'type': 'str',
                 'choices': ['301', '302']
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'user_tag': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
                     'choices': ['all', 'hits']
+                    }
                 }
-            }
-        },
+            },
         'source_list': {
             'type': 'list',
             'name': {
                 'type': 'str',
                 'required': True,
-            },
+                },
             'match_class_list': {
                 'type': 'str',
-            },
+                },
             'match_any': {
                 'type': 'bool',
-            },
+                },
             'match_authorize_policy': {
                 'type': 'str',
-            },
+                },
             'priority': {
                 'type': 'int',
-            },
+                },
             'uuid': {
                 'type': 'str',
-            },
+                },
             'user_tag': {
                 'type': 'str',
-            },
+                },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'hits', 'destination-match-not-found',
-                        'no-host-info'
-                    ]
-                }
-            },
+                    'type': 'str',
+                    'choices': ['all', 'hits', 'destination-match-not-found', 'no-host-info']
+                    }
+                },
             'destination': {
                 'type': 'dict',
                 'class_list_list': {
@@ -476,101 +443,101 @@ def get_argspec():
                     'dest_class_list': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'action': {
                         'type': 'str',
-                    },
+                        },
                     'ntype': {
                         'type': 'str',
                         'choices': ['host', 'url', 'ip']
-                    },
+                        },
                     'priority': {
                         'type': 'int',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
-                    },
+                        },
                     'sampling_enable': {
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
                             'choices': ['all', 'hits']
+                            }
                         }
-                    }
-                },
+                    },
                 'web_reputation_scope_list': {
                     'type': 'list',
                     'web_reputation_scope': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'action': {
                         'type': 'str',
-                    },
+                        },
                     'ntype': {
                         'type': 'str',
                         'choices': ['host', 'url']
-                    },
+                        },
                     'priority': {
                         'type': 'int',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
-                    },
+                        },
                     'sampling_enable': {
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
                             'choices': ['all', 'hits']
+                            }
                         }
-                    }
-                },
+                    },
                 'web_category_list_list': {
                     'type': 'list',
                     'web_category_list': {
                         'type': 'str',
                         'required': True,
-                    },
+                        },
                     'action': {
                         'type': 'str',
-                    },
+                        },
                     'ntype': {
                         'type': 'str',
                         'choices': ['host', 'url']
-                    },
+                        },
                     'priority': {
                         'type': 'int',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
-                    },
+                        },
                     'sampling_enable': {
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
                             'choices': ['all', 'hits']
+                            }
                         }
-                    }
-                },
+                    },
                 'any': {
                     'type': 'dict',
                     'action': {
                         'type': 'str',
-                    },
+                        },
                     'uuid': {
                         'type': 'str',
-                    },
+                        },
                     'sampling_enable': {
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
                             'choices': ['all', 'hits']
+                            }
                         }
                     }
                 }
             }
-        }
-    })
+        })
     # Parent keys
     rv.update(dict(policy_name=dict(type='str', required=True), ))
     return rv
@@ -583,8 +550,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["policy_name"]:
-        f_dict["policy_name"] = module.params["policy_name"].replace(
-            "/", "%2F")
+        f_dict["policy_name"] = module.params["policy_name"].replace("/", "%2F")
     else:
         f_dict["policy_name"] = module.params["policy_name"]
 
@@ -641,8 +607,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("forward-policy", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("forward-policy", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -676,12 +641,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -696,16 +656,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -716,13 +674,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -739,20 +694,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "forward-policy"] if info != "NotFound" else info
+                result["acos_info"] = info["forward-policy"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "forward-policy-list"] if info != "NotFound" else info
+                result["acos_info"] = info["forward-policy-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -765,8 +716,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

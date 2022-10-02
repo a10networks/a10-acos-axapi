@@ -290,13 +290,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "respond_to_user_mac",
-    "sampling_enable",
-    "stateful_firewall_value",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["respond_to_user_mac", "sampling_enable", "stateful_firewall_value", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -304,21 +298,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -327,138 +314,113 @@ def get_argspec():
         'stateful_firewall_value': {
             'type': 'str',
             'choices': ['enable']
-        },
+            },
         'respond_to_user_mac': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
                 'type':
                 'str',
                 'choices': [
-                    'all', 'tcp_packet_process', 'udp_packet_process',
-                    'other_packet_process', 'packet_inbound_deny',
-                    'packet_process_failure', 'outbound_session_created',
-                    'outbound_session_freed', 'inbound_session_created',
-                    'inbound_session_freed', 'tcp_session_created',
-                    'tcp_session_freed', 'udp_session_created',
-                    'udp_session_freed', 'other_session_created',
-                    'other_session_freed', 'session_creation_failure',
-                    'no_fwd_route', 'no_rev_route', 'packet_standby_drop',
-                    'tcp_fullcone_created', 'tcp_fullcone_freed',
-                    'udp_fullcone_created', 'udp_fullcone_freed',
-                    'fullcone_creation_failure', 'eif_process', 'one_arm_drop',
-                    'no_class_list_match', 'outbound_session_created_shadow',
-                    'outbound_session_freed_shadow',
-                    'inbound_session_created_shadow',
-                    'inbound_session_freed_shadow',
-                    'tcp_session_created_shadow', 'tcp_session_freed_shadow',
-                    'udp_session_created_shadow', 'udp_session_freed_shadow',
-                    'other_session_created_shadow',
-                    'other_session_freed_shadow',
-                    'session_creation_failure_shadow', 'bad_session_freed',
-                    'ctl_mem_alloc', 'ctl_mem_free',
-                    'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow',
-                    'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow',
-                    'fullcone_in_del_q', 'fullcone_overflow_eim',
-                    'fullcone_overflow_eif', 'fullcone_free_found',
-                    'fullcone_free_retry_lookup', 'fullcone_free_not_found',
-                    'eif_limit_exceeded', 'eif_disable_drop',
-                    'eif_process_failure', 'eif_filtered',
-                    'ha_standby_session_created', 'ha_standby_session_eim',
-                    'ha_standby_session_eif'
-                ]
-            }
-        },
+                    'all', 'tcp_packet_process', 'udp_packet_process', 'other_packet_process', 'packet_inbound_deny', 'packet_process_failure', 'outbound_session_created', 'outbound_session_freed', 'inbound_session_created', 'inbound_session_freed', 'tcp_session_created', 'tcp_session_freed',
+                    'udp_session_created', 'udp_session_freed', 'other_session_created', 'other_session_freed', 'session_creation_failure', 'no_fwd_route', 'no_rev_route', 'packet_standby_drop', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed',
+                    'fullcone_creation_failure', 'eif_process', 'one_arm_drop', 'no_class_list_match', 'outbound_session_created_shadow', 'outbound_session_freed_shadow', 'inbound_session_created_shadow', 'inbound_session_freed_shadow', 'tcp_session_created_shadow', 'tcp_session_freed_shadow',
+                    'udp_session_created_shadow', 'udp_session_freed_shadow', 'other_session_created_shadow', 'other_session_freed_shadow', 'session_creation_failure_shadow', 'bad_session_freed', 'ctl_mem_alloc', 'ctl_mem_free', 'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow',
+                    'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'fullcone_in_del_q', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'fullcone_free_found', 'fullcone_free_retry_lookup', 'fullcone_free_not_found', 'eif_limit_exceeded', 'eif_disable_drop', 'eif_process_failure',
+                    'eif_filtered', 'ha_standby_session_created', 'ha_standby_session_eim', 'ha_standby_session_eif'
+                    ]
+                }
+            },
         'stats': {
             'type': 'dict',
             'tcp_packet_process': {
                 'type': 'str',
-            },
+                },
             'udp_packet_process': {
                 'type': 'str',
-            },
+                },
             'other_packet_process': {
                 'type': 'str',
-            },
+                },
             'packet_inbound_deny': {
                 'type': 'str',
-            },
+                },
             'packet_process_failure': {
                 'type': 'str',
-            },
+                },
             'outbound_session_created': {
                 'type': 'str',
-            },
+                },
             'outbound_session_freed': {
                 'type': 'str',
-            },
+                },
             'inbound_session_created': {
                 'type': 'str',
-            },
+                },
             'inbound_session_freed': {
                 'type': 'str',
-            },
+                },
             'tcp_session_created': {
                 'type': 'str',
-            },
+                },
             'tcp_session_freed': {
                 'type': 'str',
-            },
+                },
             'udp_session_created': {
                 'type': 'str',
-            },
+                },
             'udp_session_freed': {
                 'type': 'str',
-            },
+                },
             'other_session_created': {
                 'type': 'str',
-            },
+                },
             'other_session_freed': {
                 'type': 'str',
-            },
+                },
             'session_creation_failure': {
                 'type': 'str',
-            },
+                },
             'no_fwd_route': {
                 'type': 'str',
-            },
+                },
             'no_rev_route': {
                 'type': 'str',
-            },
+                },
             'packet_standby_drop': {
                 'type': 'str',
-            },
+                },
             'tcp_fullcone_created': {
                 'type': 'str',
-            },
+                },
             'tcp_fullcone_freed': {
                 'type': 'str',
-            },
+                },
             'udp_fullcone_created': {
                 'type': 'str',
-            },
+                },
             'udp_fullcone_freed': {
                 'type': 'str',
-            },
+                },
             'fullcone_creation_failure': {
                 'type': 'str',
-            },
+                },
             'eif_process': {
                 'type': 'str',
-            },
+                },
             'one_arm_drop': {
                 'type': 'str',
-            },
+                },
             'no_class_list_match': {
                 'type': 'str',
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -555,12 +517,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -575,16 +532,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -595,13 +550,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -618,28 +570,21 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "global"] if info != "NotFound" else info
+                result["acos_info"] = info["global"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "global-list"] if info != "NotFound" else info
+                result["acos_info"] = info["global-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["global"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["global"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -652,8 +597,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

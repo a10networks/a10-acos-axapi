@@ -255,36 +255,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "all",
-    "application_buffer_limit",
-    "bw_rate_limit_exceed",
-    "bw_rate_limit_resume",
-    "gateway_down",
-    "gateway_up",
-    "server_conn_limit",
-    "server_conn_resume",
-    "server_disabled",
-    "server_down",
-    "server_selection_failure",
-    "server_up",
-    "service_conn_limit",
-    "service_conn_resume",
-    "service_down",
-    "service_group_down",
-    "service_group_member_down",
-    "service_group_member_up",
-    "service_group_up",
-    "service_up",
-    "uuid",
-    "vip_connlimit",
-    "vip_connratelimit",
-    "vip_down",
-    "vip_port_connlimit",
-    "vip_port_connratelimit",
-    "vip_port_down",
-    "vip_port_up",
-    "vip_up",
-]
+    "all", "application_buffer_limit", "bw_rate_limit_exceed", "bw_rate_limit_resume", "gateway_down", "gateway_up", "server_conn_limit", "server_conn_resume", "server_disabled", "server_down", "server_selection_failure", "server_up", "service_conn_limit", "service_conn_resume", "service_down",
+    "service_group_down", "service_group_member_down", "service_group_member_up", "service_group_up", "service_up", "uuid", "vip_connlimit", "vip_connratelimit", "vip_down", "vip_port_connlimit", "vip_port_connratelimit", "vip_port_down", "vip_port_up", "vip_up",
+    ]
 
 
 def get_default_argspec():
@@ -292,21 +265,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -314,92 +280,92 @@ def get_argspec():
     rv.update({
         'all': {
             'type': 'bool',
-        },
+            },
         'application_buffer_limit': {
             'type': 'bool',
-        },
+            },
         'gateway_up': {
             'type': 'bool',
-        },
+            },
         'gateway_down': {
             'type': 'bool',
-        },
+            },
         'server_conn_limit': {
             'type': 'bool',
-        },
+            },
         'server_conn_resume': {
             'type': 'bool',
-        },
+            },
         'server_up': {
             'type': 'bool',
-        },
+            },
         'server_down': {
             'type': 'bool',
-        },
+            },
         'server_disabled': {
             'type': 'bool',
-        },
+            },
         'server_selection_failure': {
             'type': 'bool',
-        },
+            },
         'service_conn_limit': {
             'type': 'bool',
-        },
+            },
         'service_conn_resume': {
             'type': 'bool',
-        },
+            },
         'service_down': {
             'type': 'bool',
-        },
+            },
         'service_up': {
             'type': 'bool',
-        },
+            },
         'service_group_up': {
             'type': 'bool',
-        },
+            },
         'service_group_down': {
             'type': 'bool',
-        },
+            },
         'service_group_member_up': {
             'type': 'bool',
-        },
+            },
         'service_group_member_down': {
             'type': 'bool',
-        },
+            },
         'vip_connlimit': {
             'type': 'bool',
-        },
+            },
         'vip_connratelimit': {
             'type': 'bool',
-        },
+            },
         'vip_down': {
             'type': 'bool',
-        },
+            },
         'vip_port_connlimit': {
             'type': 'bool',
-        },
+            },
         'vip_port_connratelimit': {
             'type': 'bool',
-        },
+            },
         'vip_port_down': {
             'type': 'bool',
-        },
+            },
         'vip_port_up': {
             'type': 'bool',
-        },
+            },
         'vip_up': {
             'type': 'bool',
-        },
+            },
         'bw_rate_limit_exceed': {
             'type': 'bool',
-        },
+            },
         'bw_rate_limit_resume': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        }
-    })
+            }
+        })
     return rv
 
 
@@ -496,12 +462,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -516,16 +477,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -536,13 +495,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -559,20 +515,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["slb"] if info != "NotFound" else info
+                result["acos_info"] = info["slb"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "slb-list"] if info != "NotFound" else info
+                result["acos_info"] = info["slb-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -585,8 +537,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

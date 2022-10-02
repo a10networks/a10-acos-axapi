@@ -296,11 +296,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -308,21 +304,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -330,142 +319,134 @@ def get_argspec():
     rv.update({
         'uuid': {
             'type': 'str',
-        },
+            },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
                 'type':
                 'str',
                 'choices': [
-                    'all', 'in_msgs', 'in_errors', 'in_dest_un_reach',
-                    'in_pkt_too_big', 'in_time_exceeds', 'in_param_prob',
-                    'in_echoes', 'in_exho_reply', 'in_grp_mem_query',
-                    'in_grp_mem_resp', 'in_grp_mem_reduction', 'in_router_sol',
-                    'in_ra', 'in_ns', 'in_na', 'in_redirect', 'out_msg',
-                    'out_dst_un_reach', 'out_pkt_too_big', 'out_time_exceeds',
-                    'out_param_prob', 'out_echo_req', 'out_echo_replies',
-                    'out_rs', 'out_ra', 'out_ns', 'out_na', 'out_redirects',
-                    'out_mem_resp', 'out_mem_reductions', 'err_rs', 'err_ra',
-                    'err_ns', 'err_na', 'err_redirects', 'err_echoes',
+                    'all', 'in_msgs', 'in_errors', 'in_dest_un_reach', 'in_pkt_too_big', 'in_time_exceeds', 'in_param_prob', 'in_echoes', 'in_exho_reply', 'in_grp_mem_query', 'in_grp_mem_resp', 'in_grp_mem_reduction', 'in_router_sol', 'in_ra', 'in_ns', 'in_na', 'in_redirect', 'out_msg',
+                    'out_dst_un_reach', 'out_pkt_too_big', 'out_time_exceeds', 'out_param_prob', 'out_echo_req', 'out_echo_replies', 'out_rs', 'out_ra', 'out_ns', 'out_na', 'out_redirects', 'out_mem_resp', 'out_mem_reductions', 'err_rs', 'err_ra', 'err_ns', 'err_na', 'err_redirects', 'err_echoes',
                     'err_echo_replies'
-                ]
-            }
-        },
+                    ]
+                }
+            },
         'stats': {
             'type': 'dict',
             'in_msgs': {
                 'type': 'str',
-            },
+                },
             'in_errors': {
                 'type': 'str',
-            },
+                },
             'in_dest_un_reach': {
                 'type': 'str',
-            },
+                },
             'in_pkt_too_big': {
                 'type': 'str',
-            },
+                },
             'in_time_exceeds': {
                 'type': 'str',
-            },
+                },
             'in_param_prob': {
                 'type': 'str',
-            },
+                },
             'in_echoes': {
                 'type': 'str',
-            },
+                },
             'in_exho_reply': {
                 'type': 'str',
-            },
+                },
             'in_grp_mem_query': {
                 'type': 'str',
-            },
+                },
             'in_grp_mem_resp': {
                 'type': 'str',
-            },
+                },
             'in_grp_mem_reduction': {
                 'type': 'str',
-            },
+                },
             'in_router_sol': {
                 'type': 'str',
-            },
+                },
             'in_ra': {
                 'type': 'str',
-            },
+                },
             'in_ns': {
                 'type': 'str',
-            },
+                },
             'in_na': {
                 'type': 'str',
-            },
+                },
             'in_redirect': {
                 'type': 'str',
-            },
+                },
             'out_msg': {
                 'type': 'str',
-            },
+                },
             'out_dst_un_reach': {
                 'type': 'str',
-            },
+                },
             'out_pkt_too_big': {
                 'type': 'str',
-            },
+                },
             'out_time_exceeds': {
                 'type': 'str',
-            },
+                },
             'out_param_prob': {
                 'type': 'str',
-            },
+                },
             'out_echo_req': {
                 'type': 'str',
-            },
+                },
             'out_echo_replies': {
                 'type': 'str',
-            },
+                },
             'out_rs': {
                 'type': 'str',
-            },
+                },
             'out_ra': {
                 'type': 'str',
-            },
+                },
             'out_ns': {
                 'type': 'str',
-            },
+                },
             'out_na': {
                 'type': 'str',
-            },
+                },
             'out_redirects': {
                 'type': 'str',
-            },
+                },
             'out_mem_resp': {
                 'type': 'str',
-            },
+                },
             'out_mem_reductions': {
                 'type': 'str',
-            },
+                },
             'err_rs': {
                 'type': 'str',
-            },
+                },
             'err_ra': {
                 'type': 'str',
-            },
+                },
             'err_ns': {
                 'type': 'str',
-            },
+                },
             'err_na': {
                 'type': 'str',
-            },
+                },
             'err_redirects': {
                 'type': 'str',
-            },
+                },
             'err_echoes': {
                 'type': 'str',
-            },
+                },
             'err_echo_replies': {
                 'type': 'str',
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -562,12 +543,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -582,16 +558,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -602,13 +576,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -625,28 +596,21 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "icmp6"] if info != "NotFound" else info
+                result["acos_info"] = info["icmp6"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "icmp6-list"] if info != "NotFound" else info
+                result["acos_info"] = info["icmp6-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["icmp6"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["icmp6"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -659,8 +623,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

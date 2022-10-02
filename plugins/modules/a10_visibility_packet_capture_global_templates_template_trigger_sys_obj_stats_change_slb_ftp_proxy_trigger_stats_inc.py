@@ -255,35 +255,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auth_fail",
-    "bad_sequence",
-    "cant_find_eprt",
-    "cant_find_port",
-    "cl_est_err",
-    "cl_request_err",
-    "data_conn_start_err",
-    "data_send_fail",
-    "data_serv_connected_err",
-    "data_serv_connecting_err",
-    "data_server_conn_fail",
-    "ds_fail",
-    "insert_tuple_fail",
-    "invalid_start_line",
-    "line_too_long",
-    "no_route",
-    "rsv_persist_conn_fail",
-    "ser_connecting_err",
-    "server_response_err",
-    "smp_create_fail",
-    "smp_v4_fail",
-    "smp_v6_fail",
-    "snat_fail",
-    "svrsel_fail",
-    "unsupported_command",
-    "unsupported_pbsz_value",
-    "unsupported_prot_value",
-    "uuid",
-]
+    "auth_fail", "bad_sequence", "cant_find_eprt", "cant_find_port", "cl_est_err", "cl_request_err", "data_conn_start_err", "data_send_fail", "data_serv_connected_err", "data_serv_connecting_err", "data_server_conn_fail", "ds_fail", "insert_tuple_fail", "invalid_start_line", "line_too_long",
+    "no_route", "rsv_persist_conn_fail", "ser_connecting_err", "server_response_err", "smp_create_fail", "smp_v4_fail", "smp_v6_fail", "snat_fail", "svrsel_fail", "unsupported_command", "unsupported_pbsz_value", "unsupported_prot_value", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -291,21 +265,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -313,89 +280,89 @@ def get_argspec():
     rv.update({
         'svrsel_fail': {
             'type': 'bool',
-        },
+            },
         'no_route': {
             'type': 'bool',
-        },
+            },
         'snat_fail': {
             'type': 'bool',
-        },
+            },
         'line_too_long': {
             'type': 'bool',
-        },
+            },
         'invalid_start_line': {
             'type': 'bool',
-        },
+            },
         'smp_create_fail': {
             'type': 'bool',
-        },
+            },
         'data_server_conn_fail': {
             'type': 'bool',
-        },
+            },
         'data_send_fail': {
             'type': 'bool',
-        },
+            },
         'unsupported_pbsz_value': {
             'type': 'bool',
-        },
+            },
         'unsupported_prot_value': {
             'type': 'bool',
-        },
+            },
         'unsupported_command': {
             'type': 'bool',
-        },
+            },
         'bad_sequence': {
             'type': 'bool',
-        },
+            },
         'rsv_persist_conn_fail': {
             'type': 'bool',
-        },
+            },
         'smp_v6_fail': {
             'type': 'bool',
-        },
+            },
         'smp_v4_fail': {
             'type': 'bool',
-        },
+            },
         'insert_tuple_fail': {
             'type': 'bool',
-        },
+            },
         'cl_est_err': {
             'type': 'bool',
-        },
+            },
         'ser_connecting_err': {
             'type': 'bool',
-        },
+            },
         'server_response_err': {
             'type': 'bool',
-        },
+            },
         'cl_request_err': {
             'type': 'bool',
-        },
+            },
         'data_conn_start_err': {
             'type': 'bool',
-        },
+            },
         'data_serv_connecting_err': {
             'type': 'bool',
-        },
+            },
         'data_serv_connected_err': {
             'type': 'bool',
-        },
+            },
         'auth_fail': {
             'type': 'bool',
-        },
+            },
         'ds_fail': {
             'type': 'bool',
-        },
+            },
         'cant_find_port': {
             'type': 'bool',
-        },
+            },
         'cant_find_eprt': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        }
-    })
+            }
+        })
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
@@ -408,8 +375,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace(
-            "/", "%2F")
+        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -466,8 +432,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -501,12 +466,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -521,16 +481,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -541,13 +499,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -564,20 +519,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -590,8 +541,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

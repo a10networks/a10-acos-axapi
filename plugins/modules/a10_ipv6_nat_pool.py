@@ -211,21 +211,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "end_address",
-    "gateway",
-    "ip_rr",
-    "netmask",
-    "oper",
-    "pool_name",
-    "port_overload",
-    "sampling_enable",
-    "scaleout_device_id",
-    "start_address",
-    "stats",
-    "uuid",
-    "vrid",
-]
+AVAILABLE_PROPERTIES = ["end_address", "gateway", "ip_rr", "netmask", "oper", "pool_name", "port_overload", "sampling_enable", "scaleout_device_id", "start_address", "stats", "uuid", "vrid", ]
 
 
 def get_default_argspec():
@@ -233,21 +219,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -256,88 +235,86 @@ def get_argspec():
         'pool_name': {
             'type': 'str',
             'required': True,
-        },
+            },
         'start_address': {
             'type': 'str',
-        },
+            },
         'end_address': {
             'type': 'str',
-        },
+            },
         'netmask': {
             'type': 'int',
-        },
+            },
         'gateway': {
             'type': 'str',
-        },
+            },
         'vrid': {
             'type': 'int',
-        },
+            },
         'scaleout_device_id': {
             'type': 'int',
-        },
+            },
         'ip_rr': {
             'type': 'bool',
-        },
+            },
         'port_overload': {
             'type': 'bool',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices':
-                ['all', 'Port-Usage', 'Total-Used', 'Total-Freed', 'Failed']
-            }
-        },
+                'type': 'str',
+                'choices': ['all', 'Port-Usage', 'Total-Used', 'Total-Freed', 'Failed']
+                }
+            },
         'oper': {
             'type': 'dict',
             'nat_pool_addr_list': {
                 'type': 'list',
                 'Address': {
                     'type': 'str',
-                },
+                    },
                 'Port_Usage': {
                     'type': 'int',
-                },
+                    },
                 'Total_Used': {
                     'type': 'int',
-                },
+                    },
                 'Total_Freed': {
                     'type': 'int',
-                },
+                    },
                 'Failed': {
                     'type': 'int',
-                }
-            },
+                    }
+                },
             'pool_name': {
                 'type': 'str',
                 'required': True,
-            }
-        },
+                }
+            },
         'stats': {
             'type': 'dict',
             'Port_Usage': {
                 'type': 'str',
-            },
+                },
             'Total_Used': {
                 'type': 'str',
-            },
+                },
             'Total_Freed': {
                 'type': 'str',
-            },
+                },
             'Failed': {
                 'type': 'str',
-            },
+                },
             'pool_name': {
                 'type': 'str',
                 'required': True,
+                }
             }
-        }
-    })
+        })
     return rv
 
 
@@ -439,12 +416,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -459,16 +431,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -479,13 +449,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -502,36 +469,26 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["pool"] if info != "NotFound" else info
+                result["acos_info"] = info["pool"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "pool-list"] if info != "NotFound" else info
+                result["acos_info"] = info["pool-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["pool"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["pool"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["pool"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["pool"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -544,8 +501,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

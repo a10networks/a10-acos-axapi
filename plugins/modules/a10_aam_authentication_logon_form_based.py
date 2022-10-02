@@ -298,21 +298,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "account_lock",
-    "challenge_variable",
-    "cp_page_cfg",
-    "duration",
-    "logon_page_cfg",
-    "name",
-    "new_pin_variable",
-    "next_token_variable",
-    "notify_cp_page_cfg",
-    "portal",
-    "retry",
-    "user_tag",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["account_lock", "challenge_variable", "cp_page_cfg", "duration", "logon_page_cfg", "name", "new_pin_variable", "next_token_variable", "notify_cp_page_cfg", "portal", "retry", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -320,21 +306,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -343,132 +322,132 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
-        },
+            },
         'portal': {
             'type': 'dict',
             'default_portal': {
                 'type': 'bool',
-            },
+                },
             'portal_name': {
                 'type': 'str',
-            },
+                },
             'logon': {
                 'type': 'str',
-            },
+                },
             'failpage': {
                 'type': 'str',
-            },
+                },
             'changepasswordpage': {
                 'type': 'str',
-            },
+                },
             'notifychangepasswordpage': {
                 'type': 'str',
-            },
+                },
             'challenge_page': {
                 'type': 'str',
-            },
+                },
             'new_pin_page': {
                 'type': 'str',
-            },
+                },
             'next_token_page': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'logon_page_cfg': {
             'type': 'dict',
             'action_url': {
                 'type': 'str',
-            },
+                },
             'username_variable': {
                 'type': 'str',
-            },
+                },
             'password_variable': {
                 'type': 'str',
-            },
+                },
             'passcode_variable': {
                 'type': 'str',
-            },
+                },
             'captcha_variable': {
                 'type': 'str',
-            },
+                },
             'login_failure_message': {
                 'type': 'str',
-            },
+                },
             'authz_failure_message': {
                 'type': 'str',
-            },
+                },
             'disable_change_password_link': {
                 'type': 'bool',
-            }
-        },
+                }
+            },
         'cp_page_cfg': {
             'type': 'dict',
             'changepassword_url': {
                 'type': 'str',
-            },
+                },
             'cp_user_enum': {
                 'type': 'str',
                 'choices': ['changepassword-username-variable']
-            },
+                },
             'cp_user_var': {
                 'type': 'str',
-            },
+                },
             'cp_old_pwd_enum': {
                 'type': 'str',
                 'choices': ['changepassword-old-password-variable']
-            },
+                },
             'cp_old_pwd_var': {
                 'type': 'str',
-            },
+                },
             'cp_new_pwd_enum': {
                 'type': 'str',
                 'choices': ['changepassword-new-password-variable']
-            },
+                },
             'cp_new_pwd_var': {
                 'type': 'str',
-            },
+                },
             'cp_cfm_pwd_enum': {
                 'type': 'str',
                 'choices': ['changepassword-password-confirm-variable']
-            },
+                },
             'cp_cfm_pwd_var': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'notify_cp_page_cfg': {
             'type': 'dict',
             'notifychangepassword_change_url': {
                 'type': 'str',
-            },
+                },
             'notifychangepassword_continue_url': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'challenge_variable': {
             'type': 'str',
-        },
+            },
         'new_pin_variable': {
             'type': 'str',
-        },
+            },
         'next_token_variable': {
             'type': 'str',
-        },
+            },
         'retry': {
             'type': 'int',
-        },
+            },
         'account_lock': {
             'type': 'bool',
-        },
+            },
         'duration': {
             'type': 'int',
-        },
+            },
         'uuid': {
             'type': 'str',
-        },
+            },
         'user_tag': {
             'type': 'str',
-        }
-    })
+            }
+        })
     return rv
 
 
@@ -536,8 +515,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("form-based", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("form-based", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -571,12 +549,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -591,16 +564,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -611,13 +582,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -634,20 +602,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "form-based"] if info != "NotFound" else info
+                result["acos_info"] = info["form-based"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "form-based-list"] if info != "NotFound" else info
+                result["acos_info"] = info["form-based-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -660,8 +624,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -369,27 +369,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "aggregator",
-    "as_path",
-    "atomic_aggregate",
-    "comm_list",
-    "community",
-    "dampening_cfg",
-    "ddos",
-    "extcommunity",
-    "ip",
-    "ipv6",
-    "level",
-    "local_preference",
-    "metric",
-    "metric_type",
-    "origin",
-    "originator_id",
-    "tag",
-    "uuid",
-    "weight",
-]
+AVAILABLE_PROPERTIES = ["aggregator", "as_path", "atomic_aggregate", "comm_list", "community", "dampening_cfg", "ddos", "extcommunity", "ip", "ipv6", "level", "local_preference", "metric", "metric_type", "origin", "originator_id", "tag", "uuid", "weight", ]
 
 
 def get_default_argspec():
@@ -397,21 +377,14 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
@@ -423,190 +396,185 @@ def get_argspec():
                 'type': 'dict',
                 'address': {
                     'type': 'str',
+                    }
                 }
-            }
-        },
+            },
         'ddos': {
             'type': 'dict',
             'class_list_name': {
                 'type': 'str',
-            },
+                },
             'class_list_cid': {
                 'type': 'int',
-            },
+                },
             'zone': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'ipv6': {
             'type': 'dict',
             'next_hop_1': {
                 'type': 'dict',
                 'address': {
                     'type': 'str',
-                },
+                    },
                 'local': {
                     'type': 'dict',
                     'address': {
                         'type': 'str',
+                        }
                     }
                 }
-            }
-        },
+            },
         'level': {
             'type': 'dict',
             'value': {
                 'type': 'str',
                 'choices': ['level-1', 'level-1-2', 'level-2']
-            }
-        },
+                }
+            },
         'metric': {
             'type': 'dict',
             'value': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'metric_type': {
             'type': 'dict',
             'value': {
                 'type': 'str',
                 'choices': ['external', 'internal', 'type-1', 'type-2']
-            }
-        },
+                }
+            },
         'tag': {
             'type': 'dict',
             'value': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'aggregator': {
             'type': 'dict',
             'aggregator_as': {
                 'type': 'dict',
                 'asn': {
                     'type': 'int',
-                },
+                    },
                 'ip': {
                     'type': 'str',
+                    }
                 }
-            }
-        },
+            },
         'as_path': {
             'type': 'dict',
             'prepend': {
                 'type': 'str',
-            },
+                },
             'num': {
                 'type': 'int',
-            },
+                },
             'num2': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'atomic_aggregate': {
             'type': 'bool',
-        },
+            },
         'comm_list': {
             'type': 'dict',
             'v_std': {
                 'type': 'int',
-            },
+                },
             'delete': {
                 'type': 'bool',
-            },
+                },
             'v_exp': {
                 'type': 'int',
-            },
+                },
             'v_exp_delete': {
                 'type': 'bool',
-            },
+                },
             'name': {
                 'type': 'str',
-            },
+                },
             'name_delete': {
                 'type': 'bool',
-            }
-        },
+                }
+            },
         'community': {
             'type': 'str',
-        },
+            },
         'dampening_cfg': {
             'type': 'dict',
             'dampening': {
                 'type': 'bool',
-            },
+                },
             'dampening_half_time': {
                 'type': 'int',
-            },
+                },
             'dampening_reuse': {
                 'type': 'int',
-            },
+                },
             'dampening_supress': {
                 'type': 'int',
-            },
+                },
             'dampening_max_supress': {
                 'type': 'int',
-            },
+                },
             'dampening_penalty': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'extcommunity': {
             'type': 'dict',
             'rt': {
                 'type': 'dict',
                 'value': {
                     'type': 'str',
-                }
-            },
+                    }
+                },
             'soo': {
                 'type': 'dict',
                 'value': {
                     'type': 'str',
+                    }
                 }
-            }
-        },
+            },
         'local_preference': {
             'type': 'dict',
             'val': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'originator_id': {
             'type': 'dict',
             'originator_ip': {
                 'type': 'str',
-            }
-        },
+                }
+            },
         'weight': {
             'type': 'dict',
             'weight_val': {
                 'type': 'int',
-            }
-        },
+                }
+            },
         'origin': {
             'type': 'dict',
             'egp': {
                 'type': 'bool',
-            },
+                },
             'igp': {
                 'type': 'bool',
-            },
+                },
             'incomplete': {
                 'type': 'bool',
-            }
-        },
+                }
+            },
         'uuid': {
             'type': 'str',
-        }
-    })
+            }
+        })
     # Parent keys
-    rv.update(
-        dict(
-            sequence=dict(type='str', required=True),
-            action=dict(type='str', required=True),
-            route_map_tag=dict(type='str', required=True),
-        ))
+    rv.update(dict(sequence=dict(type='str', required=True), action=dict(type='str', required=True), route_map_tag=dict(type='str', required=True), ))
     return rv
 
 
@@ -625,8 +593,7 @@ def existing_url(module):
     else:
         f_dict["action"] = module.params["action"]
     if '/' in module.params["route_map_tag"]:
-        f_dict["route_map_tag"] = module.params["route_map_tag"].replace(
-            "/", "%2F")
+        f_dict["route_map_tag"] = module.params["route_map_tag"].replace("/", "%2F")
     else:
         f_dict["route_map_tag"] = module.params["route_map_tag"]
 
@@ -719,12 +686,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -739,16 +701,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -759,13 +719,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -782,20 +739,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["set"] if info != "NotFound" else info
+                result["acos_info"] = info["set"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "set-list"] if info != "NotFound" else info
+                result["acos_info"] = info["set-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -808,8 +761,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
