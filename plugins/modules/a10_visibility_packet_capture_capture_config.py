@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_capture_config
 description:
@@ -487,9 +486,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["concurrent_captures", "concurrent_captures_age", "concurrent_conn_per_capture", "concurrent_conn_tag", "create_pcap_files_now", "disable", "disable_auto_merge", "enable_continuous_global_capture", "file_count", "file_size", "keep_pcap_files_after_merge", "name", "number_of_packets_per_capture", "number_of_packets_per_conn", "number_of_packets_total", "packet_length", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "concurrent_captures", "concurrent_captures_age", "concurrent_conn_per_capture", "concurrent_conn_tag", "create_pcap_files_now", "disable", "disable_auto_merge", "enable_continuous_global_capture", "file_count", "file_size", "keep_pcap_files_after_merge", "name", "number_of_packets_per_capture",
+    "number_of_packets_per_conn", "number_of_packets_total", "packet_length", "stats", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -499,34 +500,281 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'disable': {'type': 'bool', },
-        'concurrent_captures': {'type': 'int', },
-        'concurrent_conn_per_capture': {'type': 'int', },
-        'concurrent_captures_age': {'type': 'int', },
-        'concurrent_conn_tag': {'type': 'int', },
-        'number_of_packets_per_conn': {'type': 'int', },
-        'packet_length': {'type': 'int', },
-        'file_size': {'type': 'int', },
-        'file_count': {'type': 'int', },
-        'number_of_packets_per_capture': {'type': 'int', },
-        'number_of_packets_total': {'type': 'int', },
-        'enable_continuous_global_capture': {'type': 'bool', },
-        'create_pcap_files_now': {'type': 'bool', },
-        'disable_auto_merge': {'type': 'bool', },
-        'keep_pcap_files_after_merge': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'stats': {'type': 'dict', 'Concurrent_capture_created_by_ctr_increment': {'type': 'str', }, 'Concurrent_capture_created_by_ctr_anomaly': {'type': 'str', }, 'Concurrent_capture_create_failed_by_ctr_increment': {'type': 'str', }, 'Concurrent_capture_create_failed_by_ctr_anomaly': {'type': 'str', }, 'Concurrent_capture_create_failed_by_other_feature': {'type': 'str', }, 'Concurrent_capture_create_failed_oom': {'type': 'str', }, 'Concurrent_capture_limit_reached': {'type': 'str', }, 'Concurrent_capture_by_ctr_increment_freed': {'type': 'str', }, 'Concurrent_capture_by_ctr_anomaly_freed': {'type': 'str', }, 'Concurrent_capture_by_ctr_other_feature_freed': {'type': 'str', }, 'Global_capture_finished': {'type': 'str', }, 'Concurrent_capture_finished': {'type': 'str', }, 'pktcapture_with_no_conn_success': {'type': 'str', }, 'pktcapture_with_no_conn_failure': {'type': 'str', }, 'pktcapture_with_conn_but_not_tagged_success': {'type': 'str', }, 'pktcapture_with_conn_but_not_tagged_failure': {'type': 'str', }, 'pktcapture_with_conn_success_global': {'type': 'str', }, 'pktcapture_with_conn_success': {'type': 'str', }, 'pktcapture_with_conn_failure_global': {'type': 'str', }, 'pktcapture_with_conn_failure': {'type': 'str', }, 'pktcapture_failure_wait_for_block': {'type': 'str', }, 'pktcapture_failure_file_size_rchd': {'type': 'str', }, 'num_conns_tagged_global_increment': {'type': 'str', }, 'num_conns_tagged_global_anomaly': {'type': 'str', }, 'num_conns_tagged_global_other_feature': {'type': 'str', }, 'num_conns_tagged_global_increment_fail': {'type': 'str', }, 'num_conns_tagged_global_anomaly_fail': {'type': 'str', }, 'num_conns_tagged_global_other_feature_fail': {'type': 'str', }, 'num_conns_tagged_global_increment_maxed': {'type': 'str', }, 'num_conns_tagged_global_anomaly_maxed': {'type': 'str', }, 'num_conns_tagged_global_other_feature_maxed': {'type': 'str', }, 'num_conns_tagged_increment': {'type': 'str', }, 'num_conns_tagged_anomaly': {'type': 'str', }, 'num_conns_tagged_other_feature': {'type': 'str', }, 'num_conns_tagged_increment_fail': {'type': 'str', }, 'num_conns_tagged_anomaly_fail': {'type': 'str', }, 'num_conns_tagged_other_feature_fail': {'type': 'str', }, 'num_conns_tagged_increment_maxed': {'type': 'str', }, 'num_conns_tagged_anomaly_maxed': {'type': 'str', }, 'num_conns_tagged_other_feature_maxed': {'type': 'str', }, 'num_conns_untagged': {'type': 'str', }, 'pktcapture_triggered_by_increment': {'type': 'str', }, 'pktcapture_triggered_by_anomaly': {'type': 'str', }, 'pktcapture_triggered_by_other_feature': {'type': 'str', }, 'num_of_anomalies_detected': {'type': 'str', }, 'num_of_anomalies_cleared': {'type': 'str', }, 'num_pcaps_created': {'type': 'str', }, 'num_tmp_pcaps_created': {'type': 'str', }, 'num_pcaps_create_failed': {'type': 'str', }, 'pktcap_oom': {'type': 'str', }, 'failed_disk_full': {'type': 'str', }, 'conn_ext_failed': {'type': 'str', }, 'skip_as_conn_already_recapture': {'type': 'str', }, 'skip_capture_as_conn_created_before_smp': {'type': 'str', }, 'failed_as_return_completed_set': {'type': 'str', }, 'non_pkt_path': {'type': 'str', }, 'pkt_already_captured': {'type': 'str', }, 'wrong_ctr_incremented': {'type': 'str', }, 'auto_pcap_file_merged': {'type': 'str', }, 'auto_pcap_file_merged_failed': {'type': 'str', }, 'num_dynamic_capture_config_created': {'type': 'str', }, 'num_dynamic_capture_config_delete_q': {'type': 'str', }, 'num_dynamic_capture_config_deleted': {'type': 'str', }, 'num_global_counters_registered': {'type': 'str', }, 'num_global_counters_deregistered': {'type': 'str', }, 'num_per_object_counters_registered': {'type': 'str', }, 'num_per_object_counters_deregistered': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
-    })
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'disable': {
+            'type': 'bool',
+            },
+        'concurrent_captures': {
+            'type': 'int',
+            },
+        'concurrent_conn_per_capture': {
+            'type': 'int',
+            },
+        'concurrent_captures_age': {
+            'type': 'int',
+            },
+        'concurrent_conn_tag': {
+            'type': 'int',
+            },
+        'number_of_packets_per_conn': {
+            'type': 'int',
+            },
+        'packet_length': {
+            'type': 'int',
+            },
+        'file_size': {
+            'type': 'int',
+            },
+        'file_count': {
+            'type': 'int',
+            },
+        'number_of_packets_per_capture': {
+            'type': 'int',
+            },
+        'number_of_packets_total': {
+            'type': 'int',
+            },
+        'enable_continuous_global_capture': {
+            'type': 'bool',
+            },
+        'create_pcap_files_now': {
+            'type': 'bool',
+            },
+        'disable_auto_merge': {
+            'type': 'bool',
+            },
+        'keep_pcap_files_after_merge': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'stats': {
+            'type': 'dict',
+            'Concurrent_capture_created_by_ctr_increment': {
+                'type': 'str',
+                },
+            'Concurrent_capture_created_by_ctr_anomaly': {
+                'type': 'str',
+                },
+            'Concurrent_capture_create_failed_by_ctr_increment': {
+                'type': 'str',
+                },
+            'Concurrent_capture_create_failed_by_ctr_anomaly': {
+                'type': 'str',
+                },
+            'Concurrent_capture_create_failed_by_other_feature': {
+                'type': 'str',
+                },
+            'Concurrent_capture_create_failed_oom': {
+                'type': 'str',
+                },
+            'Concurrent_capture_limit_reached': {
+                'type': 'str',
+                },
+            'Concurrent_capture_by_ctr_increment_freed': {
+                'type': 'str',
+                },
+            'Concurrent_capture_by_ctr_anomaly_freed': {
+                'type': 'str',
+                },
+            'Concurrent_capture_by_ctr_other_feature_freed': {
+                'type': 'str',
+                },
+            'Global_capture_finished': {
+                'type': 'str',
+                },
+            'Concurrent_capture_finished': {
+                'type': 'str',
+                },
+            'pktcapture_with_no_conn_success': {
+                'type': 'str',
+                },
+            'pktcapture_with_no_conn_failure': {
+                'type': 'str',
+                },
+            'pktcapture_with_conn_but_not_tagged_success': {
+                'type': 'str',
+                },
+            'pktcapture_with_conn_but_not_tagged_failure': {
+                'type': 'str',
+                },
+            'pktcapture_with_conn_success_global': {
+                'type': 'str',
+                },
+            'pktcapture_with_conn_success': {
+                'type': 'str',
+                },
+            'pktcapture_with_conn_failure_global': {
+                'type': 'str',
+                },
+            'pktcapture_with_conn_failure': {
+                'type': 'str',
+                },
+            'pktcapture_failure_wait_for_block': {
+                'type': 'str',
+                },
+            'pktcapture_failure_file_size_rchd': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_increment': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_anomaly': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_other_feature': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_increment_fail': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_anomaly_fail': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_other_feature_fail': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_increment_maxed': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_anomaly_maxed': {
+                'type': 'str',
+                },
+            'num_conns_tagged_global_other_feature_maxed': {
+                'type': 'str',
+                },
+            'num_conns_tagged_increment': {
+                'type': 'str',
+                },
+            'num_conns_tagged_anomaly': {
+                'type': 'str',
+                },
+            'num_conns_tagged_other_feature': {
+                'type': 'str',
+                },
+            'num_conns_tagged_increment_fail': {
+                'type': 'str',
+                },
+            'num_conns_tagged_anomaly_fail': {
+                'type': 'str',
+                },
+            'num_conns_tagged_other_feature_fail': {
+                'type': 'str',
+                },
+            'num_conns_tagged_increment_maxed': {
+                'type': 'str',
+                },
+            'num_conns_tagged_anomaly_maxed': {
+                'type': 'str',
+                },
+            'num_conns_tagged_other_feature_maxed': {
+                'type': 'str',
+                },
+            'num_conns_untagged': {
+                'type': 'str',
+                },
+            'pktcapture_triggered_by_increment': {
+                'type': 'str',
+                },
+            'pktcapture_triggered_by_anomaly': {
+                'type': 'str',
+                },
+            'pktcapture_triggered_by_other_feature': {
+                'type': 'str',
+                },
+            'num_of_anomalies_detected': {
+                'type': 'str',
+                },
+            'num_of_anomalies_cleared': {
+                'type': 'str',
+                },
+            'num_pcaps_created': {
+                'type': 'str',
+                },
+            'num_tmp_pcaps_created': {
+                'type': 'str',
+                },
+            'num_pcaps_create_failed': {
+                'type': 'str',
+                },
+            'pktcap_oom': {
+                'type': 'str',
+                },
+            'failed_disk_full': {
+                'type': 'str',
+                },
+            'conn_ext_failed': {
+                'type': 'str',
+                },
+            'skip_as_conn_already_recapture': {
+                'type': 'str',
+                },
+            'skip_capture_as_conn_created_before_smp': {
+                'type': 'str',
+                },
+            'failed_as_return_completed_set': {
+                'type': 'str',
+                },
+            'non_pkt_path': {
+                'type': 'str',
+                },
+            'pkt_already_captured': {
+                'type': 'str',
+                },
+            'wrong_ctr_incremented': {
+                'type': 'str',
+                },
+            'auto_pcap_file_merged': {
+                'type': 'str',
+                },
+            'auto_pcap_file_merged_failed': {
+                'type': 'str',
+                },
+            'num_dynamic_capture_config_created': {
+                'type': 'str',
+                },
+            'num_dynamic_capture_config_delete_q': {
+                'type': 'str',
+                },
+            'num_dynamic_capture_config_deleted': {
+                'type': 'str',
+                },
+            'num_global_counters_registered': {
+                'type': 'str',
+                },
+            'num_global_counters_deregistered': {
+                'type': 'str',
+                },
+            'num_per_object_counters_registered': {
+                'type': 'str',
+                },
+            'num_per_object_counters_deregistered': {
+                'type': 'str',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                }
+            }
+        })
     return rv
 
 
@@ -537,7 +785,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
 
@@ -577,8 +825,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -589,8 +836,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -630,14 +876,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -652,9 +891,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -670,15 +907,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -706,8 +940,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["capture-config-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["capture-config"]["stats"] if info != "NotFound" else info
@@ -726,6 +959,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

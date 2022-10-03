@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_fw_rad_server_trigger_stats_inc
 description:
@@ -61,14 +60,49 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    radius_request_dropped:
+        description:
+        - "Enable automatic packet-capture for RADIUS Request Dropped (Malformed Packet)"
+        type: bool
+        required: False
+    request_bad_secret_dropped:
+        description:
+        - "Enable automatic packet-capture for RADIUS Request Bad Secret Dropped"
+        type: bool
+        required: False
+    request_no_key_vap_dropped:
+        description:
+        - "Enable automatic packet-capture for RADIUS Request No Key Attribute Dropped"
+        type: bool
+        required: False
+    request_malformed_dropped:
+        description:
+        - "Enable automatic packet-capture for RADIUS Request Malformed Dropped"
+        type: bool
+        required: False
+    request_ignored:
+        description:
+        - "Enable automatic packet-capture for RADIUS Request Table Full Dropped"
+        type: bool
+        required: False
     radius_table_full:
         description:
         - "Enable automatic packet-capture for RADIUS Request Dropped (Table Full)"
         type: bool
         required: False
+    ha_standby_dropped:
+        description:
+        - "Enable automatic packet-capture for HA Standby Dropped"
+        type: bool
+        required: False
     ipv6_prefix_length_mismatch:
         description:
         - "Enable automatic packet-capture for Framed IPV6 Prefix Length Mismatch"
+        type: bool
+        required: False
+    invalid_key:
+        description:
+        - "Enable automatic packet-capture for Radius Request has Invalid Key Field"
         type: bool
         required: False
     uuid:
@@ -129,9 +163,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ipv6_prefix_length_mismatch", "radius_table_full", "uuid", ]
+AVAILABLE_PROPERTIES = ["ha_standby_dropped", "invalid_key", "ipv6_prefix_length_mismatch", "radius_request_dropped", "radius_table_full", "request_bad_secret_dropped", "request_ignored", "request_malformed_dropped", "request_no_key_vap_dropped", "uuid", ]
 
 
 def get_default_argspec():
@@ -141,22 +174,50 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'radius_table_full': {'type': 'bool', },
-        'ipv6_prefix_length_mismatch': {'type': 'bool', },
-        'uuid': {'type': 'str', }
-    })
+    rv.update({
+        'radius_request_dropped': {
+            'type': 'bool',
+            },
+        'request_bad_secret_dropped': {
+            'type': 'bool',
+            },
+        'request_no_key_vap_dropped': {
+            'type': 'bool',
+            },
+        'request_malformed_dropped': {
+            'type': 'bool',
+            },
+        'request_ignored': {
+            'type': 'bool',
+            },
+        'radius_table_full': {
+            'type': 'bool',
+            },
+        'ha_standby_dropped': {
+            'type': 'bool',
+            },
+        'ipv6_prefix_length_mismatch': {
+            'type': 'bool',
+            },
+        'invalid_key': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -167,7 +228,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/","%2F")
+        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -207,8 +268,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -219,8 +279,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -260,14 +319,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -282,9 +334,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -300,15 +350,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -350,6 +397,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

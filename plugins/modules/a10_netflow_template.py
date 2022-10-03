@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_netflow_template
 description:
@@ -218,7 +217,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["information_element_blk", "ipfix_template_id", "name", "user_tag", "uuid", ]
 
@@ -230,20 +228,47 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'information_element_blk': {'type': 'list', 'information_element': {'type': 'str', 'choices': ['fwd-tuple-vnp-id', 'rev-tuple-vnp-id', 'source-ipv4-address', 'source-ipv4-prefix-len', 'dest-ipv4-address', 'dest-ipv4-prefix-len', 'source-ipv6-address', 'source-ipv6-prefix-len', 'dest-ipv6-address', 'dest-ipv6-prefix-len', 'post-nat-source-ipv4-address', 'post-nat-dest-ipv4-address', 'post-nat-source-ipv6-address', 'post-nat-dest-ipv6-address', 'source-port', 'dest-port', 'post-nat-source-port', 'post-nat-dest-port', 'fwd-tuple-type', 'rev-tuple-type', 'ip-proto', 'flow-direction', 'tcp-control-bits', 'fwd-bytes', 'fwd-packets', 'rev-bytes', 'rev-packets', 'in-port', 'out-port', 'in-interface', 'out-interface', 'port-range-start', 'port-range-end', 'port-range-step-size', 'port-range-num-ports', 'rule-name', 'rule-set-name', 'fw-source-zone', 'fw-dest-zone', 'application-id', 'application-name', 'imsi', 'msisdn', 'imei', 'radius-custom1', 'radius-custom2', 'radius-custom3', 'radius-custom4', 'radius-custom5', 'radius-custom6', 'flow-start-msec', 'flow-duration-msec', 'flow-duration-msec-64', 'flow-end-msec', 'nat-event', 'fw-event', 'fw-deny-reset-event', 'cgn-flow-direction', 'fw-dest-fqdn', 'flow-end-reason', 'gtp-deny-reason', 'gtp-apn', 'gtp-steid', 'gtp-dteid', 'gtp-selection-mode', 'gtp-mcc', 'gtp-mnc', 'gtp-rat-type', 'gtp-pdn-pdp-type', 'gtp-uli', 'gtp-enduser-v4-addr', 'gtp-enduser-v6-addr', 'gtp-bearer-id-or-nsapi', 'gtp-qci', 'gtp-info-event-ind', 'gtp-restarted-node-ipv4', 'gtp-restarted-node-ipv6', 'gtp-c-tunnels-removed-with-node-restart', 'radius-imsi', 'radius-msisdn', 'radius-imei', 'event-time-msec', 'security-event-type', 'limit-exceeded-count', 'rate-limit-key', 'rate-limit-type', 'rate-limit-drop-count']}},
-        'ipfix_template_id': {'type': 'int', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', }
-    })
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'information_element_blk': {
+            'type': 'list',
+            'information_element': {
+                'type':
+                'str',
+                'choices': [
+                    'fwd-tuple-vnp-id', 'rev-tuple-vnp-id', 'source-ipv4-address', 'source-ipv4-prefix-len', 'dest-ipv4-address', 'dest-ipv4-prefix-len', 'source-ipv6-address', 'source-ipv6-prefix-len', 'dest-ipv6-address', 'dest-ipv6-prefix-len', 'post-nat-source-ipv4-address',
+                    'post-nat-dest-ipv4-address', 'post-nat-source-ipv6-address', 'post-nat-dest-ipv6-address', 'source-port', 'dest-port', 'post-nat-source-port', 'post-nat-dest-port', 'fwd-tuple-type', 'rev-tuple-type', 'ip-proto', 'flow-direction', 'tcp-control-bits', 'fwd-bytes', 'fwd-packets',
+                    'rev-bytes', 'rev-packets', 'in-port', 'out-port', 'in-interface', 'out-interface', 'port-range-start', 'port-range-end', 'port-range-step-size', 'port-range-num-ports', 'rule-name', 'rule-set-name', 'fw-source-zone', 'fw-dest-zone', 'application-id', 'application-name', 'imsi',
+                    'msisdn', 'imei', 'radius-custom1', 'radius-custom2', 'radius-custom3', 'radius-custom4', 'radius-custom5', 'radius-custom6', 'flow-start-msec', 'flow-duration-msec', 'flow-duration-msec-64', 'flow-end-msec', 'nat-event', 'fw-event', 'fw-deny-reset-event', 'cgn-flow-direction',
+                    'fw-dest-fqdn', 'flow-end-reason', 'gtp-deny-reason', 'gtp-apn', 'gtp-steid', 'gtp-dteid', 'gtp-selection-mode', 'gtp-mcc', 'gtp-mnc', 'gtp-rat-type', 'gtp-pdn-pdp-type', 'gtp-uli', 'gtp-enduser-v4-addr', 'gtp-enduser-v6-addr', 'gtp-bearer-id-or-nsapi', 'gtp-qci',
+                    'gtp-info-event-ind', 'gtp-restarted-node-ipv4', 'gtp-restarted-node-ipv6', 'gtp-c-tunnels-removed-with-node-restart', 'radius-imsi', 'radius-msisdn', 'radius-imei', 'event-time-msec', 'security-event-type', 'limit-exceeded-count', 'rate-limit-key', 'rate-limit-type',
+                    'rate-limit-drop-count'
+                    ]
+                }
+            },
+        'ipfix_template_id': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
@@ -254,7 +279,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
 
@@ -294,8 +319,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -306,8 +330,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -347,14 +370,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -369,9 +385,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -387,15 +401,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -437,6 +448,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

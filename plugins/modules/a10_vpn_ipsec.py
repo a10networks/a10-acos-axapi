@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_vpn_ipsec
 description:
@@ -483,7 +482,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["anti_replay_window", "bind_tunnel", "dh_group", "dscp", "enc_cfg", "enforce_traffic_selector", "ipsec_gateway", "lifebytes", "lifetime", "mode", "name", "oper", "proto", "sampling_enable", "sequence_number_disable", "stats", "traffic_selector", "up", "user_tag", "uuid", ]
 
@@ -495,35 +493,458 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'mode': {'type': 'str', 'choices': ['tunnel']},
-        'dscp': {'type': 'str', 'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63']},
-        'proto': {'type': 'str', 'choices': ['esp']},
-        'dh_group': {'type': 'str', 'choices': ['0', '1', '2', '5', '14', '15', '16', '18', '19', '20']},
-        'enc_cfg': {'type': 'list', 'encryption': {'type': 'str', 'choices': ['des', '3des', 'aes-128', 'aes-192', 'aes-256', 'aes-gcm-128', 'aes-gcm-192', 'aes-gcm-256', 'null']}, 'hash': {'type': 'str', 'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512', 'null']}, 'priority': {'type': 'int', }, 'gcm_priority': {'type': 'int', }},
-        'lifetime': {'type': 'int', },
-        'lifebytes': {'type': 'int', },
-        'anti_replay_window': {'type': 'str', 'choices': ['0', '32', '64', '128', '256', '512', '1024']},
-        'up': {'type': 'bool', },
-        'sequence_number_disable': {'type': 'bool', },
-        'traffic_selector': {'type': 'dict', 'ipv4': {'type': 'dict', 'local': {'type': 'str', }, 'local_netmask': {'type': 'str', }, 'local_port': {'type': 'int', }, 'remote_ipv4_assigned': {'type': 'bool', }, 'remote_ip': {'type': 'str', }, 'remote_netmask': {'type': 'str', }, 'remote_port': {'type': 'int', }, 'protocol': {'type': 'int', }}, 'ipv6': {'type': 'dict', 'localv6': {'type': 'str', }, 'local_portv6': {'type': 'int', }, 'remote_ipv6_assigned': {'type': 'bool', }, 'remote_ipv6': {'type': 'str', }, 'remote_portv6': {'type': 'int', }, 'protocolv6': {'type': 'int', }}},
-        'enforce_traffic_selector': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'packets-encrypted', 'packets-decrypted', 'anti-replay-num', 'rekey-num', 'packets-err-inactive', 'packets-err-encryption', 'packets-err-pad-check', 'packets-err-pkt-sanity', 'packets-err-icv-check', 'packets-err-lifetime-lifebytes', 'bytes-encrypted', 'bytes-decrypted', 'prefrag-success', 'prefrag-error', 'cavium-bytes-encrypted', 'cavium-bytes-decrypted', 'cavium-packets-encrypted', 'cavium-packets-decrypted', 'qat-bytes-encrypted', 'qat-bytes-decrypted', 'qat-packets-encrypted', 'qat-packets-decrypted', 'tunnel-intf-down', 'pkt-fail-prep-to-send', 'no-next-hop', 'invalid-tunnel-id', 'no-tunnel-found', 'pkt-fail-to-send', 'frag-after-encap-frag-packets', 'frag-received', 'sequence-num', 'sequence-num-rollover', 'packets-err-nh-check']}},
-        'bind_tunnel': {'type': 'dict', 'tunnel': {'type': 'int', }, 'next_hop': {'type': 'str', }, 'next_hop_v6': {'type': 'str', }, 'uuid': {'type': 'str', }},
-        'ipsec_gateway': {'type': 'dict', 'ike_gateway': {'type': 'str', }, 'uuid': {'type': 'str', }},
-        'oper': {'type': 'dict', 'remote_ts_filter': {'type': 'str', }, 'remote_ts_v6_filter': {'type': 'str', }, 'in_spi_filter': {'type': 'str', }, 'out_spi_filter': {'type': 'str', }, 'SA_List': {'type': 'list', 'Status': {'type': 'str', }, 'SA_Index': {'type': 'int', }, 'TS_Proto': {'type': 'int', }, 'Local_IP': {'type': 'str', }, 'Local_Port': {'type': 'int', }, 'Peer_IP': {'type': 'str', }, 'Peer_Port': {'type': 'int', }, 'Local_SPI': {'type': 'str', }, 'Remote_SPI': {'type': 'str', }, 'Protocol': {'type': 'str', }, 'Mode': {'type': 'str', }, 'Encryption_Algorithm': {'type': 'str', }, 'Hash_Algorithm': {'type': 'str', }, 'Lifetime': {'type': 'int', }, 'Lifebytes': {'type': 'str', }, 'DH_Group': {'type': 'int', }, 'NAT_Traversal': {'type': 'int', }, 'Anti_Replay': {'type': 'str', }, 'packets_encrypted': {'type': 'int', }, 'packets_decrypted': {'type': 'int', }, 'anti_replay_num': {'type': 'int', }, 'rekey_num': {'type': 'int', }, 'packets_err_inactive': {'type': 'int', }, 'packets_err_encryption': {'type': 'int', }, 'packets_err_pad_check': {'type': 'int', }, 'packets_err_pkt_sanity': {'type': 'int', }, 'packets_err_icv_check': {'type': 'int', }, 'packets_err_lifetime_lifebytes': {'type': 'str', }, 'bytes_encrypted': {'type': 'int', }, 'bytes_decrypted': {'type': 'int', }, 'prefrag_success': {'type': 'int', }, 'prefrag_error': {'type': 'int', }, 'cavium_bytes_encrypted': {'type': 'int', }, 'cavium_bytes_decrypted': {'type': 'int', }, 'cavium_packets_encrypted': {'type': 'int', }, 'cavium_packets_decrypted': {'type': 'int', }, 'qat_bytes_encrypted': {'type': 'int', }, 'qat_bytes_decrypted': {'type': 'int', }, 'qat_packets_encrypted': {'type': 'int', }, 'qat_packets_decrypted': {'type': 'int', }, 'tunnel_intf_down': {'type': 'int', }, 'pkt_fail_prep_to_send': {'type': 'int', }, 'no_next_hop': {'type': 'int', }, 'invalid_tunnel_id': {'type': 'int', }, 'no_tunnel_found': {'type': 'int', }, 'pkt_fail_to_send': {'type': 'int', }, 'frag_after_encap_frag_packets': {'type': 'int', }, 'frag_received': {'type': 'int', }, 'sequence_num': {'type': 'int', }, 'sequence_num_rollover': {'type': 'int', }, 'packets_err_nh_check': {'type': 'int', }, 'enforce_ts_encap_drop': {'type': 'int', }, 'enforce_ts_decap_drop': {'type': 'int', }}, 'name': {'type': 'str', 'required': True, }},
-        'stats': {'type': 'dict', 'packets_encrypted': {'type': 'str', }, 'packets_decrypted': {'type': 'str', }, 'anti_replay_num': {'type': 'str', }, 'rekey_num': {'type': 'str', }, 'packets_err_inactive': {'type': 'str', }, 'packets_err_encryption': {'type': 'str', }, 'packets_err_pad_check': {'type': 'str', }, 'packets_err_pkt_sanity': {'type': 'str', }, 'packets_err_icv_check': {'type': 'str', }, 'packets_err_lifetime_lifebytes': {'type': 'str', }, 'bytes_encrypted': {'type': 'str', }, 'bytes_decrypted': {'type': 'str', }, 'prefrag_success': {'type': 'str', }, 'prefrag_error': {'type': 'str', }, 'cavium_bytes_encrypted': {'type': 'str', }, 'cavium_bytes_decrypted': {'type': 'str', }, 'cavium_packets_encrypted': {'type': 'str', }, 'cavium_packets_decrypted': {'type': 'str', }, 'qat_bytes_encrypted': {'type': 'str', }, 'qat_bytes_decrypted': {'type': 'str', }, 'qat_packets_encrypted': {'type': 'str', }, 'qat_packets_decrypted': {'type': 'str', }, 'tunnel_intf_down': {'type': 'str', }, 'pkt_fail_prep_to_send': {'type': 'str', }, 'no_next_hop': {'type': 'str', }, 'invalid_tunnel_id': {'type': 'str', }, 'no_tunnel_found': {'type': 'str', }, 'pkt_fail_to_send': {'type': 'str', }, 'frag_after_encap_frag_packets': {'type': 'str', }, 'frag_received': {'type': 'str', }, 'sequence_num': {'type': 'str', }, 'sequence_num_rollover': {'type': 'str', }, 'packets_err_nh_check': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
-    })
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'mode': {
+            'type': 'str',
+            'choices': ['tunnel']
+            },
+        'dscp': {
+            'type':
+            'str',
+            'choices': [
+                'default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21',
+                '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63'
+                ]
+            },
+        'proto': {
+            'type': 'str',
+            'choices': ['esp']
+            },
+        'dh_group': {
+            'type': 'str',
+            'choices': ['0', '1', '2', '5', '14', '15', '16', '18', '19', '20']
+            },
+        'enc_cfg': {
+            'type': 'list',
+            'encryption': {
+                'type': 'str',
+                'choices': ['des', '3des', 'aes-128', 'aes-192', 'aes-256', 'aes-gcm-128', 'aes-gcm-192', 'aes-gcm-256', 'null']
+                },
+            'hash': {
+                'type': 'str',
+                'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512', 'null']
+                },
+            'priority': {
+                'type': 'int',
+                },
+            'gcm_priority': {
+                'type': 'int',
+                }
+            },
+        'lifetime': {
+            'type': 'int',
+            },
+        'lifebytes': {
+            'type': 'int',
+            },
+        'anti_replay_window': {
+            'type': 'str',
+            'choices': ['0', '32', '64', '128', '256', '512', '1024']
+            },
+        'up': {
+            'type': 'bool',
+            },
+        'sequence_number_disable': {
+            'type': 'bool',
+            },
+        'traffic_selector': {
+            'type': 'dict',
+            'ipv4': {
+                'type': 'dict',
+                'local': {
+                    'type': 'str',
+                    },
+                'local_netmask': {
+                    'type': 'str',
+                    },
+                'local_port': {
+                    'type': 'int',
+                    },
+                'remote_ipv4_assigned': {
+                    'type': 'bool',
+                    },
+                'remote_ip': {
+                    'type': 'str',
+                    },
+                'remote_netmask': {
+                    'type': 'str',
+                    },
+                'remote_port': {
+                    'type': 'int',
+                    },
+                'protocol': {
+                    'type': 'int',
+                    }
+                },
+            'ipv6': {
+                'type': 'dict',
+                'localv6': {
+                    'type': 'str',
+                    },
+                'local_portv6': {
+                    'type': 'int',
+                    },
+                'remote_ipv6_assigned': {
+                    'type': 'bool',
+                    },
+                'remote_ipv6': {
+                    'type': 'str',
+                    },
+                'remote_portv6': {
+                    'type': 'int',
+                    },
+                'protocolv6': {
+                    'type': 'int',
+                    }
+                }
+            },
+        'enforce_traffic_selector': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'packets-encrypted', 'packets-decrypted', 'anti-replay-num', 'rekey-num', 'packets-err-inactive', 'packets-err-encryption', 'packets-err-pad-check', 'packets-err-pkt-sanity', 'packets-err-icv-check', 'packets-err-lifetime-lifebytes', 'bytes-encrypted', 'bytes-decrypted',
+                    'prefrag-success', 'prefrag-error', 'cavium-bytes-encrypted', 'cavium-bytes-decrypted', 'cavium-packets-encrypted', 'cavium-packets-decrypted', 'qat-bytes-encrypted', 'qat-bytes-decrypted', 'qat-packets-encrypted', 'qat-packets-decrypted', 'tunnel-intf-down',
+                    'pkt-fail-prep-to-send', 'no-next-hop', 'invalid-tunnel-id', 'no-tunnel-found', 'pkt-fail-to-send', 'frag-after-encap-frag-packets', 'frag-received', 'sequence-num', 'sequence-num-rollover', 'packets-err-nh-check'
+                    ]
+                }
+            },
+        'bind_tunnel': {
+            'type': 'dict',
+            'tunnel': {
+                'type': 'int',
+                },
+            'next_hop': {
+                'type': 'str',
+                },
+            'next_hop_v6': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ipsec_gateway': {
+            'type': 'dict',
+            'ike_gateway': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'remote_ts_filter': {
+                'type': 'str',
+                },
+            'remote_ts_v6_filter': {
+                'type': 'str',
+                },
+            'in_spi_filter': {
+                'type': 'str',
+                },
+            'out_spi_filter': {
+                'type': 'str',
+                },
+            'SA_List': {
+                'type': 'list',
+                'Status': {
+                    'type': 'str',
+                    },
+                'SA_Index': {
+                    'type': 'int',
+                    },
+                'TS_Proto': {
+                    'type': 'int',
+                    },
+                'Local_IP': {
+                    'type': 'str',
+                    },
+                'Local_Port': {
+                    'type': 'int',
+                    },
+                'Peer_IP': {
+                    'type': 'str',
+                    },
+                'Peer_Port': {
+                    'type': 'int',
+                    },
+                'Local_SPI': {
+                    'type': 'str',
+                    },
+                'Remote_SPI': {
+                    'type': 'str',
+                    },
+                'Protocol': {
+                    'type': 'str',
+                    },
+                'Mode': {
+                    'type': 'str',
+                    },
+                'Encryption_Algorithm': {
+                    'type': 'str',
+                    },
+                'Hash_Algorithm': {
+                    'type': 'str',
+                    },
+                'Lifetime': {
+                    'type': 'int',
+                    },
+                'Lifebytes': {
+                    'type': 'str',
+                    },
+                'DH_Group': {
+                    'type': 'int',
+                    },
+                'NAT_Traversal': {
+                    'type': 'int',
+                    },
+                'Anti_Replay': {
+                    'type': 'str',
+                    },
+                'packets_encrypted': {
+                    'type': 'int',
+                    },
+                'packets_decrypted': {
+                    'type': 'int',
+                    },
+                'anti_replay_num': {
+                    'type': 'int',
+                    },
+                'rekey_num': {
+                    'type': 'int',
+                    },
+                'packets_err_inactive': {
+                    'type': 'int',
+                    },
+                'packets_err_encryption': {
+                    'type': 'int',
+                    },
+                'packets_err_pad_check': {
+                    'type': 'int',
+                    },
+                'packets_err_pkt_sanity': {
+                    'type': 'int',
+                    },
+                'packets_err_icv_check': {
+                    'type': 'int',
+                    },
+                'packets_err_lifetime_lifebytes': {
+                    'type': 'str',
+                    },
+                'bytes_encrypted': {
+                    'type': 'int',
+                    },
+                'bytes_decrypted': {
+                    'type': 'int',
+                    },
+                'prefrag_success': {
+                    'type': 'int',
+                    },
+                'prefrag_error': {
+                    'type': 'int',
+                    },
+                'cavium_bytes_encrypted': {
+                    'type': 'int',
+                    },
+                'cavium_bytes_decrypted': {
+                    'type': 'int',
+                    },
+                'cavium_packets_encrypted': {
+                    'type': 'int',
+                    },
+                'cavium_packets_decrypted': {
+                    'type': 'int',
+                    },
+                'qat_bytes_encrypted': {
+                    'type': 'int',
+                    },
+                'qat_bytes_decrypted': {
+                    'type': 'int',
+                    },
+                'qat_packets_encrypted': {
+                    'type': 'int',
+                    },
+                'qat_packets_decrypted': {
+                    'type': 'int',
+                    },
+                'tunnel_intf_down': {
+                    'type': 'int',
+                    },
+                'pkt_fail_prep_to_send': {
+                    'type': 'int',
+                    },
+                'no_next_hop': {
+                    'type': 'int',
+                    },
+                'invalid_tunnel_id': {
+                    'type': 'int',
+                    },
+                'no_tunnel_found': {
+                    'type': 'int',
+                    },
+                'pkt_fail_to_send': {
+                    'type': 'int',
+                    },
+                'frag_after_encap_frag_packets': {
+                    'type': 'int',
+                    },
+                'frag_received': {
+                    'type': 'int',
+                    },
+                'sequence_num': {
+                    'type': 'int',
+                    },
+                'sequence_num_rollover': {
+                    'type': 'int',
+                    },
+                'packets_err_nh_check': {
+                    'type': 'int',
+                    },
+                'enforce_ts_encap_drop': {
+                    'type': 'int',
+                    },
+                'enforce_ts_decap_drop': {
+                    'type': 'int',
+                    }
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'packets_encrypted': {
+                'type': 'str',
+                },
+            'packets_decrypted': {
+                'type': 'str',
+                },
+            'anti_replay_num': {
+                'type': 'str',
+                },
+            'rekey_num': {
+                'type': 'str',
+                },
+            'packets_err_inactive': {
+                'type': 'str',
+                },
+            'packets_err_encryption': {
+                'type': 'str',
+                },
+            'packets_err_pad_check': {
+                'type': 'str',
+                },
+            'packets_err_pkt_sanity': {
+                'type': 'str',
+                },
+            'packets_err_icv_check': {
+                'type': 'str',
+                },
+            'packets_err_lifetime_lifebytes': {
+                'type': 'str',
+                },
+            'bytes_encrypted': {
+                'type': 'str',
+                },
+            'bytes_decrypted': {
+                'type': 'str',
+                },
+            'prefrag_success': {
+                'type': 'str',
+                },
+            'prefrag_error': {
+                'type': 'str',
+                },
+            'cavium_bytes_encrypted': {
+                'type': 'str',
+                },
+            'cavium_bytes_decrypted': {
+                'type': 'str',
+                },
+            'cavium_packets_encrypted': {
+                'type': 'str',
+                },
+            'cavium_packets_decrypted': {
+                'type': 'str',
+                },
+            'qat_bytes_encrypted': {
+                'type': 'str',
+                },
+            'qat_bytes_decrypted': {
+                'type': 'str',
+                },
+            'qat_packets_encrypted': {
+                'type': 'str',
+                },
+            'qat_packets_decrypted': {
+                'type': 'str',
+                },
+            'tunnel_intf_down': {
+                'type': 'str',
+                },
+            'pkt_fail_prep_to_send': {
+                'type': 'str',
+                },
+            'no_next_hop': {
+                'type': 'str',
+                },
+            'invalid_tunnel_id': {
+                'type': 'str',
+                },
+            'no_tunnel_found': {
+                'type': 'str',
+                },
+            'pkt_fail_to_send': {
+                'type': 'str',
+                },
+            'frag_after_encap_frag_packets': {
+                'type': 'str',
+                },
+            'frag_received': {
+                'type': 'str',
+                },
+            'sequence_num': {
+                'type': 'str',
+                },
+            'sequence_num_rollover': {
+                'type': 'str',
+                },
+            'packets_err_nh_check': {
+                'type': 'str',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                }
+            }
+        })
     return rv
 
 
@@ -534,7 +955,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
 
@@ -574,8 +995,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -586,8 +1006,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -627,14 +1046,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -649,9 +1061,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -667,15 +1077,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -703,14 +1110,12 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["ipsec-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["ipsec"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["ipsec"]["stats"] if info != "NotFound" else info
@@ -729,6 +1134,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

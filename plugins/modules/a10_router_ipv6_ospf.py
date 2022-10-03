@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf
 description:
@@ -362,9 +361,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["abr_type_option", "area_list", "auto_cost_reference_bandwidth", "bfd_all_interfaces", "default_information", "default_metric", "distribute_internal_list", "distribute_list", "ha_standby_extra_cost", "log_adjacency_changes", "max_concurrent_dd", "passive_interface", "process_id", "redistribute", "router_id", "timers", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "abr_type_option", "area_list", "auto_cost_reference_bandwidth", "bfd_all_interfaces", "default_information", "default_metric", "distribute_internal_list", "distribute_list", "ha_standby_extra_cost", "log_adjacency_changes", "max_concurrent_dd", "passive_interface", "process_id", "redistribute",
+    "router_id", "timers", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -374,33 +375,305 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'process_id': {'type': 'str', 'required': True, },
-        'abr_type_option': {'type': 'str', 'choices': ['cisco', 'ibm', 'standard']},
-        'auto_cost_reference_bandwidth': {'type': 'int', },
-        'bfd_all_interfaces': {'type': 'bool', },
-        'default_metric': {'type': 'int', },
-        'distribute_internal_list': {'type': 'list', 'ntype': {'type': 'str', 'choices': ['lw4o6', 'nat64', 'static-nat', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged']}, 'area_ipv4': {'type': 'str', }, 'area_num': {'type': 'int', }, 'cost': {'type': 'int', }},
-        'distribute_list': {'type': 'dict', 'prefix_list': {'type': 'dict', 'value': {'type': 'str', }, 'direction': {'type': 'str', 'choices': ['in']}}},
-        'log_adjacency_changes': {'type': 'str', 'choices': ['detail', 'disable']},
-        'ha_standby_extra_cost': {'type': 'list', 'extra_cost': {'type': 'int', }, 'group': {'type': 'int', }},
-        'max_concurrent_dd': {'type': 'int', },
-        'passive_interface': {'type': 'dict', 'loopback_cfg': {'type': 'list', 'loopback': {'type': 'str', }}, 'trunk_cfg': {'type': 'list', 'trunk': {'type': 'str', }}, 've_cfg': {'type': 'list', 've': {'type': 'str', }}, 'tunnel_cfg': {'type': 'list', 'tunnel': {'type': 'str', }}, 'eth_cfg': {'type': 'list', 'ethernet': {'type': 'str', }}},
-        'router_id': {'type': 'str', },
-        'timers': {'type': 'dict', 'spf': {'type': 'dict', 'exp': {'type': 'dict', 'min_delay': {'type': 'int', }, 'max_delay': {'type': 'int', }}}},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'default_information': {'type': 'dict', 'originate': {'type': 'bool', }, 'always': {'type': 'bool', }, 'metric': {'type': 'int', }, 'metric_type': {'type': 'int', }, 'route_map': {'type': 'str', }, 'uuid': {'type': 'str', }},
-        'area_list': {'type': 'list', 'area_ipv4': {'type': 'str', 'required': True, }, 'area_num': {'type': 'int', 'required': True, }, 'default_cost': {'type': 'int', }, 'range_list': {'type': 'list', 'value': {'type': 'str', }, 'option': {'type': 'str', 'choices': ['advertise', 'not-advertise']}}, 'stub': {'type': 'bool', }, 'no_summary': {'type': 'bool', }, 'virtual_link_list': {'type': 'list', 'value': {'type': 'str', }, 'dead_interval': {'type': 'int', }, 'bfd': {'type': 'bool', }, 'hello_interval': {'type': 'int', }, 'retransmit_interval': {'type': 'int', }, 'transmit_delay': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'uuid': {'type': 'str', }},
-        'redistribute': {'type': 'dict', 'redist_list': {'type': 'list', 'ntype': {'type': 'str', 'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis', 'rip', 'static']}, 'metric': {'type': 'int', }, 'metric_type': {'type': 'str', 'choices': ['1', '2']}, 'route_map': {'type': 'str', }}, 'ospf_list': {'type': 'list', 'ospf': {'type': 'bool', }, 'process_id': {'type': 'str', }, 'metric_ospf': {'type': 'int', }, 'metric_type_ospf': {'type': 'str', 'choices': ['1', '2']}, 'route_map_ospf': {'type': 'str', }}, 'ip_nat': {'type': 'bool', }, 'metric_ip_nat': {'type': 'int', }, 'metric_type_ip_nat': {'type': 'str', 'choices': ['1', '2']}, 'route_map_ip_nat': {'type': 'str', }, 'ip_nat_floating_list': {'type': 'list', 'ip_nat_prefix': {'type': 'str', }, 'ip_nat_floating_IP_forward': {'type': 'str', }}, 'vip_list': {'type': 'list', 'type_vip': {'type': 'str', 'choices': ['only-flagged', 'only-not-flagged']}, 'metric_vip': {'type': 'int', }, 'metric_type_vip': {'type': 'str', 'choices': ['1', '2']}, 'route_map_vip': {'type': 'str', }}, 'vip_floating_list': {'type': 'list', 'vip_address': {'type': 'str', }, 'vip_floating_IP_forward': {'type': 'str', }}, 'uuid': {'type': 'str', }}
-    })
+    rv.update({
+        'process_id': {
+            'type': 'str',
+            'required': True,
+            },
+        'abr_type_option': {
+            'type': 'str',
+            'choices': ['cisco', 'ibm', 'standard']
+            },
+        'auto_cost_reference_bandwidth': {
+            'type': 'int',
+            },
+        'bfd_all_interfaces': {
+            'type': 'bool',
+            },
+        'default_metric': {
+            'type': 'int',
+            },
+        'distribute_internal_list': {
+            'type': 'list',
+            'ntype': {
+                'type': 'str',
+                'choices': ['lw4o6', 'nat64', 'static-nat', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged']
+                },
+            'area_ipv4': {
+                'type': 'str',
+                },
+            'area_num': {
+                'type': 'int',
+                },
+            'cost': {
+                'type': 'int',
+                }
+            },
+        'distribute_list': {
+            'type': 'dict',
+            'prefix_list': {
+                'type': 'dict',
+                'value': {
+                    'type': 'str',
+                    },
+                'direction': {
+                    'type': 'str',
+                    'choices': ['in']
+                    }
+                }
+            },
+        'log_adjacency_changes': {
+            'type': 'str',
+            'choices': ['detail', 'disable']
+            },
+        'ha_standby_extra_cost': {
+            'type': 'list',
+            'extra_cost': {
+                'type': 'int',
+                },
+            'group': {
+                'type': 'int',
+                }
+            },
+        'max_concurrent_dd': {
+            'type': 'int',
+            },
+        'passive_interface': {
+            'type': 'dict',
+            'loopback_cfg': {
+                'type': 'list',
+                'loopback': {
+                    'type': 'str',
+                    }
+                },
+            'trunk_cfg': {
+                'type': 'list',
+                'trunk': {
+                    'type': 'str',
+                    }
+                },
+            've_cfg': {
+                'type': 'list',
+                've': {
+                    'type': 'str',
+                    }
+                },
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel': {
+                    'type': 'str',
+                    }
+                },
+            'eth_cfg': {
+                'type': 'list',
+                'ethernet': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'router_id': {
+            'type': 'str',
+            },
+        'timers': {
+            'type': 'dict',
+            'spf': {
+                'type': 'dict',
+                'exp': {
+                    'type': 'dict',
+                    'min_delay': {
+                        'type': 'int',
+                        },
+                    'max_delay': {
+                        'type': 'int',
+                        }
+                    }
+                }
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'default_information': {
+            'type': 'dict',
+            'originate': {
+                'type': 'bool',
+                },
+            'always': {
+                'type': 'bool',
+                },
+            'metric': {
+                'type': 'int',
+                },
+            'metric_type': {
+                'type': 'int',
+                },
+            'route_map': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'area_list': {
+            'type': 'list',
+            'area_ipv4': {
+                'type': 'str',
+                'required': True,
+                },
+            'area_num': {
+                'type': 'int',
+                'required': True,
+                },
+            'default_cost': {
+                'type': 'int',
+                },
+            'range_list': {
+                'type': 'list',
+                'value': {
+                    'type': 'str',
+                    },
+                'option': {
+                    'type': 'str',
+                    'choices': ['advertise', 'not-advertise']
+                    }
+                },
+            'stub': {
+                'type': 'bool',
+                },
+            'no_summary': {
+                'type': 'bool',
+                },
+            'virtual_link_list': {
+                'type': 'list',
+                'value': {
+                    'type': 'str',
+                    },
+                'dead_interval': {
+                    'type': 'int',
+                    },
+                'bfd': {
+                    'type': 'bool',
+                    },
+                'hello_interval': {
+                    'type': 'int',
+                    },
+                'retransmit_interval': {
+                    'type': 'int',
+                    },
+                'transmit_delay': {
+                    'type': 'int',
+                    },
+                'instance_id': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis', 'rip', 'static']
+                    },
+                'metric': {
+                    'type': 'int',
+                    },
+                'metric_type': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                    },
+                'route_map': {
+                    'type': 'str',
+                    }
+                },
+            'ospf_list': {
+                'type': 'list',
+                'ospf': {
+                    'type': 'bool',
+                    },
+                'process_id': {
+                    'type': 'str',
+                    },
+                'metric_ospf': {
+                    'type': 'int',
+                    },
+                'metric_type_ospf': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                    },
+                'route_map_ospf': {
+                    'type': 'str',
+                    }
+                },
+            'ip_nat': {
+                'type': 'bool',
+                },
+            'metric_ip_nat': {
+                'type': 'int',
+                },
+            'metric_type_ip_nat': {
+                'type': 'str',
+                'choices': ['1', '2']
+                },
+            'route_map_ip_nat': {
+                'type': 'str',
+                },
+            'ip_nat_floating_list': {
+                'type': 'list',
+                'ip_nat_prefix': {
+                    'type': 'str',
+                    },
+                'ip_nat_floating_IP_forward': {
+                    'type': 'str',
+                    }
+                },
+            'vip_list': {
+                'type': 'list',
+                'type_vip': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                    },
+                'metric_vip': {
+                    'type': 'int',
+                    },
+                'metric_type_vip': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                    },
+                'route_map_vip': {
+                    'type': 'str',
+                    }
+                },
+            'vip_floating_list': {
+                'type': 'list',
+                'vip_address': {
+                    'type': 'str',
+                    },
+                'vip_floating_IP_forward': {
+                    'type': 'str',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -411,7 +684,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["process_id"]):
-        f_dict["process_id"] = module.params["process_id"].replace("/","%2F")
+        f_dict["process_id"] = module.params["process_id"].replace("/", "%2F")
     else:
         f_dict["process_id"] = module.params["process_id"]
 
@@ -451,8 +724,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -463,8 +735,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -504,14 +775,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -526,9 +790,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -544,15 +806,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -594,6 +853,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_vrrp_a_vrid_blade_parameters
 description:
@@ -163,7 +162,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["fail_over_policy_template", "priority", "tracking_options", "uuid", ]
 
@@ -175,23 +173,162 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'priority': {'type': 'int', },
-        'fail_over_policy_template': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'tracking_options': {'type': 'dict', 'interface': {'type': 'list', 'ethernet': {'type': 'str', }, 'priority_cost': {'type': 'int', }}, 'route': {'type': 'dict', 'ip_destination_cfg': {'type': 'list', 'ip_destination': {'type': 'str', }, 'mask': {'type': 'str', }, 'priority_cost': {'type': 'int', }, 'gateway': {'type': 'str', }, 'distance': {'type': 'int', }, 'protocol': {'type': 'str', 'choices': ['any', 'static', 'dynamic']}}, 'ipv6_destination_cfg': {'type': 'list', 'ipv6_destination': {'type': 'str', }, 'priority_cost': {'type': 'int', }, 'gatewayv6': {'type': 'str', }, 'distance': {'type': 'int', }, 'protocol': {'type': 'str', 'choices': ['any', 'static', 'dynamic']}}}, 'trunk_cfg': {'type': 'list', 'trunk': {'type': 'int', }, 'priority_cost': {'type': 'int', }, 'per_port_pri': {'type': 'int', }}, 'bgp': {'type': 'dict', 'bgp_ipv4_address_cfg': {'type': 'list', 'bgp_ipv4_address': {'type': 'str', }, 'priority_cost': {'type': 'int', }}, 'bgp_ipv6_address_cfg': {'type': 'list', 'bgp_ipv6_address': {'type': 'str', }, 'priority_cost': {'type': 'int', }}}, 'vlan_cfg': {'type': 'list', 'vlan': {'type': 'int', }, 'timeout': {'type': 'int', }, 'priority_cost': {'type': 'int', }}, 'uuid': {'type': 'str', }, 'gateway': {'type': 'dict', 'ipv4_gateway_list': {'type': 'list', 'ip_address': {'type': 'str', 'required': True, }, 'priority_cost': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'ipv6_gateway_list': {'type': 'list', 'ipv6_address': {'type': 'str', 'required': True, }, 'priority_cost': {'type': 'int', }, 'uuid': {'type': 'str', }}}}
-    })
+    rv.update({
+        'priority': {
+            'type': 'int',
+            },
+        'fail_over_policy_template': {
+            'type': 'str',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'tracking_options': {
+            'type': 'dict',
+            'interface': {
+                'type': 'list',
+                'ethernet': {
+                    'type': 'str',
+                    },
+                'priority_cost': {
+                    'type': 'int',
+                    }
+                },
+            'route': {
+                'type': 'dict',
+                'ip_destination_cfg': {
+                    'type': 'list',
+                    'ip_destination': {
+                        'type': 'str',
+                        },
+                    'mask': {
+                        'type': 'str',
+                        },
+                    'priority_cost': {
+                        'type': 'int',
+                        },
+                    'gateway': {
+                        'type': 'str',
+                        },
+                    'distance': {
+                        'type': 'int',
+                        },
+                    'protocol': {
+                        'type': 'str',
+                        'choices': ['any', 'static', 'dynamic']
+                        }
+                    },
+                'ipv6_destination_cfg': {
+                    'type': 'list',
+                    'ipv6_destination': {
+                        'type': 'str',
+                        },
+                    'priority_cost': {
+                        'type': 'int',
+                        },
+                    'gatewayv6': {
+                        'type': 'str',
+                        },
+                    'distance': {
+                        'type': 'int',
+                        },
+                    'protocol': {
+                        'type': 'str',
+                        'choices': ['any', 'static', 'dynamic']
+                        }
+                    }
+                },
+            'trunk_cfg': {
+                'type': 'list',
+                'trunk': {
+                    'type': 'int',
+                    },
+                'priority_cost': {
+                    'type': 'int',
+                    },
+                'per_port_pri': {
+                    'type': 'int',
+                    }
+                },
+            'bgp': {
+                'type': 'dict',
+                'bgp_ipv4_address_cfg': {
+                    'type': 'list',
+                    'bgp_ipv4_address': {
+                        'type': 'str',
+                        },
+                    'priority_cost': {
+                        'type': 'int',
+                        }
+                    },
+                'bgp_ipv6_address_cfg': {
+                    'type': 'list',
+                    'bgp_ipv6_address': {
+                        'type': 'str',
+                        },
+                    'priority_cost': {
+                        'type': 'int',
+                        }
+                    }
+                },
+            'vlan_cfg': {
+                'type': 'list',
+                'vlan': {
+                    'type': 'int',
+                    },
+                'timeout': {
+                    'type': 'int',
+                    },
+                'priority_cost': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'gateway': {
+                'type': 'dict',
+                'ipv4_gateway_list': {
+                    'type': 'list',
+                    'ip_address': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'priority_cost': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'ipv6_gateway_list': {
+                    'type': 'list',
+                    'ipv6_address': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'priority_cost': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                }
+            }
+        })
     # Parent keys
-    rv.update(dict(
-        vrid_val=dict(type='str', required=True),
-    ))
+    rv.update(dict(vrid_val=dict(type='str', required=True), ))
     return rv
 
 
@@ -202,7 +339,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["vrid_val"]:
-        f_dict["vrid_val"] = module.params["vrid_val"].replace("/","%2F")
+        f_dict["vrid_val"] = module.params["vrid_val"].replace("/", "%2F")
     else:
         f_dict["vrid_val"] = module.params["vrid_val"]
 
@@ -242,8 +379,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -254,8 +390,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -295,14 +430,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -317,9 +445,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -335,15 +461,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -385,6 +508,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

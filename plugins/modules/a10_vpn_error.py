@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_vpn_error
 description:
@@ -272,7 +271,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["stats", "uuid", ]
 
@@ -284,17 +282,138 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'stats': {'type': 'dict', 'bad_opcode': {'type': 'str', }, 'bad_sg_write_len': {'type': 'str', }, 'bad_len': {'type': 'str', }, 'bad_ipsec_protocol': {'type': 'str', }, 'bad_ipsec_auth': {'type': 'str', }, 'bad_ipsec_padding': {'type': 'str', }, 'bad_ip_version': {'type': 'str', }, 'bad_auth_type': {'type': 'str', }, 'bad_encrypt_type': {'type': 'str', }, 'bad_ipsec_spi': {'type': 'str', }, 'bad_checksum': {'type': 'str', }, 'bad_ipsec_context': {'type': 'str', }, 'bad_ipsec_context_direction': {'type': 'str', }, 'bad_ipsec_context_flag_mismatch': {'type': 'str', }, 'ipcomp_payload': {'type': 'str', }, 'bad_selector_match': {'type': 'str', }, 'bad_fragment_size': {'type': 'str', }, 'bad_inline_data': {'type': 'str', }, 'bad_frag_size_configuration': {'type': 'str', }, 'dummy_payload': {'type': 'str', }, 'bad_ip_payload_type': {'type': 'str', }, 'bad_min_frag_size_auth_sha384_512': {'type': 'str', }, 'bad_esp_next_header': {'type': 'str', }, 'bad_gre_header': {'type': 'str', }, 'bad_gre_protocol': {'type': 'str', }, 'ipv6_extension_headers_too_big': {'type': 'str', }, 'ipv6_hop_by_hop_error': {'type': 'str', }, 'error_ipv6_decrypt_rh_segs_left_error': {'type': 'str', }, 'ipv6_rh_length_error': {'type': 'str', }, 'ipv6_outbound_rh_copy_addr_error': {'type': 'str', }, 'error_IPv6_extension_header_bad': {'type': 'str', }, 'bad_encrypt_type_ctr_gcm': {'type': 'str', }, 'ah_not_supported_with_gcm_gmac_sha2': {'type': 'str', }, 'tfc_padding_with_prefrag_not_supported': {'type': 'str', }, 'bad_srtp_auth_tag': {'type': 'str', }, 'bad_ipcomp_configuration': {'type': 'str', }, 'dsiv_incorrect_param': {'type': 'str', }, 'bad_ipsec_unknown': {'type': 'str', }}
-    })
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'stats': {
+            'type': 'dict',
+            'bad_opcode': {
+                'type': 'str',
+                },
+            'bad_sg_write_len': {
+                'type': 'str',
+                },
+            'bad_len': {
+                'type': 'str',
+                },
+            'bad_ipsec_protocol': {
+                'type': 'str',
+                },
+            'bad_ipsec_auth': {
+                'type': 'str',
+                },
+            'bad_ipsec_padding': {
+                'type': 'str',
+                },
+            'bad_ip_version': {
+                'type': 'str',
+                },
+            'bad_auth_type': {
+                'type': 'str',
+                },
+            'bad_encrypt_type': {
+                'type': 'str',
+                },
+            'bad_ipsec_spi': {
+                'type': 'str',
+                },
+            'bad_checksum': {
+                'type': 'str',
+                },
+            'bad_ipsec_context': {
+                'type': 'str',
+                },
+            'bad_ipsec_context_direction': {
+                'type': 'str',
+                },
+            'bad_ipsec_context_flag_mismatch': {
+                'type': 'str',
+                },
+            'ipcomp_payload': {
+                'type': 'str',
+                },
+            'bad_selector_match': {
+                'type': 'str',
+                },
+            'bad_fragment_size': {
+                'type': 'str',
+                },
+            'bad_inline_data': {
+                'type': 'str',
+                },
+            'bad_frag_size_configuration': {
+                'type': 'str',
+                },
+            'dummy_payload': {
+                'type': 'str',
+                },
+            'bad_ip_payload_type': {
+                'type': 'str',
+                },
+            'bad_min_frag_size_auth_sha384_512': {
+                'type': 'str',
+                },
+            'bad_esp_next_header': {
+                'type': 'str',
+                },
+            'bad_gre_header': {
+                'type': 'str',
+                },
+            'bad_gre_protocol': {
+                'type': 'str',
+                },
+            'ipv6_extension_headers_too_big': {
+                'type': 'str',
+                },
+            'ipv6_hop_by_hop_error': {
+                'type': 'str',
+                },
+            'error_ipv6_decrypt_rh_segs_left_error': {
+                'type': 'str',
+                },
+            'ipv6_rh_length_error': {
+                'type': 'str',
+                },
+            'ipv6_outbound_rh_copy_addr_error': {
+                'type': 'str',
+                },
+            'error_IPv6_extension_header_bad': {
+                'type': 'str',
+                },
+            'bad_encrypt_type_ctr_gcm': {
+                'type': 'str',
+                },
+            'ah_not_supported_with_gcm_gmac_sha2': {
+                'type': 'str',
+                },
+            'tfc_padding_with_prefrag_not_supported': {
+                'type': 'str',
+                },
+            'bad_srtp_auth_tag': {
+                'type': 'str',
+                },
+            'bad_ipcomp_configuration': {
+                'type': 'str',
+                },
+            'dsiv_incorrect_param': {
+                'type': 'str',
+                },
+            'bad_ipsec_unknown': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -327,8 +446,7 @@ def report_changes(module, result, existing_config):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -339,8 +457,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -380,14 +497,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -402,9 +512,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -420,15 +528,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -456,8 +561,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["error-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["error"]["stats"] if info != "NotFound" else info
@@ -476,6 +580,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_template_limit_policy
 description:
@@ -128,6 +127,44 @@ options:
         - "Prefix length"
         type: int
         required: False
+    burstsize_downlink_pps:
+        description:
+        - "Downlink PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+        type: int
+        required: False
+    burstsize_uplink_pps:
+        description:
+        - "Uplink PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+        type: int
+        required: False
+    burstsize_total_pps:
+        description:
+        - "Total PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+        type: int
+        required: False
+    burstsize_downlink_throughput:
+        description:
+        - "Downlink Throughput Token Bucket Size (Must Exceed Configured Rate) (In Mega
+          Bits per second)"
+        type: int
+        required: False
+    burstsize_uplink_throughput:
+        description:
+        - "Uplink Throughput Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits
+          per second)"
+        type: int
+        required: False
+    burstsize_total_throughput:
+        description:
+        - "Total Throughput Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits
+          per second)"
+        type: int
+        required: False
+    burstsize_cps:
+        description:
+        - "CPS Token Bucket Size (Must Exceed Configured Rate) (In Connections per second)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -191,9 +228,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ddos_protection_factor", "downlink_pps", "downlink_throughput", "limit_concurrent_sessions", "limit_cps", "limit_rate", "limit_scope", "log", "policy_number", "prefix_length", "total_pps", "total_throughput", "uplink_pps", "uplink_throughput", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "burstsize_cps", "burstsize_downlink_pps", "burstsize_downlink_throughput", "burstsize_total_pps", "burstsize_total_throughput", "burstsize_uplink_pps", "burstsize_uplink_throughput", "ddos_protection_factor", "downlink_pps", "downlink_throughput", "limit_concurrent_sessions", "limit_cps",
+    "limit_rate", "limit_scope", "log", "policy_number", "prefix_length", "total_pps", "total_throughput", "uplink_pps", "uplink_throughput", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -203,31 +242,90 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'policy_number': {'type': 'int', 'required': True, },
-        'limit_rate': {'type': 'str', 'choices': ['limit-pps', 'limit-throughput']},
-        'uplink_pps': {'type': 'int', },
-        'downlink_pps': {'type': 'int', },
-        'ddos_protection_factor': {'type': 'int', },
-        'total_pps': {'type': 'int', },
-        'uplink_throughput': {'type': 'int', },
-        'downlink_throughput': {'type': 'int', },
-        'total_throughput': {'type': 'int', },
-        'limit_cps': {'type': 'int', },
-        'limit_concurrent_sessions': {'type': 'int', },
-        'log': {'type': 'bool', },
-        'limit_scope': {'type': 'str', 'choices': ['aggregate', 'subscriber-ip', 'subscriber-prefix']},
-        'prefix_length': {'type': 'int', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', }
-    })
+    rv.update({
+        'policy_number': {
+            'type': 'int',
+            'required': True,
+            },
+        'limit_rate': {
+            'type': 'str',
+            'choices': ['limit-pps', 'limit-throughput']
+            },
+        'uplink_pps': {
+            'type': 'int',
+            },
+        'downlink_pps': {
+            'type': 'int',
+            },
+        'ddos_protection_factor': {
+            'type': 'int',
+            },
+        'total_pps': {
+            'type': 'int',
+            },
+        'uplink_throughput': {
+            'type': 'int',
+            },
+        'downlink_throughput': {
+            'type': 'int',
+            },
+        'total_throughput': {
+            'type': 'int',
+            },
+        'limit_cps': {
+            'type': 'int',
+            },
+        'limit_concurrent_sessions': {
+            'type': 'int',
+            },
+        'log': {
+            'type': 'bool',
+            },
+        'limit_scope': {
+            'type': 'str',
+            'choices': ['aggregate', 'subscriber-ip', 'subscriber-prefix']
+            },
+        'prefix_length': {
+            'type': 'int',
+            },
+        'burstsize_downlink_pps': {
+            'type': 'int',
+            },
+        'burstsize_uplink_pps': {
+            'type': 'int',
+            },
+        'burstsize_total_pps': {
+            'type': 'int',
+            },
+        'burstsize_downlink_throughput': {
+            'type': 'int',
+            },
+        'burstsize_uplink_throughput': {
+            'type': 'int',
+            },
+        'burstsize_total_throughput': {
+            'type': 'int',
+            },
+        'burstsize_cps': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
@@ -238,7 +336,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["policy_number"]):
-        f_dict["policy_number"] = module.params["policy_number"].replace("/","%2F")
+        f_dict["policy_number"] = module.params["policy_number"].replace("/", "%2F")
     else:
         f_dict["policy_number"] = module.params["policy_number"]
 
@@ -278,8 +376,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -290,8 +387,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -331,14 +427,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -353,9 +442,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -371,15 +458,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -421,6 +505,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_vrrp_a_state
 description:
@@ -935,7 +934,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
@@ -947,18 +945,539 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'sync_pkt_tx_counter', 'sync_pkt_rcv_counter', 'sync_rx_create_counter', 'sync_rx_del_counter', 'sync_rx_update_age_counter', 'sync_tx_create_counter', 'sync_tx_del_counter', 'sync_tx_update_age_counter', 'sync_rx_persist_create_counter', 'sync_rx_persist_del_counter', 'sync_rx_persist_update_age_counter', 'sync_tx_persist_create_counter', 'sync_tx_persist_del_counter', 'sync_tx_persist_update_age_counter', 'query_pkt_tx_counter', 'query_pkt_rcv_counter', 'sync_tx_smp_radius_table_counter', 'sync_rx_smp_radius_table_counter', 'query_tx_max_packed', 'query_tx_min_packed', 'query_pkt_invalid_idx_counter', 'query_tx_get_buff_failed', 'query_rx_zero_info_counter', 'query_rx_full_info_counter', 'query_rx_unk_counter', 'sync_pkt_invalid_idx_counter', 'sync_tx_get_buff_failed', 'sync_tx_total_info_counter', 'sync_tx_create_ext_bit_counter', 'sync_tx_update_seqnos_counter', 'sync_tx_min_packed', 'sync_tx_max_packed', 'sync_rx_len_invalid', 'sync_persist_rx_len_invalid', 'sync_persist_rx_proto_not_supported', 'sync_persist_rx_type_invalid', 'sync_persist_rx_cannot_process_mandatory', 'sync_persist_rx_ext_bit_process_error', 'sync_persist_rx_no_such_vport', 'sync_persist_rx_vporttype_not_supported', 'sync_persist_rx_no_such_rport', 'sync_persist_rx_no_such_sg_group', 'sync_persist_rx_no_sg_group_info', 'sync_persist_rx_conn_get_failed', 'sync_rx_no_such_vport', 'sync_rx_no_such_rport', 'sync_rx_cannot_process_mandatory', 'sync_rx_ext_bit_process_error', 'sync_rx_create_ext_bit_counter', 'sync_rx_conn_exists', 'sync_rx_conn_get_failed', 'sync_rx_proto_not_supported', 'sync_rx_no_dst_for_vport_inline', 'sync_rx_no_such_nat_pool', 'sync_rx_no_such_sg_node', 'sync_rx_del_no_such_session', 'sync_rx_type_invalid', 'sync_rx_zero_info_counter', 'sync_rx_dcmsg_counter', 'sync_rx_total_info_counter', 'sync_rx_update_seqnos_counter', 'sync_rx_unk_counter', 'sync_rx_apptype_not_supported', 'sync_query_dcmsg_counter', 'sync_get_buff_failed_rt', 'sync_get_buff_failed_port', 'sync_rx_lsn_create_sby', 'sync_rx_nat_create_sby', 'sync_rx_nat_alloc_sby', 'sync_rx_insert_tuple', 'sync_rx_sfw', 'sync_rx_create_static_sby', 'sync_rx_ext_pptp', 'sync_rx_ext_rtsp', 'sync_rx_reserve_ha', 'sync_rx_seq_deltas', 'sync_rx_ftp_control', 'sync_rx_ext_lsn_acl', 'sync_rx_ext_lsn_ac_idle_timeout', 'sync_rx_ext_sip_alg', 'sync_rx_ext_h323_alg', 'sync_rx_ext_nat_mac', 'sync_tx_lsn_fullcone', 'sync_rx_lsn_fullcone', 'sync_err_lsn_fullcone', 'sync_tx_update_sctp_conn_addr', 'sync_rx_update_sctp_conn_addr', 'sync_rx_ext_nat_alg_tcp_info', 'sync_rx_ext_dcfw_rule_id', 'sync_rx_ext_dcfw_log', 'sync_rx_estab_counter', 'sync_tx_estab_counter', 'sync_rx_zone_failure_counter', 'sync_rx_ext_fw_http_logging', 'sync_rx_ext_dcfw_rule_idle_timeout', 'sync_rx_ext_fw_gtp_info', 'sync_rx_not_expect_sync_pkt', 'sync_rx_ext_fw_apps', 'sync_tx_mon_entity', 'sync_rx_mon_entity', 'sync_rx_ext_fw_gtp_log_info', 'sync_rx_ext_fw_gtp_u_info', 'sync_rx_ext_fw_gtp_ext_info', 'sync_rx_ext_fw_gtp_log_ext_info', 'sync_rx_ddos_drop_counter', 'sync_rx_invalid_sync_packet_counter', 'sync_pkt_empty_buff_counter', 'sync_pkt_no_sending_vgrp_counter', 'sync_pkt_no_receiving_vgrp_counter', 'query_pkt_no_receiving_ip_counter', 'sync_pkt_failed_buff_copy_counter', 'sync_rx_bad_protocol_counter', 'sync_rx_no_vgrp_counter', 'sync_rx_by_inactive_peer_counter', 'sync_rx_table_entry_update_counter', 'sync_rx_table_entry_create_counter']}, 'counters2': {'type': 'str', 'choices': ['sync_rx_table_entry_del_counter', 'sync_rx_aflex_update_counter', 'sync_rx_aflex_create_counter', 'sync_rx_aflex_del_counter', 'sync_rx_aflex_frag_counter', 'query_rx_invalid_partition_counter', 'query_rx_invalid_ha_group_counter', 'query_rx_invalid_sync_version_counter', 'query_rx_invalid_msg_dir_counter', 'sync_rx_out_of_order_pkt_counter', 'sync_rx_unreached_pkt_counter', 'sync_rx_ext_fw_gtp_echo_ext_info', 'sync_rx_smp_create_counter', 'sync_rx_smp_delete_counter', 'sync_rx_smp_update_counter', 'sync_tx_smp_create_counter', 'sync_tx_smp_delete_counter', 'sync_tx_smp_update_counter', 'sync_rx_smp_clear_counter', 'sync_tx_smp_clear_counter', 'sync_rx_ext_fw_so_shadow_ext_info', 'sync_tx_aflex_table_entry_add_counter', 'sync_rx_aflex_table_entry_add_counter', 'sync_tx_aflex_table_entry_append_counter', 'sync_rx_aflex_table_entry_append_counter', 'sync_tx_aflex_table_entry_delete_counter', 'sync_rx_aflex_table_entry_delete_counter', 'sync_tx_aflex_table_entry_incr_counter', 'sync_rx_aflex_table_entry_incr_counter', 'sync_tx_aflex_table_entry_lookup_counter', 'sync_rx_aflex_table_entry_lookup_counter', 'sync_tx_aflex_table_entry_lifetime_counter', 'sync_rx_aflex_table_entry_lifetime_counter', 'sync_tx_aflex_table_entry_replace_counter', 'sync_rx_aflex_table_entry_replace_counter', 'sync_tx_aflex_table_entry_set_counter', 'sync_rx_aflex_table_entry_set_counter', 'sync_tx_aflex_table_entry_timeout_counter', 'sync_rx_aflex_table_entry_timeout_counter', 'sync_tx_aflex_table_entry_fastsync_counter', 'sync_rx_aflex_table_entry_fastsync_counter', 'sync_tx_aflex_table_entry_error_counter', 'sync_tx_aflex_table_entry_not_eligible_counter', 'sync_rx_ext_fw_limit_entry']}},
-        'stats': {'type': 'dict', 'sync_pkt_tx_counter': {'type': 'str', }, 'sync_pkt_rcv_counter': {'type': 'str', }, 'sync_rx_create_counter': {'type': 'str', }, 'sync_rx_del_counter': {'type': 'str', }, 'sync_rx_update_age_counter': {'type': 'str', }, 'sync_tx_create_counter': {'type': 'str', }, 'sync_tx_del_counter': {'type': 'str', }, 'sync_tx_update_age_counter': {'type': 'str', }, 'sync_rx_persist_create_counter': {'type': 'str', }, 'sync_rx_persist_del_counter': {'type': 'str', }, 'sync_rx_persist_update_age_counter': {'type': 'str', }, 'sync_tx_persist_create_counter': {'type': 'str', }, 'sync_tx_persist_del_counter': {'type': 'str', }, 'sync_tx_persist_update_age_counter': {'type': 'str', }, 'query_pkt_tx_counter': {'type': 'str', }, 'query_pkt_rcv_counter': {'type': 'str', }, 'sync_tx_smp_radius_table_counter': {'type': 'str', }, 'sync_rx_smp_radius_table_counter': {'type': 'str', }, 'query_tx_max_packed': {'type': 'str', }, 'query_tx_min_packed': {'type': 'str', }, 'query_pkt_invalid_idx_counter': {'type': 'str', }, 'query_tx_get_buff_failed': {'type': 'str', }, 'query_rx_zero_info_counter': {'type': 'str', }, 'query_rx_full_info_counter': {'type': 'str', }, 'query_rx_unk_counter': {'type': 'str', }, 'sync_pkt_invalid_idx_counter': {'type': 'str', }, 'sync_tx_get_buff_failed': {'type': 'str', }, 'sync_tx_total_info_counter': {'type': 'str', }, 'sync_tx_create_ext_bit_counter': {'type': 'str', }, 'sync_tx_update_seqnos_counter': {'type': 'str', }, 'sync_tx_min_packed': {'type': 'str', }, 'sync_tx_max_packed': {'type': 'str', }, 'sync_rx_len_invalid': {'type': 'str', }, 'sync_persist_rx_len_invalid': {'type': 'str', }, 'sync_persist_rx_proto_not_supported': {'type': 'str', }, 'sync_persist_rx_type_invalid': {'type': 'str', }, 'sync_persist_rx_cannot_process_mandatory': {'type': 'str', }, 'sync_persist_rx_ext_bit_process_error': {'type': 'str', }, 'sync_persist_rx_no_such_vport': {'type': 'str', }, 'sync_persist_rx_vporttype_not_supported': {'type': 'str', }, 'sync_persist_rx_no_such_rport': {'type': 'str', }, 'sync_persist_rx_no_such_sg_group': {'type': 'str', }, 'sync_persist_rx_no_sg_group_info': {'type': 'str', }, 'sync_persist_rx_conn_get_failed': {'type': 'str', }, 'sync_rx_no_such_vport': {'type': 'str', }, 'sync_rx_no_such_rport': {'type': 'str', }, 'sync_rx_cannot_process_mandatory': {'type': 'str', }, 'sync_rx_ext_bit_process_error': {'type': 'str', }, 'sync_rx_create_ext_bit_counter': {'type': 'str', }, 'sync_rx_conn_exists': {'type': 'str', }, 'sync_rx_conn_get_failed': {'type': 'str', }, 'sync_rx_proto_not_supported': {'type': 'str', }, 'sync_rx_no_dst_for_vport_inline': {'type': 'str', }, 'sync_rx_no_such_nat_pool': {'type': 'str', }, 'sync_rx_no_such_sg_node': {'type': 'str', }, 'sync_rx_del_no_such_session': {'type': 'str', }, 'sync_rx_type_invalid': {'type': 'str', }, 'sync_rx_zero_info_counter': {'type': 'str', }, 'sync_rx_dcmsg_counter': {'type': 'str', }, 'sync_rx_total_info_counter': {'type': 'str', }, 'sync_rx_update_seqnos_counter': {'type': 'str', }, 'sync_rx_unk_counter': {'type': 'str', }, 'sync_rx_apptype_not_supported': {'type': 'str', }, 'sync_query_dcmsg_counter': {'type': 'str', }, 'sync_get_buff_failed_rt': {'type': 'str', }, 'sync_get_buff_failed_port': {'type': 'str', }, 'sync_rx_lsn_create_sby': {'type': 'str', }, 'sync_rx_nat_create_sby': {'type': 'str', }, 'sync_rx_nat_alloc_sby': {'type': 'str', }, 'sync_rx_insert_tuple': {'type': 'str', }, 'sync_rx_sfw': {'type': 'str', }, 'sync_rx_create_static_sby': {'type': 'str', }, 'sync_rx_ext_pptp': {'type': 'str', }, 'sync_rx_ext_rtsp': {'type': 'str', }, 'sync_rx_reserve_ha': {'type': 'str', }, 'sync_rx_seq_deltas': {'type': 'str', }, 'sync_rx_ftp_control': {'type': 'str', }, 'sync_rx_ext_lsn_acl': {'type': 'str', }, 'sync_rx_ext_lsn_ac_idle_timeout': {'type': 'str', }, 'sync_rx_ext_sip_alg': {'type': 'str', }, 'sync_rx_ext_h323_alg': {'type': 'str', }, 'sync_rx_ext_nat_mac': {'type': 'str', }, 'sync_tx_lsn_fullcone': {'type': 'str', }, 'sync_rx_lsn_fullcone': {'type': 'str', }, 'sync_err_lsn_fullcone': {'type': 'str', }, 'sync_tx_update_sctp_conn_addr': {'type': 'str', }, 'sync_rx_update_sctp_conn_addr': {'type': 'str', }, 'sync_rx_ext_nat_alg_tcp_info': {'type': 'str', }, 'sync_rx_ext_dcfw_rule_id': {'type': 'str', }, 'sync_rx_ext_dcfw_log': {'type': 'str', }, 'sync_rx_estab_counter': {'type': 'str', }, 'sync_tx_estab_counter': {'type': 'str', }, 'sync_rx_zone_failure_counter': {'type': 'str', }, 'sync_rx_ext_fw_http_logging': {'type': 'str', }, 'sync_rx_ext_dcfw_rule_idle_timeout': {'type': 'str', }, 'sync_rx_ext_fw_gtp_info': {'type': 'str', }, 'sync_rx_not_expect_sync_pkt': {'type': 'str', }, 'sync_rx_ext_fw_apps': {'type': 'str', }, 'sync_tx_mon_entity': {'type': 'str', }, 'sync_rx_mon_entity': {'type': 'str', }, 'sync_rx_ext_fw_gtp_log_info': {'type': 'str', }, 'sync_rx_ext_fw_gtp_u_info': {'type': 'str', }, 'sync_rx_ext_fw_gtp_ext_info': {'type': 'str', }, 'sync_rx_ext_fw_gtp_log_ext_info': {'type': 'str', }, 'sync_rx_ddos_drop_counter': {'type': 'str', }, 'sync_rx_invalid_sync_packet_counter': {'type': 'str', }, 'sync_pkt_empty_buff_counter': {'type': 'str', }, 'sync_pkt_no_sending_vgrp_counter': {'type': 'str', }, 'sync_pkt_no_receiving_vgrp_counter': {'type': 'str', }, 'query_pkt_no_receiving_ip_counter': {'type': 'str', }, 'sync_pkt_failed_buff_copy_counter': {'type': 'str', }, 'sync_rx_bad_protocol_counter': {'type': 'str', }, 'sync_rx_no_vgrp_counter': {'type': 'str', }, 'sync_rx_by_inactive_peer_counter': {'type': 'str', }, 'sync_rx_table_entry_update_counter': {'type': 'str', }, 'sync_rx_table_entry_create_counter': {'type': 'str', }, 'sync_rx_table_entry_del_counter': {'type': 'str', }, 'sync_rx_aflex_update_counter': {'type': 'str', }, 'sync_rx_aflex_create_counter': {'type': 'str', }, 'sync_rx_aflex_del_counter': {'type': 'str', }, 'sync_rx_aflex_frag_counter': {'type': 'str', }, 'query_rx_invalid_partition_counter': {'type': 'str', }, 'query_rx_invalid_ha_group_counter': {'type': 'str', }, 'query_rx_invalid_sync_version_counter': {'type': 'str', }, 'query_rx_invalid_msg_dir_counter': {'type': 'str', }, 'sync_rx_out_of_order_pkt_counter': {'type': 'str', }, 'sync_rx_unreached_pkt_counter': {'type': 'str', }, 'sync_rx_ext_fw_gtp_echo_ext_info': {'type': 'str', }, 'sync_rx_smp_create_counter': {'type': 'str', }, 'sync_rx_smp_delete_counter': {'type': 'str', }, 'sync_rx_smp_update_counter': {'type': 'str', }, 'sync_tx_smp_create_counter': {'type': 'str', }, 'sync_tx_smp_delete_counter': {'type': 'str', }, 'sync_tx_smp_update_counter': {'type': 'str', }, 'sync_rx_smp_clear_counter': {'type': 'str', }, 'sync_tx_smp_clear_counter': {'type': 'str', }, 'sync_rx_ext_fw_so_shadow_ext_info': {'type': 'str', }, 'sync_tx_aflex_table_entry_add_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_add_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_append_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_append_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_delete_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_delete_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_incr_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_incr_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_lookup_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_lookup_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_lifetime_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_lifetime_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_replace_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_replace_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_set_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_set_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_timeout_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_timeout_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_fastsync_counter': {'type': 'str', }, 'sync_rx_aflex_table_entry_fastsync_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_error_counter': {'type': 'str', }, 'sync_tx_aflex_table_entry_not_eligible_counter': {'type': 'str', }, 'sync_rx_ext_fw_limit_entry': {'type': 'str', }}
-    })
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'sync_pkt_tx_counter', 'sync_pkt_rcv_counter', 'sync_rx_create_counter', 'sync_rx_del_counter', 'sync_rx_update_age_counter', 'sync_tx_create_counter', 'sync_tx_del_counter', 'sync_tx_update_age_counter', 'sync_rx_persist_create_counter', 'sync_rx_persist_del_counter',
+                    'sync_rx_persist_update_age_counter', 'sync_tx_persist_create_counter', 'sync_tx_persist_del_counter', 'sync_tx_persist_update_age_counter', 'query_pkt_tx_counter', 'query_pkt_rcv_counter', 'sync_tx_smp_radius_table_counter', 'sync_rx_smp_radius_table_counter',
+                    'query_tx_max_packed', 'query_tx_min_packed', 'query_pkt_invalid_idx_counter', 'query_tx_get_buff_failed', 'query_rx_zero_info_counter', 'query_rx_full_info_counter', 'query_rx_unk_counter', 'sync_pkt_invalid_idx_counter', 'sync_tx_get_buff_failed', 'sync_tx_total_info_counter',
+                    'sync_tx_create_ext_bit_counter', 'sync_tx_update_seqnos_counter', 'sync_tx_min_packed', 'sync_tx_max_packed', 'sync_rx_len_invalid', 'sync_persist_rx_len_invalid', 'sync_persist_rx_proto_not_supported', 'sync_persist_rx_type_invalid', 'sync_persist_rx_cannot_process_mandatory',
+                    'sync_persist_rx_ext_bit_process_error', 'sync_persist_rx_no_such_vport', 'sync_persist_rx_vporttype_not_supported', 'sync_persist_rx_no_such_rport', 'sync_persist_rx_no_such_sg_group', 'sync_persist_rx_no_sg_group_info', 'sync_persist_rx_conn_get_failed',
+                    'sync_rx_no_such_vport', 'sync_rx_no_such_rport', 'sync_rx_cannot_process_mandatory', 'sync_rx_ext_bit_process_error', 'sync_rx_create_ext_bit_counter', 'sync_rx_conn_exists', 'sync_rx_conn_get_failed', 'sync_rx_proto_not_supported', 'sync_rx_no_dst_for_vport_inline',
+                    'sync_rx_no_such_nat_pool', 'sync_rx_no_such_sg_node', 'sync_rx_del_no_such_session', 'sync_rx_type_invalid', 'sync_rx_zero_info_counter', 'sync_rx_dcmsg_counter', 'sync_rx_total_info_counter', 'sync_rx_update_seqnos_counter', 'sync_rx_unk_counter',
+                    'sync_rx_apptype_not_supported', 'sync_query_dcmsg_counter', 'sync_get_buff_failed_rt', 'sync_get_buff_failed_port', 'sync_rx_lsn_create_sby', 'sync_rx_nat_create_sby', 'sync_rx_nat_alloc_sby', 'sync_rx_insert_tuple', 'sync_rx_sfw', 'sync_rx_create_static_sby',
+                    'sync_rx_ext_pptp', 'sync_rx_ext_rtsp', 'sync_rx_reserve_ha', 'sync_rx_seq_deltas', 'sync_rx_ftp_control', 'sync_rx_ext_lsn_acl', 'sync_rx_ext_lsn_ac_idle_timeout', 'sync_rx_ext_sip_alg', 'sync_rx_ext_h323_alg', 'sync_rx_ext_nat_mac', 'sync_tx_lsn_fullcone',
+                    'sync_rx_lsn_fullcone', 'sync_err_lsn_fullcone', 'sync_tx_update_sctp_conn_addr', 'sync_rx_update_sctp_conn_addr', 'sync_rx_ext_nat_alg_tcp_info', 'sync_rx_ext_dcfw_rule_id', 'sync_rx_ext_dcfw_log', 'sync_rx_estab_counter', 'sync_tx_estab_counter', 'sync_rx_zone_failure_counter',
+                    'sync_rx_ext_fw_http_logging', 'sync_rx_ext_dcfw_rule_idle_timeout', 'sync_rx_ext_fw_gtp_info', 'sync_rx_not_expect_sync_pkt', 'sync_rx_ext_fw_apps', 'sync_tx_mon_entity', 'sync_rx_mon_entity', 'sync_rx_ext_fw_gtp_log_info', 'sync_rx_ext_fw_gtp_u_info',
+                    'sync_rx_ext_fw_gtp_ext_info', 'sync_rx_ext_fw_gtp_log_ext_info', 'sync_rx_ddos_drop_counter', 'sync_rx_invalid_sync_packet_counter', 'sync_pkt_empty_buff_counter', 'sync_pkt_no_sending_vgrp_counter', 'sync_pkt_no_receiving_vgrp_counter', 'query_pkt_no_receiving_ip_counter',
+                    'sync_pkt_failed_buff_copy_counter', 'sync_rx_bad_protocol_counter', 'sync_rx_no_vgrp_counter', 'sync_rx_by_inactive_peer_counter', 'sync_rx_table_entry_update_counter', 'sync_rx_table_entry_create_counter'
+                    ]
+                },
+            'counters2': {
+                'type':
+                'str',
+                'choices': [
+                    'sync_rx_table_entry_del_counter', 'sync_rx_aflex_update_counter', 'sync_rx_aflex_create_counter', 'sync_rx_aflex_del_counter', 'sync_rx_aflex_frag_counter', 'query_rx_invalid_partition_counter', 'query_rx_invalid_ha_group_counter', 'query_rx_invalid_sync_version_counter',
+                    'query_rx_invalid_msg_dir_counter', 'sync_rx_out_of_order_pkt_counter', 'sync_rx_unreached_pkt_counter', 'sync_rx_ext_fw_gtp_echo_ext_info', 'sync_rx_smp_create_counter', 'sync_rx_smp_delete_counter', 'sync_rx_smp_update_counter', 'sync_tx_smp_create_counter',
+                    'sync_tx_smp_delete_counter', 'sync_tx_smp_update_counter', 'sync_rx_smp_clear_counter', 'sync_tx_smp_clear_counter', 'sync_rx_ext_fw_so_shadow_ext_info', 'sync_tx_aflex_table_entry_add_counter', 'sync_rx_aflex_table_entry_add_counter', 'sync_tx_aflex_table_entry_append_counter',
+                    'sync_rx_aflex_table_entry_append_counter', 'sync_tx_aflex_table_entry_delete_counter', 'sync_rx_aflex_table_entry_delete_counter', 'sync_tx_aflex_table_entry_incr_counter', 'sync_rx_aflex_table_entry_incr_counter', 'sync_tx_aflex_table_entry_lookup_counter',
+                    'sync_rx_aflex_table_entry_lookup_counter', 'sync_tx_aflex_table_entry_lifetime_counter', 'sync_rx_aflex_table_entry_lifetime_counter', 'sync_tx_aflex_table_entry_replace_counter', 'sync_rx_aflex_table_entry_replace_counter', 'sync_tx_aflex_table_entry_set_counter',
+                    'sync_rx_aflex_table_entry_set_counter', 'sync_tx_aflex_table_entry_timeout_counter', 'sync_rx_aflex_table_entry_timeout_counter', 'sync_tx_aflex_table_entry_fastsync_counter', 'sync_rx_aflex_table_entry_fastsync_counter', 'sync_tx_aflex_table_entry_error_counter',
+                    'sync_tx_aflex_table_entry_not_eligible_counter', 'sync_rx_ext_fw_limit_entry'
+                    ]
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'sync_pkt_tx_counter': {
+                'type': 'str',
+                },
+            'sync_pkt_rcv_counter': {
+                'type': 'str',
+                },
+            'sync_rx_create_counter': {
+                'type': 'str',
+                },
+            'sync_rx_del_counter': {
+                'type': 'str',
+                },
+            'sync_rx_update_age_counter': {
+                'type': 'str',
+                },
+            'sync_tx_create_counter': {
+                'type': 'str',
+                },
+            'sync_tx_del_counter': {
+                'type': 'str',
+                },
+            'sync_tx_update_age_counter': {
+                'type': 'str',
+                },
+            'sync_rx_persist_create_counter': {
+                'type': 'str',
+                },
+            'sync_rx_persist_del_counter': {
+                'type': 'str',
+                },
+            'sync_rx_persist_update_age_counter': {
+                'type': 'str',
+                },
+            'sync_tx_persist_create_counter': {
+                'type': 'str',
+                },
+            'sync_tx_persist_del_counter': {
+                'type': 'str',
+                },
+            'sync_tx_persist_update_age_counter': {
+                'type': 'str',
+                },
+            'query_pkt_tx_counter': {
+                'type': 'str',
+                },
+            'query_pkt_rcv_counter': {
+                'type': 'str',
+                },
+            'sync_tx_smp_radius_table_counter': {
+                'type': 'str',
+                },
+            'sync_rx_smp_radius_table_counter': {
+                'type': 'str',
+                },
+            'query_tx_max_packed': {
+                'type': 'str',
+                },
+            'query_tx_min_packed': {
+                'type': 'str',
+                },
+            'query_pkt_invalid_idx_counter': {
+                'type': 'str',
+                },
+            'query_tx_get_buff_failed': {
+                'type': 'str',
+                },
+            'query_rx_zero_info_counter': {
+                'type': 'str',
+                },
+            'query_rx_full_info_counter': {
+                'type': 'str',
+                },
+            'query_rx_unk_counter': {
+                'type': 'str',
+                },
+            'sync_pkt_invalid_idx_counter': {
+                'type': 'str',
+                },
+            'sync_tx_get_buff_failed': {
+                'type': 'str',
+                },
+            'sync_tx_total_info_counter': {
+                'type': 'str',
+                },
+            'sync_tx_create_ext_bit_counter': {
+                'type': 'str',
+                },
+            'sync_tx_update_seqnos_counter': {
+                'type': 'str',
+                },
+            'sync_tx_min_packed': {
+                'type': 'str',
+                },
+            'sync_tx_max_packed': {
+                'type': 'str',
+                },
+            'sync_rx_len_invalid': {
+                'type': 'str',
+                },
+            'sync_persist_rx_len_invalid': {
+                'type': 'str',
+                },
+            'sync_persist_rx_proto_not_supported': {
+                'type': 'str',
+                },
+            'sync_persist_rx_type_invalid': {
+                'type': 'str',
+                },
+            'sync_persist_rx_cannot_process_mandatory': {
+                'type': 'str',
+                },
+            'sync_persist_rx_ext_bit_process_error': {
+                'type': 'str',
+                },
+            'sync_persist_rx_no_such_vport': {
+                'type': 'str',
+                },
+            'sync_persist_rx_vporttype_not_supported': {
+                'type': 'str',
+                },
+            'sync_persist_rx_no_such_rport': {
+                'type': 'str',
+                },
+            'sync_persist_rx_no_such_sg_group': {
+                'type': 'str',
+                },
+            'sync_persist_rx_no_sg_group_info': {
+                'type': 'str',
+                },
+            'sync_persist_rx_conn_get_failed': {
+                'type': 'str',
+                },
+            'sync_rx_no_such_vport': {
+                'type': 'str',
+                },
+            'sync_rx_no_such_rport': {
+                'type': 'str',
+                },
+            'sync_rx_cannot_process_mandatory': {
+                'type': 'str',
+                },
+            'sync_rx_ext_bit_process_error': {
+                'type': 'str',
+                },
+            'sync_rx_create_ext_bit_counter': {
+                'type': 'str',
+                },
+            'sync_rx_conn_exists': {
+                'type': 'str',
+                },
+            'sync_rx_conn_get_failed': {
+                'type': 'str',
+                },
+            'sync_rx_proto_not_supported': {
+                'type': 'str',
+                },
+            'sync_rx_no_dst_for_vport_inline': {
+                'type': 'str',
+                },
+            'sync_rx_no_such_nat_pool': {
+                'type': 'str',
+                },
+            'sync_rx_no_such_sg_node': {
+                'type': 'str',
+                },
+            'sync_rx_del_no_such_session': {
+                'type': 'str',
+                },
+            'sync_rx_type_invalid': {
+                'type': 'str',
+                },
+            'sync_rx_zero_info_counter': {
+                'type': 'str',
+                },
+            'sync_rx_dcmsg_counter': {
+                'type': 'str',
+                },
+            'sync_rx_total_info_counter': {
+                'type': 'str',
+                },
+            'sync_rx_update_seqnos_counter': {
+                'type': 'str',
+                },
+            'sync_rx_unk_counter': {
+                'type': 'str',
+                },
+            'sync_rx_apptype_not_supported': {
+                'type': 'str',
+                },
+            'sync_query_dcmsg_counter': {
+                'type': 'str',
+                },
+            'sync_get_buff_failed_rt': {
+                'type': 'str',
+                },
+            'sync_get_buff_failed_port': {
+                'type': 'str',
+                },
+            'sync_rx_lsn_create_sby': {
+                'type': 'str',
+                },
+            'sync_rx_nat_create_sby': {
+                'type': 'str',
+                },
+            'sync_rx_nat_alloc_sby': {
+                'type': 'str',
+                },
+            'sync_rx_insert_tuple': {
+                'type': 'str',
+                },
+            'sync_rx_sfw': {
+                'type': 'str',
+                },
+            'sync_rx_create_static_sby': {
+                'type': 'str',
+                },
+            'sync_rx_ext_pptp': {
+                'type': 'str',
+                },
+            'sync_rx_ext_rtsp': {
+                'type': 'str',
+                },
+            'sync_rx_reserve_ha': {
+                'type': 'str',
+                },
+            'sync_rx_seq_deltas': {
+                'type': 'str',
+                },
+            'sync_rx_ftp_control': {
+                'type': 'str',
+                },
+            'sync_rx_ext_lsn_acl': {
+                'type': 'str',
+                },
+            'sync_rx_ext_lsn_ac_idle_timeout': {
+                'type': 'str',
+                },
+            'sync_rx_ext_sip_alg': {
+                'type': 'str',
+                },
+            'sync_rx_ext_h323_alg': {
+                'type': 'str',
+                },
+            'sync_rx_ext_nat_mac': {
+                'type': 'str',
+                },
+            'sync_tx_lsn_fullcone': {
+                'type': 'str',
+                },
+            'sync_rx_lsn_fullcone': {
+                'type': 'str',
+                },
+            'sync_err_lsn_fullcone': {
+                'type': 'str',
+                },
+            'sync_tx_update_sctp_conn_addr': {
+                'type': 'str',
+                },
+            'sync_rx_update_sctp_conn_addr': {
+                'type': 'str',
+                },
+            'sync_rx_ext_nat_alg_tcp_info': {
+                'type': 'str',
+                },
+            'sync_rx_ext_dcfw_rule_id': {
+                'type': 'str',
+                },
+            'sync_rx_ext_dcfw_log': {
+                'type': 'str',
+                },
+            'sync_rx_estab_counter': {
+                'type': 'str',
+                },
+            'sync_tx_estab_counter': {
+                'type': 'str',
+                },
+            'sync_rx_zone_failure_counter': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_http_logging': {
+                'type': 'str',
+                },
+            'sync_rx_ext_dcfw_rule_idle_timeout': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_gtp_info': {
+                'type': 'str',
+                },
+            'sync_rx_not_expect_sync_pkt': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_apps': {
+                'type': 'str',
+                },
+            'sync_tx_mon_entity': {
+                'type': 'str',
+                },
+            'sync_rx_mon_entity': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_gtp_log_info': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_gtp_u_info': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_gtp_ext_info': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_gtp_log_ext_info': {
+                'type': 'str',
+                },
+            'sync_rx_ddos_drop_counter': {
+                'type': 'str',
+                },
+            'sync_rx_invalid_sync_packet_counter': {
+                'type': 'str',
+                },
+            'sync_pkt_empty_buff_counter': {
+                'type': 'str',
+                },
+            'sync_pkt_no_sending_vgrp_counter': {
+                'type': 'str',
+                },
+            'sync_pkt_no_receiving_vgrp_counter': {
+                'type': 'str',
+                },
+            'query_pkt_no_receiving_ip_counter': {
+                'type': 'str',
+                },
+            'sync_pkt_failed_buff_copy_counter': {
+                'type': 'str',
+                },
+            'sync_rx_bad_protocol_counter': {
+                'type': 'str',
+                },
+            'sync_rx_no_vgrp_counter': {
+                'type': 'str',
+                },
+            'sync_rx_by_inactive_peer_counter': {
+                'type': 'str',
+                },
+            'sync_rx_table_entry_update_counter': {
+                'type': 'str',
+                },
+            'sync_rx_table_entry_create_counter': {
+                'type': 'str',
+                },
+            'sync_rx_table_entry_del_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_update_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_create_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_del_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_frag_counter': {
+                'type': 'str',
+                },
+            'query_rx_invalid_partition_counter': {
+                'type': 'str',
+                },
+            'query_rx_invalid_ha_group_counter': {
+                'type': 'str',
+                },
+            'query_rx_invalid_sync_version_counter': {
+                'type': 'str',
+                },
+            'query_rx_invalid_msg_dir_counter': {
+                'type': 'str',
+                },
+            'sync_rx_out_of_order_pkt_counter': {
+                'type': 'str',
+                },
+            'sync_rx_unreached_pkt_counter': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_gtp_echo_ext_info': {
+                'type': 'str',
+                },
+            'sync_rx_smp_create_counter': {
+                'type': 'str',
+                },
+            'sync_rx_smp_delete_counter': {
+                'type': 'str',
+                },
+            'sync_rx_smp_update_counter': {
+                'type': 'str',
+                },
+            'sync_tx_smp_create_counter': {
+                'type': 'str',
+                },
+            'sync_tx_smp_delete_counter': {
+                'type': 'str',
+                },
+            'sync_tx_smp_update_counter': {
+                'type': 'str',
+                },
+            'sync_rx_smp_clear_counter': {
+                'type': 'str',
+                },
+            'sync_tx_smp_clear_counter': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_so_shadow_ext_info': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_add_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_add_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_append_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_append_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_delete_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_delete_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_incr_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_incr_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_lookup_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_lookup_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_lifetime_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_lifetime_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_replace_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_replace_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_set_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_set_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_timeout_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_timeout_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_fastsync_counter': {
+                'type': 'str',
+                },
+            'sync_rx_aflex_table_entry_fastsync_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_error_counter': {
+                'type': 'str',
+                },
+            'sync_tx_aflex_table_entry_not_eligible_counter': {
+                'type': 'str',
+                },
+            'sync_rx_ext_fw_limit_entry': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -1004,8 +1523,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1016,8 +1534,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -1057,14 +1574,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1079,9 +1589,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -1097,15 +1605,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1133,8 +1638,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["state-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["state"]["stats"] if info != "NotFound" else info
@@ -1153,6 +1657,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

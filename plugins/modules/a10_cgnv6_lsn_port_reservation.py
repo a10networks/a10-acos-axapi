@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_port_reservation
 description:
@@ -144,7 +143,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["inside", "inside_port_end", "inside_port_start", "nat", "nat_port_end", "nat_port_start", "uuid", ]
 
@@ -156,22 +154,45 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'inside': {'type': 'str', 'required': True, },
-        'inside_port_start': {'type': 'int', 'required': True, },
-        'inside_port_end': {'type': 'int', 'required': True, },
-        'nat': {'type': 'str', 'required': True, },
-        'nat_port_start': {'type': 'int', 'required': True, },
-        'nat_port_end': {'type': 'int', 'required': True, },
-        'uuid': {'type': 'str', }
-    })
+    rv.update({
+        'inside': {
+            'type': 'str',
+            'required': True,
+            },
+        'inside_port_start': {
+            'type': 'int',
+            'required': True,
+            },
+        'inside_port_end': {
+            'type': 'int',
+            'required': True,
+            },
+        'nat': {
+            'type': 'str',
+            'required': True,
+            },
+        'nat_port_start': {
+            'type': 'int',
+            'required': True,
+            },
+        'nat_port_end': {
+            'type': 'int',
+            'required': True,
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
@@ -182,27 +203,27 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["inside"]):
-        f_dict["inside"] = module.params["inside"].replace("/","%2F")
+        f_dict["inside"] = module.params["inside"].replace("/", "%2F")
     else:
         f_dict["inside"] = module.params["inside"]
     if '/' in str(module.params["inside_port_start"]):
-        f_dict["inside_port_start"] = module.params["inside_port_start"].replace("/","%2F")
+        f_dict["inside_port_start"] = module.params["inside_port_start"].replace("/", "%2F")
     else:
         f_dict["inside_port_start"] = module.params["inside_port_start"]
     if '/' in str(module.params["inside_port_end"]):
-        f_dict["inside_port_end"] = module.params["inside_port_end"].replace("/","%2F")
+        f_dict["inside_port_end"] = module.params["inside_port_end"].replace("/", "%2F")
     else:
         f_dict["inside_port_end"] = module.params["inside_port_end"]
     if '/' in str(module.params["nat"]):
-        f_dict["nat"] = module.params["nat"].replace("/","%2F")
+        f_dict["nat"] = module.params["nat"].replace("/", "%2F")
     else:
         f_dict["nat"] = module.params["nat"]
     if '/' in str(module.params["nat_port_start"]):
-        f_dict["nat_port_start"] = module.params["nat_port_start"].replace("/","%2F")
+        f_dict["nat_port_start"] = module.params["nat_port_start"].replace("/", "%2F")
     else:
         f_dict["nat_port_start"] = module.params["nat_port_start"]
     if '/' in str(module.params["nat_port_end"]):
-        f_dict["nat_port_end"] = module.params["nat_port_end"].replace("/","%2F")
+        f_dict["nat_port_end"] = module.params["nat_port_end"].replace("/", "%2F")
     else:
         f_dict["nat_port_end"] = module.params["nat_port_end"]
 
@@ -247,8 +268,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -259,8 +279,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -300,14 +319,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -322,9 +334,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -340,15 +350,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -390,6 +397,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

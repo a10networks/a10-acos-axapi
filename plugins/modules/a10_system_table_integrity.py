@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_system_table_integrity
 description:
@@ -1353,7 +1352,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["audit_action", "auto_sync_action", "sampling_enable", "stats", "table", "uuid", ]
 
@@ -1365,21 +1363,777 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'table': {'type': 'str', 'choices': ['all']},
-        'audit_action': {'type': 'str', 'choices': ['enable', 'disable']},
-        'auto_sync_action': {'type': 'str', 'choices': ['enable', 'disable']},
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'arp-tbl-sync-start-ts-m-1st', 'nd6-tbl-sync-start-ts-m-1st', 'ipv4-fib-tbl-sync-start-ts-m-1st', 'ipv6-fib-tbl-sync-start-ts-m-1st', 'mac-tbl-sync-start-ts-m-1st', 'arp-tbl-sync-start-ts-b-1st', 'nd6-tbl-sync-start-ts-b-1st', 'ipv4-fib-tbl-sync-start-ts-b-1st', 'ipv6-fib-tbl-sync-start-ts-b-1st', 'mac-tbl-sync-start-ts-b-1st', 'arp-tbl-sync-entries-sent-m-1st', 'nd6-tbl-sync-entries-sent-m-1st', 'ipv4-fib-tbl-sync-entries-sent-m-1st', 'ipv6-fib-tbl-sync-entries-sent-m-1st', 'mac-tbl-sync-entries-sent-m-1st', 'arp-tbl-sync-entries-rcvd-b-1st', 'nd6-tbl-sync-entries-rcvd-b-1st', 'ipv4-fib-tbl-sync-entries-rcvd-b-1st', 'ipv6-fib-tbl-sync-entries-rcvd-b-1st', 'mac-tbl-sync-entries-rcvd-b-1st', 'arp-tbl-sync-entries-added-b-1st', 'nd6-tbl-sync-entries-added-b-1st', 'ipv4-fib-tbl-sync-entries-added-b-1st', 'ipv6-fib-tbl-sync-entries-added-b-1st', 'mac-tbl-sync-entries-added-b-1st', 'arp-tbl-sync-entries-removed-b-1st', 'nd6-tbl-sync-entries-removed-b-1st', 'ipv4-fib-tbl-sync-entries-removed-b-1st', 'ipv6-fib-tbl-sync-entries-removed-b-1st', 'mac-tbl-sync-entries-removed-b-1st', 'arp-tbl-sync-end-ts-m-1st', 'nd6-tbl-sync-end-ts-m-1st', 'ipv4-fib-tbl-sync-end-ts-m-1st', 'ipv6-fib-tbl-sync-end-ts-m-1st', 'mac-tbl-sync-end-ts-m-1st', 'arp-tbl-sync-end-ts-b-1st', 'nd6-tbl-sync-end-ts-b-1st', 'ipv4-fib-tbl-sync-end-ts-b-1st', 'ipv6-fib-tbl-sync-end-ts-b-1st', 'mac-tbl-sync-end-ts-b-1st', 'arp-tbl-sync-start-ts-m-2nd', 'nd6-tbl-sync-start-ts-m-2nd', 'ipv4-fib-tbl-sync-start-ts-m-2nd', 'ipv6-fib-tbl-sync-start-ts-m-2nd', 'mac-tbl-sync-start-ts-m-2nd', 'arp-tbl-sync-start-ts-b-2nd', 'nd6-tbl-sync-start-ts-b-2nd', 'ipv4-fib-tbl-sync-start-ts-b-2nd', 'ipv6-fib-tbl-sync-start-ts-b-2nd', 'mac-tbl-sync-start-ts-b-2nd', 'arp-tbl-sync-entries-sent-m-2nd', 'nd6-tbl-sync-entries-sent-m-2nd', 'ipv4-fib-tbl-sync-entries-sent-m-2nd', 'ipv6-fib-tbl-sync-entries-sent-m-2nd', 'mac-tbl-sync-entries-sent-m-2nd', 'arp-tbl-sync-entries-rcvd-b-2nd', 'nd6-tbl-sync-entries-rcvd-b-2nd', 'ipv4-fib-tbl-sync-entries-rcvd-b-2nd', 'ipv6-fib-tbl-sync-entries-rcvd-b-2nd', 'mac-tbl-sync-entries-rcvd-b-2nd', 'arp-tbl-sync-entries-added-b-2nd', 'nd6-tbl-sync-entries-added-b-2nd', 'ipv4-fib-tbl-sync-entries-added-b-2nd', 'ipv6-fib-tbl-sync-entries-added-b-2nd', 'mac-tbl-sync-entries-added-b-2nd', 'arp-tbl-sync-entries-removed-b-2nd', 'nd6-tbl-sync-entries-removed-b-2nd', 'ipv4-fib-tbl-sync-entries-removed-b-2nd', 'ipv6-fib-tbl-sync-entries-removed-b-2nd', 'mac-tbl-sync-entries-removed-b-2nd', 'arp-tbl-sync-end-ts-m-2nd', 'nd6-tbl-sync-end-ts-m-2nd', 'ipv4-fib-tbl-sync-end-ts-m-2nd', 'ipv6-fib-tbl-sync-end-ts-m-2nd', 'mac-tbl-sync-end-ts-m-2nd', 'arp-tbl-sync-end-ts-b-2nd', 'nd6-tbl-sync-end-ts-b-2nd', 'ipv4-fib-tbl-sync-end-ts-b-2nd', 'ipv6-fib-tbl-sync-end-ts-b-2nd', 'mac-tbl-sync-end-ts-b-2nd', 'arp-tbl-sync-start-ts-m-3rd', 'nd6-tbl-sync-start-ts-m-3rd']}, 'counters2': {'type': 'str', 'choices': ['ipv4-fib-tbl-sync-start-ts-m-3rd', 'ipv6-fib-tbl-sync-start-ts-m-3rd', 'mac-tbl-sync-start-ts-m-3rd', 'arp-tbl-sync-start-ts-b-3rd', 'nd6-tbl-sync-start-ts-b-3rd', 'ipv4-fib-tbl-sync-start-ts-b-3rd', 'ipv6-fib-tbl-sync-start-ts-b-3rd', 'mac-tbl-sync-start-ts-b-3rd', 'arp-tbl-sync-entries-sent-m-3rd', 'nd6-tbl-sync-entries-sent-m-3rd', 'ipv4-fib-tbl-sync-entries-sent-m-3rd', 'ipv6-fib-tbl-sync-entries-sent-m-3rd', 'mac-tbl-sync-entries-sent-m-3rd', 'arp-tbl-sync-entries-rcvd-b-3rd', 'nd6-tbl-sync-entries-rcvd-b-3rd', 'ipv4-fib-tbl-sync-entries-rcvd-b-3rd', 'ipv6-fib-tbl-sync-entries-rcvd-b-3rd', 'mac-tbl-sync-entries-rcvd-b-3rd', 'arp-tbl-sync-entries-added-b-3rd', 'nd6-tbl-sync-entries-added-b-3rd', 'ipv4-fib-tbl-sync-entries-added-b-3rd', 'ipv6-fib-tbl-sync-entries-added-b-3rd', 'mac-tbl-sync-entries-added-b-3rd', 'arp-tbl-sync-entries-removed-b-3rd', 'nd6-tbl-sync-entries-removed-b-3rd', 'ipv4-fib-tbl-sync-entries-removed-b-3rd', 'ipv6-fib-tbl-sync-entries-removed-b-3rd', 'mac-tbl-sync-entries-removed-b-3rd', 'arp-tbl-sync-end-ts-m-3rd', 'nd6-tbl-sync-end-ts-m-3rd', 'ipv4-fib-tbl-sync-end-ts-m-3rd', 'ipv6-fib-tbl-sync-end-ts-m-3rd', 'mac-tbl-sync-end-ts-m-3rd', 'arp-tbl-sync-end-ts-b-3rd', 'nd6-tbl-sync-end-ts-b-3rd', 'ipv4-fib-tbl-sync-end-ts-b-3rd', 'ipv6-fib-tbl-sync-end-ts-b-3rd', 'mac-tbl-sync-end-ts-b-3rd', 'arp-tbl-sync-start-ts-m-4th', 'nd6-tbl-sync-start-ts-m-4th', 'ipv4-fib-tbl-sync-start-ts-m-4th', 'ipv6-fib-tbl-sync-start-ts-m-4th', 'mac-tbl-sync-start-ts-m-4th', 'arp-tbl-sync-start-ts-b-4th', 'nd6-tbl-sync-start-ts-b-4th', 'ipv4-fib-tbl-sync-start-ts-b-4th', 'ipv6-fib-tbl-sync-start-ts-b-4th', 'mac-tbl-sync-start-ts-b-4th', 'arp-tbl-sync-entries-sent-m-4th', 'nd6-tbl-sync-entries-sent-m-4th', 'ipv4-fib-tbl-sync-entries-sent-m-4th', 'ipv6-fib-tbl-sync-entries-sent-m-4th', 'mac-tbl-sync-entries-sent-m-4th', 'arp-tbl-sync-entries-rcvd-b-4th', 'nd6-tbl-sync-entries-rcvd-b-4th', 'ipv4-fib-tbl-sync-entries-rcvd-b-4th', 'ipv6-fib-tbl-sync-entries-rcvd-b-4th', 'mac-tbl-sync-entries-rcvd-b-4th', 'arp-tbl-sync-entries-added-b-4th', 'nd6-tbl-sync-entries-added-b-4th', 'ipv4-fib-tbl-sync-entries-added-b-4th', 'ipv6-fib-tbl-sync-entries-added-b-4th', 'mac-tbl-sync-entries-added-b-4th', 'arp-tbl-sync-entries-removed-b-4th', 'nd6-tbl-sync-entries-removed-b-4th', 'ipv4-fib-tbl-sync-entries-removed-b-4th', 'ipv6-fib-tbl-sync-entries-removed-b-4th', 'mac-tbl-sync-entries-removed-b-4th', 'arp-tbl-sync-end-ts-m-4th', 'nd6-tbl-sync-end-ts-m-4th', 'ipv4-fib-tbl-sync-end-ts-m-4th', 'ipv6-fib-tbl-sync-end-ts-m-4th', 'mac-tbl-sync-end-ts-m-4th', 'arp-tbl-sync-end-ts-b-4th', 'nd6-tbl-sync-end-ts-b-4th', 'ipv4-fib-tbl-sync-end-ts-b-4th', 'ipv6-fib-tbl-sync-end-ts-b-4th', 'mac-tbl-sync-end-ts-b-4th', 'arp-tbl-sync-start-ts-m-5th']}, 'counters3': {'type': 'str', 'choices': ['nd6-tbl-sync-start-ts-m-5th', 'ipv4-fib-tbl-sync-start-ts-m-5th', 'ipv6-fib-tbl-sync-start-ts-m-5th', 'mac-tbl-sync-start-ts-m-5th', 'arp-tbl-sync-start-ts-b-5th', 'nd6-tbl-sync-start-ts-b-5th', 'ipv4-fib-tbl-sync-start-ts-b-5th', 'ipv6-fib-tbl-sync-start-ts-b-5th', 'mac-tbl-sync-start-ts-b-5th', 'arp-tbl-sync-entries-sent-m-5th', 'nd6-tbl-sync-entries-sent-m-5th', 'ipv4-fib-tbl-sync-entries-sent-m-5th', 'ipv6-fib-tbl-sync-entries-sent-m-5th', 'mac-tbl-sync-entries-sent-m-5th', 'arp-tbl-sync-entries-rcvd-b-5th', 'nd6-tbl-sync-entries-rcvd-b-5th', 'ipv4-fib-tbl-sync-entries-rcvd-b-5th', 'ipv6-fib-tbl-sync-entries-rcvd-b-5th', 'mac-tbl-sync-entries-rcvd-b-5th', 'arp-tbl-sync-entries-added-b-5th', 'nd6-tbl-sync-entries-added-b-5th', 'ipv4-fib-tbl-sync-entries-added-b-5th', 'ipv6-fib-tbl-sync-entries-added-b-5th', 'mac-tbl-sync-entries-added-b-5th', 'arp-tbl-sync-entries-removed-b-5th', 'nd6-tbl-sync-entries-removed-b-5th', 'ipv4-fib-tbl-sync-entries-removed-b-5th', 'ipv6-fib-tbl-sync-entries-removed-b-5th', 'mac-tbl-sync-entries-removed-b-5th', 'arp-tbl-sync-end-ts-m-5th', 'nd6-tbl-sync-end-ts-m-5th', 'ipv4-fib-tbl-sync-end-ts-m-5th', 'ipv6-fib-tbl-sync-end-ts-m-5th', 'mac-tbl-sync-end-ts-m-5th', 'arp-tbl-sync-end-ts-b-5th', 'nd6-tbl-sync-end-ts-b-5th', 'ipv4-fib-tbl-sync-end-ts-b-5th', 'ipv6-fib-tbl-sync-end-ts-b-5th', 'mac-tbl-sync-end-ts-b-5th', 'arp-tbl-sync-m', 'nd6-tbl-sync-m', 'ipv4-fib-tbl-sync-m', 'ipv6-fib-tbl-sync-m', 'mac-tbl-sync-m', 'arp-tbl-sync-b', 'nd6-tbl-sync-b', 'ipv4-fib-tbl-sync-b', 'ipv6-fib-tbl-sync-b', 'mac-tbl-sync-b', 'arp-tbl-cksum-m', 'nd6-tbl-cksum-m', 'ipv4-fib-tbl-cksum-m', 'ipv6-fib-tbl-cksum-m', 'mac-tbl-cksum-m', 'arp-tbl-cksum-b', 'nd6-tbl-cksum-b', 'ipv4-fib-tbl-cksum-b', 'ipv6-fib-tbl-cksum-b', 'mac-tbl-cksum-b', 'arp-tbl-cksum-mismatch-b', 'nd6-tbl-cksum-mismatch-b', 'ipv4-fib-tbl-cksum-mismatch-b', 'ipv6-fib-tbl-cksum-mismatch-b', 'mac-tbl-cksum-mismatch-b', 'arp-tbl-cksum-cancel-m', 'nd6-tbl-cksum-cancel-m', 'ipv4-fib-tbl-cksum-cancel-m', 'ipv6-fib-tbl-cksum-cancel-m', 'mac-tbl-cksum-cancel-m']}},
-        'stats': {'type': 'dict', 'arp_tbl_sync_start_ts_m_1st': {'type': 'str', }, 'nd6_tbl_sync_start_ts_m_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_m_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_m_1st': {'type': 'str', }, 'mac_tbl_sync_start_ts_m_1st': {'type': 'str', }, 'arp_tbl_sync_start_ts_b_1st': {'type': 'str', }, 'nd6_tbl_sync_start_ts_b_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_b_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_b_1st': {'type': 'str', }, 'mac_tbl_sync_start_ts_b_1st': {'type': 'str', }, 'arp_tbl_sync_entries_sent_m_1st': {'type': 'str', }, 'nd6_tbl_sync_entries_sent_m_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_sent_m_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_sent_m_1st': {'type': 'str', }, 'mac_tbl_sync_entries_sent_m_1st': {'type': 'str', }, 'arp_tbl_sync_entries_rcvd_b_1st': {'type': 'str', }, 'nd6_tbl_sync_entries_rcvd_b_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_rcvd_b_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_rcvd_b_1st': {'type': 'str', }, 'mac_tbl_sync_entries_rcvd_b_1st': {'type': 'str', }, 'arp_tbl_sync_entries_added_b_1st': {'type': 'str', }, 'nd6_tbl_sync_entries_added_b_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_added_b_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_added_b_1st': {'type': 'str', }, 'mac_tbl_sync_entries_added_b_1st': {'type': 'str', }, 'arp_tbl_sync_entries_removed_b_1st': {'type': 'str', }, 'nd6_tbl_sync_entries_removed_b_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_removed_b_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_removed_b_1st': {'type': 'str', }, 'mac_tbl_sync_entries_removed_b_1st': {'type': 'str', }, 'arp_tbl_sync_end_ts_m_1st': {'type': 'str', }, 'nd6_tbl_sync_end_ts_m_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_m_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_m_1st': {'type': 'str', }, 'mac_tbl_sync_end_ts_m_1st': {'type': 'str', }, 'arp_tbl_sync_end_ts_b_1st': {'type': 'str', }, 'nd6_tbl_sync_end_ts_b_1st': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_b_1st': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_b_1st': {'type': 'str', }, 'mac_tbl_sync_end_ts_b_1st': {'type': 'str', }, 'arp_tbl_sync_start_ts_m_2nd': {'type': 'str', }, 'nd6_tbl_sync_start_ts_m_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_m_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_m_2nd': {'type': 'str', }, 'mac_tbl_sync_start_ts_m_2nd': {'type': 'str', }, 'arp_tbl_sync_start_ts_b_2nd': {'type': 'str', }, 'nd6_tbl_sync_start_ts_b_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_b_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_b_2nd': {'type': 'str', }, 'mac_tbl_sync_start_ts_b_2nd': {'type': 'str', }, 'arp_tbl_sync_entries_sent_m_2nd': {'type': 'str', }, 'nd6_tbl_sync_entries_sent_m_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_sent_m_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_sent_m_2nd': {'type': 'str', }, 'mac_tbl_sync_entries_sent_m_2nd': {'type': 'str', }, 'arp_tbl_sync_entries_rcvd_b_2nd': {'type': 'str', }, 'nd6_tbl_sync_entries_rcvd_b_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_rcvd_b_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_rcvd_b_2nd': {'type': 'str', }, 'mac_tbl_sync_entries_rcvd_b_2nd': {'type': 'str', }, 'arp_tbl_sync_entries_added_b_2nd': {'type': 'str', }, 'nd6_tbl_sync_entries_added_b_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_added_b_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_added_b_2nd': {'type': 'str', }, 'mac_tbl_sync_entries_added_b_2nd': {'type': 'str', }, 'arp_tbl_sync_entries_removed_b_2nd': {'type': 'str', }, 'nd6_tbl_sync_entries_removed_b_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_removed_b_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_removed_b_2nd': {'type': 'str', }, 'mac_tbl_sync_entries_removed_b_2nd': {'type': 'str', }, 'arp_tbl_sync_end_ts_m_2nd': {'type': 'str', }, 'nd6_tbl_sync_end_ts_m_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_m_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_m_2nd': {'type': 'str', }, 'mac_tbl_sync_end_ts_m_2nd': {'type': 'str', }, 'arp_tbl_sync_end_ts_b_2nd': {'type': 'str', }, 'nd6_tbl_sync_end_ts_b_2nd': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_b_2nd': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_b_2nd': {'type': 'str', }, 'mac_tbl_sync_end_ts_b_2nd': {'type': 'str', }, 'arp_tbl_sync_start_ts_m_3rd': {'type': 'str', }, 'nd6_tbl_sync_start_ts_m_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_m_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_m_3rd': {'type': 'str', }, 'mac_tbl_sync_start_ts_m_3rd': {'type': 'str', }, 'arp_tbl_sync_start_ts_b_3rd': {'type': 'str', }, 'nd6_tbl_sync_start_ts_b_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_b_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_b_3rd': {'type': 'str', }, 'mac_tbl_sync_start_ts_b_3rd': {'type': 'str', }, 'arp_tbl_sync_entries_sent_m_3rd': {'type': 'str', }, 'nd6_tbl_sync_entries_sent_m_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_sent_m_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_sent_m_3rd': {'type': 'str', }, 'mac_tbl_sync_entries_sent_m_3rd': {'type': 'str', }, 'arp_tbl_sync_entries_rcvd_b_3rd': {'type': 'str', }, 'nd6_tbl_sync_entries_rcvd_b_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_rcvd_b_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_rcvd_b_3rd': {'type': 'str', }, 'mac_tbl_sync_entries_rcvd_b_3rd': {'type': 'str', }, 'arp_tbl_sync_entries_added_b_3rd': {'type': 'str', }, 'nd6_tbl_sync_entries_added_b_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_added_b_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_added_b_3rd': {'type': 'str', }, 'mac_tbl_sync_entries_added_b_3rd': {'type': 'str', }, 'arp_tbl_sync_entries_removed_b_3rd': {'type': 'str', }, 'nd6_tbl_sync_entries_removed_b_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_removed_b_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_removed_b_3rd': {'type': 'str', }, 'mac_tbl_sync_entries_removed_b_3rd': {'type': 'str', }, 'arp_tbl_sync_end_ts_m_3rd': {'type': 'str', }, 'nd6_tbl_sync_end_ts_m_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_m_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_m_3rd': {'type': 'str', }, 'mac_tbl_sync_end_ts_m_3rd': {'type': 'str', }, 'arp_tbl_sync_end_ts_b_3rd': {'type': 'str', }, 'nd6_tbl_sync_end_ts_b_3rd': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_b_3rd': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_b_3rd': {'type': 'str', }, 'mac_tbl_sync_end_ts_b_3rd': {'type': 'str', }, 'arp_tbl_sync_start_ts_m_4th': {'type': 'str', }, 'nd6_tbl_sync_start_ts_m_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_m_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_m_4th': {'type': 'str', }, 'mac_tbl_sync_start_ts_m_4th': {'type': 'str', }, 'arp_tbl_sync_start_ts_b_4th': {'type': 'str', }, 'nd6_tbl_sync_start_ts_b_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_b_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_b_4th': {'type': 'str', }, 'mac_tbl_sync_start_ts_b_4th': {'type': 'str', }, 'arp_tbl_sync_entries_sent_m_4th': {'type': 'str', }, 'nd6_tbl_sync_entries_sent_m_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_sent_m_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_sent_m_4th': {'type': 'str', }, 'mac_tbl_sync_entries_sent_m_4th': {'type': 'str', }, 'arp_tbl_sync_entries_rcvd_b_4th': {'type': 'str', }, 'nd6_tbl_sync_entries_rcvd_b_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_rcvd_b_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_rcvd_b_4th': {'type': 'str', }, 'mac_tbl_sync_entries_rcvd_b_4th': {'type': 'str', }, 'arp_tbl_sync_entries_added_b_4th': {'type': 'str', }, 'nd6_tbl_sync_entries_added_b_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_added_b_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_added_b_4th': {'type': 'str', }, 'mac_tbl_sync_entries_added_b_4th': {'type': 'str', }, 'arp_tbl_sync_entries_removed_b_4th': {'type': 'str', }, 'nd6_tbl_sync_entries_removed_b_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_removed_b_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_removed_b_4th': {'type': 'str', }, 'mac_tbl_sync_entries_removed_b_4th': {'type': 'str', }, 'arp_tbl_sync_end_ts_m_4th': {'type': 'str', }, 'nd6_tbl_sync_end_ts_m_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_m_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_m_4th': {'type': 'str', }, 'mac_tbl_sync_end_ts_m_4th': {'type': 'str', }, 'arp_tbl_sync_end_ts_b_4th': {'type': 'str', }, 'nd6_tbl_sync_end_ts_b_4th': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_b_4th': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_b_4th': {'type': 'str', }, 'mac_tbl_sync_end_ts_b_4th': {'type': 'str', }, 'arp_tbl_sync_start_ts_m_5th': {'type': 'str', }, 'nd6_tbl_sync_start_ts_m_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_m_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_m_5th': {'type': 'str', }, 'mac_tbl_sync_start_ts_m_5th': {'type': 'str', }, 'arp_tbl_sync_start_ts_b_5th': {'type': 'str', }, 'nd6_tbl_sync_start_ts_b_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_start_ts_b_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_start_ts_b_5th': {'type': 'str', }, 'mac_tbl_sync_start_ts_b_5th': {'type': 'str', }, 'arp_tbl_sync_entries_sent_m_5th': {'type': 'str', }, 'nd6_tbl_sync_entries_sent_m_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_sent_m_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_sent_m_5th': {'type': 'str', }, 'mac_tbl_sync_entries_sent_m_5th': {'type': 'str', }, 'arp_tbl_sync_entries_rcvd_b_5th': {'type': 'str', }, 'nd6_tbl_sync_entries_rcvd_b_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_rcvd_b_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_rcvd_b_5th': {'type': 'str', }, 'mac_tbl_sync_entries_rcvd_b_5th': {'type': 'str', }, 'arp_tbl_sync_entries_added_b_5th': {'type': 'str', }, 'nd6_tbl_sync_entries_added_b_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_added_b_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_added_b_5th': {'type': 'str', }, 'mac_tbl_sync_entries_added_b_5th': {'type': 'str', }, 'arp_tbl_sync_entries_removed_b_5th': {'type': 'str', }, 'nd6_tbl_sync_entries_removed_b_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_entries_removed_b_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_entries_removed_b_5th': {'type': 'str', }, 'mac_tbl_sync_entries_removed_b_5th': {'type': 'str', }, 'arp_tbl_sync_end_ts_m_5th': {'type': 'str', }, 'nd6_tbl_sync_end_ts_m_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_m_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_m_5th': {'type': 'str', }, 'mac_tbl_sync_end_ts_m_5th': {'type': 'str', }, 'arp_tbl_sync_end_ts_b_5th': {'type': 'str', }, 'nd6_tbl_sync_end_ts_b_5th': {'type': 'str', }, 'ipv4_fib_tbl_sync_end_ts_b_5th': {'type': 'str', }, 'ipv6_fib_tbl_sync_end_ts_b_5th': {'type': 'str', }, 'mac_tbl_sync_end_ts_b_5th': {'type': 'str', }, 'arp_tbl_sync_m': {'type': 'str', }, 'nd6_tbl_sync_m': {'type': 'str', }, 'ipv4_fib_tbl_sync_m': {'type': 'str', }, 'ipv6_fib_tbl_sync_m': {'type': 'str', }, 'mac_tbl_sync_m': {'type': 'str', }, 'arp_tbl_sync_b': {'type': 'str', }, 'nd6_tbl_sync_b': {'type': 'str', }, 'ipv4_fib_tbl_sync_b': {'type': 'str', }, 'ipv6_fib_tbl_sync_b': {'type': 'str', }, 'mac_tbl_sync_b': {'type': 'str', }, 'arp_tbl_cksum_m': {'type': 'str', }, 'nd6_tbl_cksum_m': {'type': 'str', }, 'ipv4_fib_tbl_cksum_m': {'type': 'str', }, 'ipv6_fib_tbl_cksum_m': {'type': 'str', }, 'mac_tbl_cksum_m': {'type': 'str', }, 'arp_tbl_cksum_b': {'type': 'str', }, 'nd6_tbl_cksum_b': {'type': 'str', }, 'ipv4_fib_tbl_cksum_b': {'type': 'str', }, 'ipv6_fib_tbl_cksum_b': {'type': 'str', }, 'mac_tbl_cksum_b': {'type': 'str', }, 'arp_tbl_cksum_mismatch_b': {'type': 'str', }, 'nd6_tbl_cksum_mismatch_b': {'type': 'str', }, 'ipv4_fib_tbl_cksum_mismatch_b': {'type': 'str', }, 'ipv6_fib_tbl_cksum_mismatch_b': {'type': 'str', }, 'mac_tbl_cksum_mismatch_b': {'type': 'str', }, 'arp_tbl_cksum_cancel_m': {'type': 'str', }, 'nd6_tbl_cksum_cancel_m': {'type': 'str', }, 'ipv4_fib_tbl_cksum_cancel_m': {'type': 'str', }, 'ipv6_fib_tbl_cksum_cancel_m': {'type': 'str', }, 'mac_tbl_cksum_cancel_m': {'type': 'str', }}
-    })
+    rv.update({
+        'table': {
+            'type': 'str',
+            'choices': ['all']
+            },
+        'audit_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'auto_sync_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'arp-tbl-sync-start-ts-m-1st', 'nd6-tbl-sync-start-ts-m-1st', 'ipv4-fib-tbl-sync-start-ts-m-1st', 'ipv6-fib-tbl-sync-start-ts-m-1st', 'mac-tbl-sync-start-ts-m-1st', 'arp-tbl-sync-start-ts-b-1st', 'nd6-tbl-sync-start-ts-b-1st', 'ipv4-fib-tbl-sync-start-ts-b-1st',
+                    'ipv6-fib-tbl-sync-start-ts-b-1st', 'mac-tbl-sync-start-ts-b-1st', 'arp-tbl-sync-entries-sent-m-1st', 'nd6-tbl-sync-entries-sent-m-1st', 'ipv4-fib-tbl-sync-entries-sent-m-1st', 'ipv6-fib-tbl-sync-entries-sent-m-1st', 'mac-tbl-sync-entries-sent-m-1st',
+                    'arp-tbl-sync-entries-rcvd-b-1st', 'nd6-tbl-sync-entries-rcvd-b-1st', 'ipv4-fib-tbl-sync-entries-rcvd-b-1st', 'ipv6-fib-tbl-sync-entries-rcvd-b-1st', 'mac-tbl-sync-entries-rcvd-b-1st', 'arp-tbl-sync-entries-added-b-1st', 'nd6-tbl-sync-entries-added-b-1st',
+                    'ipv4-fib-tbl-sync-entries-added-b-1st', 'ipv6-fib-tbl-sync-entries-added-b-1st', 'mac-tbl-sync-entries-added-b-1st', 'arp-tbl-sync-entries-removed-b-1st', 'nd6-tbl-sync-entries-removed-b-1st', 'ipv4-fib-tbl-sync-entries-removed-b-1st', 'ipv6-fib-tbl-sync-entries-removed-b-1st',
+                    'mac-tbl-sync-entries-removed-b-1st', 'arp-tbl-sync-end-ts-m-1st', 'nd6-tbl-sync-end-ts-m-1st', 'ipv4-fib-tbl-sync-end-ts-m-1st', 'ipv6-fib-tbl-sync-end-ts-m-1st', 'mac-tbl-sync-end-ts-m-1st', 'arp-tbl-sync-end-ts-b-1st', 'nd6-tbl-sync-end-ts-b-1st',
+                    'ipv4-fib-tbl-sync-end-ts-b-1st', 'ipv6-fib-tbl-sync-end-ts-b-1st', 'mac-tbl-sync-end-ts-b-1st', 'arp-tbl-sync-start-ts-m-2nd', 'nd6-tbl-sync-start-ts-m-2nd', 'ipv4-fib-tbl-sync-start-ts-m-2nd', 'ipv6-fib-tbl-sync-start-ts-m-2nd', 'mac-tbl-sync-start-ts-m-2nd',
+                    'arp-tbl-sync-start-ts-b-2nd', 'nd6-tbl-sync-start-ts-b-2nd', 'ipv4-fib-tbl-sync-start-ts-b-2nd', 'ipv6-fib-tbl-sync-start-ts-b-2nd', 'mac-tbl-sync-start-ts-b-2nd', 'arp-tbl-sync-entries-sent-m-2nd', 'nd6-tbl-sync-entries-sent-m-2nd', 'ipv4-fib-tbl-sync-entries-sent-m-2nd',
+                    'ipv6-fib-tbl-sync-entries-sent-m-2nd', 'mac-tbl-sync-entries-sent-m-2nd', 'arp-tbl-sync-entries-rcvd-b-2nd', 'nd6-tbl-sync-entries-rcvd-b-2nd', 'ipv4-fib-tbl-sync-entries-rcvd-b-2nd', 'ipv6-fib-tbl-sync-entries-rcvd-b-2nd', 'mac-tbl-sync-entries-rcvd-b-2nd',
+                    'arp-tbl-sync-entries-added-b-2nd', 'nd6-tbl-sync-entries-added-b-2nd', 'ipv4-fib-tbl-sync-entries-added-b-2nd', 'ipv6-fib-tbl-sync-entries-added-b-2nd', 'mac-tbl-sync-entries-added-b-2nd', 'arp-tbl-sync-entries-removed-b-2nd', 'nd6-tbl-sync-entries-removed-b-2nd',
+                    'ipv4-fib-tbl-sync-entries-removed-b-2nd', 'ipv6-fib-tbl-sync-entries-removed-b-2nd', 'mac-tbl-sync-entries-removed-b-2nd', 'arp-tbl-sync-end-ts-m-2nd', 'nd6-tbl-sync-end-ts-m-2nd', 'ipv4-fib-tbl-sync-end-ts-m-2nd', 'ipv6-fib-tbl-sync-end-ts-m-2nd', 'mac-tbl-sync-end-ts-m-2nd',
+                    'arp-tbl-sync-end-ts-b-2nd', 'nd6-tbl-sync-end-ts-b-2nd', 'ipv4-fib-tbl-sync-end-ts-b-2nd', 'ipv6-fib-tbl-sync-end-ts-b-2nd', 'mac-tbl-sync-end-ts-b-2nd', 'arp-tbl-sync-start-ts-m-3rd', 'nd6-tbl-sync-start-ts-m-3rd'
+                    ]
+                },
+            'counters2': {
+                'type':
+                'str',
+                'choices': [
+                    'ipv4-fib-tbl-sync-start-ts-m-3rd', 'ipv6-fib-tbl-sync-start-ts-m-3rd', 'mac-tbl-sync-start-ts-m-3rd', 'arp-tbl-sync-start-ts-b-3rd', 'nd6-tbl-sync-start-ts-b-3rd', 'ipv4-fib-tbl-sync-start-ts-b-3rd', 'ipv6-fib-tbl-sync-start-ts-b-3rd', 'mac-tbl-sync-start-ts-b-3rd',
+                    'arp-tbl-sync-entries-sent-m-3rd', 'nd6-tbl-sync-entries-sent-m-3rd', 'ipv4-fib-tbl-sync-entries-sent-m-3rd', 'ipv6-fib-tbl-sync-entries-sent-m-3rd', 'mac-tbl-sync-entries-sent-m-3rd', 'arp-tbl-sync-entries-rcvd-b-3rd', 'nd6-tbl-sync-entries-rcvd-b-3rd',
+                    'ipv4-fib-tbl-sync-entries-rcvd-b-3rd', 'ipv6-fib-tbl-sync-entries-rcvd-b-3rd', 'mac-tbl-sync-entries-rcvd-b-3rd', 'arp-tbl-sync-entries-added-b-3rd', 'nd6-tbl-sync-entries-added-b-3rd', 'ipv4-fib-tbl-sync-entries-added-b-3rd', 'ipv6-fib-tbl-sync-entries-added-b-3rd',
+                    'mac-tbl-sync-entries-added-b-3rd', 'arp-tbl-sync-entries-removed-b-3rd', 'nd6-tbl-sync-entries-removed-b-3rd', 'ipv4-fib-tbl-sync-entries-removed-b-3rd', 'ipv6-fib-tbl-sync-entries-removed-b-3rd', 'mac-tbl-sync-entries-removed-b-3rd', 'arp-tbl-sync-end-ts-m-3rd',
+                    'nd6-tbl-sync-end-ts-m-3rd', 'ipv4-fib-tbl-sync-end-ts-m-3rd', 'ipv6-fib-tbl-sync-end-ts-m-3rd', 'mac-tbl-sync-end-ts-m-3rd', 'arp-tbl-sync-end-ts-b-3rd', 'nd6-tbl-sync-end-ts-b-3rd', 'ipv4-fib-tbl-sync-end-ts-b-3rd', 'ipv6-fib-tbl-sync-end-ts-b-3rd', 'mac-tbl-sync-end-ts-b-3rd',
+                    'arp-tbl-sync-start-ts-m-4th', 'nd6-tbl-sync-start-ts-m-4th', 'ipv4-fib-tbl-sync-start-ts-m-4th', 'ipv6-fib-tbl-sync-start-ts-m-4th', 'mac-tbl-sync-start-ts-m-4th', 'arp-tbl-sync-start-ts-b-4th', 'nd6-tbl-sync-start-ts-b-4th', 'ipv4-fib-tbl-sync-start-ts-b-4th',
+                    'ipv6-fib-tbl-sync-start-ts-b-4th', 'mac-tbl-sync-start-ts-b-4th', 'arp-tbl-sync-entries-sent-m-4th', 'nd6-tbl-sync-entries-sent-m-4th', 'ipv4-fib-tbl-sync-entries-sent-m-4th', 'ipv6-fib-tbl-sync-entries-sent-m-4th', 'mac-tbl-sync-entries-sent-m-4th',
+                    'arp-tbl-sync-entries-rcvd-b-4th', 'nd6-tbl-sync-entries-rcvd-b-4th', 'ipv4-fib-tbl-sync-entries-rcvd-b-4th', 'ipv6-fib-tbl-sync-entries-rcvd-b-4th', 'mac-tbl-sync-entries-rcvd-b-4th', 'arp-tbl-sync-entries-added-b-4th', 'nd6-tbl-sync-entries-added-b-4th',
+                    'ipv4-fib-tbl-sync-entries-added-b-4th', 'ipv6-fib-tbl-sync-entries-added-b-4th', 'mac-tbl-sync-entries-added-b-4th', 'arp-tbl-sync-entries-removed-b-4th', 'nd6-tbl-sync-entries-removed-b-4th', 'ipv4-fib-tbl-sync-entries-removed-b-4th', 'ipv6-fib-tbl-sync-entries-removed-b-4th',
+                    'mac-tbl-sync-entries-removed-b-4th', 'arp-tbl-sync-end-ts-m-4th', 'nd6-tbl-sync-end-ts-m-4th', 'ipv4-fib-tbl-sync-end-ts-m-4th', 'ipv6-fib-tbl-sync-end-ts-m-4th', 'mac-tbl-sync-end-ts-m-4th', 'arp-tbl-sync-end-ts-b-4th', 'nd6-tbl-sync-end-ts-b-4th',
+                    'ipv4-fib-tbl-sync-end-ts-b-4th', 'ipv6-fib-tbl-sync-end-ts-b-4th', 'mac-tbl-sync-end-ts-b-4th', 'arp-tbl-sync-start-ts-m-5th'
+                    ]
+                },
+            'counters3': {
+                'type':
+                'str',
+                'choices': [
+                    'nd6-tbl-sync-start-ts-m-5th', 'ipv4-fib-tbl-sync-start-ts-m-5th', 'ipv6-fib-tbl-sync-start-ts-m-5th', 'mac-tbl-sync-start-ts-m-5th', 'arp-tbl-sync-start-ts-b-5th', 'nd6-tbl-sync-start-ts-b-5th', 'ipv4-fib-tbl-sync-start-ts-b-5th', 'ipv6-fib-tbl-sync-start-ts-b-5th',
+                    'mac-tbl-sync-start-ts-b-5th', 'arp-tbl-sync-entries-sent-m-5th', 'nd6-tbl-sync-entries-sent-m-5th', 'ipv4-fib-tbl-sync-entries-sent-m-5th', 'ipv6-fib-tbl-sync-entries-sent-m-5th', 'mac-tbl-sync-entries-sent-m-5th', 'arp-tbl-sync-entries-rcvd-b-5th',
+                    'nd6-tbl-sync-entries-rcvd-b-5th', 'ipv4-fib-tbl-sync-entries-rcvd-b-5th', 'ipv6-fib-tbl-sync-entries-rcvd-b-5th', 'mac-tbl-sync-entries-rcvd-b-5th', 'arp-tbl-sync-entries-added-b-5th', 'nd6-tbl-sync-entries-added-b-5th', 'ipv4-fib-tbl-sync-entries-added-b-5th',
+                    'ipv6-fib-tbl-sync-entries-added-b-5th', 'mac-tbl-sync-entries-added-b-5th', 'arp-tbl-sync-entries-removed-b-5th', 'nd6-tbl-sync-entries-removed-b-5th', 'ipv4-fib-tbl-sync-entries-removed-b-5th', 'ipv6-fib-tbl-sync-entries-removed-b-5th', 'mac-tbl-sync-entries-removed-b-5th',
+                    'arp-tbl-sync-end-ts-m-5th', 'nd6-tbl-sync-end-ts-m-5th', 'ipv4-fib-tbl-sync-end-ts-m-5th', 'ipv6-fib-tbl-sync-end-ts-m-5th', 'mac-tbl-sync-end-ts-m-5th', 'arp-tbl-sync-end-ts-b-5th', 'nd6-tbl-sync-end-ts-b-5th', 'ipv4-fib-tbl-sync-end-ts-b-5th', 'ipv6-fib-tbl-sync-end-ts-b-5th',
+                    'mac-tbl-sync-end-ts-b-5th', 'arp-tbl-sync-m', 'nd6-tbl-sync-m', 'ipv4-fib-tbl-sync-m', 'ipv6-fib-tbl-sync-m', 'mac-tbl-sync-m', 'arp-tbl-sync-b', 'nd6-tbl-sync-b', 'ipv4-fib-tbl-sync-b', 'ipv6-fib-tbl-sync-b', 'mac-tbl-sync-b', 'arp-tbl-cksum-m', 'nd6-tbl-cksum-m',
+                    'ipv4-fib-tbl-cksum-m', 'ipv6-fib-tbl-cksum-m', 'mac-tbl-cksum-m', 'arp-tbl-cksum-b', 'nd6-tbl-cksum-b', 'ipv4-fib-tbl-cksum-b', 'ipv6-fib-tbl-cksum-b', 'mac-tbl-cksum-b', 'arp-tbl-cksum-mismatch-b', 'nd6-tbl-cksum-mismatch-b', 'ipv4-fib-tbl-cksum-mismatch-b',
+                    'ipv6-fib-tbl-cksum-mismatch-b', 'mac-tbl-cksum-mismatch-b', 'arp-tbl-cksum-cancel-m', 'nd6-tbl-cksum-cancel-m', 'ipv4-fib-tbl-cksum-cancel-m', 'ipv6-fib-tbl-cksum-cancel-m', 'mac-tbl-cksum-cancel-m'
+                    ]
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'arp_tbl_sync_start_ts_m_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_m_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_m_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_m_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_m_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_b_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_b_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_b_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_b_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_b_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_sent_m_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_sent_m_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_sent_m_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_sent_m_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_sent_m_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_rcvd_b_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_rcvd_b_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_rcvd_b_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_rcvd_b_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_rcvd_b_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_added_b_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_added_b_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_added_b_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_added_b_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_added_b_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_removed_b_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_removed_b_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_removed_b_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_removed_b_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_removed_b_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_m_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_m_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_m_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_m_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_m_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_b_1st': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_b_1st': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_b_1st': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_b_1st': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_b_1st': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_m_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_m_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_m_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_m_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_m_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_b_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_b_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_b_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_b_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_b_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_sent_m_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_sent_m_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_sent_m_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_sent_m_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_sent_m_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_rcvd_b_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_rcvd_b_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_rcvd_b_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_rcvd_b_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_rcvd_b_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_added_b_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_added_b_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_added_b_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_added_b_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_added_b_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_removed_b_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_removed_b_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_removed_b_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_removed_b_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_removed_b_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_m_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_m_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_m_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_m_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_m_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_b_2nd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_b_2nd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_b_2nd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_b_2nd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_b_2nd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_m_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_m_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_m_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_m_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_m_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_b_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_b_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_b_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_b_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_b_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_sent_m_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_sent_m_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_sent_m_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_sent_m_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_sent_m_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_rcvd_b_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_rcvd_b_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_rcvd_b_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_rcvd_b_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_rcvd_b_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_added_b_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_added_b_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_added_b_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_added_b_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_added_b_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_removed_b_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_removed_b_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_removed_b_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_removed_b_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_removed_b_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_m_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_m_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_m_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_m_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_m_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_b_3rd': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_b_3rd': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_b_3rd': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_b_3rd': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_b_3rd': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_m_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_m_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_m_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_m_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_m_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_b_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_b_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_b_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_b_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_b_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_sent_m_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_sent_m_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_sent_m_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_sent_m_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_sent_m_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_rcvd_b_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_rcvd_b_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_rcvd_b_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_rcvd_b_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_rcvd_b_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_added_b_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_added_b_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_added_b_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_added_b_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_added_b_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_removed_b_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_removed_b_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_removed_b_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_removed_b_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_removed_b_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_m_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_m_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_m_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_m_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_m_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_b_4th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_b_4th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_b_4th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_b_4th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_b_4th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_m_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_m_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_m_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_m_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_m_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_start_ts_b_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_start_ts_b_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_start_ts_b_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_start_ts_b_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_start_ts_b_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_sent_m_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_sent_m_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_sent_m_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_sent_m_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_sent_m_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_rcvd_b_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_rcvd_b_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_rcvd_b_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_rcvd_b_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_rcvd_b_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_added_b_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_added_b_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_added_b_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_added_b_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_added_b_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_entries_removed_b_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_entries_removed_b_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_entries_removed_b_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_entries_removed_b_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_entries_removed_b_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_m_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_m_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_m_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_m_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_m_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_end_ts_b_5th': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_end_ts_b_5th': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_end_ts_b_5th': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_end_ts_b_5th': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_end_ts_b_5th': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_m': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_m': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_m': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_m': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_m': {
+                'type': 'str',
+                },
+            'arp_tbl_sync_b': {
+                'type': 'str',
+                },
+            'nd6_tbl_sync_b': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_sync_b': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_sync_b': {
+                'type': 'str',
+                },
+            'mac_tbl_sync_b': {
+                'type': 'str',
+                },
+            'arp_tbl_cksum_m': {
+                'type': 'str',
+                },
+            'nd6_tbl_cksum_m': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_cksum_m': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_cksum_m': {
+                'type': 'str',
+                },
+            'mac_tbl_cksum_m': {
+                'type': 'str',
+                },
+            'arp_tbl_cksum_b': {
+                'type': 'str',
+                },
+            'nd6_tbl_cksum_b': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_cksum_b': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_cksum_b': {
+                'type': 'str',
+                },
+            'mac_tbl_cksum_b': {
+                'type': 'str',
+                },
+            'arp_tbl_cksum_mismatch_b': {
+                'type': 'str',
+                },
+            'nd6_tbl_cksum_mismatch_b': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_cksum_mismatch_b': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_cksum_mismatch_b': {
+                'type': 'str',
+                },
+            'mac_tbl_cksum_mismatch_b': {
+                'type': 'str',
+                },
+            'arp_tbl_cksum_cancel_m': {
+                'type': 'str',
+                },
+            'nd6_tbl_cksum_cancel_m': {
+                'type': 'str',
+                },
+            'ipv4_fib_tbl_cksum_cancel_m': {
+                'type': 'str',
+                },
+            'ipv6_fib_tbl_cksum_cancel_m': {
+                'type': 'str',
+                },
+            'mac_tbl_cksum_cancel_m': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -1425,8 +2179,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1437,8 +2190,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -1478,14 +2230,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1500,9 +2245,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -1518,15 +2261,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1554,8 +2294,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["table-integrity-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["table-integrity"]["stats"] if info != "NotFound" else info
@@ -1574,6 +2313,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

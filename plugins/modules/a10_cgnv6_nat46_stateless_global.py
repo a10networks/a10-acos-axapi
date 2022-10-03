@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_global
 description:
@@ -219,7 +218,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
@@ -231,18 +229,92 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'outbound_ipv4_received', 'outbound_ipv4_drop', 'outbound_ipv4_fragment_received', 'outbound_ipv6_unreachable', 'outbound_ipv6_fragmented', 'inbound_ipv6_received', 'inbound_ipv6_drop', 'inbound_ipv6_fragment_received', 'inbound_ipv4_unreachable', 'inbound_ipv4_fragmented', 'packet_too_big', 'fragment_error', 'icmpv6_to_icmp', 'icmpv6_to_icmp_error', 'icmp_to_icmpv6', 'icmp_to_icmpv6_error', 'ha_standby', 'other_error', 'conn_count']}},
-        'stats': {'type': 'dict', 'outbound_ipv4_received': {'type': 'str', }, 'outbound_ipv4_drop': {'type': 'str', }, 'outbound_ipv4_fragment_received': {'type': 'str', }, 'outbound_ipv6_unreachable': {'type': 'str', }, 'outbound_ipv6_fragmented': {'type': 'str', }, 'inbound_ipv6_received': {'type': 'str', }, 'inbound_ipv6_drop': {'type': 'str', }, 'inbound_ipv6_fragment_received': {'type': 'str', }, 'inbound_ipv4_unreachable': {'type': 'str', }, 'inbound_ipv4_fragmented': {'type': 'str', }, 'packet_too_big': {'type': 'str', }, 'fragment_error': {'type': 'str', }, 'icmpv6_to_icmp': {'type': 'str', }, 'icmpv6_to_icmp_error': {'type': 'str', }, 'icmp_to_icmpv6': {'type': 'str', }, 'icmp_to_icmpv6_error': {'type': 'str', }, 'ha_standby': {'type': 'str', }, 'other_error': {'type': 'str', }, 'conn_count': {'type': 'str', }}
-    })
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'outbound_ipv4_received', 'outbound_ipv4_drop', 'outbound_ipv4_fragment_received', 'outbound_ipv6_unreachable', 'outbound_ipv6_fragmented', 'inbound_ipv6_received', 'inbound_ipv6_drop', 'inbound_ipv6_fragment_received', 'inbound_ipv4_unreachable',
+                    'inbound_ipv4_fragmented', 'packet_too_big', 'fragment_error', 'icmpv6_to_icmp', 'icmpv6_to_icmp_error', 'icmp_to_icmpv6', 'icmp_to_icmpv6_error', 'ha_standby', 'other_error', 'conn_count'
+                    ]
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'outbound_ipv4_received': {
+                'type': 'str',
+                },
+            'outbound_ipv4_drop': {
+                'type': 'str',
+                },
+            'outbound_ipv4_fragment_received': {
+                'type': 'str',
+                },
+            'outbound_ipv6_unreachable': {
+                'type': 'str',
+                },
+            'outbound_ipv6_fragmented': {
+                'type': 'str',
+                },
+            'inbound_ipv6_received': {
+                'type': 'str',
+                },
+            'inbound_ipv6_drop': {
+                'type': 'str',
+                },
+            'inbound_ipv6_fragment_received': {
+                'type': 'str',
+                },
+            'inbound_ipv4_unreachable': {
+                'type': 'str',
+                },
+            'inbound_ipv4_fragmented': {
+                'type': 'str',
+                },
+            'packet_too_big': {
+                'type': 'str',
+                },
+            'fragment_error': {
+                'type': 'str',
+                },
+            'icmpv6_to_icmp': {
+                'type': 'str',
+                },
+            'icmpv6_to_icmp_error': {
+                'type': 'str',
+                },
+            'icmp_to_icmpv6': {
+                'type': 'str',
+                },
+            'icmp_to_icmpv6_error': {
+                'type': 'str',
+                },
+            'ha_standby': {
+                'type': 'str',
+                },
+            'other_error': {
+                'type': 'str',
+                },
+            'conn_count': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -288,8 +360,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -300,8 +371,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -341,14 +411,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -363,9 +426,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -381,15 +442,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -417,8 +475,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["global-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["global"]["stats"] if info != "NotFound" else info
@@ -437,6 +494,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_aam_authentication_portal_change_password
 description:
@@ -413,7 +412,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["action_url", "background", "cfm_pwd_cfg", "confirm_password_var", "new_password_var", "new_pwd_cfg", "old_password_var", "old_pwd_cfg", "reset_text", "submit_text", "title_cfg", "username_cfg", "username_var", "uuid", ]
 
@@ -425,33 +423,221 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'background': {'type': 'dict', 'bgfile': {'type': 'str', }, 'bgstyle': {'type': 'str', 'choices': ['tile', 'stretch', 'fit']}, 'bgcolor_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'bgcolor_value': {'type': 'str', }},
-        'title_cfg': {'type': 'dict', 'title': {'type': 'bool', }, 'title_text': {'type': 'str', }, 'title_font': {'type': 'bool', }, 'title_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'title_font_custom': {'type': 'str', }, 'title_size': {'type': 'int', }, 'title_color': {'type': 'bool', }, 'title_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'title_color_value': {'type': 'str', }},
-        'action_url': {'type': 'str', },
-        'username_cfg': {'type': 'dict', 'username': {'type': 'bool', }, 'user_text': {'type': 'str', }, 'user_font': {'type': 'bool', }, 'user_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'user_font_custom': {'type': 'str', }, 'user_size': {'type': 'int', }, 'user_color': {'type': 'bool', }, 'user_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'user_color_value': {'type': 'str', }},
-        'username_var': {'type': 'str', },
-        'old_pwd_cfg': {'type': 'dict', 'old_password': {'type': 'bool', }, 'old_text': {'type': 'str', }, 'old_font': {'type': 'bool', }, 'old_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'old_font_custom': {'type': 'str', }, 'old_size': {'type': 'int', }, 'old_color': {'type': 'bool', }, 'old_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'old_color_value': {'type': 'str', }},
-        'old_password_var': {'type': 'str', },
-        'new_pwd_cfg': {'type': 'dict', 'new_password': {'type': 'bool', }, 'new_text': {'type': 'str', }, 'new_font': {'type': 'bool', }, 'new_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'new_font_custom': {'type': 'str', }, 'new_size': {'type': 'int', }, 'new_color': {'type': 'bool', }, 'new_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'new_color_value': {'type': 'str', }},
-        'new_password_var': {'type': 'str', },
-        'cfm_pwd_cfg': {'type': 'dict', 'confirm_password': {'type': 'bool', }, 'cfm_text': {'type': 'str', }, 'cfm_font': {'type': 'bool', }, 'cfm_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'cfm_font_custom': {'type': 'str', }, 'cfm_size': {'type': 'int', }, 'cfm_color': {'type': 'bool', }, 'cfm_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'cfm_color_value': {'type': 'str', }},
-        'confirm_password_var': {'type': 'str', },
-        'submit_text': {'type': 'str', },
-        'reset_text': {'type': 'str', },
-        'uuid': {'type': 'str', }
-    })
+    rv.update({
+        'background': {
+            'type': 'dict',
+            'bgfile': {
+                'type': 'str',
+                },
+            'bgstyle': {
+                'type': 'str',
+                'choices': ['tile', 'stretch', 'fit']
+                },
+            'bgcolor_name': {
+                'type': 'str',
+                'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']
+                },
+            'bgcolor_value': {
+                'type': 'str',
+                }
+            },
+        'title_cfg': {
+            'type': 'dict',
+            'title': {
+                'type': 'bool',
+                },
+            'title_text': {
+                'type': 'str',
+                },
+            'title_font': {
+                'type': 'bool',
+                },
+            'title_face': {
+                'type': 'str',
+                'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']
+                },
+            'title_font_custom': {
+                'type': 'str',
+                },
+            'title_size': {
+                'type': 'int',
+                },
+            'title_color': {
+                'type': 'bool',
+                },
+            'title_color_name': {
+                'type': 'str',
+                'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']
+                },
+            'title_color_value': {
+                'type': 'str',
+                }
+            },
+        'action_url': {
+            'type': 'str',
+            },
+        'username_cfg': {
+            'type': 'dict',
+            'username': {
+                'type': 'bool',
+                },
+            'user_text': {
+                'type': 'str',
+                },
+            'user_font': {
+                'type': 'bool',
+                },
+            'user_face': {
+                'type': 'str',
+                'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']
+                },
+            'user_font_custom': {
+                'type': 'str',
+                },
+            'user_size': {
+                'type': 'int',
+                },
+            'user_color': {
+                'type': 'bool',
+                },
+            'user_color_name': {
+                'type': 'str',
+                'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']
+                },
+            'user_color_value': {
+                'type': 'str',
+                }
+            },
+        'username_var': {
+            'type': 'str',
+            },
+        'old_pwd_cfg': {
+            'type': 'dict',
+            'old_password': {
+                'type': 'bool',
+                },
+            'old_text': {
+                'type': 'str',
+                },
+            'old_font': {
+                'type': 'bool',
+                },
+            'old_face': {
+                'type': 'str',
+                'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']
+                },
+            'old_font_custom': {
+                'type': 'str',
+                },
+            'old_size': {
+                'type': 'int',
+                },
+            'old_color': {
+                'type': 'bool',
+                },
+            'old_color_name': {
+                'type': 'str',
+                'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']
+                },
+            'old_color_value': {
+                'type': 'str',
+                }
+            },
+        'old_password_var': {
+            'type': 'str',
+            },
+        'new_pwd_cfg': {
+            'type': 'dict',
+            'new_password': {
+                'type': 'bool',
+                },
+            'new_text': {
+                'type': 'str',
+                },
+            'new_font': {
+                'type': 'bool',
+                },
+            'new_face': {
+                'type': 'str',
+                'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']
+                },
+            'new_font_custom': {
+                'type': 'str',
+                },
+            'new_size': {
+                'type': 'int',
+                },
+            'new_color': {
+                'type': 'bool',
+                },
+            'new_color_name': {
+                'type': 'str',
+                'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']
+                },
+            'new_color_value': {
+                'type': 'str',
+                }
+            },
+        'new_password_var': {
+            'type': 'str',
+            },
+        'cfm_pwd_cfg': {
+            'type': 'dict',
+            'confirm_password': {
+                'type': 'bool',
+                },
+            'cfm_text': {
+                'type': 'str',
+                },
+            'cfm_font': {
+                'type': 'bool',
+                },
+            'cfm_face': {
+                'type': 'str',
+                'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']
+                },
+            'cfm_font_custom': {
+                'type': 'str',
+                },
+            'cfm_size': {
+                'type': 'int',
+                },
+            'cfm_color': {
+                'type': 'bool',
+                },
+            'cfm_color_name': {
+                'type': 'str',
+                'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']
+                },
+            'cfm_color_value': {
+                'type': 'str',
+                }
+            },
+        'confirm_password_var': {
+            'type': 'str',
+            },
+        'submit_text': {
+            'type': 'str',
+            },
+        'reset_text': {
+            'type': 'str',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
-    rv.update(dict(
-        portal_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(portal_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -462,7 +648,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["portal_name"]:
-        f_dict["portal_name"] = module.params["portal_name"].replace("/","%2F")
+        f_dict["portal_name"] = module.params["portal_name"].replace("/", "%2F")
     else:
         f_dict["portal_name"] = module.params["portal_name"]
 
@@ -502,8 +688,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -514,8 +699,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -555,14 +739,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -577,9 +754,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -595,15 +770,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -645,6 +817,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

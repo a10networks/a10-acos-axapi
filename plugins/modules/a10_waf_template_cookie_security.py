@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_waf_template_cookie_security
 description:
@@ -237,9 +236,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["allow_missing_cookie", "allow_unrecognized_cookie", "cookie_policy", "enable_disable_action", "set_cookie_policy", "tamper_protection_grace_period", "tamper_protection_http_only", "tamper_protection_samesite", "tamper_protection_secret", "tamper_protection_secret_encrypted", "tamper_protection_secure", "tamper_protection_session_cookie_only", "tamper_protection_sign", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "allow_missing_cookie", "allow_unrecognized_cookie", "cookie_policy", "enable_disable_action", "set_cookie_policy", "tamper_protection_grace_period", "tamper_protection_http_only", "tamper_protection_samesite", "tamper_protection_secret", "tamper_protection_secret_encrypted",
+    "tamper_protection_secure", "tamper_protection_session_cookie_only", "tamper_protection_sign", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -249,33 +250,101 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'enable_disable_action': {'type': 'str', 'choices': ['enable', 'disable']},
-        'allow_missing_cookie': {'type': 'bool', },
-        'allow_unrecognized_cookie': {'type': 'bool', },
-        'cookie_policy': {'type': 'list', 'cookie_policy_name': {'type': 'str', }, 'cookie_policy_allow': {'type': 'bool', }, 'cookie_policy_disallow': {'type': 'bool', }},
-        'set_cookie_policy': {'type': 'list', 'set_cookie_policy_name': {'type': 'str', }, 'set_cookie_policy_allow': {'type': 'bool', }, 'set_cookie_policy_disallow': {'type': 'bool', }, 'set_cookie_policy_http_only': {'type': 'bool', }, 'set_cookie_policy_secure': {'type': 'bool', }, 'set_cookie_policy_samesite': {'type': 'str', 'choices': ['none', 'lax', 'strict']}, 'set_cookie_policy_sign': {'type': 'bool', }, 'set_cookie_policy_secret': {'type': 'str', }, 'set_cookie_policy_secret_encrypted': {'type': 'str', }},
-        'tamper_protection_http_only': {'type': 'bool', },
-        'tamper_protection_secure': {'type': 'bool', },
-        'tamper_protection_samesite': {'type': 'str', 'choices': ['none', 'lax', 'strict']},
-        'tamper_protection_secret': {'type': 'str', },
-        'tamper_protection_secret_encrypted': {'type': 'str', },
-        'tamper_protection_grace_period': {'type': 'int', },
-        'tamper_protection_session_cookie_only': {'type': 'bool', },
-        'tamper_protection_sign': {'type': 'bool', },
-        'uuid': {'type': 'str', }
-    })
+    rv.update({
+        'enable_disable_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'allow_missing_cookie': {
+            'type': 'bool',
+            },
+        'allow_unrecognized_cookie': {
+            'type': 'bool',
+            },
+        'cookie_policy': {
+            'type': 'list',
+            'cookie_policy_name': {
+                'type': 'str',
+                },
+            'cookie_policy_allow': {
+                'type': 'bool',
+                },
+            'cookie_policy_disallow': {
+                'type': 'bool',
+                }
+            },
+        'set_cookie_policy': {
+            'type': 'list',
+            'set_cookie_policy_name': {
+                'type': 'str',
+                },
+            'set_cookie_policy_allow': {
+                'type': 'bool',
+                },
+            'set_cookie_policy_disallow': {
+                'type': 'bool',
+                },
+            'set_cookie_policy_http_only': {
+                'type': 'bool',
+                },
+            'set_cookie_policy_secure': {
+                'type': 'bool',
+                },
+            'set_cookie_policy_samesite': {
+                'type': 'str',
+                'choices': ['none', 'lax', 'strict']
+                },
+            'set_cookie_policy_sign': {
+                'type': 'bool',
+                },
+            'set_cookie_policy_secret': {
+                'type': 'str',
+                },
+            'set_cookie_policy_secret_encrypted': {
+                'type': 'str',
+                }
+            },
+        'tamper_protection_http_only': {
+            'type': 'bool',
+            },
+        'tamper_protection_secure': {
+            'type': 'bool',
+            },
+        'tamper_protection_samesite': {
+            'type': 'str',
+            'choices': ['none', 'lax', 'strict']
+            },
+        'tamper_protection_secret': {
+            'type': 'str',
+            },
+        'tamper_protection_secret_encrypted': {
+            'type': 'str',
+            },
+        'tamper_protection_grace_period': {
+            'type': 'int',
+            },
+        'tamper_protection_session_cookie_only': {
+            'type': 'bool',
+            },
+        'tamper_protection_sign': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -286,7 +355,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/","%2F")
+        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
     else:
         f_dict["template_name"] = module.params["template_name"]
 
@@ -326,8 +395,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -338,8 +406,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -379,14 +446,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -401,9 +461,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -419,15 +477,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -469,6 +524,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

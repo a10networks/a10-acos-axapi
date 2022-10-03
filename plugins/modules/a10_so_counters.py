@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_so_counters
 description:
@@ -291,7 +290,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
@@ -303,18 +301,129 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'so_pkts_rcvd', 'so_redirect_pkts_sent', 'so_pkts_dropped', 'so_redirected_pkts_rcvd', 'so_fw_shadow_session_created', 'so_pkts_traffic_map_not_found_drop', 'so_slb_pkts_redirect_conn_aged_out', 'so_pkts_scaleout_not_active_drop', 'so_pkts_slb_nat_reserve_fail', 'so_pkts_slb_nat_release_fail', 'so_pkts_dest_mac_mismatch_drop', 'so_pkts_l2redirect_dest_mac_zero_drop', 'so_pkts_l2redirect_interface_not_up', 'so_pkts_l2redirect_invalid_redirect_info_error', 'so_pkts_l3_redirect_encap_error_drop', 'so_pkts_l3_redirect_inner_mac_zero_drop', 'so_pkts_l3_redirect_decap_vlan_sanity_drop', 'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop', 'so_pkts_l3_redirect_decap_rx_encap_params_drop', 'so_pkts_l3_redirect_table_error', 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop', 'so_pkts_l3_redirect_fragmentation_error', 'so_pkts_l3_redirect_table_no_entry_found', 'so_pkts_l3_redirect_invalid_dev_dir', 'so_pkts_l3_redirect_chassis_dest_mac_error', 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop', 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop', 'so_pkts_l3_redirect_too_large_pkts_in_drop', 'so_sync_fw_shadow_session_create', 'so_sync_fw_shadow_session_delete', 'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active', 'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error', 'so_pkts_l2redirect_port_retrieval_error']}},
-        'stats': {'type': 'dict', 'so_pkts_rcvd': {'type': 'str', }, 'so_redirect_pkts_sent': {'type': 'str', }, 'so_pkts_dropped': {'type': 'str', }, 'so_redirected_pkts_rcvd': {'type': 'str', }, 'so_fw_shadow_session_created': {'type': 'str', }, 'so_pkts_traffic_map_not_found_drop': {'type': 'str', }, 'so_slb_pkts_redirect_conn_aged_out': {'type': 'str', }, 'so_pkts_scaleout_not_active_drop': {'type': 'str', }, 'so_pkts_slb_nat_reserve_fail': {'type': 'str', }, 'so_pkts_slb_nat_release_fail': {'type': 'str', }, 'so_pkts_dest_mac_mismatch_drop': {'type': 'str', }, 'so_pkts_l2redirect_dest_mac_zero_drop': {'type': 'str', }, 'so_pkts_l2redirect_interface_not_up': {'type': 'str', }, 'so_pkts_l2redirect_invalid_redirect_info_error': {'type': 'str', }, 'so_pkts_l3_redirect_encap_error_drop': {'type': 'str', }, 'so_pkts_l3_redirect_inner_mac_zero_drop': {'type': 'str', }, 'so_pkts_l3_redirect_decap_vlan_sanity_drop': {'type': 'str', }, 'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop': {'type': 'str', }, 'so_pkts_l3_redirect_decap_rx_encap_params_drop': {'type': 'str', }, 'so_pkts_l3_redirect_table_error': {'type': 'str', }, 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop': {'type': 'str', }, 'so_pkts_l3_redirect_fragmentation_error': {'type': 'str', }, 'so_pkts_l3_redirect_table_no_entry_found': {'type': 'str', }, 'so_pkts_l3_redirect_invalid_dev_dir': {'type': 'str', }, 'so_pkts_l3_redirect_chassis_dest_mac_error': {'type': 'str', }, 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop': {'type': 'str', }, 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop': {'type': 'str', }, 'so_pkts_l3_redirect_too_large_pkts_in_drop': {'type': 'str', }, 'so_pkts_l2redirect_vlan_retrieval_error': {'type': 'str', }, 'so_pkts_l2redirect_port_retrieval_error': {'type': 'str', }}
-    })
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'so_pkts_rcvd', 'so_redirect_pkts_sent', 'so_pkts_dropped', 'so_redirected_pkts_rcvd', 'so_fw_shadow_session_created', 'so_pkts_traffic_map_not_found_drop', 'so_slb_pkts_redirect_conn_aged_out', 'so_pkts_scaleout_not_active_drop', 'so_pkts_slb_nat_reserve_fail',
+                    'so_pkts_slb_nat_release_fail', 'so_pkts_dest_mac_mismatch_drop', 'so_pkts_l2redirect_dest_mac_zero_drop', 'so_pkts_l2redirect_interface_not_up', 'so_pkts_l2redirect_invalid_redirect_info_error', 'so_pkts_l3_redirect_encap_error_drop', 'so_pkts_l3_redirect_inner_mac_zero_drop',
+                    'so_pkts_l3_redirect_decap_vlan_sanity_drop', 'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop', 'so_pkts_l3_redirect_decap_rx_encap_params_drop', 'so_pkts_l3_redirect_table_error', 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop', 'so_pkts_l3_redirect_fragmentation_error',
+                    'so_pkts_l3_redirect_table_no_entry_found', 'so_pkts_l3_redirect_invalid_dev_dir', 'so_pkts_l3_redirect_chassis_dest_mac_error', 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop', 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop', 'so_pkts_l3_redirect_too_large_pkts_in_drop',
+                    'so_sync_fw_shadow_session_create', 'so_sync_fw_shadow_session_delete', 'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active', 'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error',
+                    'so_pkts_l2redirect_port_retrieval_error'
+                    ]
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'so_pkts_rcvd': {
+                'type': 'str',
+                },
+            'so_redirect_pkts_sent': {
+                'type': 'str',
+                },
+            'so_pkts_dropped': {
+                'type': 'str',
+                },
+            'so_redirected_pkts_rcvd': {
+                'type': 'str',
+                },
+            'so_fw_shadow_session_created': {
+                'type': 'str',
+                },
+            'so_pkts_traffic_map_not_found_drop': {
+                'type': 'str',
+                },
+            'so_slb_pkts_redirect_conn_aged_out': {
+                'type': 'str',
+                },
+            'so_pkts_scaleout_not_active_drop': {
+                'type': 'str',
+                },
+            'so_pkts_slb_nat_reserve_fail': {
+                'type': 'str',
+                },
+            'so_pkts_slb_nat_release_fail': {
+                'type': 'str',
+                },
+            'so_pkts_dest_mac_mismatch_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l2redirect_dest_mac_zero_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l2redirect_interface_not_up': {
+                'type': 'str',
+                },
+            'so_pkts_l2redirect_invalid_redirect_info_error': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_encap_error_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_inner_mac_zero_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_decap_vlan_sanity_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_decap_rx_encap_params_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_table_error': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_rcvd_in_l2_mode_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_fragmentation_error': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_table_no_entry_found': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_invalid_dev_dir': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_chassis_dest_mac_error': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l3_redirect_too_large_pkts_in_drop': {
+                'type': 'str',
+                },
+            'so_pkts_l2redirect_vlan_retrieval_error': {
+                'type': 'str',
+                },
+            'so_pkts_l2redirect_port_retrieval_error': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -360,8 +469,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -372,8 +480,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -413,14 +520,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -435,9 +535,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -453,15 +551,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -489,8 +584,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["so-counters-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["so-counters"]["stats"] if info != "NotFound" else info
@@ -509,6 +603,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

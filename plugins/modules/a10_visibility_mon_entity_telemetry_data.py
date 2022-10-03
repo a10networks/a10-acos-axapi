@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_mon_entity_telemetry_data
 description:
@@ -264,7 +263,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
@@ -276,18 +274,119 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload', 'tcp_out_payload', 'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_fwd_syn_per_fin']}},
-        'stats': {'type': 'dict', 'in_pkts': {'type': 'str', }, 'out_pkts': {'type': 'str', }, 'in_bytes': {'type': 'str', }, 'out_bytes': {'type': 'str', }, 'errors': {'type': 'str', }, 'in_small_pkt': {'type': 'str', }, 'in_frag': {'type': 'str', }, 'out_small_pkt': {'type': 'str', }, 'out_frag': {'type': 'str', }, 'new_conn': {'type': 'str', }, 'concurrent_conn': {'type': 'str', }, 'in_bytes_per_out_bytes': {'type': 'str', }, 'drop_pkts_per_pkts': {'type': 'str', }, 'tcp_in_syn': {'type': 'str', }, 'tcp_out_syn': {'type': 'str', }, 'tcp_in_fin': {'type': 'str', }, 'tcp_out_fin': {'type': 'str', }, 'tcp_in_payload': {'type': 'str', }, 'tcp_out_payload': {'type': 'str', }, 'tcp_in_rexmit': {'type': 'str', }, 'tcp_out_rexmit': {'type': 'str', }, 'tcp_in_rst': {'type': 'str', }, 'tcp_out_rst': {'type': 'str', }, 'tcp_in_empty_ack': {'type': 'str', }, 'tcp_out_empty_ack': {'type': 'str', }, 'tcp_in_zero_wnd': {'type': 'str', }, 'tcp_out_zero_wnd': {'type': 'str', }, 'tcp_fwd_syn_per_fin': {'type': 'str', }}
-    })
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload',
+                    'tcp_out_payload', 'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_fwd_syn_per_fin'
+                    ]
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'in_pkts': {
+                'type': 'str',
+                },
+            'out_pkts': {
+                'type': 'str',
+                },
+            'in_bytes': {
+                'type': 'str',
+                },
+            'out_bytes': {
+                'type': 'str',
+                },
+            'errors': {
+                'type': 'str',
+                },
+            'in_small_pkt': {
+                'type': 'str',
+                },
+            'in_frag': {
+                'type': 'str',
+                },
+            'out_small_pkt': {
+                'type': 'str',
+                },
+            'out_frag': {
+                'type': 'str',
+                },
+            'new_conn': {
+                'type': 'str',
+                },
+            'concurrent_conn': {
+                'type': 'str',
+                },
+            'in_bytes_per_out_bytes': {
+                'type': 'str',
+                },
+            'drop_pkts_per_pkts': {
+                'type': 'str',
+                },
+            'tcp_in_syn': {
+                'type': 'str',
+                },
+            'tcp_out_syn': {
+                'type': 'str',
+                },
+            'tcp_in_fin': {
+                'type': 'str',
+                },
+            'tcp_out_fin': {
+                'type': 'str',
+                },
+            'tcp_in_payload': {
+                'type': 'str',
+                },
+            'tcp_out_payload': {
+                'type': 'str',
+                },
+            'tcp_in_rexmit': {
+                'type': 'str',
+                },
+            'tcp_out_rexmit': {
+                'type': 'str',
+                },
+            'tcp_in_rst': {
+                'type': 'str',
+                },
+            'tcp_out_rst': {
+                'type': 'str',
+                },
+            'tcp_in_empty_ack': {
+                'type': 'str',
+                },
+            'tcp_out_empty_ack': {
+                'type': 'str',
+                },
+            'tcp_in_zero_wnd': {
+                'type': 'str',
+                },
+            'tcp_out_zero_wnd': {
+                'type': 'str',
+                },
+            'tcp_fwd_syn_per_fin': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -333,8 +432,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -345,8 +443,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -364,14 +461,7 @@ def present(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -386,9 +476,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -404,15 +492,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -437,8 +522,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["mon-entity-telemetry-data-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["mon-entity-telemetry-data"]["stats"] if info != "NotFound" else info
@@ -457,6 +541,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

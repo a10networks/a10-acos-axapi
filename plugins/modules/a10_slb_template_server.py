@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_template_server
 description:
@@ -280,9 +279,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add", "bw_rate_limit", "bw_rate_limit_acct", "bw_rate_limit_duration", "bw_rate_limit_no_logging", "bw_rate_limit_resume", "conn_limit", "conn_limit_no_logging", "conn_rate_limit", "conn_rate_limit_no_logging", "dns_fail_interval", "dns_query_interval", "dynamic_server_prefix", "every", "extended_stats", "health_check", "health_check_disable", "initial_slow_start", "log_selection_failure", "max_dynamic_server", "min_ttl_ratio", "name", "rate_interval", "resume", "slow_start", "spoofing_cache", "stats_data_action", "till", "times", "user_tag", "uuid", "weight", ]
+AVAILABLE_PROPERTIES = [
+    "add", "bw_rate_limit", "bw_rate_limit_acct", "bw_rate_limit_duration", "bw_rate_limit_no_logging", "bw_rate_limit_resume", "conn_limit", "conn_limit_no_logging", "conn_rate_limit", "conn_rate_limit_no_logging", "dns_fail_interval", "dns_query_interval", "dynamic_server_prefix", "every",
+    "extended_stats", "health_check", "health_check_disable", "initial_slow_start", "log_selection_failure", "max_dynamic_server", "min_ttl_ratio", "name", "rate_interval", "resume", "slow_start", "spoofing_cache", "stats_data_action", "till", "times", "user_tag", "uuid", "weight",
+    ]
 
 
 def get_default_argspec():
@@ -292,47 +293,118 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'conn_limit': {'type': 'int', },
-        'resume': {'type': 'int', },
-        'conn_limit_no_logging': {'type': 'bool', },
-        'conn_rate_limit': {'type': 'int', },
-        'rate_interval': {'type': 'str', 'choices': ['100ms', 'second']},
-        'conn_rate_limit_no_logging': {'type': 'bool', },
-        'dns_query_interval': {'type': 'int', },
-        'dns_fail_interval': {'type': 'int', },
-        'dynamic_server_prefix': {'type': 'str', },
-        'extended_stats': {'type': 'bool', },
-        'log_selection_failure': {'type': 'bool', },
-        'health_check': {'type': 'str', },
-        'health_check_disable': {'type': 'bool', },
-        'max_dynamic_server': {'type': 'int', },
-        'min_ttl_ratio': {'type': 'int', },
-        'weight': {'type': 'int', },
-        'spoofing_cache': {'type': 'bool', },
-        'stats_data_action': {'type': 'str', 'choices': ['stats-data-enable', 'stats-data-disable']},
-        'slow_start': {'type': 'bool', },
-        'initial_slow_start': {'type': 'int', },
-        'add': {'type': 'int', },
-        'times': {'type': 'int', },
-        'every': {'type': 'int', },
-        'till': {'type': 'int', },
-        'bw_rate_limit_acct': {'type': 'str', 'choices': ['to-server-only', 'from-server-only', 'all']},
-        'bw_rate_limit': {'type': 'int', },
-        'bw_rate_limit_resume': {'type': 'int', },
-        'bw_rate_limit_duration': {'type': 'int', },
-        'bw_rate_limit_no_logging': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', }
-    })
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'conn_limit': {
+            'type': 'int',
+            },
+        'resume': {
+            'type': 'int',
+            },
+        'conn_limit_no_logging': {
+            'type': 'bool',
+            },
+        'conn_rate_limit': {
+            'type': 'int',
+            },
+        'rate_interval': {
+            'type': 'str',
+            'choices': ['100ms', 'second']
+            },
+        'conn_rate_limit_no_logging': {
+            'type': 'bool',
+            },
+        'dns_query_interval': {
+            'type': 'int',
+            },
+        'dns_fail_interval': {
+            'type': 'int',
+            },
+        'dynamic_server_prefix': {
+            'type': 'str',
+            },
+        'extended_stats': {
+            'type': 'bool',
+            },
+        'log_selection_failure': {
+            'type': 'bool',
+            },
+        'health_check': {
+            'type': 'str',
+            },
+        'health_check_disable': {
+            'type': 'bool',
+            },
+        'max_dynamic_server': {
+            'type': 'int',
+            },
+        'min_ttl_ratio': {
+            'type': 'int',
+            },
+        'weight': {
+            'type': 'int',
+            },
+        'spoofing_cache': {
+            'type': 'bool',
+            },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+            },
+        'slow_start': {
+            'type': 'bool',
+            },
+        'initial_slow_start': {
+            'type': 'int',
+            },
+        'add': {
+            'type': 'int',
+            },
+        'times': {
+            'type': 'int',
+            },
+        'every': {
+            'type': 'int',
+            },
+        'till': {
+            'type': 'int',
+            },
+        'bw_rate_limit_acct': {
+            'type': 'str',
+            'choices': ['to-server-only', 'from-server-only', 'all']
+            },
+        'bw_rate_limit': {
+            'type': 'int',
+            },
+        'bw_rate_limit_resume': {
+            'type': 'int',
+            },
+        'bw_rate_limit_duration': {
+            'type': 'int',
+            },
+        'bw_rate_limit_no_logging': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
@@ -343,7 +415,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
 
@@ -383,8 +455,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -395,8 +466,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -436,14 +506,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -458,9 +521,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -476,15 +537,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -526,6 +584,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

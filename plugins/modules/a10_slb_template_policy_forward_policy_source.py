@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_source
 description:
@@ -209,7 +208,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["destination", "match_any", "match_authorize_policy", "match_class_list", "name", "priority", "sampling_enable", "stats", "user_tag", "uuid", ]
 
@@ -221,29 +219,168 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'match_class_list': {'type': 'str', },
-        'match_any': {'type': 'bool', },
-        'match_authorize_policy': {'type': 'str', },
-        'priority': {'type': 'int', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits', 'destination-match-not-found', 'no-host-info']}},
-        'destination': {'type': 'dict', 'class_list_list': {'type': 'list', 'dest_class_list': {'type': 'str', 'required': True, }, 'action': {'type': 'str', }, 'ntype': {'type': 'str', 'choices': ['host', 'url', 'ip']}, 'priority': {'type': 'int', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}}, 'web_reputation_scope_list': {'type': 'list', 'web_reputation_scope': {'type': 'str', 'required': True, }, 'action': {'type': 'str', }, 'ntype': {'type': 'str', 'choices': ['host', 'url']}, 'priority': {'type': 'int', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}}, 'web_category_list_list': {'type': 'list', 'web_category_list': {'type': 'str', 'required': True, }, 'action': {'type': 'str', }, 'ntype': {'type': 'str', 'choices': ['host', 'url']}, 'priority': {'type': 'int', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}}, 'any': {'type': 'dict', 'action': {'type': 'str', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}}},
-        'stats': {'type': 'dict', 'hits': {'type': 'str', }, 'destination_match_not_found': {'type': 'str', }, 'no_host_info': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }, 'destination': {'type': 'dict', }}
-    })
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'match_class_list': {
+            'type': 'str',
+            },
+        'match_any': {
+            'type': 'bool',
+            },
+        'match_authorize_policy': {
+            'type': 'str',
+            },
+        'priority': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits', 'destination-match-not-found', 'no-host-info']
+                }
+            },
+        'destination': {
+            'type': 'dict',
+            'class_list_list': {
+                'type': 'list',
+                'dest_class_list': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'action': {
+                    'type': 'str',
+                    },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['host', 'url', 'ip']
+                    },
+                'priority': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
+                    }
+                },
+            'web_reputation_scope_list': {
+                'type': 'list',
+                'web_reputation_scope': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'action': {
+                    'type': 'str',
+                    },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['host', 'url']
+                    },
+                'priority': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
+                    }
+                },
+            'web_category_list_list': {
+                'type': 'list',
+                'web_category_list': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'action': {
+                    'type': 'str',
+                    },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['host', 'url']
+                    },
+                'priority': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
+                    }
+                },
+            'any': {
+                'type': 'dict',
+                'action': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
+                    }
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'hits': {
+                'type': 'str',
+                },
+            'destination_match_not_found': {
+                'type': 'str',
+                },
+            'no_host_info': {
+                'type': 'str',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'destination': {
+                'type': 'dict',
+                }
+            }
+        })
     # Parent keys
-    rv.update(dict(
-        policy_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(policy_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -254,11 +391,11 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
     if '/' in module.params["policy_name"]:
-        f_dict["policy_name"] = module.params["policy_name"].replace("/","%2F")
+        f_dict["policy_name"] = module.params["policy_name"].replace("/", "%2F")
     else:
         f_dict["policy_name"] = module.params["policy_name"]
 
@@ -299,8 +436,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -311,8 +447,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -352,14 +487,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -374,9 +502,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -392,15 +518,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -428,8 +551,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["source-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["source"]["stats"] if info != "NotFound" else info
@@ -448,6 +570,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

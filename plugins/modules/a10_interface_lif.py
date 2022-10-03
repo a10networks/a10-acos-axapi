@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_interface_lif
 description:
@@ -533,7 +532,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["access_list", "action", "bfd", "ifname", "ip", "ipv6", "isis", "mtu", "name", "oper", "sampling_enable", "stats", "user_tag", "uuid", ]
 
@@ -545,29 +543,845 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ifname': {'type': 'str', 'required': True, },
-        'mtu': {'type': 'int', },
-        'action': {'type': 'str', 'choices': ['enable', 'disable']},
-        'name': {'type': 'str', },
-        'access_list': {'type': 'dict', 'acl_id': {'type': 'int', }, 'acl_name': {'type': 'str', }},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts', 'dropped_tx_pkts', 'dropped_rx_pkts_gre_key']}},
-        'ip': {'type': 'dict', 'dhcp': {'type': 'bool', }, 'address_list': {'type': 'list', 'ipv4_address': {'type': 'str', }, 'ipv4_netmask': {'type': 'str', }}, 'allow_promiscuous_vip': {'type': 'bool', }, 'cache_spoofing_port': {'type': 'bool', }, 'inside': {'type': 'bool', }, 'outside': {'type': 'bool', }, 'generate_membership_query': {'type': 'bool', }, 'query_interval': {'type': 'int', }, 'max_resp_time': {'type': 'int', }, 'unnumbered': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'router': {'type': 'dict', 'isis': {'type': 'dict', 'tag': {'type': 'str', }, 'uuid': {'type': 'str', }}}, 'rip': {'type': 'dict', 'authentication': {'type': 'dict', 'str': {'type': 'dict', 'string': {'type': 'str', }}, 'mode': {'type': 'dict', 'mode': {'type': 'str', 'choices': ['md5', 'text']}}, 'key_chain': {'type': 'dict', 'key_chain': {'type': 'str', }}}, 'send_packet': {'type': 'bool', }, 'receive_packet': {'type': 'bool', }, 'send_cfg': {'type': 'dict', 'send': {'type': 'bool', }, 'version': {'type': 'str', 'choices': ['1', '2', '1-compatible', '1-2']}}, 'receive_cfg': {'type': 'dict', 'receive': {'type': 'bool', }, 'version': {'type': 'str', 'choices': ['1', '2', '1-2']}}, 'split_horizon_cfg': {'type': 'dict', 'state': {'type': 'str', 'choices': ['poisoned', 'disable', 'enable']}}, 'uuid': {'type': 'str', }}, 'ospf': {'type': 'dict', 'ospf_global': {'type': 'dict', 'authentication_cfg': {'type': 'dict', 'authentication': {'type': 'bool', }, 'value': {'type': 'str', 'choices': ['message-digest', 'null']}}, 'authentication_key': {'type': 'str', }, 'bfd_cfg': {'type': 'dict', 'bfd': {'type': 'bool', }, 'disable': {'type': 'bool', }}, 'cost': {'type': 'int', }, 'database_filter_cfg': {'type': 'dict', 'database_filter': {'type': 'str', 'choices': ['all']}, 'out': {'type': 'bool', }}, 'dead_interval': {'type': 'int', }, 'disable': {'type': 'str', 'choices': ['all']}, 'hello_interval': {'type': 'int', }, 'message_digest_cfg': {'type': 'list', 'message_digest_key': {'type': 'int', }, 'md5': {'type': 'dict', 'md5_value': {'type': 'str', }, 'encrypted': {'type': 'str', }}}, 'mtu': {'type': 'int', }, 'mtu_ignore': {'type': 'bool', }, 'network': {'type': 'dict', 'broadcast': {'type': 'bool', }, 'non_broadcast': {'type': 'bool', }, 'point_to_point': {'type': 'bool', }, 'point_to_multipoint': {'type': 'bool', }, 'p2mp_nbma': {'type': 'bool', }}, 'priority': {'type': 'int', }, 'retransmit_interval': {'type': 'int', }, 'transmit_delay': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'ospf_ip_list': {'type': 'list', 'ip_addr': {'type': 'str', 'required': True, }, 'authentication': {'type': 'bool', }, 'value': {'type': 'str', 'choices': ['message-digest', 'null']}, 'authentication_key': {'type': 'str', }, 'cost': {'type': 'int', }, 'database_filter': {'type': 'str', 'choices': ['all']}, 'out': {'type': 'bool', }, 'dead_interval': {'type': 'int', }, 'hello_interval': {'type': 'int', }, 'message_digest_cfg': {'type': 'list', 'message_digest_key': {'type': 'int', }, 'md5_value': {'type': 'str', }, 'encrypted': {'type': 'str', }}, 'mtu_ignore': {'type': 'bool', }, 'priority': {'type': 'int', }, 'retransmit_interval': {'type': 'int', }, 'transmit_delay': {'type': 'int', }, 'uuid': {'type': 'str', }}}},
-        'ipv6': {'type': 'dict', 'address_list': {'type': 'list', 'ipv6_addr': {'type': 'str', }, 'anycast': {'type': 'bool', }, 'link_local': {'type': 'bool', }}, 'ipv6_enable': {'type': 'bool', }, 'inside': {'type': 'bool', }, 'outside': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'router': {'type': 'dict', 'ripng': {'type': 'dict', 'rip': {'type': 'bool', }, 'uuid': {'type': 'str', }}, 'ospf': {'type': 'dict', 'area_list': {'type': 'list', 'area_id_num': {'type': 'int', }, 'area_id_addr': {'type': 'str', }, 'tag': {'type': 'str', }, 'instance_id': {'type': 'int', }}, 'uuid': {'type': 'str', }}, 'isis': {'type': 'dict', 'tag': {'type': 'str', }, 'uuid': {'type': 'str', }}}, 'ospf': {'type': 'dict', 'network_list': {'type': 'list', 'broadcast_type': {'type': 'str', 'choices': ['broadcast', 'non-broadcast', 'point-to-point', 'point-to-multipoint']}, 'p2mp_nbma': {'type': 'bool', }, 'network_instance_id': {'type': 'int', }}, 'bfd': {'type': 'bool', }, 'disable': {'type': 'bool', }, 'cost_cfg': {'type': 'list', 'cost': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'dead_interval_cfg': {'type': 'list', 'dead_interval': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'hello_interval_cfg': {'type': 'list', 'hello_interval': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'mtu_ignore_cfg': {'type': 'list', 'mtu_ignore': {'type': 'bool', }, 'instance_id': {'type': 'int', }}, 'neighbor_cfg': {'type': 'list', 'neighbor': {'type': 'str', }, 'neig_inst': {'type': 'int', }, 'neighbor_cost': {'type': 'int', }, 'neighbor_poll_interval': {'type': 'int', }, 'neighbor_priority': {'type': 'int', }}, 'priority_cfg': {'type': 'list', 'priority': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'retransmit_interval_cfg': {'type': 'list', 'retransmit_interval': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'transmit_delay_cfg': {'type': 'list', 'transmit_delay': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'uuid': {'type': 'str', }}},
-        'bfd': {'type': 'dict', 'authentication': {'type': 'dict', 'key_id': {'type': 'int', }, 'method': {'type': 'str', 'choices': ['md5', 'meticulous-md5', 'meticulous-sha1', 'sha1', 'simple']}, 'password': {'type': 'str', }, 'encrypted': {'type': 'str', }}, 'echo': {'type': 'bool', }, 'demand': {'type': 'bool', }, 'interval_cfg': {'type': 'dict', 'interval': {'type': 'int', }, 'min_rx': {'type': 'int', }, 'multiplier': {'type': 'int', }}, 'uuid': {'type': 'str', }},
-        'isis': {'type': 'dict', 'authentication': {'type': 'dict', 'send_only_list': {'type': 'list', 'send_only': {'type': 'bool', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'mode_list': {'type': 'list', 'mode': {'type': 'str', 'choices': ['md5']}, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'key_chain_list': {'type': 'list', 'key_chain': {'type': 'str', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}}, 'bfd_cfg': {'type': 'dict', 'bfd': {'type': 'bool', }, 'disable': {'type': 'bool', }}, 'circuit_type': {'type': 'str', 'choices': ['level-1', 'level-1-2', 'level-2-only']}, 'csnp_interval_list': {'type': 'list', 'csnp_interval': {'type': 'int', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'padding': {'type': 'bool', }, 'hello_interval_list': {'type': 'list', 'hello_interval': {'type': 'int', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'hello_interval_minimal_list': {'type': 'list', 'hello_interval_minimal': {'type': 'bool', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'hello_multiplier_list': {'type': 'list', 'hello_multiplier': {'type': 'int', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'lsp_interval': {'type': 'int', }, 'mesh_group': {'type': 'dict', 'value': {'type': 'int', }, 'blocked': {'type': 'bool', }}, 'metric_list': {'type': 'list', 'metric': {'type': 'int', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'network': {'type': 'str', 'choices': ['broadcast', 'point-to-point']}, 'password_list': {'type': 'list', 'password': {'type': 'str', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'priority_list': {'type': 'list', 'priority': {'type': 'int', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'retransmit_interval': {'type': 'int', }, 'wide_metric_list': {'type': 'list', 'wide_metric': {'type': 'int', }, 'level': {'type': 'str', 'choices': ['level-1', 'level-2']}}, 'uuid': {'type': 'str', }},
-        'oper': {'type': 'dict', 'state': {'type': 'str', 'choices': ['up', 'disabled', 'down']}, 'line_protocol': {'type': 'str', 'choices': ['UP', 'DOWN']}, 'link_type': {'type': 'str', }, 'encapsulation_type': {'type': 'str', 'choices': ['DOT1Q', 'GRE', 'NO-ENCAP']}, 'member_id': {'type': 'str', }, 'keep_alive': {'type': 'str', }, 'mac': {'type': 'str', }, 'igmp_query_sent': {'type': 'int', }, 'icmp_rate_limit_current': {'type': 'int', }, 'icmp_rate_over_limit_drop': {'type': 'int', }, 'icmp6_rate_limit_current': {'type': 'int', }, 'icmp6_rate_over_limit_drop': {'type': 'int', }, 'ipv4_addr_count': {'type': 'int', }, 'ipv4_list': {'type': 'list', 'addr': {'type': 'str', }, 'mask': {'type': 'str', }}, 'ipv6_addr_count': {'type': 'int', }, 'ipv6_list': {'type': 'list', 'addr': {'type': 'str', }, 'prefix': {'type': 'str', }, 'is_anycast': {'type': 'int', }}, 'ipv6_link_local': {'type': 'str', }, 'ipv6_link_local_prefix': {'type': 'str', }, 'ipv6_link_local_type': {'type': 'str', }, 'ipv6_link_local_scope': {'type': 'str', }, 'ip_unnumbered_enabled': {'type': 'int', }, 'ifname': {'type': 'str', 'required': True, }},
-        'stats': {'type': 'dict', 'num_pkts': {'type': 'str', }, 'num_total_bytes': {'type': 'str', }, 'num_unicast_pkts': {'type': 'str', }, 'num_broadcast_pkts': {'type': 'str', }, 'num_multicast_pkts': {'type': 'str', }, 'num_tx_pkts': {'type': 'str', }, 'num_total_tx_bytes': {'type': 'str', }, 'num_unicast_tx_pkts': {'type': 'str', }, 'num_broadcast_tx_pkts': {'type': 'str', }, 'num_multicast_tx_pkts': {'type': 'str', }, 'dropped_dis_rx_pkts': {'type': 'str', }, 'dropped_rx_pkts': {'type': 'str', }, 'dropped_dis_tx_pkts': {'type': 'str', }, 'dropped_tx_pkts': {'type': 'str', }, 'dropped_rx_pkts_gre_key': {'type': 'str', }, 'ifname': {'type': 'str', 'required': True, }}
-    })
+    rv.update({
+        'ifname': {
+            'type': 'str',
+            'required': True,
+            },
+        'mtu': {
+            'type': 'int',
+            },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'name': {
+            'type': 'str',
+            },
+        'access_list': {
+            'type': 'dict',
+            'acl_id': {
+                'type': 'int',
+                },
+            'acl_name': {
+                'type': 'str',
+                }
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts',
+                    'dropped_tx_pkts', 'dropped_rx_pkts_gre_key'
+                    ]
+                }
+            },
+        'ip': {
+            'type': 'dict',
+            'dhcp': {
+                'type': 'bool',
+                },
+            'address_list': {
+                'type': 'list',
+                'ipv4_address': {
+                    'type': 'str',
+                    },
+                'ipv4_netmask': {
+                    'type': 'str',
+                    }
+                },
+            'allow_promiscuous_vip': {
+                'type': 'bool',
+                },
+            'cache_spoofing_port': {
+                'type': 'bool',
+                },
+            'inside': {
+                'type': 'bool',
+                },
+            'outside': {
+                'type': 'bool',
+                },
+            'generate_membership_query': {
+                'type': 'bool',
+                },
+            'query_interval': {
+                'type': 'int',
+                },
+            'max_resp_time': {
+                'type': 'int',
+                },
+            'unnumbered': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'router': {
+                'type': 'dict',
+                'isis': {
+                    'type': 'dict',
+                    'tag': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'rip': {
+                'type': 'dict',
+                'authentication': {
+                    'type': 'dict',
+                    'str': {
+                        'type': 'dict',
+                        'string': {
+                            'type': 'str',
+                            }
+                        },
+                    'mode': {
+                        'type': 'dict',
+                        'mode': {
+                            'type': 'str',
+                            'choices': ['md5', 'text']
+                            }
+                        },
+                    'key_chain': {
+                        'type': 'dict',
+                        'key_chain': {
+                            'type': 'str',
+                            }
+                        }
+                    },
+                'send_packet': {
+                    'type': 'bool',
+                    },
+                'receive_packet': {
+                    'type': 'bool',
+                    },
+                'send_cfg': {
+                    'type': 'dict',
+                    'send': {
+                        'type': 'bool',
+                        },
+                    'version': {
+                        'type': 'str',
+                        'choices': ['1', '2', '1-compatible', '1-2']
+                        }
+                    },
+                'receive_cfg': {
+                    'type': 'dict',
+                    'receive': {
+                        'type': 'bool',
+                        },
+                    'version': {
+                        'type': 'str',
+                        'choices': ['1', '2', '1-2']
+                        }
+                    },
+                'split_horizon_cfg': {
+                    'type': 'dict',
+                    'state': {
+                        'type': 'str',
+                        'choices': ['poisoned', 'disable', 'enable']
+                        }
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'ospf': {
+                'type': 'dict',
+                'ospf_global': {
+                    'type': 'dict',
+                    'authentication_cfg': {
+                        'type': 'dict',
+                        'authentication': {
+                            'type': 'bool',
+                            },
+                        'value': {
+                            'type': 'str',
+                            'choices': ['message-digest', 'null']
+                            }
+                        },
+                    'authentication_key': {
+                        'type': 'str',
+                        },
+                    'bfd_cfg': {
+                        'type': 'dict',
+                        'bfd': {
+                            'type': 'bool',
+                            },
+                        'disable': {
+                            'type': 'bool',
+                            }
+                        },
+                    'cost': {
+                        'type': 'int',
+                        },
+                    'database_filter_cfg': {
+                        'type': 'dict',
+                        'database_filter': {
+                            'type': 'str',
+                            'choices': ['all']
+                            },
+                        'out': {
+                            'type': 'bool',
+                            }
+                        },
+                    'dead_interval': {
+                        'type': 'int',
+                        },
+                    'disable': {
+                        'type': 'str',
+                        'choices': ['all']
+                        },
+                    'hello_interval': {
+                        'type': 'int',
+                        },
+                    'message_digest_cfg': {
+                        'type': 'list',
+                        'message_digest_key': {
+                            'type': 'int',
+                            },
+                        'md5': {
+                            'type': 'dict',
+                            'md5_value': {
+                                'type': 'str',
+                                },
+                            'encrypted': {
+                                'type': 'str',
+                                }
+                            }
+                        },
+                    'mtu': {
+                        'type': 'int',
+                        },
+                    'mtu_ignore': {
+                        'type': 'bool',
+                        },
+                    'network': {
+                        'type': 'dict',
+                        'broadcast': {
+                            'type': 'bool',
+                            },
+                        'non_broadcast': {
+                            'type': 'bool',
+                            },
+                        'point_to_point': {
+                            'type': 'bool',
+                            },
+                        'point_to_multipoint': {
+                            'type': 'bool',
+                            },
+                        'p2mp_nbma': {
+                            'type': 'bool',
+                            }
+                        },
+                    'priority': {
+                        'type': 'int',
+                        },
+                    'retransmit_interval': {
+                        'type': 'int',
+                        },
+                    'transmit_delay': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'ospf_ip_list': {
+                    'type': 'list',
+                    'ip_addr': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'authentication': {
+                        'type': 'bool',
+                        },
+                    'value': {
+                        'type': 'str',
+                        'choices': ['message-digest', 'null']
+                        },
+                    'authentication_key': {
+                        'type': 'str',
+                        },
+                    'cost': {
+                        'type': 'int',
+                        },
+                    'database_filter': {
+                        'type': 'str',
+                        'choices': ['all']
+                        },
+                    'out': {
+                        'type': 'bool',
+                        },
+                    'dead_interval': {
+                        'type': 'int',
+                        },
+                    'hello_interval': {
+                        'type': 'int',
+                        },
+                    'message_digest_cfg': {
+                        'type': 'list',
+                        'message_digest_key': {
+                            'type': 'int',
+                            },
+                        'md5_value': {
+                            'type': 'str',
+                            },
+                        'encrypted': {
+                            'type': 'str',
+                            }
+                        },
+                    'mtu_ignore': {
+                        'type': 'bool',
+                        },
+                    'priority': {
+                        'type': 'int',
+                        },
+                    'retransmit_interval': {
+                        'type': 'int',
+                        },
+                    'transmit_delay': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                }
+            },
+        'ipv6': {
+            'type': 'dict',
+            'address_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    },
+                'anycast': {
+                    'type': 'bool',
+                    },
+                'link_local': {
+                    'type': 'bool',
+                    }
+                },
+            'ipv6_enable': {
+                'type': 'bool',
+                },
+            'inside': {
+                'type': 'bool',
+                },
+            'outside': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'router': {
+                'type': 'dict',
+                'ripng': {
+                    'type': 'dict',
+                    'rip': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'ospf': {
+                    'type': 'dict',
+                    'area_list': {
+                        'type': 'list',
+                        'area_id_num': {
+                            'type': 'int',
+                            },
+                        'area_id_addr': {
+                            'type': 'str',
+                            },
+                        'tag': {
+                            'type': 'str',
+                            },
+                        'instance_id': {
+                            'type': 'int',
+                            }
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'isis': {
+                    'type': 'dict',
+                    'tag': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'ospf': {
+                'type': 'dict',
+                'network_list': {
+                    'type': 'list',
+                    'broadcast_type': {
+                        'type': 'str',
+                        'choices': ['broadcast', 'non-broadcast', 'point-to-point', 'point-to-multipoint']
+                        },
+                    'p2mp_nbma': {
+                        'type': 'bool',
+                        },
+                    'network_instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'bfd': {
+                    'type': 'bool',
+                    },
+                'disable': {
+                    'type': 'bool',
+                    },
+                'cost_cfg': {
+                    'type': 'list',
+                    'cost': {
+                        'type': 'int',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'dead_interval_cfg': {
+                    'type': 'list',
+                    'dead_interval': {
+                        'type': 'int',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'hello_interval_cfg': {
+                    'type': 'list',
+                    'hello_interval': {
+                        'type': 'int',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'mtu_ignore_cfg': {
+                    'type': 'list',
+                    'mtu_ignore': {
+                        'type': 'bool',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'neighbor_cfg': {
+                    'type': 'list',
+                    'neighbor': {
+                        'type': 'str',
+                        },
+                    'neig_inst': {
+                        'type': 'int',
+                        },
+                    'neighbor_cost': {
+                        'type': 'int',
+                        },
+                    'neighbor_poll_interval': {
+                        'type': 'int',
+                        },
+                    'neighbor_priority': {
+                        'type': 'int',
+                        }
+                    },
+                'priority_cfg': {
+                    'type': 'list',
+                    'priority': {
+                        'type': 'int',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'retransmit_interval_cfg': {
+                    'type': 'list',
+                    'retransmit_interval': {
+                        'type': 'int',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'transmit_delay_cfg': {
+                    'type': 'list',
+                    'transmit_delay': {
+                        'type': 'int',
+                        },
+                    'instance_id': {
+                        'type': 'int',
+                        }
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'bfd': {
+            'type': 'dict',
+            'authentication': {
+                'type': 'dict',
+                'key_id': {
+                    'type': 'int',
+                    },
+                'method': {
+                    'type': 'str',
+                    'choices': ['md5', 'meticulous-md5', 'meticulous-sha1', 'sha1', 'simple']
+                    },
+                'password': {
+                    'type': 'str',
+                    },
+                'encrypted': {
+                    'type': 'str',
+                    }
+                },
+            'echo': {
+                'type': 'bool',
+                },
+            'demand': {
+                'type': 'bool',
+                },
+            'interval_cfg': {
+                'type': 'dict',
+                'interval': {
+                    'type': 'int',
+                    },
+                'min_rx': {
+                    'type': 'int',
+                    },
+                'multiplier': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'isis': {
+            'type': 'dict',
+            'authentication': {
+                'type': 'dict',
+                'send_only_list': {
+                    'type': 'list',
+                    'send_only': {
+                        'type': 'bool',
+                        },
+                    'level': {
+                        'type': 'str',
+                        'choices': ['level-1', 'level-2']
+                        }
+                    },
+                'mode_list': {
+                    'type': 'list',
+                    'mode': {
+                        'type': 'str',
+                        'choices': ['md5']
+                        },
+                    'level': {
+                        'type': 'str',
+                        'choices': ['level-1', 'level-2']
+                        }
+                    },
+                'key_chain_list': {
+                    'type': 'list',
+                    'key_chain': {
+                        'type': 'str',
+                        },
+                    'level': {
+                        'type': 'str',
+                        'choices': ['level-1', 'level-2']
+                        }
+                    }
+                },
+            'bfd_cfg': {
+                'type': 'dict',
+                'bfd': {
+                    'type': 'bool',
+                    },
+                'disable': {
+                    'type': 'bool',
+                    }
+                },
+            'circuit_type': {
+                'type': 'str',
+                'choices': ['level-1', 'level-1-2', 'level-2-only']
+                },
+            'csnp_interval_list': {
+                'type': 'list',
+                'csnp_interval': {
+                    'type': 'int',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'padding': {
+                'type': 'bool',
+                },
+            'hello_interval_list': {
+                'type': 'list',
+                'hello_interval': {
+                    'type': 'int',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'hello_interval_minimal_list': {
+                'type': 'list',
+                'hello_interval_minimal': {
+                    'type': 'bool',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'hello_multiplier_list': {
+                'type': 'list',
+                'hello_multiplier': {
+                    'type': 'int',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'lsp_interval': {
+                'type': 'int',
+                },
+            'mesh_group': {
+                'type': 'dict',
+                'value': {
+                    'type': 'int',
+                    },
+                'blocked': {
+                    'type': 'bool',
+                    }
+                },
+            'metric_list': {
+                'type': 'list',
+                'metric': {
+                    'type': 'int',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'network': {
+                'type': 'str',
+                'choices': ['broadcast', 'point-to-point']
+                },
+            'password_list': {
+                'type': 'list',
+                'password': {
+                    'type': 'str',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'priority_list': {
+                'type': 'list',
+                'priority': {
+                    'type': 'int',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'retransmit_interval': {
+                'type': 'int',
+                },
+            'wide_metric_list': {
+                'type': 'list',
+                'wide_metric': {
+                    'type': 'int',
+                    },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-2']
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['up', 'disabled', 'down']
+                },
+            'line_protocol': {
+                'type': 'str',
+                'choices': ['UP', 'DOWN']
+                },
+            'link_type': {
+                'type': 'str',
+                },
+            'encapsulation_type': {
+                'type': 'str',
+                'choices': ['DOT1Q', 'GRE', 'NO-ENCAP']
+                },
+            'member_id': {
+                'type': 'str',
+                },
+            'keep_alive': {
+                'type': 'str',
+                },
+            'mac': {
+                'type': 'str',
+                },
+            'igmp_query_sent': {
+                'type': 'int',
+                },
+            'icmp_rate_limit_current': {
+                'type': 'int',
+                },
+            'icmp_rate_over_limit_drop': {
+                'type': 'int',
+                },
+            'icmp6_rate_limit_current': {
+                'type': 'int',
+                },
+            'icmp6_rate_over_limit_drop': {
+                'type': 'int',
+                },
+            'ipv4_addr_count': {
+                'type': 'int',
+                },
+            'ipv4_list': {
+                'type': 'list',
+                'addr': {
+                    'type': 'str',
+                    },
+                'mask': {
+                    'type': 'str',
+                    }
+                },
+            'ipv6_addr_count': {
+                'type': 'int',
+                },
+            'ipv6_list': {
+                'type': 'list',
+                'addr': {
+                    'type': 'str',
+                    },
+                'prefix': {
+                    'type': 'str',
+                    },
+                'is_anycast': {
+                    'type': 'int',
+                    }
+                },
+            'ipv6_link_local': {
+                'type': 'str',
+                },
+            'ipv6_link_local_prefix': {
+                'type': 'str',
+                },
+            'ipv6_link_local_type': {
+                'type': 'str',
+                },
+            'ipv6_link_local_scope': {
+                'type': 'str',
+                },
+            'ip_unnumbered_enabled': {
+                'type': 'int',
+                },
+            'ifname': {
+                'type': 'str',
+                'required': True,
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'num_pkts': {
+                'type': 'str',
+                },
+            'num_total_bytes': {
+                'type': 'str',
+                },
+            'num_unicast_pkts': {
+                'type': 'str',
+                },
+            'num_broadcast_pkts': {
+                'type': 'str',
+                },
+            'num_multicast_pkts': {
+                'type': 'str',
+                },
+            'num_tx_pkts': {
+                'type': 'str',
+                },
+            'num_total_tx_bytes': {
+                'type': 'str',
+                },
+            'num_unicast_tx_pkts': {
+                'type': 'str',
+                },
+            'num_broadcast_tx_pkts': {
+                'type': 'str',
+                },
+            'num_multicast_tx_pkts': {
+                'type': 'str',
+                },
+            'dropped_dis_rx_pkts': {
+                'type': 'str',
+                },
+            'dropped_rx_pkts': {
+                'type': 'str',
+                },
+            'dropped_dis_tx_pkts': {
+                'type': 'str',
+                },
+            'dropped_tx_pkts': {
+                'type': 'str',
+                },
+            'dropped_rx_pkts_gre_key': {
+                'type': 'str',
+                },
+            'ifname': {
+                'type': 'str',
+                'required': True,
+                }
+            }
+        })
     return rv
 
 
@@ -578,7 +1392,7 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["ifname"]):
-        f_dict["ifname"] = module.params["ifname"].replace("/","%2F")
+        f_dict["ifname"] = module.params["ifname"].replace("/", "%2F")
     else:
         f_dict["ifname"] = module.params["ifname"]
 
@@ -618,8 +1432,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -630,8 +1443,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -671,14 +1483,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -693,9 +1498,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -711,15 +1514,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -747,14 +1547,12 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["lif-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["lif"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["lif"]["stats"] if info != "NotFound" else info
@@ -773,6 +1571,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

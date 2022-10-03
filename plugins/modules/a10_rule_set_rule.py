@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_rule_set_rule
 description:
@@ -1008,9 +1007,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "action_group", "app_list", "application_any", "cgnv6_ds_lite", "cgnv6_ds_lite_log", "cgnv6_ds_lite_lsn_lid", "cgnv6_fixed_nat_log", "cgnv6_log", "cgnv6_lsn_lid", "cgnv6_lsn_log", "cgnv6_policy", "dest_list", "dscp_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "forward_listen_on_port", "forward_log", "fw_log", "fwlog", "gtp_template", "idle_timeout", "inspect_payload", "ip_version", "lid", "lidlog", "listen_on_port", "listen_on_port_lid", "listen_on_port_lidlog", "log", "move_rule", "name", "oper", "policy", "remark", "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application", "user_tag", "uuid", "vpn_ipsec_name", ]
+AVAILABLE_PROPERTIES = [
+    "action", "action_group", "app_list", "application_any", "cgnv6_ds_lite", "cgnv6_ds_lite_log", "cgnv6_ds_lite_lsn_lid", "cgnv6_fixed_nat_log", "cgnv6_log", "cgnv6_lsn_lid", "cgnv6_lsn_log", "cgnv6_policy", "dest_list", "dscp_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list",
+    "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "forward_listen_on_port", "forward_log", "fw_log", "fwlog", "gtp_template", "idle_timeout", "inspect_payload", "ip_version", "lid", "lidlog", "listen_on_port",
+    "listen_on_port_lid", "listen_on_port_lidlog", "log", "move_rule", "name", "oper", "policy", "remark", "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any",
+    "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application", "user_tag", "uuid", "vpn_ipsec_name",
+    ]
 
 
 def get_default_argspec():
@@ -1020,83 +1023,583 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'remark': {'type': 'str', },
-        'status': {'type': 'str', 'choices': ['enable', 'disable']},
-        'ip_version': {'type': 'str', 'choices': ['v4', 'v6']},
-        'action': {'type': 'str', 'choices': ['permit', 'deny', 'reset']},
-        'log': {'type': 'bool', },
-        'reset_lid': {'type': 'int', },
-        'listen_on_port': {'type': 'bool', },
-        'policy': {'type': 'str', 'choices': ['cgnv6', 'forward', 'ipsec']},
-        'vpn_ipsec_name': {'type': 'str', },
-        'forward_listen_on_port': {'type': 'bool', },
-        'lid': {'type': 'int', },
-        'listen_on_port_lid': {'type': 'int', },
-        'fw_log': {'type': 'bool', },
-        'fwlog': {'type': 'bool', },
-        'cgnv6_log': {'type': 'bool', },
-        'forward_log': {'type': 'bool', },
-        'lidlog': {'type': 'bool', },
-        'reset_lidlog': {'type': 'bool', },
-        'listen_on_port_lidlog': {'type': 'bool', },
-        'cgnv6_policy': {'type': 'str', 'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']},
-        'cgnv6_fixed_nat_log': {'type': 'bool', },
-        'cgnv6_lsn_lid': {'type': 'int', },
-        'cgnv6_ds_lite': {'type': 'str', 'choices': ['lsn-lid']},
-        'cgnv6_ds_lite_lsn_lid': {'type': 'int', },
-        'inspect_payload': {'type': 'bool', },
-        'cgnv6_ds_lite_log': {'type': 'bool', },
-        'cgnv6_lsn_log': {'type': 'bool', },
-        'gtp_template': {'type': 'str', },
-        'src_class_list': {'type': 'str', },
-        'src_geoloc_name': {'type': 'str', },
-        'src_geoloc_list': {'type': 'str', },
-        'src_geoloc_list_shared': {'type': 'bool', },
-        'src_ipv4_any': {'type': 'str', 'choices': ['any']},
-        'src_ipv6_any': {'type': 'str', 'choices': ['any']},
-        'source_list': {'type': 'list', 'src_ip_subnet': {'type': 'str', }, 'src_ipv6_subnet': {'type': 'str', }, 'src_obj_network': {'type': 'str', }, 'src_obj_grp_network': {'type': 'str', }, 'src_slb_server': {'type': 'str', }},
-        'src_zone': {'type': 'str', },
-        'src_zone_any': {'type': 'str', 'choices': ['any']},
-        'src_threat_list': {'type': 'str', },
-        'dst_class_list': {'type': 'str', },
-        'dst_geoloc_name': {'type': 'str', },
-        'dst_geoloc_list': {'type': 'str', },
-        'dst_geoloc_list_shared': {'type': 'bool', },
-        'dst_ipv4_any': {'type': 'str', 'choices': ['any']},
-        'dst_ipv6_any': {'type': 'str', 'choices': ['any']},
-        'dest_list': {'type': 'list', 'dst_ip_subnet': {'type': 'str', }, 'dst_ipv6_subnet': {'type': 'str', }, 'dst_obj_network': {'type': 'str', }, 'dst_obj_grp_network': {'type': 'str', }, 'dst_slb_server': {'type': 'str', }, 'dst_slb_vserver': {'type': 'str', }},
-        'dst_domain_list': {'type': 'str', },
-        'dst_zone': {'type': 'str', },
-        'dst_zone_any': {'type': 'str', 'choices': ['any']},
-        'dst_threat_list': {'type': 'str', },
-        'service_any': {'type': 'str', 'choices': ['any']},
-        'service_list': {'type': 'list', 'protocols': {'type': 'str', 'choices': ['tcp', 'udp', 'sctp']}, 'proto_id': {'type': 'int', }, 'obj_grp_service': {'type': 'str', }, 'icmp': {'type': 'bool', }, 'icmpv6': {'type': 'bool', }, 'icmp_type': {'type': 'int', }, 'special_type': {'type': 'str', 'choices': ['any-type', 'echo-reply', 'echo-request', 'info-reply', 'info-request', 'mask-reply', 'mask-request', 'parameter-problem', 'redirect', 'source-quench', 'time-exceeded', 'timestamp', 'timestamp-reply', 'dest-unreachable']}, 'icmp_code': {'type': 'int', }, 'special_code': {'type': 'str', 'choices': ['any-code', 'frag-required', 'host-unreachable', 'network-unreachable', 'port-unreachable', 'proto-unreachable', 'route-failed']}, 'icmpv6_type': {'type': 'int', }, 'special_v6_type': {'type': 'str', 'choices': ['any-type', 'dest-unreachable', 'echo-reply', 'echo-request', 'packet-too-big', 'param-prob', 'time-exceeded']}, 'icmpv6_code': {'type': 'int', }, 'special_v6_code': {'type': 'str', 'choices': ['any-code', 'addr-unreachable', 'admin-prohibited', 'no-route', 'not-neighbour', 'port-unreachable']}, 'eq_src_port': {'type': 'int', }, 'gt_src_port': {'type': 'int', }, 'lt_src_port': {'type': 'int', }, 'range_src_port': {'type': 'int', }, 'port_num_end_src': {'type': 'int', }, 'eq_dst_port': {'type': 'int', }, 'gt_dst_port': {'type': 'int', }, 'lt_dst_port': {'type': 'int', }, 'range_dst_port': {'type': 'int', }, 'port_num_end_dst': {'type': 'int', }, 'sctp_template': {'type': 'str', }, 'alg': {'type': 'str', 'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP', 'ESP']}},
-        'idle_timeout': {'type': 'int', },
-        'dscp_list': {'type': 'list', 'dscp_value': {'type': 'str', 'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']}, 'dscp_range_start': {'type': 'int', }, 'dscp_range_end': {'type': 'int', }},
-        'application_any': {'type': 'str', 'choices': ['any']},
-        'app_list': {'type': 'list', 'obj_grp_application': {'type': 'str', }, 'protocol': {'type': 'str', }, 'protocol_tag': {'type': 'str', 'choices': ['aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency', 'database', 'disposable-email', 'ebook-reader', 'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming', 'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements', 'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service']}},
-        'track_application': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other', 'active-session-sctp', 'session-sctp', 'hitcount-timestamp', 'rate-limit-drops']}},
-        'action_group': {'type': 'dict', 'ntype': {'type': 'str', 'choices': ['permit', 'deny', 'reset']}, 'permit_log': {'type': 'bool', }, 'reset_log': {'type': 'bool', }, 'deny_log': {'type': 'bool', }, 'listen_on_port': {'type': 'bool', }, 'forward': {'type': 'bool', }, 'ipsec': {'type': 'bool', }, 'vpn_ipsec_name': {'type': 'str', }, 'cgnv6': {'type': 'bool', }, 'cgnv6_policy': {'type': 'str', 'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']}, 'cgnv6_lsn_lid': {'type': 'int', }, 'cgnv6_ds_lite': {'type': 'str', 'choices': ['lsn-lid']}, 'cgnv6_ds_lite_lsn_lid': {'type': 'int', }, 'inspect_payload': {'type': 'bool', }, 'permit_limit_policy': {'type': 'int', }, 'permit_respond_to_user_mac': {'type': 'bool', }, 'reset_respond_to_user_mac': {'type': 'bool', }, 'uuid': {'type': 'str', }},
-        'move_rule': {'type': 'dict', 'location': {'type': 'str', 'choices': ['top', 'before', 'after', 'bottom']}, 'target_rule': {'type': 'str', }},
-        'oper': {'type': 'dict', 'hitcount': {'type': 'int', }, 'last_hitcount_time': {'type': 'str', }, 'action': {'type': 'str', }, 'status': {'type': 'str', }, 'permitbytes': {'type': 'int', }, 'denybytes': {'type': 'int', }, 'resetbytes': {'type': 'int', }, 'totalbytes': {'type': 'int', }, 'permitpackets': {'type': 'int', }, 'denypackets': {'type': 'int', }, 'resetpackets': {'type': 'int', }, 'totalpackets': {'type': 'int', }, 'activesessiontcp': {'type': 'int', }, 'activesessionudp': {'type': 'int', }, 'activesessionicmp': {'type': 'int', }, 'activesessionsctp': {'type': 'int', }, 'activesessionother': {'type': 'int', }, 'activesessiontotal': {'type': 'int', }, 'sessiontcp': {'type': 'int', }, 'sessionudp': {'type': 'int', }, 'sessionicmp': {'type': 'int', }, 'sessionsctp': {'type': 'int', }, 'sessionother': {'type': 'int', }, 'sessiontotal': {'type': 'int', }, 'ratelimitdrops': {'type': 'int', }, 'name': {'type': 'str', 'required': True, }},
-        'stats': {'type': 'dict', 'hit_count': {'type': 'str', }, 'permit_bytes': {'type': 'str', }, 'deny_bytes': {'type': 'str', }, 'reset_bytes': {'type': 'str', }, 'permit_packets': {'type': 'str', }, 'deny_packets': {'type': 'str', }, 'reset_packets': {'type': 'str', }, 'active_session_tcp': {'type': 'str', }, 'active_session_udp': {'type': 'str', }, 'active_session_icmp': {'type': 'str', }, 'active_session_other': {'type': 'str', }, 'session_tcp': {'type': 'str', }, 'session_udp': {'type': 'str', }, 'session_icmp': {'type': 'str', }, 'session_other': {'type': 'str', }, 'active_session_sctp': {'type': 'str', }, 'session_sctp': {'type': 'str', }, 'hitcount_timestamp': {'type': 'str', }, 'rate_limit_drops': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
-    })
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'remark': {
+            'type': 'str',
+            },
+        'status': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'ip_version': {
+            'type': 'str',
+            'choices': ['v4', 'v6']
+            },
+        'action': {
+            'type': 'str',
+            'choices': ['permit', 'deny', 'reset']
+            },
+        'log': {
+            'type': 'bool',
+            },
+        'reset_lid': {
+            'type': 'int',
+            },
+        'listen_on_port': {
+            'type': 'bool',
+            },
+        'policy': {
+            'type': 'str',
+            'choices': ['cgnv6', 'forward', 'ipsec']
+            },
+        'vpn_ipsec_name': {
+            'type': 'str',
+            },
+        'forward_listen_on_port': {
+            'type': 'bool',
+            },
+        'lid': {
+            'type': 'int',
+            },
+        'listen_on_port_lid': {
+            'type': 'int',
+            },
+        'fw_log': {
+            'type': 'bool',
+            },
+        'fwlog': {
+            'type': 'bool',
+            },
+        'cgnv6_log': {
+            'type': 'bool',
+            },
+        'forward_log': {
+            'type': 'bool',
+            },
+        'lidlog': {
+            'type': 'bool',
+            },
+        'reset_lidlog': {
+            'type': 'bool',
+            },
+        'listen_on_port_lidlog': {
+            'type': 'bool',
+            },
+        'cgnv6_policy': {
+            'type': 'str',
+            'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']
+            },
+        'cgnv6_fixed_nat_log': {
+            'type': 'bool',
+            },
+        'cgnv6_lsn_lid': {
+            'type': 'int',
+            },
+        'cgnv6_ds_lite': {
+            'type': 'str',
+            'choices': ['lsn-lid']
+            },
+        'cgnv6_ds_lite_lsn_lid': {
+            'type': 'int',
+            },
+        'inspect_payload': {
+            'type': 'bool',
+            },
+        'cgnv6_ds_lite_log': {
+            'type': 'bool',
+            },
+        'cgnv6_lsn_log': {
+            'type': 'bool',
+            },
+        'gtp_template': {
+            'type': 'str',
+            },
+        'src_class_list': {
+            'type': 'str',
+            },
+        'src_geoloc_name': {
+            'type': 'str',
+            },
+        'src_geoloc_list': {
+            'type': 'str',
+            },
+        'src_geoloc_list_shared': {
+            'type': 'bool',
+            },
+        'src_ipv4_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'src_ipv6_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'source_list': {
+            'type': 'list',
+            'src_ip_subnet': {
+                'type': 'str',
+                },
+            'src_ipv6_subnet': {
+                'type': 'str',
+                },
+            'src_obj_network': {
+                'type': 'str',
+                },
+            'src_obj_grp_network': {
+                'type': 'str',
+                },
+            'src_slb_server': {
+                'type': 'str',
+                }
+            },
+        'src_zone': {
+            'type': 'str',
+            },
+        'src_zone_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'src_threat_list': {
+            'type': 'str',
+            },
+        'dst_class_list': {
+            'type': 'str',
+            },
+        'dst_geoloc_name': {
+            'type': 'str',
+            },
+        'dst_geoloc_list': {
+            'type': 'str',
+            },
+        'dst_geoloc_list_shared': {
+            'type': 'bool',
+            },
+        'dst_ipv4_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'dst_ipv6_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'dest_list': {
+            'type': 'list',
+            'dst_ip_subnet': {
+                'type': 'str',
+                },
+            'dst_ipv6_subnet': {
+                'type': 'str',
+                },
+            'dst_obj_network': {
+                'type': 'str',
+                },
+            'dst_obj_grp_network': {
+                'type': 'str',
+                },
+            'dst_slb_server': {
+                'type': 'str',
+                },
+            'dst_slb_vserver': {
+                'type': 'str',
+                }
+            },
+        'dst_domain_list': {
+            'type': 'str',
+            },
+        'dst_zone': {
+            'type': 'str',
+            },
+        'dst_zone_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'dst_threat_list': {
+            'type': 'str',
+            },
+        'service_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'service_list': {
+            'type': 'list',
+            'protocols': {
+                'type': 'str',
+                'choices': ['tcp', 'udp', 'sctp']
+                },
+            'proto_id': {
+                'type': 'int',
+                },
+            'obj_grp_service': {
+                'type': 'str',
+                },
+            'icmp': {
+                'type': 'bool',
+                },
+            'icmpv6': {
+                'type': 'bool',
+                },
+            'icmp_type': {
+                'type': 'int',
+                },
+            'special_type': {
+                'type': 'str',
+                'choices': ['any-type', 'echo-reply', 'echo-request', 'info-reply', 'info-request', 'mask-reply', 'mask-request', 'parameter-problem', 'redirect', 'source-quench', 'time-exceeded', 'timestamp', 'timestamp-reply', 'dest-unreachable']
+                },
+            'icmp_code': {
+                'type': 'int',
+                },
+            'special_code': {
+                'type': 'str',
+                'choices': ['any-code', 'frag-required', 'host-unreachable', 'network-unreachable', 'port-unreachable', 'proto-unreachable', 'route-failed']
+                },
+            'icmpv6_type': {
+                'type': 'int',
+                },
+            'special_v6_type': {
+                'type': 'str',
+                'choices': ['any-type', 'dest-unreachable', 'echo-reply', 'echo-request', 'packet-too-big', 'param-prob', 'time-exceeded']
+                },
+            'icmpv6_code': {
+                'type': 'int',
+                },
+            'special_v6_code': {
+                'type': 'str',
+                'choices': ['any-code', 'addr-unreachable', 'admin-prohibited', 'no-route', 'not-neighbour', 'port-unreachable']
+                },
+            'eq_src_port': {
+                'type': 'int',
+                },
+            'gt_src_port': {
+                'type': 'int',
+                },
+            'lt_src_port': {
+                'type': 'int',
+                },
+            'range_src_port': {
+                'type': 'int',
+                },
+            'port_num_end_src': {
+                'type': 'int',
+                },
+            'eq_dst_port': {
+                'type': 'int',
+                },
+            'gt_dst_port': {
+                'type': 'int',
+                },
+            'lt_dst_port': {
+                'type': 'int',
+                },
+            'range_dst_port': {
+                'type': 'int',
+                },
+            'port_num_end_dst': {
+                'type': 'int',
+                },
+            'sctp_template': {
+                'type': 'str',
+                },
+            'alg': {
+                'type': 'str',
+                'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP', 'ESP']
+                }
+            },
+        'idle_timeout': {
+            'type': 'int',
+            },
+        'dscp_list': {
+            'type': 'list',
+            'dscp_value': {
+                'type': 'str',
+                'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']
+                },
+            'dscp_range_start': {
+                'type': 'int',
+                },
+            'dscp_range_end': {
+                'type': 'int',
+                }
+            },
+        'application_any': {
+            'type': 'str',
+            'choices': ['any']
+            },
+        'app_list': {
+            'type': 'list',
+            'obj_grp_application': {
+                'type': 'str',
+                },
+            'protocol': {
+                'type': 'str',
+                },
+            'protocol_tag': {
+                'type':
+                'str',
+                'choices': [
+                    'aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency',
+                    'database', 'disposable-email', 'ebook-reader', 'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming',
+                    'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites',
+                    'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions',
+                    'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals',
+                    'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research',
+                    'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements',
+                    'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service'
+                    ]
+                }
+            },
+        'track_application': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other',
+                    'active-session-sctp', 'session-sctp', 'hitcount-timestamp', 'rate-limit-drops'
+                    ]
+                }
+            },
+        'action_group': {
+            'type': 'dict',
+            'ntype': {
+                'type': 'str',
+                'choices': ['permit', 'deny', 'reset']
+                },
+            'permit_log': {
+                'type': 'bool',
+                },
+            'reset_log': {
+                'type': 'bool',
+                },
+            'deny_log': {
+                'type': 'bool',
+                },
+            'listen_on_port': {
+                'type': 'bool',
+                },
+            'forward': {
+                'type': 'bool',
+                },
+            'ipsec': {
+                'type': 'bool',
+                },
+            'vpn_ipsec_name': {
+                'type': 'str',
+                },
+            'cgnv6': {
+                'type': 'bool',
+                },
+            'cgnv6_policy': {
+                'type': 'str',
+                'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']
+                },
+            'cgnv6_lsn_lid': {
+                'type': 'int',
+                },
+            'cgnv6_ds_lite': {
+                'type': 'str',
+                'choices': ['lsn-lid']
+                },
+            'cgnv6_ds_lite_lsn_lid': {
+                'type': 'int',
+                },
+            'inspect_payload': {
+                'type': 'bool',
+                },
+            'permit_limit_policy': {
+                'type': 'int',
+                },
+            'permit_respond_to_user_mac': {
+                'type': 'bool',
+                },
+            'reset_respond_to_user_mac': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'move_rule': {
+            'type': 'dict',
+            'location': {
+                'type': 'str',
+                'choices': ['top', 'before', 'after', 'bottom']
+                },
+            'target_rule': {
+                'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'hitcount': {
+                'type': 'int',
+                },
+            'last_hitcount_time': {
+                'type': 'str',
+                },
+            'action': {
+                'type': 'str',
+                },
+            'status': {
+                'type': 'str',
+                },
+            'permitbytes': {
+                'type': 'int',
+                },
+            'denybytes': {
+                'type': 'int',
+                },
+            'resetbytes': {
+                'type': 'int',
+                },
+            'totalbytes': {
+                'type': 'int',
+                },
+            'permitpackets': {
+                'type': 'int',
+                },
+            'denypackets': {
+                'type': 'int',
+                },
+            'resetpackets': {
+                'type': 'int',
+                },
+            'totalpackets': {
+                'type': 'int',
+                },
+            'activesessiontcp': {
+                'type': 'int',
+                },
+            'activesessionudp': {
+                'type': 'int',
+                },
+            'activesessionicmp': {
+                'type': 'int',
+                },
+            'activesessionsctp': {
+                'type': 'int',
+                },
+            'activesessionother': {
+                'type': 'int',
+                },
+            'activesessiontotal': {
+                'type': 'int',
+                },
+            'sessiontcp': {
+                'type': 'int',
+                },
+            'sessionudp': {
+                'type': 'int',
+                },
+            'sessionicmp': {
+                'type': 'int',
+                },
+            'sessionsctp': {
+                'type': 'int',
+                },
+            'sessionother': {
+                'type': 'int',
+                },
+            'sessiontotal': {
+                'type': 'int',
+                },
+            'ratelimitdrops': {
+                'type': 'int',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'hit_count': {
+                'type': 'str',
+                },
+            'permit_bytes': {
+                'type': 'str',
+                },
+            'deny_bytes': {
+                'type': 'str',
+                },
+            'reset_bytes': {
+                'type': 'str',
+                },
+            'permit_packets': {
+                'type': 'str',
+                },
+            'deny_packets': {
+                'type': 'str',
+                },
+            'reset_packets': {
+                'type': 'str',
+                },
+            'active_session_tcp': {
+                'type': 'str',
+                },
+            'active_session_udp': {
+                'type': 'str',
+                },
+            'active_session_icmp': {
+                'type': 'str',
+                },
+            'active_session_other': {
+                'type': 'str',
+                },
+            'session_tcp': {
+                'type': 'str',
+                },
+            'session_udp': {
+                'type': 'str',
+                },
+            'session_icmp': {
+                'type': 'str',
+                },
+            'session_other': {
+                'type': 'str',
+                },
+            'active_session_sctp': {
+                'type': 'str',
+                },
+            'session_sctp': {
+                'type': 'str',
+                },
+            'hitcount_timestamp': {
+                'type': 'str',
+                },
+            'rate_limit_drops': {
+                'type': 'str',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                }
+            }
+        })
     # Parent keys
-    rv.update(dict(
-        rule_set_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(rule_set_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -1107,11 +1610,11 @@ def existing_url(module):
 
     f_dict = {}
     if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/","%2F")
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
         f_dict["name"] = module.params["name"]
     if '/' in module.params["rule_set_name"]:
-        f_dict["rule_set_name"] = module.params["rule_set_name"].replace("/","%2F")
+        f_dict["rule_set_name"] = module.params["rule_set_name"].replace("/", "%2F")
     else:
         f_dict["rule_set_name"] = module.params["rule_set_name"]
 
@@ -1152,8 +1655,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1164,8 +1666,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -1205,14 +1706,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1227,9 +1721,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -1245,15 +1737,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1281,14 +1770,12 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["rule-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module),
-                                                      params=module.params)
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["rule"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["rule"]["stats"] if info != "NotFound" else info
@@ -1307,6 +1794,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

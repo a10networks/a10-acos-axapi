@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_system_data_cpu
 description:
@@ -524,7 +523,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["stats", "uuid", ]
 
@@ -536,17 +534,327 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'stats': {'type': 'dict', 'data_cpu_number': {'type': 'str', }, 'cpu_1': {'type': 'str', }, 'cpu_2': {'type': 'str', }, 'cpu_3': {'type': 'str', }, 'cpu_4': {'type': 'str', }, 'cpu_5': {'type': 'str', }, 'cpu_6': {'type': 'str', }, 'cpu_7': {'type': 'str', }, 'cpu_8': {'type': 'str', }, 'cpu_9': {'type': 'str', }, 'cpu_10': {'type': 'str', }, 'cpu_11': {'type': 'str', }, 'cpu_12': {'type': 'str', }, 'cpu_13': {'type': 'str', }, 'cpu_14': {'type': 'str', }, 'cpu_15': {'type': 'str', }, 'cpu_16': {'type': 'str', }, 'cpu_17': {'type': 'str', }, 'cpu_18': {'type': 'str', }, 'cpu_19': {'type': 'str', }, 'cpu_20': {'type': 'str', }, 'cpu_21': {'type': 'str', }, 'cpu_22': {'type': 'str', }, 'cpu_23': {'type': 'str', }, 'cpu_24': {'type': 'str', }, 'cpu_25': {'type': 'str', }, 'cpu_26': {'type': 'str', }, 'cpu_27': {'type': 'str', }, 'cpu_28': {'type': 'str', }, 'cpu_29': {'type': 'str', }, 'cpu_30': {'type': 'str', }, 'cpu_31': {'type': 'str', }, 'cpu_32': {'type': 'str', }, 'cpu_33': {'type': 'str', }, 'cpu_34': {'type': 'str', }, 'cpu_35': {'type': 'str', }, 'cpu_36': {'type': 'str', }, 'cpu_37': {'type': 'str', }, 'cpu_38': {'type': 'str', }, 'cpu_39': {'type': 'str', }, 'cpu_40': {'type': 'str', }, 'cpu_41': {'type': 'str', }, 'cpu_42': {'type': 'str', }, 'cpu_43': {'type': 'str', }, 'cpu_44': {'type': 'str', }, 'cpu_45': {'type': 'str', }, 'cpu_46': {'type': 'str', }, 'cpu_47': {'type': 'str', }, 'cpu_48': {'type': 'str', }, 'cpu_49': {'type': 'str', }, 'cpu_50': {'type': 'str', }, 'cpu_51': {'type': 'str', }, 'cpu_52': {'type': 'str', }, 'cpu_53': {'type': 'str', }, 'cpu_54': {'type': 'str', }, 'cpu_55': {'type': 'str', }, 'cpu_56': {'type': 'str', }, 'cpu_57': {'type': 'str', }, 'cpu_58': {'type': 'str', }, 'cpu_59': {'type': 'str', }, 'cpu_60': {'type': 'str', }, 'cpu_61': {'type': 'str', }, 'cpu_62': {'type': 'str', }, 'cpu_63': {'type': 'str', }, 'cpu_64': {'type': 'str', }, 'cpu_65': {'type': 'str', }, 'cpu_66': {'type': 'str', }, 'cpu_67': {'type': 'str', }, 'cpu_68': {'type': 'str', }, 'cpu_69': {'type': 'str', }, 'cpu_70': {'type': 'str', }, 'cpu_71': {'type': 'str', }, 'cpu_72': {'type': 'str', }, 'cpu_73': {'type': 'str', }, 'cpu_74': {'type': 'str', }, 'cpu_75': {'type': 'str', }, 'cpu_76': {'type': 'str', }, 'cpu_77': {'type': 'str', }, 'cpu_78': {'type': 'str', }, 'cpu_79': {'type': 'str', }, 'cpu_80': {'type': 'str', }, 'cpu_81': {'type': 'str', }, 'cpu_82': {'type': 'str', }, 'cpu_83': {'type': 'str', }, 'cpu_84': {'type': 'str', }, 'cpu_85': {'type': 'str', }, 'cpu_86': {'type': 'str', }, 'cpu_87': {'type': 'str', }, 'cpu_88': {'type': 'str', }, 'cpu_89': {'type': 'str', }, 'cpu_90': {'type': 'str', }, 'cpu_91': {'type': 'str', }, 'cpu_92': {'type': 'str', }, 'cpu_93': {'type': 'str', }, 'cpu_94': {'type': 'str', }, 'cpu_95': {'type': 'str', }, 'cpu_96': {'type': 'str', }, 'cpu_97': {'type': 'str', }, 'cpu_98': {'type': 'str', }, 'cpu_99': {'type': 'str', }, 'cpu_100': {'type': 'str', }}
-    })
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'stats': {
+            'type': 'dict',
+            'data_cpu_number': {
+                'type': 'str',
+                },
+            'cpu_1': {
+                'type': 'str',
+                },
+            'cpu_2': {
+                'type': 'str',
+                },
+            'cpu_3': {
+                'type': 'str',
+                },
+            'cpu_4': {
+                'type': 'str',
+                },
+            'cpu_5': {
+                'type': 'str',
+                },
+            'cpu_6': {
+                'type': 'str',
+                },
+            'cpu_7': {
+                'type': 'str',
+                },
+            'cpu_8': {
+                'type': 'str',
+                },
+            'cpu_9': {
+                'type': 'str',
+                },
+            'cpu_10': {
+                'type': 'str',
+                },
+            'cpu_11': {
+                'type': 'str',
+                },
+            'cpu_12': {
+                'type': 'str',
+                },
+            'cpu_13': {
+                'type': 'str',
+                },
+            'cpu_14': {
+                'type': 'str',
+                },
+            'cpu_15': {
+                'type': 'str',
+                },
+            'cpu_16': {
+                'type': 'str',
+                },
+            'cpu_17': {
+                'type': 'str',
+                },
+            'cpu_18': {
+                'type': 'str',
+                },
+            'cpu_19': {
+                'type': 'str',
+                },
+            'cpu_20': {
+                'type': 'str',
+                },
+            'cpu_21': {
+                'type': 'str',
+                },
+            'cpu_22': {
+                'type': 'str',
+                },
+            'cpu_23': {
+                'type': 'str',
+                },
+            'cpu_24': {
+                'type': 'str',
+                },
+            'cpu_25': {
+                'type': 'str',
+                },
+            'cpu_26': {
+                'type': 'str',
+                },
+            'cpu_27': {
+                'type': 'str',
+                },
+            'cpu_28': {
+                'type': 'str',
+                },
+            'cpu_29': {
+                'type': 'str',
+                },
+            'cpu_30': {
+                'type': 'str',
+                },
+            'cpu_31': {
+                'type': 'str',
+                },
+            'cpu_32': {
+                'type': 'str',
+                },
+            'cpu_33': {
+                'type': 'str',
+                },
+            'cpu_34': {
+                'type': 'str',
+                },
+            'cpu_35': {
+                'type': 'str',
+                },
+            'cpu_36': {
+                'type': 'str',
+                },
+            'cpu_37': {
+                'type': 'str',
+                },
+            'cpu_38': {
+                'type': 'str',
+                },
+            'cpu_39': {
+                'type': 'str',
+                },
+            'cpu_40': {
+                'type': 'str',
+                },
+            'cpu_41': {
+                'type': 'str',
+                },
+            'cpu_42': {
+                'type': 'str',
+                },
+            'cpu_43': {
+                'type': 'str',
+                },
+            'cpu_44': {
+                'type': 'str',
+                },
+            'cpu_45': {
+                'type': 'str',
+                },
+            'cpu_46': {
+                'type': 'str',
+                },
+            'cpu_47': {
+                'type': 'str',
+                },
+            'cpu_48': {
+                'type': 'str',
+                },
+            'cpu_49': {
+                'type': 'str',
+                },
+            'cpu_50': {
+                'type': 'str',
+                },
+            'cpu_51': {
+                'type': 'str',
+                },
+            'cpu_52': {
+                'type': 'str',
+                },
+            'cpu_53': {
+                'type': 'str',
+                },
+            'cpu_54': {
+                'type': 'str',
+                },
+            'cpu_55': {
+                'type': 'str',
+                },
+            'cpu_56': {
+                'type': 'str',
+                },
+            'cpu_57': {
+                'type': 'str',
+                },
+            'cpu_58': {
+                'type': 'str',
+                },
+            'cpu_59': {
+                'type': 'str',
+                },
+            'cpu_60': {
+                'type': 'str',
+                },
+            'cpu_61': {
+                'type': 'str',
+                },
+            'cpu_62': {
+                'type': 'str',
+                },
+            'cpu_63': {
+                'type': 'str',
+                },
+            'cpu_64': {
+                'type': 'str',
+                },
+            'cpu_65': {
+                'type': 'str',
+                },
+            'cpu_66': {
+                'type': 'str',
+                },
+            'cpu_67': {
+                'type': 'str',
+                },
+            'cpu_68': {
+                'type': 'str',
+                },
+            'cpu_69': {
+                'type': 'str',
+                },
+            'cpu_70': {
+                'type': 'str',
+                },
+            'cpu_71': {
+                'type': 'str',
+                },
+            'cpu_72': {
+                'type': 'str',
+                },
+            'cpu_73': {
+                'type': 'str',
+                },
+            'cpu_74': {
+                'type': 'str',
+                },
+            'cpu_75': {
+                'type': 'str',
+                },
+            'cpu_76': {
+                'type': 'str',
+                },
+            'cpu_77': {
+                'type': 'str',
+                },
+            'cpu_78': {
+                'type': 'str',
+                },
+            'cpu_79': {
+                'type': 'str',
+                },
+            'cpu_80': {
+                'type': 'str',
+                },
+            'cpu_81': {
+                'type': 'str',
+                },
+            'cpu_82': {
+                'type': 'str',
+                },
+            'cpu_83': {
+                'type': 'str',
+                },
+            'cpu_84': {
+                'type': 'str',
+                },
+            'cpu_85': {
+                'type': 'str',
+                },
+            'cpu_86': {
+                'type': 'str',
+                },
+            'cpu_87': {
+                'type': 'str',
+                },
+            'cpu_88': {
+                'type': 'str',
+                },
+            'cpu_89': {
+                'type': 'str',
+                },
+            'cpu_90': {
+                'type': 'str',
+                },
+            'cpu_91': {
+                'type': 'str',
+                },
+            'cpu_92': {
+                'type': 'str',
+                },
+            'cpu_93': {
+                'type': 'str',
+                },
+            'cpu_94': {
+                'type': 'str',
+                },
+            'cpu_95': {
+                'type': 'str',
+                },
+            'cpu_96': {
+                'type': 'str',
+                },
+            'cpu_97': {
+                'type': 'str',
+                },
+            'cpu_98': {
+                'type': 'str',
+                },
+            'cpu_99': {
+                'type': 'str',
+                },
+            'cpu_100': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -579,8 +887,7 @@ def report_changes(module, result, existing_config):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -591,8 +898,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -632,14 +938,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -654,9 +953,7 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
@@ -672,15 +969,12 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -708,8 +1002,7 @@ def run_command(module):
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["data-cpu-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
-                                                       params=module.params)
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
                 result["acos_info"] = info["data-cpu"]["stats"] if info != "NotFound" else info
@@ -728,6 +1021,7 @@ def main():
     module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()
