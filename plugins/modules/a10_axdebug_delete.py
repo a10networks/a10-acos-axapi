@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_axdebug_delete
 description:
     - delete axdebug file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

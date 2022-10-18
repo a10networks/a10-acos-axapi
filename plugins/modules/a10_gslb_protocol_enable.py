@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_protocol_enable
 description:
     - Enable/Disable GSLB Message Protocol
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

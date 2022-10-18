@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_tcp
 description:
     - TCP type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,35 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'method_tcp': {
-            'type': 'bool',
-            },
-        'tcp_port': {
-            'type': 'int',
-            },
-        'port_halfopen': {
-            'type': 'bool',
-            },
-        'port_send': {
-            'type': 'str',
-            },
-        'port_resp': {
-            'type': 'dict',
-            'port_contains': {
-                'type': 'str',
-                }
-            },
-        'maintenance': {
-            'type': 'bool',
-            },
-        'maintenance_text': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'method_tcp': {'type': 'bool', }, 'tcp_port': {'type': 'int', }, 'port_halfopen': {'type': 'bool', }, 'port_send': {'type': 'str', }, 'port_resp': {'type': 'dict', 'port_contains': {'type': 'str', }}, 'maintenance': {'type': 'bool', }, 'maintenance_text': {'type': 'str', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(monitor_name=dict(type='str', required=True), ))
     return rv

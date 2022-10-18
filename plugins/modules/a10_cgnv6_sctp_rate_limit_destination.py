@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sctp_rate_limit_destination
 description:
     - Configure SCTP destination rate-limit
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

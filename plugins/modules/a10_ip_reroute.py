@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_reroute
 description:
     - reroute sessions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -172,38 +172,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'suppress_protocols': {
-            'type': 'dict',
-            'ospf': {
-                'type': 'bool',
-                },
-            'ebgp': {
-                'type': 'bool',
-                },
-            'ibgp': {
-                'type': 'bool',
-                },
-            'static': {
-                'type': 'bool',
-                },
-            'isis': {
-                'type': 'bool',
-                },
-            'rip': {
-                'type': 'bool',
-                },
-            'connected': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'suppress_protocols': {'type': 'dict', 'ospf': {'type': 'bool', }, 'ebgp': {'type': 'bool', }, 'ibgp': {'type': 'bool', }, 'static': {'type': 'bool', }, 'isis': {'type': 'bool', }, 'rip': {'type': 'bool', }, 'connected': {'type': 'bool', }, 'uuid': {'type': 'str', }}})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_icap_http
 description:
     - Configure ICAP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -451,10 +451,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'status_200', 'status_201', 'status_202', 'status_203', 'status_204', 'status_205', 'status_206', 'status_207', 'status_100', 'status_101', 'status_102', 'status_300', 'status_301', 'status_302', 'status_303', 'status_304', 'status_305', 'status_306', 'status_307',
-                    'status_400', 'status_401', 'status_402', 'status_403', 'status_404', 'status_405', 'status_406', 'status_407', 'status_408', 'status_409', 'status_410', 'status_411', 'status_412', 'status_413', 'status_414', 'status_415', 'status_416', 'status_417', 'status_418', 'status_422',
-                    'status_423', 'status_424', 'status_425', 'status_426', 'status_449', 'status_450', 'status_500', 'status_501', 'status_502', 'status_503', 'status_504', 'status_505', 'status_506', 'status_507', 'status_508', 'status_509', 'status_510', 'status_1xx', 'status_2xx', 'status_3xx',
-                    'status_4xx', 'status_5xx', 'status_6xx', 'status_unknown'
+                    'all', 'status_200', 'status_201', 'status_202', 'status_203', 'status_204', 'status_205', 'status_206', 'status_207', 'status_100', 'status_101', 'status_102', 'status_300', 'status_301', 'status_302', 'status_303', 'status_304', 'status_305', 'status_306', 'status_307', 'status_400', 'status_401', 'status_402', 'status_403',
+                    'status_404', 'status_405', 'status_406', 'status_407', 'status_408', 'status_409', 'status_410', 'status_411', 'status_412', 'status_413', 'status_414', 'status_415', 'status_416', 'status_417', 'status_418', 'status_422', 'status_423', 'status_424', 'status_425', 'status_426', 'status_449', 'status_450', 'status_500',
+                    'status_501', 'status_502', 'status_503', 'status_504', 'status_505', 'status_506', 'status_507', 'status_508', 'status_509', 'status_510', 'status_1xx', 'status_2xx', 'status_3xx', 'status_4xx', 'status_5xx', 'status_6xx', 'status_unknown'
                     ]
                 }
             },

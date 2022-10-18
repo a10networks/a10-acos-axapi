@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template_udp
 description:
     - UDP header
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -178,36 +178,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'src_port_range': {
-            'type': 'list',
-            'src_port_start': {
-                'type': 'int',
-                },
-            'src_port_end': {
-                'type': 'int',
-                }
-            },
-        'dest_port': {
-            'type': 'bool',
-            },
-        'dest_port_value': {
-            'type': 'int',
-            },
-        'nat_pool': {
-            'type': 'str',
-            },
-        'length': {
-            'type': 'int',
-            },
-        'checksum': {
-            'type': 'str',
-            'choices': ['valid', 'invalid']
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'src_port_range': {'type': 'list', 'src_port_start': {'type': 'int', }, 'src_port_end': {'type': 'int', }}, 'dest_port': {'type': 'bool', }, 'dest_port_value': {'type': 'int', }, 'nat_pool': {'type': 'str', }, 'length': {'type': 'int', }, 'checksum': {'type': 'str', 'choices': ['valid', 'invalid']}, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

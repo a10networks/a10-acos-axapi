@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_webroot_log
 description:
     - webroot log information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -164,35 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'webroot_log_list': {
-                'type': 'list',
-                'webroot_log_data': {
-                    'type': 'str',
-                    }
-                },
-            'webroot_log_offset': {
-                'type': 'int',
-                },
-            'webroot_log_over': {
-                'type': 'int',
-                },
-            'follow': {
-                'type': 'bool',
-                },
-            'from_start': {
-                'type': 'bool',
-                },
-            'num_lines': {
-                'type': 'int',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'webroot_log_list': {'type': 'list', 'webroot_log_data': {'type': 'str', }}, 'webroot_log_offset': {'type': 'int', }, 'webroot_log_over': {'type': 'int', }, 'follow': {'type': 'bool', }, 'from_start': {'type': 'bool', }, 'num_lines': {'type': 'int', }}})
     return rv
 
 

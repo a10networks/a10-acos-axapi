@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_system_status
 description:
     - Field system_status
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

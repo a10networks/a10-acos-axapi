@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_policy_attribute
 description:
     - Authorization-policy attribute configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -226,10 +226,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "A10_AX_AUTH_URI", "a10_dynamic_defined", "any", "attr_int", "attr_int_val", "attr_ip", "attr_ipv4", "attr_num", "attr_number", "attr_number_val", "attr_str", "attr_str_val", "attr_type", "attribute_name", "custom_attr_str", "custom_attr_type", "integer_type", "ip_type", "number_type",
-    "string_type", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["A10_AX_AUTH_URI", "a10_dynamic_defined", "any", "attr_int", "attr_int_val", "attr_ip", "attr_ipv4", "attr_num", "attr_number", "attr_number_val", "attr_str", "attr_str_val", "attr_type", "attribute_name", "custom_attr_str", "custom_attr_type", "integer_type", "ip_type", "number_type", "string_type", "uuid", ]
 
 
 def get_default_argspec():

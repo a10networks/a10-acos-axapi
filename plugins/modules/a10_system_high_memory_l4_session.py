@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_high_memory_l4_session
 description:
     - Enable/Disable high memory L4 session support
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

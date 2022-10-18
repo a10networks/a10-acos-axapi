@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_http_limit_check
 description:
     - HTTP limit check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -375,10 +375,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "disable", "max_content_length", "max_content_length_value", "max_cookie_header_length", "max_cookie_header_length_value", "max_cookie_name_length", "max_cookie_name_length_value", "max_cookie_value_length", "max_cookie_value_length_value", "max_cookies", "max_cookies_length",
-    "max_cookies_length_value", "max_cookies_value", "max_data_parse", "max_data_parse_value", "max_entities", "max_entities_value", "max_header_length", "max_header_length_value", "max_header_name_length", "max_header_name_length_value", "max_header_value_length", "max_header_value_length_value",
-    "max_headers", "max_headers_length", "max_headers_length_value", "max_headers_value", "max_param_name_length", "max_param_name_length_value", "max_param_value_length", "max_param_value_length_value", "max_params", "max_params_length", "max_params_length_value", "max_params_value",
-    "max_post_length", "max_post_length_value", "max_query_length", "max_query_length_value", "max_request_length", "max_request_length_value", "max_request_line_length", "max_request_line_length_value", "max_url_length", "max_url_length_value", "uuid",
+    "disable", "max_content_length", "max_content_length_value", "max_cookie_header_length", "max_cookie_header_length_value", "max_cookie_name_length", "max_cookie_name_length_value", "max_cookie_value_length", "max_cookie_value_length_value", "max_cookies", "max_cookies_length", "max_cookies_length_value", "max_cookies_value", "max_data_parse",
+    "max_data_parse_value", "max_entities", "max_entities_value", "max_header_length", "max_header_length_value", "max_header_name_length", "max_header_name_length_value", "max_header_value_length", "max_header_value_length_value", "max_headers", "max_headers_length", "max_headers_length_value", "max_headers_value", "max_param_name_length",
+    "max_param_name_length_value", "max_param_value_length", "max_param_value_length_value", "max_params", "max_params_length", "max_params_length_value", "max_params_value", "max_post_length", "max_post_length_value", "max_query_length", "max_query_length_value", "max_request_length", "max_request_length_value", "max_request_line_length",
+    "max_request_line_length_value", "max_url_length", "max_url_length_value", "uuid",
     ]
 
 

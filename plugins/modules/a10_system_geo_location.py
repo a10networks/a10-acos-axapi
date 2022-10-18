@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geo_location
 description:
     - Configure system global geo-location
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_telemetry_log_top_k_source_list
 description:
     - top_k source list for a given app svc
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

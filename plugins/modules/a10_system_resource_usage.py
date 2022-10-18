@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_usage
 description:
     - Configure System Resource Usage
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -431,8 +431,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex_table_entry_count", "auth_portal_html_file_size", "auth_portal_image_file_size", "auth_session_count", "authz_policy_number", "class_list_ac_entry_count", "class_list_entry_count", "class_list_ipv6_addr_count", "ipsec_sa_number", "l4_session_count", "max_aflex_authz_collection_number",
-    "max_aflex_file_size", "nat_pool_addr_count", "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility", "waf_template_count",
+    "aflex_table_entry_count", "auth_portal_html_file_size", "auth_portal_image_file_size", "auth_session_count", "authz_policy_number", "class_list_ac_entry_count", "class_list_entry_count", "class_list_ipv6_addr_count", "ipsec_sa_number", "l4_session_count", "max_aflex_authz_collection_number", "max_aflex_file_size", "nat_pool_addr_count",
+    "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility", "waf_template_count",
     ]
 
 

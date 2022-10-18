@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin_ssh_pubkey
 description:
     - Config openssh authorized public keys management
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

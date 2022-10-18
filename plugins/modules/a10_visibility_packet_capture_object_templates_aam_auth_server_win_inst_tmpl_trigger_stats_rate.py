@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_server_win_inst_tmpl_trigger_stats_rate
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -185,10 +185,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "duration", "krb_other_error", "krb_pw_change_failure", "krb_pw_expiry", "krb_timeout_error", "krb_validate_kdc_failure", "ntlm_auth_failure", "ntlm_other_error", "ntlm_prepare_req_error", "ntlm_proto_nego_failure", "ntlm_session_setup_failure", "ntlm_timeout_error", "threshold_exceeded_by",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["duration", "krb_other_error", "krb_pw_change_failure", "krb_pw_expiry", "krb_timeout_error", "krb_validate_kdc_failure", "ntlm_auth_failure", "ntlm_other_error", "ntlm_prepare_req_error", "ntlm_proto_nego_failure", "ntlm_session_setup_failure", "ntlm_timeout_error", "threshold_exceeded_by", "uuid", ]
 
 
 def get_default_argspec():

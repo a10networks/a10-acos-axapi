@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_stun_timeout
 description:
     - Set STUN timeout for endpoint-independent filtering
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

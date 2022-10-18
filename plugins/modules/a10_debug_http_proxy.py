@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_http_proxy
 description:
     - Debug HTTP proxy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

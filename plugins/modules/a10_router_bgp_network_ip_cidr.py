@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_network_ip_cidr
 description:
     - Specify a ip network to announce via BGP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

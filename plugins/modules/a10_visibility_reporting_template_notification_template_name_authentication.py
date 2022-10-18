@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_reporting_template_notification_template_name_authentication
 description:
     - Configure authentication information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

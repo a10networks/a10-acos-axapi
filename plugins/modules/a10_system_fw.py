@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_fw
 description:
     - Configure system parameters for firewall
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

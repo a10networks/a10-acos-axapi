@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev
 description:
     - Specify a SLB device for the GSLB site
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -295,8 +295,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "admin_preference", "auto_detect", "auto_map", "client_ip", "device_name", "gateway_ip_addr", "health_check_action", "ip_address", "ipv6_address", "max_client", "msg_format_acos_2x", "oper", "probe_timer", "proto_aging_fast", "proto_aging_time", "proto_compatible", "rdt_type", "rdt_value",
-    "session_number", "session_utilization", "user_tag", "uuid", "vip_server",
+    "admin_preference", "auto_detect", "auto_map", "client_ip", "device_name", "gateway_ip_addr", "health_check_action", "ip_address", "ipv6_address", "max_client", "msg_format_acos_2x", "oper", "probe_timer", "proto_aging_fast", "proto_aging_time", "proto_compatible", "rdt_type", "rdt_value", "session_number", "session_utilization", "user_tag",
+    "uuid", "vip_server",
     ]
 
 

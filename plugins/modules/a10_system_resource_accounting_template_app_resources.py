@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_app_resources
 description:
     - Enter the application resource limits
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -571,9 +571,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cache_template_cfg", "client_ssl_template_cfg", "conn_reuse_template_cfg", "fast_tcp_template_cfg", "fast_udp_template_cfg", "fix_template_cfg", "gslb_device_cfg", "gslb_geo_location_cfg", "gslb_ip_list_cfg", "gslb_policy_cfg", "gslb_service_cfg", "gslb_service_ip_cfg", "gslb_service_port_cfg",
-    "gslb_site_cfg", "gslb_svc_group_cfg", "gslb_template_cfg", "gslb_zone_cfg", "health_monitor_cfg", "http_template_cfg", "link_cost_template_cfg", "persist_cookie_template_cfg", "persist_srcip_template_cfg", "proxy_template_cfg", "real_port_cfg", "real_server_cfg", "server_ssl_template_cfg",
-    "service_group_cfg", "stream_template_cfg", "threshold", "uuid", "virtual_port_cfg", "virtual_server_cfg",
+    "cache_template_cfg", "client_ssl_template_cfg", "conn_reuse_template_cfg", "fast_tcp_template_cfg", "fast_udp_template_cfg", "fix_template_cfg", "gslb_device_cfg", "gslb_geo_location_cfg", "gslb_ip_list_cfg", "gslb_policy_cfg", "gslb_service_cfg", "gslb_service_ip_cfg", "gslb_service_port_cfg", "gslb_site_cfg", "gslb_svc_group_cfg",
+    "gslb_template_cfg", "gslb_zone_cfg", "health_monitor_cfg", "http_template_cfg", "link_cost_template_cfg", "persist_cookie_template_cfg", "persist_srcip_template_cfg", "proxy_template_cfg", "real_port_cfg", "real_server_cfg", "server_ssl_template_cfg", "service_group_cfg", "stream_template_cfg", "threshold", "uuid", "virtual_port_cfg",
+    "virtual_server_cfg",
     ]
 
 

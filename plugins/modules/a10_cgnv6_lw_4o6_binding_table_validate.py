@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_binding_table_validate
 description:
     - Check for errors in LW-4over6 Binding Table
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

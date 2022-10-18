@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_port_batch_v1
 description:
     - Configure Port-batch-v1 Behavior
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update_checknow
 description:
     - Manually check for update from axapi
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

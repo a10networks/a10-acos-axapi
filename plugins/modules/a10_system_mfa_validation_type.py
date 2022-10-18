@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_mfa_validation_type
 description:
     - Define a 2FA management validation parameter
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

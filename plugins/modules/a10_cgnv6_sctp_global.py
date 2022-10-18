@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sctp_global
 description:
     - Configure CGNv6 SCTP NAT global parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

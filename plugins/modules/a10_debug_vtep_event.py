@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_vtep_event
 description:
     - Debug Overlay related control plane events
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

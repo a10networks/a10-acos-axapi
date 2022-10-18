@@ -14,7 +14,7 @@ module: a10_system_password_policy
 description:
     - Configure Password Complexity, Passsword Aging, Password history under password
       policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

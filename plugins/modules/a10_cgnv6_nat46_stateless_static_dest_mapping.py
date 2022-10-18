@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_static_dest_mapping
 description:
     - Stateless NAT46 mapping (IPv4 <-> IPv6)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

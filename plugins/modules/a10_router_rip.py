@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_rip
 description:
     - Routing Information Protocol (RIP)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -315,10 +315,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "cisco_metric_behavior", "default_information", "default_metric", "distance_list_cfg", "distribute_list", "neighbor", "network_addresses", "network_interface_list_cfg", "offset_list", "passive_interface_list", "recv_buffer_size", "redistribute", "rip_maximum_prefix_cfg", "route_cfg", "timers",
-    "uuid", "version",
-    ]
+AVAILABLE_PROPERTIES = ["cisco_metric_behavior", "default_information", "default_metric", "distance_list_cfg", "distribute_list", "neighbor", "network_addresses", "network_interface_list_cfg", "offset_list", "passive_interface_list", "recv_buffer_size", "redistribute", "rip_maximum_prefix_cfg", "route_cfg", "timers", "uuid", "version", ]
 
 
 def get_default_argspec():

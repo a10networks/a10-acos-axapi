@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_data_cpu
 description:
     - System data cpu information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_tracking_template_multi_template
 description:
     - Configure multi tracking template to be used by scaleout
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,34 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'multi_template': {
-            'type': 'str',
-            'required': True,
-            },
-        'template': {
-            'type': 'list',
-            'template_name': {
-                'type': 'str',
-                },
-            'partition_name': {
-                'type': 'str',
-                }
-            },
-        'threshold': {
-            'type': 'int',
-            },
-        'action': {
-            'type': 'str',
-            'choices': ['down', 'exit-cluster']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'multi_template': {'type': 'str', 'required': True, }, 'template': {'type': 'list', 'template_name': {'type': 'str', }, 'partition_name': {'type': 'str', }}, 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv

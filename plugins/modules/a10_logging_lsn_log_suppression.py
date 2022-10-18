@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_lsn_log_suppression
 description:
     - Set LSN system log generation parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

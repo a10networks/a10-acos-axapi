@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rule_set_rule_action_group
 description:
     - Configure action-group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -79,6 +79,50 @@ options:
         description:
         - "Enable logging"
         type: bool
+        required: False
+    logging_template_list:
+        description:
+        - "Field logging_template_list"
+        type: list
+        required: False
+        suboptions:
+            permit_log_template_type:
+                description:
+                - "'fw-logging-template'= Logging with specified fw template; 'cgnv6-logging-
+          template'= Logging with specified cgnv6 template; 'netflow-monitor'= Logging
+          with specified netflow/ipfix monitor;"
+                type: str
+            permit_fw_log:
+                description:
+                - "Logging template name"
+                type: str
+            permit_cgnv6_log:
+                description:
+                - "Logging template name"
+                type: str
+            permit_netflow_log:
+                description:
+                - "Name of netflow monitor"
+                type: str
+    reset_log_template_type:
+        description:
+        - "'fw-logging-template'= Logging with specified fw template;"
+        type: str
+        required: False
+    reset_fw_log:
+        description:
+        - "Logging template name"
+        type: str
+        required: False
+    deny_log_template_type:
+        description:
+        - "'fw-logging-template'= Logging with specified fw template;"
+        type: str
+        required: False
+    deny_fw_log:
+        description:
+        - "Logging template name"
+        type: str
         required: False
     listen_on_port:
         description:
@@ -208,7 +252,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_log", "forward", "inspect_payload", "ipsec", "listen_on_port", "permit_limit_policy", "permit_log", "permit_respond_to_user_mac", "reset_log", "reset_respond_to_user_mac", "ntype", "uuid", "vpn_ipsec_name",
+    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "forward", "inspect_payload", "ipsec", "listen_on_port", "logging_template_list", "permit_limit_policy", "permit_log", "permit_respond_to_user_mac", "reset_fw_log", "reset_log", "reset_log_template_type",
+    "reset_respond_to_user_mac", "ntype", "uuid", "vpn_ipsec_name",
     ]
 
 
@@ -242,6 +287,36 @@ def get_argspec():
             },
         'deny_log': {
             'type': 'bool',
+            },
+        'logging_template_list': {
+            'type': 'list',
+            'permit_log_template_type': {
+                'type': 'str',
+                'choices': ['fw-logging-template', 'cgnv6-logging-template', 'netflow-monitor']
+                },
+            'permit_fw_log': {
+                'type': 'str',
+                },
+            'permit_cgnv6_log': {
+                'type': 'str',
+                },
+            'permit_netflow_log': {
+                'type': 'str',
+                }
+            },
+        'reset_log_template_type': {
+            'type': 'str',
+            'choices': ['fw-logging-template']
+            },
+        'reset_fw_log': {
+            'type': 'str',
+            },
+        'deny_log_template_type': {
+            'type': 'str',
+            'choices': ['fw-logging-template']
+            },
+        'deny_fw_log': {
+            'type': 'str',
             },
         'listen_on_port': {
             'type': 'bool',

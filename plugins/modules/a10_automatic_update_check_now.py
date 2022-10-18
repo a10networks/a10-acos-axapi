@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update_check_now
 description:
     - Manually check for update now
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_twamp_responder_ip
 description:
     - Configure TWAMP responder
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

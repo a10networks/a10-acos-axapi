@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_radius
 description:
     - RADIUS Authentication Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -345,8 +345,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'authen_success', 'authen_failure', 'authorize_success', 'authorize_failure', 'access_challenge', 'timeout_error', 'other_error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other',
-                    'job-start-error', 'polling-control-error', 'accounting-request-sent', 'accounting-success', 'accounting-failure'
+                    'all', 'authen_success', 'authen_failure', 'authorize_success', 'authorize_failure', 'access_challenge', 'timeout_error', 'other_error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error',
+                    'accounting-request-sent', 'accounting-success', 'accounting-failure'
                     ]
                 }
             },

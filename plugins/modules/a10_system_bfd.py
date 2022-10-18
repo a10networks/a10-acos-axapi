@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_bfd
 description:
     - BFD Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -262,8 +262,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'ip_checksum_error', 'udp_checksum_error', 'session_not_found', 'multihop_mismatch', 'version_mismatch', 'length_too_small', 'data_is_short', 'invalid_detect_mult', 'invalid_multipoint', 'invalid_my_disc', 'invalid_ttl', 'auth_length_invalid', 'auth_mismatch',
-                    'auth_type_mismatch', 'auth_key_id_mismatch', 'auth_key_mismatch', 'auth_seqnum_invalid', 'auth_failed', 'local_state_admin_down', 'dest_unreachable', 'no_ipv6_enable', 'other_error'
+                    'all', 'ip_checksum_error', 'udp_checksum_error', 'session_not_found', 'multihop_mismatch', 'version_mismatch', 'length_too_small', 'data_is_short', 'invalid_detect_mult', 'invalid_multipoint', 'invalid_my_disc', 'invalid_ttl', 'auth_length_invalid', 'auth_mismatch', 'auth_type_mismatch', 'auth_key_id_mismatch',
+                    'auth_key_mismatch', 'auth_seqnum_invalid', 'auth_failed', 'local_state_admin_down', 'dest_unreachable', 'no_ipv6_enable', 'other_error'
                     ]
                 }
             },

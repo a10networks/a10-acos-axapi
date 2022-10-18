@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_partition_all
 description:
     - Display all partitions in the system
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

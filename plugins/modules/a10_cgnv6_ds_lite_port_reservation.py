@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_port_reservation
 description:
     - DS-Lite Static Port Reservation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

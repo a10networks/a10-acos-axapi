@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_global
 description:
     - Stateful Firewall Configuration (default=disabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -327,12 +327,11 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'tcp_packet_process', 'udp_packet_process', 'other_packet_process', 'packet_inbound_deny', 'packet_process_failure', 'outbound_session_created', 'outbound_session_freed', 'inbound_session_created', 'inbound_session_freed', 'tcp_session_created', 'tcp_session_freed',
-                    'udp_session_created', 'udp_session_freed', 'other_session_created', 'other_session_freed', 'session_creation_failure', 'no_fwd_route', 'no_rev_route', 'packet_standby_drop', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed',
-                    'fullcone_creation_failure', 'eif_process', 'one_arm_drop', 'no_class_list_match', 'outbound_session_created_shadow', 'outbound_session_freed_shadow', 'inbound_session_created_shadow', 'inbound_session_freed_shadow', 'tcp_session_created_shadow', 'tcp_session_freed_shadow',
-                    'udp_session_created_shadow', 'udp_session_freed_shadow', 'other_session_created_shadow', 'other_session_freed_shadow', 'session_creation_failure_shadow', 'bad_session_freed', 'ctl_mem_alloc', 'ctl_mem_free', 'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow',
-                    'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'fullcone_in_del_q', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'fullcone_free_found', 'fullcone_free_retry_lookup', 'fullcone_free_not_found', 'eif_limit_exceeded', 'eif_disable_drop', 'eif_process_failure',
-                    'eif_filtered', 'ha_standby_session_created', 'ha_standby_session_eim', 'ha_standby_session_eif'
+                    'all', 'tcp_packet_process', 'udp_packet_process', 'other_packet_process', 'packet_inbound_deny', 'packet_process_failure', 'outbound_session_created', 'outbound_session_freed', 'inbound_session_created', 'inbound_session_freed', 'tcp_session_created', 'tcp_session_freed', 'udp_session_created', 'udp_session_freed',
+                    'other_session_created', 'other_session_freed', 'session_creation_failure', 'no_fwd_route', 'no_rev_route', 'packet_standby_drop', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_creation_failure', 'eif_process', 'one_arm_drop', 'no_class_list_match',
+                    'outbound_session_created_shadow', 'outbound_session_freed_shadow', 'inbound_session_created_shadow', 'inbound_session_freed_shadow', 'tcp_session_created_shadow', 'tcp_session_freed_shadow', 'udp_session_created_shadow', 'udp_session_freed_shadow', 'other_session_created_shadow', 'other_session_freed_shadow',
+                    'session_creation_failure_shadow', 'bad_session_freed', 'ctl_mem_alloc', 'ctl_mem_free', 'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow', 'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'fullcone_in_del_q', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'fullcone_free_found',
+                    'fullcone_free_retry_lookup', 'fullcone_free_not_found', 'eif_limit_exceeded', 'eif_disable_drop', 'eif_process_failure', 'eif_filtered', 'ha_standby_session_created', 'ha_standby_session_eim', 'ha_standby_session_eif'
                     ]
                 }
             },

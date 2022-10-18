@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_shared_service_group
 description:
     - CGNv6 Shared Service Group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

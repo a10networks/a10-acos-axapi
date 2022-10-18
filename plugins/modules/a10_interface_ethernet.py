@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet
 description:
     - Ethernet interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -424,6 +424,10 @@ options:
             server:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
+                type: bool
+            unnumbered:
+                description:
+                - "Set the interface as unnumbered"
                 type: bool
             uuid:
                 description:
@@ -1100,9 +1104,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "access_list", "action", "auto_neg_enable", "bfd", "cpu_process", "cpu_process_dir", "ddos", "duplexity", "fec_forced_off", "fec_forced_on", "flow_control", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipg_bit_time", "ipv6", "isis", "l3_vlan_fwd_disable", "lldp", "load_interval",
-    "lw_4o6", "mac_learning", "map", "media_type_copper", "monitor_list", "mtu", "name", "nptv6", "oper", "packet_capture_template", "ping_sweep_detection", "port_breakout", "port_scan_detection", "remove_vlan_tag", "sampling_enable", "spanning_tree", "speed", "speed_forced_10g", "speed_forced_1g",
-    "speed_forced_40g", "stats", "traffic_distribution_mode", "trap_source", "trunk_group_list", "update_l2_info", "user_tag", "uuid", "virtual_wire", "vlan_learning",
+    "access_list", "action", "auto_neg_enable", "bfd", "cpu_process", "cpu_process_dir", "ddos", "duplexity", "fec_forced_off", "fec_forced_on", "flow_control", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipg_bit_time", "ipv6", "isis", "l3_vlan_fwd_disable", "lldp", "load_interval", "lw_4o6", "mac_learning", "map", "media_type_copper",
+    "monitor_list", "mtu", "name", "nptv6", "oper", "packet_capture_template", "ping_sweep_detection", "port_breakout", "port_scan_detection", "remove_vlan_tag", "sampling_enable", "spanning_tree", "speed", "speed_forced_10g", "speed_forced_1g", "speed_forced_40g", "stats", "traffic_distribution_mode", "trap_source", "trunk_group_list",
+    "update_l2_info", "user_tag", "uuid", "virtual_wire", "vlan_learning",
     ]
 
 
@@ -1280,8 +1284,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'runts', 'giants', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts',
-                    'output_errors', 'collisions', 'giants_output', 'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval'
+                    'all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'runts', 'giants', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts', 'output_errors', 'collisions', 'giants_output',
+                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval'
                     ]
                 }
             },
@@ -1417,6 +1421,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
+                'type': 'bool',
+                },
+            'unnumbered': {
                 'type': 'bool',
                 },
             'uuid': {

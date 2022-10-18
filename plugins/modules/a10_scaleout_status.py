@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_status
 description:
     - Field status
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -302,6 +302,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'ip': {
+                    'type': 'str',
+                    },
+                'ipv6': {
                     'type': 'str',
                     }
                 },

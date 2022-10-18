@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_lldp_management_address_ipv6_addr
 description:
     - Configure lldp management-address ipv6 address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

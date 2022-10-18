@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_record
 description:
     - Configure record types to be exported
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -229,8 +229,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "dslite", "nat44", "nat64", "netflow_v5", "netflow_v5_ext", "port_batch_dslite", "port_batch_nat44", "port_batch_nat64", "port_batch_v2_dslite", "port_batch_v2_nat44", "port_batch_v2_nat64", "port_mapping_dslite", "port_mapping_nat44", "port_mapping_nat64", "sesn_event_dslite", "sesn_event_fw4",
-    "sesn_event_fw6", "sesn_event_nat44", "sesn_event_nat64", "uuid",
+    "dslite", "nat44", "nat64", "netflow_v5", "netflow_v5_ext", "port_batch_dslite", "port_batch_nat44", "port_batch_nat64", "port_batch_v2_dslite", "port_batch_v2_nat44", "port_batch_v2_nat64", "port_mapping_dslite", "port_mapping_nat44", "port_mapping_nat64", "sesn_event_dslite", "sesn_event_fw4", "sesn_event_fw6", "sesn_event_nat44",
+    "sesn_event_nat64", "uuid",
     ]
 
 

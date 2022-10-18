@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_trunk_neighbor
 description:
     - Specify a trunk unnumbered neighbor
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

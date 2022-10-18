@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rule_set_rule_move_rule
 description:
     - Move Rule
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin
 description:
     - System admin user configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -125,11 +125,6 @@ options:
     privilege_shell:
         description:
         - "Set shell privilege"
-        type: bool
-        required: False
-    privilege_shell_root:
-        description:
-        - "Set shell root privilege"
         type: bool
         required: False
     uuid:
@@ -306,10 +301,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "access", "access_list", "action", "aws_accesskey", "azure_cred", "encrypted", "passwd_string", "password", "password_key", "privilege_global", "privilege_list", "privilege_shell", "privilege_shell_root", "ssh_pubkey", "trusted_host", "trusted_host_acl_id", "trusted_host_cidr", "user",
-    "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["access", "access_list", "action", "aws_accesskey", "azure_cred", "encrypted", "passwd_string", "password", "password_key", "privilege_global", "privilege_list", "privilege_shell", "ssh_pubkey", "trusted_host", "trusted_host_acl_id", "trusted_host_cidr", "user", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -374,9 +366,6 @@ def get_argspec():
                 }
             },
         'privilege_shell': {
-            'type': 'bool',
-            },
-        'privilege_shell_root': {
             'type': 'bool',
             },
         'uuid': {

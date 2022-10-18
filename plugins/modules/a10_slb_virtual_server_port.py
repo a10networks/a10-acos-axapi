@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port
 description:
     - Virtual Port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -1145,7 +1145,9 @@ options:
           'dns_rpz_trigger_client_ip'= DNS RPZ Trigger Client IP;
           'dns_rpz_trigger_resp_ip'= DNS RPZ Trigger Response IP;
           'dns_rpz_trigger_ns_ip'= DNS RPZ Trigger NS IP; 'dns_rpz_trigger_qname'= DNS
-          RPZ Trigger Qname IP; 'dns_rpz_trigger_ns_name'= DNS RPZ Trigger NS Name;"
+          RPZ Trigger Qname IP; 'dns_rpz_trigger_ns_name'= DNS RPZ Trigger NS Name;
+          'http1_client_idle_timeout'= HTTP1 Client Idle Timeout;
+          'http2_client_idle_timeout'= HTTP2 Client Idle Timeout;"
                 type: str
     packet_capture_template:
         description:
@@ -1600,6 +1602,14 @@ options:
                 description:
                 - "DNS RPZ Trigger NS Name"
                 type: str
+            http1_client_idle_timeout:
+                description:
+                - "HTTP1 Client Idle Timeout"
+                type: str
+            http2_client_idle_timeout:
+                description:
+                - "HTTP2 Client Idle Timeout"
+                type: str
             port_number:
                 description:
                 - "Port"
@@ -1675,21 +1685,19 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "acl_list", "action", "aflex_scripts", "aflex_table_entry_syn_disable", "aflex_table_entry_syn_enable", "alt_protocol1", "alt_protocol2", "alternate_port", "alternate_port_number", "attack_detection", "auth_cfg", "auto", "clientip_sticky_nat", "conn_limit", "cpu_compute",
-    "def_selection_if_pref_failed", "enable_playerid_check", "enable_scaleout", "eth_fwd", "eth_rev", "expand", "extended_stats", "force_routing_mode", "gslb_enable", "gtp_session_lb", "ha_conn_mirror", "ignore_global", "ip_map_list", "ip_only_lb", "ip_smart_rr", "ipinip", "l7_hardware_assist",
-    "l7_service_chain", "memory_compute", "message_switching", "name", "no_auto_up_on_aflex", "no_dest_nat", "no_logging", "on_syn", "one_server_conn", "oper", "optimization_level", "p_template_sip_shared", "packet_capture_template", "persist_type", "pool", "pool_shared", "port_number",
-    "port_translation", "precedence", "protocol", "proxy_layer", "range", "rate", "redirect_to_https", "reply_acme_challenge", "req_fail", "reselection", "reset", "reset_on_server_selection_fail", "resolve_web_cat_list", "rtp_sip_call_id_match", "sampling_enable", "scaleout_bucket_count",
-    "scaleout_device_group", "secs", "serv_sel_fail", "server_group", "service_group", "shared_partition_cache_template", "shared_partition_client_ssl_template", "shared_partition_connection_reuse_template", "shared_partition_dblb_template", "shared_partition_diameter_template",
-    "shared_partition_dns_template", "shared_partition_doh_template", "shared_partition_dynamic_service_template", "shared_partition_external_service_template", "shared_partition_fix_template", "shared_partition_http_policy_template", "shared_partition_http_template",
-    "shared_partition_imap_pop3_template", "shared_partition_persist_cookie_template", "shared_partition_persist_destination_ip_template", "shared_partition_persist_source_ip_template", "shared_partition_persist_ssl_sid_template", "shared_partition_policy_template", "shared_partition_pool",
-    "shared_partition_server_ssl_template", "shared_partition_smpp_template", "shared_partition_smtp_template", "shared_partition_tcp", "shared_partition_tcp_proxy_template", "shared_partition_udp", "shared_partition_virtual_port_template", "showtech_print_extended_stats", "skip_rev_hash",
-    "snat_on_vip", "stats", "stats_data_action", "substitute_source_mac", "support_http2", "syn_cookie", "template_cache", "template_cache_shared", "template_client_ssh", "template_client_ssl", "template_client_ssl_shared", "template_connection_reuse", "template_connection_reuse_shared",
-    "template_dblb", "template_dblb_shared", "template_diameter", "template_diameter_shared", "template_dns", "template_dns_shared", "template_doh", "template_doh_shared", "template_dynamic_service", "template_dynamic_service_shared", "template_external_service", "template_external_service_shared",
-    "template_fix", "template_fix_shared", "template_ftp", "template_http", "template_http_policy", "template_http_policy_shared", "template_http_shared", "template_imap_pop3", "template_imap_pop3_shared", "template_mqtt", "template_persist_cookie", "template_persist_cookie_shared",
-    "template_persist_destination_ip", "template_persist_destination_ip_shared", "template_persist_source_ip", "template_persist_source_ip_shared", "template_persist_ssl_sid", "template_persist_ssl_sid_shared", "template_policy", "template_policy_shared", "template_ram_cache",
-    "template_reqmod_icap", "template_respmod_icap", "template_scaleout", "template_server_ssh", "template_server_ssl", "template_server_ssl_shared", "template_sip", "template_sip_shared", "template_smpp", "template_smpp_shared", "template_smtp", "template_smtp_shared", "template_ssli",
-    "template_tcp", "template_tcp_proxy", "template_tcp_proxy_client", "template_tcp_proxy_server", "template_tcp_proxy_shared", "template_tcp_shared", "template_udp", "template_udp_shared", "template_virtual_port", "template_virtual_port_shared", "trunk_fwd", "trunk_rev", "use_alternate_port",
-    "use_cgnv6", "use_default_if_no_server", "use_rcv_hop_for_resp", "use_rcv_hop_group", "user_tag", "uuid", "view", "waf_template", "when_down", "when_down_protocol2",
+    "acl_list", "action", "aflex_scripts", "aflex_table_entry_syn_disable", "aflex_table_entry_syn_enable", "alt_protocol1", "alt_protocol2", "alternate_port", "alternate_port_number", "attack_detection", "auth_cfg", "auto", "clientip_sticky_nat", "conn_limit", "cpu_compute", "def_selection_if_pref_failed", "enable_playerid_check",
+    "enable_scaleout", "eth_fwd", "eth_rev", "expand", "extended_stats", "force_routing_mode", "gslb_enable", "gtp_session_lb", "ha_conn_mirror", "ignore_global", "ip_map_list", "ip_only_lb", "ip_smart_rr", "ipinip", "l7_hardware_assist", "l7_service_chain", "memory_compute", "message_switching", "name", "no_auto_up_on_aflex", "no_dest_nat",
+    "no_logging", "on_syn", "one_server_conn", "oper", "optimization_level", "p_template_sip_shared", "packet_capture_template", "persist_type", "pool", "pool_shared", "port_number", "port_translation", "precedence", "protocol", "proxy_layer", "range", "rate", "redirect_to_https", "reply_acme_challenge", "req_fail", "reselection", "reset",
+    "reset_on_server_selection_fail", "resolve_web_cat_list", "rtp_sip_call_id_match", "sampling_enable", "scaleout_bucket_count", "scaleout_device_group", "secs", "serv_sel_fail", "server_group", "service_group", "shared_partition_cache_template", "shared_partition_client_ssl_template", "shared_partition_connection_reuse_template",
+    "shared_partition_dblb_template", "shared_partition_diameter_template", "shared_partition_dns_template", "shared_partition_doh_template", "shared_partition_dynamic_service_template", "shared_partition_external_service_template", "shared_partition_fix_template", "shared_partition_http_policy_template", "shared_partition_http_template",
+    "shared_partition_imap_pop3_template", "shared_partition_persist_cookie_template", "shared_partition_persist_destination_ip_template", "shared_partition_persist_source_ip_template", "shared_partition_persist_ssl_sid_template", "shared_partition_policy_template", "shared_partition_pool", "shared_partition_server_ssl_template",
+    "shared_partition_smpp_template", "shared_partition_smtp_template", "shared_partition_tcp", "shared_partition_tcp_proxy_template", "shared_partition_udp", "shared_partition_virtual_port_template", "showtech_print_extended_stats", "skip_rev_hash", "snat_on_vip", "stats", "stats_data_action", "substitute_source_mac", "support_http2",
+    "syn_cookie", "template_cache", "template_cache_shared", "template_client_ssh", "template_client_ssl", "template_client_ssl_shared", "template_connection_reuse", "template_connection_reuse_shared", "template_dblb", "template_dblb_shared", "template_diameter", "template_diameter_shared", "template_dns", "template_dns_shared", "template_doh",
+    "template_doh_shared", "template_dynamic_service", "template_dynamic_service_shared", "template_external_service", "template_external_service_shared", "template_fix", "template_fix_shared", "template_ftp", "template_http", "template_http_policy", "template_http_policy_shared", "template_http_shared", "template_imap_pop3",
+    "template_imap_pop3_shared", "template_mqtt", "template_persist_cookie", "template_persist_cookie_shared", "template_persist_destination_ip", "template_persist_destination_ip_shared", "template_persist_source_ip", "template_persist_source_ip_shared", "template_persist_ssl_sid", "template_persist_ssl_sid_shared", "template_policy",
+    "template_policy_shared", "template_ram_cache", "template_reqmod_icap", "template_respmod_icap", "template_scaleout", "template_server_ssh", "template_server_ssl", "template_server_ssl_shared", "template_sip", "template_sip_shared", "template_smpp", "template_smpp_shared", "template_smtp", "template_smtp_shared", "template_ssli",
+    "template_tcp", "template_tcp_proxy", "template_tcp_proxy_client", "template_tcp_proxy_server", "template_tcp_proxy_shared", "template_tcp_shared", "template_udp", "template_udp_shared", "template_virtual_port", "template_virtual_port_shared", "trunk_fwd", "trunk_rev", "use_alternate_port", "use_cgnv6", "use_default_if_no_server",
+    "use_rcv_hop_for_resp", "use_rcv_hop_group", "user_tag", "uuid", "view", "waf_template", "when_down", "when_down_protocol2",
     ]
 
 
@@ -1716,14 +1724,9 @@ def get_argspec():
             'required': True,
             },
         'protocol': {
-            'type':
-            'str',
-            'required':
-            True,
-            'choices': [
-                'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli',
-                'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                ]
+            'type': 'str',
+            'required': True,
+            'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
             },
         'range': {
             'type': 'int',
@@ -2343,14 +2346,13 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'total_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before',
-                    'compression_bytes_after', 'compression_hit', 'compression_miss', 'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time', 'loc_permit',
-                    'loc_deny', 'loc_conn', 'curr_ssl_conn', 'total_ssl_conn', 'backend-time-to-first-byte', 'backend-time-to-last-byte', 'in-latency', 'out-latency', 'total_fwd_bytes_out', 'total_fwd_pkts_out', 'total_rev_bytes_out', 'total_rev_pkts_out', 'curr_req_rate', 'curr_resp', 'total_resp',
-                    'total_resp_succ', 'curr_resp_rate', 'dnsrrl_total_allowed', 'dnsrrl_total_dropped', 'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn', 'throughput-bits-per-sec', 'dynamic-memory-alloc', 'dynamic-memory-free', 'dynamic-memory', 'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes',
-                    'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts', 'total_dns_filter_type_drop', 'total_dns_filter_class_drop', 'dns_filter_type_a_drop', 'dns_filter_type_aaaa_drop', 'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop', 'dns_filter_type_srv_drop',
-                    'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop', 'dns_filter_class_hesiod_drop', 'dns_filter_class_none_drop',
-                    'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip', 'dns_rpz_trigger_resp_ip',
-                    'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name'
+                    'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'total_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before', 'compression_bytes_after', 'compression_hit', 'compression_miss',
+                    'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time', 'loc_permit', 'loc_deny', 'loc_conn', 'curr_ssl_conn', 'total_ssl_conn', 'backend-time-to-first-byte',
+                    'backend-time-to-last-byte', 'in-latency', 'out-latency', 'total_fwd_bytes_out', 'total_fwd_pkts_out', 'total_rev_bytes_out', 'total_rev_pkts_out', 'curr_req_rate', 'curr_resp', 'total_resp', 'total_resp_succ', 'curr_resp_rate', 'dnsrrl_total_allowed', 'dnsrrl_total_dropped', 'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn',
+                    'throughput-bits-per-sec', 'dynamic-memory-alloc', 'dynamic-memory-free', 'dynamic-memory', 'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts', 'total_dns_filter_type_drop', 'total_dns_filter_class_drop', 'dns_filter_type_a_drop', 'dns_filter_type_aaaa_drop',
+                    'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop', 'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop',
+                    'dns_filter_class_hesiod_drop', 'dns_filter_class_none_drop', 'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip',
+                    'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
                     ]
                 }
             },
@@ -3052,14 +3054,9 @@ def get_argspec():
                 'required': True,
                 },
             'protocol': {
-                'type':
-                'str',
-                'required':
-                True,
-                'choices': [
-                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy',
-                    'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                    ]
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
                 }
             },
         'stats': {
@@ -3316,19 +3313,20 @@ def get_argspec():
             'dns_rpz_trigger_ns_name': {
                 'type': 'str',
                 },
+            'http1_client_idle_timeout': {
+                'type': 'str',
+                },
+            'http2_client_idle_timeout': {
+                'type': 'str',
+                },
             'port_number': {
                 'type': 'int',
                 'required': True,
                 },
             'protocol': {
-                'type':
-                'str',
-                'required':
-                True,
-                'choices': [
-                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy',
-                    'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                    ]
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
                 }
             }
         })

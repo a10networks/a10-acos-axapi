@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_server_ldap_inst_tmpl_trigger_stats_severity
 description:
     - Configure triggers severity for system object stats
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,35 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'error': {
-            'type': 'bool',
-            },
-        'error_alert': {
-            'type': 'bool',
-            },
-        'error_warning': {
-            'type': 'bool',
-            },
-        'error_critical': {
-            'type': 'bool',
-            },
-        'drop': {
-            'type': 'bool',
-            },
-        'drop_alert': {
-            'type': 'bool',
-            },
-        'drop_warning': {
-            'type': 'bool',
-            },
-        'drop_critical': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'error': {'type': 'bool', }, 'error_alert': {'type': 'bool', }, 'error_warning': {'type': 'bool', }, 'error_critical': {'type': 'bool', }, 'drop': {'type': 'bool', }, 'drop_alert': {'type': 'bool', }, 'drop_warning': {'type': 'bool', }, 'drop_critical': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(aam_auth_server_ldap_inst_tmpl_name=dict(type='str', required=True), ))
     return rv

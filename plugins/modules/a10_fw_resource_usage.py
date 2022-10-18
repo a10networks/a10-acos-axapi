@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_resource_usage
 description:
     - Firewall resource usage
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

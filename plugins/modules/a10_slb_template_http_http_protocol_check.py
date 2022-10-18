@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_http_http_protocol_check
 description:
     - HTTP protocol compliance check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -198,10 +198,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "get_and_payload", "h2up_content_length_alias", "h2up_with_host_and_auth", "h2up_with_transfer_encoding", "header_filter_rule_list", "malformed_h2up_header_value", "malformed_h2up_scheme_value", "multiple_content_length", "multiple_transfer_encoding", "transfer_encoding_and_content_length",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["get_and_payload", "h2up_content_length_alias", "h2up_with_host_and_auth", "h2up_with_transfer_encoding", "header_filter_rule_list", "malformed_h2up_header_value", "malformed_h2up_scheme_value", "multiple_content_length", "multiple_transfer_encoding", "transfer_encoding_and_content_length", "uuid", ]
 
 
 def get_default_argspec():

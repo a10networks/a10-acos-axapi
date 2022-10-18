@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_ip_server
 description:
     - Specify a real server for the GSLB site
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

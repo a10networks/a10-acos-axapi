@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_fast_http_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,35 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'parsereq_fail': {
-            'type': 'bool',
-            },
-        'svrsel_fail': {
-            'type': 'bool',
-            },
-        'fwdreq_fail': {
-            'type': 'bool',
-            },
-        'fwdreqdata_fail': {
-            'type': 'bool',
-            },
-        'snat_fail': {
-            'type': 'bool',
-            },
-        'full_proxy_fpga_err': {
-            'type': 'bool',
-            },
-        'req_over_limit': {
-            'type': 'bool',
-            },
-        'req_rate_over_limit': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'parsereq_fail': {'type': 'bool', }, 'svrsel_fail': {'type': 'bool', }, 'fwdreq_fail': {'type': 'bool', }, 'fwdreqdata_fail': {'type': 'bool', }, 'snat_fail': {'type': 'bool', }, 'full_proxy_fpga_err': {'type': 'bool', }, 'req_over_limit': {'type': 'bool', }, 'req_rate_over_limit': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

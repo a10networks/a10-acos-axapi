@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_maximum_paths
 description:
     - Set maximum number of route multipaths installed into FIB
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

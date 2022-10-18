@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_http2_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -473,13 +473,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "alloc_fail_total", "bad_connection_preface", "bad_frame_type_for_stream_state", "buff_alloc_error", "cancel", "cant_allocate_control_frame", "cant_allocate_goaway_frame", "cant_allocate_ping_frame", "cant_allocate_rst_frame", "cant_allocate_settings_frame", "cant_allocate_stream",
-    "cant_allocate_window_frame", "closed_state_unexpected_frame", "compression_error", "connect_error", "continuation_before_headers", "data_no_stream", "data_queue_alloc_error", "deflate_alloc_fail", "duration", "enhance_your_calm", "err_rcvd_total", "err_sent_cancel", "err_sent_compression_err",
-    "err_sent_connect_err", "err_sent_flow_control", "err_sent_frame_size_err", "err_sent_http11_required", "err_sent_inadequate_security", "err_sent_internal_err", "err_sent_proto_err", "err_sent_refused_stream", "err_sent_setting_timeout", "err_sent_stream_closed", "err_sent_total",
-    "err_sent_your_calm", "error_max_invalid_stream", "exceeds_max_window_size_stream", "flow_control_error", "frame_size_error", "half_closed_remote_state_unexpected_fra", "header_no_stream", "header_padlen_gt_frame_payload", "headers_after_continuation", "headers_interleaved", "http_1_1_required",
-    "idle_state_unexpected_frame", "inadequate_security", "inflate_alloc_fail", "inflate_header_fail", "internal_error", "invalid_frame_during_headers", "invalid_frame_size", "invalid_push_promise", "invalid_setting_value", "invalid_stream_id", "invalid_window_update", "protocol_error",
-    "proxy_alloc_error", "refused_stream", "reserved_local_state_unexpected_frame", "reserved_remote_state_unexpected_frame", "settings_timeout", "split_buff_fail", "streams_gt_max_concur_streams", "threshold_exceeded_by", "trailers_no_end_stream", "uuid", "wrong_stream_state",
-    "zero_window_size_on_stream",
+    "alloc_fail_total", "bad_connection_preface", "bad_frame_type_for_stream_state", "buff_alloc_error", "cancel", "cant_allocate_control_frame", "cant_allocate_goaway_frame", "cant_allocate_ping_frame", "cant_allocate_rst_frame", "cant_allocate_settings_frame", "cant_allocate_stream", "cant_allocate_window_frame", "closed_state_unexpected_frame",
+    "compression_error", "connect_error", "continuation_before_headers", "data_no_stream", "data_queue_alloc_error", "deflate_alloc_fail", "duration", "enhance_your_calm", "err_rcvd_total", "err_sent_cancel", "err_sent_compression_err", "err_sent_connect_err", "err_sent_flow_control", "err_sent_frame_size_err", "err_sent_http11_required",
+    "err_sent_inadequate_security", "err_sent_internal_err", "err_sent_proto_err", "err_sent_refused_stream", "err_sent_setting_timeout", "err_sent_stream_closed", "err_sent_total", "err_sent_your_calm", "error_max_invalid_stream", "exceeds_max_window_size_stream", "flow_control_error", "frame_size_error", "half_closed_remote_state_unexpected_fra",
+    "header_no_stream", "header_padlen_gt_frame_payload", "headers_after_continuation", "headers_interleaved", "http_1_1_required", "idle_state_unexpected_frame", "inadequate_security", "inflate_alloc_fail", "inflate_header_fail", "internal_error", "invalid_frame_during_headers", "invalid_frame_size", "invalid_push_promise",
+    "invalid_setting_value", "invalid_stream_id", "invalid_window_update", "protocol_error", "proxy_alloc_error", "refused_stream", "reserved_local_state_unexpected_frame", "reserved_remote_state_unexpected_frame", "settings_timeout", "split_buff_fail", "streams_gt_max_concur_streams", "threshold_exceeded_by", "trailers_no_end_stream", "uuid",
+    "wrong_stream_state", "zero_window_size_on_stream",
     ]
 
 

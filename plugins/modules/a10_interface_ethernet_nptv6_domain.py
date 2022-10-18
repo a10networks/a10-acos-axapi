@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet_nptv6_domain
 description:
     - Apply NPTv6 translation domain on interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

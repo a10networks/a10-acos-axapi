@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_server_ocsp_inst_tmpl
 description:
     - Configure template for aam.authentication.server.ocsp.instance
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_port_list
 description:
     - Bare-Metal port list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,38 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'system_port_list': {
-                'type': 'list',
-                'Port_IDX': {
-                    'type': 'str',
-                    },
-                'Port_Num': {
-                    'type': 'str',
-                    },
-                'status': {
-                    'type': 'str',
-                    },
-                'Mac_Addr': {
-                    'type': 'str',
-                    },
-                'Speed': {
-                    'type': 'str',
-                    },
-                'Node': {
-                    'type': 'str',
-                    },
-                'PCI_Addr': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'system_port_list': {'type': 'list', 'Port_IDX': {'type': 'str', }, 'Port_Num': {'type': 'str', }, 'status': {'type': 'str', }, 'Mac_Addr': {'type': 'str', }, 'Speed': {'type': 'str', }, 'Node': {'type': 'str', }, 'PCI_Addr': {'type': 'str', }}}})
     return rv
 
 

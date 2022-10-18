@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_icmp6
 description:
     - Display ICMPv6 statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -326,9 +326,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'in_msgs', 'in_errors', 'in_dest_un_reach', 'in_pkt_too_big', 'in_time_exceeds', 'in_param_prob', 'in_echoes', 'in_exho_reply', 'in_grp_mem_query', 'in_grp_mem_resp', 'in_grp_mem_reduction', 'in_router_sol', 'in_ra', 'in_ns', 'in_na', 'in_redirect', 'out_msg',
-                    'out_dst_un_reach', 'out_pkt_too_big', 'out_time_exceeds', 'out_param_prob', 'out_echo_req', 'out_echo_replies', 'out_rs', 'out_ra', 'out_ns', 'out_na', 'out_redirects', 'out_mem_resp', 'out_mem_reductions', 'err_rs', 'err_ra', 'err_ns', 'err_na', 'err_redirects', 'err_echoes',
-                    'err_echo_replies'
+                    'all', 'in_msgs', 'in_errors', 'in_dest_un_reach', 'in_pkt_too_big', 'in_time_exceeds', 'in_param_prob', 'in_echoes', 'in_exho_reply', 'in_grp_mem_query', 'in_grp_mem_resp', 'in_grp_mem_reduction', 'in_router_sol', 'in_ra', 'in_ns', 'in_na', 'in_redirect', 'out_msg', 'out_dst_un_reach', 'out_pkt_too_big', 'out_time_exceeds',
+                    'out_param_prob', 'out_echo_req', 'out_echo_replies', 'out_rs', 'out_ra', 'out_ns', 'out_na', 'out_redirects', 'out_mem_resp', 'out_mem_reductions', 'err_rs', 'err_ra', 'err_ns', 'err_na', 'err_redirects', 'err_echoes', 'err_echo_replies'
                     ]
                 }
             },

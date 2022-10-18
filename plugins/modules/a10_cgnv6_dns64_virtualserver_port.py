@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_dns64_virtualserver_port
 description:
     - Virtual Port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -536,8 +536,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'toatal_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before',
-                    'compression_bytes_after', 'compression_hit', 'compression_miss', 'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time'
+                    'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'toatal_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before', 'compression_bytes_after', 'compression_hit', 'compression_miss',
+                    'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time'
                     ]
                 }
             },

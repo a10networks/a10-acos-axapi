@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_fragmentation_outbound
 description:
     - LW-4O6 fragmentation rules for outbound oversize packets
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

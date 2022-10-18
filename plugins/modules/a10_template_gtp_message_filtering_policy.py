@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_message_filtering_policy
 description:
     - Configure GTP Message Filtering Policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

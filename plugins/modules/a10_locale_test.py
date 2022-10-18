@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_locale_test
 description:
     - To test current terminal encodings for specific locale
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nptv6_domain
 description:
     - Configure NPTv6 translation domain
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

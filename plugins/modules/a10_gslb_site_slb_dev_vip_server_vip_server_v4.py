@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev_vip_server_vip_server_v4
 description:
     - Specify a VIP for the SLB device
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

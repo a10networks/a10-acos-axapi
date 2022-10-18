@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_lacp_passthrough
 description:
     - Peer ports to forward received lacp packets
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

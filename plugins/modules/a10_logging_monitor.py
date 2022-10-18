@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_monitor
 description:
     - Set terminal monitor logging level
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

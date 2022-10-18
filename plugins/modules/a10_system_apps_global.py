@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_apps_global
 description:
     - Global application generic configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

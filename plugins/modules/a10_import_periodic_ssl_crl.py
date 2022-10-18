@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_ssl_crl
 description:
     - SSL Crl File
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_source_destination_web_reputation_scope
 description:
     - Configure web-category reputation-scope for destination matching
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

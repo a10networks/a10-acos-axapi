@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_stop_test
 description:
     - Clear all dynamic test parameters and stop the test
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

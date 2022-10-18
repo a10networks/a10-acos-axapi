@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_bw_list
 description:
     - black white list file information and management commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

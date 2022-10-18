@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_lsn_alg_rtsp_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -170,29 +170,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'threshold_exceeded_by': {
-            'type': 'int',
-            },
-        'duration': {
-            'type': 'int',
-            },
-        'stream_creation_failure': {
-            'type': 'bool',
-            },
-        'port_allocation_failure': {
-            'type': 'bool',
-            },
-        'unknown_client_port_from_server': {
-            'type': 'bool',
-            },
-        'no_session_mem': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'stream_creation_failure': {'type': 'bool', }, 'port_allocation_failure': {'type': 'bool', }, 'unknown_client_port_from_server': {'type': 'bool', }, 'no_session_mem': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

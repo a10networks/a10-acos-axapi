@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dnssec_ds
 description:
     - Delegation Signer(DS) Resource Records of child zones
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

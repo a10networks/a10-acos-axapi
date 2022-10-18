@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_dns_vport
 description:
     - Statistics for the object port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -679,6 +679,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'empty_response': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_reach_max_depth': {
                     'type': 'str',
                     }
                 }

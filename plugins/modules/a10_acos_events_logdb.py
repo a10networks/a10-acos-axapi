@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_logdb
 description:
     - Configure global logging template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,35 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'enable_all': {
-            'type': 'bool',
-            },
-        'enable_ssli': {
-            'type': 'bool',
-            },
-        'enable_smtp': {
-            'type': 'bool',
-            },
-        'enable_mqtt': {
-            'type': 'bool',
-            },
-        'enable_fw': {
-            'type': 'bool',
-            },
-        'enable_http_forward_proxy': {
-            'type': 'bool',
-            },
-        'enable_link_cost': {
-            'type': 'bool',
-            },
-        'enable_cgn': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'enable_all': {'type': 'bool', }, 'enable_ssli': {'type': 'bool', }, 'enable_smtp': {'type': 'bool', }, 'enable_mqtt': {'type': 'bool', }, 'enable_fw': {'type': 'bool', }, 'enable_http_forward_proxy': {'type': 'bool', }, 'enable_link_cost': {'type': 'bool', }, 'enable_cgn': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_mac_address_dynamic
 description:
     - dynamic MAC commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -148,39 +148,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'Age_time': {
-                'type': 'int',
-                },
-            'macoper': {
-                'type': 'list',
-                'MAC_Address': {
-                    'type': 'str',
-                    },
-                'Port': {
-                    'type': 'int',
-                    },
-                'Type': {
-                    'type': 'str',
-                    'choices': ['Dynamic', 'Static']
-                    },
-                'Index': {
-                    'type': 'int',
-                    },
-                'Vlan': {
-                    'type': 'int',
-                    },
-                'Age': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'Age_time': {'type': 'int', }, 'macoper': {'type': 'list', 'MAC_Address': {'type': 'str', }, 'Port': {'type': 'int', }, 'Type': {'type': 'str', 'choices': ['Dynamic', 'Static']}, 'Index': {'type': 'int', }, 'Vlan': {'type': 'int', }, 'Age': {'type': 'int', }}}})
     return rv
 
 

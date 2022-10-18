@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_global
 description:
     - sFlow global
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_logon_http_ins_tmpl
 description:
     - Configure template for aam.authentication.logon.http-authenticate.instance
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

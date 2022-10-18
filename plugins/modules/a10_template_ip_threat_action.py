@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_ip_threat_action
 description:
     - Create an IP Threat Action Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

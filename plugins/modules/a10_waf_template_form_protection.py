@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_form_protection
 description:
     - Web form protection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -185,8 +185,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "csrf_check", "enable_disable_action", "field_consistency_check", "form_check_caching", "form_check_non_post", "form_check_non_ssl", "form_check_request_non_post", "form_check_response_non_post", "form_check_response_non_post_sanitize", "password_check_autocomplete", "password_check_non_masked",
-    "password_check_non_ssl", "uuid",
+    "csrf_check", "enable_disable_action", "field_consistency_check", "form_check_caching", "form_check_non_post", "form_check_non_ssl", "form_check_request_non_post", "form_check_response_non_post", "form_check_response_non_post_sanitize", "password_check_autocomplete", "password_check_non_masked", "password_check_non_ssl", "uuid",
     ]
 
 

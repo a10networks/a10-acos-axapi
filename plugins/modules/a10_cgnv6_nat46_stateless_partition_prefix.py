@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_partition_prefix
 description:
     - Configure NAT46 prefix for a L3V partition traffic
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

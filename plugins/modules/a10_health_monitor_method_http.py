@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_http
 description:
     - HTTP type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -271,8 +271,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "http", "http_encrypted", "http_expect", "http_host", "http_kerberos_auth", "http_kerberos_kdc", "http_kerberos_realm", "http_maintenance_code", "http_password", "http_password_string", "http_port", "http_postdata", "http_postfile", "http_response_code", "http_text", "http_url", "http_username",
-    "maintenance", "maintenance_text", "maintenance_text_regex", "post_path", "post_type", "response_code_regex", "text_regex", "url_path", "url_type", "uuid",
+    "http", "http_encrypted", "http_expect", "http_host", "http_kerberos_auth", "http_kerberos_kdc", "http_kerberos_realm", "http_maintenance_code", "http_password", "http_password_string", "http_port", "http_postdata", "http_postfile", "http_response_code", "http_text", "http_url", "http_username", "maintenance", "maintenance_text",
+    "maintenance_text_regex", "post_path", "post_type", "response_code_regex", "text_regex", "url_path", "url_type", "uuid",
     ]
 
 

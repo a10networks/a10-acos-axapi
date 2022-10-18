@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_q_in_q
 description:
     - 802.1QinQ system settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

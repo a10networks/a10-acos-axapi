@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_ssl
 description:
     - Enable SSL group traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

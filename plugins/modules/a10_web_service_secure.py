@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service_secure
 description:
     - Web-service secure operation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

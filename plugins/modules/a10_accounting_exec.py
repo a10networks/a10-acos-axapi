@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_accounting_exec
 description:
     - Configuration for EXEC <shell> accounting
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

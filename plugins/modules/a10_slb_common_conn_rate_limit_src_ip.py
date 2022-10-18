@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_common_conn_rate_limit_src_ip
 description:
     - Set connection limit based on source IP address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_dns_vport_tmpl_trigger_stats_inc
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -260,9 +260,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "dns_filter_class_any_drop", "dns_filter_class_chaos_drop", "dns_filter_class_hesiod_drop", "dns_filter_class_internet_drop", "dns_filter_class_none_drop", "dns_filter_class_others_drop", "dns_filter_type_a_drop", "dns_filter_type_aaaa_drop", "dns_filter_type_any_drop",
-    "dns_filter_type_cname_drop", "dns_filter_type_mx_drop", "dns_filter_type_ns_drop", "dns_filter_type_others_drop", "dns_filter_type_ptr_drop", "dns_filter_type_soa_drop", "dns_filter_type_srv_drop", "dns_filter_type_txt_drop", "dns_rpz_action_drop", "dnsrrl_bad_fqdn", "dnsrrl_total_dropped",
-    "gslb_query_bad", "gslb_response_bad", "rcode_notimpl_receive", "rcode_notimpl_response", "total_dns_filter_class_drop", "total_dns_filter_type_drop", "total_filter_drop", "total_max_query_len_drop", "uuid",
+    "dns_filter_class_any_drop", "dns_filter_class_chaos_drop", "dns_filter_class_hesiod_drop", "dns_filter_class_internet_drop", "dns_filter_class_none_drop", "dns_filter_class_others_drop", "dns_filter_type_a_drop", "dns_filter_type_aaaa_drop", "dns_filter_type_any_drop", "dns_filter_type_cname_drop", "dns_filter_type_mx_drop",
+    "dns_filter_type_ns_drop", "dns_filter_type_others_drop", "dns_filter_type_ptr_drop", "dns_filter_type_soa_drop", "dns_filter_type_srv_drop", "dns_filter_type_txt_drop", "dns_rpz_action_drop", "dnsrrl_bad_fqdn", "dnsrrl_total_dropped", "gslb_query_bad", "gslb_response_bad", "rcode_notimpl_receive", "rcode_notimpl_response",
+    "total_dns_filter_class_drop", "total_dns_filter_type_drop", "total_filter_drop", "total_max_query_len_drop", "uuid",
     ]
 
 

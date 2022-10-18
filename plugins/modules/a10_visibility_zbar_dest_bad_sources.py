@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_zbar_dest_bad_sources
 description:
     - Configure zbar dest bad sources
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -160,41 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'ipv4_addr': {
-                'type': 'str',
-                },
-            'ipv6_addr': {
-                'type': 'str',
-                },
-            'port': {
-                'type': 'int',
-                },
-            'protocol': {
-                'type': 'str',
-                },
-            'multi_bad_src_list': {
-                'type': 'list',
-                'src_ip': {
-                    'type': 'str',
-                    },
-                'ind_value': {
-                    'type': 'int',
-                    },
-                'state': {
-                    'type': 'str',
-                    },
-                'drop_cnt': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'ipv4_addr': {'type': 'str', }, 'ipv6_addr': {'type': 'str', }, 'port': {'type': 'int', }, 'protocol': {'type': 'str', }, 'multi_bad_src_list': {'type': 'list', 'src_ip': {'type': 'str', }, 'ind_value': {'type': 'int', }, 'state': {'type': 'str', }, 'drop_cnt': {'type': 'int', }}}})
     return rv
 
 

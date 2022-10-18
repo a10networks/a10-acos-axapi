@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_vcs
 description:
     - Enable vcs traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

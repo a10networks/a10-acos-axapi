@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_web_reputation_url
 description:
     - URL Reputation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

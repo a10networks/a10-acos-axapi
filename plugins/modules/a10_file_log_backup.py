@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_log_backup
 description:
     - Backup system files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,38 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'file_path': {
-            'type': 'str',
-            },
-        'expedite': {
-            'type': 'bool',
-            },
-        'period': {
-            'type': 'bool',
-            },
-        'date': {
-            'type': 'int',
-            },
-        'day': {
-            'type': 'bool',
-            },
-        'month': {
-            'type': 'bool',
-            },
-        'week': {
-            'type': 'bool',
-            },
-        'all': {
-            'type': 'bool',
-            },
-        'stats_data': {
-            'type': 'bool',
-            },
-        'file_handle': {
-            'type': 'str',
-            }
-        })
+    rv.update({'file_path': {'type': 'str', }, 'expedite': {'type': 'bool', }, 'period': {'type': 'bool', }, 'date': {'type': 'int', }, 'day': {'type': 'bool', }, 'month': {'type': 'bool', }, 'week': {'type': 'bool', }, 'all': {'type': 'bool', }, 'stats_data': {'type': 'bool', }, 'file_handle': {'type': 'str', }})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_shm_logging
 description:
     - Configure shared memory logging
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

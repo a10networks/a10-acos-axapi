@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_force_self_standby
 description:
     - HA VRRP-A Operational Command to force the unit or a group to HA standby state
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

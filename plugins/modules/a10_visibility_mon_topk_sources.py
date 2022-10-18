@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_mon_topk_sources
 description:
     - Display topk source entities
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

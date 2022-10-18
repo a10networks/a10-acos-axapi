@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_ping_sweep_detection
 description:
     - Configure ping sweep detection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

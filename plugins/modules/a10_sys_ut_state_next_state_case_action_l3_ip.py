@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_state_next_state_case_action_l3_ip
 description:
     - IP address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -189,37 +189,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'src_dst': {
-            'type': 'str',
-            'required': True,
-            'choices': ['dest', 'src']
-            },
-        'ipv4_address': {
-            'type': 'str',
-            },
-        'ipv6_address': {
-            'type': 'str',
-            },
-        'virtual_server': {
-            'type': 'str',
-            },
-        'nat_pool': {
-            'type': 'str',
-            },
-        'ethernet': {
-            'type': 'str',
-            },
-        've': {
-            'type': 'str',
-            },
-        'trunk': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'src_dst': {'type': 'str', 'required': True, 'choices': ['dest', 'src']}, 'ipv4_address': {'type': 'str', }, 'ipv6_address': {'type': 'str', }, 'virtual_server': {'type': 'str', }, 'nat_pool': {'type': 'str', }, 'ethernet': {'type': 'str', }, 've': {'type': 'str', }, 'trunk': {'type': 'str', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(action_direction=dict(type='str', required=True), case_number=dict(type='str', required=True), state_name=dict(type='str', required=True), ))
     return rv

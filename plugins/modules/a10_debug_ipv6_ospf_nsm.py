@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_ipv6_ospf_nsm
 description:
     - OSPFv3 NSM information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

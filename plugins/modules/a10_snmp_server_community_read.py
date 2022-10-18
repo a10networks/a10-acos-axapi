@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_community_read
 description:
     - Define a read only community string
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

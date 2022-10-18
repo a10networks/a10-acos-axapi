@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_ftp
 description:
     - Change Firewall FTP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -198,8 +198,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'client-port-request', 'client-eprt-request', 'server-pasv-reply', 'server-epsv-reply', 'port-retransmits', 'pasv-retransmits', 'smp-app-type-mismatch', 'retransmit-sanity-check-failure', 'smp-conn-alloc-failure', 'port-helper-created', 'pasv-helper-created',
-                    'port-helper-acquire-in-del-q', 'port-helper-acquire-already-used', 'pasv-helper-acquire-in-del-q', 'pasv-helper-acquire-already-used', 'port-helper-freed-used', 'port-helper-freed-unused', 'pasv-helper-freed-used', 'pasv-helper-freed-unused'
+                    'all', 'client-port-request', 'client-eprt-request', 'server-pasv-reply', 'server-epsv-reply', 'port-retransmits', 'pasv-retransmits', 'smp-app-type-mismatch', 'retransmit-sanity-check-failure', 'smp-conn-alloc-failure', 'port-helper-created', 'pasv-helper-created', 'port-helper-acquire-in-del-q',
+                    'port-helper-acquire-already-used', 'pasv-helper-acquire-in-del-q', 'pasv-helper-acquire-already-used', 'port-helper-freed-used', 'port-helper-freed-unused', 'pasv-helper-freed-used', 'pasv-helper-freed-unused'
                     ]
                 }
             },

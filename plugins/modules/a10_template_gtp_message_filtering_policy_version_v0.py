@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_message_filtering_policy_version_v0
 description:
     - Configure Message Filtering Policy for GTPv0 Control Messages,
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

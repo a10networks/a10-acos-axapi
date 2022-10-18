@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_ftp_proxy_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -255,8 +255,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auth_fail", "bad_sequence", "cant_find_eprt", "cant_find_port", "cl_est_err", "cl_request_err", "data_conn_start_err", "data_send_fail", "data_serv_connected_err", "data_serv_connecting_err", "data_server_conn_fail", "ds_fail", "insert_tuple_fail", "invalid_start_line", "line_too_long",
-    "no_route", "rsv_persist_conn_fail", "ser_connecting_err", "server_response_err", "smp_create_fail", "smp_v4_fail", "smp_v6_fail", "snat_fail", "svrsel_fail", "unsupported_command", "unsupported_pbsz_value", "unsupported_prot_value", "uuid",
+    "auth_fail", "bad_sequence", "cant_find_eprt", "cant_find_port", "cl_est_err", "cl_request_err", "data_conn_start_err", "data_send_fail", "data_serv_connected_err", "data_serv_connecting_err", "data_server_conn_fail", "ds_fail", "insert_tuple_fail", "invalid_start_line", "line_too_long", "no_route", "rsv_persist_conn_fail",
+    "ser_connecting_err", "server_response_err", "smp_create_fail", "smp_v4_fail", "smp_v6_fail", "snat_fail", "svrsel_fail", "unsupported_command", "unsupported_pbsz_value", "unsupported_prot_value", "uuid",
     ]
 
 

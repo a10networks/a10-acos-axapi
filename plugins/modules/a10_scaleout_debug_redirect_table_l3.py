@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_debug_redirect_table_l3
 description:
     - Field l3
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

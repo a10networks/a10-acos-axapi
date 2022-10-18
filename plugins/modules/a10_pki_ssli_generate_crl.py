@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_ssli_generate_crl
 description:
     - Generate a CRL for for a vport
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

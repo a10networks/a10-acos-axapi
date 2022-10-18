@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ipsec_sa
 description:
     - Get IPsec SAs
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -209,9 +209,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'packets-encrypted', 'packets-decrypted', 'anti-replay-num', 'rekey-num', 'packets-err-inactive', 'packets-err-encryption', 'packets-err-pad-check', 'packets-err-pkt-sanity', 'packets-err-icv-check', 'packets-err-lifetime-lifebytes', 'bytes-encrypted',
-                        'bytes-decrypted', 'prefrag-success', 'prefrag-error', 'cavium-bytes-encrypted', 'cavium-bytes-decrypted', 'cavium-packets-encrypted', 'cavium-packets-decrypted', 'qat-bytes-encrypted', 'qat-bytes-decrypted', 'qat-packets-encrypted', 'qat-packets-decrypted',
-                        'tunnel-intf-down', 'pkt-fail-prep-to-send', 'no-next-hop', 'invalid-tunnel-id', 'no-tunnel-found', 'pkt-fail-to-send', 'frag-after-encap-frag-packets', 'frag-received', 'sequence-num', 'sequence-num-rollover', 'packets-err-nh-check'
+                        'all', 'packets-encrypted', 'packets-decrypted', 'anti-replay-num', 'rekey-num', 'packets-err-inactive', 'packets-err-encryption', 'packets-err-pad-check', 'packets-err-pkt-sanity', 'packets-err-icv-check', 'packets-err-lifetime-lifebytes', 'bytes-encrypted', 'bytes-decrypted', 'prefrag-success', 'prefrag-error',
+                        'cavium-bytes-encrypted', 'cavium-bytes-decrypted', 'cavium-packets-encrypted', 'cavium-packets-decrypted', 'qat-bytes-encrypted', 'qat-bytes-decrypted', 'qat-packets-encrypted', 'qat-packets-decrypted', 'tunnel-intf-down', 'pkt-fail-prep-to-send', 'no-next-hop', 'invalid-tunnel-id', 'no-tunnel-found', 'pkt-fail-to-send',
+                        'frag-after-encap-frag-packets', 'frag-received', 'sequence-num', 'sequence-num-rollover', 'packets-err-nh-check'
                         ]
                     }
                 }

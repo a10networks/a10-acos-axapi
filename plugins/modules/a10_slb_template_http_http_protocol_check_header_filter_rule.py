@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_http_http_protocol_check_header_filter_rule
 description:
     - Header filter rules
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -169,32 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'seq_num': {
-            'type': 'int',
-            'required': True,
-            },
-        'match_type_value': {
-            'type': 'str',
-            'choices': ['full-text', 'pcre']
-            },
-        'header_name_value': {
-            'type': 'str',
-            },
-        'header_value_value': {
-            'type': 'str',
-            },
-        'action_value': {
-            'type': 'str',
-            'choices': ['drop']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'seq_num': {'type': 'int', 'required': True, }, 'match_type_value': {'type': 'str', 'choices': ['full-text', 'pcre']}, 'header_name_value': {'type': 'str', }, 'header_value_value': {'type': 'str', }, 'action_value': {'type': 'str', 'choices': ['drop']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(http_name=dict(type='str', required=True), ))
     return rv

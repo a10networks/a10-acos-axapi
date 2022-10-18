@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns_query_type_filter
 description:
     - DNS query type filter list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -162,26 +162,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'query_type_action': {
-            'type': 'str',
-            'required': True,
-            'choices': ['allow', 'deny']
-            },
-        'query_type': {
-            'type': 'list',
-            'str_query_type': {
-                'type': 'str',
-                'choices': ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA', 'TXT', 'ANY']
-                },
-            'num_query_type': {
-                'type': 'int',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'query_type_action': {'type': 'str', 'required': True, 'choices': ['allow', 'deny']}, 'query_type': {'type': 'list', 'str_query_type': {'type': 'str', 'choices': ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA', 'TXT', 'ANY']}, 'num_query_type': {'type': 'int', }}, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(dns_name=dict(type='str', required=True), ))
     return rv

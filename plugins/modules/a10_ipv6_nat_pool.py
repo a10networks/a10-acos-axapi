@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_nat_pool
 description:
     - IPv6 pool name
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

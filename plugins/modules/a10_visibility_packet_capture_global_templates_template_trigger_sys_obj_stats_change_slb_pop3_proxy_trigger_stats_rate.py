@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_pop3_proxy_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -200,10 +200,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "bad_sequence", "cl_est_err", "duration", "insert_tuple_fail", "invalid_start_line", "line_too_long", "no_route", "rsv_persist_conn_fail", "ser_connecting_err", "server_response_err", "smp_v4_fail", "smp_v6_fail", "snat_fail", "svrsel_fail", "threshold_exceeded_by", "unsupported_command",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["bad_sequence", "cl_est_err", "duration", "insert_tuple_fail", "invalid_start_line", "line_too_long", "no_route", "rsv_persist_conn_fail", "ser_connecting_err", "server_response_err", "smp_v4_fail", "smp_v6_fail", "snat_fail", "svrsel_fail", "threshold_exceeded_by", "unsupported_command", "uuid", ]
 
 
 def get_default_argspec():

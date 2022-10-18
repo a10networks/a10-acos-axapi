@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_console
 description:
     - Set logging level which sent to console
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

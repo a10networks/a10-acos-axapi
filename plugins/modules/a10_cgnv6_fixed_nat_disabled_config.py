@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_disabled_config
 description:
     - Fixed NAT Disabled Configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

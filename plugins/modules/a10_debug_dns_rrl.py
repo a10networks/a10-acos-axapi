@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_dns_rrl
 description:
     - Debug DNS Response-Rate-Limiting
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

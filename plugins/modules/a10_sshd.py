@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sshd
 description:
     - SSHD service operation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -173,36 +173,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'restart': {
-            'type': 'bool',
-            },
-        'wipe': {
-            'type': 'bool',
-            },
-        'regenerate': {
-            'type': 'bool',
-            },
-        'generate': {
-            'type': 'bool',
-            },
-        're_add_rsa': {
-            'type': 'str',
-            },
-        'size': {
-            'type': 'str',
-            'choices': ['2048', '4096']
-            },
-        'load': {
-            'type': 'bool',
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'file_url': {
-            'type': 'str',
-            }
-        })
+    rv.update({'restart': {'type': 'bool', }, 'wipe': {'type': 'bool', }, 'regenerate': {'type': 'bool', }, 'generate': {'type': 'bool', }, 're_add_rsa': {'type': 'str', }, 'size': {'type': 'str', 'choices': ['2048', '4096']}, 'load': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'file_url': {'type': 'str', }})
     return rv
 
 

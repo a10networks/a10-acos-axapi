@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_backup_status
 description:
     - Get backup system or backup log status
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

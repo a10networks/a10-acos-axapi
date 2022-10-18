@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_cpu_ctrl_cpu
 description:
     - Control CPU usage
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -152,41 +152,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'current_time': {
-                'type': 'str',
-                },
-            'number_of_cpu': {
-                'type': 'int',
-                },
-            'cpu_usage': {
-                'type': 'list',
-                'cpu_id': {
-                    'type': 'int',
-                    },
-                '1_sec': {
-                    'type': 'int',
-                    },
-                '5_sec': {
-                    'type': 'int',
-                    },
-                '10_sec': {
-                    'type': 'int',
-                    },
-                '30_sec': {
-                    'type': 'int',
-                    },
-                '60_sec': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'current_time': {'type': 'str', }, 'number_of_cpu': {'type': 'int', }, 'cpu_usage': {'type': 'list', 'cpu_id': {'type': 'int', }, '1_sec': {'type': 'int', }, '5_sec': {'type': 'int', }, '10_sec': {'type': 'int', }, '30_sec': {'type': 'int', }, '60_sec': {'type': 'int', }}}})
     return rv
 
 

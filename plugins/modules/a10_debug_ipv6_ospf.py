@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_ipv6_ospf
 description:
     - Open Shortest Path First (OSPF) for IPv6
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

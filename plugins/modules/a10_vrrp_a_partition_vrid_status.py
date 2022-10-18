@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_partition_vrid_status
 description:
     - display vrrp-a status for all partitions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,35 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'all_partition_list': {
-                'type': 'list',
-                'local_device_ID': {
-                    'type': 'int',
-                    },
-                'partition_name': {
-                    'type': 'str',
-                    },
-                'vrid': {
-                    'type': 'int',
-                    },
-                'active_device_id': {
-                    'type': 'int',
-                    },
-                'active_priority': {
-                    'type': 'int',
-                    },
-                'active_weight': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'all_partition_list': {'type': 'list', 'local_device_ID': {'type': 'int', }, 'partition_name': {'type': 'str', }, 'vrid': {'type': 'int', }, 'active_device_id': {'type': 'int', }, 'active_priority': {'type': 'int', }, 'active_weight': {'type': 'int', }}}})
     return rv
 
 

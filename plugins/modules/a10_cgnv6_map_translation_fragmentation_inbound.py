@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_translation_fragmentation_inbound
 description:
     - MAP-T fragmentation rules for inbound oversize packets
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

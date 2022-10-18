@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_dns_cache
 description:
     - DNS Cache Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -329,12 +329,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate',
-                    'current_data_allocate', 'resolver_queue_full', 'truncated_r'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r']
                 }
             },
         'oper': {

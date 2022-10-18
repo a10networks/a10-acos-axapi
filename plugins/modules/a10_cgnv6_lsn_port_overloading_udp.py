@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_port_overloading_udp
 description:
     - Set behavior for UDP only
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_message_filtering_policy_version_v1
 description:
     - Configure Message Filtering Policy for GTPv1 Control Messages,
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -205,10 +205,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "create_mbms", "create_pdp", "delete_mbms", "delete_pdp", "enable_disable_action", "gtp_pdu", "initiate_pdp", "mbms_deregistration", "mbms_notification", "mbms_registration", "mbms_session", "message_type", "ms_info_change", "pdu_notification", "reserved_messages", "update_mbms", "update_pdp",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["create_mbms", "create_pdp", "delete_mbms", "delete_pdp", "enable_disable_action", "gtp_pdu", "initiate_pdp", "mbms_deregistration", "mbms_notification", "mbms_registration", "mbms_session", "message_type", "ms_info_change", "pdu_notification", "reserved_messages", "update_mbms", "update_pdp", "uuid", ]
 
 
 def get_default_argspec():

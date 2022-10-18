@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_common
 description:
     - SLB related commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -183,6 +183,11 @@ options:
         - "Enable DNS cache"
         type: bool
         required: False
+    dns_cache_ttl_adjustment_enable:
+        description:
+        - "Enable DNS cache response ttl adjustment"
+        type: bool
+        required: False
     response_type:
         description:
         - "'single-answer'= Only cache DNS response with single answer; 'round-robin'=
@@ -305,6 +310,11 @@ options:
     fast_path_disable:
         description:
         - "Disable fast path in SLB processing"
+        type: bool
+        required: False
+    odd_even_nat_enable:
+        description:
+        - "Enable odd even nat pool allocation in dual blade systems"
         type: bool
         required: False
     http_fast_enable:
@@ -498,6 +508,11 @@ options:
         - "HW assisted N5 SSL module with TLS 1.2 support using OpenSSL 0.9.7"
         type: bool
         required: False
+    ssl_n5_delay_tx_enable:
+        description:
+        - "Enable delay transmission for N5-new"
+        type: bool
+        required: False
     substitute_source_mac:
         description:
         - "Substitute Source MAC Address to that of the outgoing interface"
@@ -681,13 +696,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low",
-    "compress_block_size", "conn_rate_limit", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_age_min_threshold",
-    "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable",
-    "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency",
-    "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "N5_new", "N5_old", "no_auto_up_on_aflex", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "per_thr_percent", "ping_sweep_detection",
-    "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port_scan_detection", "QAT", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map",
-    "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "sort_res", "ssli_cert_not_ready_inspect_limit",
+    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "compress_block_size", "conn_rate_limit", "ddos_pkt_count_thresh",
+    "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_ttl_adjustment_enable", "dns_response_rate_limiting",
+    "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable",
+    "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "N5_new", "N5_old", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper",
+    "override_port", "pbslb_entry_age", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port_scan_detection", "QAT", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out",
+    "scale_out_traffic_map", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "sort_res", "ssl_n5_delay_tx_enable", "ssli_cert_not_ready_inspect_limit",
     "ssli_cert_not_ready_inspect_timeout", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_mss_tab", "uuid",
     ]
 
@@ -789,6 +803,9 @@ def get_argspec():
         'dns_cache_enable': {
             'type': 'bool',
             },
+        'dns_cache_ttl_adjustment_enable': {
+            'type': 'bool',
+            },
         'response_type': {
             'type': 'str',
             'choices': ['single-answer', 'round-robin']
@@ -858,6 +875,9 @@ def get_argspec():
             'type': 'int',
             },
         'fast_path_disable': {
+            'type': 'bool',
+            },
+        'odd_even_nat_enable': {
             'type': 'bool',
             },
         'http_fast_enable': {
@@ -985,6 +1005,9 @@ def get_argspec():
             'type': 'bool',
             },
         'N5_old': {
+            'type': 'bool',
+            },
+        'ssl_n5_delay_tx_enable': {
             'type': 'bool',
             },
         'substitute_source_mac': {

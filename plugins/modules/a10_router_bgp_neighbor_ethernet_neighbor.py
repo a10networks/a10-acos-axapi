@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_ethernet_neighbor
 description:
     - Specify an ethernet unnumbered neighbor
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

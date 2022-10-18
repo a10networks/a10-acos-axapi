@@ -14,7 +14,7 @@ module: a10_system_ssl_scv_verify_host
 description:
     - To Enable/disable checking claimed identity in server certificate during server
       certificate validation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

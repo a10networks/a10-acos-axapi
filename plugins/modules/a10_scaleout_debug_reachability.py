@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_debug_reachability
 description:
     - Field reachability
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -60,30 +60,20 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    hash_table:
-        description:
-        - "Field hash_table"
-        type: dict
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     oper:
         description:
         - "Field oper"
         type: dict
         required: False
         suboptions:
+            part_name:
+                description:
+                - "Field part_name"
+                type: str
             scaleout_ip_list:
                 description:
                 - "Field scaleout_ip_list"
                 type: list
-            hash_table:
-                description:
-                - "Field hash_table"
-                type: dict
 
 '''
 
@@ -138,7 +128,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["hash_table", "oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -162,14 +152,11 @@ def get_argspec():
         'uuid': {
             'type': 'str',
             },
-        'hash_table': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-                }
-            },
         'oper': {
             'type': 'dict',
+            'part_name': {
+                'type': 'str',
+                },
             'scaleout_ip_list': {
                 'type': 'list',
                 'node': {
@@ -195,42 +182,6 @@ def get_argspec():
                     },
                 'name': {
                     'type': 'str',
-                    }
-                },
-            'hash_table': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'ip': {
-                        'type': 'int',
-                        },
-                    'mac': {
-                        'type': 'int',
-                        },
-                    'hash_list': {
-                        'type': 'list',
-                        'hash': {
-                            'type': 'int',
-                            },
-                        'node': {
-                            'type': 'int',
-                            },
-                        'so_ip': {
-                            'type': 'str',
-                            },
-                        'so_mac': {
-                            'type': 'str',
-                            },
-                        'real_port': {
-                            'type': 'int',
-                            },
-                        'stale': {
-                            'type': 'int',
-                            },
-                        'ref_count': {
-                            'type': 'int',
-                            }
-                        }
                     }
                 }
             }
@@ -258,23 +209,10 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config, payload):
-    change_results = copy.deepcopy(result)
-    if not existing_config:
-        change_results["modified_values"].update(**payload)
-        return change_results
-
-    config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["reachability"].items():
-        v = 1 if str(v).lower() == "true" else v
-        v = 0 if str(v).lower() == "false" else v
-
-        if config_changes["reachability"].get(k) != v:
-            change_results["changed"] = True
-            config_changes["reachability"][k] = v
-
-    change_results["modified_values"].update(**config_changes)
-    return change_results
+def report_changes(module, result, existing_config):
+    if existing_config:
+        result["changed"] = True
+    return result
 
 
 def create(module, result, payload={}):

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_jumbo_global
 description:
     - To enable/disable jumbo
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

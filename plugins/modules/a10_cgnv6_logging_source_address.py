@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_logging_source_address
 description:
     - Field source_address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_running_config
 description:
     - Configure the behaviour of show running config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

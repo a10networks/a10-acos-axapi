@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_access_log
 description:
     - Access Log Info
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

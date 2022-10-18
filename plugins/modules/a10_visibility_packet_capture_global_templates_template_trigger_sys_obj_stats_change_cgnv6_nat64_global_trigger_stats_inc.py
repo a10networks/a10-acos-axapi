@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_nat64_global_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -196,8 +196,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "eif_limit_exceeded", "fullcone_failure", "fullcone_self_hairpinning_drop", "ha_nat_pool_batch_type_mismatch", "ha_nat_pool_unusable", "nat_pool_unusable", "nat_port_unavailable_icmp", "nat_port_unavailable_tcp", "nat_port_unavailable_udp", "new_user_resource_unavailable", "no_class_list_match",
-    "no_radius_profile_match", "user_quota_failure", "user_quota_unusable", "user_quota_unusable_drop", "uuid",
+    "eif_limit_exceeded", "fullcone_failure", "fullcone_self_hairpinning_drop", "ha_nat_pool_batch_type_mismatch", "ha_nat_pool_unusable", "nat_pool_unusable", "nat_port_unavailable_icmp", "nat_port_unavailable_tcp", "nat_port_unavailable_udp", "new_user_resource_unavailable", "no_class_list_match", "no_radius_profile_match", "user_quota_failure",
+    "user_quota_unusable", "user_quota_unusable_drop", "uuid",
     ]
 
 

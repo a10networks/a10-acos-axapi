@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ve_ip
 description:
     - Global IP configuration subcommands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -143,6 +143,11 @@ options:
         description:
         - "Maximum Response Time (Max Response Time (Default is 100))"
         type: int
+        required: False
+    unnumbered:
+        description:
+        - "Set the interface as unnumbered"
+        type: bool
         required: False
     uuid:
         description:
@@ -291,9 +296,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "address_list", "allow_promiscuous_vip", "client", "dhcp", "generate_membership_query", "helper_address_list", "inside", "max_resp_time", "ospf", "outside", "query_interval", "rip", "router", "server", "slb_partition_redirect", "stateful_firewall", "syn_cookie", "ttl_ignore", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["address_list", "allow_promiscuous_vip", "client", "dhcp", "generate_membership_query", "helper_address_list", "inside", "max_resp_time", "ospf", "outside", "query_interval", "rip", "router", "server", "slb_partition_redirect", "stateful_firewall", "syn_cookie", "ttl_ignore", "unnumbered", "uuid", ]
 
 
 def get_default_argspec():
@@ -364,6 +367,9 @@ def get_argspec():
             },
         'max_resp_time': {
             'type': 'int',
+            },
+        'unnumbered': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

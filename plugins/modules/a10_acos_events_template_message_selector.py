@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_template_message_selector
 description:
     - Specify the message selector
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

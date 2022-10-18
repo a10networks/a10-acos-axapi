@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_spdy_proxy
 description:
     - Configure SPDY Proxy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -564,13 +564,12 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_proxy', 'total_proxy', 'curr_http_proxy', 'total_http_proxy', 'total_v2_proxy', 'total_v3_proxy', 'curr_stream', 'total_stream', 'total_stream_succ', 'client_rst', 'server_rst', 'client_goaway', 'server_goaway', 'tcp_err', 'inflate_ctx', 'deflate_ctx', 'ping_sent',
-                    'stream_not_found', 'client_fin', 'server_fin', 'stream_close', 'stream_err', 'session_err', 'control_frame', 'syn_frame', 'syn_reply_frame', 'headers_frame', 'settings_frame', 'window_frame', 'ping_frame', 'data_frame', 'data_no_stream', 'data_no_stream_no_goaway',
-                    'data_no_stream_goaway_close', 'est_cb_no_tuple', 'data_cb_no_tuple', 'ctx_alloc_fail', 'fin_close_session', 'server_rst_close_stream', 'stream_found', 'close_stream_session_not_found', 'close_stream_stream_not_found', 'close_stream_already_closed', 'close_stream_session_close',
-                    'close_session_already_closed', 'max_concurrent_stream_limit', 'stream_alloc_fail', 'http_conn_alloc_fail', 'request_header_alloc_fail', 'name_value_total_len_ex', 'name_value_zero_len', 'name_value_invalid_http_ver', 'name_value_connection', 'name_value_keepalive',
-                    'name_value_proxy_conn', 'name_value_trasnfer_encod', 'name_value_no_must_have', 'decompress_fail', 'syn_after_goaway', 'stream_lt_prev', 'syn_stream_exist_or_even', 'syn_unidir', 'syn_reply_alr_rcvd', 'client_rst_nostream', 'window_no_stream', 'invalid_window_size',
-                    'unknown_control_frame', 'data_on_closed_stream', 'invalid_frame_size', 'invalid_version', 'header_after_session_close', 'compress_ctx_alloc_fail', 'header_compress_fail', 'http_data_session_close', 'http_data_stream_not_found', 'close_stream_not_http_proxy',
-                    'session_needs_requeue', 'new_stream_session_del', 'fin_stream_closed', 'http_close_stream_closed', 'http_err_stream_closed', 'http_hdr_stream_close', 'http_data_stream_close', 'session_close'
+                    'all', 'curr_proxy', 'total_proxy', 'curr_http_proxy', 'total_http_proxy', 'total_v2_proxy', 'total_v3_proxy', 'curr_stream', 'total_stream', 'total_stream_succ', 'client_rst', 'server_rst', 'client_goaway', 'server_goaway', 'tcp_err', 'inflate_ctx', 'deflate_ctx', 'ping_sent', 'stream_not_found', 'client_fin', 'server_fin',
+                    'stream_close', 'stream_err', 'session_err', 'control_frame', 'syn_frame', 'syn_reply_frame', 'headers_frame', 'settings_frame', 'window_frame', 'ping_frame', 'data_frame', 'data_no_stream', 'data_no_stream_no_goaway', 'data_no_stream_goaway_close', 'est_cb_no_tuple', 'data_cb_no_tuple', 'ctx_alloc_fail', 'fin_close_session',
+                    'server_rst_close_stream', 'stream_found', 'close_stream_session_not_found', 'close_stream_stream_not_found', 'close_stream_already_closed', 'close_stream_session_close', 'close_session_already_closed', 'max_concurrent_stream_limit', 'stream_alloc_fail', 'http_conn_alloc_fail', 'request_header_alloc_fail',
+                    'name_value_total_len_ex', 'name_value_zero_len', 'name_value_invalid_http_ver', 'name_value_connection', 'name_value_keepalive', 'name_value_proxy_conn', 'name_value_trasnfer_encod', 'name_value_no_must_have', 'decompress_fail', 'syn_after_goaway', 'stream_lt_prev', 'syn_stream_exist_or_even', 'syn_unidir',
+                    'syn_reply_alr_rcvd', 'client_rst_nostream', 'window_no_stream', 'invalid_window_size', 'unknown_control_frame', 'data_on_closed_stream', 'invalid_frame_size', 'invalid_version', 'header_after_session_close', 'compress_ctx_alloc_fail', 'header_compress_fail', 'http_data_session_close', 'http_data_stream_not_found',
+                    'close_stream_not_http_proxy', 'session_needs_requeue', 'new_stream_session_del', 'fin_stream_closed', 'http_close_stream_closed', 'http_err_stream_closed', 'http_hdr_stream_close', 'http_data_stream_close', 'session_close'
                     ]
                 }
             },

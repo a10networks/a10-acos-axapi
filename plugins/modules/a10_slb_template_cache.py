@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_cache
 description:
     - RAM caching template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -395,8 +395,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "accept_reload_req", "age", "default_policy_nocache", "disable_insert_age", "disable_insert_via", "local_uri_policy", "logging", "max_cache_size", "max_content_size", "min_content_size", "name", "packet_capture_template", "remove_cookies", "replacement_policy", "sampling_enable", "stats",
-    "uri_policy", "user_tag", "uuid", "verify_host",
+    "accept_reload_req", "age", "default_policy_nocache", "disable_insert_age", "disable_insert_via", "local_uri_policy", "logging", "max_cache_size", "max_content_size", "min_content_size", "name", "packet_capture_template", "remove_cookies", "replacement_policy", "sampling_enable", "stats", "uri_policy", "user_tag", "uuid", "verify_host",
     ]
 
 
@@ -493,8 +492,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate',
-                    'rsp_other', 'nocache_match', 'match', 'invalidate_match', 'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'header_save_error'
+                    'all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match',
+                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'header_save_error'
                     ]
                 }
             },

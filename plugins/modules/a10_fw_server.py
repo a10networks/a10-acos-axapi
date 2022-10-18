@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_server
 description:
     - Firewall logging Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -361,8 +361,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'curr_conn', 'curr_req', 'total_req', 'total_req_succ', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'last_total_conn', 'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400', 'es_resp_500', 'es_resp_other', 'es_req_count',
-                        'es_resp_count', 'es_resp_invalid_http', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_good_status_code', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
+                        'all', 'curr_conn', 'curr_req', 'total_req', 'total_req_succ', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'last_total_conn', 'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400', 'es_resp_500', 'es_resp_other', 'es_req_count', 'es_resp_count', 'es_resp_invalid_http',
+                        'total_rev_pkts_inspected', 'total_rev_pkts_inspected_good_status_code', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
                         ]
                     }
                 },

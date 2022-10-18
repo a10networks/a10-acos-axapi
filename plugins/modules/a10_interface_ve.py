@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ve
 description:
     - Virtual ethernet interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -241,6 +241,10 @@ options:
                 description:
                 - "Maximum Response Time (Max Response Time (Default is 100))"
                 type: int
+            unnumbered:
+                description:
+                - "Set the interface as unnumbered"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -724,9 +728,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "access_list", "action", "bfd", "ddos", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipv6", "isis", "l3_vlan_fwd_disable", "lw_4o6", "map", "mtu", "name", "nptv6", "oper", "ping_sweep_detection", "port_scan_detection", "sampling_enable", "stats", "trap_source", "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["access_list", "action", "bfd", "ddos", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipv6", "isis", "l3_vlan_fwd_disable", "lw_4o6", "map", "mtu", "name", "nptv6", "oper", "ping_sweep_detection", "port_scan_detection", "sampling_enable", "stats", "trap_source", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -817,12 +819,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd',
-                    'rate_byte_rcvd', 'load_interval'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval']
                 }
             },
         'ip': {
@@ -877,6 +875,9 @@ def get_argspec():
                 },
             'max_resp_time': {
                 'type': 'int',
+                },
+            'unnumbered': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

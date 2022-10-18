@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_link_capability
 description:
     - To enable/disable link capabilities
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

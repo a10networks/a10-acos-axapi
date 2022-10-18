@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_icmp
 description:
     - Change Firewall ICMP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_doh_dns_retry
 description:
     - DNS over HTTP(s) template retry policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

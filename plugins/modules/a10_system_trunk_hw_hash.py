@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_trunk_hw_hash
 description:
     - Set Trunk HW Hash Mode
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

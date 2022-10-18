@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_csr
 description:
     - ssl certificate signing request file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

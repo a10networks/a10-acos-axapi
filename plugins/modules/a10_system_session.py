@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_session
 description:
     - Session Entries
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -151,7 +151,10 @@ options:
           Open; 'gtp_u_counter'= GTP-U Count; 'gtp_c_echo_counter'= GTP-C Echo Count;
           'gtp_u_echo_counter'= GTP-U Echo Count; 'gtp_curr_free_conn'= GTP Current
           Available Conn; 'gtp_cum_conn_counter'= GTP cumulative Conn Count;
-          'gtp_cum_conn_freed_counter'= GTP cumulative Conn Freed;"
+          'gtp_cum_conn_freed_counter'= GTP cumulative Conn Freed; 'fw_blacklist_sess'=
+          Blacklist Sessions; 'fw_blacklist_sess_created'= Blacklist Session Created;
+          'fw_blacklist_sess_freed'= Blacklist Session Freed; 'server_tcp_est_counter'=
+          Server TCP Established; 'server_tcp_half_open_counter'= Server TCP Half Open;"
                 type: str
     stats:
         description:
@@ -447,6 +450,26 @@ options:
                 description:
                 - "GTP cumulative Conn Freed"
                 type: str
+            fw_blacklist_sess:
+                description:
+                - "Blacklist Sessions"
+                type: str
+            fw_blacklist_sess_created:
+                description:
+                - "Blacklist Session Created"
+                type: str
+            fw_blacklist_sess_freed:
+                description:
+                - "Blacklist Session Freed"
+                type: str
+            server_tcp_est_counter:
+                description:
+                - "Server TCP Established"
+                type: str
+            server_tcp_half_open_counter:
+                description:
+                - "Server TCP Half Open"
+                type: str
 
 '''
 
@@ -531,18 +554,16 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'total_l4_conn', 'conn_counter', 'conn_freed_counter', 'total_l4_packet_count', 'total_l7_packet_count', 'total_l4_conn_proxy', 'total_l7_conn', 'total_tcp_conn', 'curr_free_conn', 'tcp_est_counter', 'tcp_half_open_counter', 'tcp_half_close_counter', 'udp_counter',
-                    'ip_counter', 'other_counter', 'reverse_nat_tcp_counter', 'reverse_nat_udp_counter', 'tcp_syn_half_open_counter', 'conn_smp_alloc_counter', 'conn_smp_free_counter', 'conn_smp_aged_counter', 'ssl_count_curr', 'ssl_count_total', 'server_ssl_count_curr', 'server_ssl_count_total',
-                    'client_ssl_reuse_total', 'server_ssl_reuse_total', 'ssl_failed_total', 'ssl_failed_ca_verification', 'ssl_server_cert_error', 'ssl_client_cert_auth_fail', 'total_ip_nat_conn', 'total_l2l3_conn', 'client_ssl_ctx_malloc_failure', 'conn_type_0_available', 'conn_type_1_available',
-                    'conn_type_2_available', 'conn_type_3_available', 'conn_type_4_available', 'conn_smp_type_0_available', 'conn_smp_type_1_available', 'conn_smp_type_2_available', 'conn_smp_type_3_available', 'conn_smp_type_4_available', 'sctp-half-open-counter', 'sctp-est-counter',
-                    'nonssl_bypass', 'ssl_failsafe_total', 'ssl_forward_proxy_failed_handshake_total', 'ssl_forward_proxy_failed_tcp_total', 'ssl_forward_proxy_failed_crypto_total', 'ssl_forward_proxy_failed_cert_verify_total', 'ssl_forward_proxy_invalid_ocsp_stapling_total',
-                    'ssl_forward_proxy_revoked_ocsp_total', 'ssl_forward_proxy_failed_cert_signing_total', 'ssl_forward_proxy_failed_ssl_version_total', 'ssl_forward_proxy_sni_bypass_total', 'ssl_forward_proxy_client_auth_bypass_total', 'conn_app_smp_alloc_counter', 'diameter_conn_counter',
-                    'diameter_conn_freed_counter', 'debug_tcp_counter', 'debug_udp_counter', 'total_fw_conn', 'total_local_conn', 'total_curr_conn', 'client_ssl_fatal_alert', 'client_ssl_fin_rst', 'fp_session_fin_rst', 'server_ssl_fatal_alert', 'server_ssl_fin_rst', 'client_template_int_err',
-                    'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total', 'ssl_forward_proxy_cert_issuer_bypass_total',
-                    'ssl_forward_proxy_cert_san_bypass_total', 'ssl_forward_proxy_no_sni_bypass_total', 'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter',
-                    'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total', 'total_clientside_early_data_connections', 'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections', 'total_serverside_failed_early_data-connections',
-                    'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter', 'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter', 'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter',
-                    'gtp_cum_conn_freed_counter'
+                    'all', 'total_l4_conn', 'conn_counter', 'conn_freed_counter', 'total_l4_packet_count', 'total_l7_packet_count', 'total_l4_conn_proxy', 'total_l7_conn', 'total_tcp_conn', 'curr_free_conn', 'tcp_est_counter', 'tcp_half_open_counter', 'tcp_half_close_counter', 'udp_counter', 'ip_counter', 'other_counter', 'reverse_nat_tcp_counter',
+                    'reverse_nat_udp_counter', 'tcp_syn_half_open_counter', 'conn_smp_alloc_counter', 'conn_smp_free_counter', 'conn_smp_aged_counter', 'ssl_count_curr', 'ssl_count_total', 'server_ssl_count_curr', 'server_ssl_count_total', 'client_ssl_reuse_total', 'server_ssl_reuse_total', 'ssl_failed_total', 'ssl_failed_ca_verification',
+                    'ssl_server_cert_error', 'ssl_client_cert_auth_fail', 'total_ip_nat_conn', 'total_l2l3_conn', 'client_ssl_ctx_malloc_failure', 'conn_type_0_available', 'conn_type_1_available', 'conn_type_2_available', 'conn_type_3_available', 'conn_type_4_available', 'conn_smp_type_0_available', 'conn_smp_type_1_available',
+                    'conn_smp_type_2_available', 'conn_smp_type_3_available', 'conn_smp_type_4_available', 'sctp-half-open-counter', 'sctp-est-counter', 'nonssl_bypass', 'ssl_failsafe_total', 'ssl_forward_proxy_failed_handshake_total', 'ssl_forward_proxy_failed_tcp_total', 'ssl_forward_proxy_failed_crypto_total',
+                    'ssl_forward_proxy_failed_cert_verify_total', 'ssl_forward_proxy_invalid_ocsp_stapling_total', 'ssl_forward_proxy_revoked_ocsp_total', 'ssl_forward_proxy_failed_cert_signing_total', 'ssl_forward_proxy_failed_ssl_version_total', 'ssl_forward_proxy_sni_bypass_total', 'ssl_forward_proxy_client_auth_bypass_total',
+                    'conn_app_smp_alloc_counter', 'diameter_conn_counter', 'diameter_conn_freed_counter', 'debug_tcp_counter', 'debug_udp_counter', 'total_fw_conn', 'total_local_conn', 'total_curr_conn', 'client_ssl_fatal_alert', 'client_ssl_fin_rst', 'fp_session_fin_rst', 'server_ssl_fatal_alert', 'server_ssl_fin_rst', 'client_template_int_err',
+                    'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total', 'ssl_forward_proxy_cert_issuer_bypass_total', 'ssl_forward_proxy_cert_san_bypass_total', 'ssl_forward_proxy_no_sni_bypass_total',
+                    'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter', 'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total', 'total_clientside_early_data_connections',
+                    'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections', 'total_serverside_failed_early_data-connections', 'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter', 'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter',
+                    'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter'
                     ]
                 }
             },
@@ -762,6 +783,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'gtp_cum_conn_freed_counter': {
+                'type': 'str',
+                },
+            'fw_blacklist_sess': {
+                'type': 'str',
+                },
+            'fw_blacklist_sess_created': {
+                'type': 'str',
+                },
+            'fw_blacklist_sess_freed': {
+                'type': 'str',
+                },
+            'server_tcp_est_counter': {
+                'type': 'str',
+                },
+            'server_tcp_half_open_counter': {
                 'type': 'str',
                 }
             }

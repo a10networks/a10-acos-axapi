@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_revocation
 description:
     - IPsec VPN revocation settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -177,39 +177,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'ca': {
-            'type': 'str',
-            },
-        'crl': {
-            'type': 'dict',
-            'crl_pri': {
-                'type': 'str',
-                },
-            'crl_sec': {
-                'type': 'str',
-                }
-            },
-        'ocsp': {
-            'type': 'dict',
-            'ocsp_pri': {
-                'type': 'str',
-                },
-            'ocsp_sec': {
-                'type': 'str',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'ca': {'type': 'str', }, 'crl': {'type': 'dict', 'crl_pri': {'type': 'str', }, 'crl_sec': {'type': 'str', }}, 'ocsp': {'type': 'dict', 'ocsp_pri': {'type': 'str', }, 'ocsp_sec': {'type': 'str', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

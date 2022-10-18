@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_validation_policy
 description:
     - Configure GTP Validation Policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -226,8 +226,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "anomaly_action", "anomaly_checks", "anti_spoofing_action", "anti_spoofing_check", "crosslayer_corr_action", "crosslayer_correlation", "mandatory_ie_action", "mandatory_ie_check", "msisdn_imsi_corr_action", "msisdn_imsi_correlation", "name", "out_of_order_ie_action", "out_of_order_ie_check",
-    "out_of_state_ie_action", "out_of_state_ie_check", "reserved_ie_action", "reserved_ie_check", "sequence_num_corr_action", "sequence_num_correlation", "user_tag", "uuid",
+    "anomaly_action", "anomaly_checks", "anti_spoofing_action", "anti_spoofing_check", "crosslayer_corr_action", "crosslayer_correlation", "mandatory_ie_action", "mandatory_ie_check", "msisdn_imsi_corr_action", "msisdn_imsi_correlation", "name", "out_of_order_ie_action", "out_of_order_ie_check", "out_of_state_ie_action", "out_of_state_ie_check",
+    "reserved_ie_action", "reserved_ie_check", "sequence_num_corr_action", "sequence_num_correlation", "user_tag", "uuid",
     ]
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_xml_check
 description:
     - XML check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -209,10 +209,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "disable", "format", "max_attr", "max_attr_name_len", "max_attr_value_len", "max_cdata_len", "max_elem", "max_elem_child", "max_elem_depth", "max_elem_name_len", "max_entity_decl", "max_entity_depth", "max_entity_exp", "max_entity_exp_depth", "max_namespace", "max_namespace_uri_len", "sqlia",
-    "uuid", "xss",
-    ]
+AVAILABLE_PROPERTIES = ["disable", "format", "max_attr", "max_attr_name_len", "max_attr_value_len", "max_cdata_len", "max_elem", "max_elem_child", "max_elem_depth", "max_elem_name_len", "max_entity_decl", "max_entity_depth", "max_entity_exp", "max_entity_exp_depth", "max_namespace", "max_namespace_uri_len", "sqlia", "uuid", "xss", ]
 
 
 def get_default_argspec():

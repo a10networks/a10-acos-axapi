@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_trunk
 description:
     - Trunk interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -276,6 +276,10 @@ options:
                 description:
                 - "Maximum Response Time (Max Response Time (Default is 100))"
                 type: int
+            unnumbered:
+                description:
+                - "Set the interface as unnumbered"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -778,8 +782,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "access_list", "action", "bfd", "ddos", "do_auto_recovery", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipv6", "isis", "l3_vlan_fwd_disable", "lw_4o6", "mac_learning", "map", "mtu", "name", "nptv6", "oper", "ports_threshold", "sampling_enable", "spanning_tree", "stats",
-    "sync_modify_disable", "timer", "trap_source", "update_l2_info", "use_hw_hash", "user_tag", "uuid", "virtual_wire", "vlan_learning",
+    "access_list", "action", "bfd", "ddos", "do_auto_recovery", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipv6", "isis", "l3_vlan_fwd_disable", "lw_4o6", "mac_learning", "map", "mtu", "name", "nptv6", "oper", "ports_threshold", "sampling_enable", "spanning_tree", "stats", "sync_modify_disable", "timer", "trap_source",
+    "update_l2_info", "use_hw_hash", "user_tag", "uuid", "virtual_wire", "vlan_learning",
     ]
 
 
@@ -892,12 +896,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts',
-                    'dropped_tx_pkts'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts', 'dropped_tx_pkts']
                 }
             },
         'ip': {
@@ -958,6 +958,9 @@ def get_argspec():
                 },
             'max_resp_time': {
                 'type': 'int',
+                },
+            'unnumbered': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

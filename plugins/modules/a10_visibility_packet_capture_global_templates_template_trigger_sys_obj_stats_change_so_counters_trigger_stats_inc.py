@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_so_counters_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -196,8 +196,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "so_pkts_l2redirect_dest_mac_zero_drop", "so_pkts_l2redirect_interface_not_up", "so_pkts_l2redirect_invalid_redirect_inf", "so_pkts_l2redirect_port_retrieval_error", "so_pkts_l2redirect_vlan_retrieval_error", "so_pkts_l3_redirect_chassis_dest_mac_er", "so_pkts_l3_redirect_encap_error_drop",
-    "so_pkts_l3_redirect_fragmentation_error", "so_pkts_l3_redirect_inner_mac_zero_drop", "so_pkts_l3_redirect_invalid_dev_dir", "so_pkts_l3_redirect_table_error", "so_pkts_l3_redirect_table_no_entry_foun", "so_pkts_slb_nat_release_fail", "so_pkts_slb_nat_reserve_fail", "uuid",
+    "so_pkts_l2redirect_dest_mac_zero_drop", "so_pkts_l2redirect_interface_not_up", "so_pkts_l2redirect_invalid_redirect_inf", "so_pkts_l2redirect_port_retrieval_error", "so_pkts_l2redirect_vlan_retrieval_error", "so_pkts_l3_redirect_chassis_dest_mac_er", "so_pkts_l3_redirect_encap_error_drop", "so_pkts_l3_redirect_fragmentation_error",
+    "so_pkts_l3_redirect_inner_mac_zero_drop", "so_pkts_l3_redirect_invalid_dev_dir", "so_pkts_l3_redirect_table_error", "so_pkts_l3_redirect_table_no_entry_foun", "so_pkts_slb_nat_release_fail", "so_pkts_slb_nat_reserve_fail", "uuid",
     ]
 
 

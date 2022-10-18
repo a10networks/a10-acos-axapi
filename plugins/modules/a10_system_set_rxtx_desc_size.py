@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_set_rxtx_desc_size
 description:
     - Set the number of Descriptor size per queue
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

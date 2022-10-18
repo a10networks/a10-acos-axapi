@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_discovery_mode
 description:
     - vcs election discovery mode
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

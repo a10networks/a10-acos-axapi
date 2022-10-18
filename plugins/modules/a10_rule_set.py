@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rule_set
 description:
     - Configure Security policy Rule Set
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -221,10 +221,6 @@ options:
                 description:
                 - "Configure GTP Policy Template (GTP Template Policy Name)"
                 type: str
-            src_class_list:
-                description:
-                - "Match source IP against class-list"
-                type: str
             src_geoloc_name:
                 description:
                 - "Single geolocation name"
@@ -245,6 +241,10 @@ options:
                 description:
                 - "'any'= Any IPv6 address;"
                 type: str
+            src_class_list:
+                description:
+                - "Match source IP against class-list"
+                type: str
             source_list:
                 description:
                 - "Field source_list"
@@ -260,10 +260,6 @@ options:
             src_threat_list:
                 description:
                 - "Bind threat-list for source IP based filtering"
-                type: str
-            dst_class_list:
-                description:
-                - "Match destination IP against class-list"
                 type: str
             dst_geoloc_name:
                 description:
@@ -284,6 +280,10 @@ options:
             dst_ipv6_any:
                 description:
                 - "'any'= Any IPv6 address;"
+                type: str
+            dst_class_list:
+                description:
+                - "Match destination IP against class-list"
                 type: str
             dest_list:
                 description:
@@ -765,9 +765,6 @@ def get_argspec():
             'gtp_template': {
                 'type': 'str',
                 },
-            'src_class_list': {
-                'type': 'str',
-                },
             'src_geoloc_name': {
                 'type': 'str',
                 },
@@ -784,6 +781,9 @@ def get_argspec():
             'src_ipv6_any': {
                 'type': 'str',
                 'choices': ['any']
+                },
+            'src_class_list': {
+                'type': 'str',
                 },
             'source_list': {
                 'type': 'list',
@@ -813,9 +813,6 @@ def get_argspec():
             'src_threat_list': {
                 'type': 'str',
                 },
-            'dst_class_list': {
-                'type': 'str',
-                },
             'dst_geoloc_name': {
                 'type': 'str',
                 },
@@ -832,6 +829,9 @@ def get_argspec():
             'dst_ipv6_any': {
                 'type': 'str',
                 'choices': ['any']
+                },
+            'dst_class_list': {
+                'type': 'str',
                 },
             'dest_list': {
                 'type': 'list',
@@ -987,14 +987,13 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency',
-                        'database', 'disposable-email', 'ebook-reader', 'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming',
-                        'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines',
-                        'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating',
-                        'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine',
-                        'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites',
-                        'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media',
-                        'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements', 'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service'
+                        'aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency', 'database', 'disposable-email', 'ebook-reader',
+                        'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming', 'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada',
+                        'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration',
+                        'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government',
+                        'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers',
+                        'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements',
+                        'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service'
                         ]
                     }
                 },
@@ -1013,8 +1012,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other',
-                        'active-session-sctp', 'session-sctp', 'hitcount-timestamp', 'rate-limit-drops'
+                        'all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other', 'active-session-sctp', 'session-sctp',
+                        'hitcount-timestamp', 'rate-limit-drops'
                         ]
                     }
                 },
@@ -1032,6 +1031,36 @@ def get_argspec():
                     },
                 'deny_log': {
                     'type': 'bool',
+                    },
+                'logging_template_list': {
+                    'type': 'list',
+                    'permit_log_template_type': {
+                        'type': 'str',
+                        'choices': ['fw-logging-template', 'cgnv6-logging-template', 'netflow-monitor']
+                        },
+                    'permit_fw_log': {
+                        'type': 'str',
+                        },
+                    'permit_cgnv6_log': {
+                        'type': 'str',
+                        },
+                    'permit_netflow_log': {
+                        'type': 'str',
+                        }
+                    },
+                'reset_log_template_type': {
+                    'type': 'str',
+                    'choices': ['fw-logging-template']
+                    },
+                'reset_fw_log': {
+                    'type': 'str',
+                    },
+                'deny_log_template_type': {
+                    'type': 'str',
+                    'choices': ['fw-logging-template']
+                    },
+                'deny_fw_log': {
+                    'type': 'str',
                     },
                 'listen_on_port': {
                     'type': 'bool',

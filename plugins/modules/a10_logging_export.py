@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_export
 description:
     - Export cached log items to the specified destination
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_authentication_console
 description:
     - Configure console authentication type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

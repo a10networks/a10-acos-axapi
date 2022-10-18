@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_lsn
 description:
     - Enable LSN group traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

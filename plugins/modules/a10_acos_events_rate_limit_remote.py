@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_rate_limit_remote
 description:
     - Configure rate limit for logs sent to remote via classic logging config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

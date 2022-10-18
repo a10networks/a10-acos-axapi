@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_object_group_network
 description:
     - Configure Network Object Group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

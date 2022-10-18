@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6
 description:
     - ipv6 Address family
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

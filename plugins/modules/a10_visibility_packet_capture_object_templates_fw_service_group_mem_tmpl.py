@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_fw_service_group_mem_tmpl
 description:
     - Configure template for fw.service-group.member
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

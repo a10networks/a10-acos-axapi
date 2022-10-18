@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_brute_force_protection
 description:
     - Protect brute force attacks
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -198,8 +198,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "brute_force_challenge_limit", "brute_force_global", "brute_force_lockout_limit", "brute_force_lockout_period", "brute_force_resp_codes", "brute_force_resp_codes_file", "brute_force_resp_headers", "brute_force_resp_headers_file", "brute_force_resp_string", "brute_force_resp_string_file",
-    "brute_force_test_period", "challenge_action_captcha", "challenge_action_cookie", "challenge_action_javascript", "enable_disable_action", "uuid",
+    "brute_force_challenge_limit", "brute_force_global", "brute_force_lockout_limit", "brute_force_lockout_period", "brute_force_resp_codes", "brute_force_resp_codes_file", "brute_force_resp_headers", "brute_force_resp_headers_file", "brute_force_resp_string", "brute_force_resp_string_file", "brute_force_test_period", "challenge_action_captcha",
+    "challenge_action_cookie", "challenge_action_javascript", "enable_disable_action", "uuid",
     ]
 
 

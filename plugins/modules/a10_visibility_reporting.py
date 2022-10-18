@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_reporting
 description:
     - Configure reporting framework
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_common_dns_response_rate_limiting
 description:
     - DNS Response-Rate-Limiting Global Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

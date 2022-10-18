@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_generic_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -216,8 +216,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "client_fail", "client_select_fail", "dcmsg_error", "duration", "invalid_avp", "mismatch_fwd_id", "mismatch_rev_id", "no_fwd_tuple", "no_rev_tuple", "no_route", "no_session_id", "reply_error_info_fail", "reply_unknown_session_id", "retry_client_request_fail", "server_fail", "snat_fail",
-    "svrsel_fail", "threshold_exceeded_by", "unkwn_cmd_code", "uuid",
+    "client_fail", "client_select_fail", "dcmsg_error", "duration", "invalid_avp", "mismatch_fwd_id", "mismatch_rev_id", "no_fwd_tuple", "no_rev_tuple", "no_route", "no_session_id", "reply_error_info_fail", "reply_unknown_session_id", "retry_client_request_fail", "server_fail", "snat_fail", "svrsel_fail", "threshold_exceeded_by", "unkwn_cmd_code",
+    "uuid",
     ]
 
 

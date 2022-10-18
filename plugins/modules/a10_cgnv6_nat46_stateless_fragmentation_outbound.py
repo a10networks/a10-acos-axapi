@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_fragmentation_outbound
 description:
     - Stateless NAT46 fragmentation rules for outbound oversize packets
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

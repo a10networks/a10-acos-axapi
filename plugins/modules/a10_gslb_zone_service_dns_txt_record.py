@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_txt_record
 description:
     - Specify DNS TXT Record
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

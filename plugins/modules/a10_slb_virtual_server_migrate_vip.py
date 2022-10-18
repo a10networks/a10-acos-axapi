@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_migrate_vip
 description:
     - Migrate this virtual server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

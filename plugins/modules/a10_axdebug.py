@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_axdebug
 description:
     - Packet Trace Options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -378,6 +378,28 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+    pcapng_config:
+        description:
+        - "Field pcapng_config"
+        type: dict
+        required: False
+        suboptions:
+            pcapng_enable:
+                description:
+                - "Enable pcapng"
+                type: bool
+            ssl_key_enable:
+                description:
+                - "Enable ssl key tracking"
+                type: bool
+            exit:
+                description:
+                - "Exit from axdebug pcapng mode"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -432,7 +454,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["apply_config", "capture", "count", "delete", "exit", "filter_config_list", "inc_port_num", "incoming", "length", "maxfile", "out_port_num", "outgoing", "save_config", "sess_filter_dis", "timeout", "uuid", ]
+AVAILABLE_PROPERTIES = ["apply_config", "capture", "count", "delete", "exit", "filter_config_list", "inc_port_num", "incoming", "length", "maxfile", "out_port_num", "outgoing", "pcapng_config", "save_config", "sess_filter_dis", "timeout", "uuid", ]
 
 
 def get_default_argspec():
@@ -676,6 +698,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'user_tag': {
+                'type': 'str',
+                }
+            },
+        'pcapng_config': {
+            'type': 'dict',
+            'pcapng_enable': {
+                'type': 'bool',
+                },
+            'ssl_key_enable': {
+                'type': 'bool',
+                },
+            'exit': {
+                'type': 'bool',
+                },
+            'uuid': {
                 'type': 'str',
                 }
             }

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_hostid
 description:
     - vrrp-a device serial number or softax UUID
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

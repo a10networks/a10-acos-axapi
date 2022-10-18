@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_pptp
 description:
     - Change Fixed NAT PPTP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -215,10 +215,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'calls-established', 'mismatched-pns-call-id', 'gre-sessions-created', 'gre-sessions-freed', 'no-gre-session-match', 'smp-sessions-created', 'smp-sessions-freed', 'smp-session-creation-failure', 'extension-creation-failure', 'ha-sent', 'ha-rcv', 'ha-no-mem', 'ha-conflict',
-                    'ha-overwrite', 'ha-call-sent', 'ha-call-rcv', 'ha-smp-conflict', 'ha-smp-in-del-q', 'smp-app-type-mismatch', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown',
-                    'call-reply-retransmit', 'call-reply-retransmit-wrong-control', 'call-reply-retransmit-acquired', 'call-reply-ext-alloc-failure', 'smp-client-call-id-mismatch', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route',
-                    'gre-no-rev-route', 'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch', 'control-freed', 'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
+                    'all', 'calls-established', 'mismatched-pns-call-id', 'gre-sessions-created', 'gre-sessions-freed', 'no-gre-session-match', 'smp-sessions-created', 'smp-sessions-freed', 'smp-session-creation-failure', 'extension-creation-failure', 'ha-sent', 'ha-rcv', 'ha-no-mem', 'ha-conflict', 'ha-overwrite', 'ha-call-sent', 'ha-call-rcv',
+                    'ha-smp-conflict', 'ha-smp-in-del-q', 'smp-app-type-mismatch', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown', 'call-reply-retransmit', 'call-reply-retransmit-wrong-control', 'call-reply-retransmit-acquired',
+                    'call-reply-ext-alloc-failure', 'smp-client-call-id-mismatch', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route', 'gre-no-rev-route', 'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch', 'control-freed',
+                    'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
                     ]
                 }
             },

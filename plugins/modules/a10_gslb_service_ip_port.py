@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_service_ip_port
 description:
     - Server Port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

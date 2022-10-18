@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_rate_limit_policy
 description:
     - Configure GTP Rate Limit policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -212,8 +212,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "gtp_u_downlink_byte_rate", "gtp_u_downlink_packet_rate", "gtp_u_max_concurrent_tunnels", "gtp_u_total_byte_rate", "gtp_u_total_packet_rate", "gtp_u_tunnel_create_rate", "gtp_u_uplink_byte_rate", "gtp_u_uplink_packet_rate", "lockout", "name", "rate_limit_action", "user_tag", "uuid",
-    "v0_agg_message_type_rate", "v1_agg_message_type_rate", "v1_create_pdp_request_rate", "v1_update_pdp_request_rate", "v2_agg_message_type_rate", "v2_create_session_request_rate", "v2_modify_bearer_request_rate",
+    "gtp_u_downlink_byte_rate", "gtp_u_downlink_packet_rate", "gtp_u_max_concurrent_tunnels", "gtp_u_total_byte_rate", "gtp_u_total_packet_rate", "gtp_u_tunnel_create_rate", "gtp_u_uplink_byte_rate", "gtp_u_uplink_packet_rate", "lockout", "name", "rate_limit_action", "user_tag", "uuid", "v0_agg_message_type_rate", "v1_agg_message_type_rate",
+    "v1_create_pdp_request_rate", "v1_update_pdp_request_rate", "v2_agg_message_type_rate", "v2_create_session_request_rate", "v2_modify_bearer_request_rate",
     ]
 
 

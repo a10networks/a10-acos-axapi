@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_web_category_license
 description:
     - License file to enable web-category feature activation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

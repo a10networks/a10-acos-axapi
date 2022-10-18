@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_expire_check_exception
 description:
     - Config the exception which will not be checked
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_jwt_cache
 description:
     - AAM authorization JWT cache related operations
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

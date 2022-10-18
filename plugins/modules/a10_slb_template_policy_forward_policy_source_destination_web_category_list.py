@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_source_destination_web_category_list
 description:
     - Configure web-category category-list for destination matching
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

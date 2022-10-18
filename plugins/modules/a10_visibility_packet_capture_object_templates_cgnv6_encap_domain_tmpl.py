@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_cgnv6_encap_domain_tmpl
 description:
     - Configure template for cgnv6.map.encapsulation.domain
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

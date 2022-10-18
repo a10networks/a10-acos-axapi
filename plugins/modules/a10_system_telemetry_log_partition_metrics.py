@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_telemetry_log_partition_metrics
 description:
     - data cpu usage details
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

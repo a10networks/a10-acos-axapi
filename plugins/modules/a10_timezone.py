@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_timezone
 description:
     - Configure the Time Zone
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -231,12 +231,11 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'UTC', 'Pacific/Midway', 'Pacific/Honolulu', 'America/Anchorage', 'America/Tijuana', 'America/Los_Angeles', 'America/Vancouver', 'America/Phoenix', 'America/Shiprock', 'America/Chicago', 'America/Mexico_City', 'America/Regina', 'America/Swift_Current',
-                    'America/Kentucky/Monticello', 'America/Indiana/Marengo', 'America/Montreal', 'America/New_York', 'America/Toronto', 'America/Caracas', 'America/Halifax', 'America/Santiago', 'America/St_Johns', 'America/Buenos_Aires', 'America/Godthab', 'America/Brasilia',
-                    'Atlantic/South_Georgia', 'Atlantic/Azores', 'Atlantic/Cape_Verde', 'Europe/Dublin', 'Africa/Algiers', 'Europe/Amsterdam', 'Europe/Belgrade', 'Europe/Brussels', 'Europe/Sarajevo', 'Europe/Bucharest', 'Africa/Cairo', 'Europe/Athens', 'Africa/Harare', 'Asia/Jerusalem',
-                    'Europe/Helsinki', 'Africa/Nairobi', 'Asia/Baghdad', 'Asia/Kuwait', 'Europe/Moscow', 'Asia/Tehran', 'Asia/Baku', 'Asia/Muscat', 'Asia/Kabul', 'Asia/Karachi', 'Asia/Yekaterinburg', 'Asia/Calcutta', 'Asia/Katmandu', 'Asia/Almaty', 'Asia/Dhaka', 'Indian/Chagos', 'Asia/Rangoon',
-                    'Asia/Bangkok', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Kuala_Lumpur', 'Asia/Shanghai', 'Asia/Taipei', 'Australia/Perth', 'Asia/Seoul', 'Asia/Tokyo', 'Asia/Yakutsk', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Hobart', 'Australia/Brisbane', 'Asia/Vladivostok',
-                    'Australia/Sydney', 'Pacific/Guam', 'Asia/Magadan', 'Pacific/Auckland', 'Pacific/Fiji', 'Pacific/Kwajalein', 'Pacific/Enderbury'
+                    'UTC', 'Pacific/Midway', 'Pacific/Honolulu', 'America/Anchorage', 'America/Tijuana', 'America/Los_Angeles', 'America/Vancouver', 'America/Phoenix', 'America/Shiprock', 'America/Chicago', 'America/Mexico_City', 'America/Regina', 'America/Swift_Current', 'America/Kentucky/Monticello', 'America/Indiana/Marengo', 'America/Montreal',
+                    'America/New_York', 'America/Toronto', 'America/Caracas', 'America/Halifax', 'America/Santiago', 'America/St_Johns', 'America/Buenos_Aires', 'America/Godthab', 'America/Brasilia', 'Atlantic/South_Georgia', 'Atlantic/Azores', 'Atlantic/Cape_Verde', 'Europe/Dublin', 'Africa/Algiers', 'Europe/Amsterdam', 'Europe/Belgrade',
+                    'Europe/Brussels', 'Europe/Sarajevo', 'Europe/Bucharest', 'Africa/Cairo', 'Europe/Athens', 'Africa/Harare', 'Asia/Jerusalem', 'Europe/Helsinki', 'Africa/Nairobi', 'Asia/Baghdad', 'Asia/Kuwait', 'Europe/Moscow', 'Asia/Tehran', 'Asia/Baku', 'Asia/Muscat', 'Asia/Kabul', 'Asia/Karachi', 'Asia/Yekaterinburg', 'Asia/Calcutta',
+                    'Asia/Katmandu', 'Asia/Almaty', 'Asia/Dhaka', 'Indian/Chagos', 'Asia/Rangoon', 'Asia/Bangkok', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Kuala_Lumpur', 'Asia/Shanghai', 'Asia/Taipei', 'Australia/Perth', 'Asia/Seoul', 'Asia/Tokyo', 'Asia/Yakutsk', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Hobart', 'Australia/Brisbane',
+                    'Asia/Vladivostok', 'Australia/Sydney', 'Pacific/Guam', 'Asia/Magadan', 'Pacific/Auckland', 'Pacific/Fiji', 'Pacific/Kwajalein', 'Pacific/Enderbury'
                     ]
                 },
             'nodst': {

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_setid_monitor
 description:
     - monitor set id that has been used
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

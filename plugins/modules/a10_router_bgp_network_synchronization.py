@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_network_synchronization
 description:
     - help Perform IGP synchronization
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

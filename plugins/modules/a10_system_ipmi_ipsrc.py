@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ipmi_ipsrc
 description:
     - Source of IP Address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

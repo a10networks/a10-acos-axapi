@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_ssl_cert_poc
 description:
     - ssl certificate file information and management commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

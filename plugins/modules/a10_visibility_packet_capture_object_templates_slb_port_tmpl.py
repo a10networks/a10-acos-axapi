@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_slb_port_tmpl
 description:
     - Configure template for slb.server.port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

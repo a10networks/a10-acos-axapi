@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_session_sync_reachability_options
 description:
     - Options to determine reachability for session sync
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

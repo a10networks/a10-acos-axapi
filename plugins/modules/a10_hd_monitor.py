@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_hd_monitor
 description:
     - Enable HD monitoring
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

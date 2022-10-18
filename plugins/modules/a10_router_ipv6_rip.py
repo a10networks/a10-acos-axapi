@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_rip
 description:
     - Routing Information Protocol (RIPng)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

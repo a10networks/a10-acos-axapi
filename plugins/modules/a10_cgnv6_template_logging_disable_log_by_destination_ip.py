@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging_disable_log_by_destination_ip
 description:
     - Configure a filter IP enrty
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

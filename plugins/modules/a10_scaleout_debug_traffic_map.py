@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_debug_traffic_map
 description:
     - Field traffic_map
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,38 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'device_group_list': {
-                'type': 'list',
-                'rc': {
-                    'type': 'int',
-                    },
-                'cmd': {
-                    'type': 'str',
-                    },
-                'buffer_len': {
-                    'type': 'int',
-                    },
-                'buckets_list': {
-                    'type': 'list',
-                    'user_group': {
-                        'type': 'int',
-                        },
-                    'active_device': {
-                        'type': 'int',
-                        },
-                    'standby_device': {
-                        'type': 'int',
-                        }
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'device_group_list': {'type': 'list', 'rc': {'type': 'int', }, 'cmd': {'type': 'str', }, 'buffer_len': {'type': 'int', }, 'buckets_list': {'type': 'list', 'user_group': {'type': 'int', }, 'active_device': {'type': 'int', }, 'standby_device': {'type': 'int', }}}}})
     return rv
 
 

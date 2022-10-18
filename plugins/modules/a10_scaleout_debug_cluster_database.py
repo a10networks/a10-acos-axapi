@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_debug_cluster_database
 description:
     - Field database
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

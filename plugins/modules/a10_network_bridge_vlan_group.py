@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_bridge_vlan_group
 description:
     - Bridge VLAN Group Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rba_group_partition
 description:
     - RBA configuration for the access privilege of a group within one partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -173,34 +173,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'partition_name': {
-            'type': 'str',
-            'required': True,
-            },
-        'role_list': {
-            'type': 'list',
-            'role': {
-                'type': 'str',
-                }
-            },
-        'rule_list': {
-            'type': 'list',
-            'object': {
-                'type': 'str',
-                },
-            'operation': {
-                'type': 'str',
-                'choices': ['no-access', 'read', 'oper', 'write']
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'partition_name': {'type': 'str', 'required': True, }, 'role_list': {'type': 'list', 'role': {'type': 'str', }}, 'rule_list': {'type': 'list', 'object': {'type': 'str', }, 'operation': {'type': 'str', 'choices': ['no-access', 'read', 'oper', 'write']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(group_name=dict(type='str', required=True), ))
     return rv

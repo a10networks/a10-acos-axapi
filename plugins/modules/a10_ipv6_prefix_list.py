@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_prefix_list
 description:
     - Configure Prefix-list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,40 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'rules': {
-            'type': 'list',
-            'seq': {
-                'type': 'int',
-                },
-            'description': {
-                'type': 'str',
-                },
-            'action': {
-                'type': 'str',
-                'choices': ['deny', 'permit']
-                },
-            'any': {
-                'type': 'bool',
-                },
-            'ipaddr': {
-                'type': 'str',
-                },
-            'ge': {
-                'type': 'int',
-                },
-            'le': {
-                'type': 'int',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'rules': {'type': 'list', 'seq': {'type': 'int', }, 'description': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['deny', 'permit']}, 'any': {'type': 'bool', }, 'ipaddr': {'type': 'str', }, 'ge': {'type': 'int', }, 'le': {'type': 'int', }}, 'uuid': {'type': 'str', }})
     return rv
 
 

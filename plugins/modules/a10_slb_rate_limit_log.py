@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_rate_limit_log
 description:
     - Configure rate limit logging
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

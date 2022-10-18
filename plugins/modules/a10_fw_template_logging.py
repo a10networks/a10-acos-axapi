@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_template_logging
 description:
     - Logging Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -194,6 +194,20 @@ options:
         - "Customized tag"
         type: str
         required: False
+    session_periodic_log:
+        description:
+        - "Field session_periodic_log"
+        type: dict
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Logging time interval (minutes) for long lived sessions"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     source_address:
         description:
         - "Field source_address"
@@ -266,7 +280,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "log", "merged_style", "name", "resolution", "rule", "service_group", "severity", "source_address", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -416,6 +430,15 @@ def get_argspec():
             },
         'user_tag': {
             'type': 'str',
+            },
+        'session_periodic_log': {
+            'type': 'dict',
+            'interval': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             },
         'source_address': {
             'type': 'dict',

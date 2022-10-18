@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_topn
 description:
     - Configure topn
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -373,8 +373,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'heap-alloc-success', 'heap-alloc-failed', 'heap-alloc-oom', 'obj-reg-success', 'obj-reg-failed', 'obj-reg-oom', 'heap-deleted', 'obj-deleted', 'heap-metric-alloc-success', 'heap-metric-alloc-oom', 'heap-move-to-delq', 'heap-metric-deleted', 'obj-metric-reg-success',
-                    'obj-metric-reg-oom', 'obj-move-to-delq', 'obj-metric-deleted', 'hc-obj-alloc-failed'
+                    'all', 'heap-alloc-success', 'heap-alloc-failed', 'heap-alloc-oom', 'obj-reg-success', 'obj-reg-failed', 'obj-reg-oom', 'heap-deleted', 'obj-deleted', 'heap-metric-alloc-success', 'heap-metric-alloc-oom', 'heap-move-to-delq', 'heap-metric-deleted', 'obj-metric-reg-success', 'obj-metric-reg-oom', 'obj-move-to-delq',
+                    'obj-metric-deleted', 'hc-obj-alloc-failed'
                     ]
                 }
             },

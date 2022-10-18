@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_ssl_forward_proxy_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -175,10 +175,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "connections_failed", "duration", "failed_in_certificate_signing", "failed_in_certificate_verification", "failed_in_crypto_operations", "failed_in_ssl_handshakes", "failed_in_tcp", "invalid_ocsp_stapling_response", "revoked_ocsp_response", "threshold_exceeded_by", "unsupported_ssl_version",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["connections_failed", "duration", "failed_in_certificate_signing", "failed_in_certificate_verification", "failed_in_crypto_operations", "failed_in_ssl_handshakes", "failed_in_tcp", "invalid_ocsp_stapling_response", "revoked_ocsp_response", "threshold_exceeded_by", "unsupported_ssl_version", "uuid", ]
 
 
 def get_default_argspec():

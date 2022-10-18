@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_service_provider
 description:
     - Authentication service provider
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -377,8 +377,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "acs_uri_bypass", "adfs_ws_federation", "artifact_resolution_service", "assertion_consuming_service", "bad_request_redirect_url", "certificate", "entity_id", "metadata_export_service", "name", "packet_capture_template", "require_assertion_signed", "saml_request_signed", "sampling_enable",
-    "service_url", "signature_algorithm", "single_logout_service", "soap_tls_certificate_validate", "SP_initiated_single_logout_service", "stats", "user_tag", "uuid",
+    "acs_uri_bypass", "adfs_ws_federation", "artifact_resolution_service", "assertion_consuming_service", "bad_request_redirect_url", "certificate", "entity_id", "metadata_export_service", "name", "packet_capture_template", "require_assertion_signed", "saml_request_signed", "sampling_enable", "service_url", "signature_algorithm",
+    "single_logout_service", "soap_tls_certificate_validate", "SP_initiated_single_logout_service", "stats", "user_tag", "uuid",
     ]
 
 
@@ -510,10 +510,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices':
-                ['all', 'sp-metadata-export-req', 'sp-metadata-export-success', 'login-auth-req', 'login-auth-resp', 'acs-req', 'acs-success', 'acs-authz-fail', 'acs-error', 'slo-req', 'slo-success', 'slo-error', 'sp-slo-req', 'glo-slo-success', 'loc-slo-success', 'par-slo-success', 'other-error']
+                'type': 'str',
+                'choices': ['all', 'sp-metadata-export-req', 'sp-metadata-export-success', 'login-auth-req', 'login-auth-resp', 'acs-req', 'acs-success', 'acs-authz-fail', 'acs-error', 'slo-req', 'slo-success', 'slo-error', 'sp-slo-req', 'glo-slo-success', 'loc-slo-success', 'par-slo-success', 'other-error']
                 }
             },
         'packet_capture_template': {

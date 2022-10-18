@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_fixed_nat_alg_rtsp
 description:
     - Configure triggers for cgnv6.fixed-nat.alg.rtsp object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

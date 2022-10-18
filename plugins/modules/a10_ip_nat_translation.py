@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_translation
 description:
     - Change or Disable NAT translation values
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

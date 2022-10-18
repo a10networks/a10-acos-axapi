@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_lsn_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -268,10 +268,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "adc_port_allocation_failed", "data_sesn_user_quota_exceeded", "fullcone_ext_mem_alloc_failure", "fullcone_ext_mem_alloc_init_faulure", "fullcone_failure", "fullcone_self_hairpinning_drop", "h323_alg_alloc_single_port_failure", "h323_alg_create_rtcp_fullcone_failure",
-    "h323_alg_create_rtp_fullcone_failure", "h323_alg_create_single_fullcone_failure", "ha_nat_pool_batch_type_mismatch", "ha_nat_pool_unusable", "mgcp_alg_create_rtcp_fullcone_failure", "mgcp_alg_create_rtp_fullcone_failure", "mgcp_alg_port_pair_alloc_from_quota_par", "nat_pool_unusable",
-    "port_overloading_inc_overflow", "port_overloading_out_of_memory", "sip_alg_alloc_rtp_rtcp_port_failure", "sip_alg_alloc_single_port_failure", "sip_alg_create_rtcp_fullcone_failure", "sip_alg_create_rtp_fullcone_failure", "sip_alg_create_single_fullcone_failure", "sip_alg_quota_inc_failure",
-    "user_quota_failure", "user_quota_unusable", "user_quota_unusable_drop", "uuid",
+    "adc_port_allocation_failed", "data_sesn_user_quota_exceeded", "fullcone_ext_mem_alloc_failure", "fullcone_ext_mem_alloc_init_faulure", "fullcone_failure", "fullcone_self_hairpinning_drop", "h323_alg_alloc_single_port_failure", "h323_alg_create_rtcp_fullcone_failure", "h323_alg_create_rtp_fullcone_failure",
+    "h323_alg_create_single_fullcone_failure", "ha_nat_pool_batch_type_mismatch", "ha_nat_pool_unusable", "mgcp_alg_create_rtcp_fullcone_failure", "mgcp_alg_create_rtp_fullcone_failure", "mgcp_alg_port_pair_alloc_from_quota_par", "nat_pool_unusable", "port_overloading_inc_overflow", "port_overloading_out_of_memory",
+    "sip_alg_alloc_rtp_rtcp_port_failure", "sip_alg_alloc_single_port_failure", "sip_alg_create_rtcp_fullcone_failure", "sip_alg_create_rtp_fullcone_failure", "sip_alg_create_single_fullcone_failure", "sip_alg_quota_inc_failure", "user_quota_failure", "user_quota_unusable", "user_quota_unusable_drop", "uuid",
     ]
 
 

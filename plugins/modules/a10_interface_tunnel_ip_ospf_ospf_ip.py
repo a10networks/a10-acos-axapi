@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_tunnel_ip_ospf_ospf_ip
 description:
     - IP address configuration for Open Shortest Path First for IPv4 (OSPF)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

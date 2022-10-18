@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_cert_expire_check
 description:
     - Field ssl_cert_expire_check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -164,36 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'expire_check_status': {
-                'type': 'str',
-                'choices': ['Enabled', 'Disabled']
-                },
-            'email_address': {
-                'type': 'str',
-                },
-            'email_address2': {
-                'type': 'str',
-                },
-            'before': {
-                'type': 'int',
-                },
-            'interval': {
-                'type': 'int',
-                },
-            'ssl_exception': {
-                'type': 'list',
-                'exception_cert': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'expire_check_status': {'type': 'str', 'choices': ['Enabled', 'Disabled']}, 'email_address': {'type': 'str', }, 'email_address2': {'type': 'str', }, 'before': {'type': 'int', }, 'interval': {'type': 'int', }, 'ssl_exception': {'type': 'list', 'exception_cert': {'type': 'str', }}}})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_collector_group_log_server
 description:
     - Configure log server DNS Name/ip-address and optional port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

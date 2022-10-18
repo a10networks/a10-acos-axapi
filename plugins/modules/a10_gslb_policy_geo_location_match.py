@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_geo_location_match
 description:
     - Specify match order of geographic
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

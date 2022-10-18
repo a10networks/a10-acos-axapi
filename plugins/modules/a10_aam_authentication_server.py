@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server
 description:
     - Authentication server configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -255,8 +255,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'request-normal', 'request-dropped', 'response-success',
-                        'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error', 'ssl-session-created', 'ssl-session-failure', 'ldaps-idle-conn-num', 'ldaps-inuse-conn-num', 'pw-expiry', 'pw-change-success', 'pw-change-failure'
+                        'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout',
+                        'response-other', 'job-start-error', 'polling-control-error', 'ssl-session-created', 'ssl-session-failure', 'ldaps-idle-conn-num', 'ldaps-inuse-conn-num', 'pw-expiry', 'pw-change-success', 'pw-change-failure'
                         ]
                     }
                 },
@@ -352,12 +352,8 @@ def get_argspec():
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'ssl-session-created', 'ssl-session-failure', 'pw_expiry',
-                            'pw_change_success', 'pw_change_failure'
-                            ]
+                        'type': 'str',
+                        'choices': ['all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'ssl-session-created', 'ssl-session-failure', 'pw_expiry', 'pw_change_success', 'pw_change_failure']
                         }
                     },
                 'packet_capture_template': {
@@ -376,8 +372,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'stapling-certificate-good', 'stapling-certificate-revoked', 'stapling-certificate-unknown', 'stapling-request-normal', 'stapling-request-dropped', 'stapling-response-success', 'stapling-response-failure', 'stapling-response-error', 'stapling-response-timeout',
-                        'stapling-response-other', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error'
+                        'all', 'stapling-certificate-good', 'stapling-certificate-revoked', 'stapling-certificate-unknown', 'stapling-request-normal', 'stapling-request-dropped', 'stapling-response-success', 'stapling-response-failure', 'stapling-response-error', 'stapling-response-timeout', 'stapling-response-other', 'request-normal',
+                        'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error'
                         ]
                     }
                 },
@@ -444,8 +440,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'authen_success', 'authen_failure', 'authorize_success', 'authorize_failure', 'access_challenge', 'timeout_error', 'other_error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout',
-                        'response-other', 'job-start-error', 'polling-control-error', 'accounting-request-sent', 'accounting-success', 'accounting-failure'
+                        'all', 'authen_success', 'authen_failure', 'authorize_success', 'authorize_failure', 'access_challenge', 'timeout_error', 'other_error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error',
+                        'accounting-request-sent', 'accounting-success', 'accounting-failure'
                         ]
                     }
                 },
@@ -536,11 +532,10 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'ntlm-authentication-success', 'ntlm-authentication-failure', 'ntlm-proto-negotiation-success', 'ntlm-proto-negotiation-failure', 'ntlm-session-setup-success',
-                        'ntlm-session-setup-failed', 'kerberos-request-normal', 'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error',
-                        'kerberos-polling-control-error', 'ntlm-prepare-req-success', 'ntlm-prepare-req-failed', 'ntlm-timeout-error', 'ntlm-other-error', 'ntlm-request-normal', 'ntlm-request-dropped', 'ntlm-response-success', 'ntlm-response-failure', 'ntlm-response-error', 'ntlm-response-timeout',
-                        'ntlm-response-other', 'ntlm-job-start-error', 'ntlm-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure', 'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success',
-                        'kerberos-generate-kdc-keytab-failure', 'kerberos-delete-kdc-keytab-success', 'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count'
+                        'all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'ntlm-authentication-success', 'ntlm-authentication-failure', 'ntlm-proto-negotiation-success', 'ntlm-proto-negotiation-failure', 'ntlm-session-setup-success', 'ntlm-session-setup-failed', 'kerberos-request-normal',
+                        'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error', 'kerberos-polling-control-error', 'ntlm-prepare-req-success', 'ntlm-prepare-req-failed', 'ntlm-timeout-error',
+                        'ntlm-other-error', 'ntlm-request-normal', 'ntlm-request-dropped', 'ntlm-response-success', 'ntlm-response-failure', 'ntlm-response-error', 'ntlm-response-timeout', 'ntlm-response-other', 'ntlm-job-start-error', 'ntlm-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure',
+                        'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success', 'kerberos-generate-kdc-keytab-failure', 'kerberos-delete-kdc-keytab-success', 'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count'
                         ]
                     }
                 },
@@ -637,8 +632,8 @@ def get_argspec():
                         'type':
                         'str',
                         'choices': [
-                            'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success',
-                            'ntlm_session_setup_failure', 'ntlm_prepare_req_success', 'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
+                            'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success',
+                            'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
                             ]
                         }
                     },

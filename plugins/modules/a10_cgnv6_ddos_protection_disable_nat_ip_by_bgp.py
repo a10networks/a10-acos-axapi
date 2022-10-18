@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection_disable_nat_ip_by_bgp
 description:
     - Field disable_nat_ip_by_bgp
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

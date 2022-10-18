@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_cluster_devices
 description:
     - Configure devices in the cluster
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

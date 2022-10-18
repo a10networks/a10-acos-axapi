@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_geo_location
 description:
     - Geo location settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

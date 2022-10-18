@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_message_selector_rule
 description:
     - Configure rules to select messages for which logging is enabled/blocked
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

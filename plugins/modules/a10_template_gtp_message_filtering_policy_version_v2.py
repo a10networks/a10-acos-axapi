@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_message_filtering_policy_version_v2
 description:
     - Configure Message Filtering Policy for GTPv2 Control Messages
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -221,8 +221,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bearer_resource", "change_notification", "create_bearer", "create_session", "delete_bearer", "delete_command", "delete_pdn", "delete_session", "enable_disable_action", "message_type", "modify_bearer", "modify_command", "pgw_downlink_trigger", "remote_ue_report", "reserved_messages", "resume",
-    "suspend", "trace_session", "update_bearer", "update_pdn", "uuid",
+    "bearer_resource", "change_notification", "create_bearer", "create_session", "delete_bearer", "delete_command", "delete_pdn", "delete_session", "enable_disable_action", "message_type", "modify_bearer", "modify_command", "pgw_downlink_trigger", "remote_ue_report", "reserved_messages", "resume", "suspend", "trace_session", "update_bearer",
+    "update_pdn", "uuid",
     ]
 
 

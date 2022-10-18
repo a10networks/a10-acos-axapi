@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_full_cone_session
 description:
     - Full Cone Sessions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

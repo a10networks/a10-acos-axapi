@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_delete_startup_config
 description:
     - Startup Configuration profile
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

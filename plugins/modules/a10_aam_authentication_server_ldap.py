@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_ldap
 description:
     - LDAP Authentication Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -420,8 +420,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure',
-                    'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error', 'ssl-session-created', 'ssl-session-failure', 'ldaps-idle-conn-num', 'ldaps-inuse-conn-num', 'pw-expiry', 'pw-change-success', 'pw-change-failure'
+                    'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout',
+                    'response-other', 'job-start-error', 'polling-control-error', 'ssl-session-created', 'ssl-session-failure', 'ldaps-idle-conn-num', 'ldaps-inuse-conn-num', 'pw-expiry', 'pw-change-success', 'pw-change-failure'
                     ]
                 }
             },
@@ -517,12 +517,8 @@ def get_argspec():
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'ssl-session-created', 'ssl-session-failure', 'pw_expiry',
-                        'pw_change_success', 'pw_change_failure'
-                        ]
+                    'type': 'str',
+                    'choices': ['all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'ssl-session-created', 'ssl-session-failure', 'pw_expiry', 'pw_change_success', 'pw_change_failure']
                     }
                 },
             'packet_capture_template': {

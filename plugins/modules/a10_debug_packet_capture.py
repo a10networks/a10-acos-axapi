@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_packet_capture
 description:
     - Display live captures from packet-capture
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_email_filter
 description:
     - Logging via email filter settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

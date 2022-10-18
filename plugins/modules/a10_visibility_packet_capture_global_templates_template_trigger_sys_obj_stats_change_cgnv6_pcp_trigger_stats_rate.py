@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_pcp_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -223,8 +223,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "address_mismatch", "cannot_provide_suggest", "duration", "excessive_remote_peers", "internal_error_drop", "l4_process_error", "malform_option", "malform_request", "no_resources", "noroute_drop", "not_authorized", "pkt_not_from_nat_inside", "pkt_not_request_drop", "pkt_too_short_drop",
-    "threshold_exceeded_by", "unsol_ance_sent_fail", "unsupp_opcode", "unsupp_option", "unsupp_protocol", "unsupported_version", "uuid",
+    "address_mismatch", "cannot_provide_suggest", "duration", "excessive_remote_peers", "internal_error_drop", "l4_process_error", "malform_option", "malform_request", "no_resources", "noroute_drop", "not_authorized", "pkt_not_from_nat_inside", "pkt_not_request_drop", "pkt_too_short_drop", "threshold_exceeded_by", "unsol_ance_sent_fail",
+    "unsupp_opcode", "unsupp_option", "unsupp_protocol", "unsupported_version", "uuid",
     ]
 
 

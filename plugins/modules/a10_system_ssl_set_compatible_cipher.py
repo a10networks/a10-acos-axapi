@@ -14,7 +14,7 @@ module: a10_system_ssl_set_compatible_cipher
 description:
     - To Enable/disable setting common cipher suite for SSL connections in management
       plane
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

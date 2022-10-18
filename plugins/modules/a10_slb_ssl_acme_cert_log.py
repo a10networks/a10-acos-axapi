@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_acme_cert_log
 description:
     - acme log information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -168,38 +168,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'acme_log_list': {
-                'type': 'list',
-                'acme_log_data': {
-                    'type': 'str',
-                    }
-                },
-            'acme_log_offset': {
-                'type': 'int',
-                },
-            'acme_log_over': {
-                'type': 'int',
-                },
-            'name': {
-                'type': 'str',
-                },
-            'follow': {
-                'type': 'bool',
-                },
-            'from_start': {
-                'type': 'bool',
-                },
-            'num_lines': {
-                'type': 'int',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'acme_log_list': {'type': 'list', 'acme_log_data': {'type': 'str', }}, 'acme_log_offset': {'type': 'int', }, 'acme_log_over': {'type': 'int', }, 'name': {'type': 'str', }, 'follow': {'type': 'bool', }, 'from_start': {'type': 'bool', }, 'num_lines': {'type': 'int', }}})
     return rv
 
 

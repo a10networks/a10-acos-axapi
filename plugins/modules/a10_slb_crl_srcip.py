@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_crl_srcip
 description:
     - Configure connection rate limit
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

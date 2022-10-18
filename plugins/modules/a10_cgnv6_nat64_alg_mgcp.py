@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat64_alg_mgcp
 description:
     - NAT64 MGCP ALG (default= disabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

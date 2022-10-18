@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_remote_ip_address_vni
 description:
     - Virtual Segment Id configured on the remote VTEP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

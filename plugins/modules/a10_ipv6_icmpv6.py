@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_icmpv6
 description:
     - Global ICMPv6 commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

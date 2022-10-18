@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_del_port
 description:
     - Add port to Black list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

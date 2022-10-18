@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_spdy_proxy_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -216,8 +216,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "compress_ctx_alloc_fail", "ctx_alloc_fail", "data_cb_no_tuple", "data_no_stream", "data_no_stream_goaway_close", "data_no_stream_no_goaway", "decompress_fail", "est_cb_no_tuple", "header_compress_fail", "http_conn_alloc_fail", "http_err_stream_closed", "invalid_frame_size", "invalid_version",
-    "request_header_alloc_fail", "session_err", "stream_alloc_fail", "stream_err", "stream_not_found", "tcp_err", "uuid",
+    "compress_ctx_alloc_fail", "ctx_alloc_fail", "data_cb_no_tuple", "data_no_stream", "data_no_stream_goaway_close", "data_no_stream_no_goaway", "decompress_fail", "est_cb_no_tuple", "header_compress_fail", "http_conn_alloc_fail", "http_err_stream_closed", "invalid_frame_size", "invalid_version", "request_header_alloc_fail", "session_err",
+    "stream_alloc_fail", "stream_err", "stream_not_found", "tcp_err", "uuid",
     ]
 
 

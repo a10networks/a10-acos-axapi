@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_activate
 description:
     - Activate global packet capture template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

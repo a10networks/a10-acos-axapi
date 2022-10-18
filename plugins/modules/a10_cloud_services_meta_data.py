@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cloud_services_meta_data
 description:
     - user-data Services configuration only works in shared partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

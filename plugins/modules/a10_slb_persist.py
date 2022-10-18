@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_persist
 description:
     - Configure persist
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -417,11 +417,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'hash_tbl_trylock_fail', 'hash_tbl_create_ok', 'hash_tbl_create_fail', 'hash_tbl_free', 'hash_tbl_rst_updown', 'hash_tbl_rst_adddel', 'url_hash_pri', 'url_hash_enqueue', 'url_hash_sec', 'url_hash_fail', 'header_hash_pri', 'header_hash_enqueue', 'header_hash_sec',
-                    'header_hash_fail', 'src_ip', 'src_ip_enqueue', 'src_ip_fail', 'src_ip_new_sess_cache', 'src_ip_new_sess_cache_fail', 'src_ip_new_sess_sel', 'src_ip_new_sess_sel_fail', 'src_ip_hash_pri', 'src_ip_hash_enqueue', 'src_ip_hash_sec', 'src_ip_hash_fail', 'src_ip_enforce', 'dst_ip',
-                    'dst_ip_enqueue', 'dst_ip_fail', 'dst_ip_new_sess_cache', 'dst_ip_new_sess_cache_fail', 'dst_ip_new_sess_sel', 'dst_ip_new_sess_sel_fail', 'dst_ip_hash_pri', 'dst_ip_hash_enqueue', 'dst_ip_hash_sec', 'dst_ip_hash_fail', 'cssl_sid_not_found', 'cssl_sid_match',
-                    'cssl_sid_not_match', 'sssl_sid_not_found', 'sssl_sid_reset', 'sssl_sid_match', 'sssl_sid_not_match', 'ssl_sid_persist_ok', 'ssl_sid_persist_fail', 'ssl_sid_session_ok', 'ssl_sid_session_fail', 'cookie_persist_ok', 'cookie_persist_fail', 'cookie_not_found', 'cookie_pass_thru',
-                    'cookie_invalid'
+                    'all', 'hash_tbl_trylock_fail', 'hash_tbl_create_ok', 'hash_tbl_create_fail', 'hash_tbl_free', 'hash_tbl_rst_updown', 'hash_tbl_rst_adddel', 'url_hash_pri', 'url_hash_enqueue', 'url_hash_sec', 'url_hash_fail', 'header_hash_pri', 'header_hash_enqueue', 'header_hash_sec', 'header_hash_fail', 'src_ip', 'src_ip_enqueue',
+                    'src_ip_fail', 'src_ip_new_sess_cache', 'src_ip_new_sess_cache_fail', 'src_ip_new_sess_sel', 'src_ip_new_sess_sel_fail', 'src_ip_hash_pri', 'src_ip_hash_enqueue', 'src_ip_hash_sec', 'src_ip_hash_fail', 'src_ip_enforce', 'dst_ip', 'dst_ip_enqueue', 'dst_ip_fail', 'dst_ip_new_sess_cache', 'dst_ip_new_sess_cache_fail',
+                    'dst_ip_new_sess_sel', 'dst_ip_new_sess_sel_fail', 'dst_ip_hash_pri', 'dst_ip_hash_enqueue', 'dst_ip_hash_sec', 'dst_ip_hash_fail', 'cssl_sid_not_found', 'cssl_sid_match', 'cssl_sid_not_match', 'sssl_sid_not_found', 'sssl_sid_reset', 'sssl_sid_match', 'sssl_sid_not_match', 'ssl_sid_persist_ok', 'ssl_sid_persist_fail',
+                    'ssl_sid_session_ok', 'ssl_sid_session_fail', 'cookie_persist_ok', 'cookie_persist_fail', 'cookie_not_found', 'cookie_pass_thru', 'cookie_invalid'
                     ]
                 }
             },

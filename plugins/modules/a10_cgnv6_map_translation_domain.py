@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_translation_domain
 description:
     - MAP Translation domain
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -370,8 +370,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'inbound_packet_received', 'inbound_frag_packet_received', 'inbound_addr_port_validation_failed', 'inbound_rev_lookup_failed', 'inbound_dest_unreachable', 'outbound_packet_received', 'outbound_frag_packet_received', 'outbound_addr_validation_failed',
-                    'outbound_rev_lookup_failed', 'outbound_dest_unreachable', 'packet_mtu_exceeded', 'frag_icmp_sent', 'interface_not_configured', 'bmr_prefixrules_configured', 'helper_count', 'active_dhcpv6_leases'
+                    'all', 'inbound_packet_received', 'inbound_frag_packet_received', 'inbound_addr_port_validation_failed', 'inbound_rev_lookup_failed', 'inbound_dest_unreachable', 'outbound_packet_received', 'outbound_frag_packet_received', 'outbound_addr_validation_failed', 'outbound_rev_lookup_failed', 'outbound_dest_unreachable',
+                    'packet_mtu_exceeded', 'frag_icmp_sent', 'interface_not_configured', 'bmr_prefixrules_configured', 'helper_count', 'active_dhcpv6_leases'
                     ]
                 }
             },

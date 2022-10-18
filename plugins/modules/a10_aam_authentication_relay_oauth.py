@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_oauth
 description:
     - Oauth 2.0 Authentication Relay
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

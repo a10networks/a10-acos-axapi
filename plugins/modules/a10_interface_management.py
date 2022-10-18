@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_management
 description:
     - Management interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -566,12 +566,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'input_err_short', 'input_err_long', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts',
-                    'transmitted_unicasts', 'output_errors', 'collisions'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'input_err_short', 'input_err_long', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts', 'output_errors', 'collisions']
                 }
             },
         'lldp': {

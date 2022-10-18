@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_smtp
 description:
     - Configure SMTP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -520,13 +520,12 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_proxy', 'total_proxy', 'request', 'request_success', 'no_proxy', 'client_reset', 'server_reset', 'no_tuple', 'parse_req_fail', 'server_select_fail', 'forward_req_fail', 'forward_req_data_fail', 'req_retran', 'req_ofo', 'server_reselect', 'server_prem_close',
-                    'new_server_conn', 'snat_fail', 'tcp_out_reset', 'Aflex_switch', 'Aflex_switch_ok', 'recv_client_command_EHLO', 'recv_client_command_HELO', 'recv_client_command_MAIL', 'recv_client_command_RCPT', 'recv_client_command_DATA', 'recv_client_command_RSET', 'recv_client_command_VRFY',
-                    'recv_client_command_EXPN', 'recv_client_command_HELP', 'recv_client_command_NOOP', 'recv_client_command_QUIT', 'recv_client_command_STARTTLS', 'recv_client_command_others', 'send_client_service_ready', 'send_client_service_not_ready', 'send_client_close_connection',
-                    'send_client_go_ahead', 'send_client_start_TLS_first', 'send_client_TLS_not_available', 'send_client_no_command', 'send_server_cmd_reset', 'TLS_established', 'L4_switch', 'recv_server_service_not_ready', 'recv_server_unknow_reply_code', 'client_domain_switch',
-                    'client_domain_switch_ok', 'LB_switch', 'LB_switch_ok', 'read_request_line_fail', 'get_all_headers_fail', 'too_many_headers', 'line_too_long', 'line_across_packet', 'line_extend', 'line_extend_fail', 'line_table_extend', 'line_table_extend_fail', 'parse_request_line_fail',
-                    'insert_resonse_line_fail', 'remove_resonse_line_fail', 'parse_resonse_line_fail', 'Aflex_lb_reselect', 'Aflex_lb_reselect_ok', 'server_STARTTLS_init', 'server_STARTTLS_fail', 'rserver_STARTTLS_disable', 'recv_client_command_TURN', 'recv_client_command_ETRN', 'send_server_ehlo',
-                    'fail_to_save_client_ehlo', 'aflex_mail_fail', 'drop_server_ehlo_ok', 'client_ehlo_saved'
+                    'all', 'curr_proxy', 'total_proxy', 'request', 'request_success', 'no_proxy', 'client_reset', 'server_reset', 'no_tuple', 'parse_req_fail', 'server_select_fail', 'forward_req_fail', 'forward_req_data_fail', 'req_retran', 'req_ofo', 'server_reselect', 'server_prem_close', 'new_server_conn', 'snat_fail', 'tcp_out_reset',
+                    'Aflex_switch', 'Aflex_switch_ok', 'recv_client_command_EHLO', 'recv_client_command_HELO', 'recv_client_command_MAIL', 'recv_client_command_RCPT', 'recv_client_command_DATA', 'recv_client_command_RSET', 'recv_client_command_VRFY', 'recv_client_command_EXPN', 'recv_client_command_HELP', 'recv_client_command_NOOP',
+                    'recv_client_command_QUIT', 'recv_client_command_STARTTLS', 'recv_client_command_others', 'send_client_service_ready', 'send_client_service_not_ready', 'send_client_close_connection', 'send_client_go_ahead', 'send_client_start_TLS_first', 'send_client_TLS_not_available', 'send_client_no_command', 'send_server_cmd_reset',
+                    'TLS_established', 'L4_switch', 'recv_server_service_not_ready', 'recv_server_unknow_reply_code', 'client_domain_switch', 'client_domain_switch_ok', 'LB_switch', 'LB_switch_ok', 'read_request_line_fail', 'get_all_headers_fail', 'too_many_headers', 'line_too_long', 'line_across_packet', 'line_extend', 'line_extend_fail',
+                    'line_table_extend', 'line_table_extend_fail', 'parse_request_line_fail', 'insert_resonse_line_fail', 'remove_resonse_line_fail', 'parse_resonse_line_fail', 'Aflex_lb_reselect', 'Aflex_lb_reselect_ok', 'server_STARTTLS_init', 'server_STARTTLS_fail', 'rserver_STARTTLS_disable', 'recv_client_command_TURN',
+                    'recv_client_command_ETRN', 'send_server_ehlo', 'fail_to_save_client_ehlo', 'aflex_mail_fail', 'drop_server_ehlo_ok', 'client_ehlo_saved'
                     ]
                 }
             },

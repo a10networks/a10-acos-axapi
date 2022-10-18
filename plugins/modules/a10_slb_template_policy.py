@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy
 description:
     - Policy config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -364,9 +364,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "bw_list_id", "bw_list_name", "class_list", "forward_policy", "full_domain_tree", "interval", "name", "over_limit", "over_limit_lockup", "over_limit_logging", "over_limit_reset", "overlap", "sampling_enable", "share", "stats", "timeout", "use_destination_ip", "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["bw_list_id", "bw_list_name", "class_list", "forward_policy", "full_domain_tree", "interval", "name", "over_limit", "over_limit_lockup", "over_limit_logging", "over_limit_reset", "overlap", "sampling_enable", "share", "stats", "timeout", "use_destination_ip", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -461,12 +459,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'fwd-policy-dns-unresolved', 'fwd-policy-dns-outstanding', 'fwd-policy-snat-fail', 'fwd-policy-hits', 'fwd-policy-forward-to-internet', 'fwd-policy-forward-to-service-group', 'fwd-policy-forward-to-proxy', 'fwd-policy-policy-drop', 'fwd-policy-source-match-not-found',
-                    'exp-client-hello-not-found'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'fwd-policy-dns-unresolved', 'fwd-policy-dns-outstanding', 'fwd-policy-snat-fail', 'fwd-policy-hits', 'fwd-policy-forward-to-internet', 'fwd-policy-forward-to-service-group', 'fwd-policy-forward-to-proxy', 'fwd-policy-policy-drop', 'fwd-policy-source-match-not-found', 'exp-client-hello-not-found']
                 }
             },
         'class_list': {

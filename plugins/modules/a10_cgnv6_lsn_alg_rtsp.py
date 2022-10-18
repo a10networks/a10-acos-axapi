@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_rtsp
 description:
     - Change LSN RTSP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -235,10 +235,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'streams-created', 'streams-freed', 'stream-creation-failure', 'ports-allocated', 'ports-freed', 'port-allocation-failure', 'unknown-client-port-from-server', 'data-session-created', 'data-session-freed', 'no-session-mem', 'ha-sent', 'ha-rcv', 'smp-inserted',
-                    'smp-removed', 'smp-reused', 'nat-pool-standby', 'smp-deleted', 'control-closed', 'data-session-exists', 'data-session-creation-failure', 'rtp-reversed', 'rtcp-reversed', 'cross-cpu-sent', 'cross-cpu-rcv', 'cross-cpu-no-session', 'cross-cpu-created', 'cross-cpu-rcv-failure',
-                    'data-free-smp-retry-lookup', 'data-free-smp-not-found', 'ha-streams-sent', 'ha-streams-rcv', 'ha-stream-incompatible', 'ha-stream-exists', 'ha-port-allocation-failure', 'ha-data-session-sent', 'ha-data-session-rcv', 'ha-data-no-smp', 'ha-control-closed', 'ha-data-exists',
-                    'ha-extension-failure', 'ha-stream-smp-reused', 'ha-stream-smp-acquire-failure', 'smp-app-type-mismatch'
+                    'all', 'streams-created', 'streams-freed', 'stream-creation-failure', 'ports-allocated', 'ports-freed', 'port-allocation-failure', 'unknown-client-port-from-server', 'data-session-created', 'data-session-freed', 'no-session-mem', 'ha-sent', 'ha-rcv', 'smp-inserted', 'smp-removed', 'smp-reused', 'nat-pool-standby', 'smp-deleted',
+                    'control-closed', 'data-session-exists', 'data-session-creation-failure', 'rtp-reversed', 'rtcp-reversed', 'cross-cpu-sent', 'cross-cpu-rcv', 'cross-cpu-no-session', 'cross-cpu-created', 'cross-cpu-rcv-failure', 'data-free-smp-retry-lookup', 'data-free-smp-not-found', 'ha-streams-sent', 'ha-streams-rcv',
+                    'ha-stream-incompatible', 'ha-stream-exists', 'ha-port-allocation-failure', 'ha-data-session-sent', 'ha-data-session-rcv', 'ha-data-no-smp', 'ha-control-closed', 'ha-data-exists', 'ha-extension-failure', 'ha-stream-smp-reused', 'ha-stream-smp-acquire-failure', 'smp-app-type-mismatch'
                     ]
                 }
             },

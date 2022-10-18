@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_global
 description:
     - Set Large-Scale NAT config parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -80,7 +80,14 @@ options:
         required: False
     inbound_refresh:
         description:
-        - "'disable'= Disable NAT Inbound Refresh Behavior;"
+        - "'enable'= Enable NAT Inbound Refresh Behavior; 'disable'= Disable NAT Inbound
+          Refresh Behavior;"
+        type: str
+        required: False
+    inbound_refresh_full_cone:
+        description:
+        - "'enable'= Enable NAT full cone refresh for inbound flows; 'disable'= Disable
+          NAT full cone refresh for inbound flows;"
         type: str
         required: False
     ip_selection:
@@ -1082,7 +1089,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["attempt_port_preservation", "enhanced_user_tracking", "hairpinning", "half_close_timeout", "icmp", "inbound_refresh", "ip_selection", "logging", "port_batching", "sampling_enable", "stats", "strictly_sticky_nat", "syn_timeout", "uuid", ]
+AVAILABLE_PROPERTIES = ["attempt_port_preservation", "enhanced_user_tracking", "hairpinning", "half_close_timeout", "icmp", "inbound_refresh", "inbound_refresh_full_cone", "ip_selection", "logging", "port_batching", "sampling_enable", "stats", "strictly_sticky_nat", "syn_timeout", "uuid", ]
 
 
 def get_default_argspec():
@@ -1119,7 +1126,11 @@ def get_argspec():
             },
         'inbound_refresh': {
             'type': 'str',
-            'choices': ['disable']
+            'choices': ['enable', 'disable']
+            },
+        'inbound_refresh_full_cone': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
             },
         'ip_selection': {
             'type': 'str',
@@ -1182,73 +1193,65 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'total_tcp_allocated', 'total_tcp_freed', 'total_udp_allocated', 'total_udp_freed', 'total_icmp_allocated', 'total_icmp_freed', 'data_session_created', 'data_session_freed', 'user_quota_created', 'user_quota_put_in_del_q', 'user_quota_failure', 'nat_port_unavailable_tcp',
-                    'nat_port_unavailable_udp', 'nat_port_unavailable_icmp', 'new_user_resource_unavailable', 'tcp_user_quota_exceeded', 'udp_user_quota_exceeded', 'icmp_user_quota_exceeded', 'extended_quota_matched', 'extended_quota_exceeded', 'data_sesn_user_quota_exceeded',
-                    'data_sesn_rate_user_quota_exceeded', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_failure', 'hairpin', 'fullcone_self_hairpinning_drop', 'endpoint_indep_map_match', 'endpoint_indep_filter_match', 'inbound_filtered',
-                    'eif_limit_exceeded', 'total_tcp_overloaded', 'total_udp_overloaded', 'port_overloading_smp_inserted_tcp', 'port_overloading_smp_inserted_udp', 'port_overloading_smp_free_tcp', 'port_overloading_smp_free_udp', 'nat_pool_unusable', 'ha_nat_pool_unusable',
-                    'ha_nat_pool_batch_type_mismatch', 'no_radius_profile_match', 'nat_ip_max_tcp_ports_allocated', 'nat_ip_max_udp_ports_allocated', 'no_class_list_match', 'lid_drop', 'lid_pass_through', 'fullcone_in_del_q', 'fullcone_retry_lookup', 'fullcone_not_found', 'nat_port_double_free',
-                    'nat_port_chunk_freed_from_cpu', 'nat_port_freed_from_diff_cpu', 'nat_pool_deleted', 'nat_esp_ip_conflicts', 'nat_esp_no_control_sesn', 'esp_user_quota_exceeded', 'udp_alg_user_quota_exceeded', 'gre_user_quota_exceeded', 'ha_classlist_mismatch', 'ha_user_quota_mismatch',
-                    'ha_fullcone_mismatch', 'ha_port_mismatch', 'ha_dnat_mismatch', 'ha_nat_port_unavailable', 'ha_unknown_nat_ip', 'ha_fullcone_failure', 'ha_fullcone_create_race_failure', 'ha_endpoint_indep_map_match', 'standby_class_list_drop', 'bad_tuple_nat_ip', 'bad_smp_tuple_nat_ip',
-                    'fullcone_inbound_nat_pool_mismatch', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'cross_cpu_helper_created', 'cross_cpu_sent', 'cross_cpu_rcv', 'cross_cpu_bad_l3', 'cross_cpu_bad_l4', 'cross_cpu_no_session', 'cross_cpu_helper_free', 'cross_cpu_helper_free_retry_lookup',
-                    'cross_cpu_helper_free_not_found', 'cross_cpu_helper_deleted', 'cross_cpu_helper_cpu_mismatch', 'cross_cpu_helper_nat_pool_standby', 'cross_cpu_helper_double_add', 'mtu_exceeded', 'frag', 'dslite_tunnel_frag', 'sixrd_tunnel_frag', 'frag_icmp', 'frag_tunnel_icmp',
-                    'quota_ext_mem_allocated', 'quota_ext_mem_alloc_failure', 'quota_ext_mem_freed', 'quota_ext_put_in_del_q', 'port_batch_num_mismatch', 'port_batch_interval_mismatch', 'port_pair_alloc_bad_math', 'free_port_from_quota_no_container', 'free_port_from_quota_no_port_info',
-                    'static_nat_cross_cpu_helper_created', 'static_nat_cross_cpu_helper_deleted', 'static_nat_cross_cpu_helper_standby', 'static_nat_cross_cpu_helper_cpu_mismatch', 'static_nat_cross_cpu_sent', 'static_nat_cross_cpu_rcv', 'static_nat_cross_cpu_bad_l3', 'static_nat_cross_cpu_bad_l4',
-                    'static_nat_cross_cpu_no_session', 'static_nat_cross_cpu_helper_free', 'static_nat_cross_cpu_helper_free_retry_lookup', 'static_nat_cross_cpu_helper_free_not_found', 'static_nat_ha_map_mismatch', 'ip_slb_cross_cpu_sent', 'fullcone_force_deleted', 'user_quota_mem_allocated',
-                    'user_quota_mem_freed', 'user_quota_created_shadow', 'quota_marked_deleted', 'quota_delete_not_in_bucket', 'user_quota_put_in_del_q_shadow', 'tcp_out_of_state_rst_sent', 'tcp_out_of_state_rst_dropped', 'icmp_out_of_state_uqe_admin_filtered_sent',
-                    'icmp_out_of_state_uqe_host_unreachable_sent', 'icmp_out_of_state_uqe_dropped'
+                    'all', 'total_tcp_allocated', 'total_tcp_freed', 'total_udp_allocated', 'total_udp_freed', 'total_icmp_allocated', 'total_icmp_freed', 'data_session_created', 'data_session_freed', 'user_quota_created', 'user_quota_put_in_del_q', 'user_quota_failure', 'nat_port_unavailable_tcp', 'nat_port_unavailable_udp',
+                    'nat_port_unavailable_icmp', 'new_user_resource_unavailable', 'tcp_user_quota_exceeded', 'udp_user_quota_exceeded', 'icmp_user_quota_exceeded', 'extended_quota_matched', 'extended_quota_exceeded', 'data_sesn_user_quota_exceeded', 'data_sesn_rate_user_quota_exceeded', 'tcp_fullcone_created', 'tcp_fullcone_freed',
+                    'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_failure', 'hairpin', 'fullcone_self_hairpinning_drop', 'endpoint_indep_map_match', 'endpoint_indep_filter_match', 'inbound_filtered', 'eif_limit_exceeded', 'total_tcp_overloaded', 'total_udp_overloaded', 'port_overloading_smp_inserted_tcp',
+                    'port_overloading_smp_inserted_udp', 'port_overloading_smp_free_tcp', 'port_overloading_smp_free_udp', 'nat_pool_unusable', 'ha_nat_pool_unusable', 'ha_nat_pool_batch_type_mismatch', 'no_radius_profile_match', 'nat_ip_max_tcp_ports_allocated', 'nat_ip_max_udp_ports_allocated', 'no_class_list_match', 'lid_drop',
+                    'lid_pass_through', 'fullcone_in_del_q', 'fullcone_retry_lookup', 'fullcone_not_found', 'nat_port_double_free', 'nat_port_chunk_freed_from_cpu', 'nat_port_freed_from_diff_cpu', 'nat_pool_deleted', 'nat_esp_ip_conflicts', 'nat_esp_no_control_sesn', 'esp_user_quota_exceeded', 'udp_alg_user_quota_exceeded',
+                    'gre_user_quota_exceeded', 'ha_classlist_mismatch', 'ha_user_quota_mismatch', 'ha_fullcone_mismatch', 'ha_port_mismatch', 'ha_dnat_mismatch', 'ha_nat_port_unavailable', 'ha_unknown_nat_ip', 'ha_fullcone_failure', 'ha_fullcone_create_race_failure', 'ha_endpoint_indep_map_match', 'standby_class_list_drop', 'bad_tuple_nat_ip',
+                    'bad_smp_tuple_nat_ip', 'fullcone_inbound_nat_pool_mismatch', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'cross_cpu_helper_created', 'cross_cpu_sent', 'cross_cpu_rcv', 'cross_cpu_bad_l3', 'cross_cpu_bad_l4', 'cross_cpu_no_session', 'cross_cpu_helper_free', 'cross_cpu_helper_free_retry_lookup',
+                    'cross_cpu_helper_free_not_found', 'cross_cpu_helper_deleted', 'cross_cpu_helper_cpu_mismatch', 'cross_cpu_helper_nat_pool_standby', 'cross_cpu_helper_double_add', 'mtu_exceeded', 'frag', 'dslite_tunnel_frag', 'sixrd_tunnel_frag', 'frag_icmp', 'frag_tunnel_icmp', 'quota_ext_mem_allocated', 'quota_ext_mem_alloc_failure',
+                    'quota_ext_mem_freed', 'quota_ext_put_in_del_q', 'port_batch_num_mismatch', 'port_batch_interval_mismatch', 'port_pair_alloc_bad_math', 'free_port_from_quota_no_container', 'free_port_from_quota_no_port_info', 'static_nat_cross_cpu_helper_created', 'static_nat_cross_cpu_helper_deleted', 'static_nat_cross_cpu_helper_standby',
+                    'static_nat_cross_cpu_helper_cpu_mismatch', 'static_nat_cross_cpu_sent', 'static_nat_cross_cpu_rcv', 'static_nat_cross_cpu_bad_l3', 'static_nat_cross_cpu_bad_l4', 'static_nat_cross_cpu_no_session', 'static_nat_cross_cpu_helper_free', 'static_nat_cross_cpu_helper_free_retry_lookup', 'static_nat_cross_cpu_helper_free_not_found',
+                    'static_nat_ha_map_mismatch', 'ip_slb_cross_cpu_sent', 'fullcone_force_deleted', 'user_quota_mem_allocated', 'user_quota_mem_freed', 'user_quota_created_shadow', 'quota_marked_deleted', 'quota_delete_not_in_bucket', 'user_quota_put_in_del_q_shadow', 'tcp_out_of_state_rst_sent', 'tcp_out_of_state_rst_dropped',
+                    'icmp_out_of_state_uqe_admin_filtered_sent', 'icmp_out_of_state_uqe_host_unreachable_sent', 'icmp_out_of_state_uqe_dropped'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'user_quota_not_found', 'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow', 'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'udp_alg_fullcone_created', 'udp_alg_fullcone_freed', 'fullcone_created', 'fullcone_freed', 'data_session_created_shadow',
-                    'data_session_freed_shadow', 'data_session_user_quota_mismatch', 'extended_quota_mismatched', 'nat_port_unavailable_other', 'nat_port_unavailable', 'new_user_resource_unavailable_tcp', 'new_user_resource_unavailable_udp', 'new_user_resource_unavailable_icmp',
-                    'new_user_resource_unavailable_other', 'total_tcp_allocated_shadow', 'total_tcp_freed_shadow', 'total_udp_allocated_shadow', 'total_udp_freed_shadow', 'total_icmp_allocated_shadow', 'total_icmp_freed_shadow', 'udp_alg_no_quota', 'udp_alg_eim_mismatch', 'udp_alg_no_nat_ip',
-                    'udp_alg_alloc_failure', 'sip_alg_no_quota', 'sip_alg_quota_inc_failure', 'sip_alg_no_nat_ip', 'sip_alg_reuse_contact_fullcone', 'sip_alg_contact_fullcone_mismatch', 'sip_alg_alloc_contact_port_failure', 'sip_alg_create_contact_fullcone_failure',
-                    'sip_alg_release_contact_port_failure', 'sip_alg_single_rtp_fullcone', 'sip_alg_single_rtcp_fullcone', 'sip_alg_rtcp_fullcone_mismatch', 'sip_alg_reuse_rtp_rtcp_fullcone', 'sip_alg_alloc_rtp_rtcp_port_failure', 'sip_alg_alloc_single_port_failure',
-                    'sip_alg_create_single_fullcone_failure', 'sip_alg_create_rtp_fullcone_failure', 'sip_alg_create_rtcp_fullcone_failure', 'sip_alg_port_pair_alloc_from_consecutive', 'sip_alg_port_pair_alloc_from_partition', 'sip_alg_port_pair_alloc_from_pool_port_batch',
-                    'sip_alg_port_pair_alloc_from_quota_consecutive', 'sip_alg_port_pair_alloc_from_quota_partition', 'sip_alg_port_pair_alloc_from_quota_partition_error', 'sip_alg_port_pair_alloc_from_quota_pool_port_batch', 'sip_alg_port_pair_alloc_from_quota_pool_port_batch_with_frag',
-                    'h323_alg_no_quota', 'h323_alg_quota_inc_failure', 'h323_alg_no_nat_ip', 'h323_alg_reuse_fullcone', 'h323_alg_fullcone_mismatch', 'h323_alg_alloc_port_failure', 'h323_alg_create_fullcone_failure', 'h323_alg_release_port_failure', 'h323_alg_single_rtp_fullcone',
-                    'h323_alg_single_rtcp_fullcone', 'h323_alg_rtcp_fullcone_mismatch', 'h323_alg_reuse_rtp_rtcp_fullcone', 'h323_alg_alloc_rtp_rtcp_port_failure', 'h323_alg_alloc_single_port_failure', 'h323_alg_create_single_fullcone_failure', 'h323_alg_create_rtp_fullcone_failure',
-                    'h323_alg_create_rtcp_fullcone_failure', 'h323_alg_port_pair_alloc_from_consecutive', 'h323_alg_port_pair_alloc_from_partition', 'h323_alg_port_pair_alloc_from_pool_port_batch', 'h323_alg_port_pair_alloc_from_quota_consecutive', 'h323_alg_port_pair_alloc_from_quota_partition',
-                    'h323_alg_port_pair_alloc_from_quota_partition_error', 'h323_alg_port_pair_alloc_from_quota_pool_port_batch', 'port_batch_quota_extension_alloc_failure', 'port_batch_free_quota_not_found', 'port_batch_free_port_not_found', 'port_batch_free_wrong_partition',
-                    'radius_query_quota_ext_alloc_failure', 'radius_query_quota_ext_alloc_race_free', 'quota_extension_added', 'quota_extension_removed', 'quota_extension_remove_not_found', 'ha_sync_port_batch_sent', 'ha_sync_port_batch_rcv', 'ha_send_port_batch_not_found',
-                    'ha_rcv_port_not_in_port_batch', 'bad_port_to_free', 'consecutive_port_free', 'partition_port_free', 'pool_port_batch_port_free', 'port_allocated_from_quota_consecutive', 'port_allocated_from_quota_partition', 'port_allocated_from_quota_pool_port_batch',
-                    'port_freed_from_quota_consecutive', 'port_freed_from_quota_partition', 'port_freed_from_quota_pool_port_batch', 'port_batch_allocated_to_quota', 'port_batch_freed_from_quota', 'specific_port_allocated_from_quota_consecutive'
+                    'user_quota_not_found', 'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow', 'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'udp_alg_fullcone_created', 'udp_alg_fullcone_freed', 'fullcone_created', 'fullcone_freed', 'data_session_created_shadow', 'data_session_freed_shadow',
+                    'data_session_user_quota_mismatch', 'extended_quota_mismatched', 'nat_port_unavailable_other', 'nat_port_unavailable', 'new_user_resource_unavailable_tcp', 'new_user_resource_unavailable_udp', 'new_user_resource_unavailable_icmp', 'new_user_resource_unavailable_other', 'total_tcp_allocated_shadow', 'total_tcp_freed_shadow',
+                    'total_udp_allocated_shadow', 'total_udp_freed_shadow', 'total_icmp_allocated_shadow', 'total_icmp_freed_shadow', 'udp_alg_no_quota', 'udp_alg_eim_mismatch', 'udp_alg_no_nat_ip', 'udp_alg_alloc_failure', 'sip_alg_no_quota', 'sip_alg_quota_inc_failure', 'sip_alg_no_nat_ip', 'sip_alg_reuse_contact_fullcone',
+                    'sip_alg_contact_fullcone_mismatch', 'sip_alg_alloc_contact_port_failure', 'sip_alg_create_contact_fullcone_failure', 'sip_alg_release_contact_port_failure', 'sip_alg_single_rtp_fullcone', 'sip_alg_single_rtcp_fullcone', 'sip_alg_rtcp_fullcone_mismatch', 'sip_alg_reuse_rtp_rtcp_fullcone', 'sip_alg_alloc_rtp_rtcp_port_failure',
+                    'sip_alg_alloc_single_port_failure', 'sip_alg_create_single_fullcone_failure', 'sip_alg_create_rtp_fullcone_failure', 'sip_alg_create_rtcp_fullcone_failure', 'sip_alg_port_pair_alloc_from_consecutive', 'sip_alg_port_pair_alloc_from_partition', 'sip_alg_port_pair_alloc_from_pool_port_batch',
+                    'sip_alg_port_pair_alloc_from_quota_consecutive', 'sip_alg_port_pair_alloc_from_quota_partition', 'sip_alg_port_pair_alloc_from_quota_partition_error', 'sip_alg_port_pair_alloc_from_quota_pool_port_batch', 'sip_alg_port_pair_alloc_from_quota_pool_port_batch_with_frag', 'h323_alg_no_quota', 'h323_alg_quota_inc_failure',
+                    'h323_alg_no_nat_ip', 'h323_alg_reuse_fullcone', 'h323_alg_fullcone_mismatch', 'h323_alg_alloc_port_failure', 'h323_alg_create_fullcone_failure', 'h323_alg_release_port_failure', 'h323_alg_single_rtp_fullcone', 'h323_alg_single_rtcp_fullcone', 'h323_alg_rtcp_fullcone_mismatch', 'h323_alg_reuse_rtp_rtcp_fullcone',
+                    'h323_alg_alloc_rtp_rtcp_port_failure', 'h323_alg_alloc_single_port_failure', 'h323_alg_create_single_fullcone_failure', 'h323_alg_create_rtp_fullcone_failure', 'h323_alg_create_rtcp_fullcone_failure', 'h323_alg_port_pair_alloc_from_consecutive', 'h323_alg_port_pair_alloc_from_partition',
+                    'h323_alg_port_pair_alloc_from_pool_port_batch', 'h323_alg_port_pair_alloc_from_quota_consecutive', 'h323_alg_port_pair_alloc_from_quota_partition', 'h323_alg_port_pair_alloc_from_quota_partition_error', 'h323_alg_port_pair_alloc_from_quota_pool_port_batch', 'port_batch_quota_extension_alloc_failure',
+                    'port_batch_free_quota_not_found', 'port_batch_free_port_not_found', 'port_batch_free_wrong_partition', 'radius_query_quota_ext_alloc_failure', 'radius_query_quota_ext_alloc_race_free', 'quota_extension_added', 'quota_extension_removed', 'quota_extension_remove_not_found', 'ha_sync_port_batch_sent', 'ha_sync_port_batch_rcv',
+                    'ha_send_port_batch_not_found', 'ha_rcv_port_not_in_port_batch', 'bad_port_to_free', 'consecutive_port_free', 'partition_port_free', 'pool_port_batch_port_free', 'port_allocated_from_quota_consecutive', 'port_allocated_from_quota_partition', 'port_allocated_from_quota_pool_port_batch', 'port_freed_from_quota_consecutive',
+                    'port_freed_from_quota_partition', 'port_freed_from_quota_pool_port_batch', 'port_batch_allocated_to_quota', 'port_batch_freed_from_quota', 'specific_port_allocated_from_quota_consecutive'
                     ]
                 },
             'counters3': {
                 'type':
                 'str',
                 'choices': [
-                    'specific_port_allocated_from_quota_partition', 'specific_port_allocated_from_quota_pool_port_batch', 'port_batch_container_alloc_failure', 'port_batch_container_alloc_race_free', 'port_overloading_destination_conflict', 'port_overloading_out_of_memory',
-                    'port_overloading_assign_user', 'port_overloading_assign_user_port_batch', 'port_overloading_inc', 'port_overloading_dec_on_conflict', 'port_overloading_dec_on_free', 'port_overloading_free_port_on_conflict', 'port_overloading_free_port_batch_on_conflict',
-                    'port_overloading_inc_overflow', 'port_overloading_attempt_consecutive_ports', 'port_overloading_attempt_same_partition', 'port_overloading_attempt_diff_partition', 'port_overloading_attempt_failed', 'port_overloading_conn_free_retry_lookup',
-                    'port_overloading_conn_free_not_found', 'port_overloading_smp_mem_allocated', 'port_overloading_smp_mem_freed', 'port_overloading_smp_inserted', 'port_overloading_smp_inserted_tcp_shadow', 'port_overloading_smp_inserted_udp_shadow', 'port_overloading_smp_free_tcp_shadow',
-                    'port_overloading_smp_free_udp_shadow', 'port_overloading_smp_put_in_del_q_from_conn', 'port_overloading_smp_free_dec_failure', 'port_overloading_smp_free_no_quota', 'port_overloading_smp_free_port', 'port_overloading_smp_free_port_from_quota', 'port_overloading_for_no_ports',
-                    'port_overloading_for_no_ports_success', 'port_overloading_for_quota_exceeded', 'port_overloading_for_quota_exceeded_success', 'port_overloading_for_quota_exceeded_race', 'port_overloading_for_quota_exceeded_race_success', 'port_overloading_for_new_user',
-                    'port_overloading_for_new_user_success', 'ha_port_overloading_attempt_failed', 'ha_port_overloading_for_no_ports', 'ha_port_overloading_for_no_ports_success', 'ha_port_overloading_for_quota_exceeded', 'ha_port_overloading_for_quota_exceeded_success',
-                    'ha_port_overloading_for_quota_exceeded_race', 'ha_port_overloading_for_quota_exceeded_race_success', 'ha_port_overloading_for_new_user', 'ha_port_overloading_for_new_user_success', 'nat_pool_force_delete', 'quota_ext_too_many', 'nat_pool_not_found_on_free',
-                    'fullcone_ext_mem_freed', 'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_added', 'fullcone_ext_too_many', 'nat_pool_attempt_adding_multiple_free_batches', 'nat_pool_add_free_batch_failed', 'mgcp_alg_no_quota',
-                    'mgcp_alg_quota_inc_failure', 'mgcp_alg_no_nat_ip', 'mgcp_alg_reuse_fullcone', 'mgcp_alg_fullcone_mismatch', 'mgcp_alg_alloc_port_failure', 'mgcp_alg_create_fullcone_failure', 'mgcp_alg_release_port_failure', 'mgcp_alg_single_rtp_fullcone', 'mgcp_alg_single_rtcp_fullcone',
-                    'mgcp_alg_rtcp_fullcone_mismatch', 'mgcp_alg_reuse_rtp_rtcp_fullcone', 'mgcp_alg_alloc_rtp_rtcp_port_failure', 'mgcp_alg_alloc_single_port_failure', 'mgcp_alg_create_single_fullcone_failure', 'mgcp_alg_create_rtp_fullcone_failure', 'mgcp_alg_create_rtcp_fullcone_failure',
-                    'mgcp_alg_port_pair_alloc_from_consecutive', 'mgcp_alg_port_pair_alloc_from_partition', 'mgcp_alg_port_pair_alloc_from_pool_port_batch', 'mgcp_alg_port_pair_alloc_from_quota_consecutive', 'mgcp_alg_port_pair_alloc_from_quota_partition',
-                    'mgcp_alg_port_pair_alloc_from_quota_partition_error', 'mgcp_alg_port_pair_alloc_from_quota_pool_port_batch', 'user_quota_unusable_drop', 'user_quota_unusable', 'nat_pool_same_port_batch_udp_failed', 'cross_cpu_helper_created_eim', 'cross_cpu_helper_created_eif',
-                    'cross_cpu_helper_created_udp', 'cross_cpu_helper_created_tcp', 'cross_cpu_helper_created_icmp', 'cross_cpu_helper_created_ip', 'cross_cpu_helper_free_not_found_ip', 'cross_cpu_helper_free_not_found_icmp', 'cross_cpu_helper_free_not_found_tcp',
-                    'cross_cpu_helper_free_not_found_udp', 'adc_port_allocation_failed', 'adc_port_allocation_ineligible'
+                    'specific_port_allocated_from_quota_partition', 'specific_port_allocated_from_quota_pool_port_batch', 'port_batch_container_alloc_failure', 'port_batch_container_alloc_race_free', 'port_overloading_destination_conflict', 'port_overloading_out_of_memory', 'port_overloading_assign_user', 'port_overloading_assign_user_port_batch',
+                    'port_overloading_inc', 'port_overloading_dec_on_conflict', 'port_overloading_dec_on_free', 'port_overloading_free_port_on_conflict', 'port_overloading_free_port_batch_on_conflict', 'port_overloading_inc_overflow', 'port_overloading_attempt_consecutive_ports', 'port_overloading_attempt_same_partition',
+                    'port_overloading_attempt_diff_partition', 'port_overloading_attempt_failed', 'port_overloading_conn_free_retry_lookup', 'port_overloading_conn_free_not_found', 'port_overloading_smp_mem_allocated', 'port_overloading_smp_mem_freed', 'port_overloading_smp_inserted', 'port_overloading_smp_inserted_tcp_shadow',
+                    'port_overloading_smp_inserted_udp_shadow', 'port_overloading_smp_free_tcp_shadow', 'port_overloading_smp_free_udp_shadow', 'port_overloading_smp_put_in_del_q_from_conn', 'port_overloading_smp_free_dec_failure', 'port_overloading_smp_free_no_quota', 'port_overloading_smp_free_port', 'port_overloading_smp_free_port_from_quota',
+                    'port_overloading_for_no_ports', 'port_overloading_for_no_ports_success', 'port_overloading_for_quota_exceeded', 'port_overloading_for_quota_exceeded_success', 'port_overloading_for_quota_exceeded_race', 'port_overloading_for_quota_exceeded_race_success', 'port_overloading_for_new_user', 'port_overloading_for_new_user_success',
+                    'ha_port_overloading_attempt_failed', 'ha_port_overloading_for_no_ports', 'ha_port_overloading_for_no_ports_success', 'ha_port_overloading_for_quota_exceeded', 'ha_port_overloading_for_quota_exceeded_success', 'ha_port_overloading_for_quota_exceeded_race', 'ha_port_overloading_for_quota_exceeded_race_success',
+                    'ha_port_overloading_for_new_user', 'ha_port_overloading_for_new_user_success', 'nat_pool_force_delete', 'quota_ext_too_many', 'nat_pool_not_found_on_free', 'fullcone_ext_mem_freed', 'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_added',
+                    'fullcone_ext_too_many', 'nat_pool_attempt_adding_multiple_free_batches', 'nat_pool_add_free_batch_failed', 'mgcp_alg_no_quota', 'mgcp_alg_quota_inc_failure', 'mgcp_alg_no_nat_ip', 'mgcp_alg_reuse_fullcone', 'mgcp_alg_fullcone_mismatch', 'mgcp_alg_alloc_port_failure', 'mgcp_alg_create_fullcone_failure',
+                    'mgcp_alg_release_port_failure', 'mgcp_alg_single_rtp_fullcone', 'mgcp_alg_single_rtcp_fullcone', 'mgcp_alg_rtcp_fullcone_mismatch', 'mgcp_alg_reuse_rtp_rtcp_fullcone', 'mgcp_alg_alloc_rtp_rtcp_port_failure', 'mgcp_alg_alloc_single_port_failure', 'mgcp_alg_create_single_fullcone_failure', 'mgcp_alg_create_rtp_fullcone_failure',
+                    'mgcp_alg_create_rtcp_fullcone_failure', 'mgcp_alg_port_pair_alloc_from_consecutive', 'mgcp_alg_port_pair_alloc_from_partition', 'mgcp_alg_port_pair_alloc_from_pool_port_batch', 'mgcp_alg_port_pair_alloc_from_quota_consecutive', 'mgcp_alg_port_pair_alloc_from_quota_partition',
+                    'mgcp_alg_port_pair_alloc_from_quota_partition_error', 'mgcp_alg_port_pair_alloc_from_quota_pool_port_batch', 'user_quota_unusable_drop', 'user_quota_unusable', 'nat_pool_same_port_batch_udp_failed', 'cross_cpu_helper_created_eim', 'cross_cpu_helper_created_eif', 'cross_cpu_helper_created_udp', 'cross_cpu_helper_created_tcp',
+                    'cross_cpu_helper_created_icmp', 'cross_cpu_helper_created_ip', 'cross_cpu_helper_free_not_found_ip', 'cross_cpu_helper_free_not_found_icmp', 'cross_cpu_helper_free_not_found_tcp', 'cross_cpu_helper_free_not_found_udp', 'adc_port_allocation_failed', 'adc_port_allocation_ineligible'
                     ]
                 },
             'counters4': {
                 'type':
                 'str',
                 'choices': [
-                    'acl_http_domain_node_exceeded', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp',
-                    'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp',
-                    'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others',
-                    'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
-                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3',
-                    'rev_egress_pkt_size_range4'
+                    'acl_http_domain_node_exceeded', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp',
+                    'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp',
+                    'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2',
+                    'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4',
+                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
                     ]
                 }
             },

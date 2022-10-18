@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_inuse_port_list
 description:
     - Bare-Metal lb port list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

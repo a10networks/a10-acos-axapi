@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template_l2_mac
 description:
     - Mac Address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

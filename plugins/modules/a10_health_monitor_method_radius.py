@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_radius
 description:
     - RADIUS type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

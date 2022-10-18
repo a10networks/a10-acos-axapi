@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_zone_local_zone_cfg
 description:
     - Local zone configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fail_safe
 description:
     - Fail Safe Global Commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -281,8 +281,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "config", "dataplane_recovery_timeout", "disable_failsafe", "fpga_buff_recovery_threshold", "fpga_monitor_enable", "fpga_monitor_forced_reboot", "fpga_monitor_interval", "fpga_monitor_threshold", "hw_error_monitor", "hw_error_recovery_timeout", "hw_ssl_timeout_monitor", "kill", "log", "oper",
-    "session_mem_recovery_threshold", "sw_error_monitor_enable", "sw_error_recovery_timeout", "total_memory_size_check", "uuid",
+    "config", "dataplane_recovery_timeout", "disable_failsafe", "fpga_buff_recovery_threshold", "fpga_monitor_enable", "fpga_monitor_forced_reboot", "fpga_monitor_interval", "fpga_monitor_threshold", "hw_error_monitor", "hw_error_recovery_timeout", "hw_ssl_timeout_monitor", "kill", "log", "oper", "session_mem_recovery_threshold",
+    "sw_error_monitor_enable", "sw_error_recovery_timeout", "total_memory_size_check", "uuid",
     ]
 
 

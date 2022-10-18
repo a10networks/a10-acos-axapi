@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_list_all_cli
 description:
     - Field list_all_cli
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

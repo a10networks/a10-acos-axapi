@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_logging_nat_resource_exhausted
 description:
     - Change logging level for NAT Resource Exhausted
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

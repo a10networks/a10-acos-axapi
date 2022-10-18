@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_counter_lib_accounting
 description:
     - System Counter library accounting
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

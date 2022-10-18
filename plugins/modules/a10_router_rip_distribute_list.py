@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_rip_distribute_list
 description:
     - Filter networks in routing updates
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

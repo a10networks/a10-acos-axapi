@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_evasion_check
 description:
     - Check for evasion attempt
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -186,9 +186,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "apache_whitespace", "decode_entities", "decode_escaped_chars", "decode_plus_chars", "decode_unicode_chars", "dir_traversal", "high_ascii_bytes", "invalid_hex_encoding", "max_levels", "multiple_encoding_levels", "multiple_slashes", "remove_comments", "remove_spaces", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["apache_whitespace", "decode_entities", "decode_escaped_chars", "decode_plus_chars", "decode_unicode_chars", "dir_traversal", "high_ascii_bytes", "invalid_hex_encoding", "max_levels", "multiple_encoding_levels", "multiple_slashes", "remove_comments", "remove_spaces", "uuid", ]
 
 
 def get_default_argspec():

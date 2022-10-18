@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_relay_ntlm_tmpl_trigger_stats_rate
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -180,35 +180,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'threshold_exceeded_by': {
-            'type': 'int',
-            },
-        'duration': {
-            'type': 'int',
-            },
-        'failure': {
-            'type': 'bool',
-            },
-        'buffer_alloc_fail': {
-            'type': 'bool',
-            },
-        'encoding_fail': {
-            'type': 'bool',
-            },
-        'insert_header_fail': {
-            'type': 'bool',
-            },
-        'parse_header_fail': {
-            'type': 'bool',
-            },
-        'internal_error': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'failure': {'type': 'bool', }, 'buffer_alloc_fail': {'type': 'bool', }, 'encoding_fail': {'type': 'bool', }, 'insert_header_fail': {'type': 'bool', }, 'parse_header_fail': {'type': 'bool', }, 'internal_error': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(aam_auth_relay_ntlm_tmpl_name=dict(type='str', required=True), ))
     return rv

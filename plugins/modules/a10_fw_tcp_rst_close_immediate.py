@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_tcp_rst_close_immediate
 description:
     - Configure TCP RST behavior
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

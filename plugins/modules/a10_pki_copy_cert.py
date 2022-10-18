@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_copy_cert
 description:
     - Copy SSL certificate to another file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

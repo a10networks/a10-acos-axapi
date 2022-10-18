@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_mon_template_link_block_as_down
 description:
     - LACP Link-block will be treated as Link-down template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

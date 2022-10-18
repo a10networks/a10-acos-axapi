@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_port_scan_detection
 description:
     - Configure port scan detection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

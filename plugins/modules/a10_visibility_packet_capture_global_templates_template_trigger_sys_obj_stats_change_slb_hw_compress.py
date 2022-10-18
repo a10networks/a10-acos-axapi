@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_hw_compress
 description:
     - Configure triggers for slb.hw-compress object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

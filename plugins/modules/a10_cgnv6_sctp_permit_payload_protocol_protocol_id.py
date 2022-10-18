@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sctp_permit_payload_protocol_protocol_id
 description:
     - Configure SCTP permitted payload protocol ID
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_spanning_tree_mode_rstp
 description:
     - Configure spanning tree protocol RSTP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

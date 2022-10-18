@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_host
 description:
     - IP Address of the local tunnel end point
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

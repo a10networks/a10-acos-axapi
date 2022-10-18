@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_event_partition
 description:
     - module partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

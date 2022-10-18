@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_routing_isis
 description:
     - Enable isis traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -200,8 +200,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "isisAdjacencyChange", "isisAreaMismatch", "isisAttemptToExceedMaxSequence", "isisAuthenticationFailure", "isisAuthenticationTypeFailure", "isisCorruptedLSPDetected", "isisDatabaseOverload", "isisIDLenMismatch", "isisLSPTooLargeToPropagate", "isisManualAddressDrops",
-    "isisMaxAreaAddressesMismatch", "isisOriginatingLSPBufferSizeMismatch", "isisOwnLSPPurge", "isisProtocolsSupportedMismatch", "isisRejectedAdjacency", "isisSequenceNumberSkip", "isisVersionSkew", "uuid",
+    "isisAdjacencyChange", "isisAreaMismatch", "isisAttemptToExceedMaxSequence", "isisAuthenticationFailure", "isisAuthenticationTypeFailure", "isisCorruptedLSPDetected", "isisDatabaseOverload", "isisIDLenMismatch", "isisLSPTooLargeToPropagate", "isisManualAddressDrops", "isisMaxAreaAddressesMismatch", "isisOriginatingLSPBufferSizeMismatch",
+    "isisOwnLSPPurge", "isisProtocolsSupportedMismatch", "isisRejectedAdjacency", "isisSequenceNumberSkip", "isisVersionSkew", "uuid",
     ]
 
 

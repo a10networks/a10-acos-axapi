@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_persist_cookie
 description:
     - Cookie persistence
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -69,6 +69,12 @@ options:
         description:
         - "Set cookie expiration time (Expiration in seconds)"
         type: int
+        required: False
+    use_attribute:
+        description:
+        - "'max-age'= Use the Max-Age attribute; 'expires'= Use the Expires attribute;
+          'all'= Use all attributes;"
+        type: str
         required: False
     insert_always:
         description:
@@ -222,10 +228,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "cookie_name", "domain", "dont_honor_conn_rules", "encrypt_level", "encrypted", "expire", "httponly", "insert_always", "match_type", "name", "pass_phrase", "pass_thru", "path", "prefix", "samesite", "scan_all_members", "secure", "server", "server_service_group", "service_group", "user_tag",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["cookie_name", "domain", "dont_honor_conn_rules", "encrypt_level", "encrypted", "expire", "httponly", "insert_always", "match_type", "name", "pass_phrase", "pass_thru", "path", "prefix", "samesite", "scan_all_members", "secure", "server", "server_service_group", "service_group", "use_attribute", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -255,6 +258,10 @@ def get_argspec():
             },
         'expire': {
             'type': 'int',
+            },
+        'use_attribute': {
+            'type': 'str',
+            'choices': ['max-age', 'expires', 'all']
             },
         'insert_always': {
             'type': 'bool',

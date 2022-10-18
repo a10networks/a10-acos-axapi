@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_smpp
 description:
     - Configure SMPP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -346,15 +346,14 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'msg_proxy_current', 'msg_proxy_total', 'msg_proxy_mem_allocd', 'msg_proxy_mem_cached', 'msg_proxy_mem_freed', 'msg_proxy_client_recv', 'msg_proxy_client_send_success', 'msg_proxy_client_incomplete', 'msg_proxy_client_drop', 'msg_proxy_client_connection',
-                    'msg_proxy_client_fail', 'msg_proxy_client_fail_parse', 'msg_proxy_client_fail_process', 'msg_proxy_client_fail_snat', 'msg_proxy_client_exceed_tmp_buff', 'msg_proxy_client_fail_send_pkt', 'msg_proxy_client_fail_start_server_Conn', 'msg_proxy_server_recv',
-                    'msg_proxy_server_send_success', 'msg_proxy_server_incomplete', 'msg_proxy_server_drop', 'msg_proxy_server_fail', 'msg_proxy_server_fail_parse', 'msg_proxy_server_fail_process', 'msg_proxy_server_fail_selec_connt', 'msg_proxy_server_fail_snat', 'msg_proxy_server_exceed_tmp_buff',
-                    'msg_proxy_server_fail_send_pkt', 'msg_proxy_create_server_conn', 'msg_proxy_start_server_conn', 'msg_proxy_fail_start_server_conn', 'msg_proxy_server_conn_fail_snat', 'msg_proxy_fail_construct_server_conn', 'msg_proxy_fail_reserve_pconn', 'msg_proxy_start_server_conn_failed',
-                    'msg_proxy_server_conn_already_exists', 'msg_proxy_fail_insert_server_conn', 'msg_proxy_parse_msg_fail', 'msg_proxy_process_msg_fail', 'msg_proxy_no_vport', 'msg_proxy_fail_select_server', 'msg_proxy_fail_alloc_mem', 'msg_proxy_unexpected_err', 'msg_proxy_l7_cpu_failed',
-                    'msg_proxy_l4_to_l7', 'msg_proxy_l4_from_l7', 'msg_proxy_to_l4_send_pkt', 'msg_proxy_l4_from_l4_send', 'msg_proxy_l7_to_L4', 'msg_proxy_mag_back', 'msg_proxy_fail_dcmsg', 'msg_proxy_deprecated_conn', 'msg_proxy_hold_msg', 'msg_proxy_split_pkt', 'msg_proxy_pipline_msg',
-                    'msg_proxy_client_reset', 'msg_proxy_server_reset', 'payload_allocd', 'payload_freed', 'pkt_too_small', 'invalid_seq', 'AX_response_directly', 'select_client_conn', 'select_client_by_req', 'select_client_from_list', 'select_client_by_conn', 'select_client_fail',
-                    'select_server_conn', 'select_server_by_req', 'select_server_from_list', 'select_server_by_conn', 'select_server_fail', 'bind_conn', 'unbind_conn', 'enquire_link_recv', 'enquire_link_resp_recv', 'enquire_link_send', 'enquire_link_resp_send', 'client_conn_put_in_list',
-                    'client_conn_get_from_list', 'server_conn_put_in_list', 'server_conn_get_from_list', 'server_conn_fail_bind', 'single_msg', 'fail_bind_msg'
+                    'all', 'msg_proxy_current', 'msg_proxy_total', 'msg_proxy_mem_allocd', 'msg_proxy_mem_cached', 'msg_proxy_mem_freed', 'msg_proxy_client_recv', 'msg_proxy_client_send_success', 'msg_proxy_client_incomplete', 'msg_proxy_client_drop', 'msg_proxy_client_connection', 'msg_proxy_client_fail', 'msg_proxy_client_fail_parse',
+                    'msg_proxy_client_fail_process', 'msg_proxy_client_fail_snat', 'msg_proxy_client_exceed_tmp_buff', 'msg_proxy_client_fail_send_pkt', 'msg_proxy_client_fail_start_server_Conn', 'msg_proxy_server_recv', 'msg_proxy_server_send_success', 'msg_proxy_server_incomplete', 'msg_proxy_server_drop', 'msg_proxy_server_fail',
+                    'msg_proxy_server_fail_parse', 'msg_proxy_server_fail_process', 'msg_proxy_server_fail_selec_connt', 'msg_proxy_server_fail_snat', 'msg_proxy_server_exceed_tmp_buff', 'msg_proxy_server_fail_send_pkt', 'msg_proxy_create_server_conn', 'msg_proxy_start_server_conn', 'msg_proxy_fail_start_server_conn',
+                    'msg_proxy_server_conn_fail_snat', 'msg_proxy_fail_construct_server_conn', 'msg_proxy_fail_reserve_pconn', 'msg_proxy_start_server_conn_failed', 'msg_proxy_server_conn_already_exists', 'msg_proxy_fail_insert_server_conn', 'msg_proxy_parse_msg_fail', 'msg_proxy_process_msg_fail', 'msg_proxy_no_vport',
+                    'msg_proxy_fail_select_server', 'msg_proxy_fail_alloc_mem', 'msg_proxy_unexpected_err', 'msg_proxy_l7_cpu_failed', 'msg_proxy_l4_to_l7', 'msg_proxy_l4_from_l7', 'msg_proxy_to_l4_send_pkt', 'msg_proxy_l4_from_l4_send', 'msg_proxy_l7_to_L4', 'msg_proxy_mag_back', 'msg_proxy_fail_dcmsg', 'msg_proxy_deprecated_conn',
+                    'msg_proxy_hold_msg', 'msg_proxy_split_pkt', 'msg_proxy_pipline_msg', 'msg_proxy_client_reset', 'msg_proxy_server_reset', 'payload_allocd', 'payload_freed', 'pkt_too_small', 'invalid_seq', 'AX_response_directly', 'select_client_conn', 'select_client_by_req', 'select_client_from_list', 'select_client_by_conn',
+                    'select_client_fail', 'select_server_conn', 'select_server_by_req', 'select_server_from_list', 'select_server_by_conn', 'select_server_fail', 'bind_conn', 'unbind_conn', 'enquire_link_recv', 'enquire_link_resp_recv', 'enquire_link_send', 'enquire_link_resp_send', 'client_conn_put_in_list', 'client_conn_get_from_list',
+                    'server_conn_put_in_list', 'server_conn_get_from_list', 'server_conn_fail_bind', 'single_msg', 'fail_bind_msg'
                     ]
                 }
             },

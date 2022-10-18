@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_snmpv1_v2c_user
 description:
     - Define configuration for SNMPv1/v2c user
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

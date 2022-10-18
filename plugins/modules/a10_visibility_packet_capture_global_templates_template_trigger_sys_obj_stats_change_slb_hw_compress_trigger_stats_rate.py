@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_hw_compress_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -175,32 +175,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'threshold_exceeded_by': {
-            'type': 'int',
-            },
-        'duration': {
-            'type': 'int',
-            },
-        'failure_count': {
-            'type': 'bool',
-            },
-        'failure_code': {
-            'type': 'bool',
-            },
-        'ring_full_count': {
-            'type': 'bool',
-            },
-        'max_outstanding_request_count': {
-            'type': 'bool',
-            },
-        'max_outstanding_submit_count': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'failure_count': {'type': 'bool', }, 'failure_code': {'type': 'bool', }, 'ring_full_count': {'type': 'bool', }, 'max_outstanding_request_count': {'type': 'bool', }, 'max_outstanding_submit_count': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

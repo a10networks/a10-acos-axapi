@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_sport_rate_limit
 description:
     - Configure source port rate-limit
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_encapsulation_fragmentation_inbound
 description:
     - MAP-E fragmentation rules for inbound oversize packets
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

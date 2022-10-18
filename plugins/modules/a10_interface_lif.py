@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_lif
 description:
     - Logical interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -586,12 +586,9 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts',
-                    'dropped_tx_pkts', 'dropped_rx_pkts_gre_key'
-                    ]
+                'type': 'str',
+                'choices':
+                ['all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts', 'dropped_tx_pkts', 'dropped_rx_pkts_gre_key']
                 }
             },
         'ip': {

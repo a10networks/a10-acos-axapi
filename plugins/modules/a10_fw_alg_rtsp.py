@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_rtsp
 description:
     - Change Firewall RTSP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -216,10 +216,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'transport-inserted', 'transport-freed', 'transport-alloc-failure', 'data-session-created', 'data-session-freed', 'ext-creation-failure', 'transport-add-to-ext', 'transport-removed-from-ext', 'transport-too-many', 'transport-already-in-ext', 'transport-exists',
-                    'transport-link-ext-failure-control', 'transport-link-ext-data', 'transport-link-ext-failure-data', 'transport-inserted-shadow', 'transport-creation-race', 'transport-alloc-failure-shadow', 'transport-put-in-del-q', 'transport-freed-shadow', 'transport-acquired-from-control',
-                    'transport-found-from-prev-control', 'transport-acquire-failure-from-control', 'transport-released-from-control', 'transport-double-release-from-control', 'transport-acquired-from-data', 'transport-acquire-failure-from-data', 'transport-released-from-data',
-                    'transport-double-release-from-data', 'transport-retry-lookup-on-data-free', 'transport-not-found-on-data-free', 'data-session-created-shadow', 'data-session-freed-shadow', 'ha-control-ext-creation-failure', 'ha-control-session-created', 'ha-data-session-created'
+                    'all', 'transport-inserted', 'transport-freed', 'transport-alloc-failure', 'data-session-created', 'data-session-freed', 'ext-creation-failure', 'transport-add-to-ext', 'transport-removed-from-ext', 'transport-too-many', 'transport-already-in-ext', 'transport-exists', 'transport-link-ext-failure-control',
+                    'transport-link-ext-data', 'transport-link-ext-failure-data', 'transport-inserted-shadow', 'transport-creation-race', 'transport-alloc-failure-shadow', 'transport-put-in-del-q', 'transport-freed-shadow', 'transport-acquired-from-control', 'transport-found-from-prev-control', 'transport-acquire-failure-from-control',
+                    'transport-released-from-control', 'transport-double-release-from-control', 'transport-acquired-from-data', 'transport-acquire-failure-from-data', 'transport-released-from-data', 'transport-double-release-from-data', 'transport-retry-lookup-on-data-free', 'transport-not-found-on-data-free', 'data-session-created-shadow',
+                    'data-session-freed-shadow', 'ha-control-ext-creation-failure', 'ha-control-session-created', 'ha-data-session-created'
                     ]
                 }
             },

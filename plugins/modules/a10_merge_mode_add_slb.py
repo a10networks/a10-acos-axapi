@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_merge_mode_add_slb
 description:
     - Control block-merge mode behavior for slb objects
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

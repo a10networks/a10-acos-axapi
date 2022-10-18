@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_active_rdt
 description:
     - Active RDT options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -184,38 +184,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'aging_time': {
-            'type': 'int',
-            },
-        'smooth_factor': {
-            'type': 'int',
-            },
-        'range_factor': {
-            'type': 'int',
-            },
-        'limit': {
-            'type': 'int',
-            },
-        'mask': {
-            'type': 'str',
-            },
-        'ipv6_mask': {
-            'type': 'int',
-            },
-        'ignore_count': {
-            'type': 'int',
-            },
-        'bind_geoloc': {
-            'type': 'bool',
-            },
-        'overlap': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'aging_time': {'type': 'int', }, 'smooth_factor': {'type': 'int', }, 'range_factor': {'type': 'int', }, 'limit': {'type': 'int', }, 'mask': {'type': 'str', }, 'ipv6_mask': {'type': 'int', }, 'ignore_count': {'type': 'int', }, 'bind_geoloc': {'type': 'bool', }, 'overlap': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(site_name=dict(type='str', required=True), ))
     return rv

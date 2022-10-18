@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_service_group_member
 description:
     - Service Group Member
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -396,8 +396,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn',
-                    'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow', 'state_flaps'
+                    'all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time',
+                    'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow', 'state_flaps'
                     ]
                 }
             },

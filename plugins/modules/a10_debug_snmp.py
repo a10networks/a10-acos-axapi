@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_snmp
 description:
     - SNMP module parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_http
 description:
     - HTTP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -130,7 +130,7 @@ options:
         required: False
     max_concurrent_streams:
         description:
-        - "(http2 only) Max concurrent streams, default 100"
+        - "(http2 only) Max concurrent streams, default 50"
         type: int
         required: False
     frame_limit:
@@ -480,6 +480,12 @@ options:
           when possible;"
         type: str
         required: False
+    client_idle_timeout:
+        description:
+        - "Client session timeout if the next request is not received (timeout in seconds.
+          0 means disable, default is 0)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -595,12 +601,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "http_100_cont_wait_for_req_complete", "bypass_sg", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_content_type", "compression_enable", "compression_exclude_content_type", "compression_exclude_uri", "compression_keep_accept_encoding",
-    "compression_keep_accept_encoding_enable", "compression_level", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "failover_url", "frame_limit", "host_switching", "http_protocol_check", "insert_client_ip", "insert_client_ip_header_name",
-    "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code", "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time",
-    "req_hdr_wait_time_val", "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx", "retry_on_5xx_per_req",
-    "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only", "server_support_http2_only_value", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status",
-    "user_tag", "uuid",
+    "http_100_cont_wait_for_req_complete", "bypass_sg", "client_idle_timeout", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_content_type", "compression_enable", "compression_exclude_content_type", "compression_exclude_uri", "compression_keep_accept_encoding",
+    "compression_keep_accept_encoding_enable", "compression_level", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "failover_url", "frame_limit", "host_switching", "http_protocol_check", "insert_client_ip", "insert_client_ip_header_name", "insert_client_port", "insert_client_port_header_name",
+    "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code", "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val", "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive",
+    "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx", "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only", "server_support_http2_only_value", "strict_transaction_switch", "template", "term_11client_hdr_conn_close",
+    "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid",
     ]
 
 
@@ -881,6 +886,9 @@ def get_argspec():
         'server_support_http2_only_value': {
             'type': 'str',
             'choices': ['auto-detect', 'force']
+            },
+        'client_idle_timeout': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',

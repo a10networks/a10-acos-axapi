@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility
 description:
     - Display Network statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -615,8 +615,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "anomaly_detection", "debug_files", "file", "flow_collector", "granularity", "initial_learning_interval", "mon_entity_telemetry_data", "mon_topk", "monitor", "monitored_entity", "packet_capture", "ping_sweep_detection", "port_scan_detection", "reporting", "resource_usage", "sampling_enable",
-    "source_entity_topk", "stats", "topn", "uuid", "zbar",
+    "anomaly_detection", "debug_files", "file", "flow_collector", "granularity", "initial_learning_interval", "mon_entity_telemetry_data", "mon_topk", "monitor", "monitored_entity", "packet_capture", "ping_sweep_detection", "port_scan_detection", "reporting", "resource_usage", "sampling_enable", "source_entity_topk", "stats", "topn", "uuid",
+    "zbar",
     ]
 
 
@@ -656,8 +656,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'mon-entity-limit-exceed', 'ha-entity-create-sent', 'ha-entity-delete-sent', 'ha-entity-anomaly-on-sent', 'ha-entity-anomaly-off-sent', 'ha-entity-periodic-sync-sent', 'out-of-memory-alloc-failures', 'lw-mon-entity-created', 'lw-mon-entity-deleted',
-                    'lw-mon-entity-limit-exceed', 'lw-out-of-memory-alloc-failures', 'mon-entity-rrd-file-timestamp-err', 'mon-entity-rrd-update-err', 'mon-entity-rrd-last-update-fetch-failed-err', 'mon-entity-rrd-tune-err', 'mon-entity-rrd-out-of-memory-err', 'mon-entity-rrd-file-create-err'
+                    'all', 'mon-entity-limit-exceed', 'ha-entity-create-sent', 'ha-entity-delete-sent', 'ha-entity-anomaly-on-sent', 'ha-entity-anomaly-off-sent', 'ha-entity-periodic-sync-sent', 'out-of-memory-alloc-failures', 'lw-mon-entity-created', 'lw-mon-entity-deleted', 'lw-mon-entity-limit-exceed', 'lw-out-of-memory-alloc-failures',
+                    'mon-entity-rrd-file-timestamp-err', 'mon-entity-rrd-update-err', 'mon-entity-rrd-last-update-fetch-failed-err', 'mon-entity-rrd-tune-err', 'mon-entity-rrd-out-of-memory-err', 'mon-entity-rrd-file-create-err'
                     ]
                 }
             },
@@ -672,8 +672,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload',
-                        'tcp_out_payload', 'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_fwd_syn_per_fin'
+                        'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload', 'tcp_out_payload', 'tcp_in_rexmit',
+                        'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_fwd_syn_per_fin'
                         ]
                     }
                 }
@@ -939,11 +939,10 @@ def get_argspec():
                         'type':
                         'str',
                         'choices': [
-                            'all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2',
-                            'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled', 'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed',
-                            'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len', 'netflow-v9-max-records-exceed', 'netflow-v10-packets-received', 'netflow-v10-samples-received',
-                            'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received', 'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received',
-                            'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error'
+                            'all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2', 'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled',
+                            'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len',
+                            'netflow-v9-max-records-exceed', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received', 'netflow-udp-sample-received', 'netflow-icmp-sample-received',
+                            'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error'
                             ]
                         }
                     }
@@ -1226,8 +1225,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'heap-alloc-success', 'heap-alloc-failed', 'heap-alloc-oom', 'obj-reg-success', 'obj-reg-failed', 'obj-reg-oom', 'heap-deleted', 'obj-deleted', 'heap-metric-alloc-success', 'heap-metric-alloc-oom', 'heap-move-to-delq', 'heap-metric-deleted', 'obj-metric-reg-success',
-                        'obj-metric-reg-oom', 'obj-move-to-delq', 'obj-metric-deleted', 'hc-obj-alloc-failed'
+                        'all', 'heap-alloc-success', 'heap-alloc-failed', 'heap-alloc-oom', 'obj-reg-success', 'obj-reg-failed', 'obj-reg-oom', 'heap-deleted', 'obj-deleted', 'heap-metric-alloc-success', 'heap-metric-alloc-oom', 'heap-move-to-delq', 'heap-metric-deleted', 'obj-metric-reg-success', 'obj-metric-reg-oom', 'obj-move-to-delq',
+                        'obj-metric-deleted', 'hc-obj-alloc-failed'
                         ]
                     }
                 },
@@ -7268,6 +7267,39 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'session_limit_exceeded': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                }
+                            },
+                        'fw_global': {
+                            'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
+                            'uuid': {
+                                'type': 'str',
+                                },
+                            'trigger_stats_inc': {
+                                'type': 'dict',
+                                'fullcone_creation_failure': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                },
+                            'trigger_stats_rate': {
+                                'type': 'dict',
+                                'threshold_exceeded_by': {
+                                    'type': 'int',
+                                    },
+                                'duration': {
+                                    'type': 'int',
+                                    },
+                                'fullcone_creation_failure': {
                                     'type': 'bool',
                                     },
                                 'uuid': {

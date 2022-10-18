@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_dnssec_ds
 description:
     - DNSSEC DS file for child zone
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

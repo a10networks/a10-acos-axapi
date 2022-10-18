@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update_info
 description:
     - automatic-update information opers
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -154,41 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'feature_list': {
-                'type': 'list',
-                'feature_name': {
-                    'type': 'str',
-                    },
-                'version': {
-                    'type': 'str',
-                    },
-                'schedule': {
-                    'type': 'str',
-                    },
-                'time': {
-                    'type': 'str',
-                    },
-                'last_update': {
-                    'type': 'str',
-                    },
-                'next_check': {
-                    'type': 'str',
-                    }
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'dummy': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'feature_list': {'type': 'list', 'feature_name': {'type': 'str', }, 'version': {'type': 'str', }, 'schedule': {'type': 'str', }, 'time': {'type': 'str', }, 'last_update': {'type': 'str', }, 'next_check': {'type': 'str', }}}, 'stats': {'type': 'dict', 'dummy': {'type': 'str', }}})
     return rv
 
 

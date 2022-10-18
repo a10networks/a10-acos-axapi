@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_view
 description:
     - Defines named 'view' - a subset of the overall OID tree
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

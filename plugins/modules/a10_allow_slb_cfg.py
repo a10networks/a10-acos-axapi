@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_allow_slb_cfg
 description:
     - Field allow_slb_cfg
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

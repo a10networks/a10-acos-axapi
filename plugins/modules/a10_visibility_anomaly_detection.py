@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_anomaly_detection
 description:
     - Anomaly detection parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -159,26 +159,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'sensitivity': {
-            'type': 'str',
-            'choices': ['high', 'low']
-            },
-        'restart_learning_on_anomaly': {
-            'type': 'bool',
-            },
-        'feature_status': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        'logging': {
-            'type': 'str',
-            'choices': ['per-entity', 'per-metric', 'disable']
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'sensitivity': {'type': 'str', 'choices': ['high', 'low']}, 'restart_learning_on_anomaly': {'type': 'bool', }, 'feature_status': {'type': 'str', 'choices': ['enable', 'disable']}, 'logging': {'type': 'str', 'choices': ['per-entity', 'per-metric', 'disable']}, 'uuid': {'type': 'str', }})
     return rv
 
 

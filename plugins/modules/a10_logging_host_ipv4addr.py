@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_host_ipv4addr
 description:
     - host DNS name or ipv4 address of remote syslog server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

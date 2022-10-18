@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_icap_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -235,8 +235,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "app_serv_conn_err", "app_serv_conn_no_pcb_err", "chunk1_hdr_err", "chunk2_hdr_err", "chunk_bad_trail_err", "encap_hdr_incomplete_err", "http_resp_hdr_err", "http_resp_line_parse_err", "http_resp_line_read_err", "icap_line_err", "icap_ver_err", "no_icap_resp_err", "no_payload_buff_err",
-    "no_payload_next_buff_err", "no_status_code_err", "prep_req_fail_err", "req_hdr_incomplete_err", "resp_hdr_err", "resp_hdr_incomplete_err", "resp_line_parse_err", "resp_line_read_err", "serv_sel_fail_err", "start_icap_conn_fail_err", "uuid",
+    "app_serv_conn_err", "app_serv_conn_no_pcb_err", "chunk1_hdr_err", "chunk2_hdr_err", "chunk_bad_trail_err", "encap_hdr_incomplete_err", "http_resp_hdr_err", "http_resp_line_parse_err", "http_resp_line_read_err", "icap_line_err", "icap_ver_err", "no_icap_resp_err", "no_payload_buff_err", "no_payload_next_buff_err", "no_status_code_err",
+    "prep_req_fail_err", "req_hdr_incomplete_err", "resp_hdr_err", "resp_hdr_incomplete_err", "resp_line_parse_err", "resp_line_read_err", "serv_sel_fail_err", "start_icap_conn_fail_err", "uuid",
     ]
 
 

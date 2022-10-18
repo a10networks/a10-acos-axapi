@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_group
 description:
     - GSLB Group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -221,9 +221,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "auto_map_learn", "auto_map_primary", "auto_map_smart", "config_anywhere", "config_merge", "config_save", "data_interface", "dns_discover", "enable", "learn", "mgmt_interface", "name", "primary_ipv6_list", "primary_list", "priority", "resolve_as", "standalone", "suffix", "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["auto_map_learn", "auto_map_primary", "auto_map_smart", "config_anywhere", "config_merge", "config_save", "data_interface", "dns_discover", "enable", "learn", "mgmt_interface", "name", "primary_ipv6_list", "primary_list", "priority", "resolve_as", "standalone", "suffix", "user_tag", "uuid", ]
 
 
 def get_default_argspec():

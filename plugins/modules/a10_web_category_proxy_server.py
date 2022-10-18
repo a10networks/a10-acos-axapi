@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_proxy_server
 description:
     - Commands to connect web-category through proxy server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

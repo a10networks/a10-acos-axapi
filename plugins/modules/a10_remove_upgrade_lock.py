@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_remove_upgrade_lock
 description:
     - removing upgrade lock file mgmt_is_upgrade
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_tcp_syn_per_sec
 description:
     - Tcp SYN's per sec
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

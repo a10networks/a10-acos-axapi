@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_sni_automap_attributes
 description:
     - Server Name Automap global settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

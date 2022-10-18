@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy
 description:
     - Forward Policy commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

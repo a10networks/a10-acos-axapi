@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_data_leak_prevention
 description:
     - Data leak prevention
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

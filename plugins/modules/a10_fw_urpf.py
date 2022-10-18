@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_urpf
 description:
     - Unicast Reverse Path Forwarding (Default= loose)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_mgmt_port
 description:
     - set management port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

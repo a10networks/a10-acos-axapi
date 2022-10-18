@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_transparent_acl_template
 description:
     - ACL setting for transparent sessions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

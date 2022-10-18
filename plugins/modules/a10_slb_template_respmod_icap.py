@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_respmod_icap
 description:
     - RESPMOD ICAP template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -240,8 +240,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "bypass_ip_cfg", "disable_http_server_reset", "fail_close", "failure_action", "include_protocol_in_uri", "log_only_allowed_method", "logging", "min_payload_size", "name", "preview", "server_ssl", "service_group", "service_url", "shared_partition_persist_source_ip_template",
-    "shared_partition_tcp_proxy_template", "source_ip", "tcp_proxy", "template_persist_source_ip_shared", "template_tcp_proxy_shared", "timeout", "user_tag", "uuid", "x_auth_url",
+    "action", "bypass_ip_cfg", "disable_http_server_reset", "fail_close", "failure_action", "include_protocol_in_uri", "log_only_allowed_method", "logging", "min_payload_size", "name", "preview", "server_ssl", "service_group", "service_url", "shared_partition_persist_source_ip_template", "shared_partition_tcp_proxy_template", "source_ip",
+    "tcp_proxy", "template_persist_source_ip_shared", "template_tcp_proxy_shared", "timeout", "user_tag", "uuid", "x_auth_url",
     ]
 
 

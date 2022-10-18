@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_resource_track
 description:
     - Define a resource track policy template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

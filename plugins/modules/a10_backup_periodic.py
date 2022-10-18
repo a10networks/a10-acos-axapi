@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_backup_periodic
 description:
     - Configure backup periodically
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -184,41 +184,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'system': {
-            'type': 'bool',
-            },
-        'log': {
-            'type': 'bool',
-            },
-        'fixed_nat': {
-            'type': 'bool',
-            },
-        'day': {
-            'type': 'int',
-            },
-        'hour': {
-            'type': 'int',
-            },
-        'week': {
-            'type': 'int',
-            },
-        'encrypt': {
-            'type': 'bool',
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'remote_file': {
-            'type': 'str',
-            },
-        'store_name': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'system': {'type': 'bool', }, 'log': {'type': 'bool', }, 'fixed_nat': {'type': 'bool', }, 'day': {'type': 'int', }, 'hour': {'type': 'int', }, 'week': {'type': 'int', }, 'encrypt': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'store_name': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

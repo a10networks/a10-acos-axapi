@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_device_groups
 description:
     - Configure scaleout device groups
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -166,36 +166,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'enable': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'device_group_list': {
-            'type': 'list',
-            'device_group': {
-                'type': 'int',
-                'required': True,
-                },
-            'device_id_list': {
-                'type': 'list',
-                'device_id_start': {
-                    'type': 'int',
-                    },
-                'device_id_end': {
-                    'type': 'int',
-                    }
-                },
-            'uuid': {
-                'type': 'str',
-                },
-            'user_tag': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'device_group_list': {'type': 'list', 'device_group': {'type': 'int', 'required': True, }, 'device_id_list': {'type': 'list', 'device_id_start': {'type': 'int', }, 'device_id_end': {'type': 'int', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv

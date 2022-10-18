@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_ip_anomaly_drop_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -310,8 +310,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bad_ip_flg", "bad_ip_frg_offset", "bad_ip_hdrlen", "bad_ip_payload_len", "bad_ip_ttl", "bad_tcp_urg_offset", "csum", "emp_frg", "emp_mic_frg", "frg", "gre_pptp_err", "ipip_tnl_err", "ipip_tnl_msmtch", "land", "no_ip_payload", "nvgre_err", "opt", "over_ip_payload", "pod", "runt_ip_hdr",
-    "runt_tcp_udp_hdr", "tcp_bad_csum", "tcp_bad_iplen", "tcp_frg_hdr", "tcp_null_frg", "tcp_null_scan", "tcp_opt_err", "tcp_sht_hdr", "tcp_syn_fin", "tcp_syn_frg", "tcp_xmas", "tcp_xmas_scan", "udp_bad_csum", "udp_bad_len", "udp_kerb_frg", "udp_port_lb", "udp_srt_hdr", "uuid", "vxlan_err",
+    "bad_ip_flg", "bad_ip_frg_offset", "bad_ip_hdrlen", "bad_ip_payload_len", "bad_ip_ttl", "bad_tcp_urg_offset", "csum", "emp_frg", "emp_mic_frg", "frg", "gre_pptp_err", "ipip_tnl_err", "ipip_tnl_msmtch", "land", "no_ip_payload", "nvgre_err", "opt", "over_ip_payload", "pod", "runt_ip_hdr", "runt_tcp_udp_hdr", "tcp_bad_csum", "tcp_bad_iplen",
+    "tcp_frg_hdr", "tcp_null_frg", "tcp_null_scan", "tcp_opt_err", "tcp_sht_hdr", "tcp_syn_fin", "tcp_syn_frg", "tcp_xmas", "tcp_xmas_scan", "udp_bad_csum", "udp_bad_len", "udp_kerb_frg", "udp_port_lb", "udp_srt_hdr", "uuid", "vxlan_err",
     ]
 
 

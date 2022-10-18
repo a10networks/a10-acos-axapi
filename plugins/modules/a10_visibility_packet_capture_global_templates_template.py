@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template
 description:
     - Configure global packet capture template for T1 counters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -306,6 +306,10 @@ options:
             fw_logging:
                 description:
                 - "Field fw_logging"
+                type: dict
+            fw_global:
+                description:
+                - "Field fw_global"
                 type: dict
             fw_alg_rtsp:
                 description:
@@ -5880,6 +5884,39 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'session_limit_exceeded': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'fw_global': {
+                'type': 'dict',
+                'dummy': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'trigger_stats_inc': {
+                    'type': 'dict',
+                    'fullcone_creation_failure': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'trigger_stats_rate': {
+                    'type': 'dict',
+                    'threshold_exceeded_by': {
+                        'type': 'int',
+                        },
+                    'duration': {
+                        'type': 'int',
+                        },
+                    'fullcone_creation_failure': {
                         'type': 'bool',
                         },
                     'uuid': {

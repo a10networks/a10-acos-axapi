@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_hrxq_status
 description:
     - Field hrxq_status
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

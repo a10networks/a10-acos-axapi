@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_cosq_show
 description:
     - Field cosq_show
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

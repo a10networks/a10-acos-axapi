@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sessions
 description:
     - Field sessions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -484,8 +484,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw',
-                    'clear-all', 'full-width', 'debug', 'application', 'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp'
+                    'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'debug', 'application',
+                    'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp'
                     ]
                 },
             'src_ipv4_addr': {

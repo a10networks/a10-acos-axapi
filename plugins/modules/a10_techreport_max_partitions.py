@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_techreport_max_partitions
 description:
     - Maximum partitions to show in per periodic techsupport
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows_instance
 description:
     - 'Windows Server, using Kerberos or NTLM for authentication'
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -440,8 +440,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure',
-                    'ntlm_prepare_req_success', 'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
+                    'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success', 'ntlm_prepare_req_error',
+                    'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
                     ]
                 }
             },

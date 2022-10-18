@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_action
 description:
     - action list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -226,9 +226,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "action1", "drop_message", "drop_redirect_url", "drop_response_code", "fake_sg", "fall_back", "fall_back_snat", "forward_snat", "http_status_code", "log", "name", "proxy_chaining", "proxy_chaining_bypass", "real_sg", "sampling_enable", "stats", "support_cert_fetch", "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["action1", "drop_message", "drop_redirect_url", "drop_response_code", "fake_sg", "fall_back", "fall_back_snat", "forward_snat", "http_status_code", "log", "name", "proxy_chaining", "proxy_chaining_bypass", "real_sg", "sampling_enable", "stats", "support_cert_fetch", "user_tag", "uuid", ]
 
 
 def get_default_argspec():

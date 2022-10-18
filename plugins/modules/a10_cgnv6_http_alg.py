@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_http_alg
 description:
     - HTTP-ALG Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -236,8 +236,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'request-processed', 'request-insert-msisdn-performed', 'request-insert-client-ip-performed', 'request-insert-msisdn-unavailable', 'queued-session-too-many', 'radius-query-succeed', 'radius-query-failed', 'radius-requst-sent', 'radius-requst-dropped',
-                    'radius-response-received', 'radius-response-dropped', 'out-of-memory-dropped', 'queue-len-exceed-dropped', 'out-of-order-dropped', 'buff-resent', 'buff-spilt-failed', 'header-insertion-failed', 'header-removal-failed', 'no-queue'
+                    'all', 'request-processed', 'request-insert-msisdn-performed', 'request-insert-client-ip-performed', 'request-insert-msisdn-unavailable', 'queued-session-too-many', 'radius-query-succeed', 'radius-query-failed', 'radius-requst-sent', 'radius-requst-dropped', 'radius-response-received', 'radius-response-dropped',
+                    'out-of-memory-dropped', 'queue-len-exceed-dropped', 'out-of-order-dropped', 'buff-resent', 'buff-spilt-failed', 'header-insertion-failed', 'header-removal-failed', 'no-queue'
                     ]
                 }
             },

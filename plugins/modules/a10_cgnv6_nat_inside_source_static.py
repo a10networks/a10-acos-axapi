@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_inside_source_static
 description:
     - Static Address Translations
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

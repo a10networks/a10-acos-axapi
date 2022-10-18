@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_ca_cert
 description:
     - Field ca_cert
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

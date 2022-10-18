@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_state_next_state_case_action_l1
 description:
     - L1 packet paramters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -192,38 +192,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'eth_list': {
-            'type': 'list',
-            'ethernet_start': {
-                'type': 'str',
-                },
-            'ethernet_end': {
-                'type': 'str',
-                }
-            },
-        'trunk_list': {
-            'type': 'list',
-            'trunk_start': {
-                'type': 'int',
-                },
-            'trunk_end': {
-                'type': 'int',
-                }
-            },
-        'length': {
-            'type': 'bool',
-            },
-        'value': {
-            'type': 'int',
-            },
-        'auto': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'eth_list': {'type': 'list', 'ethernet_start': {'type': 'str', }, 'ethernet_end': {'type': 'str', }}, 'trunk_list': {'type': 'list', 'trunk_start': {'type': 'int', }, 'trunk_end': {'type': 'int', }}, 'length': {'type': 'bool', }, 'value': {'type': 'int', }, 'auto': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(action_direction=dict(type='str', required=True), case_number=dict(type='str', required=True), state_name=dict(type='str', required=True), ))
     return rv

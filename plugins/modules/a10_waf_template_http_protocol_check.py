@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_http_protocol_check
 description:
     - HTTP protocol compliance check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -249,9 +249,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "allowed_headers", "allowed_headers_list", "allowed_methods", "allowed_methods_list", "allowed_versions", "allowed_versions_list", "bad_multipart_request", "body_without_content_type", "disable", "get_with_content", "head_with_content", "host_header_with_ip", "invalid_url_encoding",
-    "malformed_content_length", "malformed_header", "malformed_parameter", "malformed_request", "malformed_request_line", "missing_header_value", "missing_host_header", "multiple_content_length", "non_ssl_cookie_prefix", "post_with_0_content", "post_without_content", "post_without_content_type",
-    "uuid",
+    "allowed_headers", "allowed_headers_list", "allowed_methods", "allowed_methods_list", "allowed_versions", "allowed_versions_list", "bad_multipart_request", "body_without_content_type", "disable", "get_with_content", "head_with_content", "host_header_with_ip", "invalid_url_encoding", "malformed_content_length", "malformed_header",
+    "malformed_parameter", "malformed_request", "malformed_request_line", "missing_header_value", "missing_host_header", "multiple_content_length", "non_ssl_cookie_prefix", "post_with_0_content", "post_without_content", "post_without_content_type", "uuid",
     ]
 
 

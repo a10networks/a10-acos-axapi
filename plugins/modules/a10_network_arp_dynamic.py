@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_arp_dynamic
 description:
     - Dynamic ARP commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,36 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'arp_list': {
-                'type': 'list',
-                'IP_Address': {
-                    'type': 'str',
-                    },
-                'MAC_Address': {
-                    'type': 'str',
-                    },
-                'Type': {
-                    'type': 'str',
-                    'choices': ['Incomplete', 'Dynamic', 'Static']
-                    },
-                'Age': {
-                    'type': 'int',
-                    },
-                'Interface': {
-                    'type': 'str',
-                    },
-                'Vlan': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'arp_list': {'type': 'list', 'IP_Address': {'type': 'str', }, 'MAC_Address': {'type': 'str', }, 'Type': {'type': 'str', 'choices': ['Incomplete', 'Dynamic', 'Static']}, 'Age': {'type': 'int', }, 'Interface': {'type': 'str', }, 'Vlan': {'type': 'int', }}}})
     return rv
 
 

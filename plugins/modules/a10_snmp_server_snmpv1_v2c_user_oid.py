@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_snmpv1_v2c_user_oid
 description:
     - Define a remote entity to which user belongs
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

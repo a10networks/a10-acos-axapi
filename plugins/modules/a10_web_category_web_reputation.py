@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_web_reputation
 description:
     - Used for Web-Reputation Show Commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

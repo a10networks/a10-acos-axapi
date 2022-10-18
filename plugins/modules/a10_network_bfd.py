@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_bfd
 description:
     - Configure BFD (Bidirectional Forwarding Detection)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

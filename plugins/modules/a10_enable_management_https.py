@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_enable_management_https
 description:
     - Field https
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,38 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'port_list': {
-                'type': 'list',
-                'management': {
-                    'type': 'int',
-                    },
-                'ethernet': {
-                    'type': 'int',
-                    },
-                've': {
-                    'type': 'int',
-                    },
-                'tunnel': {
-                    'type': 'int',
-                    },
-                'action': {
-                    'type': 'str',
-                    },
-                'ipv4_acl': {
-                    'type': 'str',
-                    },
-                'ipv6_acl': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'port_list': {'type': 'list', 'management': {'type': 'int', }, 'ethernet': {'type': 'int', }, 've': {'type': 'int', }, 'tunnel': {'type': 'int', }, 'action': {'type': 'str', }, 'ipv4_acl': {'type': 'str', }, 'ipv6_acl': {'type': 'str', }}}})
     return rv
 
 

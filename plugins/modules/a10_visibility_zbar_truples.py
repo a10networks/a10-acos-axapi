@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_zbar_truples
 description:
     - Configure zbar truples
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

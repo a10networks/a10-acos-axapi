@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update
 description:
     - Automatic update configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

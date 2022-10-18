@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_capture_config
 description:
     - Packet Capture-Configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -488,8 +488,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "concurrent_captures", "concurrent_captures_age", "concurrent_conn_per_capture", "concurrent_conn_tag", "create_pcap_files_now", "disable", "disable_auto_merge", "enable_continuous_global_capture", "file_count", "file_size", "keep_pcap_files_after_merge", "name", "number_of_packets_per_capture",
-    "number_of_packets_per_conn", "number_of_packets_total", "packet_length", "stats", "user_tag", "uuid",
+    "concurrent_captures", "concurrent_captures_age", "concurrent_conn_per_capture", "concurrent_conn_tag", "create_pcap_files_now", "disable", "disable_auto_merge", "enable_continuous_global_capture", "file_count", "file_size", "keep_pcap_files_after_merge", "name", "number_of_packets_per_capture", "number_of_packets_per_conn",
+    "number_of_packets_total", "packet_length", "stats", "user_tag", "uuid",
     ]
 
 

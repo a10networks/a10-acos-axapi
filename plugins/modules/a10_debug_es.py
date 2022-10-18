@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_es
 description:
     - Debug external service
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ike_stats_by_gw
 description:
     - IKE Stats by gateway
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

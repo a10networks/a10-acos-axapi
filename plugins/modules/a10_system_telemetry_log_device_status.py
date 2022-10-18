@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_telemetry_log_device_status
 description:
     - Device status
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -168,35 +168,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'memory_usage': {
-                'type': 'str',
-                },
-            'control_cpu_usage': {
-                'type': 'int',
-                },
-            'cpu_usage_overall': {
-                'type': 'int',
-                },
-            'ratio_session_count': {
-                'type': 'str',
-                },
-            'ratio_buffer_count': {
-                'type': 'str',
-                },
-            'total_bytes_in': {
-                'type': 'int',
-                },
-            'total_bytes_out': {
-                'type': 'int',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'memory_usage': {'type': 'str', }, 'control_cpu_usage': {'type': 'int', }, 'cpu_usage_overall': {'type': 'int', }, 'ratio_session_count': {'type': 'str', }, 'ratio_buffer_count': {'type': 'str', }, 'total_bytes_in': {'type': 'int', }, 'total_bytes_out': {'type': 'int', }}})
     return rv
 
 

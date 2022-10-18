@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_unicast_election
 description:
     - VCS Device
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -157,38 +157,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'port': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'members': {
-            'type': 'dict',
-            'ip_address_cfg': {
-                'type': 'list',
-                'ip_address': {
-                    'type': 'str',
-                    },
-                'use_mgmt_port': {
-                    'type': 'bool',
-                    }
-                },
-            'ipv6_address_cfg': {
-                'type': 'list',
-                'ipv6_address': {
-                    'type': 'str',
-                    },
-                'use_mgmt_port': {
-                    'type': 'bool',
-                    }
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'port': {'type': 'int', }, 'uuid': {'type': 'str', }, 'members': {'type': 'dict', 'ip_address_cfg': {'type': 'list', 'ip_address': {'type': 'str', }, 'use_mgmt_port': {'type': 'bool', }}, 'ipv6_address_cfg': {'type': 'list', 'ipv6_address': {'type': 'str', }, 'use_mgmt_port': {'type': 'bool', }}, 'uuid': {'type': 'str', }}})
     return rv
 
 

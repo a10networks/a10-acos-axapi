@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_hw_compress
 description:
     - Configure HW compression
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update_proxy_server
 description:
     - Connect through proxy server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -175,36 +175,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'proxy_host': {
-            'type': 'str',
-            },
-        'https_port': {
-            'type': 'int',
-            },
-        'auth_type': {
-            'type': 'str',
-            'choices': ['ntlm', 'basic']
-            },
-        'domain': {
-            'type': 'str',
-            },
-        'username': {
-            'type': 'str',
-            },
-        'password': {
-            'type': 'bool',
-            },
-        'secret_string': {
-            'type': 'str',
-            },
-        'encrypted': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'proxy_host': {'type': 'str', }, 'https_port': {'type': 'int', }, 'auth_type': {'type': 'str', 'choices': ['ntlm', 'basic']}, 'domain': {'type': 'str', }, 'username': {'type': 'str', }, 'password': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

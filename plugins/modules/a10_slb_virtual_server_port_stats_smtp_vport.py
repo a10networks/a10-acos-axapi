@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_smtp_vport
 description:
     - Statistics for the object port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

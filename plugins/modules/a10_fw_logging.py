@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_logging
 description:
     - Bind a logging template to firewall
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -313,10 +313,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'log_message_sent', 'log_type_reset', 'log_type_deny', 'log_type_session_closed', 'log_type_session_opened', 'rule_not_logged', 'log-dropped', 'tcp-session-created', 'tcp-session-deleted', 'udp-session-created', 'udp-session-deleted', 'icmp-session-deleted',
-                    'icmp-session-created', 'icmpv6-session-deleted', 'icmpv6-session-created', 'other-session-deleted', 'other-session-created', 'http-request-logged', 'http-logging-invalid-format', 'dcmsg_permit', 'alg_override_permit', 'template_error', 'ipv4-frag-applied', 'ipv4-frag-failed',
-                    'ipv6-frag-applied', 'ipv6-frag-failed', 'out-of-buffers', 'add-msg-failed', 'tcp-logging-conn-established', 'tcp-logging-conn-create-failed', 'tcp-logging-conn-dropped', 'log-message-too-long', 'http-out-of-order-dropped', 'http-alloc-failed', 'sctp-session-created',
-                    'sctp-session-deleted', 'log_type_sctp_inner_proto_filter', 'tcp-logging-port-allocated', 'tcp-logging-port-freed', 'tcp-logging-port-allocation-failed', 'iddos-blackhole-entry-create', 'iddos-blackhole-entry-delete', 'session-limit-exceeded'
+                    'all', 'log_message_sent', 'log_type_reset', 'log_type_deny', 'log_type_session_closed', 'log_type_session_opened', 'rule_not_logged', 'log-dropped', 'tcp-session-created', 'tcp-session-deleted', 'udp-session-created', 'udp-session-deleted', 'icmp-session-deleted', 'icmp-session-created', 'icmpv6-session-deleted',
+                    'icmpv6-session-created', 'other-session-deleted', 'other-session-created', 'http-request-logged', 'http-logging-invalid-format', 'dcmsg_permit', 'alg_override_permit', 'template_error', 'ipv4-frag-applied', 'ipv4-frag-failed', 'ipv6-frag-applied', 'ipv6-frag-failed', 'out-of-buffers', 'add-msg-failed',
+                    'tcp-logging-conn-established', 'tcp-logging-conn-create-failed', 'tcp-logging-conn-dropped', 'log-message-too-long', 'http-out-of-order-dropped', 'http-alloc-failed', 'sctp-session-created', 'sctp-session-deleted', 'log_type_sctp_inner_proto_filter', 'tcp-logging-port-allocated', 'tcp-logging-port-freed',
+                    'tcp-logging-port-allocation-failed', 'iddos-blackhole-entry-create', 'iddos-blackhole-entry-delete', 'session-limit-exceeded'
                     ]
                 }
             },
@@ -331,10 +331,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'log_type_gtp_invalid_teid', 'log_gtp_type_reserved_ie_present', 'log_type_gtp_mandatory_ie_missing', 'log_type_gtp_mandatory_ie_inside_grouped_ie_missing', 'log_type_gtp_msisdn_filtering', 'log_type_gtp_out_of_order_ie', 'log_type_gtp_out_of_state_ie',
-                        'log_type_enduser_ip_spoofed', 'log_type_crosslayer_correlation', 'log_type_message_not_supported', 'log_type_out_of_state', 'log_type_max_msg_length', 'log_type_gtp_message_filtering', 'log_type_gtp_apn_filtering', 'log_type_gtp_rat_type_filtering',
-                        'log_type_country_code_mismatch', 'log_type_gtp_in_gtp_filtering', 'log_type_gtp_node_restart', 'log_type_gtp_seq_num_mismatch', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic',
-                        'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic'
+                        'all', 'log_type_gtp_invalid_teid', 'log_gtp_type_reserved_ie_present', 'log_type_gtp_mandatory_ie_missing', 'log_type_gtp_mandatory_ie_inside_grouped_ie_missing', 'log_type_gtp_msisdn_filtering', 'log_type_gtp_out_of_order_ie', 'log_type_gtp_out_of_state_ie', 'log_type_enduser_ip_spoofed', 'log_type_crosslayer_correlation',
+                        'log_type_message_not_supported', 'log_type_out_of_state', 'log_type_max_msg_length', 'log_type_gtp_message_filtering', 'log_type_gtp_apn_filtering', 'log_type_gtp_rat_type_filtering', 'log_type_country_code_mismatch', 'log_type_gtp_in_gtp_filtering', 'log_type_gtp_node_restart', 'log_type_gtp_seq_num_mismatch',
+                        'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic'
                         ]
                     }
                 }

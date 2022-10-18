@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture
 description:
     - Configure automated packet capture
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -6206,6 +6206,39 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'session_limit_exceeded': {
+                                'type': 'bool',
+                                },
+                            'uuid': {
+                                'type': 'str',
+                                }
+                            }
+                        },
+                    'fw_global': {
+                        'type': 'dict',
+                        'dummy': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            },
+                        'trigger_stats_inc': {
+                            'type': 'dict',
+                            'fullcone_creation_failure': {
+                                'type': 'bool',
+                                },
+                            'uuid': {
+                                'type': 'str',
+                                }
+                            },
+                        'trigger_stats_rate': {
+                            'type': 'dict',
+                            'threshold_exceeded_by': {
+                                'type': 'int',
+                                },
+                            'duration': {
+                                'type': 'int',
+                                },
+                            'fullcone_creation_failure': {
                                 'type': 'bool',
                                 },
                             'uuid': {

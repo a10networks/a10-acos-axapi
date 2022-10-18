@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_connection_load
 description:
     - Select Service-IP with the lowest connection-load
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -170,29 +170,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'connection_load_enable': {
-            'type': 'bool',
-            },
-        'connection_load_fail_break': {
-            'type': 'bool',
-            },
-        'connection_load_samples': {
-            'type': 'int',
-            },
-        'connection_load_interval': {
-            'type': 'int',
-            },
-        'limit': {
-            'type': 'bool',
-            },
-        'connection_load_limit': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'connection_load_enable': {'type': 'bool', }, 'connection_load_fail_break': {'type': 'bool', }, 'connection_load_samples': {'type': 'int', }, 'connection_load_interval': {'type': 'int', }, 'limit': {'type': 'bool', }, 'connection_load_limit': {'type': 'int', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(policy_name=dict(type='str', required=True), ))
     return rv

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_aam_auth_server_ocsp
 description:
     - Configure triggers for aam.authentication.server.ocsp object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

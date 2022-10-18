@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_radius_server_host_ipv6
 description:
     - Specify the hostname of RADIUS server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -158,39 +158,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ipv6_addr': {
-            'type': 'str',
-            'required': True,
-            },
-        'secret': {
-            'type': 'dict',
-            'secret_value': {
-                'type': 'str',
-                },
-            'encrypted': {
-                'type': 'str',
-                },
-            'port_cfg': {
-                'type': 'dict',
-                'auth_port': {
-                    'type': 'int',
-                    },
-                'acct_port': {
-                    'type': 'int',
-                    },
-                'retransmit': {
-                    'type': 'int',
-                    },
-                'timeout': {
-                    'type': 'int',
-                    }
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'ipv6_addr': {'type': 'str', 'required': True, }, 'secret': {'type': 'dict', 'secret_value': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'port_cfg': {'type': 'dict', 'auth_port': {'type': 'int', }, 'acct_port': {'type': 'int', }, 'retransmit': {'type': 'int', }, 'timeout': {'type': 'int', }}}, 'uuid': {'type': 'str', }})
     return rv
 
 

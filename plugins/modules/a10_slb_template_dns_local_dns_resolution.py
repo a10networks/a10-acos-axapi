@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns_local_dns_resolution
 description:
     - local DNS resolver configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_logging_tcp_svr_status
 description:
     - Field tcp_svr_status
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

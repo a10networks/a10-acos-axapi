@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_oauth_client
 description:
     - Authentication 2.0 Oauth client
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

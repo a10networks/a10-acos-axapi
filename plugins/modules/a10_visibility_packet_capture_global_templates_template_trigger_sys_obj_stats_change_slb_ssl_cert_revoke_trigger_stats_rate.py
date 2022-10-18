@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_ssl_cert_revoke_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -236,8 +236,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "crl_cache_status_revoked", "crl_connection_error", "crl_other_error", "crl_response_status_revoked", "crl_response_status_unknown", "crl_uri_https", "crl_uri_not_found", "crl_uri_unsupported", "duration", "ocsp_cache_miss", "ocsp_cache_status_revoked", "ocsp_chain_status_revoked",
-    "ocsp_chain_status_unknown", "ocsp_connection_error", "ocsp_other_error", "ocsp_response_no_nonce", "ocsp_response_nonce_error", "ocsp_response_status_revoked", "ocsp_response_status_unknown", "ocsp_uri_https", "ocsp_uri_not_found", "ocsp_uri_unsupported", "threshold_exceeded_by", "uuid",
+    "crl_cache_status_revoked", "crl_connection_error", "crl_other_error", "crl_response_status_revoked", "crl_response_status_unknown", "crl_uri_https", "crl_uri_not_found", "crl_uri_unsupported", "duration", "ocsp_cache_miss", "ocsp_cache_status_revoked", "ocsp_chain_status_revoked", "ocsp_chain_status_unknown", "ocsp_connection_error",
+    "ocsp_other_error", "ocsp_response_no_nonce", "ocsp_response_nonce_error", "ocsp_response_status_revoked", "ocsp_response_status_unknown", "ocsp_uri_https", "ocsp_uri_not_found", "ocsp_uri_unsupported", "threshold_exceeded_by", "uuid",
     ]
 
 

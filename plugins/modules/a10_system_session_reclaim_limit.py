@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_session_reclaim_limit
 description:
     - Set limits for smp session reclaim
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

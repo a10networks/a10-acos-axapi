@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_player_id_list
 description:
     - Player id records config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

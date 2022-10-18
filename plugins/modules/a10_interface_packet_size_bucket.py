@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_packet_size_bucket
 description:
     - display packet sized buckets from Hardware
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

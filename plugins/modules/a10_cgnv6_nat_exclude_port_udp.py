@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_exclude_port_udp
 description:
     - Set behavior for UDP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_topn_gtp_apn_prefix_topn_tmpl_metrics
 description:
     - Configure topn metrics for fw.gtp.apn-prefix
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -538,16 +538,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "downlink_bytes", "downlink_pkts", "drop_flt_apn_filtering", "drop_flt_gtp_in_gtp", "drop_flt_message_filtering", "drop_flt_msisdn_filtering", "drop_flt_rat_type_filtering", "drop_rl_gtp_u_downlink_byte", "drop_rl_gtp_u_downlink_packet", "drop_rl_gtp_u_max_concurrent_tunnels",
-    "drop_rl_gtp_u_total_byte", "drop_rl_gtp_u_total_packet", "drop_rl_gtp_u_tunnel_create", "drop_rl_gtp_u_uplink_byte", "drop_rl_gtp_u_uplink_packet", "drop_rl_gtp_v0_c_agg", "drop_rl_gtp_v1_c_agg", "drop_rl_gtp_v1_c_create_pdp_request", "drop_rl_gtp_v1_c_update_pdp_request",
-    "drop_rl_gtp_v2_c_agg", "drop_rl_gtp_v2_c_create_session_request", "drop_rl_gtp_v2_c_modify_bearer_request", "drop_vld_country_code_mismatch", "drop_vld_cross_layer_correlation", "drop_vld_gtp_bearer_count_exceed", "drop_vld_gtp_invalid_apn_len_drop", "drop_vld_gtp_invalid_imsi_len_drop",
-    "drop_vld_gtp_u_spoofed_source_address", "drop_vld_gtp_v2_wrong_lbi_create_bearer", "drop_vld_gtpv0_seqnum_buffer_full", "drop_vld_gtpv1_seqnum_buffer_full", "drop_vld_gtpv2_seqnum_buffer_full", "drop_vld_invalid_flow_label_v0", "drop_vld_invalid_pkt_len_piggyback", "drop_vld_invalid_teid",
-    "drop_vld_mandatory_information_element", "drop_vld_message_length", "drop_vld_out_of_order_ie", "drop_vld_out_of_state", "drop_vld_out_of_state_ie", "drop_vld_protocol_flag_unset", "drop_vld_reserved_field_set", "drop_vld_reserved_information_element", "drop_vld_sanity_failed_piggyback",
-    "drop_vld_sequence_num_correlation", "drop_vld_tunnel_id_flag", "drop_vld_unsupported_message_type", "drop_vld_version_not_supported", "gtp_c_handover_in_progress_with_conn", "gtp_path_management_message", "gtp_u_tunnel_created", "gtp_u_tunnel_deleted", "gtp_v0_c_create_pdp_resp_unsuccess",
-    "gtp_v0_c_half_open_tunnel_closed", "gtp_v0_c_tunnel_closed", "gtp_v0_c_tunnel_created", "gtp_v0_c_tunnel_deleted", "gtp_v0_c_tunnel_deleted_restart", "gtp_v0_c_tunnel_half_closed", "gtp_v0_c_tunnel_half_open", "gtp_v0_c_update_pdp_resp_unsuccess", "gtp_v1_c_create_pdp_resp_unsuccess",
-    "gtp_v1_c_half_open_tunnel_closed", "gtp_v1_c_tunnel_closed", "gtp_v1_c_tunnel_created", "gtp_v1_c_tunnel_deleted", "gtp_v1_c_tunnel_deleted_restart", "gtp_v1_c_tunnel_half_closed", "gtp_v1_c_tunnel_half_open", "gtp_v1_c_update_pdp_resp_unsuccess", "gtp_v2_c_create_sess_resp_unsuccess",
-    "gtp_v2_c_half_open_tunnel_closed", "gtp_v2_c_mod_bearer_resp_unsuccess", "gtp_v2_c_piggyback_message", "gtp_v2_c_tunnel_closed", "gtp_v2_c_tunnel_created", "gtp_v2_c_tunnel_deleted", "gtp_v2_c_tunnel_deleted_restart", "gtp_v2_c_tunnel_half_closed", "gtp_v2_c_tunnel_half_open", "uplink_bytes",
-    "uplink_pkts", "uuid",
+    "downlink_bytes", "downlink_pkts", "drop_flt_apn_filtering", "drop_flt_gtp_in_gtp", "drop_flt_message_filtering", "drop_flt_msisdn_filtering", "drop_flt_rat_type_filtering", "drop_rl_gtp_u_downlink_byte", "drop_rl_gtp_u_downlink_packet", "drop_rl_gtp_u_max_concurrent_tunnels", "drop_rl_gtp_u_total_byte", "drop_rl_gtp_u_total_packet",
+    "drop_rl_gtp_u_tunnel_create", "drop_rl_gtp_u_uplink_byte", "drop_rl_gtp_u_uplink_packet", "drop_rl_gtp_v0_c_agg", "drop_rl_gtp_v1_c_agg", "drop_rl_gtp_v1_c_create_pdp_request", "drop_rl_gtp_v1_c_update_pdp_request", "drop_rl_gtp_v2_c_agg", "drop_rl_gtp_v2_c_create_session_request", "drop_rl_gtp_v2_c_modify_bearer_request",
+    "drop_vld_country_code_mismatch", "drop_vld_cross_layer_correlation", "drop_vld_gtp_bearer_count_exceed", "drop_vld_gtp_invalid_apn_len_drop", "drop_vld_gtp_invalid_imsi_len_drop", "drop_vld_gtp_u_spoofed_source_address", "drop_vld_gtp_v2_wrong_lbi_create_bearer", "drop_vld_gtpv0_seqnum_buffer_full", "drop_vld_gtpv1_seqnum_buffer_full",
+    "drop_vld_gtpv2_seqnum_buffer_full", "drop_vld_invalid_flow_label_v0", "drop_vld_invalid_pkt_len_piggyback", "drop_vld_invalid_teid", "drop_vld_mandatory_information_element", "drop_vld_message_length", "drop_vld_out_of_order_ie", "drop_vld_out_of_state", "drop_vld_out_of_state_ie", "drop_vld_protocol_flag_unset", "drop_vld_reserved_field_set",
+    "drop_vld_reserved_information_element", "drop_vld_sanity_failed_piggyback", "drop_vld_sequence_num_correlation", "drop_vld_tunnel_id_flag", "drop_vld_unsupported_message_type", "drop_vld_version_not_supported", "gtp_c_handover_in_progress_with_conn", "gtp_path_management_message", "gtp_u_tunnel_created", "gtp_u_tunnel_deleted",
+    "gtp_v0_c_create_pdp_resp_unsuccess", "gtp_v0_c_half_open_tunnel_closed", "gtp_v0_c_tunnel_closed", "gtp_v0_c_tunnel_created", "gtp_v0_c_tunnel_deleted", "gtp_v0_c_tunnel_deleted_restart", "gtp_v0_c_tunnel_half_closed", "gtp_v0_c_tunnel_half_open", "gtp_v0_c_update_pdp_resp_unsuccess", "gtp_v1_c_create_pdp_resp_unsuccess",
+    "gtp_v1_c_half_open_tunnel_closed", "gtp_v1_c_tunnel_closed", "gtp_v1_c_tunnel_created", "gtp_v1_c_tunnel_deleted", "gtp_v1_c_tunnel_deleted_restart", "gtp_v1_c_tunnel_half_closed", "gtp_v1_c_tunnel_half_open", "gtp_v1_c_update_pdp_resp_unsuccess", "gtp_v2_c_create_sess_resp_unsuccess", "gtp_v2_c_half_open_tunnel_closed",
+    "gtp_v2_c_mod_bearer_resp_unsuccess", "gtp_v2_c_piggyback_message", "gtp_v2_c_tunnel_closed", "gtp_v2_c_tunnel_created", "gtp_v2_c_tunnel_deleted", "gtp_v2_c_tunnel_deleted_restart", "gtp_v2_c_tunnel_half_closed", "gtp_v2_c_tunnel_half_open", "uplink_bytes", "uplink_pkts", "uuid",
     ]
 
 

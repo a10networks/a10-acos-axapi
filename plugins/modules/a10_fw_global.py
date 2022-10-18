@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_global
 description:
     - Configure firewall parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -91,6 +91,16 @@ options:
         description:
         - "STUN timeout (default= 2 minutes)"
         type: int
+        required: False
+    inbound_refresh_full_cone:
+        description:
+        - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
+    inbound_refresh:
+        description:
+        - "'enable'= enable; 'disable'= disable;"
+        type: str
         required: False
     respond_to_user_mac:
         description:
@@ -230,12 +240,19 @@ options:
           cone Created; 'udp_fullcone_freed'= UDP Full-cone Freed;
           'fullcone_creation_failure'= Full-Cone Creation Failure;
           'data_session_created'= Data Session Created; 'data_session_created_local'=
-          Data Session Created Local; 'data_session_freed'= Data Session Freed;
-          'data_session_freed_local'= Data Session Freed Local; 'fullcone_in_del_q'=
-          Full-cone session found in delete queue; 'fullcone_retry_lookup'= Full-cone
-          session retry look-up; 'fullcone_not_found'= Full-cone session not found;
-          'fullcone_overflow_eim'= Full-cone Session EIM Overflow;
-          'fullcone_overflow_eif'= Full-cone Session EIF Overflow;
+          Data Session Created Local; 'dyn_blist_sess_sp'= Dynamic Blacklist Session
+          (Slowpath); 'data_session_freed'= Data Session Freed;
+          'data_session_freed_local'= Data Session Freed Local; 'dyn_blist_sess_created'=
+          Dynamic Blacklist Session Created; 'dyn_blist_sess_freed'= Dynamic Blacklist
+          Freed; 'dyn_blist_pkt_drop'= Dynamic Blacklist - Packet Drop;
+          'dyn_blist_pkt_rate_low'= Dynamic Blacklist - Pkt Rate Low;
+          'dyn_blist_pkt_rate_high'= Dynamic Blacklist - Pkt Rate High;
+          'dyn_blist_version_mismatch'= Dynamic Blacklist - Version Mismatch;
+          'dyn_blist_no_active_policy'= Dynamic Blacklist - No Active Policy;
+          'fullcone_in_del_q'= Full-cone session found in delete queue;
+          'fullcone_retry_lookup'= Full-cone session retry look-up; 'fullcone_not_found'=
+          Full-cone session not found; 'fullcone_overflow_eim'= Full-cone Session EIM
+          Overflow; 'fullcone_overflow_eif'= Full-cone Session EIF Overflow;
           'udp_fullcone_created_shadow'= Total UDP Full-cone sessions created;
           'tcp_fullcone_created_shadow'= Total TCP Full-cone sessions created;
           'udp_fullcone_freed_shadow'= Total UDP Full-cone sessions freed;
@@ -360,6 +377,18 @@ options:
             data_session_freed_local:
                 description:
                 - "Data Session Freed Local"
+                type: str
+            dyn_blist_sess_created:
+                description:
+                - "Dynamic Blacklist Session Created"
+                type: str
+            dyn_blist_sess_freed:
+                description:
+                - "Dynamic Blacklist Freed"
+                type: str
+            dyn_blist_pkt_drop:
+                description:
+                - "Dynamic Blacklist - Packet Drop"
                 type: str
             active_fullcone_session:
                 description:
@@ -628,7 +657,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "alg_processing", "allow_non_syn_session_create", "disable_app_list", "disable_application_metrics", "disable_ip_fw_sessions", "disable_undetermined_rule_logs", "extended_matching", "listen_on_port_timeout", "natip_ddos_protection", "permit_default_action", "respond_to_user_mac",
+    "alg_processing", "allow_non_syn_session_create", "disable_app_list", "disable_application_metrics", "disable_ip_fw_sessions", "disable_undetermined_rule_logs", "extended_matching", "inbound_refresh", "inbound_refresh_full_cone", "listen_on_port_timeout", "natip_ddos_protection", "permit_default_action", "respond_to_user_mac",
     "sampling_enable", "stats", "uuid",
     ]
 
@@ -676,6 +705,14 @@ def get_argspec():
         'listen_on_port_timeout': {
             'type': 'int',
             },
+        'inbound_refresh_full_cone': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'inbound_refresh': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
         'respond_to_user_mac': {
             'type': 'bool',
             },
@@ -688,13 +725,12 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency',
-                    'database', 'disposable-email', 'ebook-reader', 'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming',
-                    'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites',
-                    'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions',
-                    'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals',
-                    'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research',
-                    'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements',
+                    'aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency', 'database', 'disposable-email', 'ebook-reader',
+                    'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming', 'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada',
+                    'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration',
+                    'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government',
+                    'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers',
+                    'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements',
                     'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service'
                     ]
                 }
@@ -714,18 +750,17 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_creation_failure', 'data_session_created', 'data_session_created_local', 'data_session_freed', 'data_session_freed_local', 'fullcone_in_del_q', 'fullcone_retry_lookup',
-                    'fullcone_not_found', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'udp_fullcone_created_shadow', 'tcp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'tcp_fullcone_freed_shadow', 'fullcone_created', 'fullcone_freed', 'fullcone_ext_too_many',
-                    'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_mem_freed', 'fullcone_ext_added', 'ha_fullcone_failure', 'data_session_created_shadow', 'data_session_created_shadow_local', 'data_session_freed_shadow',
-                    'data_session_freed_shadow_local', 'active_fullcone_session', 'limit-entry-failure', 'limit-entry-allocated', 'limit-entry-mem-freed', 'limit-entry-created', 'limit-entry-found', 'limit-entry-not-in-bucket', 'limit-entry-marked-deleted', 'undetermined-rule-counter',
-                    'non_syn_pkt_fwd_allowed', 'invalid-lid-drop', 'src-session-limit-exceeded', 'uplink-pps-limit-exceeded', 'downlink-pps-limit-exceeded', 'total-pps-limit-exceeded', 'uplink-throughput-limit-exceeded', 'downlink-throughput-limit-exceeded', 'total-throughput-limit-exceeded',
-                    'cps-limit-exceeded', 'limit-exceeded', 'limit-entry-per-cpu-mem-allocated', 'limit-entry-per-cpu-mem-allocation-failed', 'limit-entry-per-cpu-mem-freed', 'alg_default_port_disable', 'no_fwd_route', 'no_rev_route', 'no_fwd_l2_dst', 'no_rev_l2_dst', 'l2_dst_in_out_same',
-                    'l2_vlan_changed', 'urpf_pkt_drop', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp',
-                    'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp',
-                    'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others',
-                    'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
-                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3',
-                    'rev_egress_pkt_size_range4'
+                    'all', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_creation_failure', 'data_session_created', 'data_session_created_local', 'dyn_blist_sess_sp', 'data_session_freed', 'data_session_freed_local', 'dyn_blist_sess_created', 'dyn_blist_sess_freed', 'dyn_blist_pkt_drop',
+                    'dyn_blist_pkt_rate_low', 'dyn_blist_pkt_rate_high', 'dyn_blist_version_mismatch', 'dyn_blist_no_active_policy', 'fullcone_in_del_q', 'fullcone_retry_lookup', 'fullcone_not_found', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'udp_fullcone_created_shadow', 'tcp_fullcone_created_shadow', 'udp_fullcone_freed_shadow',
+                    'tcp_fullcone_freed_shadow', 'fullcone_created', 'fullcone_freed', 'fullcone_ext_too_many', 'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_mem_freed', 'fullcone_ext_added', 'ha_fullcone_failure', 'data_session_created_shadow',
+                    'data_session_created_shadow_local', 'data_session_freed_shadow', 'data_session_freed_shadow_local', 'active_fullcone_session', 'limit-entry-failure', 'limit-entry-allocated', 'limit-entry-mem-freed', 'limit-entry-created', 'limit-entry-found', 'limit-entry-not-in-bucket', 'limit-entry-marked-deleted',
+                    'undetermined-rule-counter', 'non_syn_pkt_fwd_allowed', 'invalid-lid-drop', 'src-session-limit-exceeded', 'uplink-pps-limit-exceeded', 'downlink-pps-limit-exceeded', 'total-pps-limit-exceeded', 'uplink-throughput-limit-exceeded', 'downlink-throughput-limit-exceeded', 'total-throughput-limit-exceeded', 'cps-limit-exceeded',
+                    'limit-exceeded', 'limit-entry-per-cpu-mem-allocated', 'limit-entry-per-cpu-mem-allocation-failed', 'limit-entry-per-cpu-mem-freed', 'alg_default_port_disable', 'no_fwd_route', 'no_rev_route', 'no_fwd_l2_dst', 'no_rev_l2_dst', 'l2_dst_in_out_same', 'l2_vlan_changed', 'urpf_pkt_drop', 'fwd_ingress_packets_tcp',
+                    'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp',
+                    'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others',
+                    'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4',
+                    'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2',
+                    'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
                     ]
                 }
             },
@@ -756,6 +791,15 @@ def get_argspec():
                 'type': 'str',
                 },
             'data_session_freed_local': {
+                'type': 'str',
+                },
+            'dyn_blist_sess_created': {
+                'type': 'str',
+                },
+            'dyn_blist_sess_freed': {
+                'type': 'str',
+                },
+            'dyn_blist_pkt_drop': {
                 'type': 'str',
                 },
             'active_fullcone_session': {

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_tcp_idle_timeout
 description:
     - Configure TCP established-session idle timeout for IPv4 and IPv6
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

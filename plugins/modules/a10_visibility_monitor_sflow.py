@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitor_sflow
 description:
     - Configure sFlow parameters for flow based monitoring
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

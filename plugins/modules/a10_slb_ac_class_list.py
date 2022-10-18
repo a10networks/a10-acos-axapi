@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ac_class_list
 description:
     - Aho-Corasic add remove config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -163,32 +163,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'ac_list': {
-            'type': 'list',
-            'action': {
-                'type': 'str',
-                'choices': ['add', 'delete']
-                },
-            'ac_match_type': {
-                'type': 'str',
-                'choices': ['contains', 'ends-with', 'equals', 'starts-with']
-                },
-            'ac_key_string': {
-                'type': 'str',
-                },
-            'ac_key_value': {
-                'type': 'str',
-                }
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'ac_list': {'type': 'list', 'action': {'type': 'str', 'choices': ['add', 'delete']}, 'ac_match_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'equals', 'starts-with']}, 'ac_key_string': {'type': 'str', }, 'ac_key_value': {'type': 'str', }}, 'user_tag': {'type': 'str', }})
     return rv
 
 

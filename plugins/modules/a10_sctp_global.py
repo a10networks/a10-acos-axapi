@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sctp_global
 description:
     - SCTP Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -452,13 +452,12 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'sctp-static-nat-session-created', 'sctp-static-nat-session-deleted', 'sctp-fw-session-created', 'sctp-fw-session-deleted', 'pkt-err-drop', 'bad-csum', 'bad-payload-drop', 'bad-alignment-drop', 'oos-pkt-drop', 'max-multi-home-drop', 'multi-home-remove-ip-skip',
-                    'multi-home-addr-not-found-drop', 'static-nat-cfg-not-found', 'cfg-err-drop', 'vrrp-standby-drop', 'invalid-frag-chunk-drop', 'disallowed-chunk-filtered', 'disallowed-pkt-drop', 'rate-limit-drop', 'sby-session-created', 'sby-session-create-fail', 'sby-session-updated',
-                    'sby-session-update-fail', 'sby-static-nat-cfg-not-found', 'sctp-out-of-system-memory', 'conn_ext_size_max', 'bad-csum-shadow', 'bad-payload-drop-shadow', 'bad-alignment-drop-shadow', 'sctp-chunk-type-init', 'sctp-chunk-type-init-ack', 'sctp-chunk-type-cookie-echo',
-                    'sctp-chunk-type-cookie-ack', 'sctp-chunk-type-sack', 'sctp-chunk-type-asconf', 'sctp-chunk-type-asconf-ack', 'sctp-chunk-type-data', 'sctp-chunk-type-abort', 'sctp-chunk-type-shutdown', 'sctp-chunk-type-shutdown-ack', 'sctp-chunk-type-shutdown-complete',
-                    'sctp-chunk-type-error-op', 'sctp-chunk-type-heartbeat', 'sctp-chunk-type-heartbeat-ack', 'sctp-chunk-type-other', 'sctp-heartbeat-no-tuple', 'sctp-data-no-tuple', 'sctp-data-no-ext-match', 'sctp-chunk-type-init-drop', 'sctp-chunk-type-init-ack-drop',
-                    'sctp-chunk-type-shutdown-complete-drop', 'sctp-chunk-type-abort-data-drop', 'sctp-chunk-heart-beat-clubbed', 'sctp-retx-init-ack-drop', 'sctp-route-err-heartbeat-drop', 'sctp-reroute-failover', 'sctp-route-err-drop', 'sctp-no-ext-match', 'sctp-retx-init-ack',
-                    'sctp-retx-init-drop', 'sctp-retx-init', 'sctp-asconf-process-drop', 'sctp-init-vtag-zero-drop', 'pkt-len-err-drop', 'pkt-chunk-len-err-drop', 'pkt-asconf-param-len-err-drop'
+                    'all', 'sctp-static-nat-session-created', 'sctp-static-nat-session-deleted', 'sctp-fw-session-created', 'sctp-fw-session-deleted', 'pkt-err-drop', 'bad-csum', 'bad-payload-drop', 'bad-alignment-drop', 'oos-pkt-drop', 'max-multi-home-drop', 'multi-home-remove-ip-skip', 'multi-home-addr-not-found-drop', 'static-nat-cfg-not-found',
+                    'cfg-err-drop', 'vrrp-standby-drop', 'invalid-frag-chunk-drop', 'disallowed-chunk-filtered', 'disallowed-pkt-drop', 'rate-limit-drop', 'sby-session-created', 'sby-session-create-fail', 'sby-session-updated', 'sby-session-update-fail', 'sby-static-nat-cfg-not-found', 'sctp-out-of-system-memory', 'conn_ext_size_max',
+                    'bad-csum-shadow', 'bad-payload-drop-shadow', 'bad-alignment-drop-shadow', 'sctp-chunk-type-init', 'sctp-chunk-type-init-ack', 'sctp-chunk-type-cookie-echo', 'sctp-chunk-type-cookie-ack', 'sctp-chunk-type-sack', 'sctp-chunk-type-asconf', 'sctp-chunk-type-asconf-ack', 'sctp-chunk-type-data', 'sctp-chunk-type-abort',
+                    'sctp-chunk-type-shutdown', 'sctp-chunk-type-shutdown-ack', 'sctp-chunk-type-shutdown-complete', 'sctp-chunk-type-error-op', 'sctp-chunk-type-heartbeat', 'sctp-chunk-type-heartbeat-ack', 'sctp-chunk-type-other', 'sctp-heartbeat-no-tuple', 'sctp-data-no-tuple', 'sctp-data-no-ext-match', 'sctp-chunk-type-init-drop',
+                    'sctp-chunk-type-init-ack-drop', 'sctp-chunk-type-shutdown-complete-drop', 'sctp-chunk-type-abort-data-drop', 'sctp-chunk-heart-beat-clubbed', 'sctp-retx-init-ack-drop', 'sctp-route-err-heartbeat-drop', 'sctp-reroute-failover', 'sctp-route-err-drop', 'sctp-no-ext-match', 'sctp-retx-init-ack', 'sctp-retx-init-drop',
+                    'sctp-retx-init', 'sctp-asconf-process-drop', 'sctp-init-vtag-zero-drop', 'pkt-len-err-drop', 'pkt-chunk-len-err-drop', 'pkt-asconf-param-len-err-drop'
                     ]
                 }
             },

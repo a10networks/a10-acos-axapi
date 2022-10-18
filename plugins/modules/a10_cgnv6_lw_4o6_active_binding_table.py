@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_active_binding_table
 description:
     - Active LW-4over6 binding table
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

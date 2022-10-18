@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_gtp_network_element
 description:
     - Dynamic GTP Network Element Counters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

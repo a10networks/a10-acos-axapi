@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system
 description:
     - Configure System Parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -89,6 +89,12 @@ options:
         description:
         - "Apply limits to the whole system"
         type: int
+        required: False
+    non_shared:
+        description:
+        - "Apply global limit ID to the whole system at per data cpu level (default
+          disabled)"
+        type: bool
         required: False
     module_ctrl_cpu:
         description:
@@ -2082,14 +2088,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "app_performance", "apps_global", "asic_debug_dump", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cm_update_file_name_ref", "control_cpu", "core", "cosq_show", "cosq_stats", "counter_lib_accounting",
-    "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "deep_hrxq", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn",
-    "dynamic_service_dns_socket_pool", "environment", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_forward",
-    "high_memory_l4_session", "hrxq_status", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "link_capability", "link_monitor", "lro",
-    "management_interface_mode", "memory", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "nsm_a10lb", "password_policy", "pbslb", "per_vlan_limit", "platformtype", "port_info",
-    "port_list", "ports", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec", "shared_poll_mode",
-    "shell_privileges", "shm_logging", "shutdown", "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "table_integrity", "tcp", "tcp_stats",
-    "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
+    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "app_performance", "apps_global", "asic_debug_dump", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cm_update_file_name_ref", "control_cpu", "core", "cosq_show", "cosq_stats", "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map",
+    "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "deep_hrxq", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn", "dynamic_service_dns_socket_pool", "environment", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable",
+    "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_forward", "high_memory_l4_session", "hrxq_status", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi",
+    "ipmi_service", "ipsec", "ipv6_prefix_length", "link_capability", "link_monitor", "lro", "management_interface_mode", "memory", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "non_shared", "nsm_a10lb", "password_policy",
+    "pbslb", "per_vlan_limit", "platformtype", "port_info", "port_list", "ports", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec", "shared_poll_mode",
+    "shell_privileges", "shm_logging", "shutdown", "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "table_integrity", "tcp", "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template",
+    "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
     ]
 
 
@@ -2131,6 +2136,9 @@ def get_argspec():
             },
         'glid': {
             'type': 'int',
+            },
+        'non_shared': {
+            'type': 'bool',
             },
         'module_ctrl_cpu': {
             'type': 'str',
@@ -3148,48 +3156,43 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'arp-tbl-sync-start-ts-m-1st', 'nd6-tbl-sync-start-ts-m-1st', 'ipv4-fib-tbl-sync-start-ts-m-1st', 'ipv6-fib-tbl-sync-start-ts-m-1st', 'mac-tbl-sync-start-ts-m-1st', 'arp-tbl-sync-start-ts-b-1st', 'nd6-tbl-sync-start-ts-b-1st', 'ipv4-fib-tbl-sync-start-ts-b-1st',
-                        'ipv6-fib-tbl-sync-start-ts-b-1st', 'mac-tbl-sync-start-ts-b-1st', 'arp-tbl-sync-entries-sent-m-1st', 'nd6-tbl-sync-entries-sent-m-1st', 'ipv4-fib-tbl-sync-entries-sent-m-1st', 'ipv6-fib-tbl-sync-entries-sent-m-1st', 'mac-tbl-sync-entries-sent-m-1st',
-                        'arp-tbl-sync-entries-rcvd-b-1st', 'nd6-tbl-sync-entries-rcvd-b-1st', 'ipv4-fib-tbl-sync-entries-rcvd-b-1st', 'ipv6-fib-tbl-sync-entries-rcvd-b-1st', 'mac-tbl-sync-entries-rcvd-b-1st', 'arp-tbl-sync-entries-added-b-1st', 'nd6-tbl-sync-entries-added-b-1st',
-                        'ipv4-fib-tbl-sync-entries-added-b-1st', 'ipv6-fib-tbl-sync-entries-added-b-1st', 'mac-tbl-sync-entries-added-b-1st', 'arp-tbl-sync-entries-removed-b-1st', 'nd6-tbl-sync-entries-removed-b-1st', 'ipv4-fib-tbl-sync-entries-removed-b-1st',
-                        'ipv6-fib-tbl-sync-entries-removed-b-1st', 'mac-tbl-sync-entries-removed-b-1st', 'arp-tbl-sync-end-ts-m-1st', 'nd6-tbl-sync-end-ts-m-1st', 'ipv4-fib-tbl-sync-end-ts-m-1st', 'ipv6-fib-tbl-sync-end-ts-m-1st', 'mac-tbl-sync-end-ts-m-1st', 'arp-tbl-sync-end-ts-b-1st',
-                        'nd6-tbl-sync-end-ts-b-1st', 'ipv4-fib-tbl-sync-end-ts-b-1st', 'ipv6-fib-tbl-sync-end-ts-b-1st', 'mac-tbl-sync-end-ts-b-1st', 'arp-tbl-sync-start-ts-m-2nd', 'nd6-tbl-sync-start-ts-m-2nd', 'ipv4-fib-tbl-sync-start-ts-m-2nd', 'ipv6-fib-tbl-sync-start-ts-m-2nd',
-                        'mac-tbl-sync-start-ts-m-2nd', 'arp-tbl-sync-start-ts-b-2nd', 'nd6-tbl-sync-start-ts-b-2nd', 'ipv4-fib-tbl-sync-start-ts-b-2nd', 'ipv6-fib-tbl-sync-start-ts-b-2nd', 'mac-tbl-sync-start-ts-b-2nd', 'arp-tbl-sync-entries-sent-m-2nd', 'nd6-tbl-sync-entries-sent-m-2nd',
-                        'ipv4-fib-tbl-sync-entries-sent-m-2nd', 'ipv6-fib-tbl-sync-entries-sent-m-2nd', 'mac-tbl-sync-entries-sent-m-2nd', 'arp-tbl-sync-entries-rcvd-b-2nd', 'nd6-tbl-sync-entries-rcvd-b-2nd', 'ipv4-fib-tbl-sync-entries-rcvd-b-2nd', 'ipv6-fib-tbl-sync-entries-rcvd-b-2nd',
-                        'mac-tbl-sync-entries-rcvd-b-2nd', 'arp-tbl-sync-entries-added-b-2nd', 'nd6-tbl-sync-entries-added-b-2nd', 'ipv4-fib-tbl-sync-entries-added-b-2nd', 'ipv6-fib-tbl-sync-entries-added-b-2nd', 'mac-tbl-sync-entries-added-b-2nd', 'arp-tbl-sync-entries-removed-b-2nd',
-                        'nd6-tbl-sync-entries-removed-b-2nd', 'ipv4-fib-tbl-sync-entries-removed-b-2nd', 'ipv6-fib-tbl-sync-entries-removed-b-2nd', 'mac-tbl-sync-entries-removed-b-2nd', 'arp-tbl-sync-end-ts-m-2nd', 'nd6-tbl-sync-end-ts-m-2nd', 'ipv4-fib-tbl-sync-end-ts-m-2nd',
-                        'ipv6-fib-tbl-sync-end-ts-m-2nd', 'mac-tbl-sync-end-ts-m-2nd', 'arp-tbl-sync-end-ts-b-2nd', 'nd6-tbl-sync-end-ts-b-2nd', 'ipv4-fib-tbl-sync-end-ts-b-2nd', 'ipv6-fib-tbl-sync-end-ts-b-2nd', 'mac-tbl-sync-end-ts-b-2nd', 'arp-tbl-sync-start-ts-m-3rd',
-                        'nd6-tbl-sync-start-ts-m-3rd'
+                        'all', 'arp-tbl-sync-start-ts-m-1st', 'nd6-tbl-sync-start-ts-m-1st', 'ipv4-fib-tbl-sync-start-ts-m-1st', 'ipv6-fib-tbl-sync-start-ts-m-1st', 'mac-tbl-sync-start-ts-m-1st', 'arp-tbl-sync-start-ts-b-1st', 'nd6-tbl-sync-start-ts-b-1st', 'ipv4-fib-tbl-sync-start-ts-b-1st', 'ipv6-fib-tbl-sync-start-ts-b-1st',
+                        'mac-tbl-sync-start-ts-b-1st', 'arp-tbl-sync-entries-sent-m-1st', 'nd6-tbl-sync-entries-sent-m-1st', 'ipv4-fib-tbl-sync-entries-sent-m-1st', 'ipv6-fib-tbl-sync-entries-sent-m-1st', 'mac-tbl-sync-entries-sent-m-1st', 'arp-tbl-sync-entries-rcvd-b-1st', 'nd6-tbl-sync-entries-rcvd-b-1st', 'ipv4-fib-tbl-sync-entries-rcvd-b-1st',
+                        'ipv6-fib-tbl-sync-entries-rcvd-b-1st', 'mac-tbl-sync-entries-rcvd-b-1st', 'arp-tbl-sync-entries-added-b-1st', 'nd6-tbl-sync-entries-added-b-1st', 'ipv4-fib-tbl-sync-entries-added-b-1st', 'ipv6-fib-tbl-sync-entries-added-b-1st', 'mac-tbl-sync-entries-added-b-1st', 'arp-tbl-sync-entries-removed-b-1st',
+                        'nd6-tbl-sync-entries-removed-b-1st', 'ipv4-fib-tbl-sync-entries-removed-b-1st', 'ipv6-fib-tbl-sync-entries-removed-b-1st', 'mac-tbl-sync-entries-removed-b-1st', 'arp-tbl-sync-end-ts-m-1st', 'nd6-tbl-sync-end-ts-m-1st', 'ipv4-fib-tbl-sync-end-ts-m-1st', 'ipv6-fib-tbl-sync-end-ts-m-1st', 'mac-tbl-sync-end-ts-m-1st',
+                        'arp-tbl-sync-end-ts-b-1st', 'nd6-tbl-sync-end-ts-b-1st', 'ipv4-fib-tbl-sync-end-ts-b-1st', 'ipv6-fib-tbl-sync-end-ts-b-1st', 'mac-tbl-sync-end-ts-b-1st', 'arp-tbl-sync-start-ts-m-2nd', 'nd6-tbl-sync-start-ts-m-2nd', 'ipv4-fib-tbl-sync-start-ts-m-2nd', 'ipv6-fib-tbl-sync-start-ts-m-2nd', 'mac-tbl-sync-start-ts-m-2nd',
+                        'arp-tbl-sync-start-ts-b-2nd', 'nd6-tbl-sync-start-ts-b-2nd', 'ipv4-fib-tbl-sync-start-ts-b-2nd', 'ipv6-fib-tbl-sync-start-ts-b-2nd', 'mac-tbl-sync-start-ts-b-2nd', 'arp-tbl-sync-entries-sent-m-2nd', 'nd6-tbl-sync-entries-sent-m-2nd', 'ipv4-fib-tbl-sync-entries-sent-m-2nd', 'ipv6-fib-tbl-sync-entries-sent-m-2nd',
+                        'mac-tbl-sync-entries-sent-m-2nd', 'arp-tbl-sync-entries-rcvd-b-2nd', 'nd6-tbl-sync-entries-rcvd-b-2nd', 'ipv4-fib-tbl-sync-entries-rcvd-b-2nd', 'ipv6-fib-tbl-sync-entries-rcvd-b-2nd', 'mac-tbl-sync-entries-rcvd-b-2nd', 'arp-tbl-sync-entries-added-b-2nd', 'nd6-tbl-sync-entries-added-b-2nd',
+                        'ipv4-fib-tbl-sync-entries-added-b-2nd', 'ipv6-fib-tbl-sync-entries-added-b-2nd', 'mac-tbl-sync-entries-added-b-2nd', 'arp-tbl-sync-entries-removed-b-2nd', 'nd6-tbl-sync-entries-removed-b-2nd', 'ipv4-fib-tbl-sync-entries-removed-b-2nd', 'ipv6-fib-tbl-sync-entries-removed-b-2nd', 'mac-tbl-sync-entries-removed-b-2nd',
+                        'arp-tbl-sync-end-ts-m-2nd', 'nd6-tbl-sync-end-ts-m-2nd', 'ipv4-fib-tbl-sync-end-ts-m-2nd', 'ipv6-fib-tbl-sync-end-ts-m-2nd', 'mac-tbl-sync-end-ts-m-2nd', 'arp-tbl-sync-end-ts-b-2nd', 'nd6-tbl-sync-end-ts-b-2nd', 'ipv4-fib-tbl-sync-end-ts-b-2nd', 'ipv6-fib-tbl-sync-end-ts-b-2nd', 'mac-tbl-sync-end-ts-b-2nd',
+                        'arp-tbl-sync-start-ts-m-3rd', 'nd6-tbl-sync-start-ts-m-3rd'
                         ]
                     },
                 'counters2': {
                     'type':
                     'str',
                     'choices': [
-                        'ipv4-fib-tbl-sync-start-ts-m-3rd', 'ipv6-fib-tbl-sync-start-ts-m-3rd', 'mac-tbl-sync-start-ts-m-3rd', 'arp-tbl-sync-start-ts-b-3rd', 'nd6-tbl-sync-start-ts-b-3rd', 'ipv4-fib-tbl-sync-start-ts-b-3rd', 'ipv6-fib-tbl-sync-start-ts-b-3rd', 'mac-tbl-sync-start-ts-b-3rd',
-                        'arp-tbl-sync-entries-sent-m-3rd', 'nd6-tbl-sync-entries-sent-m-3rd', 'ipv4-fib-tbl-sync-entries-sent-m-3rd', 'ipv6-fib-tbl-sync-entries-sent-m-3rd', 'mac-tbl-sync-entries-sent-m-3rd', 'arp-tbl-sync-entries-rcvd-b-3rd', 'nd6-tbl-sync-entries-rcvd-b-3rd',
-                        'ipv4-fib-tbl-sync-entries-rcvd-b-3rd', 'ipv6-fib-tbl-sync-entries-rcvd-b-3rd', 'mac-tbl-sync-entries-rcvd-b-3rd', 'arp-tbl-sync-entries-added-b-3rd', 'nd6-tbl-sync-entries-added-b-3rd', 'ipv4-fib-tbl-sync-entries-added-b-3rd', 'ipv6-fib-tbl-sync-entries-added-b-3rd',
-                        'mac-tbl-sync-entries-added-b-3rd', 'arp-tbl-sync-entries-removed-b-3rd', 'nd6-tbl-sync-entries-removed-b-3rd', 'ipv4-fib-tbl-sync-entries-removed-b-3rd', 'ipv6-fib-tbl-sync-entries-removed-b-3rd', 'mac-tbl-sync-entries-removed-b-3rd', 'arp-tbl-sync-end-ts-m-3rd',
-                        'nd6-tbl-sync-end-ts-m-3rd', 'ipv4-fib-tbl-sync-end-ts-m-3rd', 'ipv6-fib-tbl-sync-end-ts-m-3rd', 'mac-tbl-sync-end-ts-m-3rd', 'arp-tbl-sync-end-ts-b-3rd', 'nd6-tbl-sync-end-ts-b-3rd', 'ipv4-fib-tbl-sync-end-ts-b-3rd', 'ipv6-fib-tbl-sync-end-ts-b-3rd',
-                        'mac-tbl-sync-end-ts-b-3rd', 'arp-tbl-sync-start-ts-m-4th', 'nd6-tbl-sync-start-ts-m-4th', 'ipv4-fib-tbl-sync-start-ts-m-4th', 'ipv6-fib-tbl-sync-start-ts-m-4th', 'mac-tbl-sync-start-ts-m-4th', 'arp-tbl-sync-start-ts-b-4th', 'nd6-tbl-sync-start-ts-b-4th',
-                        'ipv4-fib-tbl-sync-start-ts-b-4th', 'ipv6-fib-tbl-sync-start-ts-b-4th', 'mac-tbl-sync-start-ts-b-4th', 'arp-tbl-sync-entries-sent-m-4th', 'nd6-tbl-sync-entries-sent-m-4th', 'ipv4-fib-tbl-sync-entries-sent-m-4th', 'ipv6-fib-tbl-sync-entries-sent-m-4th',
-                        'mac-tbl-sync-entries-sent-m-4th', 'arp-tbl-sync-entries-rcvd-b-4th', 'nd6-tbl-sync-entries-rcvd-b-4th', 'ipv4-fib-tbl-sync-entries-rcvd-b-4th', 'ipv6-fib-tbl-sync-entries-rcvd-b-4th', 'mac-tbl-sync-entries-rcvd-b-4th', 'arp-tbl-sync-entries-added-b-4th',
-                        'nd6-tbl-sync-entries-added-b-4th', 'ipv4-fib-tbl-sync-entries-added-b-4th', 'ipv6-fib-tbl-sync-entries-added-b-4th', 'mac-tbl-sync-entries-added-b-4th', 'arp-tbl-sync-entries-removed-b-4th', 'nd6-tbl-sync-entries-removed-b-4th', 'ipv4-fib-tbl-sync-entries-removed-b-4th',
-                        'ipv6-fib-tbl-sync-entries-removed-b-4th', 'mac-tbl-sync-entries-removed-b-4th', 'arp-tbl-sync-end-ts-m-4th', 'nd6-tbl-sync-end-ts-m-4th', 'ipv4-fib-tbl-sync-end-ts-m-4th', 'ipv6-fib-tbl-sync-end-ts-m-4th', 'mac-tbl-sync-end-ts-m-4th', 'arp-tbl-sync-end-ts-b-4th',
-                        'nd6-tbl-sync-end-ts-b-4th', 'ipv4-fib-tbl-sync-end-ts-b-4th', 'ipv6-fib-tbl-sync-end-ts-b-4th', 'mac-tbl-sync-end-ts-b-4th', 'arp-tbl-sync-start-ts-m-5th'
+                        'ipv4-fib-tbl-sync-start-ts-m-3rd', 'ipv6-fib-tbl-sync-start-ts-m-3rd', 'mac-tbl-sync-start-ts-m-3rd', 'arp-tbl-sync-start-ts-b-3rd', 'nd6-tbl-sync-start-ts-b-3rd', 'ipv4-fib-tbl-sync-start-ts-b-3rd', 'ipv6-fib-tbl-sync-start-ts-b-3rd', 'mac-tbl-sync-start-ts-b-3rd', 'arp-tbl-sync-entries-sent-m-3rd',
+                        'nd6-tbl-sync-entries-sent-m-3rd', 'ipv4-fib-tbl-sync-entries-sent-m-3rd', 'ipv6-fib-tbl-sync-entries-sent-m-3rd', 'mac-tbl-sync-entries-sent-m-3rd', 'arp-tbl-sync-entries-rcvd-b-3rd', 'nd6-tbl-sync-entries-rcvd-b-3rd', 'ipv4-fib-tbl-sync-entries-rcvd-b-3rd', 'ipv6-fib-tbl-sync-entries-rcvd-b-3rd',
+                        'mac-tbl-sync-entries-rcvd-b-3rd', 'arp-tbl-sync-entries-added-b-3rd', 'nd6-tbl-sync-entries-added-b-3rd', 'ipv4-fib-tbl-sync-entries-added-b-3rd', 'ipv6-fib-tbl-sync-entries-added-b-3rd', 'mac-tbl-sync-entries-added-b-3rd', 'arp-tbl-sync-entries-removed-b-3rd', 'nd6-tbl-sync-entries-removed-b-3rd',
+                        'ipv4-fib-tbl-sync-entries-removed-b-3rd', 'ipv6-fib-tbl-sync-entries-removed-b-3rd', 'mac-tbl-sync-entries-removed-b-3rd', 'arp-tbl-sync-end-ts-m-3rd', 'nd6-tbl-sync-end-ts-m-3rd', 'ipv4-fib-tbl-sync-end-ts-m-3rd', 'ipv6-fib-tbl-sync-end-ts-m-3rd', 'mac-tbl-sync-end-ts-m-3rd', 'arp-tbl-sync-end-ts-b-3rd',
+                        'nd6-tbl-sync-end-ts-b-3rd', 'ipv4-fib-tbl-sync-end-ts-b-3rd', 'ipv6-fib-tbl-sync-end-ts-b-3rd', 'mac-tbl-sync-end-ts-b-3rd', 'arp-tbl-sync-start-ts-m-4th', 'nd6-tbl-sync-start-ts-m-4th', 'ipv4-fib-tbl-sync-start-ts-m-4th', 'ipv6-fib-tbl-sync-start-ts-m-4th', 'mac-tbl-sync-start-ts-m-4th', 'arp-tbl-sync-start-ts-b-4th',
+                        'nd6-tbl-sync-start-ts-b-4th', 'ipv4-fib-tbl-sync-start-ts-b-4th', 'ipv6-fib-tbl-sync-start-ts-b-4th', 'mac-tbl-sync-start-ts-b-4th', 'arp-tbl-sync-entries-sent-m-4th', 'nd6-tbl-sync-entries-sent-m-4th', 'ipv4-fib-tbl-sync-entries-sent-m-4th', 'ipv6-fib-tbl-sync-entries-sent-m-4th', 'mac-tbl-sync-entries-sent-m-4th',
+                        'arp-tbl-sync-entries-rcvd-b-4th', 'nd6-tbl-sync-entries-rcvd-b-4th', 'ipv4-fib-tbl-sync-entries-rcvd-b-4th', 'ipv6-fib-tbl-sync-entries-rcvd-b-4th', 'mac-tbl-sync-entries-rcvd-b-4th', 'arp-tbl-sync-entries-added-b-4th', 'nd6-tbl-sync-entries-added-b-4th', 'ipv4-fib-tbl-sync-entries-added-b-4th',
+                        'ipv6-fib-tbl-sync-entries-added-b-4th', 'mac-tbl-sync-entries-added-b-4th', 'arp-tbl-sync-entries-removed-b-4th', 'nd6-tbl-sync-entries-removed-b-4th', 'ipv4-fib-tbl-sync-entries-removed-b-4th', 'ipv6-fib-tbl-sync-entries-removed-b-4th', 'mac-tbl-sync-entries-removed-b-4th', 'arp-tbl-sync-end-ts-m-4th',
+                        'nd6-tbl-sync-end-ts-m-4th', 'ipv4-fib-tbl-sync-end-ts-m-4th', 'ipv6-fib-tbl-sync-end-ts-m-4th', 'mac-tbl-sync-end-ts-m-4th', 'arp-tbl-sync-end-ts-b-4th', 'nd6-tbl-sync-end-ts-b-4th', 'ipv4-fib-tbl-sync-end-ts-b-4th', 'ipv6-fib-tbl-sync-end-ts-b-4th', 'mac-tbl-sync-end-ts-b-4th', 'arp-tbl-sync-start-ts-m-5th'
                         ]
                     },
                 'counters3': {
                     'type':
                     'str',
                     'choices': [
-                        'nd6-tbl-sync-start-ts-m-5th', 'ipv4-fib-tbl-sync-start-ts-m-5th', 'ipv6-fib-tbl-sync-start-ts-m-5th', 'mac-tbl-sync-start-ts-m-5th', 'arp-tbl-sync-start-ts-b-5th', 'nd6-tbl-sync-start-ts-b-5th', 'ipv4-fib-tbl-sync-start-ts-b-5th', 'ipv6-fib-tbl-sync-start-ts-b-5th',
-                        'mac-tbl-sync-start-ts-b-5th', 'arp-tbl-sync-entries-sent-m-5th', 'nd6-tbl-sync-entries-sent-m-5th', 'ipv4-fib-tbl-sync-entries-sent-m-5th', 'ipv6-fib-tbl-sync-entries-sent-m-5th', 'mac-tbl-sync-entries-sent-m-5th', 'arp-tbl-sync-entries-rcvd-b-5th',
-                        'nd6-tbl-sync-entries-rcvd-b-5th', 'ipv4-fib-tbl-sync-entries-rcvd-b-5th', 'ipv6-fib-tbl-sync-entries-rcvd-b-5th', 'mac-tbl-sync-entries-rcvd-b-5th', 'arp-tbl-sync-entries-added-b-5th', 'nd6-tbl-sync-entries-added-b-5th', 'ipv4-fib-tbl-sync-entries-added-b-5th',
-                        'ipv6-fib-tbl-sync-entries-added-b-5th', 'mac-tbl-sync-entries-added-b-5th', 'arp-tbl-sync-entries-removed-b-5th', 'nd6-tbl-sync-entries-removed-b-5th', 'ipv4-fib-tbl-sync-entries-removed-b-5th', 'ipv6-fib-tbl-sync-entries-removed-b-5th', 'mac-tbl-sync-entries-removed-b-5th',
-                        'arp-tbl-sync-end-ts-m-5th', 'nd6-tbl-sync-end-ts-m-5th', 'ipv4-fib-tbl-sync-end-ts-m-5th', 'ipv6-fib-tbl-sync-end-ts-m-5th', 'mac-tbl-sync-end-ts-m-5th', 'arp-tbl-sync-end-ts-b-5th', 'nd6-tbl-sync-end-ts-b-5th', 'ipv4-fib-tbl-sync-end-ts-b-5th',
-                        'ipv6-fib-tbl-sync-end-ts-b-5th', 'mac-tbl-sync-end-ts-b-5th', 'arp-tbl-sync-m', 'nd6-tbl-sync-m', 'ipv4-fib-tbl-sync-m', 'ipv6-fib-tbl-sync-m', 'mac-tbl-sync-m', 'arp-tbl-sync-b', 'nd6-tbl-sync-b', 'ipv4-fib-tbl-sync-b', 'ipv6-fib-tbl-sync-b', 'mac-tbl-sync-b',
-                        'arp-tbl-cksum-m', 'nd6-tbl-cksum-m', 'ipv4-fib-tbl-cksum-m', 'ipv6-fib-tbl-cksum-m', 'mac-tbl-cksum-m', 'arp-tbl-cksum-b', 'nd6-tbl-cksum-b', 'ipv4-fib-tbl-cksum-b', 'ipv6-fib-tbl-cksum-b', 'mac-tbl-cksum-b', 'arp-tbl-cksum-mismatch-b', 'nd6-tbl-cksum-mismatch-b',
+                        'nd6-tbl-sync-start-ts-m-5th', 'ipv4-fib-tbl-sync-start-ts-m-5th', 'ipv6-fib-tbl-sync-start-ts-m-5th', 'mac-tbl-sync-start-ts-m-5th', 'arp-tbl-sync-start-ts-b-5th', 'nd6-tbl-sync-start-ts-b-5th', 'ipv4-fib-tbl-sync-start-ts-b-5th', 'ipv6-fib-tbl-sync-start-ts-b-5th', 'mac-tbl-sync-start-ts-b-5th',
+                        'arp-tbl-sync-entries-sent-m-5th', 'nd6-tbl-sync-entries-sent-m-5th', 'ipv4-fib-tbl-sync-entries-sent-m-5th', 'ipv6-fib-tbl-sync-entries-sent-m-5th', 'mac-tbl-sync-entries-sent-m-5th', 'arp-tbl-sync-entries-rcvd-b-5th', 'nd6-tbl-sync-entries-rcvd-b-5th', 'ipv4-fib-tbl-sync-entries-rcvd-b-5th',
+                        'ipv6-fib-tbl-sync-entries-rcvd-b-5th', 'mac-tbl-sync-entries-rcvd-b-5th', 'arp-tbl-sync-entries-added-b-5th', 'nd6-tbl-sync-entries-added-b-5th', 'ipv4-fib-tbl-sync-entries-added-b-5th', 'ipv6-fib-tbl-sync-entries-added-b-5th', 'mac-tbl-sync-entries-added-b-5th', 'arp-tbl-sync-entries-removed-b-5th',
+                        'nd6-tbl-sync-entries-removed-b-5th', 'ipv4-fib-tbl-sync-entries-removed-b-5th', 'ipv6-fib-tbl-sync-entries-removed-b-5th', 'mac-tbl-sync-entries-removed-b-5th', 'arp-tbl-sync-end-ts-m-5th', 'nd6-tbl-sync-end-ts-m-5th', 'ipv4-fib-tbl-sync-end-ts-m-5th', 'ipv6-fib-tbl-sync-end-ts-m-5th', 'mac-tbl-sync-end-ts-m-5th',
+                        'arp-tbl-sync-end-ts-b-5th', 'nd6-tbl-sync-end-ts-b-5th', 'ipv4-fib-tbl-sync-end-ts-b-5th', 'ipv6-fib-tbl-sync-end-ts-b-5th', 'mac-tbl-sync-end-ts-b-5th', 'arp-tbl-sync-m', 'nd6-tbl-sync-m', 'ipv4-fib-tbl-sync-m', 'ipv6-fib-tbl-sync-m', 'mac-tbl-sync-m', 'arp-tbl-sync-b', 'nd6-tbl-sync-b', 'ipv4-fib-tbl-sync-b',
+                        'ipv6-fib-tbl-sync-b', 'mac-tbl-sync-b', 'arp-tbl-cksum-m', 'nd6-tbl-cksum-m', 'ipv4-fib-tbl-cksum-m', 'ipv6-fib-tbl-cksum-m', 'mac-tbl-cksum-m', 'arp-tbl-cksum-b', 'nd6-tbl-cksum-b', 'ipv4-fib-tbl-cksum-b', 'ipv6-fib-tbl-cksum-b', 'mac-tbl-cksum-b', 'arp-tbl-cksum-mismatch-b', 'nd6-tbl-cksum-mismatch-b',
                         'ipv4-fib-tbl-cksum-mismatch-b', 'ipv6-fib-tbl-cksum-mismatch-b', 'mac-tbl-cksum-mismatch-b', 'arp-tbl-cksum-cancel-m', 'nd6-tbl-cksum-cancel-m', 'ipv4-fib-tbl-cksum-cancel-m', 'ipv6-fib-tbl-cksum-cancel-m', 'mac-tbl-cksum-cancel-m'
                         ]
                     }
@@ -3413,9 +3416,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count',
-                        'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index', 'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop',
-                        'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop', 'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count'
+                        'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count', 'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index',
+                        'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop', 'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop',
+                        'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count'
                         ]
                     }
                 },
@@ -3430,8 +3433,8 @@ def get_argspec():
                         'type':
                         'str',
                         'choices': [
-                            'all', 'entry-create', 'entry-create-failure', 'entry-create-fail-server-down', 'entry-create-fail-max-entry', 'entry-free', 'entry-free-opp-entry', 'entry-free-no-hw-prog', 'entry-free-no-conn', 'entry-free-no-sw-entry', 'entry-counter', 'entry-age-out',
-                            'entry-age-out-idle', 'entry-age-out-tcp-fin', 'entry-age-out-tcp-rst', 'entry-age-out-invalid-dst', 'entry-force-hw-invalidate', 'entry-invalidate-server-down', 'tcam-create', 'tcam-free', 'tcam-counter'
+                            'all', 'entry-create', 'entry-create-failure', 'entry-create-fail-server-down', 'entry-create-fail-max-entry', 'entry-free', 'entry-free-opp-entry', 'entry-free-no-hw-prog', 'entry-free-no-conn', 'entry-free-no-sw-entry', 'entry-counter', 'entry-age-out', 'entry-age-out-idle', 'entry-age-out-tcp-fin',
+                            'entry-age-out-tcp-rst', 'entry-age-out-invalid-dst', 'entry-force-hw-invalidate', 'entry-invalidate-server-down', 'tcam-create', 'tcam-free', 'tcam-counter'
                             ]
                         }
                     }
@@ -3783,10 +3786,9 @@ def get_argspec():
                         'type':
                         'str',
                         'choices': [
-                            'all', 'msisdn-received', 'imei-received', 'imsi-received', 'custom-received', 'radius-request-received', 'radius-request-dropped', 'request-bad-secret-dropped', 'request-no-key-vap-dropped', 'request-malformed-dropped', 'request-ignored', 'radius-table-full',
-                            'secret-not-configured-dropped', 'ha-standby-dropped', 'ipv6-prefix-length-mismatch', 'invalid-key', 'smp-created', 'smp-deleted', 'smp-mem-allocated', 'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml', 'mem-allocated', 'mem-alloc-failed', 'mem-freed',
-                            'ha-sync-create-sent', 'ha-sync-delete-sent', 'ha-sync-create-recv', 'ha-sync-delete-recv', 'acct-on-filters-full', 'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop', 'radius-packets-redirected',
-                            'radius-packets-redirect-fail-dropped', 'radius-packets-process-local', 'radius-packets-dropped-not-lo', 'radius-inter-card-dup-redir'
+                            'all', 'msisdn-received', 'imei-received', 'imsi-received', 'custom-received', 'radius-request-received', 'radius-request-dropped', 'request-bad-secret-dropped', 'request-no-key-vap-dropped', 'request-malformed-dropped', 'request-ignored', 'radius-table-full', 'secret-not-configured-dropped', 'ha-standby-dropped',
+                            'ipv6-prefix-length-mismatch', 'invalid-key', 'smp-created', 'smp-deleted', 'smp-mem-allocated', 'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml', 'mem-allocated', 'mem-alloc-failed', 'mem-freed', 'ha-sync-create-sent', 'ha-sync-delete-sent', 'ha-sync-create-recv', 'ha-sync-delete-recv', 'acct-on-filters-full',
+                            'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop', 'radius-packets-redirected', 'radius-packets-redirect-fail-dropped', 'radius-packets-process-local', 'radius-packets-dropped-not-lo', 'radius-inter-card-dup-redir'
                             ]
                         }
                     }
@@ -4058,9 +4060,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'mrx-drop', 'hrx-drop', 'siz-drop', 'fcs-drop', 'land-drop', 'empty-frag-drop', 'mic-frag-drop', 'ipv4-opt-drop', 'ipv4-frag', 'bad-ip-hdr-len', 'bad-ip-flags-drop', 'bad-ip-ttl-drop', 'no-ip-payload-drop', 'oversize-ip-payload', 'bad-ip-payload-len',
-                        'bad-ip-frag-offset', 'bad-ip-chksum-drop', 'icmp-pod-drop', 'tcp-bad-urg-offet', 'tcp-short-hdr', 'tcp-bad-ip-len', 'tcp-null-flags', 'tcp-null-scan', 'tcp-fin-sin', 'tcp-xmas-flags', 'tcp-xmas-scan', 'tcp-syn-frag', 'tcp-frag-hdr', 'tcp-bad-chksum', 'udp-short-hdr',
-                        'udp-bad-ip-len', 'udp-kb-frags', 'udp-port-lb', 'udp-bad-chksum', 'runt-ip-hdr', 'runt-tcpudp-hdr', 'tun-mismatch', 'qdr-drop'
+                        'all', 'mrx-drop', 'hrx-drop', 'siz-drop', 'fcs-drop', 'land-drop', 'empty-frag-drop', 'mic-frag-drop', 'ipv4-opt-drop', 'ipv4-frag', 'bad-ip-hdr-len', 'bad-ip-flags-drop', 'bad-ip-ttl-drop', 'no-ip-payload-drop', 'oversize-ip-payload', 'bad-ip-payload-len', 'bad-ip-frag-offset', 'bad-ip-chksum-drop', 'icmp-pod-drop',
+                        'tcp-bad-urg-offet', 'tcp-short-hdr', 'tcp-bad-ip-len', 'tcp-null-flags', 'tcp-null-scan', 'tcp-fin-sin', 'tcp-xmas-flags', 'tcp-xmas-scan', 'tcp-syn-frag', 'tcp-frag-hdr', 'tcp-bad-chksum', 'udp-short-hdr', 'udp-bad-ip-len', 'udp-kb-frags', 'udp-port-lb', 'udp-bad-chksum', 'runt-ip-hdr', 'runt-tcpudp-hdr', 'tun-mismatch',
+                        'qdr-drop'
                         ]
                     }
                 }
@@ -4076,8 +4078,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'pkt-drop', 'pkt-lnk-down-drop', 'err-pkt-drop', 'rx-err', 'tx-err', 'tx-drop', 'rx-len-err', 'rx-over-err', 'rx-crc-err', 'rx-frame-err', 'rx-no-buff-err', 'rx-miss-err', 'tx-abort-err', 'tx-carrier-err', 'tx-fifo-err', 'tx-hbeat-err', 'tx-windows-err',
-                        'rx-long-len-err', 'rx-short-len-err', 'rx-align-err', 'rx-csum-offload-err', 'io-rx-que-drop', 'io-tx-que-drop', 'io-ring-drop', 'w-tx-que-drop', 'w-link-down-drop', 'w-ring-drop'
+                        'all', 'pkt-drop', 'pkt-lnk-down-drop', 'err-pkt-drop', 'rx-err', 'tx-err', 'tx-drop', 'rx-len-err', 'rx-over-err', 'rx-crc-err', 'rx-frame-err', 'rx-no-buff-err', 'rx-miss-err', 'tx-abort-err', 'tx-carrier-err', 'tx-fifo-err', 'tx-hbeat-err', 'tx-windows-err', 'rx-long-len-err', 'rx-short-len-err', 'rx-align-err',
+                        'rx-csum-offload-err', 'io-rx-que-drop', 'io-tx-que-drop', 'io-ring-drop', 'w-tx-que-drop', 'w-link-down-drop', 'w-ring-drop'
                         ]
                     }
                 }
@@ -4205,12 +4207,8 @@ def get_argspec():
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'total-throughput-bits-per-sec', 'l4-conns-per-sec', 'l7-conns-per-sec', 'l7-trans-per-sec', 'ssl-conns-per-sec', 'ip-nat-conns-per-sec', 'total-new-conns-per-sec', 'total-curr-conns', 'l4-bandwidth', 'l7-bandwidth', 'serv-ssl-conns-per-sec', 'fw-conns-per-sec',
-                        'gifw-conns-per-sec'
-                        ]
+                    'type': 'str',
+                    'choices': ['all', 'total-throughput-bits-per-sec', 'l4-conns-per-sec', 'l7-conns-per-sec', 'l7-trans-per-sec', 'ssl-conns-per-sec', 'ip-nat-conns-per-sec', 'total-new-conns-per-sec', 'total-curr-conns', 'l4-bandwidth', 'l7-bandwidth', 'serv-ssl-conns-per-sec', 'fw-conns-per-sec', 'gifw-conns-per-sec']
                     }
                 }
             },
@@ -4247,8 +4245,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew',
-                        'currclose', 'currclsw', 'currlack', 'currlstn', 'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
+                        'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew', 'currclose', 'currclsw', 'currlack', 'currlstn',
+                        'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
                         ]
                     }
                 },
@@ -4276,8 +4274,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'num', 'inmsgs', 'inerrors', 'indestunreachs', 'intimeexcds', 'inparmprobs', 'insrcquenchs', 'inredirects', 'inechos', 'inechoreps', 'intimestamps', 'intimestampreps', 'inaddrmasks', 'inaddrmaskreps', 'outmsgs', 'outerrors', 'outdestunreachs', 'outtimeexcds',
-                        'outparmprobs', 'outsrcquenchs', 'outredirects', 'outechos', 'outechoreps', 'outtimestamps', 'outtimestampreps', 'outaddrmasks', 'outaddrmaskreps'
+                        'all', 'num', 'inmsgs', 'inerrors', 'indestunreachs', 'intimeexcds', 'inparmprobs', 'insrcquenchs', 'inredirects', 'inechos', 'inechoreps', 'intimestamps', 'intimestampreps', 'inaddrmasks', 'inaddrmaskreps', 'outmsgs', 'outerrors', 'outdestunreachs', 'outtimeexcds', 'outparmprobs', 'outsrcquenchs', 'outredirects',
+                        'outechos', 'outechoreps', 'outtimestamps', 'outtimestampreps', 'outaddrmasks', 'outaddrmaskreps'
                         ]
                     }
                 }
@@ -4293,9 +4291,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'in_msgs', 'in_errors', 'in_dest_un_reach', 'in_pkt_too_big', 'in_time_exceeds', 'in_param_prob', 'in_echoes', 'in_exho_reply', 'in_grp_mem_query', 'in_grp_mem_resp', 'in_grp_mem_reduction', 'in_router_sol', 'in_ra', 'in_ns', 'in_na', 'in_redirect', 'out_msg',
-                        'out_dst_un_reach', 'out_pkt_too_big', 'out_time_exceeds', 'out_param_prob', 'out_echo_req', 'out_echo_replies', 'out_rs', 'out_ra', 'out_ns', 'out_na', 'out_redirects', 'out_mem_resp', 'out_mem_reductions', 'err_rs', 'err_ra', 'err_ns', 'err_na', 'err_redirects',
-                        'err_echoes', 'err_echo_replies'
+                        'all', 'in_msgs', 'in_errors', 'in_dest_un_reach', 'in_pkt_too_big', 'in_time_exceeds', 'in_param_prob', 'in_echoes', 'in_exho_reply', 'in_grp_mem_query', 'in_grp_mem_resp', 'in_grp_mem_reduction', 'in_router_sol', 'in_ra', 'in_ns', 'in_na', 'in_redirect', 'out_msg', 'out_dst_un_reach', 'out_pkt_too_big', 'out_time_exceeds',
+                        'out_param_prob', 'out_echo_req', 'out_echo_replies', 'out_rs', 'out_ra', 'out_ns', 'out_na', 'out_redirects', 'out_mem_resp', 'out_mem_reductions', 'err_rs', 'err_ra', 'err_ns', 'err_na', 'err_redirects', 'err_echoes', 'err_echo_replies'
                         ]
                     }
                 }
@@ -4311,8 +4308,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'inreceives', 'inhdrerrors', 'intoobigerrors', 'innoroutes', 'inaddrerrors', 'inunknownprotos', 'intruncatedpkts', 'indiscards', 'indelivers', 'outforwdatagrams', 'outrequests', 'outdiscards', 'outnoroutes', 'reasmtimeout', 'reasmreqds', 'reasmoks', 'reasmfails',
-                        'fragoks', 'fragfails', 'fragcreates', 'inmcastpkts', 'outmcastpkts'
+                        'all', 'inreceives', 'inhdrerrors', 'intoobigerrors', 'innoroutes', 'inaddrerrors', 'inunknownprotos', 'intruncatedpkts', 'indiscards', 'indelivers', 'outforwdatagrams', 'outrequests', 'outdiscards', 'outnoroutes', 'reasmtimeout', 'reasmreqds', 'reasmoks', 'reasmfails', 'fragoks', 'fragfails', 'fragcreates', 'inmcastpkts',
+                        'outmcastpkts'
                         ]
                     }
                 }
@@ -4328,8 +4325,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'inreceives', 'inhdrerrors', 'intoobigerrors', 'innoroutes', 'inaddrerrors', 'inunknownprotos', 'intruncatedpkts', 'indiscards', 'indelivers', 'outforwdatagrams', 'outrequests', 'outdiscards', 'outnoroutes', 'reasmtimeout', 'reasmreqds', 'reasmoks', 'reasmfails',
-                        'fragoks', 'fragfails', 'fragcreates', 'inmcastpkts', 'outmcastpkts'
+                        'all', 'inreceives', 'inhdrerrors', 'intoobigerrors', 'innoroutes', 'inaddrerrors', 'inunknownprotos', 'intruncatedpkts', 'indiscards', 'indelivers', 'outforwdatagrams', 'outrequests', 'outdiscards', 'outnoroutes', 'reasmtimeout', 'reasmreqds', 'reasmoks', 'reasmfails', 'fragoks', 'fragfails', 'fragcreates', 'inmcastpkts',
+                        'outmcastpkts'
                         ]
                     }
                 }
@@ -4357,8 +4354,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'ip_checksum_error', 'udp_checksum_error', 'session_not_found', 'multihop_mismatch', 'version_mismatch', 'length_too_small', 'data_is_short', 'invalid_detect_mult', 'invalid_multipoint', 'invalid_my_disc', 'invalid_ttl', 'auth_length_invalid', 'auth_mismatch',
-                        'auth_type_mismatch', 'auth_key_id_mismatch', 'auth_key_mismatch', 'auth_seqnum_invalid', 'auth_failed', 'local_state_admin_down', 'dest_unreachable', 'no_ipv6_enable', 'other_error'
+                        'all', 'ip_checksum_error', 'udp_checksum_error', 'session_not_found', 'multihop_mismatch', 'version_mismatch', 'length_too_small', 'data_is_short', 'invalid_detect_mult', 'invalid_multipoint', 'invalid_my_disc', 'invalid_ttl', 'auth_length_invalid', 'auth_mismatch', 'auth_type_mismatch', 'auth_key_id_mismatch',
+                        'auth_key_mismatch', 'auth_seqnum_invalid', 'auth_failed', 'local_state_admin_down', 'dest_unreachable', 'no_ipv6_enable', 'other_error'
                         ]
                     }
                 }
@@ -4387,9 +4384,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop',
-                        'filter_type_any_drop', 'slb_dns_client_ssl_succ', 'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit',
-                        'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only', 'rpz_action_nxdomain', 'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp'
+                        'all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop', 'filter_type_any_drop', 'slb_dns_client_ssl_succ',
+                        'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only',
+                        'rpz_action_nxdomain', 'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp'
                         ]
                     }
                 },
@@ -4426,12 +4423,9 @@ def get_argspec():
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate',
-                        'current_data_allocate', 'resolver_queue_full', 'truncated_r'
-                        ]
+                    'type': 'str',
+                    'choices':
+                    ['all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r']
                     }
                 }
             },
@@ -4446,18 +4440,16 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'total_l4_conn', 'conn_counter', 'conn_freed_counter', 'total_l4_packet_count', 'total_l7_packet_count', 'total_l4_conn_proxy', 'total_l7_conn', 'total_tcp_conn', 'curr_free_conn', 'tcp_est_counter', 'tcp_half_open_counter', 'tcp_half_close_counter', 'udp_counter',
-                        'ip_counter', 'other_counter', 'reverse_nat_tcp_counter', 'reverse_nat_udp_counter', 'tcp_syn_half_open_counter', 'conn_smp_alloc_counter', 'conn_smp_free_counter', 'conn_smp_aged_counter', 'ssl_count_curr', 'ssl_count_total', 'server_ssl_count_curr',
-                        'server_ssl_count_total', 'client_ssl_reuse_total', 'server_ssl_reuse_total', 'ssl_failed_total', 'ssl_failed_ca_verification', 'ssl_server_cert_error', 'ssl_client_cert_auth_fail', 'total_ip_nat_conn', 'total_l2l3_conn', 'client_ssl_ctx_malloc_failure',
-                        'conn_type_0_available', 'conn_type_1_available', 'conn_type_2_available', 'conn_type_3_available', 'conn_type_4_available', 'conn_smp_type_0_available', 'conn_smp_type_1_available', 'conn_smp_type_2_available', 'conn_smp_type_3_available', 'conn_smp_type_4_available',
-                        'sctp-half-open-counter', 'sctp-est-counter', 'nonssl_bypass', 'ssl_failsafe_total', 'ssl_forward_proxy_failed_handshake_total', 'ssl_forward_proxy_failed_tcp_total', 'ssl_forward_proxy_failed_crypto_total', 'ssl_forward_proxy_failed_cert_verify_total',
-                        'ssl_forward_proxy_invalid_ocsp_stapling_total', 'ssl_forward_proxy_revoked_ocsp_total', 'ssl_forward_proxy_failed_cert_signing_total', 'ssl_forward_proxy_failed_ssl_version_total', 'ssl_forward_proxy_sni_bypass_total', 'ssl_forward_proxy_client_auth_bypass_total',
-                        'conn_app_smp_alloc_counter', 'diameter_conn_counter', 'diameter_conn_freed_counter', 'debug_tcp_counter', 'debug_udp_counter', 'total_fw_conn', 'total_local_conn', 'total_curr_conn', 'client_ssl_fatal_alert', 'client_ssl_fin_rst', 'fp_session_fin_rst',
-                        'server_ssl_fatal_alert', 'server_ssl_fin_rst', 'client_template_int_err', 'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total',
-                        'ssl_forward_proxy_cert_issuer_bypass_total', 'ssl_forward_proxy_cert_san_bypass_total', 'ssl_forward_proxy_no_sni_bypass_total', 'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total',
-                        'diameter_concurrent_user_sessions_counter', 'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total', 'total_clientside_early_data_connections', 'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections',
-                        'total_serverside_failed_early_data-connections', 'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter', 'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter', 'gtp_u_echo_counter',
-                        'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter'
+                        'all', 'total_l4_conn', 'conn_counter', 'conn_freed_counter', 'total_l4_packet_count', 'total_l7_packet_count', 'total_l4_conn_proxy', 'total_l7_conn', 'total_tcp_conn', 'curr_free_conn', 'tcp_est_counter', 'tcp_half_open_counter', 'tcp_half_close_counter', 'udp_counter', 'ip_counter', 'other_counter',
+                        'reverse_nat_tcp_counter', 'reverse_nat_udp_counter', 'tcp_syn_half_open_counter', 'conn_smp_alloc_counter', 'conn_smp_free_counter', 'conn_smp_aged_counter', 'ssl_count_curr', 'ssl_count_total', 'server_ssl_count_curr', 'server_ssl_count_total', 'client_ssl_reuse_total', 'server_ssl_reuse_total', 'ssl_failed_total',
+                        'ssl_failed_ca_verification', 'ssl_server_cert_error', 'ssl_client_cert_auth_fail', 'total_ip_nat_conn', 'total_l2l3_conn', 'client_ssl_ctx_malloc_failure', 'conn_type_0_available', 'conn_type_1_available', 'conn_type_2_available', 'conn_type_3_available', 'conn_type_4_available', 'conn_smp_type_0_available',
+                        'conn_smp_type_1_available', 'conn_smp_type_2_available', 'conn_smp_type_3_available', 'conn_smp_type_4_available', 'sctp-half-open-counter', 'sctp-est-counter', 'nonssl_bypass', 'ssl_failsafe_total', 'ssl_forward_proxy_failed_handshake_total', 'ssl_forward_proxy_failed_tcp_total', 'ssl_forward_proxy_failed_crypto_total',
+                        'ssl_forward_proxy_failed_cert_verify_total', 'ssl_forward_proxy_invalid_ocsp_stapling_total', 'ssl_forward_proxy_revoked_ocsp_total', 'ssl_forward_proxy_failed_cert_signing_total', 'ssl_forward_proxy_failed_ssl_version_total', 'ssl_forward_proxy_sni_bypass_total', 'ssl_forward_proxy_client_auth_bypass_total',
+                        'conn_app_smp_alloc_counter', 'diameter_conn_counter', 'diameter_conn_freed_counter', 'debug_tcp_counter', 'debug_udp_counter', 'total_fw_conn', 'total_local_conn', 'total_curr_conn', 'client_ssl_fatal_alert', 'client_ssl_fin_rst', 'fp_session_fin_rst', 'server_ssl_fatal_alert', 'server_ssl_fin_rst',
+                        'client_template_int_err', 'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total', 'ssl_forward_proxy_cert_issuer_bypass_total', 'ssl_forward_proxy_cert_san_bypass_total',
+                        'ssl_forward_proxy_no_sni_bypass_total', 'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter', 'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total',
+                        'total_clientside_early_data_connections', 'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections', 'total_serverside_failed_early_data-connections', 'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter',
+                        'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter', 'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter'
                         ]
                     }
                 }
@@ -4486,11 +4478,11 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'connattempt', 'connects', 'drops', 'conndrops', 'closed', 'segstimed', 'rttupdated', 'delack', 'timeoutdrop', 'rexmttimeo', 'persisttimeo', 'keeptimeo', 'keepprobe', 'keepdrops', 'sndtotal', 'sndpack', 'sndbyte', 'sndrexmitpack', 'sndrexmitbyte', 'sndrexmitbad',
-                        'sndacks', 'sndprobe', 'sndurg', 'sndwinup', 'sndctrl', 'sndrst', 'sndfin', 'sndsyn', 'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff', 'rcvmemdrop', 'rcvduppack', 'rcvdupbyte', 'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack', 'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin',
-                        'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch', 'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop', 'predack', 'preddat', 'persistdrop', 'badrst', 'finwait2_drops', 'sack_recovery_episode', 'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks', 'sack_send_blocks', 'sndcack',
-                        'cacklim', 'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce', 'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack', 'a2brxdata', 'a2btcpoptions', 'a2boodata', 'a2bpartialack', 'a2bfsmtransition', 'a2btransitionnum', 'b2atransitionnum', 'bad_iochan', 'atcpforward',
-                        'atcpsent', 'atcprexmitsadrop', 'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail', 'a2bappbuffering', 'atcpsendfail', 'earlyrexmit', 'mburstlim', 'a2bsndwnd', 'proxyheaderv1', 'proxyheaderv2'
+                        'all', 'connattempt', 'connects', 'drops', 'conndrops', 'closed', 'segstimed', 'rttupdated', 'delack', 'timeoutdrop', 'rexmttimeo', 'persisttimeo', 'keeptimeo', 'keepprobe', 'keepdrops', 'sndtotal', 'sndpack', 'sndbyte', 'sndrexmitpack', 'sndrexmitbyte', 'sndrexmitbad', 'sndacks', 'sndprobe', 'sndurg', 'sndwinup', 'sndctrl',
+                        'sndrst', 'sndfin', 'sndsyn', 'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff', 'rcvmemdrop', 'rcvduppack', 'rcvdupbyte', 'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack', 'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin', 'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch', 'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop',
+                        'predack', 'preddat', 'persistdrop', 'badrst', 'finwait2_drops', 'sack_recovery_episode', 'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks', 'sack_send_blocks', 'sndcack', 'cacklim', 'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce', 'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack', 'a2brxdata',
+                        'a2btcpoptions', 'a2boodata', 'a2bpartialack', 'a2bfsmtransition', 'a2btransitionnum', 'b2atransitionnum', 'bad_iochan', 'atcpforward', 'atcpsent', 'atcprexmitsadrop', 'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail', 'a2bappbuffering', 'atcpsendfail', 'earlyrexmit', 'mburstlim', 'a2bsndwnd', 'proxyheaderv1',
+                        'proxyheaderv2'
                         ]
                     }
                 }
@@ -4539,8 +4531,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'curr_entries', 'total_v4_entries_created', 'total_v4_entries_freed', 'total_v6_entries_created', 'total_v6_entries_freed', 'total_domain_entries_created', 'total_domain_entries_freed', 'total_direct_action_entries_created', 'total_direct_action_entries_freed',
-                        'curr_entries_target_global', 'curr_entries_target_vserver', 'curr_entries_target_vport', 'curr_entries_target_LOC', 'curr_entries_target_rserver', 'curr_entries_target_rport', 'curr_entries_target_service', 'curr_entries_stats'
+                        'all', 'curr_entries', 'total_v4_entries_created', 'total_v4_entries_freed', 'total_v6_entries_created', 'total_v6_entries_freed', 'total_domain_entries_created', 'total_domain_entries_freed', 'total_direct_action_entries_created', 'total_direct_action_entries_freed', 'curr_entries_target_global',
+                        'curr_entries_target_vserver', 'curr_entries_target_vport', 'curr_entries_target_LOC', 'curr_entries_target_rserver', 'curr_entries_target_rport', 'curr_entries_target_service', 'curr_entries_stats'
                         ]
                     }
                 }

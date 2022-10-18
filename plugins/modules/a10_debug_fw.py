@@ -12,8 +12,8 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_debug_fw
 description:
-    - Debug DCFW
-author: A10 Networks 2021
+    - Debug Firewall
+author: A10 Networks
 options:
     state:
         description:
@@ -55,9 +55,9 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    dumy:
+    ddos:
         description:
-        - "Dummy"
+        - "FW DDoS detection/mitigation logs"
         type: bool
         required: False
     uuid:
@@ -119,7 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dumy", "uuid", ]
+AVAILABLE_PROPERTIES = ["ddos", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +139,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'dumy': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'ddos': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

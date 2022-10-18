@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_active_partition
 description:
     - Change active partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

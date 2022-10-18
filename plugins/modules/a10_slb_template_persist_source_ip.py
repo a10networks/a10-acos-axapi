@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_persist_source_ip
 description:
     - Source IP persistence
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

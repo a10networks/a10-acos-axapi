@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_oauth_authorization_server
 description:
     - Authentication 2.0 authorization server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

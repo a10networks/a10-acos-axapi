@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_debug_role
 description:
     - Field role
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

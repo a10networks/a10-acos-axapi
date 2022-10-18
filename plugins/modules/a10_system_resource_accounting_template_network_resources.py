@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_network_resources
 description:
     - Enter the network resource limits
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

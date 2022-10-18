@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_cluster_devices_minimum_nodes
 description:
     - Minimum number of nodes to start scaleout
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

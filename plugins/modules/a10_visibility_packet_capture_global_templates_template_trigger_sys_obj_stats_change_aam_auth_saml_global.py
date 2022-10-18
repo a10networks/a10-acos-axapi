@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_aam_auth_saml_global
 description:
     - Configure triggers for aam.authentication.saml.global object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_dns_dns64
 description:
     - Enable DNS64
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -226,8 +226,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "answer_only_disable", "auth_data", "cache", "change_query", "compress_disable", "deep_check_qr", "deep_check_rr_disable", "drop_cname_disable", "edns_append", "enable", "fast_append", "ignore_rcode3_disable", "max_qr_length", "parallel_query", "passive_query_disable", "retry",
-    "single_response_disable", "timeout", "trans_ptr", "trans_ptr_query", "ttl", "uuid",
+    "answer_only_disable", "auth_data", "cache", "change_query", "compress_disable", "deep_check_qr", "deep_check_rr_disable", "drop_cname_disable", "edns_append", "enable", "fast_append", "ignore_rcode3_disable", "max_qr_length", "parallel_query", "passive_query_disable", "retry", "single_response_disable", "timeout", "trans_ptr",
+    "trans_ptr_query", "ttl", "uuid",
     ]
 
 

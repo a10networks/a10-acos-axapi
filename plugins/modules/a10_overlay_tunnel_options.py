@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_options
 description:
     - Global overlay-tunnel configuration options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -169,32 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ip_dscp_preserve': {
-            'type': 'bool',
-            },
-        'nvgre_disable_flow_id': {
-            'type': 'bool',
-            },
-        'nvgre_key_mode_lower24': {
-            'type': 'bool',
-            },
-        'tcp_mss_adjust_disable': {
-            'type': 'bool',
-            },
-        'gateway_mac': {
-            'type': 'str',
-            },
-        'fragmentation_mode_inner': {
-            'type': 'bool',
-            },
-        'vxlan_dest_port': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'ip_dscp_preserve': {'type': 'bool', }, 'nvgre_disable_flow_id': {'type': 'bool', }, 'nvgre_key_mode_lower24': {'type': 'bool', }, 'tcp_mss_adjust_disable': {'type': 'bool', }, 'gateway_mac': {'type': 'str', }, 'fragmentation_mode_inner': {'type': 'bool', }, 'vxlan_dest_port': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_system_fpga_drop_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -305,9 +305,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bad_ip_chksum_drop", "bad_ip_flags_drop", "bad_ip_frag_offset", "bad_ip_hdr_len", "bad_ip_payload_len", "bad_ip_ttl_drop", "empty_frag_drop", "fcs_drop", "hrx_drop", "icmp_pod_drop", "ipv4_frag", "ipv4_opt_drop", "land_drop", "mic_frag_drop", "mrx_drop", "no_ip_payload_drop",
-    "oversize_ip_payload", "runt_ip_hdr", "runt_tcpudp_hdr", "siz_drop", "tcp_bad_chksum", "tcp_bad_ip_len", "tcp_bad_urg_offet", "tcp_fin_sin", "tcp_frag_hdr", "tcp_null_flags", "tcp_null_scan", "tcp_short_hdr", "tcp_syn_frag", "tcp_xmas_flags", "tcp_xmas_scan", "tun_mismatch", "udp_bad_chksum",
-    "udp_bad_ip_len", "udp_kb_frags", "udp_port_lb", "udp_short_hdr", "uuid",
+    "bad_ip_chksum_drop", "bad_ip_flags_drop", "bad_ip_frag_offset", "bad_ip_hdr_len", "bad_ip_payload_len", "bad_ip_ttl_drop", "empty_frag_drop", "fcs_drop", "hrx_drop", "icmp_pod_drop", "ipv4_frag", "ipv4_opt_drop", "land_drop", "mic_frag_drop", "mrx_drop", "no_ip_payload_drop", "oversize_ip_payload", "runt_ip_hdr", "runt_tcpudp_hdr", "siz_drop",
+    "tcp_bad_chksum", "tcp_bad_ip_len", "tcp_bad_urg_offet", "tcp_fin_sin", "tcp_frag_hdr", "tcp_null_flags", "tcp_null_scan", "tcp_short_hdr", "tcp_syn_frag", "tcp_xmas_flags", "tcp_xmas_scan", "tun_mismatch", "udp_bad_chksum", "udp_bad_ip_len", "udp_kb_frags", "udp_port_lb", "udp_short_hdr", "uuid",
     ]
 
 

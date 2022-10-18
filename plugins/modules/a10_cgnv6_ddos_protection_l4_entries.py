@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection_l4_entries
 description:
     - Field l4_entries
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

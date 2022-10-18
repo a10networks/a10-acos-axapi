@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rrd_slb_virtual_server
 description:
     - slb virtual server statistics in RRD
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

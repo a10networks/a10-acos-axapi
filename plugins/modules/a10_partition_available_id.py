@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_partition_available_id
 description:
     - Display the available id can be used to create partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

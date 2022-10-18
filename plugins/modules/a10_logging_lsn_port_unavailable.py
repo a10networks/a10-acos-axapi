@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_lsn_port_unavailable
 description:
     - Set LSN system log policy when port unavailable occur
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

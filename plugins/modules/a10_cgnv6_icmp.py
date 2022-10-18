@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_icmp
 description:
     - CGNV6 ICMP Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -273,10 +273,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'icmp-unknown-type', 'icmp-no-port-info', 'icmp-no-session-drop', 'icmpv6-unknown-type', 'icmpv6-no-port-info', 'icmpv6-no-session-drop', 'icmp-to-icmp', 'icmp-to-icmpv6', 'icmpv6-to-icmp', 'icmpv6-to-icmpv6', 'icmp-bad-type', 'icmpv6-bad-type', '64-known-drop',
-                    '64-unknown-drop', '64-midpoint-hop', '46-known-drop', '46-unknown-drop', '46-no-prefix-for-ipv4', '46-bad-encap-ip-header-len', 'icmp-to-icmp-err', 'icmp-to-icmpv6-err', 'icmpv6-to-icmp-err', 'icmpv6-to-icmpv6-err', 'encap-cross-cpu-no-match', 'encap-cross-cpu-preprocess-err',
-                    'icmp-to-icmp-unknown-l4', 'icmp-to-icmpv6-unknown-l4', 'icmpv6-to-icmp-unknown-l4', 'icmpv6-to-icmpv6-unknown-l4', 'static-nat', 'echo-to-pool-reply', 'echo-to-pool-drop', 'error-to-pool-drop', 'echo-to-pool-reply-v6', 'echo-to-pool-drop-v6', 'error-to-pool-drop-v6',
-                    'error-ip-mismatch'
+                    'all', 'icmp-unknown-type', 'icmp-no-port-info', 'icmp-no-session-drop', 'icmpv6-unknown-type', 'icmpv6-no-port-info', 'icmpv6-no-session-drop', 'icmp-to-icmp', 'icmp-to-icmpv6', 'icmpv6-to-icmp', 'icmpv6-to-icmpv6', 'icmp-bad-type', 'icmpv6-bad-type', '64-known-drop', '64-unknown-drop', '64-midpoint-hop', '46-known-drop',
+                    '46-unknown-drop', '46-no-prefix-for-ipv4', '46-bad-encap-ip-header-len', 'icmp-to-icmp-err', 'icmp-to-icmpv6-err', 'icmpv6-to-icmp-err', 'icmpv6-to-icmpv6-err', 'encap-cross-cpu-no-match', 'encap-cross-cpu-preprocess-err', 'icmp-to-icmp-unknown-l4', 'icmp-to-icmpv6-unknown-l4', 'icmpv6-to-icmp-unknown-l4',
+                    'icmpv6-to-icmpv6-unknown-l4', 'static-nat', 'echo-to-pool-reply', 'echo-to-pool-drop', 'error-to-pool-drop', 'echo-to-pool-reply-v6', 'echo-to-pool-drop-v6', 'error-to-pool-drop-v6', 'error-ip-mismatch'
                     ]
                 }
             },

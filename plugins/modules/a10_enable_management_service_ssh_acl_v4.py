@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_enable_management_service_ssh_acl_v4
 description:
     - IPv4 ACL for SSH service
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

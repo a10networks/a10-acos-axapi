@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template
 description:
     - Manage WAF template configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -2475,9 +2475,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "brute_force_protection", "cookie_security", "csp", "csp_insert_type", "csp_value", "data_leak_prevention", "deploy_mode", "evasion_check", "form_protection", "http_limit_check", "http_protocol_check", "http_redirect", "http_resp_200", "http_resp_403", "json_check", "learn_pr", "log_succ_reqs",
-    "logging", "name", "parent", "parent_template_waf", "pcre_match_limit", "pcre_match_recursion_limit", "request_check", "reset_conn", "resp_url_200", "resp_url_403", "response_cloaking", "soap_format_check", "stats", "user_tag", "uuid", "violation_log_mask", "wsdl_file", "wsdl_resp_val_file",
-    "xml_check", "xml_schema_file", "xml_schema_resp_val_file",
+    "brute_force_protection", "cookie_security", "csp", "csp_insert_type", "csp_value", "data_leak_prevention", "deploy_mode", "evasion_check", "form_protection", "http_limit_check", "http_protocol_check", "http_redirect", "http_resp_200", "http_resp_403", "json_check", "learn_pr", "log_succ_reqs", "logging", "name", "parent",
+    "parent_template_waf", "pcre_match_limit", "pcre_match_recursion_limit", "request_check", "reset_conn", "resp_url_200", "resp_url_403", "response_cloaking", "soap_format_check", "stats", "user_tag", "uuid", "violation_log_mask", "wsdl_file", "wsdl_resp_val_file", "xml_check", "xml_schema_file", "xml_schema_resp_val_file",
     ]
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_l7session
 description:
     - Configure l7session
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -265,9 +265,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'start_server_conn_succ', 'conn_not_exist', 'data_event', 'client_fin', 'server_fin', 'wbuf_event', 'wbuf_cb_failed', 'err_event', 'err_cb_failed', 'server_conn_failed', 'client_rst', 'server_rst', 'client_rst_req', 'client_rst_connecting', 'client_rst_connected',
-                    'client_rst_rsp', 'server_rst_req', 'server_rst_connecting', 'server_rst_connected', 'server_rst_rsp', 'proxy_v1_connection', 'proxy_v2_connection', 'curr_proxy', 'curr_proxy_client', 'curr_proxy_server', 'curr_proxy_es', 'total_proxy', 'total_proxy_client', 'total_proxy_server',
-                    'total_proxy_es', 'server_select_fail', 'est_event', 'est_cb_failed', 'data_cb_failed', 'hps_fwdreq_fail', 'hps_fwdreq_fail_buff', 'hps_fwdreq_fail_rport', 'hps_fwdreq_fail_route', 'hps_fwdreq_fail_persist', 'hps_fwdreq_fail_server', 'hps_fwdreq_fail_tuple'
+                    'all', 'start_server_conn_succ', 'conn_not_exist', 'data_event', 'client_fin', 'server_fin', 'wbuf_event', 'wbuf_cb_failed', 'err_event', 'err_cb_failed', 'server_conn_failed', 'client_rst', 'server_rst', 'client_rst_req', 'client_rst_connecting', 'client_rst_connected', 'client_rst_rsp', 'server_rst_req',
+                    'server_rst_connecting', 'server_rst_connected', 'server_rst_rsp', 'proxy_v1_connection', 'proxy_v2_connection', 'curr_proxy', 'curr_proxy_client', 'curr_proxy_server', 'curr_proxy_es', 'total_proxy', 'total_proxy_client', 'total_proxy_server', 'total_proxy_es', 'server_select_fail', 'est_event', 'est_cb_failed',
+                    'data_cb_failed', 'hps_fwdreq_fail', 'hps_fwdreq_fail_buff', 'hps_fwdreq_fail_rport', 'hps_fwdreq_fail_route', 'hps_fwdreq_fail_persist', 'hps_fwdreq_fail_server', 'hps_fwdreq_fail_tuple'
                     ]
                 }
             },

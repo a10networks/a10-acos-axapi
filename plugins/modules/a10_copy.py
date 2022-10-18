@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_copy
 description:
     - Copy configuration to/from remote server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

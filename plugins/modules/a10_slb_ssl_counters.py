@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_counters
 description:
     - Client side SSL Vport Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

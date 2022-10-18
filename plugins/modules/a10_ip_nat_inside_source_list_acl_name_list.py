@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_inside_source_list_acl_name_list
 description:
     - Apply an access list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

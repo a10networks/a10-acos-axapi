@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_ddos_protection
 description:
     - Configure FW DDoS Protection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -55,6 +55,33 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    dynamic_blacklist:
+        description:
+        - "Field dynamic_blacklist"
+        type: dict
+        required: False
+        suboptions:
+            dynamic_blacklist_action:
+                description:
+                - "'enable'= Enable protection against volumetric attacks using dynamic blacklist;
+          'disable'= Disable protection against volumetric attacks using dynamic
+          blacklist;"
+                type: str
+            dir:
+                description:
+                - "'inbound'= enable in inbound direction; 'outbound'= enable in outbound
+          direction; 'both'= enable in both directions;"
+                type: str
+            timeout:
+                description:
+                - "Timeout value (in seconds) for dynamic blacklist (Timeout value (in seconds)
+          for dynamic blacklist(default is 5 seconds))"
+                type: int
+            cpu_threshold:
+                description:
+                - "Core-level CPU usage threshold for dynamic blacklist creation (Core-level CPU
+          usage threshold for dynamic blacklist creation (default is 60))"
+                type: int
     logging:
         description:
         - "Field logging"
@@ -245,7 +272,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "logging", "oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "dynamic_blacklist", "logging", "oper", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -266,6 +293,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'dynamic_blacklist': {
+            'type': 'dict',
+            'dynamic_blacklist_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'dir': {
+                'type': 'str',
+                'choices': ['inbound', 'outbound', 'both']
+                },
+            'timeout': {
+                'type': 'int',
+                },
+            'cpu_threshold': {
+                'type': 'int',
+                }
+            },
         'logging': {
             'type': 'dict',
             'logging_action': {

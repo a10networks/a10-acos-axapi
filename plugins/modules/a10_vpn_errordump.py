@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_errordump
 description:
     - Error dump
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

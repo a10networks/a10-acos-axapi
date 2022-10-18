@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_mgcp
 description:
     - Change fixed-nat MGCP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -202,12 +202,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'auep', 'aucx', 'crcx', 'dlcx', 'epcf', 'mdcx', 'ntfy', 'rqnt', 'rsip', 'parse-error', 'conn-ext-creation-failure', 'third-party-sdp', 'sdp-process-candidate-failure', 'sdp-op-failure', 'sdp-alloc-port-map-success', 'sdp-alloc-port-map-failure', 'modify-failure',
-                    'rewrite-failure', 'tcp-out-of-order-drop'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'auep', 'aucx', 'crcx', 'dlcx', 'epcf', 'mdcx', 'ntfy', 'rqnt', 'rsip', 'parse-error', 'conn-ext-creation-failure', 'third-party-sdp', 'sdp-process-candidate-failure', 'sdp-op-failure', 'sdp-alloc-port-map-success', 'sdp-alloc-port-map-failure', 'modify-failure', 'rewrite-failure', 'tcp-out-of-order-drop']
                 }
             },
         'stats': {

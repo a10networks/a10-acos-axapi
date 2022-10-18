@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_http_basic_instance
 description:
     - HTTP Basic Authentication Relay instance
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

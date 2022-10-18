@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_fixed_nat_global_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -234,8 +234,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "config_not_found", "dest_rlist_drop", "dest_rlist_pass_through", "dest_rlist_snat_drop", "dslite_eif_limit_exceeded", "dslite_inbound_filtered", "duration", "fixed_nat_fullcone_self_hairpinning_dro", "fullcone_failure", "ha_session_user_quota_exceeded", "nat_port_unavailable_icmp",
-    "nat_port_unavailable_tcp", "nat_port_unavailable_udp", "nat44_eif_limit_exceeded", "nat44_inbound_filtered", "nat64_eif_limit_exceeded", "nat64_inbound_filtered", "port_overload_failed", "session_user_quota_exceeded", "sixrd_drop", "standby_drop", "threshold_exceeded_by", "uuid",
+    "config_not_found", "dest_rlist_drop", "dest_rlist_pass_through", "dest_rlist_snat_drop", "dslite_eif_limit_exceeded", "dslite_inbound_filtered", "duration", "fixed_nat_fullcone_self_hairpinning_dro", "fullcone_failure", "ha_session_user_quota_exceeded", "nat_port_unavailable_icmp", "nat_port_unavailable_tcp", "nat_port_unavailable_udp",
+    "nat44_eif_limit_exceeded", "nat44_inbound_filtered", "nat64_eif_limit_exceeded", "nat64_inbound_filtered", "port_overload_failed", "session_user_quota_exceeded", "sixrd_drop", "standby_drop", "threshold_exceeded_by", "uuid",
     ]
 
 

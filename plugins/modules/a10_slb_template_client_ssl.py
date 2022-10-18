@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_client_ssl
 description:
     - Client SSL Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -2531,23 +2531,20 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ad_group_list", "alert_type", "auth_sg", "auth_sg_dn", "auth_sg_filter", "auth_username", "auth_username_attribute", "authen_name", "authorization", "bypass_cert_issuer_class_list_name", "bypass_cert_issuer_multi_class_list", "bypass_cert_san_class_list_name",
-    "bypass_cert_san_multi_class_list", "bypass_cert_subject_class_list_name", "bypass_cert_subject_multi_class_list", "ca_certs", "cache_persistence_list_name", "case_insensitive", "cert_revoke_action", "cert_unknown_action", "certificate_issuer_contains_list", "certificate_issuer_ends_with_list",
-    "certificate_issuer_equals_list", "certificate_issuer_starts_with_list", "certificate_list", "certificate_san_contains_list", "certificate_san_ends_with_list", "certificate_san_equals_list", "certificate_san_starts_with_list", "certificate_subject_contains_list",
-    "certificate_subject_ends_with_list", "certificate_subject_equals_list", "certificate_subject_starts_with_list", "chain_cert", "chain_cert_shared_str", "cipher_without_prio_list", "class_list_name", "client_auth_case_insensitive", "client_auth_class_list", "client_auth_contains_list",
-    "client_auth_ends_with_list", "client_auth_equals_list", "client_auth_starts_with_list", "client_certificate", "close_notify", "contains_list", "crl_certs", "dgversion", "dh_type", "direct_client_server_auth", "disable_sslv3", "early_data", "ec_list", "enable_ssli_ftp_alg",
-    "enable_tls_alert_logging", "ends_with_list", "equals_list", "exception_ad_group_list", "exception_certificate_issuer_cl_name", "exception_certificate_san_cl_name", "exception_certificate_subject_cl_name", "exception_sni_cl_name", "exception_user_name_list", "exception_web_category",
-    "exception_web_reputation", "expire_hours", "forward_encrypted", "forward_passphrase", "forward_proxy_alt_sign", "forward_proxy_block_message", "forward_proxy_ca_cert", "forward_proxy_ca_key", "forward_proxy_cert_cache_limit", "forward_proxy_cert_cache_timeout", "forward_proxy_cert_expiry",
-    "forward_proxy_cert_not_ready_action", "forward_proxy_cert_revoke_action", "forward_proxy_cert_unknown_action", "forward_proxy_crl_disable", "forward_proxy_decrypted_dscp", "forward_proxy_decrypted_dscp_bypass", "forward_proxy_enable", "forward_proxy_esni_action",
-    "forward_proxy_failsafe_disable", "forward_proxy_hash_persistence_interval", "forward_proxy_log_disable", "forward_proxy_no_shared_cipher_action", "forward_proxy_no_sni_action", "forward_proxy_ocsp_disable", "forward_proxy_require_sni_cert_matched", "forward_proxy_selfsign_redir",
-    "forward_proxy_ssl_version", "forward_proxy_trusted_ca_lists", "forward_proxy_verify_cert_fail_action", "fp_alt_cert", "fp_alt_chain_cert", "fp_alt_encrypted", "fp_alt_key", "fp_alt_passphrase", "fp_alt_shared", "fp_ca_certificate", "fp_ca_certificate_shared", "fp_ca_chain_cert", "fp_ca_key",
-    "fp_ca_key_encrypted", "fp_ca_key_passphrase", "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name", "fp_cert_fetch_natpool_name_shared",
-    "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type", "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ldap_base_dn_from_cert", "ldap_search_filter", "local_logging",
-    "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth", "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert",
-    "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days", "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category",
-    "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list",
-    "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action",
-    "version", "web_category", "web_reputation",
+    "ad_group_list", "alert_type", "auth_sg", "auth_sg_dn", "auth_sg_filter", "auth_username", "auth_username_attribute", "authen_name", "authorization", "bypass_cert_issuer_class_list_name", "bypass_cert_issuer_multi_class_list", "bypass_cert_san_class_list_name", "bypass_cert_san_multi_class_list", "bypass_cert_subject_class_list_name",
+    "bypass_cert_subject_multi_class_list", "ca_certs", "cache_persistence_list_name", "case_insensitive", "cert_revoke_action", "cert_unknown_action", "certificate_issuer_contains_list", "certificate_issuer_ends_with_list", "certificate_issuer_equals_list", "certificate_issuer_starts_with_list", "certificate_list", "certificate_san_contains_list",
+    "certificate_san_ends_with_list", "certificate_san_equals_list", "certificate_san_starts_with_list", "certificate_subject_contains_list", "certificate_subject_ends_with_list", "certificate_subject_equals_list", "certificate_subject_starts_with_list", "chain_cert", "chain_cert_shared_str", "cipher_without_prio_list", "class_list_name",
+    "client_auth_case_insensitive", "client_auth_class_list", "client_auth_contains_list", "client_auth_ends_with_list", "client_auth_equals_list", "client_auth_starts_with_list", "client_certificate", "close_notify", "contains_list", "crl_certs", "dgversion", "dh_type", "direct_client_server_auth", "disable_sslv3", "early_data", "ec_list",
+    "enable_ssli_ftp_alg", "enable_tls_alert_logging", "ends_with_list", "equals_list", "exception_ad_group_list", "exception_certificate_issuer_cl_name", "exception_certificate_san_cl_name", "exception_certificate_subject_cl_name", "exception_sni_cl_name", "exception_user_name_list", "exception_web_category", "exception_web_reputation",
+    "expire_hours", "forward_encrypted", "forward_passphrase", "forward_proxy_alt_sign", "forward_proxy_block_message", "forward_proxy_ca_cert", "forward_proxy_ca_key", "forward_proxy_cert_cache_limit", "forward_proxy_cert_cache_timeout", "forward_proxy_cert_expiry", "forward_proxy_cert_not_ready_action", "forward_proxy_cert_revoke_action",
+    "forward_proxy_cert_unknown_action", "forward_proxy_crl_disable", "forward_proxy_decrypted_dscp", "forward_proxy_decrypted_dscp_bypass", "forward_proxy_enable", "forward_proxy_esni_action", "forward_proxy_failsafe_disable", "forward_proxy_hash_persistence_interval", "forward_proxy_log_disable", "forward_proxy_no_shared_cipher_action",
+    "forward_proxy_no_sni_action", "forward_proxy_ocsp_disable", "forward_proxy_require_sni_cert_matched", "forward_proxy_selfsign_redir", "forward_proxy_ssl_version", "forward_proxy_trusted_ca_lists", "forward_proxy_verify_cert_fail_action", "fp_alt_cert", "fp_alt_chain_cert", "fp_alt_encrypted", "fp_alt_key", "fp_alt_passphrase", "fp_alt_shared",
+    "fp_ca_certificate", "fp_ca_certificate_shared", "fp_ca_chain_cert", "fp_ca_key", "fp_ca_key_encrypted", "fp_ca_key_passphrase", "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name",
+    "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type", "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ldap_base_dn_from_cert", "ldap_search_filter", "local_logging",
+    "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth", "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days",
+    "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout",
+    "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list",
+    "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation",
     ]
 
 
@@ -3698,10 +3695,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5', 'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA', 'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256', 'TLS1_RSA_AES_256_SHA256', 'TLS1_DHE_RSA_AES_128_GCM_SHA256', 'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256',
-                    'TLS1_DHE_RSA_AES_256_GCM_SHA384', 'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_SHA', 'TLS1_ECDHE_ECDSA_AES_128_SHA256', 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA',
-                    'TLS1_ECDHE_RSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_RSA_AES_128_SHA', 'TLS1_ECDHE_RSA_AES_128_SHA256', 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_GCM_SHA256', 'TLS1_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA384',
-                    'TLS1_ECDHE_ECDSA_AES_256_SHA384', 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256', 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256', 'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
+                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5', 'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA', 'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256', 'TLS1_RSA_AES_256_SHA256', 'TLS1_DHE_RSA_AES_128_GCM_SHA256', 'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256', 'TLS1_DHE_RSA_AES_256_GCM_SHA384',
+                    'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_SHA', 'TLS1_ECDHE_ECDSA_AES_128_SHA256', 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA', 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_RSA_AES_128_SHA',
+                    'TLS1_ECDHE_RSA_AES_128_SHA256', 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_GCM_SHA256', 'TLS1_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA384', 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256', 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
                     ]
                 }
             },

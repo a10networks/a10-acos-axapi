@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_isis
 description:
     - Intermediate System - Intermediate System (IS-IS)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -417,8 +417,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "address_family", "adjacency_check", "area_password_cfg", "authentication", "bfd", "default_information", "distance_list", "domain_password_cfg", "ha_standby_extra_cost", "ignore_lsp_errors", "is_type", "log_adjacency_changes_cfg", "lsp_gen_interval_list", "lsp_refresh_interval",
-    "max_lsp_lifetime", "metric_style_list", "net_list", "passive_interface_list", "protocol_list", "redistribute", "set_overload_bit_cfg", "spf_interval_exp_list", "summary_address_list", "tag", "user_tag", "uuid",
+    "address_family", "adjacency_check", "area_password_cfg", "authentication", "bfd", "default_information", "distance_list", "domain_password_cfg", "ha_standby_extra_cost", "ignore_lsp_errors", "is_type", "log_adjacency_changes_cfg", "lsp_gen_interval_list", "lsp_refresh_interval", "max_lsp_lifetime", "metric_style_list", "net_list",
+    "passive_interface_list", "protocol_list", "redistribute", "set_overload_bit_cfg", "spf_interval_exp_list", "summary_address_list", "tag", "user_tag", "uuid",
     ]
 
 

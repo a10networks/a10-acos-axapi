@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_management_interface_mode
 description:
     - Configure management interface mode
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

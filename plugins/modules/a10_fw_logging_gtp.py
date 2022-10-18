@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_logging_gtp
 description:
     - Counters for GTP Logging
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -266,10 +266,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'log_type_gtp_invalid_teid', 'log_gtp_type_reserved_ie_present', 'log_type_gtp_mandatory_ie_missing', 'log_type_gtp_mandatory_ie_inside_grouped_ie_missing', 'log_type_gtp_msisdn_filtering', 'log_type_gtp_out_of_order_ie', 'log_type_gtp_out_of_state_ie',
-                    'log_type_enduser_ip_spoofed', 'log_type_crosslayer_correlation', 'log_type_message_not_supported', 'log_type_out_of_state', 'log_type_max_msg_length', 'log_type_gtp_message_filtering', 'log_type_gtp_apn_filtering', 'log_type_gtp_rat_type_filtering',
-                    'log_type_country_code_mismatch', 'log_type_gtp_in_gtp_filtering', 'log_type_gtp_node_restart', 'log_type_gtp_seq_num_mismatch', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic',
-                    'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic'
+                    'all', 'log_type_gtp_invalid_teid', 'log_gtp_type_reserved_ie_present', 'log_type_gtp_mandatory_ie_missing', 'log_type_gtp_mandatory_ie_inside_grouped_ie_missing', 'log_type_gtp_msisdn_filtering', 'log_type_gtp_out_of_order_ie', 'log_type_gtp_out_of_state_ie', 'log_type_enduser_ip_spoofed', 'log_type_crosslayer_correlation',
+                    'log_type_message_not_supported', 'log_type_out_of_state', 'log_type_max_msg_length', 'log_type_gtp_message_filtering', 'log_type_gtp_apn_filtering', 'log_type_gtp_rat_type_filtering', 'log_type_country_code_mismatch', 'log_type_gtp_in_gtp_filtering', 'log_type_gtp_node_restart', 'log_type_gtp_seq_num_mismatch',
+                    'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic'
                     ]
                 }
             },

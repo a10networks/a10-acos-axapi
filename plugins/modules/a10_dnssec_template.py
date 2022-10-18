@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dnssec_template
 description:
     - template Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

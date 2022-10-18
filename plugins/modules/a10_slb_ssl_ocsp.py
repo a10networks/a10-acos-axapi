@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_ocsp
 description:
     - SSL Online Certificate Status Protocol
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -148,41 +148,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'total_entries': {
-                'type': 'int',
-                },
-            'cached_entries': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                    },
-                'status': {
-                    'type': 'str',
-                    },
-                'subject': {
-                    'type': 'str',
-                    },
-                'length': {
-                    'type': 'int',
-                    },
-                'uri': {
-                    'type': 'str',
-                    },
-                'expire': {
-                    'type': 'int',
-                    },
-                'hits': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'total_entries': {'type': 'int', }, 'cached_entries': {'type': 'list', 'name': {'type': 'str', }, 'status': {'type': 'str', }, 'subject': {'type': 'str', }, 'length': {'type': 'int', }, 'uri': {'type': 'str', }, 'expire': {'type': 'int', }, 'hits': {'type': 'int', }}}})
     return rv
 
 

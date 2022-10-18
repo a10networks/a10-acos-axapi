@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update_config
 description:
     - Configure software update schedule
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

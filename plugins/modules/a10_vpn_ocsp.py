@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ocsp
 description:
     - VPN Online Certificate Status Protocol
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_class_list
 description:
     - class list file information and management commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

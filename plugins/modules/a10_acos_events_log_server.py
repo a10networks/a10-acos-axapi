@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_log_server
 description:
     - Acos logging Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

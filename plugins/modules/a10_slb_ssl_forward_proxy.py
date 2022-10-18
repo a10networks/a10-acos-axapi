@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_forward_proxy
 description:
     - SSL forward proxy stats info
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -319,10 +319,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'cert_create', 'cert_expr', 'cert_hit', 'cert_miss', 'conn_bypass', 'conn_inspect', 'bypass-failsafe-ssl-sessions', 'bypass-sni-sessions', 'bypass-client-auth-sessions', 'failed-in-ssl-handshakes', 'failed-in-crypto-operations', 'failed-in-tcp',
-                    'failed-in-certificate-verification', 'failed-in-certificate-signing', 'invalid-ocsp-stapling-response', 'revoked-ocsp-response', 'unsupported-ssl-version', 'certificates-in-cache', 'connections-failed', 'aflex-bypass', 'bypass-cert-subject-sessions',
-                    'bypass-cert-issuer-sessions', 'bypass-cert-san-sessions', 'bypass-no-sni-sessions', 'reset-no-sni-sessions', 'bypass-esni-sessions', 'drop-esni-sessions', 'bypass-username-sessions', 'bypass-ad-group-sessions', 'tot_conn_in_buff', 'curr_conn_in_buff', 'async_conn_timeout',
-                    'async_conn_limit_drop', 'cert_in_cache'
+                    'all', 'cert_create', 'cert_expr', 'cert_hit', 'cert_miss', 'conn_bypass', 'conn_inspect', 'bypass-failsafe-ssl-sessions', 'bypass-sni-sessions', 'bypass-client-auth-sessions', 'failed-in-ssl-handshakes', 'failed-in-crypto-operations', 'failed-in-tcp', 'failed-in-certificate-verification', 'failed-in-certificate-signing',
+                    'invalid-ocsp-stapling-response', 'revoked-ocsp-response', 'unsupported-ssl-version', 'certificates-in-cache', 'connections-failed', 'aflex-bypass', 'bypass-cert-subject-sessions', 'bypass-cert-issuer-sessions', 'bypass-cert-san-sessions', 'bypass-no-sni-sessions', 'reset-no-sni-sessions', 'bypass-esni-sessions',
+                    'drop-esni-sessions', 'bypass-username-sessions', 'bypass-ad-group-sessions', 'tot_conn_in_buff', 'curr_conn_in_buff', 'async_conn_timeout', 'async_conn_limit_drop', 'cert_in_cache'
                     ]
                 }
             },

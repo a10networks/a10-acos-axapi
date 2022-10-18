@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_aam_auth_server_win_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -257,9 +257,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "duration", "kerberos_delete_kdc_keytab_failure", "kerberos_generate_kdc_keytab_failure", "kerberos_job_start_error", "kerberos_other_error", "kerberos_polling_control_error", "kerberos_pw_change_failure", "kerberos_pw_expiry", "kerberos_request_dropped", "kerberos_response_error",
-    "kerberos_response_failure", "kerberos_response_timeout", "kerberos_timeout_error", "kerberos_validate_kdc_failure", "ntlm_authentication_failure", "ntlm_job_start_error", "ntlm_other_error", "ntlm_polling_control_error", "ntlm_prepare_req_failed", "ntlm_proto_negotiation_failure",
-    "ntlm_request_dropped", "ntlm_response_error", "ntlm_response_failure", "ntlm_response_timeout", "ntlm_session_setup_failed", "ntlm_timeout_error", "threshold_exceeded_by", "uuid",
+    "duration", "kerberos_delete_kdc_keytab_failure", "kerberos_generate_kdc_keytab_failure", "kerberos_job_start_error", "kerberos_other_error", "kerberos_polling_control_error", "kerberos_pw_change_failure", "kerberos_pw_expiry", "kerberos_request_dropped", "kerberos_response_error", "kerberos_response_failure", "kerberos_response_timeout",
+    "kerberos_timeout_error", "kerberos_validate_kdc_failure", "ntlm_authentication_failure", "ntlm_job_start_error", "ntlm_other_error", "ntlm_polling_control_error", "ntlm_prepare_req_failed", "ntlm_proto_negotiation_failure", "ntlm_request_dropped", "ntlm_response_error", "ntlm_response_failure", "ntlm_response_timeout",
+    "ntlm_session_setup_failed", "ntlm_timeout_error", "threshold_exceeded_by", "uuid",
     ]
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_web_service_cert_key
 description:
     - Import web service's private key and certificate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

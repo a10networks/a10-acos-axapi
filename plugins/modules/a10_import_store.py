@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_store
 description:
     - Create store name for remote url
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

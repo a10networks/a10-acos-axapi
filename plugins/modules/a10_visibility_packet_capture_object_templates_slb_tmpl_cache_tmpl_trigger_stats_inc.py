@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_slb_tmpl_cache_tmpl_trigger_stats_inc
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,32 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'nc_req_header': {
-            'type': 'bool',
-            },
-        'nc_res_header': {
-            'type': 'bool',
-            },
-        'rv_failure': {
-            'type': 'bool',
-            },
-        'content_toobig': {
-            'type': 'bool',
-            },
-        'content_toosmall': {
-            'type': 'bool',
-            },
-        'entry_create_failures': {
-            'type': 'bool',
-            },
-        'header_save_error': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'nc_req_header': {'type': 'bool', }, 'nc_res_header': {'type': 'bool', }, 'rv_failure': {'type': 'bool', }, 'content_toobig': {'type': 'bool', }, 'content_toosmall': {'type': 'bool', }, 'entry_create_failures': {'type': 'bool', }, 'header_save_error': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(slb_tmpl_cache_tmpl_name=dict(type='str', required=True), ))
     return rv

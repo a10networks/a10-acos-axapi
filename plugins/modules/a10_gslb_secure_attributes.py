@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_secure_attributes
 description:
     - GSLB Secure Settings per partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

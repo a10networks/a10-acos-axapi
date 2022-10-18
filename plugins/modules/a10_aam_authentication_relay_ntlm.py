@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_ntlm
 description:
     - NTLM Authentication Relay
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -310,8 +310,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'success', 'failure', 'request', 'response', 'http-code-200', 'http-code-400', 'http-code-401', 'http-code-403', 'http-code-404', 'http-code-500', 'http-code-503', 'http-code-other', 'buffer-alloc-fail', 'encoding-fail', 'insert-header-fail', 'parse-header-fail',
-                    'internal-error', 'ntlm-auth-skipped', 'large-request-processing', 'large-request-flushed', 'head-negotiate-request-sent', 'head-auth-request-sent'
+                    'all', 'success', 'failure', 'request', 'response', 'http-code-200', 'http-code-400', 'http-code-401', 'http-code-403', 'http-code-404', 'http-code-500', 'http-code-503', 'http-code-other', 'buffer-alloc-fail', 'encoding-fail', 'insert-header-fail', 'parse-header-fail', 'internal-error', 'ntlm-auth-skipped',
+                    'large-request-processing', 'large-request-flushed', 'head-negotiate-request-sent', 'head-auth-request-sent'
                     ]
                 }
             },

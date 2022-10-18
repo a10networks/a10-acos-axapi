@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_tcp_rate_limit_reset_unknown_conn
 description:
     - Configure rate limit for reset-unknown-conn
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -162,29 +162,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'pkt_rate_for_reset_unknown_conn': {
-            'type': 'int',
-            },
-        'log_for_reset_unknown_conn': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'unknown_conn_rate_limit': {
-                'type': 'int',
-                },
-            'unknown_conn_current_rate': {
-                'type': 'int',
-                },
-            'unknown_conn_rate_limit_drop': {
-                'type': 'int',
-                }
-            }
-        })
+    rv.update({'pkt_rate_for_reset_unknown_conn': {'type': 'int', }, 'log_for_reset_unknown_conn': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'unknown_conn_rate_limit': {'type': 'int', }, 'unknown_conn_current_rate': {'type': 'int', }, 'unknown_conn_rate_limit_drop': {'type': 'int', }}})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_resend_template
 description:
     - Configure when to resend netflow template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

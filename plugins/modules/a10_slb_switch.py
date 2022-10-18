@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_switch
 description:
     - Configure slb switch
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -633,15 +633,13 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'fwlb', 'licexpire_drop', 'bwl_drop', 'rx_kernel', 'rx_arp_req', 'rx_arp_resp', 'vlan_flood', 'l2_def_vlan_drop', 'ipv4_noroute_drop', 'ipv6_noroute_drop', 'prot_down_drop', 'l2_forward', 'l3_forward_ip', 'l3_forward_ipv6', 'l4_process', 'unknown_prot_drop',
-                    'ttl_exceeded_drop', 'linkdown_drop', 'sport_drop', 'incorrect_len_drop', 'ip_defrag', 'acl_deny', 'ipfrag_tcp', 'ipfrag_overlap', 'ipfrag_timeout', 'ipfrag_overload', 'ipfrag_reasmoks', 'ipfrag_reasmfails', 'land_drop', 'ipoptions_drop', 'badpkt_drop', 'pingofdeath_drop',
-                    'allfrag_drop', 'tcpnoflag_drop', 'tcpsynfrag_drop', 'tcpsynfin_drop', 'ipsec_drop', 'bpdu_rcvd', 'bpdu_sent', 'ctrl_syn_rate_drop', 'ip_defrag_invalid_len', 'ipv4_frag_6rd_ok', 'ipv4_frag_6rd_drop', 'no_ip_drop', 'ipv6frag_udp', 'ipv6frag_udp_dropped', 'ipv6frag_tcp_dropped',
-                    'ipv6frag_ipip_ok', 'ipv6frag_ipip_dropped', 'ip_frag_oversize', 'ip_frag_too_many', 'ipv4_novlanfwd_drop', 'ipv6_novlanfwd_drop', 'fpga_error_pkt1', 'fpga_error_pkt2', 'max_arp_drop', 'ipv6frag_tcp', 'ipv6frag_icmp', 'ipv6frag_ospf', 'ipv6frag_esp', 'l4_in_ctrl_cpu',
-                    'mgmt_svc_drop', 'jumbo_frag_drop', 'ipv6_jumbo_frag_drop', 'ipipv6_jumbo_frag_drop', 'ipv6_ndisc_dad_solicits', 'ipv6_ndisc_dad_adverts', 'ipv6_ndisc_mac_changes', 'ipv6_ndisc_out_of_memory', 'sp_non_ctrl_pkt_drop', 'urpf_pkt_drop', 'fw_smp_zone_mismatch', 'ipfrag_udp',
-                    'ipfrag_icmp', 'ipfrag_ospf', 'ipfrag_esp', 'ipfrag_tcp_dropped', 'ipfrag_udp_dropped', 'ipfrag_ipip_dropped', 'redirect_fwd_fail', 'redirect_fwd_sent', 'redirect_rev_fail', 'redirect_rev_sent', 'redirect_setup_fail', 'ip_frag_sent', 'invalid_rx_arp_pkt',
-                    'invalid_sender_mac_arp_drop', 'dev_based_arp_drop', 'scaleout_arp_drop', 'virtual_ip_not_found_arp_drop', 'inactive_static_nat_pool_arp_drop', 'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop', 'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop', 'ip_not_found_arp_drop',
-                    'dev_link_down_arp_drop', 'lacp_tx_intf_err_drop', 'service_chain_sent', 'service_chain_rcvd', 'unnumbered_nat_error', 'unnumbered_unsupported_drop', 'ipv6frag_gre_dropped', 'ipv6_ndisc_dad_prefix_mismatch_drop', 'bw_ignore_limit', 'ppsl_drop_egr', 'ppsl_drop_ing',
-                    'ppsl_ignore_limit', 'closed_port_syn_drop'
+                    'all', 'fwlb', 'licexpire_drop', 'bwl_drop', 'rx_kernel', 'rx_arp_req', 'rx_arp_resp', 'vlan_flood', 'l2_def_vlan_drop', 'ipv4_noroute_drop', 'ipv6_noroute_drop', 'prot_down_drop', 'l2_forward', 'l3_forward_ip', 'l3_forward_ipv6', 'l4_process', 'unknown_prot_drop', 'ttl_exceeded_drop', 'linkdown_drop', 'sport_drop',
+                    'incorrect_len_drop', 'ip_defrag', 'acl_deny', 'ipfrag_tcp', 'ipfrag_overlap', 'ipfrag_timeout', 'ipfrag_overload', 'ipfrag_reasmoks', 'ipfrag_reasmfails', 'land_drop', 'ipoptions_drop', 'badpkt_drop', 'pingofdeath_drop', 'allfrag_drop', 'tcpnoflag_drop', 'tcpsynfrag_drop', 'tcpsynfin_drop', 'ipsec_drop', 'bpdu_rcvd',
+                    'bpdu_sent', 'ctrl_syn_rate_drop', 'ip_defrag_invalid_len', 'ipv4_frag_6rd_ok', 'ipv4_frag_6rd_drop', 'no_ip_drop', 'ipv6frag_udp', 'ipv6frag_udp_dropped', 'ipv6frag_tcp_dropped', 'ipv6frag_ipip_ok', 'ipv6frag_ipip_dropped', 'ip_frag_oversize', 'ip_frag_too_many', 'ipv4_novlanfwd_drop', 'ipv6_novlanfwd_drop', 'fpga_error_pkt1',
+                    'fpga_error_pkt2', 'max_arp_drop', 'ipv6frag_tcp', 'ipv6frag_icmp', 'ipv6frag_ospf', 'ipv6frag_esp', 'l4_in_ctrl_cpu', 'mgmt_svc_drop', 'jumbo_frag_drop', 'ipv6_jumbo_frag_drop', 'ipipv6_jumbo_frag_drop', 'ipv6_ndisc_dad_solicits', 'ipv6_ndisc_dad_adverts', 'ipv6_ndisc_mac_changes', 'ipv6_ndisc_out_of_memory',
+                    'sp_non_ctrl_pkt_drop', 'urpf_pkt_drop', 'fw_smp_zone_mismatch', 'ipfrag_udp', 'ipfrag_icmp', 'ipfrag_ospf', 'ipfrag_esp', 'ipfrag_tcp_dropped', 'ipfrag_udp_dropped', 'ipfrag_ipip_dropped', 'redirect_fwd_fail', 'redirect_fwd_sent', 'redirect_rev_fail', 'redirect_rev_sent', 'redirect_setup_fail', 'ip_frag_sent',
+                    'invalid_rx_arp_pkt', 'invalid_sender_mac_arp_drop', 'dev_based_arp_drop', 'scaleout_arp_drop', 'virtual_ip_not_found_arp_drop', 'inactive_static_nat_pool_arp_drop', 'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop', 'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop', 'ip_not_found_arp_drop', 'dev_link_down_arp_drop',
+                    'lacp_tx_intf_err_drop', 'service_chain_sent', 'service_chain_rcvd', 'unnumbered_nat_error', 'unnumbered_unsupported_drop', 'ipv6frag_gre_dropped', 'ipv6_ndisc_dad_prefix_mismatch_drop', 'bw_ignore_limit', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'closed_port_syn_drop'
                     ]
                 }
             },

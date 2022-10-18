@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_fragmentation_inbound
 description:
     - DS-Lite fragmentation rules for inbound oversize packets (default= ipv6)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

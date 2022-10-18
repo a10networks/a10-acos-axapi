@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_local_logging
 description:
     - Configure local logging/persistant storage of FW logs
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -367,10 +367,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'init-pass', 'init-fail', 'freed', 'disk-over-thres', 'rate-limited', 'not-inited', 'sent-to-store', 'sent-to-store-fail', 'store-fail', 'in-logs', 'in-bytes', 'in-logs-backlog', 'in-bytes-backlog', 'in-store-fail-no-space', 'in-discard-logs', 'in-discard-bytes',
-                    'out-logs', 'out-bytes', 'out-error', 'remaining-logs', 'remaining-bytes', 'moved-to-delq', 'out-retry', 'out-retry-fail', 'curr-total-chunks', 'curr-mem-chunks', 'curr-fs-chunks', 'curr-fs-chunks-up', 'curr-fs-chunks-down', 'in-logs-agg', 'in-bytes-agg', 'in-logs-backlog-agg',
-                    'in-bytes-backlog-agg', 'in-store-fail-no-space-agg', 'in-discard-logs-agg', 'in-discard-bytes-agg', 'out-logs-agg', 'out-bytes-agg', 'out-error-agg', 'out-retry-agg', 'out-retry-fail-agg', 'in-logs-curr-agg', 'in-bytes-curr-agg', 'in-logs-backlog-curr-agg',
-                    'in-bytes-backlog-curr-agg', 'in-discard-logs-curr-agg', 'in-discard-bytes-curr-agg', 'out-logs-curr-agg', 'out-bytes-curr-agg'
+                    'all', 'init-pass', 'init-fail', 'freed', 'disk-over-thres', 'rate-limited', 'not-inited', 'sent-to-store', 'sent-to-store-fail', 'store-fail', 'in-logs', 'in-bytes', 'in-logs-backlog', 'in-bytes-backlog', 'in-store-fail-no-space', 'in-discard-logs', 'in-discard-bytes', 'out-logs', 'out-bytes', 'out-error', 'remaining-logs',
+                    'remaining-bytes', 'moved-to-delq', 'out-retry', 'out-retry-fail', 'curr-total-chunks', 'curr-mem-chunks', 'curr-fs-chunks', 'curr-fs-chunks-up', 'curr-fs-chunks-down', 'in-logs-agg', 'in-bytes-agg', 'in-logs-backlog-agg', 'in-bytes-backlog-agg', 'in-store-fail-no-space-agg', 'in-discard-logs-agg', 'in-discard-bytes-agg',
+                    'out-logs-agg', 'out-bytes-agg', 'out-error-agg', 'out-retry-agg', 'out-retry-fail-agg', 'in-logs-curr-agg', 'in-bytes-curr-agg', 'in-logs-backlog-curr-agg', 'in-bytes-backlog-curr-agg', 'in-discard-logs-curr-agg', 'in-discard-bytes-curr-agg', 'out-logs-curr-agg', 'out-bytes-curr-agg'
                     ]
                 }
             },

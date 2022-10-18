@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_common
 description:
     - HA VRRP-A Global Commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -226,10 +226,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "action", "arp_retry", "dead_timer", "device_id", "disable_default_vrid", "enable_sync_session_seq_number", "forward_l4_packet_on_standby", "get_ready_time", "hello_interval", "hostid_append_to_vrid", "inline_mode_cfg", "preemption_delay", "restart_time", "set_id", "stats", "track_event_delay",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["action", "arp_retry", "dead_timer", "device_id", "disable_default_vrid", "enable_sync_session_seq_number", "forward_l4_packet_on_standby", "get_ready_time", "hello_interval", "hostid_append_to_vrid", "inline_mode_cfg", "preemption_delay", "restart_time", "set_id", "stats", "track_event_delay", "uuid", ]
 
 
 def get_default_argspec():

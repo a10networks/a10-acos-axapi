@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg
 description:
     - Configure ALG
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -289,8 +289,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'client-port-request', 'client-eprt-request', 'server-pasv-reply', 'server-epsv-reply', 'port-retransmits', 'pasv-retransmits', 'smp-app-type-mismatch', 'retransmit-sanity-check-failure', 'smp-conn-alloc-failure', 'port-helper-created', 'pasv-helper-created',
-                        'port-helper-acquire-in-del-q', 'port-helper-acquire-already-used', 'pasv-helper-acquire-in-del-q', 'pasv-helper-acquire-already-used', 'port-helper-freed-used', 'port-helper-freed-unused', 'pasv-helper-freed-used', 'pasv-helper-freed-unused'
+                        'all', 'client-port-request', 'client-eprt-request', 'server-pasv-reply', 'server-epsv-reply', 'port-retransmits', 'pasv-retransmits', 'smp-app-type-mismatch', 'retransmit-sanity-check-failure', 'smp-conn-alloc-failure', 'port-helper-created', 'pasv-helper-created', 'port-helper-acquire-in-del-q',
+                        'port-helper-acquire-already-used', 'pasv-helper-acquire-in-del-q', 'pasv-helper-acquire-already-used', 'port-helper-freed-used', 'port-helper-freed-unused', 'pasv-helper-freed-used', 'pasv-helper-freed-unused'
                         ]
                     }
                 }
@@ -327,10 +327,10 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'transport-inserted', 'transport-freed', 'transport-alloc-failure', 'data-session-created', 'data-session-freed', 'ext-creation-failure', 'transport-add-to-ext', 'transport-removed-from-ext', 'transport-too-many', 'transport-already-in-ext', 'transport-exists',
-                        'transport-link-ext-failure-control', 'transport-link-ext-data', 'transport-link-ext-failure-data', 'transport-inserted-shadow', 'transport-creation-race', 'transport-alloc-failure-shadow', 'transport-put-in-del-q', 'transport-freed-shadow', 'transport-acquired-from-control',
-                        'transport-found-from-prev-control', 'transport-acquire-failure-from-control', 'transport-released-from-control', 'transport-double-release-from-control', 'transport-acquired-from-data', 'transport-acquire-failure-from-data', 'transport-released-from-data',
-                        'transport-double-release-from-data', 'transport-retry-lookup-on-data-free', 'transport-not-found-on-data-free', 'data-session-created-shadow', 'data-session-freed-shadow', 'ha-control-ext-creation-failure', 'ha-control-session-created', 'ha-data-session-created'
+                        'all', 'transport-inserted', 'transport-freed', 'transport-alloc-failure', 'data-session-created', 'data-session-freed', 'ext-creation-failure', 'transport-add-to-ext', 'transport-removed-from-ext', 'transport-too-many', 'transport-already-in-ext', 'transport-exists', 'transport-link-ext-failure-control',
+                        'transport-link-ext-data', 'transport-link-ext-failure-data', 'transport-inserted-shadow', 'transport-creation-race', 'transport-alloc-failure-shadow', 'transport-put-in-del-q', 'transport-freed-shadow', 'transport-acquired-from-control', 'transport-found-from-prev-control', 'transport-acquire-failure-from-control',
+                        'transport-released-from-control', 'transport-double-release-from-control', 'transport-acquired-from-data', 'transport-acquire-failure-from-data', 'transport-released-from-data', 'transport-double-release-from-data', 'transport-retry-lookup-on-data-free', 'transport-not-found-on-data-free', 'data-session-created-shadow',
+                        'data-session-freed-shadow', 'ha-control-ext-creation-failure', 'ha-control-session-created', 'ha-data-session-created'
                         ]
                     }
                 }
@@ -350,9 +350,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'calls-established', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'gre-session-created', 'gre-session-freed', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown', 'call-reply-retransmit',
-                        'call-reply-ext-ext-alloc-failure', 'smp-app-type-mismatch', 'smp-client-call-id-mismatch', 'smp-sessions-created', 'smp-sessions-freed', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route', 'gre-no-rev-route',
-                        'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch', 'control-freed', 'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
+                        'all', 'calls-established', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'gre-session-created', 'gre-session-freed', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown', 'call-reply-retransmit', 'call-reply-ext-ext-alloc-failure', 'smp-app-type-mismatch',
+                        'smp-client-call-id-mismatch', 'smp-sessions-created', 'smp-sessions-freed', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route', 'gre-no-rev-route', 'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch',
+                        'control-freed', 'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
                         ]
                     }
                 }
@@ -372,9 +372,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'stat-request', 'stat-response', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-options', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update',
-                        'method-unknown', 'parse-error', 'keep-alive', 'contact-error', 'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success', 'rtp-port-failure', 'rtcp-port-failure', 'contact-port-no-op', 'contact-port-success', 'contact-port-failure', 'contact-new', 'contact-alloc-failure',
-                        'contact-eim', 'contact-eim-set', 'rtp-new', 'rtp-alloc-failure', 'rtp-eim', 'helper-found', 'helper-created', 'helper-deleted', 'helper-freed', 'helper-failure'
+                        'all', 'stat-request', 'stat-response', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-options', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update', 'method-unknown', 'parse-error', 'keep-alive',
+                        'contact-error', 'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success', 'rtp-port-failure', 'rtcp-port-failure', 'contact-port-no-op', 'contact-port-success', 'contact-port-failure', 'contact-new', 'contact-alloc-failure', 'contact-eim', 'contact-eim-set', 'rtp-new', 'rtp-alloc-failure', 'rtp-eim', 'helper-found',
+                        'helper-created', 'helper-deleted', 'helper-freed', 'helper-failure'
                         ]
                     }
                 }

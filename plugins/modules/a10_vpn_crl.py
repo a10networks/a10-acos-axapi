@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_crl
 description:
     - VPN Certificate Revocation List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -148,38 +148,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'crl_list': {
-                'type': 'list',
-                'subject': {
-                    'type': 'str',
-                    },
-                'issuer': {
-                    'type': 'str',
-                    },
-                'updates': {
-                    'type': 'str',
-                    },
-                'serial': {
-                    'type': 'str',
-                    },
-                'revoked': {
-                    'type': 'str',
-                    },
-                'storage_type': {
-                    'type': 'str',
-                    }
-                },
-            'total_crls': {
-                'type': 'int',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'crl_list': {'type': 'list', 'subject': {'type': 'str', }, 'issuer': {'type': 'str', }, 'updates': {'type': 'str', }, 'serial': {'type': 'str', }, 'revoked': {'type': 'str', }, 'storage_type': {'type': 'str', }}, 'total_crls': {'type': 'int', }}})
     return rv
 
 

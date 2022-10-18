@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_persist_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -246,8 +246,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cookie_invalid", "cookie_not_found", "cookie_persist_fail", "cssl_sid_not_found", "cssl_sid_not_match", "dst_ip_fail", "dst_ip_hash_fail", "dst_ip_new_sess_cache_fail", "dst_ip_new_sess_sel_fail", "duration", "hash_tbl_create_fail", "hash_tbl_rst_adddel", "hash_tbl_rst_updown",
-    "hash_tbl_trylock_fail", "header_hash_fail", "src_ip_fail", "src_ip_hash_fail", "src_ip_new_sess_cache_fail", "src_ip_new_sess_sel_fail", "ssl_sid_persist_fail", "ssl_sid_session_fail", "sssl_sid_not_found", "sssl_sid_not_match", "threshold_exceeded_by", "url_hash_fail", "uuid",
+    "cookie_invalid", "cookie_not_found", "cookie_persist_fail", "cssl_sid_not_found", "cssl_sid_not_match", "dst_ip_fail", "dst_ip_hash_fail", "dst_ip_new_sess_cache_fail", "dst_ip_new_sess_sel_fail", "duration", "hash_tbl_create_fail", "hash_tbl_rst_adddel", "hash_tbl_rst_updown", "hash_tbl_trylock_fail", "header_hash_fail", "src_ip_fail",
+    "src_ip_hash_fail", "src_ip_new_sess_cache_fail", "src_ip_new_sess_sel_fail", "ssl_sid_persist_fail", "ssl_sid_session_fail", "sssl_sid_not_found", "sssl_sid_not_match", "threshold_exceeded_by", "url_hash_fail", "uuid",
     ]
 
 

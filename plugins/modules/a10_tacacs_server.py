@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_tacacs_server
 description:
     - Configure TACACS+ servers
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

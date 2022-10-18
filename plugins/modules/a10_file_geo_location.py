@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_geo_location
 description:
     - Display geo-location files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

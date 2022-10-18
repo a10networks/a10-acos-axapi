@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_reporting_telemetry_export_interval
 description:
     - Configure monitor entity telemetry data export interval
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

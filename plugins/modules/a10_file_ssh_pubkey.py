@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_ssh_pubkey
 description:
     - The ssh pubkey for admin user
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -159,41 +159,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'file_path': {
-            'type': 'str',
-            },
-        'user': {
-            'type': 'str',
-            },
-        'file_handle': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'file_list': {
-                'type': 'list',
-                'user': {
-                    'type': 'str',
-                    },
-                'index': {
-                    'type': 'str',
-                    },
-                'ntype': {
-                    'type': 'str',
-                    },
-                'content': {
-                    'type': 'str',
-                    },
-                'comment': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'file_path': {'type': 'str', }, 'user': {'type': 'str', }, 'file_handle': {'type': 'str', }, 'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'file_list': {'type': 'list', 'user': {'type': 'str', }, 'index': {'type': 'str', }, 'ntype': {'type': 'str', }, 'content': {'type': 'str', }, 'comment': {'type': 'str', }}}})
     return rv
 
 

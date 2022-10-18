@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_mlb
 description:
     - Configure mlb
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -256,8 +256,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'client_msg_sent', 'server_msg_received', 'server_conn_created', 'server_conn_rst', 'server_conn_failed', 'server_conn_closed', 'client_conn_created', 'client_conn_closed', 'client_conn_not_found', 'msg_dropped', 'msg_rerouted', 'mlb_dcmsg_sent', 'mlb_dcmsg_received',
-                    'mlb_dcmsg_error', 'mlb_dcmsg_alloc', 'mlb_dcmsg_free', 'mlb_server_probe', 'mlb_server_down'
+                    'all', 'client_msg_sent', 'server_msg_received', 'server_conn_created', 'server_conn_rst', 'server_conn_failed', 'server_conn_closed', 'client_conn_created', 'client_conn_closed', 'client_conn_not_found', 'msg_dropped', 'msg_rerouted', 'mlb_dcmsg_sent', 'mlb_dcmsg_received', 'mlb_dcmsg_error', 'mlb_dcmsg_alloc',
+                    'mlb_dcmsg_free', 'mlb_server_probe', 'mlb_server_down'
                     ]
                 }
             },

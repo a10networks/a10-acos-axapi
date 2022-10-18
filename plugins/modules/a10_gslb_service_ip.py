@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_service_ip
 description:
     - Service IP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

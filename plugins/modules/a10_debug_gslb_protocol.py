@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_gslb_protocol
 description:
     - Debug GSLB protocol
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -234,10 +234,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "active_rdt", "all", "cache", "event", "fsm", "ip", "ipc", "keep_alive", "message", "message_all", "message_ardt_query", "message_ardt_report", "message_control", "message_keepalive", "message_notify", "message_open", "message_query", "message_update", "name", "normal", "peer_ipv4", "peer_ipv6",
-    "timer", "update", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["active_rdt", "all", "cache", "event", "fsm", "ip", "ipc", "keep_alive", "message", "message_all", "message_ardt_query", "message_ardt_report", "message_control", "message_keepalive", "message_notify", "message_open", "message_query", "message_update", "name", "normal", "peer_ipv4", "peer_ipv6", "timer", "update", "uuid", ]
 
 
 def get_default_argspec():

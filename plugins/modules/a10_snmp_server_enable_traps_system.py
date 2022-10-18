@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_system
 description:
     - Enable system group traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -233,8 +233,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "all", "apps_global", "control_cpu_high", "data_cpu_high", "fan", "file_sys_read_only", "high_disk_use", "high_memory_use", "high_temp", "license_management", "low_temp", "packet_drop", "power", "pri_disk", "restart", "sec_disk", "shutdown", "smp_resource_event", "start", "syslog_severity_one",
-    "tacacs_server_up_down", "uuid",
+    "all", "apps_global", "control_cpu_high", "data_cpu_high", "fan", "file_sys_read_only", "high_disk_use", "high_memory_use", "high_temp", "license_management", "low_temp", "packet_drop", "power", "pri_disk", "restart", "sec_disk", "shutdown", "smp_resource_event", "start", "syslog_severity_one", "tacacs_server_up_down", "uuid",
     ]
 
 

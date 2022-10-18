@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_unnumbered_use_source_ipv6
 description:
     - Source IPv6 address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

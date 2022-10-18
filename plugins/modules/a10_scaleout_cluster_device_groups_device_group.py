@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_device_groups_device_group
 description:
     - Configure scaleout device groups
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

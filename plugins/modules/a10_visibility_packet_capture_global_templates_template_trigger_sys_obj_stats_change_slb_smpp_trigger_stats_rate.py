@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_smpp_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -177,32 +177,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'threshold_exceeded_by': {
-            'type': 'int',
-            },
-        'duration': {
-            'type': 'int',
-            },
-        'msg_proxy_client_fail': {
-            'type': 'bool',
-            },
-        'msg_proxy_server_fail': {
-            'type': 'bool',
-            },
-        'msg_proxy_fail_start_server_conn': {
-            'type': 'bool',
-            },
-        'select_client_fail': {
-            'type': 'bool',
-            },
-        'select_server_fail': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'msg_proxy_client_fail': {'type': 'bool', }, 'msg_proxy_server_fail': {'type': 'bool', }, 'msg_proxy_fail_start_server_conn': {'type': 'bool', }, 'select_client_fail': {'type': 'bool', }, 'select_server_fail': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

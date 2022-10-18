@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_local_log
 description:
     - Enable local-log for Application Firewall
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

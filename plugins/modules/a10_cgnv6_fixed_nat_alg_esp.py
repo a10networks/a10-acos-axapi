@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_esp
 description:
     - Change Fixed NAT ESP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

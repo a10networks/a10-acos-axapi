@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_dns
 description:
     - DNS Global Options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -344,9 +344,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'total-query', 'total-response', 'bad-packet-query', 'bad-packet-response', 'bad-header-query', 'bad-header-response', 'bad-format-query', 'bad-format-response', 'bad-service-query', 'bad-service-response', 'bad-class-query', 'bad-class-response', 'bad-type-query',
-                    'bad-type-response', 'no_answer', 'metric_health_check', 'metric_weighted_ip', 'metric_weighted_site', 'metric_capacity', 'metric_active_server', 'metric_easy_rdt', 'metric_active_rdt', 'metric_geographic', 'metric_connection_load', 'metric_number_of_sessions',
-                    'metric_active_weight', 'metric_admin_preference', 'metric_bandwidth_quality', 'metric_bandwidth_cost', 'metric_user', 'metric_least_reponse', 'metric_admin_ip', 'metric_round_robin'
+                    'all', 'total-query', 'total-response', 'bad-packet-query', 'bad-packet-response', 'bad-header-query', 'bad-header-response', 'bad-format-query', 'bad-format-response', 'bad-service-query', 'bad-service-response', 'bad-class-query', 'bad-class-response', 'bad-type-query', 'bad-type-response', 'no_answer', 'metric_health_check',
+                    'metric_weighted_ip', 'metric_weighted_site', 'metric_capacity', 'metric_active_server', 'metric_easy_rdt', 'metric_active_rdt', 'metric_geographic', 'metric_connection_load', 'metric_number_of_sessions', 'metric_active_weight', 'metric_admin_preference', 'metric_bandwidth_quality', 'metric_bandwidth_cost', 'metric_user',
+                    'metric_least_reponse', 'metric_admin_ip', 'metric_round_robin'
                     ]
                 }
             },

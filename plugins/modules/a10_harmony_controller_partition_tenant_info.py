@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_harmony_controller_partition_tenant_info
 description:
     - Harmony controller profile
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

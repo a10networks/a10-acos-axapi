@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_trap
 description:
     - Set logging level which sent to snmp trap host
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

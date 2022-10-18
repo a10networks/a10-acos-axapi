@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_miscellenious_alb
 description:
     - Miscellenious Information Used for CLI rendering
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

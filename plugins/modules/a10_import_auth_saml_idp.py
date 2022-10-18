@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_auth_saml_idp
 description:
     - SAML metadata of identity provider
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

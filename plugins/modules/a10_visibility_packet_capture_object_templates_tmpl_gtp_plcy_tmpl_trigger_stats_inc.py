@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_tmpl_gtp_plcy_tmpl_trigger_stats_inc
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -291,10 +291,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "drop_vld_country_code_mismatch", "drop_vld_cross_layer_correlation", "drop_vld_gtp_bearer_count_exceed", "drop_vld_gtp_ie_repeat_count_exceed", "drop_vld_gtp_invalid_apn_len_drop", "drop_vld_gtp_invalid_imsi_len_drop", "drop_vld_gtp_u_spoofed_source_address",
-    "drop_vld_gtp_v2_wrong_lbi_create_bearer", "drop_vld_gtpv0_seqnum_buffer_full", "drop_vld_gtpv1_seqnum_buffer_full", "drop_vld_gtpv2_seqnum_buffer_full", "drop_vld_invalid_flow_label_v0", "drop_vld_invalid_pkt_len_piggyback", "drop_vld_invalid_teid", "drop_vld_mandatory_ie_in_grouped_ie",
-    "drop_vld_mandatory_information_element", "drop_vld_message_length", "drop_vld_out_of_order_ie", "drop_vld_out_of_state", "drop_vld_out_of_state_ie", "drop_vld_protocol_flag_unset", "drop_vld_reserved_field_set", "drop_vld_reserved_information_element", "drop_vld_sanity_failed_piggyback",
-    "drop_vld_sequence_num_correlation", "drop_vld_tunnel_id_flag", "drop_vld_v0_reserved_message_drop", "drop_vld_v1_reserved_message_drop", "drop_vld_v2_reserved_message_drop", "drop_vld_version_not_supported", "uuid",
+    "drop_vld_country_code_mismatch", "drop_vld_cross_layer_correlation", "drop_vld_gtp_bearer_count_exceed", "drop_vld_gtp_ie_repeat_count_exceed", "drop_vld_gtp_invalid_apn_len_drop", "drop_vld_gtp_invalid_imsi_len_drop", "drop_vld_gtp_u_spoofed_source_address", "drop_vld_gtp_v2_wrong_lbi_create_bearer", "drop_vld_gtpv0_seqnum_buffer_full",
+    "drop_vld_gtpv1_seqnum_buffer_full", "drop_vld_gtpv2_seqnum_buffer_full", "drop_vld_invalid_flow_label_v0", "drop_vld_invalid_pkt_len_piggyback", "drop_vld_invalid_teid", "drop_vld_mandatory_ie_in_grouped_ie", "drop_vld_mandatory_information_element", "drop_vld_message_length", "drop_vld_out_of_order_ie", "drop_vld_out_of_state",
+    "drop_vld_out_of_state_ie", "drop_vld_protocol_flag_unset", "drop_vld_reserved_field_set", "drop_vld_reserved_information_element", "drop_vld_sanity_failed_piggyback", "drop_vld_sequence_num_correlation", "drop_vld_tunnel_id_flag", "drop_vld_v0_reserved_message_drop", "drop_vld_v1_reserved_message_drop", "drop_vld_v2_reserved_message_drop",
+    "drop_vld_version_not_supported", "uuid",
     ]
 
 

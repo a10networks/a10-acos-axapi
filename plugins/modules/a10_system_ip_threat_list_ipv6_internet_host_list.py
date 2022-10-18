@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ip_threat_list_ipv6_internet_host_list
 description:
     - List of IPv6 Class Lists for Internet Host IPv6 Threat List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

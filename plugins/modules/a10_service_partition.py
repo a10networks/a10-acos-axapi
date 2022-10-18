@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_service_partition
 description:
     - Create/unload a service partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

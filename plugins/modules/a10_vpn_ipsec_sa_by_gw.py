@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ipsec_sa_by_gw
 description:
     - Get IPsec SAs by IKE Gateway
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

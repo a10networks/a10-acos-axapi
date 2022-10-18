@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_cookie_security
 description:
     - Protections to secure cookies
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -238,8 +238,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "allow_missing_cookie", "allow_unrecognized_cookie", "cookie_policy", "enable_disable_action", "set_cookie_policy", "tamper_protection_grace_period", "tamper_protection_http_only", "tamper_protection_samesite", "tamper_protection_secret", "tamper_protection_secret_encrypted",
-    "tamper_protection_secure", "tamper_protection_session_cookie_only", "tamper_protection_sign", "uuid",
+    "allow_missing_cookie", "allow_unrecognized_cookie", "cookie_policy", "enable_disable_action", "set_cookie_policy", "tamper_protection_grace_period", "tamper_protection_http_only", "tamper_protection_samesite", "tamper_protection_secret", "tamper_protection_secret_encrypted", "tamper_protection_secure", "tamper_protection_session_cookie_only",
+    "tamper_protection_sign", "uuid",
     ]
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_range_list
 description:
     - IP Source NAT Static range list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

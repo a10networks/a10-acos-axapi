@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin_lockout
 description:
     - Admin user lockout configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
