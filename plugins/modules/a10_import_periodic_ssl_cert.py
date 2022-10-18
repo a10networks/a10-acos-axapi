@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_ssl_cert
 description:
     - SSL Cert File(enter bulk when import an archive file)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -164,31 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ssl_cert': {
-            'type': 'str',
-            'required': True,
-            },
-        'certificate_type': {
-            'type': 'str',
-            'choices': ['pem', 'der', 'pfx', 'p7b']
-            },
-        'pfx_password': {
-            'type': 'str',
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'remote_file': {
-            'type': 'str',
-            },
-        'period': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'ssl_cert': {'type': 'str', 'required': True, }, 'certificate_type': {'type': 'str', 'choices': ['pem', 'der', 'pfx', 'p7b']}, 'pfx_password': {'type': 'str', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

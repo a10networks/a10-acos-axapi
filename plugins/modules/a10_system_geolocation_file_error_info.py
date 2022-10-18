@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geolocation_file_error_info
 description:
     - Geolocation File Error Information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

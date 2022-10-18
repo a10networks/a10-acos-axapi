@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ntp_auth_key
 description:
     - authentication key
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -172,35 +172,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'key': {
-            'type': 'int',
-            'required': True,
-            },
-        'alg_type': {
-            'type': 'str',
-            'choices': ['M', 'SHA', 'SHA1']
-            },
-        'key_type': {
-            'type': 'str',
-            'choices': ['ascii', 'hex']
-            },
-        'asc_key': {
-            'type': 'str',
-            },
-        'encrypted': {
-            'type': 'str',
-            },
-        'hex_key': {
-            'type': 'str',
-            },
-        'hex_encrypted': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'key': {'type': 'int', 'required': True, }, 'alg_type': {'type': 'str', 'choices': ['M', 'SHA', 'SHA1']}, 'key_type': {'type': 'str', 'choices': ['ascii', 'hex']}, 'asc_key': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'hex_key': {'type': 'str', }, 'hex_encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

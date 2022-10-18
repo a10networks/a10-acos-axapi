@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_sample_ve
 description:
     - select VE interface to monitor
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

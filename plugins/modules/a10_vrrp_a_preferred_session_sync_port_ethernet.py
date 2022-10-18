@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_preferred_session_sync_port_ethernet
 description:
     - preferred-session-sync-port ethernet
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

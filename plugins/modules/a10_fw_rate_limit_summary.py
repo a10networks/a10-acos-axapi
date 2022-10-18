@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_rate_limit_summary
 description:
     - View A Summary About Rate Limit Entries
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -93,6 +93,18 @@ options:
             total_entries_scope_subscriber_prefix:
                 description:
                 - "Field total_entries_scope_subscriber_prefix"
+                type: int
+            total_entries_scope_parent:
+                description:
+                - "Field total_entries_scope_parent"
+                type: int
+            total_entries_scope_parent_subscriber_ip:
+                description:
+                - "Field total_entries_scope_parent_subscriber_ip"
+                type: int
+            total_entries_scope_parent_subscriber_prefix:
+                description:
+                - "Field total_entries_scope_parent_subscriber_prefix"
                 type: int
 
 '''
@@ -193,6 +205,15 @@ def get_argspec():
                 'type': 'int',
                 },
             'total_entries_scope_subscriber_prefix': {
+                'type': 'int',
+                },
+            'total_entries_scope_parent': {
+                'type': 'int',
+                },
+            'total_entries_scope_parent_subscriber_ip': {
+                'type': 'int',
+                },
+            'total_entries_scope_parent_subscriber_prefix': {
                 'type': 'int',
                 }
             }

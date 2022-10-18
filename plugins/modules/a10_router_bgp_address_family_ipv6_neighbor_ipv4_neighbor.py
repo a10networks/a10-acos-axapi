@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6_neighbor_ipv4_neighbor
 description:
     - Specify a peer-group neighbor router
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -268,8 +268,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "activate", "allowas_in", "allowas_in_count", "default_originate", "distribute_lists", "graceful_restart", "inbound", "maximum_prefix", "maximum_prefix_thres", "neighbor_filter_lists", "neighbor_ipv4", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "peer_group_name",
-    "prefix_list_direction", "remove_private_as", "restart_min", "route_map", "send_community_val", "unsuppress_map", "uuid", "weight",
+    "activate", "allowas_in", "allowas_in_count", "default_originate", "distribute_lists", "graceful_restart", "inbound", "maximum_prefix", "maximum_prefix_thres", "neighbor_filter_lists", "neighbor_ipv4", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "peer_group_name", "prefix_list_direction", "remove_private_as",
+    "restart_min", "route_map", "send_community_val", "unsuppress_map", "uuid", "weight",
     ]
 
 

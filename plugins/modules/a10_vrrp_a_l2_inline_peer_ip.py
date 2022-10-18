@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_l2_inline_peer_ip
 description:
     - Peer IP for Layer 2 inline mode
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

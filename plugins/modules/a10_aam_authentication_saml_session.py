@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_session
 description:
     - Field session
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

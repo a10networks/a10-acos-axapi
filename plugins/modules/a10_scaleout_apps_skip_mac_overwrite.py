@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_apps_skip_mac_overwrite
 description:
     - Skips overwriting dest MAC of flooded packets on Active node
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

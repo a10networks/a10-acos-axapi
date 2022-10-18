@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_net_mgmt_snmp_engineid
 description:
     - SNMP engineID
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

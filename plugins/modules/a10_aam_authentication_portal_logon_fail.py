@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_portal_logon_fail
 description:
     - Logon fail page configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

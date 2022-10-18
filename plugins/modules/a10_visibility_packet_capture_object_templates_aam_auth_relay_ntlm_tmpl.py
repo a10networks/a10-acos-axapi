@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_relay_ntlm_tmpl
 description:
     - Configure template for aam.authentication.relay.ntlm
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

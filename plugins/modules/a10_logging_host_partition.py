@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_host_partition
 description:
     - Specify preferred partition configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

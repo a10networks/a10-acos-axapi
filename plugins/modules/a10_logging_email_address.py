@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_email_address
 description:
     - Set the recipients address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

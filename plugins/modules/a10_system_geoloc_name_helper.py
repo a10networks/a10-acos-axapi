@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geoloc_name_helper
 description:
     - Geolocation name helper
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -163,36 +163,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'place-holder']
-                }
-            },
-        'oper': {
-            'type': 'dict',
-            'geoloc_candidate_list': {
-                'type': 'list',
-                'geoloc_name': {
-                    'type': 'str',
-                    },
-                'has_subregion': {
-                    'type': 'int',
-                    }
-                },
-            'geoloc': {
-                'type': 'str',
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'place-holder']}}, 'oper': {'type': 'dict', 'geoloc_candidate_list': {'type': 'list', 'geoloc_name': {'type': 'str', }, 'has_subregion': {'type': 'int', }}, 'geoloc': {'type': 'str', }}, 'stats': {'type': 'dict', }})
     return rv
 
 

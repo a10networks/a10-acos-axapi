@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_distributed_forwarding_cgn
 description:
     - Enable Scaleout distributed-forwarding for cgn
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_policy
 description:
     - Manage WAF Policy files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

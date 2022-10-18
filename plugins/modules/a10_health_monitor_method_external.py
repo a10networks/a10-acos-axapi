@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_external
 description:
     - EXTERNAL type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,32 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'external': {
-            'type': 'bool',
-            },
-        'ext_program': {
-            'type': 'str',
-            },
-        'shared_partition_program': {
-            'type': 'bool',
-            },
-        'ext_program_shared': {
-            'type': 'str',
-            },
-        'ext_port': {
-            'type': 'int',
-            },
-        'ext_arguments': {
-            'type': 'str',
-            },
-        'ext_preference': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'external': {'type': 'bool', }, 'ext_program': {'type': 'str', }, 'shared_partition_program': {'type': 'bool', }, 'ext_program_shared': {'type': 'str', }, 'ext_port': {'type': 'int', }, 'ext_arguments': {'type': 'str', }, 'ext_preference': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(monitor_name=dict(type='str', required=True), ))
     return rv

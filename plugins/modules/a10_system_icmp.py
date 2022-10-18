@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_icmp
 description:
     - Display ICMP statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -279,8 +279,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'num', 'inmsgs', 'inerrors', 'indestunreachs', 'intimeexcds', 'inparmprobs', 'insrcquenchs', 'inredirects', 'inechos', 'inechoreps', 'intimestamps', 'intimestampreps', 'inaddrmasks', 'inaddrmaskreps', 'outmsgs', 'outerrors', 'outdestunreachs', 'outtimeexcds',
-                    'outparmprobs', 'outsrcquenchs', 'outredirects', 'outechos', 'outechoreps', 'outtimestamps', 'outtimestampreps', 'outaddrmasks', 'outaddrmaskreps'
+                    'all', 'num', 'inmsgs', 'inerrors', 'indestunreachs', 'intimeexcds', 'inparmprobs', 'insrcquenchs', 'inredirects', 'inechos', 'inechoreps', 'intimestamps', 'intimestampreps', 'inaddrmasks', 'inaddrmaskreps', 'outmsgs', 'outerrors', 'outdestunreachs', 'outtimeexcds', 'outparmprobs', 'outsrcquenchs', 'outredirects', 'outechos',
+                    'outechoreps', 'outtimestamps', 'outtimestampreps', 'outaddrmasks', 'outaddrmaskreps'
                     ]
                 }
             },

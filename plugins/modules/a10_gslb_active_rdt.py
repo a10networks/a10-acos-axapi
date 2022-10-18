@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_active_rdt
 description:
     - Active RDT Options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

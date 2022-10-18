@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_hsm_rfs_sync
 description:
     - Sync with RFS server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

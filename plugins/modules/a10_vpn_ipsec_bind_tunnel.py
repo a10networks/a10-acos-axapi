@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ipsec_bind_tunnel
 description:
     - Binds tunnel interface to the IPsec connection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

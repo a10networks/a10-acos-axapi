@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_smtp
 description:
     - Debug SMTP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

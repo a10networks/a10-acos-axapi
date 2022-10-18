@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_top_k_rules
 description:
     - Display top-k rules
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

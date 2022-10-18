@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_doh_forwarder
 description:
     - DNS over HTTP(s) template forwarding policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

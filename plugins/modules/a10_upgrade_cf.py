@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_upgrade_cf
 description:
     - Compact flash
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -180,36 +180,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'file_path': {
-            'type': 'str',
-            },
-        'image': {
-            'type': 'str',
-            'choices': ['pri']
-            },
-        'local': {
-            'type': 'str',
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'file_url': {
-            'type': 'str',
-            },
-        'image_file': {
-            'type': 'str',
-            },
-        'staggered_upgrade_mode': {
-            'type': 'bool',
-            },
-        'Device': {
-            'type': 'int',
-            },
-        'reboot_after_upgrade': {
-            'type': 'bool',
-            }
-        })
+    rv.update({'file_path': {'type': 'str', }, 'image': {'type': 'str', 'choices': ['pri']}, 'local': {'type': 'str', }, 'use_mgmt_port': {'type': 'bool', }, 'file_url': {'type': 'str', }, 'image_file': {'type': 'str', }, 'staggered_upgrade_mode': {'type': 'bool', }, 'Device': {'type': 'int', }, 'reboot_after_upgrade': {'type': 'bool', }})
     return rv
 
 

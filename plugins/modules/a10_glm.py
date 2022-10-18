@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glm
 description:
     - Set GLM Connection values
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -309,9 +309,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "allocate_bandwidth", "appliance_name", "burst", "check_expiration", "create_license_request", "enable_requests", "enterprise", "enterprise_request_type", "host", "interval", "new_license", "port", "proxy_server", "send", "thunder_capacity_license", "token", "use_mgmt_port", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["allocate_bandwidth", "appliance_name", "burst", "check_expiration", "create_license_request", "enable_requests", "enterprise", "enterprise_request_type", "host", "interval", "new_license", "port", "proxy_server", "send", "thunder_capacity_license", "token", "use_mgmt_port", "uuid", ]
 
 
 def get_default_argspec():

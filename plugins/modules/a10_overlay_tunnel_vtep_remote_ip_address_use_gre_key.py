@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_remote_ip_address_use_gre_key
 description:
     - Specify the gre key
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

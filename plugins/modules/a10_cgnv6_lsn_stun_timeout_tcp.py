@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_stun_timeout_tcp
 description:
     - Set TCP STUN timeout
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

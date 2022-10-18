@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_statistics
 description:
     - acos events global statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -263,11 +263,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'msg_sent', 'msg_sent_logdb', 'msg_dropped_format_not_defined', 'msg_dropped_malloc_failure', 'msg_dropped_no_template', 'msg_dropped_selector', 'msg_dropped_too_long', 'msg_dropped_craft_fail', 'msg_dropped_local_log_ratelimit', 'msg_dropped_remote_log_ratelimit',
-                    'msg_dropped_send_failed', 'msg_dropped_no_active_member', 'msg_dropped_route_fail', 'msg_dropped_other', 'no_template', 'msg_dropped_lost_during_config_change', 'local_enqueue_pass', 'msg_sent_to_logd', 'msg_retry_after_socket_fail', 'msg_sent_direct_syslog',
-                    'msg_dropped_send_to_logd_fail', 'msg_dropped_trylock_fail', 'msg_dropped_remote_cplane_log_ratelimit', 'msg_dropped_remote_dplane_log_ratelimit', 'msg_dropped_local_enqueue_failed', 'msg_dropped_grp_not_used', 'msg_sent_remote_cplane', 'msg_dropped_no_template_logd',
-                    'msg_dropped_lost_during_config_change_logd', 'msg_dropped_craft_fail_logd', 'msg_dropped_send_failed_logd', 'msg_dropped_no_active_member_logd', 'msg_dropped_other_logd', 'msg_dropped_invalid_part', 'acos_evt_test_logs_ticks', 'param_msg_sent_to_hc', 'param_msg_sent_fail',
-                    'param_msg_encode_fail'
+                    'all', 'msg_sent', 'msg_sent_logdb', 'msg_dropped_format_not_defined', 'msg_dropped_malloc_failure', 'msg_dropped_no_template', 'msg_dropped_selector', 'msg_dropped_too_long', 'msg_dropped_craft_fail', 'msg_dropped_local_log_ratelimit', 'msg_dropped_remote_log_ratelimit', 'msg_dropped_send_failed',
+                    'msg_dropped_no_active_member', 'msg_dropped_route_fail', 'msg_dropped_other', 'no_template', 'msg_dropped_lost_during_config_change', 'local_enqueue_pass', 'msg_sent_to_logd', 'msg_retry_after_socket_fail', 'msg_sent_direct_syslog', 'msg_dropped_send_to_logd_fail', 'msg_dropped_trylock_fail',
+                    'msg_dropped_remote_cplane_log_ratelimit', 'msg_dropped_remote_dplane_log_ratelimit', 'msg_dropped_local_enqueue_failed', 'msg_dropped_grp_not_used', 'msg_sent_remote_cplane', 'msg_dropped_no_template_logd', 'msg_dropped_lost_during_config_change_logd', 'msg_dropped_craft_fail_logd', 'msg_dropped_send_failed_logd',
+                    'msg_dropped_no_active_member_logd', 'msg_dropped_other_logd', 'msg_dropped_invalid_part', 'acos_evt_test_logs_ticks', 'param_msg_sent_to_hc', 'param_msg_sent_fail', 'param_msg_encode_fail'
                     ]
                 }
             },

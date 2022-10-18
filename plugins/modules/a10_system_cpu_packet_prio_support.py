@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_cpu_packet_prio_support
 description:
     - Enable/Disable CPU packet prioritization support
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

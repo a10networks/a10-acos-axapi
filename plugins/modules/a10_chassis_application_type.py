@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_chassis_application_type
 description:
     - Configure application to be used for chassis (ADC/CGNv6)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

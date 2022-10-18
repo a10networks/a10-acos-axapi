@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_hm
 description:
     - Debug health monitor
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -154,21 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'level': {
-            'type': 'int',
-            },
-        'pin_uid': {
-            'type': 'int',
-            },
-        'method_type': {
-            'type': 'str',
-            'choices': ['icmp', 'tcp', 'udp', 'ftp', 'http', 'snmp', 'smtp', 'dns', 'dns-tcp', 'pop3', 'imap', 'sip', 'sip-tcp', 'radius', 'ldap', 'rtsp', 'kerberos-kdc', 'database', 'external', 'https', 'ntp', 'compound']
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'level': {'type': 'int', }, 'pin_uid': {'type': 'int', }, 'method_type': {'type': 'str', 'choices': ['icmp', 'tcp', 'udp', 'ftp', 'http', 'snmp', 'smtp', 'dns', 'dns-tcp', 'pop3', 'imap', 'sip', 'sip-tcp', 'radius', 'ldap', 'rtsp', 'kerberos-kdc', 'database', 'external', 'https', 'ntp', 'compound']}, 'uuid': {'type': 'str', }})
     return rv
 
 

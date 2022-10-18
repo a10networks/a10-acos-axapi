@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_template
 description:
     - Authentication template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -318,8 +318,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "account", "accounting_server", "accounting_service_group", "auth_sess_mode", "captcha", "chain", "cookie_domain", "cookie_domain_group", "cookie_httponly_enable", "cookie_max_age", "cookie_samesite", "cookie_secure_enable", "forward_logout_disable", "jwt", "local_logging", "log", "logon",
-    "logout_idle_timeout", "logout_url", "max_session_time", "modify_content_security_policy", "name", "oauth_authorization_server", "oauth_client", "redirect_hostname", "relay", "saml_idp", "saml_sp", "server", "service_group", "ntype", "user_tag", "uuid",
+    "account", "accounting_server", "accounting_service_group", "auth_sess_mode", "captcha", "chain", "cookie_domain", "cookie_domain_group", "cookie_httponly_enable", "cookie_max_age", "cookie_samesite", "cookie_secure_enable", "forward_logout_disable", "jwt", "local_logging", "log", "logon", "logout_idle_timeout", "logout_url",
+    "max_session_time", "modify_content_security_policy", "name", "oauth_authorization_server", "oauth_client", "redirect_hostname", "relay", "saml_idp", "saml_sp", "server", "service_group", "ntype", "user_tag", "uuid",
     ]
 
 

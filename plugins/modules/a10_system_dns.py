@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_dns
 description:
     - DNS Packet Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -336,9 +336,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop',
-                    'filter_type_any_drop', 'slb_dns_client_ssl_succ', 'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit',
-                    'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only', 'rpz_action_nxdomain', 'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp'
+                    'all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop', 'filter_type_any_drop', 'slb_dns_client_ssl_succ',
+                    'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only', 'rpz_action_nxdomain',
+                    'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp'
                     ]
                 }
             },

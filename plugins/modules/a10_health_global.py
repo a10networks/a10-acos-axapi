@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_global
 description:
     - Define the Health Monitor global default
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -183,38 +183,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'multi_process': {
-            'type': 'int',
-            },
-        'disable_auto_adjust': {
-            'type': 'bool',
-            },
-        'check_rate': {
-            'type': 'int',
-            },
-        'external_rate': {
-            'type': 'int',
-            },
-        'per': {
-            'type': 'int',
-            },
-        'retry': {
-            'type': 'int',
-            },
-        'up_retry': {
-            'type': 'int',
-            },
-        'interval': {
-            'type': 'int',
-            },
-        'timeout': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'multi_process': {'type': 'int', }, 'disable_auto_adjust': {'type': 'bool', }, 'check_rate': {'type': 'int', }, 'external_rate': {'type': 'int', }, 'per': {'type': 'int', }, 'retry': {'type': 'int', }, 'up_retry': {'type': 'int', }, 'interval': {'type': 'int', }, 'timeout': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

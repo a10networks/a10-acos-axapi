@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_sess
 description:
     - Debug sessions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

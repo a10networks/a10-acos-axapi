@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_fw_rad_server
 description:
     - Configure triggers for fw.radius.server object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

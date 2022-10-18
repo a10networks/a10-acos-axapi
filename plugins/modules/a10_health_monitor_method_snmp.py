@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_snmp
 description:
     - SNMP type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,37 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'snmp': {
-            'type': 'bool',
-            },
-        'snmp_port': {
-            'type': 'int',
-            },
-        'community': {
-            'type': 'str',
-            },
-        'oid': {
-            'type': 'dict',
-            'mib': {
-                'type': 'str',
-                'choices': ['sysDescr', 'sysUpTime', 'sysName']
-                },
-            'asn': {
-                'type': 'str',
-                }
-            },
-        'operation': {
-            'type': 'dict',
-            'oper_type': {
-                'type': 'str',
-                'choices': ['getnext', 'get']
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'snmp': {'type': 'bool', }, 'snmp_port': {'type': 'int', }, 'community': {'type': 'str', }, 'oid': {'type': 'dict', 'mib': {'type': 'str', 'choices': ['sysDescr', 'sysUpTime', 'sysName']}, 'asn': {'type': 'str', }}, 'operation': {'type': 'dict', 'oper_type': {'type': 'str', 'choices': ['getnext', 'get']}}, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(monitor_name=dict(type='str', required=True), ))
     return rv

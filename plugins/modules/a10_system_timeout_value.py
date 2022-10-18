@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_timeout_value
 description:
     - set the timeout to stop transferring a file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

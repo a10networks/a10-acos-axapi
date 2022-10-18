@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_account_kerberos_spn
 description:
     - AD domain account associated with a SPN
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,36 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'realm': {
-            'type': 'str',
-            },
-        'account': {
-            'type': 'str',
-            },
-        'service_principal_name': {
-            'type': 'str',
-            },
-        'password': {
-            'type': 'bool',
-            },
-        'secret_string': {
-            'type': 'str',
-            },
-        'encrypted': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'realm': {'type': 'str', }, 'account': {'type': 'str', }, 'service_principal_name': {'type': 'str', }, 'password': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_persist_destination_ip
 description:
     - Destination IP persistence
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_topn_cgnv6_nat_pool_topn_tmpl
 description:
     - Configure template for cgnv6.nat.pool
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -173,37 +173,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'topn_size': {
-            'type': 'int',
-            },
-        'interval': {
-            'type': 'str',
-            'choices': ['5', '15', '30', '60', 'all-time']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            },
-        'metrics': {
-            'type': 'dict',
-            'udp_total': {
-                'type': 'bool',
-                },
-            'tcp_total': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'topn_size': {'type': 'int', }, 'interval': {'type': 'str', 'choices': ['5', '15', '30', '60', 'all-time']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'metrics': {'type': 'dict', 'udp_total': {'type': 'bool', }, 'tcp_total': {'type': 'bool', }, 'uuid': {'type': 'str', }}})
     return rv
 
 

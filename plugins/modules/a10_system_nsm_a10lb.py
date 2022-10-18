@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_nsm_a10lb
 description:
     - NSM to A10lb communication options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

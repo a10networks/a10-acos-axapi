@@ -14,7 +14,7 @@ module: a10_cgnv6_nat64_fragmentation_df_bit_transparency
 description:
     - Add an empty IPv6 fragmentation header if IPv4 DF bit is zero
       (default=disabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

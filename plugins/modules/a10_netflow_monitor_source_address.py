@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_source_address
 description:
     - Specify source address of Netflow packet
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

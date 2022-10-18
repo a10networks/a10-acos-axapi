@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_health_gateway
 description:
     - Configure gateway health-check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ipmi_ip
 description:
     - Set IP address for IPMI interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_multi_queue_support
 description:
     - To Enable/disable Multi-Queue-Support
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

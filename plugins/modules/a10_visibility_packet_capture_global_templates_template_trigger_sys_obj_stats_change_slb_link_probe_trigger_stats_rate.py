@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_link_probe_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -188,8 +188,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "duration", "err_entry_create_failed", "err_entry_create_oom", "err_entry_insert_failed", "err_l4_sess_alloc", "err_probe_tcp_conn_send", "err_smart_nat_alloc", "err_smart_nat_port_alloc", "err_tmpl_probe_create_failed", "err_tmpl_probe_create_oom", "threshold_exceeded_by",
-    "total_http_response_bad", "total_tcp_err", "uuid",
+    "duration", "err_entry_create_failed", "err_entry_create_oom", "err_entry_insert_failed", "err_l4_sess_alloc", "err_probe_tcp_conn_send", "err_smart_nat_alloc", "err_smart_nat_port_alloc", "err_tmpl_probe_create_failed", "err_tmpl_probe_create_oom", "threshold_exceeded_by", "total_http_response_bad", "total_tcp_err", "uuid",
     ]
 
 

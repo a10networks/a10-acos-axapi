@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_partition_shared_vlan
 description:
     - Enable shared-vlan feature in Network partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_violation_log_mask
 description:
     - violation log mask
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

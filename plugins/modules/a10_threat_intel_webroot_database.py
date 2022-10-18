@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_webroot_database
 description:
     - webroot database information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

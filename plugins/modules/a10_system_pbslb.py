@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_pbslb
 description:
     - Configure Policy Based Response-Rate-Limiting
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -244,8 +244,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_entries', 'total_v4_entries_created', 'total_v4_entries_freed', 'total_v6_entries_created', 'total_v6_entries_freed', 'total_domain_entries_created', 'total_domain_entries_freed', 'total_direct_action_entries_created', 'total_direct_action_entries_freed',
-                    'curr_entries_target_global', 'curr_entries_target_vserver', 'curr_entries_target_vport', 'curr_entries_target_LOC', 'curr_entries_target_rserver', 'curr_entries_target_rport', 'curr_entries_target_service', 'curr_entries_stats'
+                    'all', 'curr_entries', 'total_v4_entries_created', 'total_v4_entries_freed', 'total_v6_entries_created', 'total_v6_entries_freed', 'total_domain_entries_created', 'total_domain_entries_freed', 'total_direct_action_entries_created', 'total_direct_action_entries_freed', 'curr_entries_target_global', 'curr_entries_target_vserver',
+                    'curr_entries_target_vport', 'curr_entries_target_LOC', 'curr_entries_target_rserver', 'curr_entries_target_rport', 'curr_entries_target_service', 'curr_entries_stats'
                     ]
                 }
             },

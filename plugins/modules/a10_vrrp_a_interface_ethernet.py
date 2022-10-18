@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_interface_ethernet
 description:
     - VRRP-A interface ethernet
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,36 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ethernet_val': {
-            'type': 'str',
-            'required': True,
-            },
-        'router_interface': {
-            'type': 'bool',
-            },
-        'server_interface': {
-            'type': 'bool',
-            },
-        'both': {
-            'type': 'bool',
-            },
-        'vlan_cfg': {
-            'type': 'list',
-            'vlan': {
-                'type': 'int',
-                }
-            },
-        'no_heartbeat': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'ethernet_val': {'type': 'str', 'required': True, }, 'router_interface': {'type': 'bool', }, 'server_interface': {'type': 'bool', }, 'both': {'type': 'bool', }, 'vlan_cfg': {'type': 'list', 'vlan': {'type': 'int', }}, 'no_heartbeat': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

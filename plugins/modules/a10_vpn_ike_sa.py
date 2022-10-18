@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ike_sa
 description:
     - Get IKE SAs
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

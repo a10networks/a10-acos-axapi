@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_images
 description:
     - VCS Images Information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

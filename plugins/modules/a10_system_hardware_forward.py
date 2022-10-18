@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_hardware_forward
 description:
     - Field hardware_forward
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -308,9 +308,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count',
-                    'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index', 'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop',
-                    'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop', 'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count'
+                    'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count', 'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index',
+                    'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop', 'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop',
+                    'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count'
                     ]
                 }
             },
@@ -325,8 +325,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'entry-create', 'entry-create-failure', 'entry-create-fail-server-down', 'entry-create-fail-max-entry', 'entry-free', 'entry-free-opp-entry', 'entry-free-no-hw-prog', 'entry-free-no-conn', 'entry-free-no-sw-entry', 'entry-counter', 'entry-age-out',
-                        'entry-age-out-idle', 'entry-age-out-tcp-fin', 'entry-age-out-tcp-rst', 'entry-age-out-invalid-dst', 'entry-force-hw-invalidate', 'entry-invalidate-server-down', 'tcam-create', 'tcam-free', 'tcam-counter'
+                        'all', 'entry-create', 'entry-create-failure', 'entry-create-fail-server-down', 'entry-create-fail-max-entry', 'entry-free', 'entry-free-opp-entry', 'entry-free-no-hw-prog', 'entry-free-no-conn', 'entry-free-no-sw-entry', 'entry-counter', 'entry-age-out', 'entry-age-out-idle', 'entry-age-out-tcp-fin',
+                        'entry-age-out-tcp-rst', 'entry-age-out-invalid-dst', 'entry-force-hw-invalidate', 'entry-invalidate-server-down', 'tcam-create', 'tcam-free', 'tcam-counter'
                         ]
                     }
                 }

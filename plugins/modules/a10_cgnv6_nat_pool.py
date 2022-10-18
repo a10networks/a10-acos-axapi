@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_pool
 description:
     - Configure CGNv6 NAT pool
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -354,8 +354,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "all", "end_address", "exclude_ip", "group", "max_users_per_ip", "netmask", "oper", "partition", "per_batch_port_usage_warning_threshold", "pool_name", "port_batch_v2_size", "shared", "simultaneous_batch_allocation", "start_address", "stats", "tcp_time_wait_interval", "usable_nat_ports",
-    "usable_nat_ports_end", "usable_nat_ports_start", "uuid", "vrid",
+    "all", "end_address", "exclude_ip", "group", "max_users_per_ip", "netmask", "oper", "partition", "per_batch_port_usage_warning_threshold", "pool_name", "port_batch_v2_size", "shared", "simultaneous_batch_allocation", "start_address", "stats", "tcp_time_wait_interval", "usable_nat_ports", "usable_nat_ports_end", "usable_nat_ports_start", "uuid",
+    "vrid",
     ]
 
 

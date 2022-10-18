@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_rate_limit_local
 description:
     - Configure Rate Limit for Local logs
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

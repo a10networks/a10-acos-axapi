@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitored_entity_secondary_mon_topk
 description:
     - Display topk secondary Monitoring entities
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

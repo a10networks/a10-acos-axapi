@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_topn_gtp_network_element_topn_tmpl
 description:
     - Configure template for fw.gtp.network-element
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_buff_debug
 description:
     - System buff debug config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

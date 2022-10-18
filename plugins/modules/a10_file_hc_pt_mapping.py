@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_hc_pt_mapping
 description:
     - harmony-controller partition tenant mapping
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_access_list
 description:
     - Configure a IPv6 Access List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

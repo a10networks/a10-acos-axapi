@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_binding_table_tunnel_address
 description:
     - Tunnel IPv6 Endpoint Address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_service_group
 description:
     - Service Group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -657,11 +657,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "backup_server_event_log", "conn_rate", "conn_rate_duration", "conn_rate_grace_period", "conn_rate_log", "conn_rate_revert_duration", "conn_revert_rate", "extended_stats", "health_check", "health_check_disable", "l4_session_revert_duration", "l4_session_usage", "l4_session_usage_duration",
-    "l4_session_usage_grace_period", "l4_session_usage_log", "l4_session_usage_revert_rate", "lb_method", "lc_method", "lclb_method", "link_probe_template", "llb_method", "member_list", "min_active_member", "min_active_member_action", "name", "oper", "persist_scoring", "priorities",
-    "priority_affinity", "protocol", "pseudo_round_robin", "report_delay", "reset", "reset_on_server_selection_fail", "reset_priority_affinity", "rpt_ext_server", "sample_rsp_time", "sampling_enable", "shared_partition_policy_template", "shared_partition_svcgrp_health_check",
-    "stateless_auto_switch", "stateless_lb_method", "stateless_lb_method2", "stats", "stats_data_action", "strict_select", "svcgrp_health_check_shared", "template_policy", "template_policy_shared", "template_port", "template_server", "top_fastest", "top_slowest", "traffic_replication_mirror",
-    "traffic_replication_mirror_da_repl", "traffic_replication_mirror_ip_repl", "traffic_replication_mirror_sa_da_repl", "traffic_replication_mirror_sa_repl", "user_tag", "uuid",
+    "backup_server_event_log", "conn_rate", "conn_rate_duration", "conn_rate_grace_period", "conn_rate_log", "conn_rate_revert_duration", "conn_revert_rate", "extended_stats", "health_check", "health_check_disable", "l4_session_revert_duration", "l4_session_usage", "l4_session_usage_duration", "l4_session_usage_grace_period",
+    "l4_session_usage_log", "l4_session_usage_revert_rate", "lb_method", "lc_method", "lclb_method", "link_probe_template", "llb_method", "member_list", "min_active_member", "min_active_member_action", "name", "oper", "persist_scoring", "priorities", "priority_affinity", "protocol", "pseudo_round_robin", "report_delay", "reset",
+    "reset_on_server_selection_fail", "reset_priority_affinity", "rpt_ext_server", "sample_rsp_time", "sampling_enable", "shared_partition_policy_template", "shared_partition_svcgrp_health_check", "stateless_auto_switch", "stateless_lb_method", "stateless_lb_method2", "stats", "stats_data_action", "strict_select", "svcgrp_health_check_shared",
+    "template_policy", "template_policy_shared", "template_port", "template_server", "top_fastest", "top_slowest", "traffic_replication_mirror", "traffic_replication_mirror_da_repl", "traffic_replication_mirror_ip_repl", "traffic_replication_mirror_sa_da_repl", "traffic_replication_mirror_sa_repl", "user_tag", "uuid",
     ]
 
 
@@ -869,12 +868,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'server_selection_fail_drop', 'server_selection_fail_reset', 'service_peak_conn', 'service_healthy_host', 'service_unhealthy_host', 'service_req_count', 'service_resp_count', 'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx', 'service_resp_5xx',
-                    'service_curr_conn_overflow'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'server_selection_fail_drop', 'server_selection_fail_reset', 'service_peak_conn', 'service_healthy_host', 'service_unhealthy_host', 'service_req_count', 'service_resp_count', 'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx', 'service_resp_5xx', 'service_curr_conn_overflow']
                 }
             },
         'reset': {
@@ -931,8 +926,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn',
-                        'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow', 'state_flaps'
+                        'all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'response_time', 'fastest_rsp_time',
+                        'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow', 'state_flaps'
                         ]
                     }
                 }

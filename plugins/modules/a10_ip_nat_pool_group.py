@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_pool_group
 description:
     - IP pool group name
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

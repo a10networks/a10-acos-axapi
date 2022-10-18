@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_snmpv3_user
 description:
     - Define a user who can access the SNMP engine
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

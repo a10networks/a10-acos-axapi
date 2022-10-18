@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_distributed_forwarding_fw
 description:
     - Enable Scaleout distributed-forwarding for fw
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -161,29 +161,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'fw_value': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        'session_offload_direction': {
-            'type': 'str',
-            'choices': ['uplink', 'downlink', 'both']
-            },
-        'threshold': {
-            'type': 'list',
-            'threshold_value': {
-                'type': 'int',
-                },
-            'protocol_value': {
-                'type': 'str',
-                'choices': ['UDP', 'TCP']
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'fw_value': {'type': 'str', 'choices': ['enable', 'disable']}, 'session_offload_direction': {'type': 'str', 'choices': ['uplink', 'downlink', 'both']}, 'threshold': {'type': 'list', 'threshold_value': {'type': 'int', }, 'protocol_value': {'type': 'str', 'choices': ['UDP', 'TCP']}}, 'uuid': {'type': 'str', }})
     return rv
 
 

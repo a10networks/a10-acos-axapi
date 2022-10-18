@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glm_create_license_request
 description:
     - Create a GLM trial or license request
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

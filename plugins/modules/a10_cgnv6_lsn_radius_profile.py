@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_radius_profile
 description:
     - Configure LSN RADIUS Profile
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

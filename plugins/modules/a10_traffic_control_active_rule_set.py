@@ -10,10 +10,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_file_inspection_data_file
+module: a10_traffic_control_active_rule_set
 description:
-    - File Inspection black white list file information and management commands
-author: A10 Networks 2021
+    - Active traffic-control policy
+author: A10 Networks
 options:
     state:
         description:
@@ -55,39 +55,9 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    file_path:
-        description:
-        - Path to the file
-        type: str
-        required: False
-    ntype:
-        description:
-        - "data file type"
-        type: str
-        required: False
     name:
         description:
-        - "data file name"
-        type: str
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        type: bool
-        required: False
-    source_ip_address:
-        description:
-        - "Source IP address"
-        type: str
-        required: False
-    file_url:
-        description:
-        - "File URL"
-        type: str
-        required: False
-    action:
-        description:
-        - "data file action"
+        - "Rule set name"
         type: str
         required: False
     uuid:
@@ -95,16 +65,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            file_list:
-                description:
-                - "Field file_list"
-                type: list
 
 '''
 
@@ -159,16 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "action",
-    "file_url",
-    "name",
-    "oper",
-    "source_ip_address",
-    "ntype",
-    "use_mgmt_port",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["name", "uuid", ]
 
 
 def get_default_argspec():
@@ -176,79 +127,26 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'file_path': {
-            'type': 'str',
-        },
-        'ntype': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
-        'source_ip_address': {
-            'type': 'str',
-        },
-        'file_url': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'oper': {
-            'type': 'dict',
-            'file_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                },
-                'status': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type': 'str',
-                },
-                'timestamp': {
-                    'type': 'str',
-                },
-                'size': {
-                    'type': 'str',
-                }
-            }
-        }
-    })
+    rv.update({'name': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/file-inspection/data-file"
+    url_base = "/axapi/v3/traffic-control/active-rule-set"
 
     f_dict = {}
 
@@ -258,7 +156,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/file-inspection/data-file"
+    url_base = "/axapi/v3/traffic-control/active-rule-set"
 
     f_dict = {}
 
@@ -271,32 +169,21 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-    file_check = ['file-handle', 'file']
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["data-file"].items():
-        if k not in file_check:
-            continue
+    for k, v in payload["active-rule-set"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["data-file"].get(k) != v:
+        if config_changes["active-rule-set"].get(k) != v:
             change_results["changed"] = True
-            config_changes["data-file"][k] = v
+            config_changes["active-rule-set"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
 
 
 def create(module, result, payload={}):
-    if module.params["action"] == "import":
-        call_result = api_client.post_file(
-            module.client,
-            new_url(module),
-            payload,
-            file_path=module.params["file_path"],
-            file_name=module.params["file"])
-    else:
-        call_result = api_client.post(module.client, new_url(module), payload)
+    call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
     result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
@@ -304,16 +191,7 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    if module.params["action"] == "import":
-        call_result = api_client.post_file(
-            module.client,
-            existing_url(module),
-            payload,
-            file_path=module.params["file_path"],
-            file_name=module.params["file"])
-    else:
-        call_result = api_client.post(module.client, existing_url(module),
-                                      payload)
+    call_result = api_client.post(module.client, existing_url(module), payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
@@ -324,8 +202,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("data-file", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("active-rule-set", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -359,12 +236,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -379,16 +251,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -399,20 +269,14 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        file_url = api_client.oper_url(existing_url(module))
-        existing_config, file_exists = api_client.get_file(
-            module.client, "data-file", file_url, module.params['file'])
+        existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
-
-        if file_exists:
+        if existing_config['response_body'] != 'NotFound':
             existing_config = existing_config["response_body"]
         else:
             existing_config = None
@@ -425,28 +289,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "data-file"] if info != "NotFound" else info
+                result["acos_info"] = info["active-rule-set"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "data-file-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["data-file"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["active-rule-set-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -459,8 +311,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

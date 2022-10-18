@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_aam_auth_server_ldap_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -189,9 +189,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "admin_bind_failure", "authorize_failure", "bind_failure", "job_start_error", "other_error", "polling_control_error", "pw_change_failure", "request_dropped", "response_error", "response_failure", "response_timeout", "search_failure", "ssl_session_failure", "timeout_error", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["admin_bind_failure", "authorize_failure", "bind_failure", "job_start_error", "other_error", "polling_control_error", "pw_change_failure", "request_dropped", "response_error", "response_failure", "response_timeout", "search_failure", "ssl_session_failure", "timeout_error", "uuid", ]
 
 
 def get_default_argspec():

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_common_aflex_table_entry_sync
 description:
     - aflex table entry sync commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

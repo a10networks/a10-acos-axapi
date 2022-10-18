@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rule_set_rules_by_zone
 description:
     - Field rules_by_zone
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

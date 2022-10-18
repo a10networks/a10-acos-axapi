@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ldap_server_host_ipv6
 description:
     - Specify the hostname of ldap server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

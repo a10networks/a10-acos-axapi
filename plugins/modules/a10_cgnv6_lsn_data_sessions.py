@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_data_sessions
 description:
     - To clear lsn data sessions by user or NAT resource
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dnssec_sign_zone_now
 description:
     - sign zone right now
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet_isis
 description:
     - ISIS
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -313,10 +313,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "authentication", "bfd_cfg", "circuit_type", "csnp_interval_list", "hello_interval_list", "hello_interval_minimal_list", "hello_multiplier_list", "lsp_interval", "mesh_group", "metric_list", "network", "padding", "password_list", "priority_list", "retransmit_interval", "uuid",
-    "wide_metric_list",
-    ]
+AVAILABLE_PROPERTIES = ["authentication", "bfd_cfg", "circuit_type", "csnp_interval_list", "hello_interval_list", "hello_interval_minimal_list", "hello_multiplier_list", "lsp_interval", "mesh_group", "metric_list", "network", "padding", "password_list", "priority_list", "retransmit_interval", "uuid", "wide_metric_list", ]
 
 
 def get_default_argspec():

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_probe_network_devices
 description:
     - Scan platform for network devices
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

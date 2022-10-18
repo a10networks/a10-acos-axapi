@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat64_alg_ftp
 description:
     - NAT64 FTP ALG (default= enabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

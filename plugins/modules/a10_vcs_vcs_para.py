@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_vcs_para
 description:
     - Virtual Chassis System Paramter
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -215,10 +215,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "chassis_id", "config_info", "config_seq", "dead_interval", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "speed_limit", "ssl_enable", "tcp_channel_monitor", "time_interval",
-    "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["chassis_id", "config_info", "config_seq", "dead_interval", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "speed_limit", "ssl_enable", "tcp_channel_monitor", "time_interval", "uuid", ]
 
 
 def get_default_argspec():

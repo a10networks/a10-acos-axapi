@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_link_probe_entry
 description:
     - Show SLB Link Probe entries
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -266,8 +266,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_entries', 'total_created', 'total_inserted', 'total_ready_to_free', 'total_freed', 'err_entry_create_failed', 'err_entry_create_oom', 'err_entry_insert_failed', 'err_tmpl_probe_create_failed', 'err_tmpl_probe_create_oom', 'total_http_probes_sent',
-                    'total_http_response_received', 'total_http_response_good', 'total_http_response_bad', 'total_tcp_err', 'err_smart_nat_alloc', 'err_smart_nat_port_alloc', 'err_l4_sess_alloc', 'err_probe_tcp_conn_send', 'probe_tcp_conn_sent'
+                    'all', 'curr_entries', 'total_created', 'total_inserted', 'total_ready_to_free', 'total_freed', 'err_entry_create_failed', 'err_entry_create_oom', 'err_entry_insert_failed', 'err_tmpl_probe_create_failed', 'err_tmpl_probe_create_oom', 'total_http_probes_sent', 'total_http_response_received', 'total_http_response_good',
+                    'total_http_response_bad', 'total_tcp_err', 'err_smart_nat_alloc', 'err_smart_nat_port_alloc', 'err_l4_sess_alloc', 'err_probe_tcp_conn_send', 'probe_tcp_conn_sent'
                     ]
                 }
             },

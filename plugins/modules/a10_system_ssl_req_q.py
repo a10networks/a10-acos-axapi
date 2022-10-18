@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ssl_req_q
 description:
     - System SSL Request Queue statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

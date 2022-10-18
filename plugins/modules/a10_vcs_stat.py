@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_stat
 description:
     - Show aVCS statistics information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -523,13 +523,12 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'elect_recv_err', 'elect_send_err', 'elect_recv_byte', 'elect_send_byte', 'elect_pdu_master_recv', 'elect_pdu_master_cand_recv', 'elect_pdu_slave_recv', 'elect_pdu_master_take_over_recv', 'elect_pdu_unknown_recv', 'elect_pdu_master_sent', 'elect_pdu_master_cand_sent',
-                    'elect_pdu_slave_sent', 'elect_pdu_master_take_over_sent', 'elect_pdu_unknown_sent', 'elect_pdu_inval', 'elect_pdu_hw_mismatch', 'elect_pdu_cluster_mismatch', 'elect_pdu_dev_id_collision', 'elect_mc_discard_master', 'elect_mc_replace_master', 'elect_mc_dup_masterr',
-                    'elect_mc_reset_timer_by_mc', 'elect_mc_reset_timer_by_mto', 'elect_slave_dup_master', 'elect_slave_discard_challenger', 'elect_slave_replace_challenger', 'elect_slave_dup_challenger', 'elect_slave_discard_neighbour', 'elect_slave_too_many_neighbour', 'elect_slave_dup_neighbour',
-                    'elect_master_discard_challenger', 'elect_master_new_challenger', 'elect_master_replace_challenger', 'elect_master_dup_challenger', 'elect_master_discard_neighbour', 'elect_master_too_many_neighbour', 'elect_master_dup_neighbour', 'elect_enter_master_cand_stat',
-                    'elect_enter_slave', 'elect_enter_master', 'elect_enter_master_take_over', 'elect_leave_master_cand', 'elect_leave_slave', 'elect_leave_master', 'elect_leave_master_take_over', 'master_slave_start_err', 'master_slave_start', 'master_slave_stop', 'master_cfg_upd',
-                    'master_cfg_upd_l_fail', 'master_cfg_upd_r_fail', 'master_cfg_upd_notif_err', 'master_cfg_upd_result_err', 'slave_recv_err', 'slave_send_err', 'slave_recv_bytes', 'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent', 'slave_msg_inval', 'slave_keepalive', 'slave_cfg_upd',
-                    'slave_cfg_upd_fail', 'daemon_n_elec_start', 'daemon_n_elec_stop', 'daemon_recv_err', 'daemon_send_err', 'daemon_recv_bytes', 'daemon_sent_bytes', 'daemon_n_recv', 'daemon_n_sent', 'daemon_msg_inval', 'daemon_msg_handle_failure'
+                    'all', 'elect_recv_err', 'elect_send_err', 'elect_recv_byte', 'elect_send_byte', 'elect_pdu_master_recv', 'elect_pdu_master_cand_recv', 'elect_pdu_slave_recv', 'elect_pdu_master_take_over_recv', 'elect_pdu_unknown_recv', 'elect_pdu_master_sent', 'elect_pdu_master_cand_sent', 'elect_pdu_slave_sent',
+                    'elect_pdu_master_take_over_sent', 'elect_pdu_unknown_sent', 'elect_pdu_inval', 'elect_pdu_hw_mismatch', 'elect_pdu_cluster_mismatch', 'elect_pdu_dev_id_collision', 'elect_mc_discard_master', 'elect_mc_replace_master', 'elect_mc_dup_masterr', 'elect_mc_reset_timer_by_mc', 'elect_mc_reset_timer_by_mto', 'elect_slave_dup_master',
+                    'elect_slave_discard_challenger', 'elect_slave_replace_challenger', 'elect_slave_dup_challenger', 'elect_slave_discard_neighbour', 'elect_slave_too_many_neighbour', 'elect_slave_dup_neighbour', 'elect_master_discard_challenger', 'elect_master_new_challenger', 'elect_master_replace_challenger', 'elect_master_dup_challenger',
+                    'elect_master_discard_neighbour', 'elect_master_too_many_neighbour', 'elect_master_dup_neighbour', 'elect_enter_master_cand_stat', 'elect_enter_slave', 'elect_enter_master', 'elect_enter_master_take_over', 'elect_leave_master_cand', 'elect_leave_slave', 'elect_leave_master', 'elect_leave_master_take_over',
+                    'master_slave_start_err', 'master_slave_start', 'master_slave_stop', 'master_cfg_upd', 'master_cfg_upd_l_fail', 'master_cfg_upd_r_fail', 'master_cfg_upd_notif_err', 'master_cfg_upd_result_err', 'slave_recv_err', 'slave_send_err', 'slave_recv_bytes', 'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent', 'slave_msg_inval',
+                    'slave_keepalive', 'slave_cfg_upd', 'slave_cfg_upd_fail', 'daemon_n_elec_start', 'daemon_n_elec_stop', 'daemon_recv_err', 'daemon_send_err', 'daemon_recv_bytes', 'daemon_sent_bytes', 'daemon_n_recv', 'daemon_n_sent', 'daemon_msg_inval', 'daemon_msg_handle_failure'
                     ]
                 }
             },

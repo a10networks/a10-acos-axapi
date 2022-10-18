@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_hotfix_apply
 description:
     - apply a hotfix
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

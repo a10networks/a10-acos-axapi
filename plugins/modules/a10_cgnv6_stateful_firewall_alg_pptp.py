@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_alg_pptp
 description:
     - Configure PPTP ALG for NAT stateful firewall (default= enabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -208,9 +208,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'calls-established', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'gre-session-created', 'gre-session-freed', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown', 'call-reply-retransmit',
-                    'call-reply-ext-ext-alloc-failure', 'smp-app-type-mismatch', 'smp-client-call-id-mismatch', 'smp-sessions-created', 'smp-sessions-freed', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route', 'gre-no-rev-route',
-                    'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch', 'control-freed', 'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
+                    'all', 'calls-established', 'call-req-pns-call-id-mismatch', 'call-reply-pns-call-id-mismatch', 'gre-session-created', 'gre-session-freed', 'call-req-retransmit', 'call-req-new', 'call-req-ext-alloc-failure', 'call-reply-call-id-unknown', 'call-reply-retransmit', 'call-reply-ext-ext-alloc-failure', 'smp-app-type-mismatch',
+                    'smp-client-call-id-mismatch', 'smp-sessions-created', 'smp-sessions-freed', 'smp-alloc-failure', 'gre-conn-creation-failure', 'gre-conn-ext-creation-failure', 'gre-no-fwd-route', 'gre-no-rev-route', 'gre-no-control-conn', 'gre-conn-already-exists', 'gre-free-no-ext', 'gre-free-no-smp', 'gre-free-smp-app-type-mismatch',
+                    'control-freed', 'control-free-no-ext', 'control-free-no-smp', 'control-free-smp-app-type-mismatch'
                     ]
                 }
             },

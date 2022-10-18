@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_trunk_spanning_tree
 description:
     - help Spanning tree port configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

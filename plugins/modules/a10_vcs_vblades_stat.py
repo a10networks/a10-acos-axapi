@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_vblades_stat
 description:
     - Show aVCS vBlade box statistics information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -239,12 +239,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'slave_recv_err', 'slave_send_err', 'slave_recv_bytes', 'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent', 'slave_msg_inval', 'slave_keepalive', 'slave_cfg_upd', 'slave_cfg_upd_l1_fail', 'slave_cfg_upd_r_fail', 'slave_cfg_upd_l2_fail', 'slave_cfg_upd_notif_err',
-                    'slave_cfg_upd_result_err'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'slave_recv_err', 'slave_send_err', 'slave_recv_bytes', 'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent', 'slave_msg_inval', 'slave_keepalive', 'slave_cfg_upd', 'slave_cfg_upd_l1_fail', 'slave_cfg_upd_r_fail', 'slave_cfg_upd_l2_fail', 'slave_cfg_upd_notif_err', 'slave_cfg_upd_result_err']
                 }
             },
         'stats': {

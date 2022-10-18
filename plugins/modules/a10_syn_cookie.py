@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_syn_cookie
 description:
     - Global Syn-Cookie Protection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

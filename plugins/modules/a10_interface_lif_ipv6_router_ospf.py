@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_lif_ipv6_router_ospf
 description:
     - Open Shortest Path First for IPv6 (OSPFv3)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

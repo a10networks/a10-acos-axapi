@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_fw_server_port_tmpl
 description:
     - Configure template for fw.server.port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_crl
 description:
     - Retrieved Certificate Revocation List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

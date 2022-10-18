@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_l4_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -235,8 +235,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bw_rate_limit_exceed", "concurrent_conn_exceed", "conn_rate_limit_drop", "conn_rate_limit_reset", "connlimit_drop", "dns_policy_drop", "l4_cps_exceed", "l7_cps_exceed", "nat_cps_exceed", "no_resourse_drop", "smart_nat_id_mismatch", "snat_fail", "snat_icmp_error_process", "snat_icmp_no_match",
-    "snat_no_fwd_route", "snat_no_rev_route", "ssl_cps_exceed", "ssl_tpt_exceed", "svr_syn_handshake_fail", "svrselfail", "synattack", "syncookiescheckfailed", "syncookiessentfailed", "uuid",
+    "bw_rate_limit_exceed", "concurrent_conn_exceed", "conn_rate_limit_drop", "conn_rate_limit_reset", "connlimit_drop", "dns_policy_drop", "l4_cps_exceed", "l7_cps_exceed", "nat_cps_exceed", "no_resourse_drop", "smart_nat_id_mismatch", "snat_fail", "snat_icmp_error_process", "snat_icmp_no_match", "snat_no_fwd_route", "snat_no_rev_route",
+    "ssl_cps_exceed", "ssl_tpt_exceed", "svr_syn_handshake_fail", "svrselfail", "synattack", "syncookiescheckfailed", "syncookiessentfailed", "uuid",
     ]
 
 

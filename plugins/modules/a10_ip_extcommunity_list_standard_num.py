@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_extcommunity_list_standard_num
 description:
     - Configure Standard number Community-list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_cert_revoke
 description:
     - Configure ssl-cert-revoke-stats
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -309,9 +309,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'ocsp_stapling_response_good', 'ocsp_chain_status_good', 'ocsp_chain_status_revoked', 'ocsp_chain_status_unknown', 'ocsp_request', 'ocsp_response', 'ocsp_connection_error', 'ocsp_uri_not_found', 'ocsp_uri_https', 'ocsp_uri_unsupported', 'ocsp_response_status_good',
-                    'ocsp_response_status_revoked', 'ocsp_response_status_unknown', 'ocsp_cache_status_good', 'ocsp_cache_status_revoked', 'ocsp_cache_miss', 'ocsp_cache_expired', 'ocsp_other_error', 'ocsp_response_no_nonce', 'ocsp_response_nonce_error', 'crl_request', 'crl_response',
-                    'crl_connection_error', 'crl_uri_not_found', 'crl_uri_https', 'crl_uri_unsupported', 'crl_response_status_good', 'crl_response_status_revoked', 'crl_response_status_unknown', 'crl_cache_status_good', 'crl_cache_status_revoked', 'crl_other_error'
+                    'all', 'ocsp_stapling_response_good', 'ocsp_chain_status_good', 'ocsp_chain_status_revoked', 'ocsp_chain_status_unknown', 'ocsp_request', 'ocsp_response', 'ocsp_connection_error', 'ocsp_uri_not_found', 'ocsp_uri_https', 'ocsp_uri_unsupported', 'ocsp_response_status_good', 'ocsp_response_status_revoked',
+                    'ocsp_response_status_unknown', 'ocsp_cache_status_good', 'ocsp_cache_status_revoked', 'ocsp_cache_miss', 'ocsp_cache_expired', 'ocsp_other_error', 'ocsp_response_no_nonce', 'ocsp_response_nonce_error', 'crl_request', 'crl_response', 'crl_connection_error', 'crl_uri_not_found', 'crl_uri_https', 'crl_uri_unsupported',
+                    'crl_response_status_good', 'crl_response_status_revoked', 'crl_response_status_unknown', 'crl_cache_status_good', 'crl_cache_status_revoked', 'crl_other_error'
                     ]
                 }
             },

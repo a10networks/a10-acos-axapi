@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_connection_reuse
 description:
     - Connection Reuse
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -69,6 +69,11 @@ options:
         description:
         - "Timeout in seconds. Multiple of 60 (default 2400)"
         type: int
+        required: False
+    add_header:
+        description:
+        - "Insert HTTP Connection= keep-alive header"
+        type: bool
         required: False
     keep_alive_conn:
         description:
@@ -149,7 +154,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["keep_alive_conn", "limit_per_server", "name", "num_conn_per_port", "preopen", "timeout", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["add_header", "keep_alive_conn", "limit_per_server", "name", "num_conn_per_port", "preopen", "timeout", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -169,7 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, }, 'limit_per_server': {'type': 'int', }, 'timeout': {'type': 'int', }, 'keep_alive_conn': {'type': 'bool', }, 'preopen': {'type': 'bool', }, 'num_conn_per_port': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({'name': {'type': 'str', 'required': True, }, 'limit_per_server': {'type': 'int', }, 'timeout': {'type': 'int', }, 'add_header': {'type': 'bool', }, 'keep_alive_conn': {'type': 'bool', }, 'preopen': {'type': 'bool', }, 'num_conn_per_port': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

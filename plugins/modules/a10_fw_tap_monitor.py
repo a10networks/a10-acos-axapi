@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_tap_monitor
 description:
     - Configure tap monitor port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_user_quota_session
 description:
     - LSN Per User Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

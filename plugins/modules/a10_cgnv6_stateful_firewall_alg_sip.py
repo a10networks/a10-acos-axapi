@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_alg_sip
 description:
     - Configure SIP ALG for NAT stateful firewall (default= enabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -252,9 +252,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'stat-request', 'stat-response', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-port-config', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update',
-                    'method-unknown', 'parse-error', 'keep-alive', 'contact-error', 'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success', 'rtp-port-failure', 'rtcp-port-failure', 'contact-port-no-op', 'contact-port-success', 'contact-port-failure', 'contact-new', 'contact-alloc-failure',
-                    'contact-eim', 'contact-eim-set', 'rtp-new', 'rtp-alloc-failure', 'rtp-eim'
+                    'all', 'stat-request', 'stat-response', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-port-config', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update', 'method-unknown', 'parse-error', 'keep-alive',
+                    'contact-error', 'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success', 'rtp-port-failure', 'rtcp-port-failure', 'contact-port-no-op', 'contact-port-success', 'contact-port-failure', 'contact-new', 'contact-alloc-failure', 'contact-eim', 'contact-eim-set', 'rtp-new', 'rtp-alloc-failure', 'rtp-eim'
                     ]
                 }
             },

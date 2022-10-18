@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_intercepted_urls
 description:
     - Intercepted URLS
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

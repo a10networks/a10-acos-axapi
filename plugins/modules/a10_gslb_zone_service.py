@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service
 description:
     - Service information for the GSLB zone
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -592,8 +592,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "disable", "dns_a_record", "dns_cname_record_list", "dns_mx_record_list", "dns_naptr_record_list", "dns_ns_record_list", "dns_ptr_record_list", "dns_record_list", "dns_srv_record_list", "dns_txt_record_list", "forward_type", "geo_location_list", "health_check_gateway",
-    "health_check_port", "oper", "policy", "sampling_enable", "service_name", "service_port", "stats", "user_tag", "uuid",
+    "action", "disable", "dns_a_record", "dns_cname_record_list", "dns_mx_record_list", "dns_naptr_record_list", "dns_ns_record_list", "dns_ptr_record_list", "dns_record_list", "dns_srv_record_list", "dns_txt_record_list", "forward_type", "geo_location_list", "health_check_gateway", "health_check_port", "oper", "policy", "sampling_enable",
+    "service_name", "service_port", "stats", "user_tag", "uuid",
     ]
 
 

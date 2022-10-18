@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_ipv6_ospf_ifsm
 description:
     - OSPFv3 Interface State Machine
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

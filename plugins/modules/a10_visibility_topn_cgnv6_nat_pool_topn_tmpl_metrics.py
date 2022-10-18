@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_topn_cgnv6_nat_pool_topn_tmpl_metrics
 description:
     - Configure topn metrics for cgnv6.nat.pool
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_delete_service_partition
 description:
     - Hard delete a service partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

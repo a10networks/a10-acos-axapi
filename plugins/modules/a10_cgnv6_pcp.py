@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_pcp
 description:
     - Set Port Control Protocol parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -325,10 +325,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'packets-rcv', 'lsn-map-process-success', 'dslite-map-process-success', 'nat64-map-process-success', 'lsn-peer-process-success', 'dslite-peer-process-success', 'nat64-peer-process-success', 'lsn-announce-process-success', 'dslite-announce-process-success',
-                    'nat64-announce-process-success', 'pkt-not-request-drop', 'pkt-too-short-drop', 'noroute-drop', 'unsupported-version', 'not-authorized', 'malform-request', 'unsupp-opcode', 'unsupp-option', 'malform-option', 'no-resources', 'unsupp-protocol', 'user-quota-exceeded',
-                    'cannot-provide-suggest', 'address-mismatch', 'excessive-remote-peers', 'pkt-not-from-nat-inside', 'l4-process-error', 'internal-error-drop', 'unsol_ance_sent_succ', 'unsol_ance_sent_fail', 'ha_sync_epoch_sent', 'ha_sync_epoch_rcv', 'fullcone-ext-alloc', 'fullcone-ext-free',
-                    'fullcone-ext-alloc-failure', 'fullcone-ext-notfound', 'fullcone-ext-reuse', 'client-nonce-mismatch', 'map-filter-set', 'map-filter-deny', 'inter-board-pkts'
+                    'all', 'packets-rcv', 'lsn-map-process-success', 'dslite-map-process-success', 'nat64-map-process-success', 'lsn-peer-process-success', 'dslite-peer-process-success', 'nat64-peer-process-success', 'lsn-announce-process-success', 'dslite-announce-process-success', 'nat64-announce-process-success', 'pkt-not-request-drop',
+                    'pkt-too-short-drop', 'noroute-drop', 'unsupported-version', 'not-authorized', 'malform-request', 'unsupp-opcode', 'unsupp-option', 'malform-option', 'no-resources', 'unsupp-protocol', 'user-quota-exceeded', 'cannot-provide-suggest', 'address-mismatch', 'excessive-remote-peers', 'pkt-not-from-nat-inside', 'l4-process-error',
+                    'internal-error-drop', 'unsol_ance_sent_succ', 'unsol_ance_sent_fail', 'ha_sync_epoch_sent', 'ha_sync_epoch_rcv', 'fullcone-ext-alloc', 'fullcone-ext-free', 'fullcone-ext-alloc-failure', 'fullcone-ext-notfound', 'fullcone-ext-reuse', 'client-nonce-mismatch', 'map-filter-set', 'map-filter-deny', 'inter-board-pkts'
                     ]
                 }
             },

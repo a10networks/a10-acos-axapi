@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_imap_pop3
 description:
     - IMAP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

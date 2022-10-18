@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_health_postfile
 description:
     - Address the HTTP Post data file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

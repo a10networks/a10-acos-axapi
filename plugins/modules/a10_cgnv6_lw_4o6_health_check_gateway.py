@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_health_check_gateway
 description:
     - Configure LW-4over6 health-check gateway
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

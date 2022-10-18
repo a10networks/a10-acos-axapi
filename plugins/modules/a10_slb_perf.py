@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_perf
 description:
     - SLB performance stats
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -229,8 +229,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'total-throughput-bits-per-sec', 'l4-conns-per-sec', 'l7-conns-per-sec', 'l7-trans-per-sec', 'ssl-conns-per-sec', 'ip-nat-conns-per-sec', 'total-new-conns-per-sec', 'total-curr-conns', 'l4-bandwidth', 'l7-bandwidth', 'serv-ssl-conns-per-sec', 'fw-conns-per-sec',
-                    'gifw-conns-per-sec', 'l7-proxy-conns-per-sec', 'l7-proxy-trans-per-sec'
+                    'all', 'total-throughput-bits-per-sec', 'l4-conns-per-sec', 'l7-conns-per-sec', 'l7-trans-per-sec', 'ssl-conns-per-sec', 'ip-nat-conns-per-sec', 'total-new-conns-per-sec', 'total-curr-conns', 'l4-bandwidth', 'l7-bandwidth', 'serv-ssl-conns-per-sec', 'fw-conns-per-sec', 'gifw-conns-per-sec', 'l7-proxy-conns-per-sec',
+                    'l7-proxy-trans-per-sec'
                     ]
                 }
             },

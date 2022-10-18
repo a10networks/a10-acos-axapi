@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_techreport_priority_partition
 description:
     - Configure partition to always poll for techreport
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

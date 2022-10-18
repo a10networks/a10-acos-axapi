@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_tunnel_ipv6_router_ripng
 description:
     - ripng
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_chassis_infra
 description:
     - Chassis infrastructure commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

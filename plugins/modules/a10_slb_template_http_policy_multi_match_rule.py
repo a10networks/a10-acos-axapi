@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_http_policy_multi_match_rule
 description:
     - Multi-match-rule block
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -466,14 +466,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cookie_name_contains_string", "cookie_name_contains_type", "cookie_name_ends_with_string", "cookie_name_ends_with_type", "cookie_name_equals_string", "cookie_name_equals_type", "cookie_name_starts_with_string", "cookie_name_starts_with_type", "cookie_value_contains_string",
-    "cookie_value_contains_type", "cookie_value_ends_with_string", "cookie_value_ends_with_type", "cookie_value_equals_string", "cookie_value_equals_type", "cookie_value_starts_with_string", "cookie_value_starts_with_type", "header_name_contains_string", "header_name_contains_type",
-    "header_name_ends_with_string", "header_name_ends_with_type", "header_name_equals_string", "header_name_equals_type", "header_name_starts_with_string", "header_name_starts_with_type", "header_value_contains_string", "header_value_contains_type", "header_value_ends_with_string",
-    "header_value_ends_with_type", "header_value_equals_string", "header_value_equals_type", "header_value_starts_with_string", "header_value_starts_with_type", "host_contains_string", "host_contains_type", "host_ends_with_string", "host_ends_with_type", "host_equals_string", "host_equals_type",
-    "host_starts_with_string", "host_starts_with_type", "multi_match", "query_param_name_contains_string", "query_param_name_contains_type", "query_param_name_ends_with_string", "query_param_name_ends_with_type", "query_param_name_equals_string", "query_param_name_equals_type",
-    "query_param_name_starts_with_string", "query_param_name_starts_with_type", "query_param_value_contains_string", "query_param_value_contains_type", "query_param_value_ends_with_string", "query_param_value_ends_with_type", "query_param_value_equals_string", "query_param_value_equals_type",
-    "query_param_value_starts_with_string", "query_param_value_starts_with_type", "seq_num", "service_group", "template_waf", "url_contains_string", "url_contains_type", "url_ends_with_string", "url_ends_with_type", "url_equals_string", "url_equals_type", "url_starts_with_string",
-    "url_starts_with_type", "user_tag", "uuid",
+    "cookie_name_contains_string", "cookie_name_contains_type", "cookie_name_ends_with_string", "cookie_name_ends_with_type", "cookie_name_equals_string", "cookie_name_equals_type", "cookie_name_starts_with_string", "cookie_name_starts_with_type", "cookie_value_contains_string", "cookie_value_contains_type", "cookie_value_ends_with_string",
+    "cookie_value_ends_with_type", "cookie_value_equals_string", "cookie_value_equals_type", "cookie_value_starts_with_string", "cookie_value_starts_with_type", "header_name_contains_string", "header_name_contains_type", "header_name_ends_with_string", "header_name_ends_with_type", "header_name_equals_string", "header_name_equals_type",
+    "header_name_starts_with_string", "header_name_starts_with_type", "header_value_contains_string", "header_value_contains_type", "header_value_ends_with_string", "header_value_ends_with_type", "header_value_equals_string", "header_value_equals_type", "header_value_starts_with_string", "header_value_starts_with_type", "host_contains_string",
+    "host_contains_type", "host_ends_with_string", "host_ends_with_type", "host_equals_string", "host_equals_type", "host_starts_with_string", "host_starts_with_type", "multi_match", "query_param_name_contains_string", "query_param_name_contains_type", "query_param_name_ends_with_string", "query_param_name_ends_with_type",
+    "query_param_name_equals_string", "query_param_name_equals_type", "query_param_name_starts_with_string", "query_param_name_starts_with_type", "query_param_value_contains_string", "query_param_value_contains_type", "query_param_value_ends_with_string", "query_param_value_ends_with_type", "query_param_value_equals_string",
+    "query_param_value_equals_type", "query_param_value_starts_with_string", "query_param_value_starts_with_type", "seq_num", "service_group", "template_waf", "url_contains_string", "url_contains_type", "url_ends_with_string", "url_ends_with_type", "url_equals_string", "url_equals_type", "url_starts_with_string", "url_starts_with_type", "user_tag",
+    "uuid",
     ]
 
 

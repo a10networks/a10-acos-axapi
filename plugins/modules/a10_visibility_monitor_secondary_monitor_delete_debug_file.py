@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitor_secondary_monitor_delete_debug_file
 description:
     - Delete the debug entity file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

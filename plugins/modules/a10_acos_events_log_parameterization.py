@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_log_parameterization
 description:
     - Harmony controller log parameterization configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_loopback_ip
 description:
     - Global IP configuration subcommands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

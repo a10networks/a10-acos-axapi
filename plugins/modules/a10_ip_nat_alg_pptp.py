@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_alg_pptp
 description:
     - PPTP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -220,12 +220,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'current-smp-sessions', 'current-gre-sessions', 'smp-session-creation-failure', 'truncated-pns-message', 'truncated-pac-message', 'mismatched-pns-call-id', 'mismatched-pac-call-id', 'retransmitted-pns-message', 'retransmitted-pac-message', 'truncated-gre-packet',
-                    'unknown-gre-version', 'no-matching-gre-session'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'current-smp-sessions', 'current-gre-sessions', 'smp-session-creation-failure', 'truncated-pns-message', 'truncated-pac-message', 'mismatched-pns-call-id', 'mismatched-pac-call-id', 'retransmitted-pns-message', 'retransmitted-pac-message', 'truncated-gre-packet', 'unknown-gre-version', 'no-matching-gre-session']
                 }
             },
         'stats': {

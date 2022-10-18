@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_saml_id_prov_tmpl
 description:
     - Configure template for aam.authentication.saml.identity-provider
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

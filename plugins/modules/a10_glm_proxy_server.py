@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glm_proxy_server
 description:
     - Connect to GLM through proxy server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

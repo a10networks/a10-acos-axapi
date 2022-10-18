@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_global
 description:
     - Configure LW-4over6 parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -287,12 +287,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'entry_count', 'self_hairpinning_drop', 'all_hairpinning_drop', 'no_match_icmpv6_sent', 'no_match_icmp_sent', 'icmp_inbound_drop', 'fwd_lookup_failed', 'rev_lookup_failed', 'interface_not_configured', 'no_binding_table_matches_fwd', 'no_binding_table_matches_rev',
-                    'session_count', 'system_address_drop'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'entry_count', 'self_hairpinning_drop', 'all_hairpinning_drop', 'no_match_icmpv6_sent', 'no_match_icmp_sent', 'icmp_inbound_drop', 'fwd_lookup_failed', 'rev_lookup_failed', 'interface_not_configured', 'no_binding_table_matches_fwd', 'no_binding_table_matches_rev', 'session_count', 'system_address_drop']
                 }
             },
         'stats': {

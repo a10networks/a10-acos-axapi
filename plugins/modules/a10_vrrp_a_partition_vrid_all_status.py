@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_partition_vrid_all_status
 description:
     - display vrid all status for all partitions
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

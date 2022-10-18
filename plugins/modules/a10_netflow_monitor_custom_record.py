@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_custom_record
 description:
     - Configure custom record types to be exported
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -198,11 +198,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'sesn-event-nat44-creation', 'sesn-event-nat44-deletion', 'sesn-event-nat64-creation', 'sesn-event-nat64-deletion', 'sesn-event-dslite-creation', 'sesn-event-dslite-deletion', 'sesn-event-fw4-creation', 'sesn-event-fw4-deletion', 'sesn-event-fw6-creation',
-                    'sesn-event-fw6-deletion', 'deny-reset-event-fw4', 'deny-reset-event-fw6', 'port-mapping-nat44-creation', 'port-mapping-nat44-deletion', 'port-mapping-nat64-creation', 'port-mapping-nat64-deletion', 'port-mapping-dslite-creation', 'port-mapping-dslite-deletion',
-                    'port-batch-nat44-creation', 'port-batch-nat44-deletion', 'port-batch-nat64-creation', 'port-batch-nat64-deletion', 'port-batch-dslite-creation', 'port-batch-dslite-deletion', 'port-batch-v2-nat44-creation', 'port-batch-v2-nat44-deletion', 'port-batch-v2-nat64-creation',
-                    'port-batch-v2-nat64-deletion', 'port-batch-v2-dslite-creation', 'port-batch-v2-dslite-deletion', 'gtp-c-tunnel-event', 'gtp-u-tunnel-event', 'gtp-deny-event', 'gtp-info-event', 'fw-ddos-entry-creation', 'fw-ddos-entry-deletion', 'fw-session-limit-exceeded',
-                    'cgn-ddos-l3-entry-creation', 'cgn-ddos-l3-entry-deletion', 'cgn-ddos-l4-entry-creation', 'cgn-ddos-l4-entry-deletion', 'gtp-rate-limit-periodic'
+                    'sesn-event-nat44-creation', 'sesn-event-nat44-deletion', 'sesn-event-nat64-creation', 'sesn-event-nat64-deletion', 'sesn-event-dslite-creation', 'sesn-event-dslite-deletion', 'sesn-event-fw4-creation', 'sesn-event-fw4-deletion', 'sesn-event-fw6-creation', 'sesn-event-fw6-deletion', 'deny-reset-event-fw4',
+                    'deny-reset-event-fw6', 'port-mapping-nat44-creation', 'port-mapping-nat44-deletion', 'port-mapping-nat64-creation', 'port-mapping-nat64-deletion', 'port-mapping-dslite-creation', 'port-mapping-dslite-deletion', 'port-batch-nat44-creation', 'port-batch-nat44-deletion', 'port-batch-nat64-creation', 'port-batch-nat64-deletion',
+                    'port-batch-dslite-creation', 'port-batch-dslite-deletion', 'port-batch-v2-nat44-creation', 'port-batch-v2-nat44-deletion', 'port-batch-v2-nat64-creation', 'port-batch-v2-nat64-deletion', 'port-batch-v2-dslite-creation', 'port-batch-v2-dslite-deletion', 'gtp-c-tunnel-event', 'gtp-u-tunnel-event', 'gtp-deny-event',
+                    'gtp-info-event', 'fw-ddos-entry-creation', 'fw-ddos-entry-deletion', 'fw-session-limit-exceeded', 'cgn-ddos-l3-entry-creation', 'cgn-ddos-l3-entry-deletion', 'cgn-ddos-l4-entry-creation', 'cgn-ddos-l4-entry-deletion', 'gtp-rate-limit-periodic'
                     ]
                 },
             'ipfix_template': {

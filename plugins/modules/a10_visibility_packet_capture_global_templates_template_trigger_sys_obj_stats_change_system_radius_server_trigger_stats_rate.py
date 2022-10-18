@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_system_radius_server_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -175,9 +175,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "duration", "ha_standby_dropped", "invalid_key", "ipv6_prefix_length_mismatch", "radius_request_dropped", "radius_table_full", "request_bad_secret_dropped", "request_malformed_dropped", "request_no_key_vap_dropped", "secret_not_configured_dropped", "threshold_exceeded_by", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["duration", "ha_standby_dropped", "invalid_key", "ipv6_prefix_length_mismatch", "radius_request_dropped", "radius_table_full", "request_bad_secret_dropped", "request_malformed_dropped", "request_no_key_vap_dropped", "secret_not_configured_dropped", "threshold_exceeded_by", "uuid", ]
 
 
 def get_default_argspec():

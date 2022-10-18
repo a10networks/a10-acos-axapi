@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_device_context
 description:
     - Switch context to a particular device for VCS config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

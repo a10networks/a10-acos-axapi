@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_geo_location
 description:
     - Configure a GSLB global geo-location object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

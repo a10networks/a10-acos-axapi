@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_server
 description:
     - Server template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -281,8 +281,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add", "bw_rate_limit", "bw_rate_limit_acct", "bw_rate_limit_duration", "bw_rate_limit_no_logging", "bw_rate_limit_resume", "conn_limit", "conn_limit_no_logging", "conn_rate_limit", "conn_rate_limit_no_logging", "dns_fail_interval", "dns_query_interval", "dynamic_server_prefix", "every",
-    "extended_stats", "health_check", "health_check_disable", "initial_slow_start", "log_selection_failure", "max_dynamic_server", "min_ttl_ratio", "name", "rate_interval", "resume", "slow_start", "spoofing_cache", "stats_data_action", "till", "times", "user_tag", "uuid", "weight",
+    "add", "bw_rate_limit", "bw_rate_limit_acct", "bw_rate_limit_duration", "bw_rate_limit_no_logging", "bw_rate_limit_resume", "conn_limit", "conn_limit_no_logging", "conn_rate_limit", "conn_rate_limit_no_logging", "dns_fail_interval", "dns_query_interval", "dynamic_server_prefix", "every", "extended_stats", "health_check", "health_check_disable",
+    "initial_slow_start", "log_selection_failure", "max_dynamic_server", "min_ttl_ratio", "name", "rate_interval", "resume", "slow_start", "spoofing_cache", "stats_data_action", "till", "times", "user_tag", "uuid", "weight",
     ]
 
 

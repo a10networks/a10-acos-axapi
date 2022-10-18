@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_tcp_mss_clamp
 description:
     - FW TCP MSS Clamping
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_pop3_proxy
 description:
     - Configure POP3 Proxy global
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -276,8 +276,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'line_too_long', 'line_mem_freed', 'invalid_start_line', 'stls', 'request_dont_care', 'unsupported_command', 'bad_sequence', 'rsv_persist_conn_fail', 'smp_v6_fail', 'smp_v4_fail', 'insert_tuple_fail',
-                    'cl_est_err', 'ser_connecting_err', 'server_response_err', 'cl_request_err', 'request', 'control_to_ssl'
+                    'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'line_too_long', 'line_mem_freed', 'invalid_start_line', 'stls', 'request_dont_care', 'unsupported_command', 'bad_sequence', 'rsv_persist_conn_fail', 'smp_v6_fail', 'smp_v4_fail', 'insert_tuple_fail', 'cl_est_err', 'ser_connecting_err', 'server_response_err',
+                    'cl_request_err', 'request', 'control_to_ssl'
                     ]
                 }
             },

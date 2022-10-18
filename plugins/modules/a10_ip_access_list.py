@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_access_list
 description:
     - Configure Access List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

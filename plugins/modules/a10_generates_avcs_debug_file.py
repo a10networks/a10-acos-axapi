@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_generates_avcs_debug_file
 description:
     - Field Generates aVCS debug file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

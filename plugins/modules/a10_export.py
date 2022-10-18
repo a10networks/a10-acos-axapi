@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_export
 description:
     - Put files to remote site
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -361,9 +361,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "axdebug", "bw_list", "ca_cert", "class_list", "csr", "debug_monitor", "dnssec_dnskey", "dnssec_ds", "externalfilename", "fixed_nat", "fixed_nat_archive", "geo_location", "ip_map_list", "ipsec_error_dump", "local_uri_file", "lw_4o6",
-    "lw_4o6_binding_table_validation_log", "merged_pcap", "mon_entity_debug_file", "per_cpu", "pktcapture_file", "policy", "profile", "remote_file", "rpz", "running_config", "saml_idp_name", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "startup_config", "status_check", "store", "store_name",
-    "syslog", "tgz", "thales_kmdata", "thales_secworld", "use_mgmt_port", "visibility", "wsdl", "xml_schema",
+    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "axdebug", "bw_list", "ca_cert", "class_list", "csr", "debug_monitor", "dnssec_dnskey", "dnssec_ds", "externalfilename", "fixed_nat", "fixed_nat_archive", "geo_location", "ip_map_list", "ipsec_error_dump", "local_uri_file", "lw_4o6", "lw_4o6_binding_table_validation_log", "merged_pcap",
+    "mon_entity_debug_file", "per_cpu", "pktcapture_file", "policy", "profile", "remote_file", "rpz", "running_config", "saml_idp_name", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "startup_config", "status_check", "store", "store_name", "syslog", "tgz", "thales_kmdata", "thales_secworld", "use_mgmt_port", "visibility", "wsdl", "xml_schema",
     ]
 
 

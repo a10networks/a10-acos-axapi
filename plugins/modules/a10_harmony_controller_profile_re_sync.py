@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_harmony_controller_profile_re_sync
 description:
     - re sync some options to harmony controller
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

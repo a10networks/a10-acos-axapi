@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_disable_management_service_ping
 description:
     - Ping service
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

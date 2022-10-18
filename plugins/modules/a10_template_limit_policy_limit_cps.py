@@ -10,10 +10,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_rrd_slb_vport
+module: a10_template_limit_policy_limit_cps
 description:
-    - slb vport statistics in RRD
-author: A10 Networks 2021
+    - Enable Connections Per Second Rate Limit
+author: A10 Networks
 options:
     state:
         description:
@@ -55,41 +55,31 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    limit_policy_policy_number:
+        description:
+        - Key to identify parent object
+        type: str
+        required: True
+    value:
+        description:
+        - "Connections Per Second Rate Limit (Number of Connections per second)"
+        type: int
+        required: False
+    burstsize:
+        description:
+        - "CPS Token Bucket Size (Must Exceed Configured Rate) (In Connections per second)"
+        type: int
+        required: False
+    relaxed:
+        description:
+        - "Relax the limitation when the policy has more tokens from the parent of policy"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            start_time:
-                description:
-                - "Field start_time"
-                type: int
-            end_time:
-                description:
-                - "Field end_time"
-                type: int
-            slb_virtual_server_name:
-                description:
-                - "Field slb_virtual_server_name"
-                type: str
-            slb_vport_number:
-                description:
-                - "Field slb_vport_number"
-                type: int
-            slb_vport_type:
-                description:
-                - "Field slb_vport_type"
-                type: int
-            slb_server_statistics:
-                description:
-                - "Field slb_server_statistics"
-                type: list
 
 '''
 
@@ -144,10 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["burstsize", "relaxed", "uuid", "value", ]
 
 
 def get_default_argspec():
@@ -155,81 +142,34 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False,
+                           ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False,
+                                   ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
-    )
+        )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'oper': {
-            'type': 'dict',
-            'start_time': {
-                'type': 'int',
-            },
-            'end_time': {
-                'type': 'int',
-            },
-            'slb_virtual_server_name': {
-                'type': 'str',
-            },
-            'slb_vport_number': {
-                'type': 'int',
-            },
-            'slb_vport_type': {
-                'type': 'int',
-            },
-            'slb_server_statistics': {
-                'type': 'list',
-                'time': {
-                    'type': 'int',
-                },
-                'in_pkts': {
-                    'type': 'int',
-                },
-                'in_bytes': {
-                    'type': 'int',
-                },
-                'out_pkts': {
-                    'type': 'int',
-                },
-                'out_bytes': {
-                    'type': 'int',
-                },
-                'cur_conn': {
-                    'type': 'int',
-                },
-                'p_conn': {
-                    'type': 'int',
-                }
-            }
-        }
-    })
+    rv.update({'value': {'type': 'int', }, 'burstsize': {'type': 'int', }, 'relaxed': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    # Parent keys
+    rv.update(dict(limit_policy_policy_number=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/rrd/slb-vport"
+    url_base = "/axapi/v3/template/limit-policy/{limit_policy_policy_number}/limit-cps"
 
     f_dict = {}
+    if '/' in module.params["limit_policy_policy_number"]:
+        f_dict["limit_policy_policy_number"] = module.params["limit_policy_policy_number"].replace("/", "%2F")
+    else:
+        f_dict["limit_policy_policy_number"] = module.params["limit_policy_policy_number"]
 
     return url_base.format(**f_dict)
 
@@ -237,17 +177,31 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/rrd/slb-vport"
+    url_base = "/axapi/v3/template/limit-policy/{limit_policy_policy_number}/limit-cps"
 
     f_dict = {}
+    f_dict["limit_policy_policy_number"] = module.params["limit_policy_policy_number"]
 
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["limit-cps"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["limit-cps"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["limit-cps"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
@@ -270,8 +224,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("slb-vport", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("limit-cps", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -305,12 +258,7 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -325,16 +273,14 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -345,13 +291,10 @@ def run_command(module):
 
     try:
         if a10_partition:
-            result["axapi_calls"].append(
-                api_client.active_partition(module.client, a10_partition))
+            result["axapi_calls"].append(api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+            result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -368,28 +311,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "slb-vport"] if info != "NotFound" else info
+                result["acos_info"] = info["limit-cps"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "slb-vport-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
-                                                      params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["slb-vport"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["limit-cps-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -402,8 +333,7 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

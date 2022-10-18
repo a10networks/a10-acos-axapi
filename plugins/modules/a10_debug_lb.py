@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_lb
 description:
     - Load Balancing debug switch parameter
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

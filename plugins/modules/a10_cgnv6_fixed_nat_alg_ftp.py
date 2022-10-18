@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_ftp
 description:
     - Change Fixed NAT FTP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -195,8 +195,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'port-requests', 'eprt-requests', 'lprt-requests', 'pasv-replies', 'epsv-replies', 'lpsv-replies', 'port-retransmits', 'pasv-retransmits', 'port-helper-created', 'pasv-helper-created', 'port-helper-freed', 'pasv-helper-freed', 'port-helper-unused', 'pasv-helper-unused',
-                    'port-helper-creation-failure', 'pasv-helper-creation-failure', 'get-conn-ext-failure', 'smp-app-type-mismatch'
+                    'all', 'port-requests', 'eprt-requests', 'lprt-requests', 'pasv-replies', 'epsv-replies', 'lpsv-replies', 'port-retransmits', 'pasv-retransmits', 'port-helper-created', 'pasv-helper-created', 'port-helper-freed', 'pasv-helper-freed', 'port-helper-unused', 'pasv-helper-unused', 'port-helper-creation-failure',
+                    'pasv-helper-creation-failure', 'get-conn-ext-failure', 'smp-app-type-mismatch'
                     ]
                 }
             },

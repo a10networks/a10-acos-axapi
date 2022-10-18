@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_icmp_rate_limit
 description:
     - Limit the rate of ICMP packet
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_auth_server_rad_inst_tmpl_trigger_stats_rate
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -175,32 +175,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'threshold_exceeded_by': {
-            'type': 'int',
-            },
-        'duration': {
-            'type': 'int',
-            },
-        'authen_failure': {
-            'type': 'bool',
-            },
-        'authorize_failure': {
-            'type': 'bool',
-            },
-        'timeout_error': {
-            'type': 'bool',
-            },
-        'other_error': {
-            'type': 'bool',
-            },
-        'accounting_failure': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'authen_failure': {'type': 'bool', }, 'authorize_failure': {'type': 'bool', }, 'timeout_error': {'type': 'bool', }, 'other_error': {'type': 'bool', }, 'accounting_failure': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(aam_auth_server_rad_inst_tmpl_name=dict(type='str', required=True), ))
     return rv

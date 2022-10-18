@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_disable
 description:
     - Disable SNMP service
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -173,38 +173,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'a10cmsubagent': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'traps': {
-            'type': 'dict',
-            'all': {
-                'type': 'bool',
-                },
-            'snmp': {
-                'type': 'bool',
-                },
-            'gslb': {
-                'type': 'bool',
-                },
-            'vrrp_a': {
-                'type': 'bool',
-                },
-            'slb': {
-                'type': 'bool',
-                },
-            'slb_change': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'a10cmsubagent': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'traps': {'type': 'dict', 'all': {'type': 'bool', }, 'snmp': {'type': 'bool', }, 'gslb': {'type': 'bool', }, 'vrrp_a': {'type': 'bool', }, 'slb': {'type': 'bool', }, 'slb_change': {'type': 'bool', }, 'uuid': {'type': 'str', }}})
     return rv
 
 

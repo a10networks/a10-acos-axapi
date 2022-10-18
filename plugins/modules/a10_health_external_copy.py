@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_external_copy
 description:
     - Copy external health monitor script
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_cloud_integration
 description:
     - Setting for heterogeneous cloud environment integration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

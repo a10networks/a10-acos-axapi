@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rrd_slb_server
 description:
     - slb server statistics in RRD
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

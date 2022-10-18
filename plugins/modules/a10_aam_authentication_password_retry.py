@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_password_retry
 description:
     - Field password_retry
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -152,38 +152,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'entry_list': {
-                'type': 'list',
-                'account': {
-                    'type': 'str',
-                    },
-                'logon': {
-                    'type': 'str',
-                    },
-                'pw_failure': {
-                    'type': 'int',
-                    },
-                'ttl': {
-                    'type': 'int',
-                    },
-                'locked_out': {
-                    'type': 'str',
-                    }
-                },
-            'logon_name': {
-                'type': 'str',
-                },
-            'name': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'entry_list': {'type': 'list', 'account': {'type': 'str', }, 'logon': {'type': 'str', }, 'pw_failure': {'type': 'int', }, 'ttl': {'type': 'int', }, 'locked_out': {'type': 'str', }}, 'logon_name': {'type': 'str', }, 'name': {'type': 'str', }}})
     return rv
 
 

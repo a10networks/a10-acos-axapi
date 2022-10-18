@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection
 description:
     - Configure CGNV6 DDoS Protection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -479,6 +479,9 @@ def get_argspec():
                 'expiration': {
                     'type': 'int',
                     },
+                'expiration_route': {
+                    'type': 'int',
+                    },
                 'timer_multiply_max': {
                     'type': 'int',
                     },
@@ -556,10 +559,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'l3_entry_added', 'l3_entry_deleted', 'l3_entry_added_to_bgp', 'l3_entry_removed_from_bgp', 'l3_entry_added_to_hw', 'l3_entry_removed_from_hw', 'l3_entry_too_many', 'l3_entry_match_drop', 'l3_entry_match_drop_hw', 'l3_entry_drop_max_hw_exceeded', 'l4_entry_added',
-                    'l4_entry_deleted', 'l4_entry_added_to_hw', 'l4_entry_removed_from_hw', 'l4_hw_out_of_entries', 'l4_entry_match_drop', 'l4_entry_match_drop_hw', 'l4_entry_drop_max_hw_exceeded', 'l4_entry_list_alloc', 'l4_entry_list_free', 'l4_entry_list_alloc_failure', 'ip_node_alloc',
-                    'ip_node_free', 'ip_node_alloc_failure', 'ip_port_block_alloc', 'ip_port_block_free', 'ip_port_block_alloc_failure', 'ip_other_block_alloc', 'ip_other_block_free', 'ip_other_block_alloc_failure', 'entry_added_shadow', 'entry_invalidated', 'l3_entry_add_to_bgp_failure',
-                    'l3_entry_remove_from_bgp_failure', 'l3_entry_add_to_hw_failure', 'syn_cookie_syn_ack_sent', 'syn_cookie_verification_passed', 'syn_cookie_verification_failed', 'syn_cookie_conn_setup_failed'
+                    'all', 'l3_entry_added', 'l3_entry_deleted', 'l3_entry_added_to_bgp', 'l3_entry_removed_from_bgp', 'l3_entry_added_to_hw', 'l3_entry_removed_from_hw', 'l3_entry_too_many', 'l3_entry_match_drop', 'l3_entry_match_drop_hw', 'l3_entry_drop_max_hw_exceeded', 'l4_entry_added', 'l4_entry_deleted', 'l4_entry_added_to_hw',
+                    'l4_entry_removed_from_hw', 'l4_hw_out_of_entries', 'l4_entry_match_drop', 'l4_entry_match_drop_hw', 'l4_entry_drop_max_hw_exceeded', 'l4_entry_list_alloc', 'l4_entry_list_free', 'l4_entry_list_alloc_failure', 'ip_node_alloc', 'ip_node_free', 'ip_node_alloc_failure', 'ip_port_block_alloc', 'ip_port_block_free',
+                    'ip_port_block_alloc_failure', 'ip_other_block_alloc', 'ip_other_block_free', 'ip_other_block_alloc_failure', 'entry_added_shadow', 'entry_invalidated', 'l3_entry_add_to_bgp_failure', 'l3_entry_remove_from_bgp_failure', 'l3_entry_add_to_hw_failure', 'syn_cookie_syn_ack_sent', 'syn_cookie_verification_passed',
+                    'syn_cookie_verification_failed', 'syn_cookie_conn_setup_failed'
                     ]
                 }
             },

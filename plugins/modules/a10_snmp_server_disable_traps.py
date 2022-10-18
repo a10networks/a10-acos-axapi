@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_disable_traps
 description:
     - Disable l3v partition SNMP traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

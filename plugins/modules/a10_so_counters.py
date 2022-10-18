@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_so_counters
 description:
     - Show scaleout statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -321,12 +321,11 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'so_pkts_rcvd', 'so_redirect_pkts_sent', 'so_pkts_dropped', 'so_redirected_pkts_rcvd', 'so_fw_shadow_session_created', 'so_pkts_traffic_map_not_found_drop', 'so_slb_pkts_redirect_conn_aged_out', 'so_pkts_scaleout_not_active_drop', 'so_pkts_slb_nat_reserve_fail',
-                    'so_pkts_slb_nat_release_fail', 'so_pkts_dest_mac_mismatch_drop', 'so_pkts_l2redirect_dest_mac_zero_drop', 'so_pkts_l2redirect_interface_not_up', 'so_pkts_l2redirect_invalid_redirect_info_error', 'so_pkts_l3_redirect_encap_error_drop', 'so_pkts_l3_redirect_inner_mac_zero_drop',
-                    'so_pkts_l3_redirect_decap_vlan_sanity_drop', 'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop', 'so_pkts_l3_redirect_decap_rx_encap_params_drop', 'so_pkts_l3_redirect_table_error', 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop', 'so_pkts_l3_redirect_fragmentation_error',
-                    'so_pkts_l3_redirect_table_no_entry_found', 'so_pkts_l3_redirect_invalid_dev_dir', 'so_pkts_l3_redirect_chassis_dest_mac_error', 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop', 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop', 'so_pkts_l3_redirect_too_large_pkts_in_drop',
-                    'so_sync_fw_shadow_session_create', 'so_sync_fw_shadow_session_delete', 'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active', 'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error',
-                    'so_pkts_l2redirect_port_retrieval_error'
+                    'all', 'so_pkts_rcvd', 'so_redirect_pkts_sent', 'so_pkts_dropped', 'so_redirected_pkts_rcvd', 'so_fw_shadow_session_created', 'so_pkts_traffic_map_not_found_drop', 'so_slb_pkts_redirect_conn_aged_out', 'so_pkts_scaleout_not_active_drop', 'so_pkts_slb_nat_reserve_fail', 'so_pkts_slb_nat_release_fail',
+                    'so_pkts_dest_mac_mismatch_drop', 'so_pkts_l2redirect_dest_mac_zero_drop', 'so_pkts_l2redirect_interface_not_up', 'so_pkts_l2redirect_invalid_redirect_info_error', 'so_pkts_l3_redirect_encap_error_drop', 'so_pkts_l3_redirect_inner_mac_zero_drop', 'so_pkts_l3_redirect_decap_vlan_sanity_drop',
+                    'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop', 'so_pkts_l3_redirect_decap_rx_encap_params_drop', 'so_pkts_l3_redirect_table_error', 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop', 'so_pkts_l3_redirect_fragmentation_error', 'so_pkts_l3_redirect_table_no_entry_found', 'so_pkts_l3_redirect_invalid_dev_dir',
+                    'so_pkts_l3_redirect_chassis_dest_mac_error', 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop', 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop', 'so_pkts_l3_redirect_too_large_pkts_in_drop', 'so_sync_fw_shadow_session_create', 'so_sync_fw_shadow_session_delete', 'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active',
+                    'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error', 'so_pkts_l2redirect_port_retrieval_error'
                     ]
                 }
             },

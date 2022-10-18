@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_template_request_check
 description:
     - Request check
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -220,8 +220,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bot_check", "bot_check_policy_file", "command_injection_check", "command_injection_check_policy_file", "lifetime", "redirect_whitelist", "referer_check", "referer_domain_list", "referer_domain_list_only", "referer_safe_url", "session_check", "sqlia_check", "sqlia_check_policy_file",
-    "url_blacklist", "url_learned_list", "url_whitelist", "uuid", "waf_blacklist_file", "waf_whitelist_file", "xss_check", "xss_check_policy_file",
+    "bot_check", "bot_check_policy_file", "command_injection_check", "command_injection_check_policy_file", "lifetime", "redirect_whitelist", "referer_check", "referer_domain_list", "referer_domain_list_only", "referer_safe_url", "session_check", "sqlia_check", "sqlia_check_policy_file", "url_blacklist", "url_learned_list", "url_whitelist", "uuid",
+    "waf_blacklist_file", "waf_whitelist_file", "xss_check", "xss_check_policy_file",
     ]
 
 

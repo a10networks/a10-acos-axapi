@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_global
 description:
     - Global AAM authentication statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -271,8 +271,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'requests', 'responses', 'misses', 'ocsp-stapling-requests-to-a10authd', 'ocsp-stapling-responses-from-a10authd', 'opened-socket', 'open-socket-failed', 'connect', 'connect-failed', 'created-timer', 'create-timer-failed', 'total-request', 'get-socket-option-failed',
-                    'aflex-authz-succ', 'aflex-authz-fail', 'authn-success', 'authn-failure', 'authz-success', 'authz-failure', 'active-session', 'active-user', 'dns-resolve-failed'
+                    'all', 'requests', 'responses', 'misses', 'ocsp-stapling-requests-to-a10authd', 'ocsp-stapling-responses-from-a10authd', 'opened-socket', 'open-socket-failed', 'connect', 'connect-failed', 'created-timer', 'create-timer-failed', 'total-request', 'get-socket-option-failed', 'aflex-authz-succ', 'aflex-authz-fail', 'authn-success',
+                    'authn-failure', 'authz-success', 'authz-failure', 'active-session', 'active-user', 'dns-resolve-failed'
                     ]
                 }
             },

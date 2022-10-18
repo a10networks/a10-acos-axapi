@@ -10,10 +10,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_scaleout_debug_reachability_hash_table
+module: a10_template_limit_policy_limit_pps
 description:
-    - Field hash_table
-author: A10 Networks 2021
+    - Enable Packets Per Second Rate Limit
+author: A10 Networks
 options:
     state:
         description:
@@ -55,29 +55,66 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    limit_policy_policy_number:
+        description:
+        - Key to identify parent object
+        type: str
+        required: True
+    uplink:
+        description:
+        - "Uplink PPS limit (Number of Packets per second)"
+        type: int
+        required: False
+    uplink_burstsize:
+        description:
+        - "PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+        type: int
+        required: False
+    uplink_relaxed:
+        description:
+        - "Relax the limitation when the policy has more tokens from the parent of policy"
+        type: bool
+        required: False
+    downlink:
+        description:
+        - "Downlink PPS limit (Number of Packets per second)"
+        type: int
+        required: False
+    ddos_protection_factor:
+        description:
+        - "Enable DDoS Protection (Multiplier of the downlink PPS)"
+        type: int
+        required: False
+    downlink_burstsize:
+        description:
+        - "PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+        type: int
+        required: False
+    downlink_relaxed:
+        description:
+        - "Relax the limitation when the policy has more tokens from the parent of policy"
+        type: bool
+        required: False
+    total:
+        description:
+        - "Total PPS limit (Number of Packets per second)"
+        type: int
+        required: False
+    total_burstsize:
+        description:
+        - "PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+        type: int
+        required: False
+    total_relaxed:
+        description:
+        - "Relax the limitation when the policy has more tokens from the parent of policy"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            ip:
-                description:
-                - "Field ip"
-                type: int
-            mac:
-                description:
-                - "Field mac"
-                type: int
-            hash_list:
-                description:
-                - "Field hash_list"
-                type: list
 
 '''
 
@@ -132,7 +169,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["ddos_protection_factor", "downlink", "downlink_burstsize", "downlink_relaxed", "total", "total_burstsize", "total_relaxed", "uplink", "uplink_burstsize", "uplink_relaxed", "uuid", ]
 
 
 def get_default_argspec():
@@ -153,52 +190,55 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uplink': {
+            'type': 'int',
+            },
+        'uplink_burstsize': {
+            'type': 'int',
+            },
+        'uplink_relaxed': {
+            'type': 'bool',
+            },
+        'downlink': {
+            'type': 'int',
+            },
+        'ddos_protection_factor': {
+            'type': 'int',
+            },
+        'downlink_burstsize': {
+            'type': 'int',
+            },
+        'downlink_relaxed': {
+            'type': 'bool',
+            },
+        'total': {
+            'type': 'int',
+            },
+        'total_burstsize': {
+            'type': 'int',
+            },
+        'total_relaxed': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'ip': {
-                'type': 'int',
-                },
-            'mac': {
-                'type': 'int',
-                },
-            'hash_list': {
-                'type': 'list',
-                'hash': {
-                    'type': 'int',
-                    },
-                'node': {
-                    'type': 'int',
-                    },
-                'so_ip': {
-                    'type': 'str',
-                    },
-                'so_mac': {
-                    'type': 'str',
-                    },
-                'real_port': {
-                    'type': 'int',
-                    },
-                'stale': {
-                    'type': 'int',
-                    },
-                'ref_count': {
-                    'type': 'int',
-                    }
-                }
             }
         })
+    # Parent keys
+    rv.update(dict(limit_policy_policy_number=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/scaleout/debug/reachability/hash-table"
+    url_base = "/axapi/v3/template/limit-policy/{limit_policy_policy_number}/limit-pps"
 
     f_dict = {}
+    if '/' in module.params["limit_policy_policy_number"]:
+        f_dict["limit_policy_policy_number"] = module.params["limit_policy_policy_number"].replace("/", "%2F")
+    else:
+        f_dict["limit_policy_policy_number"] = module.params["limit_policy_policy_number"]
 
     return url_base.format(**f_dict)
 
@@ -206,17 +246,31 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/scaleout/debug/reachability/hash-table"
+    url_base = "/axapi/v3/template/limit-policy/{limit_policy_policy_number}/limit-pps"
 
     f_dict = {}
+    f_dict["limit_policy_policy_number"] = module.params["limit_policy_policy_number"]
 
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["limit-pps"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["limit-pps"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["limit-pps"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
@@ -239,7 +293,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("hash-table", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("limit-pps", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -329,18 +383,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["hash-table"] if info != "NotFound" else info
+                result["acos_info"] = info["limit-pps"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["hash-table-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["hash-table"]["oper"] if info != "NotFound" else info
+                result["acos_info"] = info["limit-pps-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

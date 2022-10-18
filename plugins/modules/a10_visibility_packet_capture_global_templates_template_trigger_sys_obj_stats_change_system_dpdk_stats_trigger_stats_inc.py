@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_system_dpdk_stats_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -255,8 +255,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "err_pkt_drop", "io_ring_drop", "io_rx_que_drop", "io_tx_que_drop", "pkt_drop", "pkt_lnk_down_drop", "rx_align_err", "rx_crc_err", "rx_csum_offload_err", "rx_err", "rx_frame_err", "rx_len_err", "rx_long_len_err", "rx_miss_err", "rx_no_buff_err", "rx_over_err", "rx_short_len_err", "tx_abort_err",
-    "tx_carrier_err", "tx_drop", "tx_err", "tx_fifo_err", "tx_hbeat_err", "tx_windows_err", "uuid", "w_link_down_drop", "w_ring_drop", "w_tx_que_drop",
+    "err_pkt_drop", "io_ring_drop", "io_rx_que_drop", "io_tx_que_drop", "pkt_drop", "pkt_lnk_down_drop", "rx_align_err", "rx_crc_err", "rx_csum_offload_err", "rx_err", "rx_frame_err", "rx_len_err", "rx_long_len_err", "rx_miss_err", "rx_no_buff_err", "rx_over_err", "rx_short_len_err", "tx_abort_err", "tx_carrier_err", "tx_drop", "tx_err",
+    "tx_fifo_err", "tx_hbeat_err", "tx_windows_err", "uuid", "w_link_down_drop", "w_ring_drop", "w_tx_que_drop",
     ]
 
 

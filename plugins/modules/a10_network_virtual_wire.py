@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_virtual_wire
 description:
     - Configure Virtual Wire
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

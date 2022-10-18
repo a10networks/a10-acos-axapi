@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_virtual_port
 description:
     - Virtual port template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -251,8 +251,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflow", "allow_syn_otherflags", "allow_vip_to_rport_mapping", "conn_limit", "conn_limit_no_logging", "conn_limit_reset", "conn_rate_limit", "conn_rate_limit_no_logging", "conn_rate_limit_reset", "drop_unknown_conn", "dscp", "ignore_tcp_msl", "log_options", "name", "non_syn_initiation",
-    "pkt_rate_interval", "pkt_rate_limit_reset", "pkt_rate_type", "rate", "rate_interval", "reset_l7_on_failover", "reset_unknown_conn", "snat_msl", "snat_port_preserve", "user_tag", "uuid", "when_rr_enable",
+    "aflow", "allow_syn_otherflags", "allow_vip_to_rport_mapping", "conn_limit", "conn_limit_no_logging", "conn_limit_reset", "conn_rate_limit", "conn_rate_limit_no_logging", "conn_rate_limit_reset", "drop_unknown_conn", "dscp", "ignore_tcp_msl", "log_options", "name", "non_syn_initiation", "pkt_rate_interval", "pkt_rate_limit_reset",
+    "pkt_rate_type", "rate", "rate_interval", "reset_l7_on_failover", "reset_unknown_conn", "snat_msl", "snat_port_preserve", "user_tag", "uuid", "when_rr_enable",
     ]
 
 

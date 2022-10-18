@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_delete_debug_monitor
 description:
     - Debug File
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

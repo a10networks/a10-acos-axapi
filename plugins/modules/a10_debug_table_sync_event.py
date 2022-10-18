@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_table_sync_event
 description:
     - Debug table sync events
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

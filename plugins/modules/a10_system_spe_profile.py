@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_spe_profile
 description:
     - Set Security Policy Engine Profile
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

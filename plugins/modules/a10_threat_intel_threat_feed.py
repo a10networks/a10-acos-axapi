@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_threat_feed
 description:
     - Configure vendor specific module control options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

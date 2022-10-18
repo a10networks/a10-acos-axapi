@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_remote_ipv6_address_use_lif
 description:
     - Specify the interface lif
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

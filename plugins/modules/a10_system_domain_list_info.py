@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_domain_list_info
 description:
     - Display domian-list Information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,38 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'domain_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                    },
-                'domain_name': {
-                    'type': 'str',
-                    },
-                'resolved': {
-                    'type': 'int',
-                    },
-                'hit_count': {
-                    'type': 'int',
-                    },
-                'ip_number': {
-                    'type': 'int',
-                    },
-                'ip': {
-                    'type': 'str',
-                    },
-                'is_ipv6': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'domain_list': {'type': 'list', 'name': {'type': 'str', }, 'domain_name': {'type': 'str', }, 'resolved': {'type': 'int', }, 'hit_count': {'type': 'int', }, 'ip_number': {'type': 'int', }, 'ip': {'type': 'str', }, 'is_ipv6': {'type': 'int', }}}})
     return rv
 
 

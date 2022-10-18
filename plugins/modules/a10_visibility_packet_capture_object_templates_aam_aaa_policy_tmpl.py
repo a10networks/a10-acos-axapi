@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_aam_aaa_policy_tmpl
 description:
     - Configure template for aam.aaa-policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

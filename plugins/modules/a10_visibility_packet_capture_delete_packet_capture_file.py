@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_delete_packet_capture_file
 description:
     - Delete the Packet capture pcapng file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

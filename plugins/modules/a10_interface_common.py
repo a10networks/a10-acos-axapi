@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_common
 description:
     - Interface statistics information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

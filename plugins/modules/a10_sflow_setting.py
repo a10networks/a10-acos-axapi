@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_setting
 description:
     - Configure sFlow
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

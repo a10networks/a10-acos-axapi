@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_global
 description:
     - Global SAML statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -261,8 +261,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'requests-to-a10saml', 'responses-from-a10saml', 'sp-metadata-export-req', 'sp-metadata-export-success', 'login-auth-req', 'login-auth-resp', 'acs-req', 'acs-success', 'acs-authz-fail', 'acs-error', 'slo-req', 'slo-success', 'slo-error', 'sp-slo-req', 'glo-slo-success',
-                    'loc-slo-success', 'par-slo-success', 'relay-req', 'relay-success', 'relay-fail', 'relay-error', 'other-error'
+                    'all', 'requests-to-a10saml', 'responses-from-a10saml', 'sp-metadata-export-req', 'sp-metadata-export-success', 'login-auth-req', 'login-auth-resp', 'acs-req', 'acs-success', 'acs-authz-fail', 'acs-error', 'slo-req', 'slo-success', 'slo-error', 'sp-slo-req', 'glo-slo-success', 'loc-slo-success', 'par-slo-success', 'relay-req',
+                    'relay-success', 'relay-fail', 'relay-error', 'other-error'
                     ]
                 }
             },

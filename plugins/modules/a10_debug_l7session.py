@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_l7session
 description:
     - Debug L7 session processing
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

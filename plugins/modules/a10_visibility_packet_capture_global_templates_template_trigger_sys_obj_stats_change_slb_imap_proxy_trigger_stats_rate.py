@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_imap_proxy_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -241,8 +241,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auth_unsupported", "bad_sequence", "cant_find_epsv", "cant_find_pasv", "cl_est_err", "cl_request_err", "data_send_fail", "data_server_conn_fail", "duration", "insert_tuple_fail", "invalid_start_line", "line_too_long", "no_route", "rsv_persist_conn_fail", "ser_connecting_err",
-    "server_response_err", "smp_create_fail", "smp_v4_fail", "smp_v6_fail", "snat_fail", "svrsel_fail", "threshold_exceeded_by", "unsupported_pbsz_value", "unsupported_prot_value", "uuid",
+    "auth_unsupported", "bad_sequence", "cant_find_epsv", "cant_find_pasv", "cl_est_err", "cl_request_err", "data_send_fail", "data_server_conn_fail", "duration", "insert_tuple_fail", "invalid_start_line", "line_too_long", "no_route", "rsv_persist_conn_fail", "ser_connecting_err", "server_response_err", "smp_create_fail", "smp_v4_fail",
+    "smp_v6_fail", "snat_fail", "svrsel_fail", "threshold_exceeded_by", "unsupported_pbsz_value", "unsupported_prot_value", "uuid",
     ]
 
 

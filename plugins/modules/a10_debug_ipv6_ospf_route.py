@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_ipv6_ospf_route
 description:
     - OSPFv3 route information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

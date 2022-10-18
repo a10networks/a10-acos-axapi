@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_tftp
 description:
     - Change Fixed NAT TFTP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -158,24 +158,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml']
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'session_created': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml']}}, 'stats': {'type': 'dict', 'session_created': {'type': 'str', }}})
     return rv
 
 

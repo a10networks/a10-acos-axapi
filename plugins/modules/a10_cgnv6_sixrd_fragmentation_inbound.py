@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sixrd_fragmentation_inbound
 description:
     - 6rd fragmentation rules for inbound oversize packets (default= send-icmpv6)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

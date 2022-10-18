@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_external_service
 description:
     - External service template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -204,10 +204,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "action", "bypass_ip_cfg", "failure_action", "name", "request_header_forward_list", "service_group", "shared_partition_persist_source_ip_template", "shared_partition_tcp_proxy_template", "source_ip", "tcp_proxy", "template_persist_source_ip_shared", "template_tcp_proxy_shared", "timeout",
-    "ntype", "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["action", "bypass_ip_cfg", "failure_action", "name", "request_header_forward_list", "service_group", "shared_partition_persist_source_ip_template", "shared_partition_tcp_proxy_template", "source_ip", "tcp_proxy", "template_persist_source_ip_shared", "template_tcp_proxy_shared", "timeout", "ntype", "user_tag", "uuid", ]
 
 
 def get_default_argspec():

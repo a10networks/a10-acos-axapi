@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_license_manager_overage
 description:
     - Set overage parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

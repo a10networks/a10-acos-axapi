@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor
 description:
     - Define the Health Monitor object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -344,8 +344,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "default_state_up", "disable_after_down", "dsr_l2_strict", "header_insert", "interval", "method", "name", "override_ipv4", "override_ipv6", "override_port", "passive", "passive_interval", "retry", "sample_threshold", "ssl_ciphers", "ssl_dgversion", "ssl_ticket", "ssl_ticket_lifetime",
-    "ssl_version", "status_code", "strict_retry_on_server_err_resp", "threshold", "timeout", "up_retry", "user_tag", "uuid",
+    "default_state_up", "disable_after_down", "dsr_l2_strict", "header_insert", "interval", "method", "name", "override_ipv4", "override_ipv6", "override_port", "passive", "passive_interval", "retry", "sample_threshold", "ssl_ciphers", "ssl_dgversion", "ssl_ticket", "ssl_ticket_lifetime", "ssl_version", "status_code",
+    "strict_retry_on_server_err_resp", "threshold", "timeout", "up_retry", "user_tag", "uuid",
     ]
 
 

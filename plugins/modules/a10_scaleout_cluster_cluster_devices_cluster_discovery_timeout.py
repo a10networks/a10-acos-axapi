@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_cluster_devices_cluster_discovery_timeout
 description:
     - Configure cluster discovery timeout
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

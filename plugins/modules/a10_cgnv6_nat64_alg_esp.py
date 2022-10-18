@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat64_alg_esp
 description:
     - NAT64 ESP ALG (default= disabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -165,31 +165,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'esp_enable': {
-            'type': 'str',
-            'choices': ['enable', 'enable-with-ctrl']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'session-created', 'nat-ip-conflict']
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'session_created': {
-                'type': 'str',
-                },
-            'nat_ip_conflict': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'esp_enable': {'type': 'str', 'choices': ['enable', 'enable-with-ctrl']}, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'session-created', 'nat-ip-conflict']}}, 'stats': {'type': 'dict', 'session_created': {'type': 'str', }, 'nat_ip_conflict': {'type': 'str', }}})
     return rv
 
 

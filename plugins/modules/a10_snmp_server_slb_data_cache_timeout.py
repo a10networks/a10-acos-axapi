@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_slb_data_cache_timeout
 description:
     - Configure the SLB data cache time-out in seconds
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

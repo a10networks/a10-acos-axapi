@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_scaleout_nat_ip_hashing_scheme
 description:
     - Configure Scaleout NAT IP Hashing scheme
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

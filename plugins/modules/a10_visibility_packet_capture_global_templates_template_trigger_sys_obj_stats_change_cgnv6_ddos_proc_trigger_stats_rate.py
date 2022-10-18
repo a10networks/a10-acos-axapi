@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_ddos_proc_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -201,8 +201,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "duration", "ip_node_alloc_failure", "ip_other_block_alloc_failure", "ip_port_block_alloc_failure", "l3_entry_add_to_bgp_failure", "l3_entry_add_to_hw_failure", "l3_entry_drop_max_hw_exceeded", "l3_entry_match_drop", "l3_entry_match_drop_hw", "l3_entry_remove_from_bgp_failure",
-    "l4_entry_drop_max_hw_exceeded", "l4_entry_list_alloc_failure", "l4_entry_match_drop", "l4_entry_match_drop_hw", "syn_cookie_verification_failed", "threshold_exceeded_by", "uuid",
+    "duration", "ip_node_alloc_failure", "ip_other_block_alloc_failure", "ip_port_block_alloc_failure", "l3_entry_add_to_bgp_failure", "l3_entry_add_to_hw_failure", "l3_entry_drop_max_hw_exceeded", "l3_entry_match_drop", "l3_entry_match_drop_hw", "l3_entry_remove_from_bgp_failure", "l4_entry_drop_max_hw_exceeded", "l4_entry_list_alloc_failure",
+    "l4_entry_match_drop", "l4_entry_match_drop_hw", "syn_cookie_verification_failed", "threshold_exceeded_by", "uuid",
     ]
 
 

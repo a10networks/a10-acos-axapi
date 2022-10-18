@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_ptr_record
 description:
     - Specify DNS PTR Record
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -183,35 +183,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ptr_name': {
-            'type': 'str',
-            'required': True,
-            },
-        'ttl': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'hits': {
-                'type': 'str',
-                },
-            'ptr_name': {
-                'type': 'str',
-                'required': True,
-                }
-            }
-        })
+    rv.update({'ptr_name': {'type': 'str', 'required': True, }, 'ttl': {'type': 'int', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}, 'stats': {'type': 'dict', 'hits': {'type': 'str', }, 'ptr_name': {'type': 'str', 'required': True, }}})
     # Parent keys
     rv.update(dict(service_name=dict(type='str', required=True), service_port=dict(type='str', required=True), zone_name=dict(type='str', required=True), ))
     return rv

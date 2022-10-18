@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_smtp
 description:
     - Configure SMTP Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

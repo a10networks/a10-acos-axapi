@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_log_server_port
 description:
     - Logging Server Port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

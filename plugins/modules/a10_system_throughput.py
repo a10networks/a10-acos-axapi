@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_throughput
 description:
     - System throughput
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -160,27 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'global-system-throughput-bits-per-sec', 'per-part-throughput-bits-per-sec']
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'global_system_throughput_bits_per_sec': {
-                'type': 'str',
-                },
-            'per_part_throughput_bits_per_sec': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'global-system-throughput-bits-per-sec', 'per-part-throughput-bits-per-sec']}}, 'stats': {'type': 'dict', 'global_system_throughput_bits_per_sec': {'type': 'str', }, 'per_part_throughput_bits_per_sec': {'type': 'str', }}})
     return rv
 
 

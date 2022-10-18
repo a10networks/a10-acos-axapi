@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_state_cpu
 description:
     - HA VRRP-A Global Commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -144,32 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'cpu_usage': {
-                'type': 'list',
-                'cpu_id': {
-                    'type': 'int',
-                    },
-                'Max_Sync_Msg_Per_Packet': {
-                    'type': 'int',
-                    },
-                'Min_Sync_Msg_Per_Packet': {
-                    'type': 'int',
-                    },
-                'Max_Query_Msg_Per_Packet': {
-                    'type': 'int',
-                    },
-                'Min_Query_Msg_Per_Packet': {
-                    'type': 'int',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'cpu_usage': {'type': 'list', 'cpu_id': {'type': 'int', }, 'Max_Sync_Msg_Per_Packet': {'type': 'int', }, 'Min_Sync_Msg_Per_Packet': {'type': 'int', }, 'Max_Query_Msg_Per_Packet': {'type': 'int', }, 'Min_Query_Msg_Per_Packet': {'type': 'int', }}}})
     return rv
 
 

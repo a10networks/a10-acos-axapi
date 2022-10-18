@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_class_list_convert
 description:
     - Convert Class List File to A10 format
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -160,28 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'class_list_convert': {
-            'type': 'str',
-            'required': True,
-            },
-        'class_list_type': {
-            'type': 'str',
-            'choices': ['ac', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'remote_file': {
-            'type': 'str',
-            },
-        'period': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'class_list_convert': {'type': 'str', 'required': True, }, 'class_list_type': {'type': 'str', 'choices': ['ac', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']}, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_chassis_info
 description:
     - Info regarding the chassis state
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

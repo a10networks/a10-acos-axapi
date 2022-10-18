@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_fpga_drop
 description:
     - Field fpga_drop
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -332,9 +332,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'mrx-drop', 'hrx-drop', 'siz-drop', 'fcs-drop', 'land-drop', 'empty-frag-drop', 'mic-frag-drop', 'ipv4-opt-drop', 'ipv4-frag', 'bad-ip-hdr-len', 'bad-ip-flags-drop', 'bad-ip-ttl-drop', 'no-ip-payload-drop', 'oversize-ip-payload', 'bad-ip-payload-len', 'bad-ip-frag-offset',
-                    'bad-ip-chksum-drop', 'icmp-pod-drop', 'tcp-bad-urg-offet', 'tcp-short-hdr', 'tcp-bad-ip-len', 'tcp-null-flags', 'tcp-null-scan', 'tcp-fin-sin', 'tcp-xmas-flags', 'tcp-xmas-scan', 'tcp-syn-frag', 'tcp-frag-hdr', 'tcp-bad-chksum', 'udp-short-hdr', 'udp-bad-ip-len', 'udp-kb-frags',
-                    'udp-port-lb', 'udp-bad-chksum', 'runt-ip-hdr', 'runt-tcpudp-hdr', 'tun-mismatch', 'qdr-drop'
+                    'all', 'mrx-drop', 'hrx-drop', 'siz-drop', 'fcs-drop', 'land-drop', 'empty-frag-drop', 'mic-frag-drop', 'ipv4-opt-drop', 'ipv4-frag', 'bad-ip-hdr-len', 'bad-ip-flags-drop', 'bad-ip-ttl-drop', 'no-ip-payload-drop', 'oversize-ip-payload', 'bad-ip-payload-len', 'bad-ip-frag-offset', 'bad-ip-chksum-drop', 'icmp-pod-drop',
+                    'tcp-bad-urg-offet', 'tcp-short-hdr', 'tcp-bad-ip-len', 'tcp-null-flags', 'tcp-null-scan', 'tcp-fin-sin', 'tcp-xmas-flags', 'tcp-xmas-scan', 'tcp-syn-frag', 'tcp-frag-hdr', 'tcp-bad-chksum', 'udp-short-hdr', 'udp-bad-ip-len', 'udp-kb-frags', 'udp-port-lb', 'udp-bad-chksum', 'runt-ip-hdr', 'runt-tcpudp-hdr', 'tun-mismatch',
+                    'qdr-drop'
                     ]
                 }
             },

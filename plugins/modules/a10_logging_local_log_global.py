@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_global
 description:
     - Field global
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -307,8 +307,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'enqueue', 'enqueue-full', 'enqueue-error', 'dequeue', 'dequeue-error', 'raw-log', 'raw-log-error', 'log-summarized', 'l1-log-summarized', 'l2-log-summarized', 'log-summarized-error', 'aam-db', 'ep-db', 'fw-db', 'aam-top-user-db', 'ep-top-user-db', 'ep-top-src-db',
-                    'ep-top-dst-db', 'ep-top-domain-db', 'ep-top-web-category-db', 'ep-top-host-db', 'fw-top-app-db', 'fw-top-src-db', 'fw-top-app-src-db', 'fw-top-category-db', 'db-erro', 'query', 'response', 'query-error', 'fw-top-thr-db', 'fw-top-thr-src-db'
+                    'all', 'enqueue', 'enqueue-full', 'enqueue-error', 'dequeue', 'dequeue-error', 'raw-log', 'raw-log-error', 'log-summarized', 'l1-log-summarized', 'l2-log-summarized', 'log-summarized-error', 'aam-db', 'ep-db', 'fw-db', 'aam-top-user-db', 'ep-top-user-db', 'ep-top-src-db', 'ep-top-dst-db', 'ep-top-domain-db',
+                    'ep-top-web-category-db', 'ep-top-host-db', 'fw-top-app-db', 'fw-top-src-db', 'fw-top-app-src-db', 'fw-top-category-db', 'db-erro', 'query', 'response', 'query-error', 'fw-top-thr-db', 'fw-top-thr-src-db'
                     ]
                 }
             },

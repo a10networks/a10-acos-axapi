@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_radius_server
 description:
     - Configure system as a RADIUS server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -506,10 +506,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'msisdn-received', 'imei-received', 'imsi-received', 'custom-received', 'radius-request-received', 'radius-request-dropped', 'request-bad-secret-dropped', 'request-no-key-vap-dropped', 'request-malformed-dropped', 'request-ignored', 'radius-table-full',
-                    'secret-not-configured-dropped', 'ha-standby-dropped', 'ipv6-prefix-length-mismatch', 'invalid-key', 'smp-created', 'smp-deleted', 'smp-mem-allocated', 'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml', 'mem-allocated', 'mem-alloc-failed', 'mem-freed', 'ha-sync-create-sent',
-                    'ha-sync-delete-sent', 'ha-sync-create-recv', 'ha-sync-delete-recv', 'acct-on-filters-full', 'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop', 'radius-packets-redirected',
-                    'radius-packets-redirect-fail-dropped', 'radius-packets-process-local', 'radius-packets-dropped-not-lo', 'radius-inter-card-dup-redir'
+                    'all', 'msisdn-received', 'imei-received', 'imsi-received', 'custom-received', 'radius-request-received', 'radius-request-dropped', 'request-bad-secret-dropped', 'request-no-key-vap-dropped', 'request-malformed-dropped', 'request-ignored', 'radius-table-full', 'secret-not-configured-dropped', 'ha-standby-dropped',
+                    'ipv6-prefix-length-mismatch', 'invalid-key', 'smp-created', 'smp-deleted', 'smp-mem-allocated', 'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml', 'mem-allocated', 'mem-alloc-failed', 'mem-freed', 'ha-sync-create-sent', 'ha-sync-delete-sent', 'ha-sync-create-recv', 'ha-sync-delete-recv', 'acct-on-filters-full',
+                    'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop', 'radius-packets-redirected', 'radius-packets-redirect-fail-dropped', 'radius-packets-process-local', 'radius-packets-dropped-not-lo', 'radius-inter-card-dup-redir'
                     ]
                 }
             },

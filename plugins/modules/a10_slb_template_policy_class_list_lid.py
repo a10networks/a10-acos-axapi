@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_class_list_lid
 description:
     - Limit ID
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -277,8 +277,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action_value", "bw_per", "bw_rate_limit", "conn_limit", "conn_per", "conn_rate_limit", "direct_action", "direct_action_interval", "direct_action_value", "direct_fail", "direct_logging_drp_rst", "direct_pbslb_interval", "direct_pbslb_logging", "direct_service_group", "dns64", "interval",
-    "lidnum", "lockout", "log", "over_limit_action", "request_limit", "request_per", "request_rate_limit", "response_code_rate_limit", "user_tag", "uuid",
+    "action_value", "bw_per", "bw_rate_limit", "conn_limit", "conn_per", "conn_rate_limit", "direct_action", "direct_action_interval", "direct_action_value", "direct_fail", "direct_logging_drp_rst", "direct_pbslb_interval", "direct_pbslb_logging", "direct_service_group", "dns64", "interval", "lidnum", "lockout", "log", "over_limit_action",
+    "request_limit", "request_per", "request_rate_limit", "response_code_rate_limit", "user_tag", "uuid",
     ]
 
 

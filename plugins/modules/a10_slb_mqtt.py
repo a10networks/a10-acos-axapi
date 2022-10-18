@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_mqtt
 description:
     - Show MQTT Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -309,9 +309,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'recv_mqtt_connect', 'recv_mqtt_connack', 'recv_mqtt_publish', 'recv_mqtt_puback', 'recv_mqtt_pubrec', 'recv_mqtt_pubrel', 'recv_mqtt_pubcomp', 'recv_mqtt_subscribe', 'recv_mqtt_suback', 'recv_mqtt_unsubscribe', 'recv_mqtt_unsuback', 'recv_mqtt_pingreq',
-                    'recv_mqtt_pingresp', 'recv_mqtt_disconnect', 'recv_mqtt_auth', 'recv_mqtt_other', 'curr_proxy', 'total_proxy', 'request', 'parse_connect_fail', 'parse_publish_fail', 'parse_subscribe_fail', 'parse_unsubscribe_fail', 'tuple_not_linked', 'tuple_already_linked', 'conn_null',
-                    'client_id_null', 'session_exist', 'insertion_failed', 'insertion_successful'
+                    'all', 'recv_mqtt_connect', 'recv_mqtt_connack', 'recv_mqtt_publish', 'recv_mqtt_puback', 'recv_mqtt_pubrec', 'recv_mqtt_pubrel', 'recv_mqtt_pubcomp', 'recv_mqtt_subscribe', 'recv_mqtt_suback', 'recv_mqtt_unsubscribe', 'recv_mqtt_unsuback', 'recv_mqtt_pingreq', 'recv_mqtt_pingresp', 'recv_mqtt_disconnect', 'recv_mqtt_auth',
+                    'recv_mqtt_other', 'curr_proxy', 'total_proxy', 'request', 'parse_connect_fail', 'parse_publish_fail', 'parse_subscribe_fail', 'parse_unsubscribe_fail', 'tuple_not_linked', 'tuple_already_linked', 'conn_null', 'client_id_null', 'session_exist', 'insertion_failed', 'insertion_successful'
                     ]
                 }
             },

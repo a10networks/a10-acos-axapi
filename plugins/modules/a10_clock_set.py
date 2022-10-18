@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_clock_set
 description:
     - Set the Time and Date
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

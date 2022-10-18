@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_locale
 description:
     - Set locale for the CLI startup
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -158,22 +158,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'value': {
-            'type': 'str',
-            'choices': ['en_US.UTF-8', 'zh_CN.UTF-8', 'zh_CN.GB18030', 'zh_CN.GBK', 'zh_CN.GB2312', 'zh_TW.UTF-8', 'zh_TW.BIG5', 'zh_TW.EUCTW', 'ja_JP.UTF-8', 'ja_JP.EUC-JP']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'test': {
-            'type': 'dict',
-            'locale': {
-                'type': 'str',
-                'choices': ['zh_CN', 'zh_TW', 'ja_JP']
-                }
-            }
-        })
+    rv.update({'value': {'type': 'str', 'choices': ['en_US.UTF-8', 'zh_CN.UTF-8', 'zh_CN.GB18030', 'zh_CN.GBK', 'zh_CN.GB2312', 'zh_TW.UTF-8', 'zh_TW.BIG5', 'zh_TW.EUCTW', 'ja_JP.UTF-8', 'ja_JP.EUC-JP']}, 'uuid': {'type': 'str', }, 'test': {'type': 'dict', 'locale': {'type': 'str', 'choices': ['zh_CN', 'zh_TW', 'ja_JP']}}})
     return rv
 
 

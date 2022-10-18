@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_per_instance
 description:
     - Dynamic FW per VRID/UserGroup counters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -93,6 +93,30 @@ options:
             udp_fullcone_freed:
                 description:
                 - "UDP Full-cone Freed"
+                type: str
+            dyn_blist_sess_created:
+                description:
+                - "Dynamic Blacklist Session Created"
+                type: str
+            dyn_blist_sess_freed:
+                description:
+                - "Dynamic Blacklist Session Freed"
+                type: str
+            dyn_blist_pkt_drop:
+                description:
+                - "Dynamic Blacklist Packet Drop"
+                type: str
+            dyn_blist_version_mismatch:
+                description:
+                - "Dynamic Blacklist - Version Mismatch"
+                type: str
+            dyn_blist_pkt_rate_low:
+                description:
+                - "Dynamic Blacklist - Pkt Rate Low"
+                type: str
+            dyn_blist_pkt_rate_high:
+                description:
+                - "Dynamic Blacklist - Pkt Rate High"
                 type: str
 
 '''
@@ -193,6 +217,24 @@ def get_argspec():
                 'type': 'str',
                 },
             'udp_fullcone_freed': {
+                'type': 'str',
+                },
+            'dyn_blist_sess_created': {
+                'type': 'str',
+                },
+            'dyn_blist_sess_freed': {
+                'type': 'str',
+                },
+            'dyn_blist_pkt_drop': {
+                'type': 'str',
+                },
+            'dyn_blist_version_mismatch': {
+                'type': 'str',
+                },
+            'dyn_blist_pkt_rate_low': {
+                'type': 'str',
+                },
+            'dyn_blist_pkt_rate_high': {
                 'type': 'str',
                 }
             }

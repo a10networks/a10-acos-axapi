@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_delete_local_uri_file
 description:
     - Local URI files for http response
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

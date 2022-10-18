@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_pool
 description:
     - Configure IP pool name
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

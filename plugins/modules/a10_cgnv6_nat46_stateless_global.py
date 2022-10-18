@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_global
 description:
     - Stateless NAT46 Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -249,8 +249,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'outbound_ipv4_received', 'outbound_ipv4_drop', 'outbound_ipv4_fragment_received', 'outbound_ipv6_unreachable', 'outbound_ipv6_fragmented', 'inbound_ipv6_received', 'inbound_ipv6_drop', 'inbound_ipv6_fragment_received', 'inbound_ipv4_unreachable',
-                    'inbound_ipv4_fragmented', 'packet_too_big', 'fragment_error', 'icmpv6_to_icmp', 'icmpv6_to_icmp_error', 'icmp_to_icmpv6', 'icmp_to_icmpv6_error', 'ha_standby', 'other_error', 'conn_count'
+                    'all', 'outbound_ipv4_received', 'outbound_ipv4_drop', 'outbound_ipv4_fragment_received', 'outbound_ipv6_unreachable', 'outbound_ipv6_fragmented', 'inbound_ipv6_received', 'inbound_ipv6_drop', 'inbound_ipv6_fragment_received', 'inbound_ipv4_unreachable', 'inbound_ipv4_fragmented', 'packet_too_big', 'fragment_error',
+                    'icmpv6_to_icmp', 'icmpv6_to_icmp_error', 'icmp_to_icmpv6', 'icmp_to_icmpv6_error', 'ha_standby', 'other_error', 'conn_count'
                     ]
                 }
             },

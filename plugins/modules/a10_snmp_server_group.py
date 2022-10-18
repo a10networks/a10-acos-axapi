@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_group
 description:
     - Define a User Security Model group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

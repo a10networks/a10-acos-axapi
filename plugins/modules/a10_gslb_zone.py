@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone
 description:
     - Specify the DNS zone name for which global SLB is provided
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns_response_rate_limiting_rrl_class_list_lid
 description:
     - DNS Response Rate Limiting Class-List Lid
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -177,34 +177,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'lidnum': {
-            'type': 'int',
-            'required': True,
-            },
-        'lid_response_rate': {
-            'type': 'int',
-            },
-        'lid_slip_rate': {
-            'type': 'int',
-            },
-        'lid_window': {
-            'type': 'int',
-            },
-        'lid_enable_log': {
-            'type': 'bool',
-            },
-        'lid_action': {
-            'type': 'str',
-            'choices': ['log-only', 'rate-limit', 'whitelist']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'lidnum': {'type': 'int', 'required': True, }, 'lid_response_rate': {'type': 'int', }, 'lid_slip_rate': {'type': 'int', }, 'lid_window': {'type': 'int', }, 'lid_enable_log': {'type': 'bool', }, 'lid_action': {'type': 'str', 'choices': ['log-only', 'rate-limit', 'whitelist']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(dns_name=dict(type='str', required=True), ))
     return rv

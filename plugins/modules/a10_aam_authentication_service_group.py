@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_service_group
 description:
     - Authentication service group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -383,12 +383,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'server_selection_fail_drop', 'server_selection_fail_reset', 'service_peak_conn', 'service_healthy_host', 'service_unhealthy_host', 'service_req_count', 'service_resp_count', 'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx', 'service_resp_5xx',
-                    'service_curr_conn_overflow'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'server_selection_fail_drop', 'server_selection_fail_reset', 'service_peak_conn', 'service_healthy_host', 'service_unhealthy_host', 'service_req_count', 'service_resp_count', 'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx', 'service_resp_5xx', 'service_curr_conn_overflow']
                 }
             },
         'packet_capture_template': {
@@ -423,8 +419,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn',
-                        'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow'
+                        'all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'response_time', 'fastest_rsp_time',
+                        'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow'
                         ]
                     }
                 },

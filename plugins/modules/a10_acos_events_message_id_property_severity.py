@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_message_id_property_severity
 description:
     - Configure Serverity of log message(s)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

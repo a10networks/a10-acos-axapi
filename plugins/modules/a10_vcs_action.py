@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_action
 description:
     - action for aVCS
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

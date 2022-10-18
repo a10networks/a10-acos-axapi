@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_ocsp
 description:
     - OCSP Authentication Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -318,8 +318,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'stapling-certificate-good', 'stapling-certificate-revoked', 'stapling-certificate-unknown', 'stapling-request-normal', 'stapling-request-dropped', 'stapling-response-success', 'stapling-response-failure', 'stapling-response-error', 'stapling-response-timeout',
-                    'stapling-response-other', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error'
+                    'all', 'stapling-certificate-good', 'stapling-certificate-revoked', 'stapling-certificate-unknown', 'stapling-request-normal', 'stapling-request-dropped', 'stapling-response-success', 'stapling-response-failure', 'stapling-response-error', 'stapling-response-timeout', 'stapling-response-other', 'request-normal',
+                    'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error'
                     ]
                 }
             },

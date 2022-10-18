@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_session_aging_tcp
 description:
     - TCP Aging options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

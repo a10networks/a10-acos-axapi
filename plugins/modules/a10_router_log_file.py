@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_log_file
 description:
     - Logging to file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

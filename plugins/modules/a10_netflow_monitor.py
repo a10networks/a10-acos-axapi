@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor
 description:
     - Configure NetFlow Monitor
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -80,6 +80,12 @@ options:
     protocol:
         description:
         - "'v9'= Netflow version 9; 'v10'= Netflow version 10 (IPFIX);"
+        type: str
+        required: False
+    scope:
+        description:
+        - "'global'= Netflow monitor is activated globally (Default); 'firewall-rule'=
+          Netflow monitor is only activated when referenced by a firewall rule;"
         type: str
         required: False
     uuid:
@@ -1049,7 +1055,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom_record", "destination", "disable", "disable_log_by_destination", "flow_timeout", "name", "packet_capture_template", "protocol", "record", "resend_template", "sample", "sampling_enable", "source_address", "source_ip_use_mgmt", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["custom_record", "destination", "disable", "disable_log_by_destination", "flow_timeout", "name", "packet_capture_template", "protocol", "record", "resend_template", "sample", "sampling_enable", "scope", "source_address", "source_ip_use_mgmt", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -1087,6 +1093,10 @@ def get_argspec():
             'type': 'str',
             'choices': ['v9', 'v10']
             },
+        'scope': {
+            'type': 'str',
+            'choices': ['global', 'firewall-rule']
+            },
         'uuid': {
             'type': 'str',
             },
@@ -1099,36 +1109,32 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'packets-sent', 'bytes-sent', 'nat44-records-sent', 'nat44-records-sent-failure', 'nat64-records-sent', 'nat64-records-sent-failure', 'dslite-records-sent', 'dslite-records-sent-failure', 'session-event-nat44-records-sent', 'session-event-nat44-records-sent-failure',
-                    'session-event-nat64-records-sent', 'session-event-nat64-records-sent-failure', 'session-event-dslite-records-sent', 'session-event-dslite-records-sent-failure', 'session-event-fw4-records-sent', 'session-event-fw4-records-sent-failure', 'session-event-fw6-records-sent',
-                    'session-event-fw6-records-sent-failure', 'port-mapping-nat44-records-sent', 'port-mapping-nat44-records-sent-failure', 'port-mapping-nat64-records-sent', 'port-mapping-nat64-records-sent-failure', 'port-mapping-dslite-records-sent', 'port-mapping-dslite-records-sent-failure',
-                    'netflow-v5-records-sent', 'netflow-v5-records-sent-failure', 'netflow-v5-ext-records-sent', 'netflow-v5-ext-records-sent-failure', 'port-batching-nat44-records-sent', 'port-batching-nat44-records-sent-failure', 'port-batching-nat64-records-sent',
-                    'port-batching-nat64-records-sent-failure', 'port-batching-dslite-records-sent', 'port-batching-dslite-records-sent-failure', 'port-batching-v2-nat44-records-sent', 'port-batching-v2-nat44-records-sent-failure', 'port-batching-v2-nat64-records-sent',
-                    'port-batching-v2-nat64-records-sent-failure', 'port-batching-v2-dslite-records-sent', 'port-batching-v2-dslite-records-sent-failure', 'custom-session-event-nat44-creation-records-sent', 'custom-session-event-nat44-creation-records-sent-failure',
-                    'custom-session-event-nat64-creation-records-sent', 'custom-session-event-nat64-creation-records-sent-failure', 'custom-session-event-dslite-creation-records-sent', 'custom-session-event-dslite-creation-records-sent-failure', 'custom-session-event-nat44-deletion-records-sent',
-                    'custom-session-event-nat44-deletion-records-sent-failure', 'custom-session-event-nat64-deletion-records-sent', 'custom-session-event-nat64-deletion-records-sent-failure', 'custom-session-event-dslite-deletion-records-sent',
-                    'custom-session-event-dslite-deletion-records-sent-failure', 'custom-session-event-fw4-creation-records-sent', 'custom-session-event-fw4-creation-records-sent-failure', 'custom-session-event-fw6-creation-records-sent', 'custom-session-event-fw6-creation-records-sent-failure',
-                    'custom-session-event-fw4-deletion-records-sent', 'custom-session-event-fw4-deletion-records-sent-failure', 'custom-session-event-fw6-deletion-records-sent', 'custom-session-event-fw6-deletion-records-sent-failure', 'custom-deny-reset-event-fw4-records-sent',
-                    'custom-deny-reset-event-fw4-records-sent-failure', 'custom-deny-reset-event-fw6-records-sent', 'custom-deny-reset-event-fw6-records-sent-failure', 'custom-port-mapping-nat44-creation-records-sent', 'custom-port-mapping-nat44-creation-records-sent-failure',
-                    'custom-port-mapping-nat64-creation-records-sent', 'custom-port-mapping-nat64-creation-records-sent-failure', 'custom-port-mapping-dslite-creation-records-sent', 'custom-port-mapping-dslite-creation-records-sent-failure', 'custom-port-mapping-nat44-deletion-records-sent',
-                    'custom-port-mapping-nat44-deletion-records-sent-failure', 'custom-port-mapping-nat64-deletion-records-sent', 'custom-port-mapping-nat64-deletion-records-sent-failure', 'custom-port-mapping-dslite-deletion-records-sent', 'custom-port-mapping-dslite-deletion-records-sent-failure',
-                    'custom-port-batching-nat44-creation-records-sent', 'custom-port-batching-nat44-creation-records-sent-failure', 'custom-port-batching-nat64-creation-records-sent', 'custom-port-batching-nat64-creation-records-sent-failure', 'custom-port-batching-dslite-creation-records-sent',
-                    'custom-port-batching-dslite-creation-records-sent-failure', 'custom-port-batching-nat44-deletion-records-sent', 'custom-port-batching-nat44-deletion-records-sent-failure', 'custom-port-batching-nat64-deletion-records-sent',
-                    'custom-port-batching-nat64-deletion-records-sent-failure', 'custom-port-batching-dslite-deletion-records-sent', 'custom-port-batching-dslite-deletion-records-sent-failure', 'custom-port-batching-v2-nat44-creation-records-sent'
+                    'all', 'packets-sent', 'bytes-sent', 'nat44-records-sent', 'nat44-records-sent-failure', 'nat64-records-sent', 'nat64-records-sent-failure', 'dslite-records-sent', 'dslite-records-sent-failure', 'session-event-nat44-records-sent', 'session-event-nat44-records-sent-failure', 'session-event-nat64-records-sent',
+                    'session-event-nat64-records-sent-failure', 'session-event-dslite-records-sent', 'session-event-dslite-records-sent-failure', 'session-event-fw4-records-sent', 'session-event-fw4-records-sent-failure', 'session-event-fw6-records-sent', 'session-event-fw6-records-sent-failure', 'port-mapping-nat44-records-sent',
+                    'port-mapping-nat44-records-sent-failure', 'port-mapping-nat64-records-sent', 'port-mapping-nat64-records-sent-failure', 'port-mapping-dslite-records-sent', 'port-mapping-dslite-records-sent-failure', 'netflow-v5-records-sent', 'netflow-v5-records-sent-failure', 'netflow-v5-ext-records-sent',
+                    'netflow-v5-ext-records-sent-failure', 'port-batching-nat44-records-sent', 'port-batching-nat44-records-sent-failure', 'port-batching-nat64-records-sent', 'port-batching-nat64-records-sent-failure', 'port-batching-dslite-records-sent', 'port-batching-dslite-records-sent-failure', 'port-batching-v2-nat44-records-sent',
+                    'port-batching-v2-nat44-records-sent-failure', 'port-batching-v2-nat64-records-sent', 'port-batching-v2-nat64-records-sent-failure', 'port-batching-v2-dslite-records-sent', 'port-batching-v2-dslite-records-sent-failure', 'custom-session-event-nat44-creation-records-sent',
+                    'custom-session-event-nat44-creation-records-sent-failure', 'custom-session-event-nat64-creation-records-sent', 'custom-session-event-nat64-creation-records-sent-failure', 'custom-session-event-dslite-creation-records-sent', 'custom-session-event-dslite-creation-records-sent-failure',
+                    'custom-session-event-nat44-deletion-records-sent', 'custom-session-event-nat44-deletion-records-sent-failure', 'custom-session-event-nat64-deletion-records-sent', 'custom-session-event-nat64-deletion-records-sent-failure', 'custom-session-event-dslite-deletion-records-sent',
+                    'custom-session-event-dslite-deletion-records-sent-failure', 'custom-session-event-fw4-creation-records-sent', 'custom-session-event-fw4-creation-records-sent-failure', 'custom-session-event-fw6-creation-records-sent', 'custom-session-event-fw6-creation-records-sent-failure', 'custom-session-event-fw4-deletion-records-sent',
+                    'custom-session-event-fw4-deletion-records-sent-failure', 'custom-session-event-fw6-deletion-records-sent', 'custom-session-event-fw6-deletion-records-sent-failure', 'custom-deny-reset-event-fw4-records-sent', 'custom-deny-reset-event-fw4-records-sent-failure', 'custom-deny-reset-event-fw6-records-sent',
+                    'custom-deny-reset-event-fw6-records-sent-failure', 'custom-port-mapping-nat44-creation-records-sent', 'custom-port-mapping-nat44-creation-records-sent-failure', 'custom-port-mapping-nat64-creation-records-sent', 'custom-port-mapping-nat64-creation-records-sent-failure', 'custom-port-mapping-dslite-creation-records-sent',
+                    'custom-port-mapping-dslite-creation-records-sent-failure', 'custom-port-mapping-nat44-deletion-records-sent', 'custom-port-mapping-nat44-deletion-records-sent-failure', 'custom-port-mapping-nat64-deletion-records-sent', 'custom-port-mapping-nat64-deletion-records-sent-failure',
+                    'custom-port-mapping-dslite-deletion-records-sent', 'custom-port-mapping-dslite-deletion-records-sent-failure', 'custom-port-batching-nat44-creation-records-sent', 'custom-port-batching-nat44-creation-records-sent-failure', 'custom-port-batching-nat64-creation-records-sent',
+                    'custom-port-batching-nat64-creation-records-sent-failure', 'custom-port-batching-dslite-creation-records-sent', 'custom-port-batching-dslite-creation-records-sent-failure', 'custom-port-batching-nat44-deletion-records-sent', 'custom-port-batching-nat44-deletion-records-sent-failure',
+                    'custom-port-batching-nat64-deletion-records-sent', 'custom-port-batching-nat64-deletion-records-sent-failure', 'custom-port-batching-dslite-deletion-records-sent', 'custom-port-batching-dslite-deletion-records-sent-failure', 'custom-port-batching-v2-nat44-creation-records-sent'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'custom-port-batching-v2-nat44-creation-records-sent-failure', 'custom-port-batching-v2-nat64-creation-records-sent', 'custom-port-batching-v2-nat64-creation-records-sent-failure', 'custom-port-batching-v2-dslite-creation-records-sent',
-                    'custom-port-batching-v2-dslite-creation-records-sent-failure', 'custom-port-batching-v2-nat44-deletion-records-sent', 'custom-port-batching-v2-nat44-deletion-records-sent-failure', 'custom-port-batching-v2-nat64-deletion-records-sent',
-                    'custom-port-batching-v2-nat64-deletion-records-sent-failure', 'custom-port-batching-v2-dslite-deletion-records-sent', 'custom-port-batching-v2-dslite-deletion-records-sent-failure', 'reduced-logs-by-destination', 'custom-gtp-c-tunnel-event-records-sent',
-                    'custom-gtp-c-tunnel-event-records-sent-failure', 'custom-gtp-u-tunnel-event-records-sent', 'custom-gtp-u-tunnel-event-records-sent-failure', 'custom-gtp-deny-event-records-sent', 'custom-gtp-deny-event-records-sent-failure', 'custom-gtp-info-event-records-sent',
-                    'custom-gtp-info-event-records-sent-failure', 'custom-fw-iddos-entry-created-records-sent', 'custom-fw-iddos-entry-created-records-sent-failure', 'custom-fw-iddos-entry-deleted-records-sent', 'custom-fw-iddos-entry-deleted-records-sent-failure',
-                    'custom-fw-sesn-limit-exceeded-records-sent', 'custom-fw-sesn-limit-exceeded-records-sent-failure', 'custom-nat-iddos-l3-entry-created-records-sent', 'custom-nat-iddos-l3-entry-created-records-sent-failure', 'custom-nat-iddos-l3-entry-deleted-records-sent',
-                    'custom-nat-iddos-l3-entry-deleted-records-sent-failure', 'custom-nat-iddos-l4-entry-created-records-sent', 'custom-nat-iddos-l4-entry-created-records-sent-failure', 'custom-nat-iddos-l4-entry-deleted-records-sent', 'custom-nat-iddos-l4-entry-deleted-records-sent-failure',
-                    'custom-gtp-rate-limit-periodic-records-sent', 'custom-gtp-rate-limit-periodic-records-sent-failure'
+                    'custom-port-batching-v2-nat44-creation-records-sent-failure', 'custom-port-batching-v2-nat64-creation-records-sent', 'custom-port-batching-v2-nat64-creation-records-sent-failure', 'custom-port-batching-v2-dslite-creation-records-sent', 'custom-port-batching-v2-dslite-creation-records-sent-failure',
+                    'custom-port-batching-v2-nat44-deletion-records-sent', 'custom-port-batching-v2-nat44-deletion-records-sent-failure', 'custom-port-batching-v2-nat64-deletion-records-sent', 'custom-port-batching-v2-nat64-deletion-records-sent-failure', 'custom-port-batching-v2-dslite-deletion-records-sent',
+                    'custom-port-batching-v2-dslite-deletion-records-sent-failure', 'reduced-logs-by-destination', 'custom-gtp-c-tunnel-event-records-sent', 'custom-gtp-c-tunnel-event-records-sent-failure', 'custom-gtp-u-tunnel-event-records-sent', 'custom-gtp-u-tunnel-event-records-sent-failure', 'custom-gtp-deny-event-records-sent',
+                    'custom-gtp-deny-event-records-sent-failure', 'custom-gtp-info-event-records-sent', 'custom-gtp-info-event-records-sent-failure', 'custom-fw-iddos-entry-created-records-sent', 'custom-fw-iddos-entry-created-records-sent-failure', 'custom-fw-iddos-entry-deleted-records-sent', 'custom-fw-iddos-entry-deleted-records-sent-failure',
+                    'custom-fw-sesn-limit-exceeded-records-sent', 'custom-fw-sesn-limit-exceeded-records-sent-failure', 'custom-nat-iddos-l3-entry-created-records-sent', 'custom-nat-iddos-l3-entry-created-records-sent-failure', 'custom-nat-iddos-l3-entry-deleted-records-sent', 'custom-nat-iddos-l3-entry-deleted-records-sent-failure',
+                    'custom-nat-iddos-l4-entry-created-records-sent', 'custom-nat-iddos-l4-entry-created-records-sent-failure', 'custom-nat-iddos-l4-entry-deleted-records-sent', 'custom-nat-iddos-l4-entry-deleted-records-sent-failure', 'custom-gtp-rate-limit-periodic-records-sent', 'custom-gtp-rate-limit-periodic-records-sent-failure'
                     ]
                 }
             },
@@ -1324,11 +1330,10 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'sesn-event-nat44-creation', 'sesn-event-nat44-deletion', 'sesn-event-nat64-creation', 'sesn-event-nat64-deletion', 'sesn-event-dslite-creation', 'sesn-event-dslite-deletion', 'sesn-event-fw4-creation', 'sesn-event-fw4-deletion', 'sesn-event-fw6-creation',
-                        'sesn-event-fw6-deletion', 'deny-reset-event-fw4', 'deny-reset-event-fw6', 'port-mapping-nat44-creation', 'port-mapping-nat44-deletion', 'port-mapping-nat64-creation', 'port-mapping-nat64-deletion', 'port-mapping-dslite-creation', 'port-mapping-dslite-deletion',
-                        'port-batch-nat44-creation', 'port-batch-nat44-deletion', 'port-batch-nat64-creation', 'port-batch-nat64-deletion', 'port-batch-dslite-creation', 'port-batch-dslite-deletion', 'port-batch-v2-nat44-creation', 'port-batch-v2-nat44-deletion', 'port-batch-v2-nat64-creation',
-                        'port-batch-v2-nat64-deletion', 'port-batch-v2-dslite-creation', 'port-batch-v2-dslite-deletion', 'gtp-c-tunnel-event', 'gtp-u-tunnel-event', 'gtp-deny-event', 'gtp-info-event', 'fw-ddos-entry-creation', 'fw-ddos-entry-deletion', 'fw-session-limit-exceeded',
-                        'cgn-ddos-l3-entry-creation', 'cgn-ddos-l3-entry-deletion', 'cgn-ddos-l4-entry-creation', 'cgn-ddos-l4-entry-deletion', 'gtp-rate-limit-periodic'
+                        'sesn-event-nat44-creation', 'sesn-event-nat44-deletion', 'sesn-event-nat64-creation', 'sesn-event-nat64-deletion', 'sesn-event-dslite-creation', 'sesn-event-dslite-deletion', 'sesn-event-fw4-creation', 'sesn-event-fw4-deletion', 'sesn-event-fw6-creation', 'sesn-event-fw6-deletion', 'deny-reset-event-fw4',
+                        'deny-reset-event-fw6', 'port-mapping-nat44-creation', 'port-mapping-nat44-deletion', 'port-mapping-nat64-creation', 'port-mapping-nat64-deletion', 'port-mapping-dslite-creation', 'port-mapping-dslite-deletion', 'port-batch-nat44-creation', 'port-batch-nat44-deletion', 'port-batch-nat64-creation',
+                        'port-batch-nat64-deletion', 'port-batch-dslite-creation', 'port-batch-dslite-deletion', 'port-batch-v2-nat44-creation', 'port-batch-v2-nat44-deletion', 'port-batch-v2-nat64-creation', 'port-batch-v2-nat64-deletion', 'port-batch-v2-dslite-creation', 'port-batch-v2-dslite-deletion', 'gtp-c-tunnel-event', 'gtp-u-tunnel-event',
+                        'gtp-deny-event', 'gtp-info-event', 'fw-ddos-entry-creation', 'fw-ddos-entry-deletion', 'fw-session-limit-exceeded', 'cgn-ddos-l3-entry-creation', 'cgn-ddos-l3-entry-deletion', 'cgn-ddos-l4-entry-creation', 'cgn-ddos-l4-entry-deletion', 'gtp-rate-limit-periodic'
                         ]
                     },
                 'ipfix_template': {

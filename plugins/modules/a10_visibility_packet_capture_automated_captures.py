@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_automated_captures
 description:
     - Predefined set of automated captures
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

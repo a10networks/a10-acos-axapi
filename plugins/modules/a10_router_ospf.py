@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ospf
 description:
     - Open Shortest Path First (OSPF)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -532,8 +532,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "area_list", "auto_cost_reference_bandwidth", "bfd_all_interfaces", "default_information", "default_metric", "distance", "distribute_internal_list", "distribute_lists", "extern_lsa_equivalence_check", "ha_standby_extra_cost", "host_list", "log_adjacency_changes_cfg", "max_concurrent_dd",
-    "maximum_area", "neighbor_list", "network_list", "ospf_1", "overflow", "passive_interface", "process_id", "redistribute", "rfc1583_compatible", "router_id", "summary_address_list", "timers", "user_tag", "uuid",
+    "area_list", "auto_cost_reference_bandwidth", "bfd_all_interfaces", "default_information", "default_metric", "distance", "distribute_internal_list", "distribute_lists", "extern_lsa_equivalence_check", "ha_standby_extra_cost", "host_list", "log_adjacency_changes_cfg", "max_concurrent_dd", "maximum_area", "neighbor_list", "network_list",
+    "ospf_1", "overflow", "passive_interface", "process_id", "redistribute", "rfc1583_compatible", "router_id", "summary_address_list", "timers", "user_tag", "uuid",
     ]
 
 

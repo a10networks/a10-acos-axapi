@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_collector_ipv6
 description:
     - Configure sFlow IPv6 collector
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

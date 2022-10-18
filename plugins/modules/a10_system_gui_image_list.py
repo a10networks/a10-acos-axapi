@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_gui_image_list
 description:
     - Get Gui Image List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -156,38 +156,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'pre_pri_gui': {
-                'type': 'str',
-                },
-            'pre_sec_gui': {
-                'type': 'str',
-                },
-            'gui_list_pri': {
-                'type': 'list',
-                'gui_image': {
-                    'type': 'str',
-                    },
-                'path': {
-                    'type': 'str',
-                    }
-                },
-            'gui_list_sec': {
-                'type': 'list',
-                'gui_image': {
-                    'type': 'str',
-                    },
-                'path': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'pre_pri_gui': {'type': 'str', }, 'pre_sec_gui': {'type': 'str', }, 'gui_list_pri': {'type': 'list', 'gui_image': {'type': 'str', }, 'path': {'type': 'str', }}, 'gui_list_sec': {'type': 'list', 'gui_image': {'type': 'str', }, 'path': {'type': 'str', }}}})
     return rv
 
 

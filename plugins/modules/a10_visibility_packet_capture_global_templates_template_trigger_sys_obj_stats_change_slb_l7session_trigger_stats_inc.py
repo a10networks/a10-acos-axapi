@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_l7session_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,35 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'conn_not_exist': {
-            'type': 'bool',
-            },
-        'wbuf_cb_failed': {
-            'type': 'bool',
-            },
-        'err_event': {
-            'type': 'bool',
-            },
-        'err_cb_failed': {
-            'type': 'bool',
-            },
-        'server_conn_failed': {
-            'type': 'bool',
-            },
-        'server_select_fail': {
-            'type': 'bool',
-            },
-        'data_cb_failed': {
-            'type': 'bool',
-            },
-        'hps_fwdreq_fail': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'conn_not_exist': {'type': 'bool', }, 'wbuf_cb_failed': {'type': 'bool', }, 'err_event': {'type': 'bool', }, 'err_cb_failed': {'type': 'bool', }, 'server_conn_failed': {'type': 'bool', }, 'server_select_fail': {'type': 'bool', }, 'data_cb_failed': {'type': 'bool', }, 'hps_fwdreq_fail': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

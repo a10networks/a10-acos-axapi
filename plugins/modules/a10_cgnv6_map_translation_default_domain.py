@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_translation_default_domain
 description:
     - Set Default MAP-T domain
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

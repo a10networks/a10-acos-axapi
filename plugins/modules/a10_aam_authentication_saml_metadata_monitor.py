@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_metadata_monitor
 description:
     - Configure SAML metadata out-of-sync detection and recovery options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

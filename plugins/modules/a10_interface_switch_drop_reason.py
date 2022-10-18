@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_switch_drop_reason
 description:
     - display packet drop reasons from Hardware
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

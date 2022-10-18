@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_frag
 description:
     - IP fragmentation parameters
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -428,10 +428,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'session-inserted', 'session-expired', 'icmp-rcv', 'icmpv6-rcv', 'udp-rcv', 'tcp-rcv', 'ipip-rcv', 'ipv6ip-rcv', 'other-rcv', 'icmp-dropped', 'icmpv6-dropped', 'udp-dropped', 'tcp-dropped', 'ipip-dropped', 'ipv6ip-dropped', 'other-dropped', 'overlap-error', 'bad-ip-len',
-                    'too-small', 'first-tcp-too-small', 'first-l4-too-small', 'total-sessions-exceeded', 'no-session-memory', 'fast-aging-set', 'fast-aging-unset', 'fragment-queue-success', 'unaligned-len', 'exceeded-len', 'duplicate-first-frag', 'duplicate-last-frag', 'total-fragments-exceeded',
-                    'fragment-queue-failure', 'reassembly-success', 'max-len-exceeded', 'reassembly-failure', 'policy-drop', 'error-drop', 'high-cpu-threshold', 'low-cpu-threshold', 'cpu-threshold-drop', 'ipd-entry-drop', 'max-packets-exceeded', 'session-packets-exceeded', 'frag-session-count',
-                    'sctp-rcv', 'sctp-dropped', 'first-gtp-packet-too-small'
+                    'all', 'session-inserted', 'session-expired', 'icmp-rcv', 'icmpv6-rcv', 'udp-rcv', 'tcp-rcv', 'ipip-rcv', 'ipv6ip-rcv', 'other-rcv', 'icmp-dropped', 'icmpv6-dropped', 'udp-dropped', 'tcp-dropped', 'ipip-dropped', 'ipv6ip-dropped', 'other-dropped', 'overlap-error', 'bad-ip-len', 'too-small', 'first-tcp-too-small',
+                    'first-l4-too-small', 'total-sessions-exceeded', 'no-session-memory', 'fast-aging-set', 'fast-aging-unset', 'fragment-queue-success', 'unaligned-len', 'exceeded-len', 'duplicate-first-frag', 'duplicate-last-frag', 'total-fragments-exceeded', 'fragment-queue-failure', 'reassembly-success', 'max-len-exceeded',
+                    'reassembly-failure', 'policy-drop', 'error-drop', 'high-cpu-threshold', 'low-cpu-threshold', 'cpu-threshold-drop', 'ipd-entry-drop', 'max-packets-exceeded', 'session-packets-exceeded', 'frag-session-count', 'sctp-rcv', 'sctp-dropped', 'first-gtp-packet-too-small'
                     ]
                 }
             },

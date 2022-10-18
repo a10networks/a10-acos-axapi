@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_auditlog
 description:
     - Set send auditlog to syslog host
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -166,30 +166,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'shared': {
-            'type': 'bool',
-            },
-        'partition_name': {
-            'type': 'str',
-            },
-        'host6': {
-            'type': 'str',
-            },
-        'host4': {
-            'type': 'str',
-            },
-        'audit_facility': {
-            'type': 'str',
-            'choices': ['local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']
-            },
-        'port': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'shared': {'type': 'bool', }, 'partition_name': {'type': 'str', }, 'host6': {'type': 'str', }, 'host4': {'type': 'str', }, 'audit_facility': {'type': 'str', 'choices': ['local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']}, 'port': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

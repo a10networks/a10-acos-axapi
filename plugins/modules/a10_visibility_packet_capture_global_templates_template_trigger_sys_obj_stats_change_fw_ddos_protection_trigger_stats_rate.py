@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_fw_ddos_protection_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -170,29 +170,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'threshold_exceeded_by': {
-            'type': 'int',
-            },
-        'duration': {
-            'type': 'int',
-            },
-        'ddos_entries_too_many': {
-            'type': 'bool',
-            },
-        'ddos_entry_add_to_bgp_failure': {
-            'type': 'bool',
-            },
-        'ddos_entry_remove_from_bgp_failure': {
-            'type': 'bool',
-            },
-        'ddos_packet_dropped': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'ddos_entries_too_many': {'type': 'bool', }, 'ddos_entry_add_to_bgp_failure': {'type': 'bool', }, 'ddos_entry_remove_from_bgp_failure': {'type': 'bool', }, 'ddos_packet_dropped': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

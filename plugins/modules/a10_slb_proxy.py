@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_proxy
 description:
     - Configure Proxy Global
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -297,9 +297,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'num', 'tcp_event', 'est_event', 'data_event', 'client_fin', 'server_fin', 'wbuf_event', 'err_event', 'no_mem', 'client_rst', 'server_rst', 'queue_depth_over_limit', 'event_failed', 'conn_not_exist', 'service_alloc_cb', 'service_alloc_cb_failed', 'service_free_cb',
-                    'service_free_cb_failed', 'est_cb_failed', 'data_cb_failed', 'wbuf_cb_failed', 'err_cb_failed', 'start_server_conn', 'start_server_conn_succ', 'start_server_conn_no_route', 'start_server_conn_fail_mem', 'start_server_conn_fail_snat', 'start_server_conn_fail_persist',
-                    'start_server_conn_fail_server', 'start_server_conn_fail_tuple', 'line_too_long'
+                    'all', 'num', 'tcp_event', 'est_event', 'data_event', 'client_fin', 'server_fin', 'wbuf_event', 'err_event', 'no_mem', 'client_rst', 'server_rst', 'queue_depth_over_limit', 'event_failed', 'conn_not_exist', 'service_alloc_cb', 'service_alloc_cb_failed', 'service_free_cb', 'service_free_cb_failed', 'est_cb_failed',
+                    'data_cb_failed', 'wbuf_cb_failed', 'err_cb_failed', 'start_server_conn', 'start_server_conn_succ', 'start_server_conn_no_route', 'start_server_conn_fail_mem', 'start_server_conn_fail_snat', 'start_server_conn_fail_persist', 'start_server_conn_fail_server', 'start_server_conn_fail_tuple', 'line_too_long'
                     ]
                 }
             },

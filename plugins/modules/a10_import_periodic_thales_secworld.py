@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_thales_secworld
 description:
     - import Thales security world files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

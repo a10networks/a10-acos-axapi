@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_license_manager_host
 description:
     - Configure license manager host
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_ip_list
 description:
     - Specify a IP List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -167,33 +167,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'gslb_ip_list_obj_name': {
-            'type': 'str',
-            'required': True,
-            },
-        'gslb_ip_list_filename': {
-            'type': 'str',
-            },
-        'gslb_ip_list_addr_list': {
-            'type': 'list',
-            'ip': {
-                'type': 'str',
-                },
-            'ip_mask': {
-                'type': 'str',
-                },
-            'id': {
-                'type': 'int',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'gslb_ip_list_obj_name': {'type': 'str', 'required': True, }, 'gslb_ip_list_filename': {'type': 'str', }, 'gslb_ip_list_addr_list': {'type': 'list', 'ip': {'type': 'str', }, 'ip_mask': {'type': 'str', }, 'id': {'type': 'int', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

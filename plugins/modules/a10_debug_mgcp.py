@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_mgcp
 description:
     - Debug mgcp
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

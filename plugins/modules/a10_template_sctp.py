@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_sctp
 description:
     - Define a SCTP template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

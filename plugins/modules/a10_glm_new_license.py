@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glm_new_license
 description:
     - Create license
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

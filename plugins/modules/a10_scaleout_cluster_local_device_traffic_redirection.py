@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_traffic_redirection
 description:
     - Redirect interfaces and options
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

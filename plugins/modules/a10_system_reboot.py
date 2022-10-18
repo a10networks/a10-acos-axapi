@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_reboot
 description:
     - Field reboot
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -172,38 +172,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'boot_scheduled': {
-                'type': 'int',
-                },
-            'boot_now': {
-                'type': 'int',
-                },
-            'epoch_time': {
-                'type': 'str',
-                },
-            'hour': {
-                'type': 'str',
-                },
-            'min': {
-                'type': 'str',
-                },
-            'uname': {
-                'type': 'str',
-                },
-            'hostname': {
-                'type': 'str',
-                },
-            'reason': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'boot_scheduled': {'type': 'int', }, 'boot_now': {'type': 'int', }, 'epoch_time': {'type': 'str', }, 'hour': {'type': 'str', }, 'min': {'type': 'str', }, 'uname': {'type': 'str', }, 'hostname': {'type': 'str', }, 'reason': {'type': 'str', }}})
     return rv
 
 

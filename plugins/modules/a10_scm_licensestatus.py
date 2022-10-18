@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scm_licensestatus
 description:
     - license opers
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -152,35 +152,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'primary_org_id': {
-                'type': 'str',
-                },
-            'primary_org_email': {
-                'type': 'str',
-                },
-            'license_list': {
-                'type': 'list',
-                'license_type': {
-                    'type': 'str',
-                    },
-                'license_name': {
-                    'type': 'str',
-                    },
-                'org_name': {
-                    'type': 'str',
-                    },
-                'status': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'primary_org_id': {'type': 'str', }, 'primary_org_email': {'type': 'str', }, 'license_list': {'type': 'list', 'license_type': {'type': 'str', }, 'license_name': {'type': 'str', }, 'org_name': {'type': 'str', }, 'status': {'type': 'str', }}}})
     return rv
 
 

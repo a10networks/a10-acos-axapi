@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_rule_list_domain_ip
 description:
     - Domain IP for LSN Rule-List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -164,39 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'placeholder']
-                }
-            },
-        'oper': {
-            'type': 'dict',
-            'ip_list': {
-                'type': 'list',
-                'domain': {
-                    'type': 'str',
-                    },
-                'domain_list': {
-                    'type': 'str',
-                    },
-                'ip_address': {
-                    'type': 'str',
-                    },
-                'ttl': {
-                    'type': 'int',
-                    }
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'placeholder']}}, 'oper': {'type': 'dict', 'ip_list': {'type': 'list', 'domain': {'type': 'str', }, 'domain_list': {'type': 'str', }, 'ip_address': {'type': 'str', }, 'ttl': {'type': 'int', }}}, 'stats': {'type': 'dict', }})
     # Parent keys
     rv.update(dict(lsn_rule_list_name=dict(type='str', required=True), ))
     return rv

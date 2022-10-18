@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_techsupport
 description:
     - Generate the current showtech file
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

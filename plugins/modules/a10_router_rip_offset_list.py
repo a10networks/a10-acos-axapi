@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_rip_offset_list
 description:
     - Modify RIP metric
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -172,39 +172,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'acl_cfg': {
-            'type': 'list',
-            'acl': {
-                'type': 'str',
-                },
-            'offset_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                },
-            'metric': {
-                'type': 'int',
-                },
-            'ethernet': {
-                'type': 'str',
-                },
-            'loopback': {
-                'type': 'str',
-                },
-            'trunk': {
-                'type': 'str',
-                },
-            'tunnel': {
-                'type': 'str',
-                },
-            've': {
-                'type': 'str',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'acl_cfg': {'type': 'list', 'acl': {'type': 'str', }, 'offset_list_direction': {'type': 'str', 'choices': ['in', 'out']}, 'metric': {'type': 'int', }, 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }}, 'uuid': {'type': 'str', }})
     return rv
 
 

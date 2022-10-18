@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_community_list_expanded_num
 description:
     - Configure Expanded number Community-list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

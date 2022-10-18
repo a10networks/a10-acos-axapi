@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_dns_recursive_nameserver
 description:
     - Configure default DNS authoritative name servers for recursive DNS resolver
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

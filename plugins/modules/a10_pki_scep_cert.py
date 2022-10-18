@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_scep_cert
 description:
     - SCEP Certificate enrollment object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -254,8 +254,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "days", "dn", "encrypted", "end_date", "enroll", "interval", "key_length", "log_level", "max_polltime", "method", "minute", "name", "password", "renew_before", "renew_before_type", "renew_before_value", "renew_every", "renew_every_type", "renew_every_value", "secret_string", "start_date",
-    "subject_alternate_name", "url", "user_tag", "uuid",
+    "days", "dn", "encrypted", "end_date", "enroll", "interval", "key_length", "log_level", "max_polltime", "method", "minute", "name", "password", "renew_before", "renew_before_type", "renew_before_value", "renew_every", "renew_every_type", "renew_every_value", "secret_string", "start_date", "subject_alternate_name", "url", "user_tag", "uuid",
     ]
 
 

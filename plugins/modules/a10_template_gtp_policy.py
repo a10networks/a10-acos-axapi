@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_policy
 description:
     - Configure GTP Policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -807,29 +807,27 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'gtp-v0-c-tunnel-created', 'gtp-v0-c-tunnel-half-open', 'gtp-v0-c-tunnel-half-closed', 'gtp-v0-c-tunnel-closed', 'gtp-v0-c-tunnel-deleted', 'gtp-v0-c-half-open-tunnel-closed', 'gtp-v1-c-tunnel-created', 'gtp-v1-c-tunnel-half-open', 'gtp-v1-c-tunnel-half-closed',
-                    'gtp-v1-c-tunnel-closed', 'gtp-v1-c-tunnel-deleted', 'gtp-v1-c-half-open-tunnel-closed', 'gtp-v2-c-tunnel-created', 'gtp-v2-c-tunnel-half-open', 'gtp-v2-c-tunnel-half-closed', 'gtp-v2-c-tunnel-closed', 'gtp-v2-c-tunnel-deleted', 'gtp-v2-c-half-open-tunnel-closed',
-                    'gtp-u-tunnel-created', 'gtp-u-tunnel-deleted', 'gtp-v0-c-update-pdp-resp-unsuccess', 'gtp-v1-c-update-pdp-resp-unsuccess', 'gtp-v2-c-mod_bearer-resp-unsuccess', 'gtp-v0-c-create-pdp-resp-unsuccess', 'gtp-v1-c-create-pdp-resp-unsuccess', 'gtp-v2-c-create-sess-resp-unsuccess',
-                    'gtp-v2-c-piggyback-message', 'gtp-path-management-message', 'gtp-v0-c-tunnel-deleted-restart', 'gtp-v1-c-tunnel-deleted-restart', 'gtp-v2-c-tunnel-deleted-restart', 'gtp-v0-c-reserved-message-allow', 'gtp-v1-c-reserved-message-allow', 'gtp-v2-c-reserved-message-allow',
-                    'gtp-v2-c-load-contr-info-exceed', 'gtp-v1-c-pdu-notification-request-forward', 'gtp-v1-c-pdu-notification-reject-request-forward', 'gtp-v0-c-pdu-notification-request-forward', 'gtp-v0-c-pdu-notification-reject-request-forward', 'gtp-v0-c-message-skipped-apn-filtering-no-imsi',
-                    'gtp-v1-c-message-skipped-apn-filtering-no-imsi', 'gtp-v2-c-message-skipped-apn-filtering-no-imsi', 'gtp-v0-c-message-skipped-msisdn-filtering-no-imsi', 'gtp-v1-c-message-skipped-msisdn-filtering-no-imsi', 'gtp-v2-c-message-skipped-msisdn-filtering-no-imsi',
-                    'gtp-v0-c-packet-dummy-msisdn', 'gtp-v1-c-packet-dummy-msisdn', 'gtp-v2-c-packet-dummy-msisdn', 'drop-vld-sanity-gtp-v2-c-message-with-teid-zero-expected', 'drop-vld-sanity-gtp-v1-c-message-with-teid-zero-expected', 'drop-vld-sanity-gtp-v0-c-message-with-teid-zero-expected',
-                    'drop-vld-gtp-ie-repeat-count-exceed', 'drop-vld-reserved-field-set', 'drop-vld-tunnel-id-flag', 'drop-vld-invalid-flow-label-v0', 'drop-vld-invalid-teid', 'drop-vld-out-of-state', 'drop-vld-mandatory-information-element', 'drop-vld-mandatory-ie-in-grouped-ie',
-                    'drop-vld-out-of-order-ie', 'drop-vld-out-of-state-ie', 'drop-vld-reserved-information-element', 'drop-vld-version-not-supported', 'drop-vld-message-length', 'drop-vld-cross-layer-correlation', 'drop-vld-country-code-mismatch', 'drop-vld-gtp-u-spoofed-source-address',
-                    'drop-vld-gtp-bearer-count-exceed', 'drop-vld-gtp-v2-wrong-lbi-create-bearer-req', 'gtp-c-handover-in-progress-with-conn', 'drop-vld-v0-reserved-message-drop', 'drop-vld-v1-reserved-message-drop', 'drop-vld-v2-reserved-message-drop', 'drop-vld-invalid-pkt-len-piggyback',
-                    'drop-vld-sanity-failed-piggyback', 'drop-vld-sequence-num-correlation', 'drop-vld-gtpv0-seqnum-buffer-full', 'drop-vld-gtpv1-seqnum-buffer-full', 'drop-vld-gtpv2-seqnum-buffer-full', 'drop-vld-gtp-invalid-imsi-len-drop', 'drop-vld-gtp-invalid-apn-len-drop',
-                    'drop-vld-protocol-flag-unset', 'drop-vld-gtpv0-subscriber-attr-miss', 'drop-vld-gtpv1-subscriber-attr-miss', 'drop-vld-gtpv2-subscriber-attr-miss', 'drop-vld-gtp-v0-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v1-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v2-c-ie-len-exceed-msg-len',
-                    'drop-vld-gtp-v0-c-message-length-mismatch', 'drop-vld-gtp-v1-c-message-length-mismatch', 'drop-vld-gtp-v2-c-message-length-mismatch', 'drop-vld-gtp-v0-c-message-skipped-apn-filtering-no-apn', 'drop-vld-gtp-v1-c-message-skipped-apn-filtering-no-apn',
-                    'drop-vld-gtp-v2-c-message-skipped-apn-filtering-no-apn'
+                    'all', 'gtp-v0-c-tunnel-created', 'gtp-v0-c-tunnel-half-open', 'gtp-v0-c-tunnel-half-closed', 'gtp-v0-c-tunnel-closed', 'gtp-v0-c-tunnel-deleted', 'gtp-v0-c-half-open-tunnel-closed', 'gtp-v1-c-tunnel-created', 'gtp-v1-c-tunnel-half-open', 'gtp-v1-c-tunnel-half-closed', 'gtp-v1-c-tunnel-closed', 'gtp-v1-c-tunnel-deleted',
+                    'gtp-v1-c-half-open-tunnel-closed', 'gtp-v2-c-tunnel-created', 'gtp-v2-c-tunnel-half-open', 'gtp-v2-c-tunnel-half-closed', 'gtp-v2-c-tunnel-closed', 'gtp-v2-c-tunnel-deleted', 'gtp-v2-c-half-open-tunnel-closed', 'gtp-u-tunnel-created', 'gtp-u-tunnel-deleted', 'gtp-v0-c-update-pdp-resp-unsuccess',
+                    'gtp-v1-c-update-pdp-resp-unsuccess', 'gtp-v2-c-mod_bearer-resp-unsuccess', 'gtp-v0-c-create-pdp-resp-unsuccess', 'gtp-v1-c-create-pdp-resp-unsuccess', 'gtp-v2-c-create-sess-resp-unsuccess', 'gtp-v2-c-piggyback-message', 'gtp-path-management-message', 'gtp-v0-c-tunnel-deleted-restart', 'gtp-v1-c-tunnel-deleted-restart',
+                    'gtp-v2-c-tunnel-deleted-restart', 'gtp-v0-c-reserved-message-allow', 'gtp-v1-c-reserved-message-allow', 'gtp-v2-c-reserved-message-allow', 'gtp-v2-c-load-contr-info-exceed', 'gtp-v1-c-pdu-notification-request-forward', 'gtp-v1-c-pdu-notification-reject-request-forward', 'gtp-v0-c-pdu-notification-request-forward',
+                    'gtp-v0-c-pdu-notification-reject-request-forward', 'gtp-v0-c-message-skipped-apn-filtering-no-imsi', 'gtp-v1-c-message-skipped-apn-filtering-no-imsi', 'gtp-v2-c-message-skipped-apn-filtering-no-imsi', 'gtp-v0-c-message-skipped-msisdn-filtering-no-imsi', 'gtp-v1-c-message-skipped-msisdn-filtering-no-imsi',
+                    'gtp-v2-c-message-skipped-msisdn-filtering-no-imsi', 'gtp-v0-c-packet-dummy-msisdn', 'gtp-v1-c-packet-dummy-msisdn', 'gtp-v2-c-packet-dummy-msisdn', 'drop-vld-sanity-gtp-v2-c-message-with-teid-zero-expected', 'drop-vld-sanity-gtp-v1-c-message-with-teid-zero-expected', 'drop-vld-sanity-gtp-v0-c-message-with-teid-zero-expected',
+                    'drop-vld-gtp-ie-repeat-count-exceed', 'drop-vld-reserved-field-set', 'drop-vld-tunnel-id-flag', 'drop-vld-invalid-flow-label-v0', 'drop-vld-invalid-teid', 'drop-vld-out-of-state', 'drop-vld-mandatory-information-element', 'drop-vld-mandatory-ie-in-grouped-ie', 'drop-vld-out-of-order-ie', 'drop-vld-out-of-state-ie',
+                    'drop-vld-reserved-information-element', 'drop-vld-version-not-supported', 'drop-vld-message-length', 'drop-vld-cross-layer-correlation', 'drop-vld-country-code-mismatch', 'drop-vld-gtp-u-spoofed-source-address', 'drop-vld-gtp-bearer-count-exceed', 'drop-vld-gtp-v2-wrong-lbi-create-bearer-req',
+                    'gtp-c-handover-in-progress-with-conn', 'drop-vld-v0-reserved-message-drop', 'drop-vld-v1-reserved-message-drop', 'drop-vld-v2-reserved-message-drop', 'drop-vld-invalid-pkt-len-piggyback', 'drop-vld-sanity-failed-piggyback', 'drop-vld-sequence-num-correlation', 'drop-vld-gtpv0-seqnum-buffer-full',
+                    'drop-vld-gtpv1-seqnum-buffer-full', 'drop-vld-gtpv2-seqnum-buffer-full', 'drop-vld-gtp-invalid-imsi-len-drop', 'drop-vld-gtp-invalid-apn-len-drop', 'drop-vld-protocol-flag-unset', 'drop-vld-gtpv0-subscriber-attr-miss', 'drop-vld-gtpv1-subscriber-attr-miss', 'drop-vld-gtpv2-subscriber-attr-miss',
+                    'drop-vld-gtp-v0-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v1-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v2-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v0-c-message-length-mismatch', 'drop-vld-gtp-v1-c-message-length-mismatch', 'drop-vld-gtp-v2-c-message-length-mismatch', 'drop-vld-gtp-v0-c-message-skipped-apn-filtering-no-apn',
+                    'drop-vld-gtp-v1-c-message-skipped-apn-filtering-no-apn', 'drop-vld-gtp-v2-c-message-skipped-apn-filtering-no-apn'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'drop-flt-message-filtering', 'drop-flt-apn-filtering', 'drop-flt-msisdn-filtering', 'drop-flt-rat-type-filtering', 'drop-flt-gtp-in-gtp', 'drop-rl-gtp-v0-c-agg', 'drop-rl-gtp-v1-c-agg', 'drop-rl-gtp-v2-c-agg', 'drop-rl-gtp-v1-c-create-pdp-request',
-                    'drop-rl-gtp-v2-c-create-session-request', 'drop-rl-gtp-v1-c-update-pdp-request', 'drop-rl-gtp-v2-c-modify-bearer-request', 'drop-rl-gtp-u-tunnel-create', 'drop-rl-gtp-u-uplink-byte', 'drop-rl-gtp-u-uplink-packet', 'drop-rl-gtp-u-downlink-byte', 'drop-rl-gtp-u-downlink-packet',
-                    'drop-rl-gtp-u-total-byte', 'drop-rl-gtp-u-total-packet', 'drop-rl-gtp-u-max-concurrent-tunnels'
+                    'drop-flt-message-filtering', 'drop-flt-apn-filtering', 'drop-flt-msisdn-filtering', 'drop-flt-rat-type-filtering', 'drop-flt-gtp-in-gtp', 'drop-rl-gtp-v0-c-agg', 'drop-rl-gtp-v1-c-agg', 'drop-rl-gtp-v2-c-agg', 'drop-rl-gtp-v1-c-create-pdp-request', 'drop-rl-gtp-v2-c-create-session-request',
+                    'drop-rl-gtp-v1-c-update-pdp-request', 'drop-rl-gtp-v2-c-modify-bearer-request', 'drop-rl-gtp-u-tunnel-create', 'drop-rl-gtp-u-uplink-byte', 'drop-rl-gtp-u-uplink-packet', 'drop-rl-gtp-u-downlink-byte', 'drop-rl-gtp-u-downlink-packet', 'drop-rl-gtp-u-total-byte', 'drop-rl-gtp-u-total-packet',
+                    'drop-rl-gtp-u-max-concurrent-tunnels'
                     ]
                 }
             },

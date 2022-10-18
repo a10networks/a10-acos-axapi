@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_application_type
 description:
     - Configure application to be used in partition (ADC/CGNV6)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_endpoint_independent_filtering_udp
 description:
     - Set endpoint-independent filtering for UDP only
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

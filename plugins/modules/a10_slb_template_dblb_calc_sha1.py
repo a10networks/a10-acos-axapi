@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dblb_calc_sha1
 description:
     - Calculate sha1 value of a cleartext password
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

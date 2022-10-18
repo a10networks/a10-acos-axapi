@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_https
 description:
     - HTTPS type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -317,9 +317,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cert", "cert_key_shared", "disable_sslv2hello", "https", "https_encrypted", "https_expect", "https_host", "https_kerberos_auth", "https_kerberos_kdc", "https_kerberos_realm", "https_key_encrypted", "https_maintenance_code", "https_password", "https_password_string", "https_postdata",
-    "https_postfile", "https_response_code", "https_server_cert_name", "https_text", "https_url", "https_username", "key", "key_pass_phrase", "key_phrase", "maintenance", "maintenance_text", "maintenance_text_regex", "post_path", "post_type", "response_code_regex", "sni", "text_regex", "url_path",
-    "url_type", "uuid", "web_port",
+    "cert", "cert_key_shared", "disable_sslv2hello", "https", "https_encrypted", "https_expect", "https_host", "https_kerberos_auth", "https_kerberos_kdc", "https_kerberos_realm", "https_key_encrypted", "https_maintenance_code", "https_password", "https_password_string", "https_postdata", "https_postfile", "https_response_code",
+    "https_server_cert_name", "https_text", "https_url", "https_username", "key", "key_pass_phrase", "key_phrase", "maintenance", "maintenance_text", "maintenance_text_regex", "post_path", "post_type", "response_code_regex", "sni", "text_regex", "url_path", "url_type", "uuid", "web_port",
     ]
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_message_selector
 description:
     - Configure message selector to select messages to be logged/blocked
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

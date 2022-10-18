@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_scaleout_address_mapping
 description:
     - Field address_mapping
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

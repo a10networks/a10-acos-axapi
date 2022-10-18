@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_enable_management_service_http
 description:
     - HTTP service
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_dumpthread
 description:
     - Generate system threads info
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

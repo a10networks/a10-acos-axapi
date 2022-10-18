@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_fw_gtp_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -184,8 +184,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "duration", "gtp_c_ref_count_smp_exceeded", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure", "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_check_failed", "gtp_smp_path_check_failed", "gtp_smp_session_count_check_failed", "gtp_tunnel_rate_limit_entry_create_fail",
-    "gtp_u_smp_in_rml_with_sess", "out_of_session_memory", "threshold_exceeded_by", "uuid",
+    "duration", "gtp_c_ref_count_smp_exceeded", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure", "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_check_failed", "gtp_smp_path_check_failed", "gtp_smp_session_count_check_failed", "gtp_tunnel_rate_limit_entry_create_fail", "gtp_u_smp_in_rml_with_sess",
+    "out_of_session_memory", "threshold_exceeded_by", "uuid",
     ]
 
 

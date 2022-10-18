@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_pool_group
 description:
     - Configure CGNv6 one-to-one pool group
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

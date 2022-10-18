@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_neighbor_dynamic
 description:
     - dynamic IPv6 Neighbor commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

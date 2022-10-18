@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns_recursive_dns_resolution
 description:
     - Recursive DNS resolver configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -107,7 +107,7 @@ options:
     max_trials:
         description:
         - "Total number of times to try DNS query to server before closing client
-          connection, default 0"
+          connection, default 255"
         type: int
         required: False
     request_for_pending_resolution:
@@ -143,11 +143,6 @@ options:
         - "'enabled'= Force CNAME resolution always; 'disabled'= Use answer record in
           CNAME response if it exists, else resolve;"
         type: str
-        required: False
-    cname_resolution_enabled_slow_parse:
-        description:
-        - "Use answer record in CNAME response if it exists, else resolve"
-        type: bool
         required: False
     uuid:
         description:
@@ -208,10 +203,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "cname_resolution_enabled_slow_parse", "default_recursive", "force_cname_resolution", "full_response", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "max_trials", "ns_cache_lookup", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval",
-    "use_client_qid", "use_service_group_response", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["default_recursive", "force_cname_resolution", "full_response", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "max_trials", "ns_cache_lookup", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval", "use_client_qid", "use_service_group_response", "uuid", ]
 
 
 def get_default_argspec():
@@ -280,9 +272,6 @@ def get_argspec():
         'force_cname_resolution': {
             'type': 'str',
             'choices': ['enabled', 'disabled']
-            },
-        'cname_resolution_enabled_slow_parse': {
-            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

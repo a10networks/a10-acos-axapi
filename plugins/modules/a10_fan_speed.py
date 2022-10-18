@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fan_speed
 description:
     - Control FAN Speed setting
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

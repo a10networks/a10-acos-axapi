@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_health_check_summary
 description:
     - Field health_check_summary
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

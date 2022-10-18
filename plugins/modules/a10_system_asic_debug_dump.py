@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_asic_debug_dump
 description:
     - Enable/Disable L2L3 ASIC traffic discard/drop events and Dump debug information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

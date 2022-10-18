@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service
 description:
     - Configure Web Services
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -238,8 +238,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auto_redirt_disable", "axapi_idle", "axapi_session_limit", "gui_idle", "gui_session_limit", "keep_alive_timeout", "login_message", "max_keep_alive_requests", "mpm_max_conn", "mpm_max_conn_per_child", "mpm_min_spare_conn", "port", "pre_login_message", "public_apis", "secure", "secure_port",
-    "secure_server_disable", "server_disable", "uuid",
+    "auto_redirt_disable", "axapi_idle", "axapi_session_limit", "gui_idle", "gui_session_limit", "keep_alive_timeout", "login_message", "max_keep_alive_requests", "mpm_max_conn", "mpm_max_conn_per_child", "mpm_min_spare_conn", "port", "pre_login_message", "public_apis", "secure", "secure_port", "secure_server_disable", "server_disable", "uuid",
     ]
 
 

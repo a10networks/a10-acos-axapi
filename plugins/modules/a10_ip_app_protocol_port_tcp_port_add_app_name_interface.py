@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_app_protocol_port_tcp_port_add_app_name_interface
 description:
     - Bind a port to an interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

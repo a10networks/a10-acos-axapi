@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_validation_log_files
 description:
     - Get LW-4over6 validation log files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_policy_jwt_claim_map
 description:
     - Map attributes to JWT claims
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

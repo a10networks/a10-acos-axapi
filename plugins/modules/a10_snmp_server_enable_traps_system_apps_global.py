@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_system_apps_global
 description:
     - Enable apps-global group traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

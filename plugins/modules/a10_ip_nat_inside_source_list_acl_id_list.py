@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_inside_source_list_acl_id_list
 description:
     - Acl id
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

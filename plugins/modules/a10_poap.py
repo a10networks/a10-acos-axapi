@@ -14,7 +14,7 @@ module: a10_poap
 description:
     - Set POAP; when next boot, if startup-config is empty, system will enter POAP
       Mode
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

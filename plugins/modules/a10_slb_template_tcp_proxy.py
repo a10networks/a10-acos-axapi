@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_tcp_proxy
 description:
     - TCP Proxy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -364,9 +364,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ack_aggressiveness", "alive_if_active", "backend_wscale", "del_session_on_server_down", "disable", "disable_abc", "disable_sack", "disable_tcp_timestamps", "disable_window_scale", "down", "dynamic_buffer_allocation", "early_retransmit", "fin_timeout", "force_delete_timeout",
-    "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "init_cwnd", "initial_window_size", "insert_client_ip", "invalid_rate_limit", "keepalive_interval", "keepalive_probes", "limited_slowstart", "maxburst", "min_rto", "mss", "nagle",
-    "naked_ack_on_handshake", "name", "proxy_header", "psh_flag_optimization", "qos", "reassembly_limit", "reassembly_timeout", "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "timewait", "transmit_buffer", "user_tag", "uuid",
+    "ack_aggressiveness", "alive_if_active", "backend_wscale", "del_session_on_server_down", "disable", "disable_abc", "disable_sack", "disable_tcp_timestamps", "disable_window_scale", "down", "dynamic_buffer_allocation", "early_retransmit", "fin_timeout", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout",
+    "half_open_idle_timeout", "idle_timeout", "init_cwnd", "initial_window_size", "insert_client_ip", "invalid_rate_limit", "keepalive_interval", "keepalive_probes", "limited_slowstart", "maxburst", "min_rto", "mss", "nagle", "naked_ack_on_handshake", "name", "proxy_header", "psh_flag_optimization", "qos", "reassembly_limit", "reassembly_timeout",
+    "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "timewait", "transmit_buffer", "user_tag", "uuid",
     ]
 
 

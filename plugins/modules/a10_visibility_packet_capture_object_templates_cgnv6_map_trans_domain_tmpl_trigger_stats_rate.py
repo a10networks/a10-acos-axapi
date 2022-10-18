@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_cgnv6_map_trans_domain_tmpl_trigger_stats_rate
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -174,9 +174,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "duration", "inbound_addr_port_validation_failed", "inbound_dest_unreachable", "inbound_rev_lookup_failed", "interface_not_configured", "outbound_addr_validation_failed", "outbound_dest_unreachable", "outbound_rev_lookup_failed", "packet_mtu_exceeded", "threshold_exceeded_by", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["duration", "inbound_addr_port_validation_failed", "inbound_dest_unreachable", "inbound_rev_lookup_failed", "interface_not_configured", "outbound_addr_validation_failed", "outbound_dest_unreachable", "outbound_rev_lookup_failed", "packet_mtu_exceeded", "threshold_exceeded_by", "uuid", ]
 
 
 def get_default_argspec():

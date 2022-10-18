@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_capacity
 description:
     - Select Service-IP for the device having highest available connection capacity
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

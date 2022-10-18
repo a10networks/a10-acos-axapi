@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_mgmt_info
 description:
     - Overlay management specific data
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

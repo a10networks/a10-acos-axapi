@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address
 description:
     - NAT IPv4 address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -168,30 +168,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ipv4_nat_addr': {
-            'type': 'str',
-            'required': True,
-            },
-        'user_tag': {
-            'type': 'str',
-            },
-        'port_range_list': {
-            'type': 'list',
-            'port_start': {
-                'type': 'int',
-                'required': True,
-                },
-            'port_end': {
-                'type': 'int',
-                'required': True,
-                },
-            'tunnel_endpoint_address': {
-                'type': 'str',
-                'required': True,
-                }
-            }
-        })
+    rv.update({'ipv4_nat_addr': {'type': 'str', 'required': True, }, 'user_tag': {'type': 'str', }, 'port_range_list': {'type': 'list', 'port_start': {'type': 'int', 'required': True, }, 'port_end': {'type': 'int', 'required': True, }, 'tunnel_endpoint_address': {'type': 'str', 'required': True, }}})
     # Parent keys
     rv.update(dict(tunnel_address_ipv6_tunnel_addr=dict(type='str', required=True), binding_table_name=dict(type='str', required=True), ))
     return rv

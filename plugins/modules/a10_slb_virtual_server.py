@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server
 description:
     - Create a Virtual Server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -1143,9 +1143,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "acl_id", "acl_id_shared", "acl_name", "acl_name_shared", "arp_disable", "description", "disable_vip_adv", "enable_disable_action", "ethernet", "extended_stats", "ha_dynamic", "ip_address", "ipv6_acl", "ipv6_acl_shared", "ipv6_address", "migrate_vip", "name", "netmask", "oper", "port_list",
-    "redistribute_route_map", "redistribution_flagged", "shared_partition_policy_template", "shared_partition_vs_template", "stats_data_action", "suppress_internal_loopback", "template_logging", "template_policy", "template_policy_shared", "template_scaleout", "template_virtual_server",
-    "template_virtual_server_shared", "use_if_ip", "user_tag", "uuid", "vport_disable_action", "vrid",
+    "acl_id", "acl_id_shared", "acl_name", "acl_name_shared", "arp_disable", "description", "disable_vip_adv", "enable_disable_action", "ethernet", "extended_stats", "ha_dynamic", "ip_address", "ipv6_acl", "ipv6_acl_shared", "ipv6_address", "migrate_vip", "name", "netmask", "oper", "port_list", "redistribute_route_map", "redistribution_flagged",
+    "shared_partition_policy_template", "shared_partition_vs_template", "stats_data_action", "suppress_internal_loopback", "template_logging", "template_policy", "template_policy_shared", "template_scaleout", "template_virtual_server", "template_virtual_server_shared", "use_if_ip", "user_tag", "uuid", "vport_disable_action", "vrid",
     ]
 
 
@@ -1301,14 +1300,9 @@ def get_argspec():
                 'required': True,
                 },
             'protocol': {
-                'type':
-                'str',
-                'required':
-                True,
-                'choices': [
-                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy',
-                    'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                    ]
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
                 },
             'range': {
                 'type': 'int',
@@ -1928,14 +1922,13 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'total_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before',
-                        'compression_bytes_after', 'compression_hit', 'compression_miss', 'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time',
-                        'loc_permit', 'loc_deny', 'loc_conn', 'curr_ssl_conn', 'total_ssl_conn', 'backend-time-to-first-byte', 'backend-time-to-last-byte', 'in-latency', 'out-latency', 'total_fwd_bytes_out', 'total_fwd_pkts_out', 'total_rev_bytes_out', 'total_rev_pkts_out', 'curr_req_rate',
-                        'curr_resp', 'total_resp', 'total_resp_succ', 'curr_resp_rate', 'dnsrrl_total_allowed', 'dnsrrl_total_dropped', 'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn', 'throughput-bits-per-sec', 'dynamic-memory-alloc', 'dynamic-memory-free', 'dynamic-memory', 'ip_only_lb_fwd_bytes',
-                        'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts', 'total_dns_filter_type_drop', 'total_dns_filter_class_drop', 'dns_filter_type_a_drop', 'dns_filter_type_aaaa_drop', 'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop',
-                        'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop', 'dns_filter_class_hesiod_drop',
-                        'dns_filter_class_none_drop', 'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data',
-                        'dns_rpz_trigger_client_ip', 'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name'
+                        'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'total_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before', 'compression_bytes_after', 'compression_hit', 'compression_miss',
+                        'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time', 'loc_permit', 'loc_deny', 'loc_conn', 'curr_ssl_conn', 'total_ssl_conn', 'backend-time-to-first-byte',
+                        'backend-time-to-last-byte', 'in-latency', 'out-latency', 'total_fwd_bytes_out', 'total_fwd_pkts_out', 'total_rev_bytes_out', 'total_rev_pkts_out', 'curr_req_rate', 'curr_resp', 'total_resp', 'total_resp_succ', 'curr_resp_rate', 'dnsrrl_total_allowed', 'dnsrrl_total_dropped', 'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn',
+                        'throughput-bits-per-sec', 'dynamic-memory-alloc', 'dynamic-memory-free', 'dynamic-memory', 'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts', 'total_dns_filter_type_drop', 'total_dns_filter_class_drop', 'dns_filter_type_a_drop', 'dns_filter_type_aaaa_drop',
+                        'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop', 'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop',
+                        'dns_filter_class_hesiod_drop', 'dns_filter_class_none_drop', 'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip',
+                        'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
                         ]
                     }
                 },
@@ -2022,14 +2015,10 @@ def get_argspec():
                     'required': True,
                     },
                 'protocol': {
-                    'type':
-                    'str',
-                    'required':
-                    True,
-                    'choices': [
-                        'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy',
-                        'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                        ]
+                    'type': 'str',
+                    'required': True,
+                    'choices':
+                    ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
                     },
                 'oper': {
                     'type': 'dict',

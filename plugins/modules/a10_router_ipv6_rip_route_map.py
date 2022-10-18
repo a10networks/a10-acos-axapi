@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_rip_route_map
 description:
     - Route map set
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -169,36 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'map_cfg': {
-            'type': 'list',
-            'map': {
-                'type': 'str',
-                },
-            'route_map_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                },
-            'ethernet': {
-                'type': 'str',
-                },
-            'loopback': {
-                'type': 'str',
-                },
-            'trunk': {
-                'type': 'str',
-                },
-            'tunnel': {
-                'type': 'str',
-                },
-            've': {
-                'type': 'str',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'map_cfg': {'type': 'list', 'map': {'type': 'str', }, 'route_map_direction': {'type': 'str', 'choices': ['in', 'out']}, 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }}, 'uuid': {'type': 'str', }})
     return rv
 
 

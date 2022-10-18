@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_sampling
 description:
     - Configure sFlow sampling on specified interfaces
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

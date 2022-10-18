@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_http_alg
 description:
     - HTTP-ALG Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_polling
 description:
     - Configure sFlow counter polling on specified source
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

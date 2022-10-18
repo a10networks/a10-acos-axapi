@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_packet
 description:
     - Debug packet
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -240,9 +240,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "all", "all_ipv4", "all_ipv6", "all_sctp_ports", "all_tcp_ports", "all_udp_ports", "arp", "count", "detail", "ethernet", "icmp", "icmpv6", "interface", "ip", "ipv4ad", "ipv6", "ipv6ad", "l3_protocol", "l4_protocol", "neighbor", "port_range", "sctp", "tcp", "udp", "uuid", "ve",
-    ]
+AVAILABLE_PROPERTIES = ["all", "all_ipv4", "all_ipv6", "all_sctp_ports", "all_tcp_ports", "all_udp_ports", "arp", "count", "detail", "ethernet", "icmp", "icmpv6", "interface", "ip", "ipv4ad", "ipv6", "ipv6ad", "l3_protocol", "l4_protocol", "neighbor", "port_range", "sctp", "tcp", "udp", "uuid", "ve", ]
 
 
 def get_default_argspec():

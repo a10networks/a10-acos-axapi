@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ipmi_tool
 description:
     - Command to execute in double quotes
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_source_address
 description:
     - Specify source address of sFlow packet
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

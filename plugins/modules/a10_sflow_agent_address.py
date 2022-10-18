@@ -14,7 +14,7 @@ module: a10_sflow_agent_address
 description:
     - Configure agent address used in sFlow datagram, default use management IP
       address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

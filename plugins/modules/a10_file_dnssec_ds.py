@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_dnssec_ds
 description:
     - dnssec ds file information and management commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -164,36 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'file_path': {
-            'type': 'str',
-            },
-        'file': {
-            'type': 'str',
-            },
-        'action': {
-            'type': 'str',
-            'choices': ['import', 'export']
-            },
-        'file_handle': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'file_list': {
-                'type': 'list',
-                'file': {
-                    'type': 'str',
-                    },
-                'parent': {
-                    'type': 'str',
-                    }
-                }
-            }
-        })
+    rv.update({'file_path': {'type': 'str', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['import', 'export']}, 'file_handle': {'type': 'str', }, 'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'file_list': {'type': 'list', 'file': {'type': 'str', }, 'parent': {'type': 'str', }}}})
     return rv
 
 

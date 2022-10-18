@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_debug_nat_map
 description:
     - Field nat_map
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

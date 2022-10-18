@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_clear_session_filter
 description:
     - Enable clear L4 session filter for fw (Default= Disable)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

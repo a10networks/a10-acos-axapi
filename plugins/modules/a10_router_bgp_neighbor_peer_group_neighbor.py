@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_peer_group_neighbor
 description:
     - Specify a peer-group neighbor router
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -420,10 +420,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "bfd", "collide_established", "connect", "default_originate", "description", "disallow_infinite_holdtime", "distribute_lists", "dont_capability_negotiate", "dynamic", "ebgp_multihop",
-    "ebgp_multihop_hop_count", "enforce_multihop", "ethernet", "extended_nexthop", "inbound", "lif", "loopback", "maximum_prefix", "maximum_prefix_thres", "multihop", "neighbor_filter_lists", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "override_capability",
-    "pass_encrypted", "pass_value", "passive", "peer_group", "peer_group_key", "peer_group_remote_as", "prefix_list_direction", "remove_private_as", "route_map", "route_refresh", "send_community_val", "shutdown", "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk", "tunnel",
-    "unsuppress_map", "update_source_ip", "update_source_ipv6", "uuid", "ve", "weight",
+    "activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "bfd", "collide_established", "connect", "default_originate", "description", "disallow_infinite_holdtime", "distribute_lists", "dont_capability_negotiate", "dynamic", "ebgp_multihop", "ebgp_multihop_hop_count", "enforce_multihop", "ethernet",
+    "extended_nexthop", "inbound", "lif", "loopback", "maximum_prefix", "maximum_prefix_thres", "multihop", "neighbor_filter_lists", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "override_capability", "pass_encrypted", "pass_value", "passive", "peer_group", "peer_group_key", "peer_group_remote_as", "prefix_list_direction",
+    "remove_private_as", "route_map", "route_refresh", "send_community_val", "shutdown", "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk", "tunnel", "unsuppress_map", "update_source_ip", "update_source_ipv6", "uuid", "ve", "weight",
     ]
 
 

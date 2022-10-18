@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rba_role
 description:
     - Role configuration for RBA support
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

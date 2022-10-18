@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sixrd_domain
 description:
     - sixrd Domain
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -320,9 +320,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'outbound-tcp-packets-received', 'outbound-udp-packets-received', 'outbound-icmp-packets-received', 'outbound-other-packets-received', 'outbound-packets-drop', 'outbound-ipv6-dest-unreachable', 'outbound-fragment-ipv6', 'inbound-tcp-packets-received',
-                    'inbound-udp-packets-received', 'inbound-icmp-packets-received', 'inbound-other-packets-received', 'inbound-packets-drop', 'inbound-ipv4-dest-unreachable', 'inbound-fragment-ipv4', 'inbound-tunnel-fragment-ipv6', 'vport-matched', 'unknown-delegated-prefix', 'packet-too-big',
-                    'not-local-ip', 'fragment-error', 'other-error'
+                    'all', 'outbound-tcp-packets-received', 'outbound-udp-packets-received', 'outbound-icmp-packets-received', 'outbound-other-packets-received', 'outbound-packets-drop', 'outbound-ipv6-dest-unreachable', 'outbound-fragment-ipv6', 'inbound-tcp-packets-received', 'inbound-udp-packets-received', 'inbound-icmp-packets-received',
+                    'inbound-other-packets-received', 'inbound-packets-drop', 'inbound-ipv4-dest-unreachable', 'inbound-fragment-ipv4', 'inbound-tunnel-fragment-ipv6', 'vport-matched', 'unknown-delegated-prefix', 'packet-too-big', 'not-local-ip', 'fragment-error', 'other-error'
                     ]
                 }
             },

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_vpn_error_trigger_stats_inc
 description:
     - Configure stats to trigger packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -310,10 +310,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ah_not_supported_with_gcm_gmac_sha2", "bad_auth_type", "bad_checksum", "bad_encrypt_type", "bad_encrypt_type_ctr_gcm", "bad_esp_next_header", "bad_frag_size_configuration", "bad_fragment_size", "bad_gre_header", "bad_gre_protocol", "bad_inline_data", "bad_ip_payload_type", "bad_ip_version",
-    "bad_ipcomp_configuration", "bad_ipsec_auth", "bad_ipsec_context", "bad_ipsec_context_direction", "bad_ipsec_context_flag_mismatch", "bad_ipsec_padding", "bad_ipsec_protocol", "bad_ipsec_spi", "bad_ipsec_unknown", "bad_len", "bad_min_frag_size_auth_sha384_512", "bad_opcode",
-    "bad_selector_match", "bad_sg_write_len", "bad_srtp_auth_tag", "dsiv_incorrect_param", "dummy_payload", "error_ipv6_decrypt_rh_segs_left_error", "error_IPv6_extension_header_bad", "ipcomp_payload", "ipv6_extension_headers_too_big", "ipv6_hop_by_hop_error", "ipv6_outbound_rh_copy_addr_error",
-    "ipv6_rh_length_error", "tfc_padding_with_prefrag_not_supported", "uuid",
+    "ah_not_supported_with_gcm_gmac_sha2", "bad_auth_type", "bad_checksum", "bad_encrypt_type", "bad_encrypt_type_ctr_gcm", "bad_esp_next_header", "bad_frag_size_configuration", "bad_fragment_size", "bad_gre_header", "bad_gre_protocol", "bad_inline_data", "bad_ip_payload_type", "bad_ip_version", "bad_ipcomp_configuration", "bad_ipsec_auth",
+    "bad_ipsec_context", "bad_ipsec_context_direction", "bad_ipsec_context_flag_mismatch", "bad_ipsec_padding", "bad_ipsec_protocol", "bad_ipsec_spi", "bad_ipsec_unknown", "bad_len", "bad_min_frag_size_auth_sha384_512", "bad_opcode", "bad_selector_match", "bad_sg_write_len", "bad_srtp_auth_tag", "dsiv_incorrect_param", "dummy_payload",
+    "error_ipv6_decrypt_rh_segs_left_error", "error_IPv6_extension_header_bad", "ipcomp_payload", "ipv6_extension_headers_too_big", "ipv6_hop_by_hop_error", "ipv6_outbound_rh_copy_addr_error", "ipv6_rh_length_error", "tfc_padding_with_prefrag_not_supported", "uuid",
     ]
 
 

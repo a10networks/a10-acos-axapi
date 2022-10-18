@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_udp
 description:
     - UDP type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

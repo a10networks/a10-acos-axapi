@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_bridge_vlan_group
 description:
     - Debug bridge vlan traffic
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

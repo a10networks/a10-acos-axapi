@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ecmp
 description:
     - Configure ECMP hashing method for CGN
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

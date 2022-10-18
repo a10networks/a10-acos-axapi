@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_fpga_core_crc
 description:
     - FPGA Core CRC check Global Commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_template_snmp
 description:
     - Specify SNMP template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

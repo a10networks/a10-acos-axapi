@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service_secure_generate
 description:
     - Web-service secure generate operation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

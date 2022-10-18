@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_topn_gtp_apn_prefix_topn_node
 description:
     - Activate gtp-apn-prefix-topn template for fw.gtp.apn-prefix
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

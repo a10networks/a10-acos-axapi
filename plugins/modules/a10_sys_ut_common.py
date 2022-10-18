@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_common
 description:
     - Common
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

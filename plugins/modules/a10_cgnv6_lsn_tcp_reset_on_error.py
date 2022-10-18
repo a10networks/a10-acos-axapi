@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_tcp_reset_on_error
 description:
     - Send TCP resets for invalid sessions (Default= enabled)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_vmaster_maintenance
 description:
     - During this period, vMaster can leave and come back to be vMaster again
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

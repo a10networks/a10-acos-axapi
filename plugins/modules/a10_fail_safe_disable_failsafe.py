@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fail_safe_disable_failsafe
 description:
     - Disable HA failover when resource depletion is detected
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

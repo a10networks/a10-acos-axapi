@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_2x40g_mode
 description:
     - To enable/disable 40G port to split into 2x40g ports
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_axdebug_filter_config
 description:
     - Global debug filter
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -346,8 +346,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "comp_hex", "dst", "dst_ip", "dst_ipv4_address", "dst_mac", "dst_mac_addr", "dst_port", "dst_port_num", "exit", "hex", "integer", "integer_comp", "integer_max", "integer_min", "ip", "ipv4_address", "ipv4_netmask", "ipv6", "ipv6_address", "l3_proto", "length", "mac", "mac_addr", "max_hex",
-    "min_hex", "number", "offset", "oper_range", "port", "port_num_max", "port_num_min", "prot_num", "proto", "proto_val", "src", "src_ip", "src_ipv4_address", "src_mac", "src_mac_addr", "src_port", "src_port_num", "user_tag", "uuid", "word", "WORD0", "WORD1", "WORD2",
+    "comp_hex", "dst", "dst_ip", "dst_ipv4_address", "dst_mac", "dst_mac_addr", "dst_port", "dst_port_num", "exit", "hex", "integer", "integer_comp", "integer_max", "integer_min", "ip", "ipv4_address", "ipv4_netmask", "ipv6", "ipv6_address", "l3_proto", "length", "mac", "mac_addr", "max_hex", "min_hex", "number", "offset", "oper_range", "port",
+    "port_num_max", "port_num_min", "prot_num", "proto", "proto_val", "src", "src_ip", "src_ipv4_address", "src_mac", "src_mac_addr", "src_port", "src_port_num", "user_tag", "uuid", "word", "WORD0", "WORD1", "WORD2",
     ]
 
 

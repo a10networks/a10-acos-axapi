@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_tls_1_3_mgmt
 description:
     - To Enable/disable TLS 1.3 support on ACOS management plane
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

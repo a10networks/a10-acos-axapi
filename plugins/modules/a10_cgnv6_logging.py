@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_logging
 description:
     - CGNV6 Logging Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -475,14 +475,13 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'tcp-session-created', 'tcp-session-deleted', 'tcp-port-allocated', 'tcp-port-freed', 'tcp-port-batch-allocated', 'tcp-port-batch-freed', 'udp-session-created', 'udp-session-deleted', 'udp-port-allocated', 'udp-port-freed', 'udp-port-batch-allocated',
-                    'udp-port-batch-freed', 'icmp-session-created', 'icmp-session-deleted', 'icmp-resource-allocated', 'icmp-resource-freed', 'icmpv6-session-created', 'icmpv6-session-deleted', 'icmpv6-resource-allocated', 'icmpv6-resource-freed', 'gre-session-created', 'gre-session-deleted',
-                    'gre-resource-allocated', 'gre-resource-freed', 'esp-session-created', 'esp-session-deleted', 'esp-resource-allocated', 'esp-resource-freed', 'fixed-nat-user-ports', 'fixed-nat-disable-config-logged', 'fixed-nat-disable-config-logs-sent', 'fixed-nat-periodic-config-logs-sent',
-                    'fixed-nat-periodic-config-logged', 'fixed-nat-interim-updated', 'enhanced-user-log', 'log-sent', 'log-dropped', 'conn-tcp-established', 'conn-tcp-dropped', 'tcp-port-overloading-allocated', 'tcp-port-overloading-freed', 'udp-port-overloading-allocated',
-                    'udp-port-overloading-freed', 'http-request-logged', 'reduced-logs-by-destination', 'out-of-buffers', 'add-msg-failed', 'rtsp-port-allocated', 'rtsp-port-freed', 'conn-tcp-create-failed', 'ipv4-frag-applied', 'ipv4-frag-failed', 'ipv6-frag-applied', 'ipv6-frag-failed',
-                    'interim-update-scheduled', 'interim-update-schedule-failed', 'interim-update-terminated', 'interim-update-memory-freed', 'interim-update-no-buff-retried', 'tcp-port-batch-interim-updated', 'udp-port-batch-interim-updated', 'port-block-accounting-freed',
-                    'port-block-accounting-allocated', 'log-message-too-long', 'http-out-of-order-dropped', 'http-alloc-failed', 'http-frag-merge-failed-dropped', 'http-malloc', 'http-mfree', 'http-spm-alloc-type0', 'http-spm-alloc-type1', 'http-spm-alloc-type2', 'http-spm-alloc-type3',
-                    'http-spm-alloc-type4', 'http-spm-free-type0', 'http-spm-free-type1', 'http-spm-free-type2', 'http-spm-free-type3', 'http-spm-free-type4', 'iddos-l3-entry-create', 'iddos-l3-entry-delete', 'iddos-l4-entry-create', 'iddos-l4-entry-delete'
+                    'all', 'tcp-session-created', 'tcp-session-deleted', 'tcp-port-allocated', 'tcp-port-freed', 'tcp-port-batch-allocated', 'tcp-port-batch-freed', 'udp-session-created', 'udp-session-deleted', 'udp-port-allocated', 'udp-port-freed', 'udp-port-batch-allocated', 'udp-port-batch-freed', 'icmp-session-created', 'icmp-session-deleted',
+                    'icmp-resource-allocated', 'icmp-resource-freed', 'icmpv6-session-created', 'icmpv6-session-deleted', 'icmpv6-resource-allocated', 'icmpv6-resource-freed', 'gre-session-created', 'gre-session-deleted', 'gre-resource-allocated', 'gre-resource-freed', 'esp-session-created', 'esp-session-deleted', 'esp-resource-allocated',
+                    'esp-resource-freed', 'fixed-nat-user-ports', 'fixed-nat-disable-config-logged', 'fixed-nat-disable-config-logs-sent', 'fixed-nat-periodic-config-logs-sent', 'fixed-nat-periodic-config-logged', 'fixed-nat-interim-updated', 'enhanced-user-log', 'log-sent', 'log-dropped', 'conn-tcp-established', 'conn-tcp-dropped',
+                    'tcp-port-overloading-allocated', 'tcp-port-overloading-freed', 'udp-port-overloading-allocated', 'udp-port-overloading-freed', 'http-request-logged', 'reduced-logs-by-destination', 'out-of-buffers', 'add-msg-failed', 'rtsp-port-allocated', 'rtsp-port-freed', 'conn-tcp-create-failed', 'ipv4-frag-applied', 'ipv4-frag-failed',
+                    'ipv6-frag-applied', 'ipv6-frag-failed', 'interim-update-scheduled', 'interim-update-schedule-failed', 'interim-update-terminated', 'interim-update-memory-freed', 'interim-update-no-buff-retried', 'tcp-port-batch-interim-updated', 'udp-port-batch-interim-updated', 'port-block-accounting-freed', 'port-block-accounting-allocated',
+                    'log-message-too-long', 'http-out-of-order-dropped', 'http-alloc-failed', 'http-frag-merge-failed-dropped', 'http-malloc', 'http-mfree', 'http-spm-alloc-type0', 'http-spm-alloc-type1', 'http-spm-alloc-type2', 'http-spm-alloc-type3', 'http-spm-alloc-type4', 'http-spm-free-type0', 'http-spm-free-type1', 'http-spm-free-type2',
+                    'http-spm-free-type3', 'http-spm-free-type4', 'iddos-l3-entry-create', 'iddos-l3-entry-delete', 'iddos-l4-entry-create', 'iddos-l4-entry-delete'
                     ]
                 }
             },

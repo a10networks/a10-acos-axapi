@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_app_fw
 description:
     - Application firewall
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

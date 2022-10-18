@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_header_insert
 description:
     - Insert a header into request
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

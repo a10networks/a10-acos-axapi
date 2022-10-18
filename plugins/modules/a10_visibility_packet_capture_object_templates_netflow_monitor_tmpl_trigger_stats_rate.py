@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_object_templates_netflow_monitor_tmpl_trigger_stats_rate
 description:
     - Configure stats to triggers packet capture on increment
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -462,15 +462,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "custom_deny_reset_event_fw4_records_sen", "custom_deny_reset_event_fw6_records_sen", "custom_fw_iddos_entry_created_records_s", "custom_fw_iddos_entry_deleted_records_s", "custom_fw_sesn_limit_exceeded_records_s", "custom_gtp_c_tunnel_event_records_sent_",
-    "custom_gtp_deny_event_records_sent_fail", "custom_gtp_info_event_records_sent_fail", "custom_gtp_u_tunnel_event_records_sent_", "custom_nat_iddos_l3_entry_created_recor", "custom_nat_iddos_l3_entry_deleted_recor", "custom_nat_iddos_l4_entry_created_recor",
-    "custom_nat_iddos_l4_entry_deleted_recor", "custom_port_batching_dslite_creation_re", "custom_port_batching_dslite_deletion_re", "custom_port_batching_nat44_creation_rec", "custom_port_batching_nat44_deletion_rec", "custom_port_batching_nat64_creation_rec",
-    "custom_port_batching_nat64_deletion_rec", "custom_port_batching_v2_dslite_creation", "custom_port_batching_v2_dslite_deletion", "custom_port_batching_v2_nat44_creation_", "custom_port_batching_v2_nat44_deletion_", "custom_port_batching_v2_nat64_creation_",
-    "custom_port_batching_v2_nat64_deletion_", "custom_port_mapping_dslite_creation_rec", "custom_port_mapping_dslite_deletion_rec", "custom_port_mapping_nat44_creation_reco", "custom_port_mapping_nat44_deletion_reco", "custom_port_mapping_nat64_creation_reco",
-    "custom_port_mapping_nat64_deletion_reco", "custom_session_event_dslite_creation_re", "custom_session_event_dslite_deletion_re", "custom_session_event_fw4_creation_recor", "custom_session_event_fw4_deletion_recor", "custom_session_event_fw6_creation_recor",
-    "custom_session_event_fw6_deletion_recor", "custom_session_event_nat44_creation_rec", "custom_session_event_nat44_deletion_rec", "custom_session_event_nat64_creation_rec", "custom_session_event_nat64_deletion_rec", "dslite_records_sent_failure", "duration", "nat44_records_sent_failure",
-    "nat64_records_sent_failure", "netflow_v5_ext_records_sent_failure", "netflow_v5_records_sent_failure", "port_batching_dslite_records_sent_failu", "port_batching_nat44_records_sent_failur", "port_batching_nat64_records_sent_failur", "port_batching_v2_dslite_records_sent_fa",
-    "port_batching_v2_nat44_records_sent_fai", "port_batching_v2_nat64_records_sent_fai", "port_mapping_dslite_records_sent_failur", "port_mapping_nat44_records_sent_failure", "port_mapping_nat64_records_sent_failure", "session_event_dslite_records_sent_failu",
+    "custom_deny_reset_event_fw4_records_sen", "custom_deny_reset_event_fw6_records_sen", "custom_fw_iddos_entry_created_records_s", "custom_fw_iddos_entry_deleted_records_s", "custom_fw_sesn_limit_exceeded_records_s", "custom_gtp_c_tunnel_event_records_sent_", "custom_gtp_deny_event_records_sent_fail", "custom_gtp_info_event_records_sent_fail",
+    "custom_gtp_u_tunnel_event_records_sent_", "custom_nat_iddos_l3_entry_created_recor", "custom_nat_iddos_l3_entry_deleted_recor", "custom_nat_iddos_l4_entry_created_recor", "custom_nat_iddos_l4_entry_deleted_recor", "custom_port_batching_dslite_creation_re", "custom_port_batching_dslite_deletion_re", "custom_port_batching_nat44_creation_rec",
+    "custom_port_batching_nat44_deletion_rec", "custom_port_batching_nat64_creation_rec", "custom_port_batching_nat64_deletion_rec", "custom_port_batching_v2_dslite_creation", "custom_port_batching_v2_dslite_deletion", "custom_port_batching_v2_nat44_creation_", "custom_port_batching_v2_nat44_deletion_", "custom_port_batching_v2_nat64_creation_",
+    "custom_port_batching_v2_nat64_deletion_", "custom_port_mapping_dslite_creation_rec", "custom_port_mapping_dslite_deletion_rec", "custom_port_mapping_nat44_creation_reco", "custom_port_mapping_nat44_deletion_reco", "custom_port_mapping_nat64_creation_reco", "custom_port_mapping_nat64_deletion_reco", "custom_session_event_dslite_creation_re",
+    "custom_session_event_dslite_deletion_re", "custom_session_event_fw4_creation_recor", "custom_session_event_fw4_deletion_recor", "custom_session_event_fw6_creation_recor", "custom_session_event_fw6_deletion_recor", "custom_session_event_nat44_creation_rec", "custom_session_event_nat44_deletion_rec", "custom_session_event_nat64_creation_rec",
+    "custom_session_event_nat64_deletion_rec", "dslite_records_sent_failure", "duration", "nat44_records_sent_failure", "nat64_records_sent_failure", "netflow_v5_ext_records_sent_failure", "netflow_v5_records_sent_failure", "port_batching_dslite_records_sent_failu", "port_batching_nat44_records_sent_failur",
+    "port_batching_nat64_records_sent_failur", "port_batching_v2_dslite_records_sent_fa", "port_batching_v2_nat44_records_sent_fai", "port_batching_v2_nat64_records_sent_fai", "port_mapping_dslite_records_sent_failur", "port_mapping_nat44_records_sent_failure", "port_mapping_nat64_records_sent_failure", "session_event_dslite_records_sent_failu",
     "session_event_fw4_records_sent_failure", "session_event_fw6_records_sent_failure", "session_event_nat44_records_sent_failur", "session_event_nat64_records_sent_failur", "threshold_exceeded_by", "uuid",
     ]
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_cmp_cert
 description:
     - CMP Certificate enrollment object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -271,8 +271,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "allow_unprotected_errors", "cert_type", "cmp_trusted_ca", "cmp_trusted_cert", "ec_key_length", "ecdsa_type", "encrypted", "enroll", "log_level", "max_polltime", "minute", "name", "recipient_dn", "renew_before", "renew_before_type", "renew_before_value", "renew_every", "renew_every_type",
-    "renew_every_value", "rsa_key_length", "rsa_type", "secret", "secret_string", "subject_alternate_name", "subject_dn", "url", "user_tag", "uuid",
+    "allow_unprotected_errors", "cert_type", "cmp_trusted_ca", "cmp_trusted_cert", "ec_key_length", "ecdsa_type", "encrypted", "enroll", "log_level", "max_polltime", "minute", "name", "recipient_dn", "renew_before", "renew_before_type", "renew_before_value", "renew_every", "renew_every_type", "renew_every_value", "rsa_key_length", "rsa_type",
+    "secret", "secret_string", "subject_alternate_name", "subject_dn", "url", "user_tag", "uuid",
     ]
 
 

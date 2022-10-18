@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp_apn_imsi_list
 description:
     - Configure GTP APN IMSI list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

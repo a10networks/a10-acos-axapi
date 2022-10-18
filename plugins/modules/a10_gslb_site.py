@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site
 description:
     - Specify a GSLB site
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

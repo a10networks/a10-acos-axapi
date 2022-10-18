@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns
 description:
     - DNS template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -156,6 +156,11 @@ options:
     disable_rpz_attach_soa:
         description:
         - "Disable attaching SOA due to RPZ"
+        type: bool
+        required: False
+    cache_ttl_adjustment_enable:
+        description:
+        - "enable the ttl adjustment for dns cache response"
         type: bool
         required: False
     dns_logging:
@@ -375,7 +380,7 @@ options:
             max_trials:
                 description:
                 - "Total number of times to try DNS query to server before closing client
-          connection, default 0"
+          connection, default 255"
                 type: int
             request_for_pending_resolution:
                 description:
@@ -405,10 +410,6 @@ options:
                 - "'enabled'= Force CNAME resolution always; 'disabled'= Use answer record in
           CNAME response if it exists, else resolve;"
                 type: str
-            cname_resolution_enabled_slow_parse:
-                description:
-                - "Use answer record in CNAME response if it exists, else resolve"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -468,9 +469,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_padding_to_client", "cache_record_serving_policy", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "local_dns_resolution", "max_cache_entry_size",
-    "max_cache_size", "max_query_length", "name", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_edns_csubnet_to_server", "remove_padding_to_server", "response_rate_limiting", "rpz_list",
-    "udp_retransmit", "user_tag", "uuid",
+    "add_padding_to_client", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "local_dns_resolution", "max_cache_entry_size", "max_cache_size",
+    "max_query_length", "name", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_edns_csubnet_to_server", "remove_padding_to_server", "response_rate_limiting", "rpz_list", "udp_retransmit", "user_tag", "uuid",
     ]
 
 
@@ -554,6 +554,9 @@ def get_argspec():
             'type': 'str',
             },
         'disable_rpz_attach_soa': {
+            'type': 'bool',
+            },
+        'cache_ttl_adjustment_enable': {
             'type': 'bool',
             },
         'dns_logging': {
@@ -844,9 +847,6 @@ def get_argspec():
             'force_cname_resolution': {
                 'type': 'str',
                 'choices': ['enabled', 'disabled']
-                },
-            'cname_resolution_enabled_slow_parse': {
-                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_translation_domain_default_mapping_rule
 description:
     - Default mapping rule (DMR)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

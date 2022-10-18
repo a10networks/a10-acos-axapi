@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_single_board_mode
 description:
     - chassis single board mode config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

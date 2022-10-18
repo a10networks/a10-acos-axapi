@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_host_host_name
 description:
     - Specify IPV6 hosts to receive SNMP traps
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_route_static_bfd_ve
 description:
     - Virtual ethernet interface
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_prefix
 description:
     - Enable Stateless NAT46 IPv6 source address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

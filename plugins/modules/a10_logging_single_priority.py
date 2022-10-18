@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_single_priority
 description:
     - Set single-priority logging
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

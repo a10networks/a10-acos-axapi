@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_histogram
 description:
     - Configure CGNv6 NAT Histogram
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

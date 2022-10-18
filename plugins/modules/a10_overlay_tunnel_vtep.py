@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep
 description:
     - Virtual Tunnel end point Configuration
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -479,9 +479,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'cfg_err_count', 'flooded_pkt_count', 'encap_unresolved_count', 'unknown_encap_rx_pkt', 'unknown_encap_tx_pkt', 'arp_req_sent', 'vtep_host_learned', 'vtep_host_learn_error', 'invalid_lif_rx', 'invalid_lif_tx', 'unknown_vtep_tx', 'unknown_vtep_rx', 'unhandled_pkt_rx',
-                    'unhandled_pkt_tx', 'total_pkts_rx', 'total_bytes_rx', 'unicast_pkt_rx', 'bcast_pkt_rx', 'mcast_pkt_rx', 'dropped_pkt_rx', 'encap_miss_pkts_rx', 'bad_chksum_pks_rx', 'requeue_pkts_in', 'pkts_out', 'total_bytes_tx', 'unicast_pkt_tx', 'bcast_pkt_tx', 'mcast_pkt_tx',
-                    'dropped_pkts_tx', 'large_pkts_rx', 'dot1q_pkts_rx', 'frag_pkts_tx', 'reassembled_pkts_rx', 'bad_inner_ipv4_len_rx', 'bad_inner_ipv6_len_rx', 'frag_drop_pkts_tx', 'lif_un_init_rx'
+                    'all', 'cfg_err_count', 'flooded_pkt_count', 'encap_unresolved_count', 'unknown_encap_rx_pkt', 'unknown_encap_tx_pkt', 'arp_req_sent', 'vtep_host_learned', 'vtep_host_learn_error', 'invalid_lif_rx', 'invalid_lif_tx', 'unknown_vtep_tx', 'unknown_vtep_rx', 'unhandled_pkt_rx', 'unhandled_pkt_tx', 'total_pkts_rx', 'total_bytes_rx',
+                    'unicast_pkt_rx', 'bcast_pkt_rx', 'mcast_pkt_rx', 'dropped_pkt_rx', 'encap_miss_pkts_rx', 'bad_chksum_pks_rx', 'requeue_pkts_in', 'pkts_out', 'total_bytes_tx', 'unicast_pkt_tx', 'bcast_pkt_tx', 'mcast_pkt_tx', 'dropped_pkts_tx', 'large_pkts_rx', 'dot1q_pkts_rx', 'frag_pkts_tx', 'reassembled_pkts_rx', 'bad_inner_ipv4_len_rx',
+                    'bad_inner_ipv6_len_rx', 'frag_drop_pkts_tx', 'lif_un_init_rx'
                     ]
                 }
             },

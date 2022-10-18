@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_tcp
 description:
     - tcp counters and global config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -219,8 +219,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew',
-                    'currclose', 'currclsw', 'currlack', 'currlstn', 'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
+                    'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew', 'currclose', 'currclsw', 'currlack', 'currlstn',
+                    'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
                     ]
                 }
             },
@@ -380,11 +380,11 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'connattempt', 'connects', 'drops', 'conndrops', 'closed', 'segstimed', 'rttupdated', 'delack', 'timeoutdrop', 'rexmttimeo', 'persisttimeo', 'keeptimeo', 'keepprobe', 'keepdrops', 'sndtotal', 'sndpack', 'sndbyte', 'sndrexmitpack', 'sndrexmitbyte', 'sndrexmitbad',
-                        'sndacks', 'sndprobe', 'sndurg', 'sndwinup', 'sndctrl', 'sndrst', 'sndfin', 'sndsyn', 'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff', 'rcvmemdrop', 'rcvduppack', 'rcvdupbyte', 'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack', 'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin',
-                        'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch', 'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop', 'predack', 'preddat', 'persistdrop', 'badrst', 'finwait2_drops', 'sack_recovery_episode', 'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks', 'sack_send_blocks', 'sndcack',
-                        'cacklim', 'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce', 'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack', 'a2brxdata', 'a2btcpoptions', 'a2boodata', 'a2bpartialack', 'a2bfsmtransition', 'a2btransitionnum', 'b2atransitionnum', 'bad_iochan', 'atcpforward',
-                        'atcpsent', 'atcprexmitsadrop', 'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail', 'a2bappbuffering', 'atcpsendfail', 'earlyrexmit', 'mburstlim', 'a2bsndwnd', 'proxyheaderv1', 'proxyheaderv2'
+                        'all', 'connattempt', 'connects', 'drops', 'conndrops', 'closed', 'segstimed', 'rttupdated', 'delack', 'timeoutdrop', 'rexmttimeo', 'persisttimeo', 'keeptimeo', 'keepprobe', 'keepdrops', 'sndtotal', 'sndpack', 'sndbyte', 'sndrexmitpack', 'sndrexmitbyte', 'sndrexmitbad', 'sndacks', 'sndprobe', 'sndurg', 'sndwinup', 'sndctrl',
+                        'sndrst', 'sndfin', 'sndsyn', 'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff', 'rcvmemdrop', 'rcvduppack', 'rcvdupbyte', 'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack', 'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin', 'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch', 'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop',
+                        'predack', 'preddat', 'persistdrop', 'badrst', 'finwait2_drops', 'sack_recovery_episode', 'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks', 'sack_send_blocks', 'sndcack', 'cacklim', 'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce', 'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack', 'a2brxdata',
+                        'a2btcpoptions', 'a2boodata', 'a2bpartialack', 'a2bfsmtransition', 'a2btransitionnum', 'b2atransitionnum', 'bad_iochan', 'atcpforward', 'atcpsent', 'atcprexmitsadrop', 'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail', 'a2bappbuffering', 'atcpsendfail', 'earlyrexmit', 'mburstlim', 'a2bsndwnd', 'proxyheaderv1',
+                        'proxyheaderv2'
                         ]
                     }
                 }

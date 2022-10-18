@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_hsm_template
 description:
     - HSM Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -219,9 +219,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "encrypted", "enroll_timeout", "health_check_interval", "hsm_dev", "password", "password_string", "protection", "protection_module", "protection_ocs", "protection_softcard_hash", "rfs_ip", "rfs_port", "sec_world", "softcard", "softhsm_enum", "template_name", "user_tag", "uuid", "worker",
-    ]
+AVAILABLE_PROPERTIES = ["encrypted", "enroll_timeout", "health_check_interval", "hsm_dev", "password", "password_string", "protection", "protection_module", "protection_ocs", "protection_softcard_hash", "rfs_ip", "rfs_port", "sec_world", "softcard", "softhsm_enum", "template_name", "user_tag", "uuid", "worker", ]
 
 
 def get_default_argspec():

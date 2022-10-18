@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_cpu_load_sharing
 description:
     - Redistribute packets uniformly to all CPUs during overload situations
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

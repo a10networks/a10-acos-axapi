@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ssl_key
 description:
     - ssl certificate and key file information and management commands
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

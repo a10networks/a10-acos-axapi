@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_server_ssl
 description:
     - Server Side SSL Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -365,8 +365,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "alert_type", "ca_certs", "certificate", "cipher_template", "cipher_without_prio_list", "close_notify", "crl_certs", "dgversion", "dh_type", "early_data", "ec_list", "enable_ssli_ftp_alg", "enable_tls_alert_logging", "forward_proxy_enable", "handshake_logging_enable", "name", "ocsp_stapling",
-    "renegotiation_disable", "server_certificate_error", "server_name", "session_cache_size", "session_cache_timeout", "session_ticket_enable", "shared_partition_cipher_template", "ssli_logging", "sslilogging", "template_cipher_shared", "use_client_sni", "user_tag", "uuid", "version",
+    "alert_type", "ca_certs", "certificate", "cipher_template", "cipher_without_prio_list", "close_notify", "crl_certs", "dgversion", "dh_type", "early_data", "ec_list", "enable_ssli_ftp_alg", "enable_tls_alert_logging", "forward_proxy_enable", "handshake_logging_enable", "name", "ocsp_stapling", "renegotiation_disable", "server_certificate_error",
+    "server_name", "session_cache_size", "session_cache_timeout", "session_ticket_enable", "shared_partition_cipher_template", "ssli_logging", "sslilogging", "template_cipher_shared", "use_client_sni", "user_tag", "uuid", "version",
     ]
 
 
@@ -425,10 +425,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5', 'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA', 'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256', 'TLS1_RSA_AES_256_SHA256', 'TLS1_DHE_RSA_AES_128_GCM_SHA256', 'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256',
-                    'TLS1_DHE_RSA_AES_256_GCM_SHA384', 'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_SHA', 'TLS1_ECDHE_ECDSA_AES_128_SHA256', 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA',
-                    'TLS1_ECDHE_RSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_RSA_AES_128_SHA', 'TLS1_ECDHE_RSA_AES_128_SHA256', 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_GCM_SHA256', 'TLS1_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA384',
-                    'TLS1_ECDHE_ECDSA_AES_256_SHA384', 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256', 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256', 'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
+                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5', 'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA', 'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256', 'TLS1_RSA_AES_256_SHA256', 'TLS1_DHE_RSA_AES_128_GCM_SHA256', 'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256', 'TLS1_DHE_RSA_AES_256_GCM_SHA384',
+                    'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_ECDSA_AES_128_SHA', 'TLS1_ECDHE_ECDSA_AES_128_SHA256', 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA', 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256', 'TLS1_ECDHE_RSA_AES_128_SHA',
+                    'TLS1_ECDHE_RSA_AES_128_SHA256', 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_GCM_SHA256', 'TLS1_RSA_AES_256_GCM_SHA384', 'TLS1_ECDHE_RSA_AES_256_SHA384', 'TLS1_ECDHE_ECDSA_AES_256_SHA384', 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256', 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
                     ]
                 }
             },

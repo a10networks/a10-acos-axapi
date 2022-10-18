@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service_secure_regenerate
 description:
     - Web-service secure regenerate operation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

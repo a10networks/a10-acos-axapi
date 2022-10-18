@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_pop3_proxy
 description:
     - Debug POP3 proxy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

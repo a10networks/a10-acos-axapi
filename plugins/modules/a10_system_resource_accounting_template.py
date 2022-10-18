@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template
 description:
     - Create resource accounting template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

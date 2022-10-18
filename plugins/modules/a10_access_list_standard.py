@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_access_list_standard
 description:
     - Configure Standard Access List
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

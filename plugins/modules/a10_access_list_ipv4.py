@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_access_list_ipv4
 description:
     - Display IPv4 ACLs
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

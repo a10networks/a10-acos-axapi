@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_auth_portal
 description:
     - Portal file for http authentication
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

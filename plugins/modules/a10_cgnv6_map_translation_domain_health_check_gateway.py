@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_translation_domain_health_check_gateway
 description:
     - Health-check gateway for route withdrawn
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

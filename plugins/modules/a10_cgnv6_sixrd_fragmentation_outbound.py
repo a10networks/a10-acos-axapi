@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sixrd_fragmentation_outbound
 description:
     - sixrd fragmentation rules for outbound oversize packets (default= ipv6)
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

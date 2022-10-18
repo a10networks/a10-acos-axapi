@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_partition_template
 description:
     - Attach a template to the partition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_restart_port_list
 description:
     - Ports to be restarted on standby system after transition
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

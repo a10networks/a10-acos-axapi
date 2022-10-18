@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_inuse_cpu_list
 description:
     - Bare-Metal lb cpu list
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

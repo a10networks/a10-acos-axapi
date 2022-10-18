@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_trunk_ip_stateful_firewall
 description:
     - Configure Stateful Firewall direction
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

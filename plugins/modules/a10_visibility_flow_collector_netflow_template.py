@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_flow_collector_netflow_template
 description:
     - NetFlow/IPFIX collector templates
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_health_stat
 description:
     - Configure health monitor
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -348,8 +348,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'num_burst', 'max_jiffie', 'min_jiffie', 'avg_jiffie', 'open_socket', 'open_socket_failed', 'close_socket', 'connect_failed', 'send_packet', 'send_packet_failed', 'recv_packet', 'recv_packet_failed', 'retry_times', 'timeout', 'unexpected_error', 'conn_imdt_succ',
-                    'sock_close_before_17', 'sock_close_without_notify', 'curr_health_rate', 'ext_health_rate', 'ext_health_rate_val', 'total_number', 'status_up', 'status_down', 'status_unkn', 'status_other', 'running_time', 'config_health_rate', 'ssl_post_handshake_packet', 'timeout_with_packet'
+                    'all', 'num_burst', 'max_jiffie', 'min_jiffie', 'avg_jiffie', 'open_socket', 'open_socket_failed', 'close_socket', 'connect_failed', 'send_packet', 'send_packet_failed', 'recv_packet', 'recv_packet_failed', 'retry_times', 'timeout', 'unexpected_error', 'conn_imdt_succ', 'sock_close_before_17', 'sock_close_without_notify',
+                    'curr_health_rate', 'ext_health_rate', 'ext_health_rate_val', 'total_number', 'status_up', 'status_down', 'status_unkn', 'status_other', 'running_time', 'config_health_rate', 'ssl_post_handshake_packet', 'timeout_with_packet'
                     ]
                 }
             },

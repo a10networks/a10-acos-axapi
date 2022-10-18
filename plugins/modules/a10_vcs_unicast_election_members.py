@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_unicast_election_members
 description:
     - members for vcs unicast election
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

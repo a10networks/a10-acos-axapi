@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_delete_glm_license
 description:
     - Remove glm license
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

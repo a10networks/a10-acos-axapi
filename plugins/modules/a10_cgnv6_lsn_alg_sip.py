@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_sip
 description:
     - Change LSN SIP ALG Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -272,10 +272,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-options', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update', 'method-unknown', 'parse-error',
-                    'req-uri-op-failrue', 'via-hdr-op-failrue', 'contact-hdr-op-failrue', 'from-hdr-op-failrue', 'to-hdr-op-failrue', 'route-hdr-op-failrue', 'record-route-hdr-op-failrue', 'content-length-hdr-op-failrue', 'third-party-registration', 'conn-ext-creation-failure',
-                    'alloc-contact-port-failure', 'outside-contact-port-mismatch', 'inside-contact-port-mismatch', 'third-party-sdp', 'sdp-process-candidate-failure', 'sdp-op-failure', 'sdp-alloc-port-map-success', 'sdp-alloc-port-map-failure', 'modify-failure', 'rewrite-failure',
-                    'tcp-out-of-order-drop', 'smp-conn-alloc-failure', 'helper-found', 'helper-created', 'helper-deleted', 'helper-freed', 'helper-failure'
+                    'all', 'method-register', 'method-invite', 'method-ack', 'method-cancel', 'method-bye', 'method-options', 'method-prack', 'method-subscribe', 'method-notify', 'method-publish', 'method-info', 'method-refer', 'method-message', 'method-update', 'method-unknown', 'parse-error', 'req-uri-op-failrue', 'via-hdr-op-failrue',
+                    'contact-hdr-op-failrue', 'from-hdr-op-failrue', 'to-hdr-op-failrue', 'route-hdr-op-failrue', 'record-route-hdr-op-failrue', 'content-length-hdr-op-failrue', 'third-party-registration', 'conn-ext-creation-failure', 'alloc-contact-port-failure', 'outside-contact-port-mismatch', 'inside-contact-port-mismatch', 'third-party-sdp',
+                    'sdp-process-candidate-failure', 'sdp-op-failure', 'sdp-alloc-port-map-success', 'sdp-alloc-port-map-failure', 'modify-failure', 'rewrite-failure', 'tcp-out-of-order-drop', 'smp-conn-alloc-failure', 'helper-found', 'helper-created', 'helper-deleted', 'helper-freed', 'helper-failure'
                     ]
                 }
             },

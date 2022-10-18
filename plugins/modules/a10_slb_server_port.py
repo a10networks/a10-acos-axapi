@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_server_port
 description:
     - Real Server Port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -565,8 +565,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "alternate_port", "auth_cfg", "conn_limit", "conn_resume", "extended_stats", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "no_logging", "no_ssl", "only", "oper", "packet_capture_template", "port_number", "protocol", "range",
-    "rport_health_check_shared", "sampling_enable", "shared_partition_port_template", "shared_rport_health_check", "stats", "stats_data_action", "support_http2", "template_port", "template_port_shared", "template_server_ssl", "user_tag", "uuid", "weight",
+    "action", "alternate_port", "auth_cfg", "conn_limit", "conn_resume", "extended_stats", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "no_logging", "no_ssl", "only", "oper", "packet_capture_template", "port_number", "protocol", "range", "rport_health_check_shared", "sampling_enable",
+    "shared_partition_port_template", "shared_rport_health_check", "stats", "stats_data_action", "support_http2", "template_port", "template_port_shared", "template_server_ssl", "user_tag", "uuid", "weight",
     ]
 
 
@@ -693,9 +693,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_req', 'total_req', 'total_req_succ', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'last_total_conn', 'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400', 'es_resp_500', 'es_resp_other', 'es_req_count', 'es_resp_count',
-                    'es_resp_invalid_http', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_good_status_code', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'resp-count', 'resp-1xx', 'resp-2xx', 'resp-3xx', 'resp-4xx', 'resp-5xx', 'resp-other',
-                    'resp-latency', 'curr_pconn'
+                    'all', 'curr_req', 'total_req', 'total_req_succ', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'last_total_conn', 'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400', 'es_resp_500', 'es_resp_other', 'es_req_count', 'es_resp_count', 'es_resp_invalid_http',
+                    'total_rev_pkts_inspected', 'total_rev_pkts_inspected_good_status_code', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'resp-count', 'resp-1xx', 'resp-2xx', 'resp-3xx', 'resp-4xx', 'resp-5xx', 'resp-other', 'resp-latency', 'curr_pconn'
                     ]
                 }
             },

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_limit_policy
 description:
     - Create a Limit Policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -60,51 +60,15 @@ options:
         - "Limit Policy Number"
         type: int
         required: True
-    limit_rate:
+    parent:
         description:
-        - "'limit-pps'= Enable Packets Per Second Rate Limit; 'limit-throughput'= Enable
-          Throughput Rate Limit;"
-        type: str
-        required: False
-    uplink_pps:
-        description:
-        - "Uplink PPS limit (Number of Packets per second)"
+        - "Specify the parent of limit-policy"
         type: int
         required: False
-    downlink_pps:
+    max_min_fair:
         description:
-        - "Downlink PPS limit (Number of Packets per second)"
-        type: int
-        required: False
-    ddos_protection_factor:
-        description:
-        - "Enable DDoS Protection (Multiplier of the downlink PPS)"
-        type: int
-        required: False
-    total_pps:
-        description:
-        - "Total PPS limit (Number of Packets per second)"
-        type: int
-        required: False
-    uplink_throughput:
-        description:
-        - "Uplink Throughput limit (Mega Bits per second)"
-        type: int
-        required: False
-    downlink_throughput:
-        description:
-        - "Downlink Throughput limit (Mega Bits per second)"
-        type: int
-        required: False
-    total_throughput:
-        description:
-        - "Total Throughput limit (Mega Bits per second)"
-        type: int
-        required: False
-    limit_cps:
-        description:
-        - "Enable Connections Per Second Rate Limit (Number of Connections per second)"
-        type: int
+        - "Enable max-min-fairness"
+        type: bool
         required: False
     limit_concurrent_sessions:
         description:
@@ -127,44 +91,6 @@ options:
         - "Prefix length"
         type: int
         required: False
-    burstsize_downlink_pps:
-        description:
-        - "Downlink PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
-        type: int
-        required: False
-    burstsize_uplink_pps:
-        description:
-        - "Uplink PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
-        type: int
-        required: False
-    burstsize_total_pps:
-        description:
-        - "Total PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
-        type: int
-        required: False
-    burstsize_downlink_throughput:
-        description:
-        - "Downlink Throughput Token Bucket Size (Must Exceed Configured Rate) (In Mega
-          Bits per second)"
-        type: int
-        required: False
-    burstsize_uplink_throughput:
-        description:
-        - "Uplink Throughput Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits
-          per second)"
-        type: int
-        required: False
-    burstsize_total_throughput:
-        description:
-        - "Total Throughput Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits
-          per second)"
-        type: int
-        required: False
-    burstsize_cps:
-        description:
-        - "CPS Token Bucket Size (Must Exceed Configured Rate) (In Connections per second)"
-        type: int
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -175,6 +101,124 @@ options:
         - "Customized tag"
         type: str
         required: False
+    limit_pps:
+        description:
+        - "Field limit_pps"
+        type: dict
+        required: False
+        suboptions:
+            uplink:
+                description:
+                - "Uplink PPS limit (Number of Packets per second)"
+                type: int
+            uplink_burstsize:
+                description:
+                - "PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+                type: int
+            uplink_relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            downlink:
+                description:
+                - "Downlink PPS limit (Number of Packets per second)"
+                type: int
+            ddos_protection_factor:
+                description:
+                - "Enable DDoS Protection (Multiplier of the downlink PPS)"
+                type: int
+            downlink_burstsize:
+                description:
+                - "PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+                type: int
+            downlink_relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            total:
+                description:
+                - "Total PPS limit (Number of Packets per second)"
+                type: int
+            total_burstsize:
+                description:
+                - "PPS Token Bucket Size (Must Exceed Configured Rate) (In Packets)"
+                type: int
+            total_relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    limit_throughput:
+        description:
+        - "Field limit_throughput"
+        type: dict
+        required: False
+        suboptions:
+            uplink:
+                description:
+                - "Uplink Throughput limit (Mega Bits per second)"
+                type: int
+            uplink_burstsize:
+                description:
+                - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+                type: int
+            uplink_relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            downlink:
+                description:
+                - "Downlink Throughput limit (Mega Bits per second)"
+                type: int
+            downlink_burstsize:
+                description:
+                - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+                type: int
+            downlink_relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            total:
+                description:
+                - "Total Throughput limit (Mega Bits per second)"
+                type: int
+            total_burstsize:
+                description:
+                - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+                type: int
+            total_relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    limit_cps:
+        description:
+        - "Field limit_cps"
+        type: dict
+        required: False
+        suboptions:
+            value:
+                description:
+                - "Connections Per Second Rate Limit (Number of Connections per second)"
+                type: int
+            burstsize:
+                description:
+                - "CPS Token Bucket Size (Must Exceed Configured Rate) (In Connections per second)"
+                type: int
+            relaxed:
+                description:
+                - "Relax the limitation when the policy has more tokens from the parent of policy"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -229,10 +273,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "burstsize_cps", "burstsize_downlink_pps", "burstsize_downlink_throughput", "burstsize_total_pps", "burstsize_total_throughput", "burstsize_uplink_pps", "burstsize_uplink_throughput", "ddos_protection_factor", "downlink_pps", "downlink_throughput", "limit_concurrent_sessions", "limit_cps",
-    "limit_rate", "limit_scope", "log", "policy_number", "prefix_length", "total_pps", "total_throughput", "uplink_pps", "uplink_throughput", "user_tag", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["limit_concurrent_sessions", "limit_cps", "limit_pps", "limit_scope", "limit_throughput", "log", "max_min_fair", "parent", "policy_number", "prefix_length", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -257,33 +298,11 @@ def get_argspec():
             'type': 'int',
             'required': True,
             },
-        'limit_rate': {
-            'type': 'str',
-            'choices': ['limit-pps', 'limit-throughput']
-            },
-        'uplink_pps': {
+        'parent': {
             'type': 'int',
             },
-        'downlink_pps': {
-            'type': 'int',
-            },
-        'ddos_protection_factor': {
-            'type': 'int',
-            },
-        'total_pps': {
-            'type': 'int',
-            },
-        'uplink_throughput': {
-            'type': 'int',
-            },
-        'downlink_throughput': {
-            'type': 'int',
-            },
-        'total_throughput': {
-            'type': 'int',
-            },
-        'limit_cps': {
-            'type': 'int',
+        'max_min_fair': {
+            'type': 'bool',
             },
         'limit_concurrent_sessions': {
             'type': 'int',
@@ -298,32 +317,95 @@ def get_argspec():
         'prefix_length': {
             'type': 'int',
             },
-        'burstsize_downlink_pps': {
-            'type': 'int',
-            },
-        'burstsize_uplink_pps': {
-            'type': 'int',
-            },
-        'burstsize_total_pps': {
-            'type': 'int',
-            },
-        'burstsize_downlink_throughput': {
-            'type': 'int',
-            },
-        'burstsize_uplink_throughput': {
-            'type': 'int',
-            },
-        'burstsize_total_throughput': {
-            'type': 'int',
-            },
-        'burstsize_cps': {
-            'type': 'int',
-            },
         'uuid': {
             'type': 'str',
             },
         'user_tag': {
             'type': 'str',
+            },
+        'limit_pps': {
+            'type': 'dict',
+            'uplink': {
+                'type': 'int',
+                },
+            'uplink_burstsize': {
+                'type': 'int',
+                },
+            'uplink_relaxed': {
+                'type': 'bool',
+                },
+            'downlink': {
+                'type': 'int',
+                },
+            'ddos_protection_factor': {
+                'type': 'int',
+                },
+            'downlink_burstsize': {
+                'type': 'int',
+                },
+            'downlink_relaxed': {
+                'type': 'bool',
+                },
+            'total': {
+                'type': 'int',
+                },
+            'total_burstsize': {
+                'type': 'int',
+                },
+            'total_relaxed': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'limit_throughput': {
+            'type': 'dict',
+            'uplink': {
+                'type': 'int',
+                },
+            'uplink_burstsize': {
+                'type': 'int',
+                },
+            'uplink_relaxed': {
+                'type': 'bool',
+                },
+            'downlink': {
+                'type': 'int',
+                },
+            'downlink_burstsize': {
+                'type': 'int',
+                },
+            'downlink_relaxed': {
+                'type': 'bool',
+                },
+            'total': {
+                'type': 'int',
+                },
+            'total_burstsize': {
+                'type': 'int',
+                },
+            'total_relaxed': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'limit_cps': {
+            'type': 'dict',
+            'value': {
+                'type': 'int',
+                },
+            'burstsize': {
+                'type': 'int',
+                },
+            'relaxed': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             }
         })
     return rv

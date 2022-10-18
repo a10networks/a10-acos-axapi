@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_form_based_instance_request_uri
 description:
     - URI of authentication web page
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

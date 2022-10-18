@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ldap_server_host_ldap_hostname
 description:
     - Specify the hostname of LDAP server
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

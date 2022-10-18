@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_local_log
 description:
     - Debug LOCAL log
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

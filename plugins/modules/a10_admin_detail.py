@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin_detail
 description:
     - get admin user priviledge
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

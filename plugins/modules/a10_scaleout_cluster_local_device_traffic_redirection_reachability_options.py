@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_traffic_redirection_reachability_options
 description:
     - Options to determine reachability for redirection
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

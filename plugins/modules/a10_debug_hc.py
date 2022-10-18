@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_hc
 description:
     - Debug Harmony Controller
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -179,38 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'metrics': {
-            'type': 'bool',
-            },
-        'object_uuid': {
-            'type': 'str',
-            },
-        'uri': {
-            'type': 'str',
-            },
-        'per_request': {
-            'type': 'bool',
-            },
-        'app_svc_id': {
-            'type': 'str',
-            },
-        'anomaly': {
-            'type': 'bool',
-            },
-        'registration': {
-            'type': 'bool',
-            },
-        'error': {
-            'type': 'bool',
-            },
-        'per_connection': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'metrics': {'type': 'bool', }, 'object_uuid': {'type': 'str', }, 'uri': {'type': 'str', }, 'per_request': {'type': 'bool', }, 'app_svc_id': {'type': 'str', }, 'anomaly': {'type': 'bool', }, 'registration': {'type': 'bool', }, 'error': {'type': 'bool', }, 'per_connection': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

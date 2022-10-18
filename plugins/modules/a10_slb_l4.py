@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_l4
 description:
     - Configure L4
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -772,16 +772,15 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'intcp', 'synreceived', 'tcp_fwd_last_ack', 'tcp_rev_last_ack', 'tcp_rev_fin', 'tcp_fwd_fin', 'tcp_fwd_ackfin', 'inudp', 'syncookiessent', 'syncookiessent_ts', 'syncookiessentfailed', 'outrst', 'outrst_nosyn', 'outrst_broker', 'outrst_ack_attack', 'outrst_aflex',
-                    'outrst_stale_sess', 'syn_stale_sess', 'outrst_tcpproxy', 'svrselfail', 'noroute', 'snat_fail', 'snat_no_fwd_route', 'snat_no_rev_route', 'snat_icmp_error_process', 'snat_icmp_no_match', 'smart_nat_id_mismatch', 'syncookiescheckfailed', 'novport_drop', 'no_vport_drop',
-                    'nosyn_drop', 'nosyn_drop_fin', 'nosyn_drop_rst', 'nosyn_drop_ack', 'connlimit_drop', 'connlimit_reset', 'conn_rate_limit_drop', 'conn_rate_limit_reset', 'proxy_nosock_drop', 'drop_aflex', 'sess_aged_out', 'tcp_sess_aged_out', 'udp_sess_aged_out', 'other_sess_aged_out',
-                    'tcp_no_slb', 'udp_no_slb', 'throttle_syn', 'drop_gslb', 'inband_hm_retry', 'inband_hm_reassign', 'auto_reassign', 'fast_aging_set', 'fast_aging_reset', 'dns_policy_drop', 'tcp_invalid_drop', 'anomaly_out_seq', 'anomaly_zero_win', 'anomaly_bad_content', 'anomaly_pbslb_drop',
-                    'no_resourse_drop', 'reset_unknown_conn', 'reset_l7_on_failover', 'ignore_msl', 'l2_dsr', 'l3_dsr', 'port_preserve_attempt', 'port_preserve_succ', 'tcpsyndata_drop', 'tcpotherflags_drop', 'bw_rate_limit_exceed', 'bw_watermark_drop', 'l4_cps_exceed', 'nat_cps_exceed',
-                    'l7_cps_exceed', 'ssl_cps_exceed', 'ssl_tpt_exceed', 'ssl_watermark_drop', 'concurrent_conn_exceed', 'svr_syn_handshake_fail', 'stateless_conn_timeout', 'tcp_ax_rexmit_syn', 'tcp_syn_rcv_ack', 'tcp_syn_rcv_rst', 'tcp_sess_noest_aged_out', 'tcp_sess_noest_csyn_rcv_aged_out',
-                    'tcp_sess_noest_ssyn_xmit_aged_out', 'tcp_rexmit_syn', 'tcp_rexmit_syn_delq', 'tcp_rexmit_synack', 'tcp_rexmit_synack_delq', 'tcp_fwd_fin_dup', 'tcp_rev_fin_dup', 'tcp_rev_ackfin', 'tcp_fwd_rst', 'tcp_rev_rst', 'udp_req_oneplus_no_resp', 'udp_req_one_oneplus_resp',
-                    'udp_req_resp_notmatch', 'udp_req_more_resp', 'udp_resp_more_req', 'udp_req_oneplus', 'udp_resp_oneplus', 'out_seq_ack_drop', 'tcp_est', 'synattack', 'syn_rate', 'syncookie_buff_drop', 'syncookie_buff_queue', 'skip_insert_client_ip', 'synreceived_hw', 'dns_id_switch',
-                    'server_down_del', 'dnssec_switch', 'rate_drop_reset_unkn', 'tcp_connections_closed', 'gtp_c_invalid_port', 'gtp_c_invalid_header', 'gtp_c_invalid_message', 'reselect_svrselfail', 'snat_port_overload_fail', 'snat_force_preserve_alloc', 'snat_force_preserve_free',
-                    'slb_gtp_proxy_pkt_rcv_rr', 'slb_gtp_proxy_smp_match', 'slb_gtp_proxy_smp_no_match', 'slb_gtp_proxy_c_process_local_rr', 'slb_gtp_proxy_smp_creation_failed', 'slb_gtp_proxy_smp_created', 'slb_gtp_proxy_smp_free_not_found', 'slb_gtp_proxy_smp_freed', 'slb_gtp_proxy_retx_requests'
+                    'all', 'intcp', 'synreceived', 'tcp_fwd_last_ack', 'tcp_rev_last_ack', 'tcp_rev_fin', 'tcp_fwd_fin', 'tcp_fwd_ackfin', 'inudp', 'syncookiessent', 'syncookiessent_ts', 'syncookiessentfailed', 'outrst', 'outrst_nosyn', 'outrst_broker', 'outrst_ack_attack', 'outrst_aflex', 'outrst_stale_sess', 'syn_stale_sess', 'outrst_tcpproxy',
+                    'svrselfail', 'noroute', 'snat_fail', 'snat_no_fwd_route', 'snat_no_rev_route', 'snat_icmp_error_process', 'snat_icmp_no_match', 'smart_nat_id_mismatch', 'syncookiescheckfailed', 'novport_drop', 'no_vport_drop', 'nosyn_drop', 'nosyn_drop_fin', 'nosyn_drop_rst', 'nosyn_drop_ack', 'connlimit_drop', 'connlimit_reset',
+                    'conn_rate_limit_drop', 'conn_rate_limit_reset', 'proxy_nosock_drop', 'drop_aflex', 'sess_aged_out', 'tcp_sess_aged_out', 'udp_sess_aged_out', 'other_sess_aged_out', 'tcp_no_slb', 'udp_no_slb', 'throttle_syn', 'drop_gslb', 'inband_hm_retry', 'inband_hm_reassign', 'auto_reassign', 'fast_aging_set', 'fast_aging_reset',
+                    'dns_policy_drop', 'tcp_invalid_drop', 'anomaly_out_seq', 'anomaly_zero_win', 'anomaly_bad_content', 'anomaly_pbslb_drop', 'no_resourse_drop', 'reset_unknown_conn', 'reset_l7_on_failover', 'ignore_msl', 'l2_dsr', 'l3_dsr', 'port_preserve_attempt', 'port_preserve_succ', 'tcpsyndata_drop', 'tcpotherflags_drop',
+                    'bw_rate_limit_exceed', 'bw_watermark_drop', 'l4_cps_exceed', 'nat_cps_exceed', 'l7_cps_exceed', 'ssl_cps_exceed', 'ssl_tpt_exceed', 'ssl_watermark_drop', 'concurrent_conn_exceed', 'svr_syn_handshake_fail', 'stateless_conn_timeout', 'tcp_ax_rexmit_syn', 'tcp_syn_rcv_ack', 'tcp_syn_rcv_rst', 'tcp_sess_noest_aged_out',
+                    'tcp_sess_noest_csyn_rcv_aged_out', 'tcp_sess_noest_ssyn_xmit_aged_out', 'tcp_rexmit_syn', 'tcp_rexmit_syn_delq', 'tcp_rexmit_synack', 'tcp_rexmit_synack_delq', 'tcp_fwd_fin_dup', 'tcp_rev_fin_dup', 'tcp_rev_ackfin', 'tcp_fwd_rst', 'tcp_rev_rst', 'udp_req_oneplus_no_resp', 'udp_req_one_oneplus_resp', 'udp_req_resp_notmatch',
+                    'udp_req_more_resp', 'udp_resp_more_req', 'udp_req_oneplus', 'udp_resp_oneplus', 'out_seq_ack_drop', 'tcp_est', 'synattack', 'syn_rate', 'syncookie_buff_drop', 'syncookie_buff_queue', 'skip_insert_client_ip', 'synreceived_hw', 'dns_id_switch', 'server_down_del', 'dnssec_switch', 'rate_drop_reset_unkn', 'tcp_connections_closed',
+                    'gtp_c_invalid_port', 'gtp_c_invalid_header', 'gtp_c_invalid_message', 'reselect_svrselfail', 'snat_port_overload_fail', 'snat_force_preserve_alloc', 'snat_force_preserve_free', 'slb_gtp_proxy_pkt_rcv_rr', 'slb_gtp_proxy_smp_match', 'slb_gtp_proxy_smp_no_match', 'slb_gtp_proxy_c_process_local_rr',
+                    'slb_gtp_proxy_smp_creation_failed', 'slb_gtp_proxy_smp_created', 'slb_gtp_proxy_smp_free_not_found', 'slb_gtp_proxy_smp_freed', 'slb_gtp_proxy_retx_requests'
                     ]
                 }
             },

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_file_metrics
 description:
     - Persistent storage for metrics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

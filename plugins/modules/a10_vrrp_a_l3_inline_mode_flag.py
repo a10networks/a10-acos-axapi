@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_l3_inline_mode_flag
 description:
     - Enable OSPF under Layer 3 Inline Hot Standby Mode
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

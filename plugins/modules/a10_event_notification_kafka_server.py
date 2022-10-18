@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_event_notification_kafka_server
 description:
     - Set remote kafka server ip address
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -597,17 +597,15 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'pr-acos-harmony-topic', 'avro-device-status-topic', 'avro-partition-metrics-topic', 'avro-generic-sent', 'pr-acos-harmony-topic-enqueue-err', 'pr-acos-harmony-topic-dequeue-err', 'avro-generic-failed-encoding', 'avro-generic-failed-sending',
-                    'avro-device-status-topic-enqueue-err', 'avro-device-status-topic-dequeue-err', 'avro-partition-metrics-topic-enqueue-err', 'avro-partition-metrics-topic-dequeue-err', 'kafka-unknown-topic-dequeue-err', 'kafka-broker-down', 'kafka-queue-full-err', 'pr-throttle-drop',
-                    'pr-not-allowed-drop', 'pr-be-ttfb-anomaly', 'pr-be-ttlb-anomaly', 'pr-in-latency-threshold-exceed', 'pr-out-latency-threshold-exceed', 'pr-out-latency-anomaly', 'pr-in-latency-anomaly', 'kafka-topic-error', 'pc-encoding-failed', 'pc-acos-harmony-topic',
-                    'pc-acos-harmony-topic-dequeue-err', 'cgn-pc-acos-harmony-topic', 'cgn-pc-acos-harmony-topic-dequeue-err', 'cgn-pe-acos-harmony-topic', 'cgn-pe-acos-harmony-topic-dequeue-err', 'fw-pc-acos-harmony-topic', 'fw-pc-acos-harmony-topic-dequeue-err', 'fw-deny-pc-acos-harmony-topic',
-                    'fw-deny-pc-acos-harmony-topic-dequeue-err', 'fw-rst-pc-acos-harmony-topic', 'fw-rst-pc-acos-harmony-topic-dequeue-err', 'cgn-summary-error-acos-harmony-topic', 'cgn-summary-error-acos-harmony-topic-dequeue-err', 'rule-set-application-metrics-topic',
-                    'rule-set-application-metrics-topic-dequeue-err', 'slb-ssl-stats-metrics-topic', 'slb-ssl-stats-metrics-topic-dequeue-err', 'slb-client-ssl-counters-metrics-topic', 'slb-client-ssl-counters-metrics-topic-dequeue-err', 'slb-server-ssl-counters-metrics-topic',
-                    'slb-server-ssl-counters-metrics-topic-dequeue-err', 'pc-throttle-drop', 'metrics-dropped-pt-missing', 'ssli-pc-acos-harmony-topic', 'ssli-pc-acos-harmony-topic-dequeue-err', 'ssli-pe-acos-harmony-topic', 'ssli-pe-acos-harmony-topic-dequeue-err', 'analytics-bus-restart',
-                    'waf-learn-pr-topic', 'waf-learn-pr-topic-dequeue-err', 'waf-events-topic', 'waf-events-topic-dequeue-err', 'visibility-topn-harmony-topic', 'visibility-topn-harmony-topic-dequeue-err', 'hc-logs-sent-to-master', 'hc-logs-received-from-blade', 'hc-oper-sent-to-master',
-                    'hc-oper-received-from-blade', 'hc-counters-sent-to-master', 'hc-counters-received-from-blade', 'hc-counters-dropped-from-blade', 'pe-acos-harmony-topic', 'pe-acos-harmony-topic-enqueue-err', 'pe-acos-harmony-topic-dequeue-err', 'vpn-ipsec-sa-metrics-topic',
-                    'vpn-ipsec-sa-metrics-topic-dequeue-err', 'vpn-ike-gateway-metrics-topic', 'vpn-ike-gateway-metrics-topic-dequeue-err', 'vpn-stats-metrics-topic', 'vpn-stats-metrics-topic-dequeue-err', 'cgn-port-usage-hstgrm-acos-harmony-topic',
-                    'cgn-port-usage-hstgrm-acos-harmony-topic-dequeue-err', 'avro-system-env-topic', 'avro-system-env-dequeue-err', 'cert-pinning-list-topic', 'cert-pinning-list-topic-dequeue-err'
+                    'all', 'pr-acos-harmony-topic', 'avro-device-status-topic', 'avro-partition-metrics-topic', 'avro-generic-sent', 'pr-acos-harmony-topic-enqueue-err', 'pr-acos-harmony-topic-dequeue-err', 'avro-generic-failed-encoding', 'avro-generic-failed-sending', 'avro-device-status-topic-enqueue-err', 'avro-device-status-topic-dequeue-err',
+                    'avro-partition-metrics-topic-enqueue-err', 'avro-partition-metrics-topic-dequeue-err', 'kafka-unknown-topic-dequeue-err', 'kafka-broker-down', 'kafka-queue-full-err', 'pr-throttle-drop', 'pr-not-allowed-drop', 'pr-be-ttfb-anomaly', 'pr-be-ttlb-anomaly', 'pr-in-latency-threshold-exceed', 'pr-out-latency-threshold-exceed',
+                    'pr-out-latency-anomaly', 'pr-in-latency-anomaly', 'kafka-topic-error', 'pc-encoding-failed', 'pc-acos-harmony-topic', 'pc-acos-harmony-topic-dequeue-err', 'cgn-pc-acos-harmony-topic', 'cgn-pc-acos-harmony-topic-dequeue-err', 'cgn-pe-acos-harmony-topic', 'cgn-pe-acos-harmony-topic-dequeue-err', 'fw-pc-acos-harmony-topic',
+                    'fw-pc-acos-harmony-topic-dequeue-err', 'fw-deny-pc-acos-harmony-topic', 'fw-deny-pc-acos-harmony-topic-dequeue-err', 'fw-rst-pc-acos-harmony-topic', 'fw-rst-pc-acos-harmony-topic-dequeue-err', 'cgn-summary-error-acos-harmony-topic', 'cgn-summary-error-acos-harmony-topic-dequeue-err', 'rule-set-application-metrics-topic',
+                    'rule-set-application-metrics-topic-dequeue-err', 'slb-ssl-stats-metrics-topic', 'slb-ssl-stats-metrics-topic-dequeue-err', 'slb-client-ssl-counters-metrics-topic', 'slb-client-ssl-counters-metrics-topic-dequeue-err', 'slb-server-ssl-counters-metrics-topic', 'slb-server-ssl-counters-metrics-topic-dequeue-err',
+                    'pc-throttle-drop', 'metrics-dropped-pt-missing', 'ssli-pc-acos-harmony-topic', 'ssli-pc-acos-harmony-topic-dequeue-err', 'ssli-pe-acos-harmony-topic', 'ssli-pe-acos-harmony-topic-dequeue-err', 'analytics-bus-restart', 'waf-learn-pr-topic', 'waf-learn-pr-topic-dequeue-err', 'waf-events-topic', 'waf-events-topic-dequeue-err',
+                    'visibility-topn-harmony-topic', 'visibility-topn-harmony-topic-dequeue-err', 'hc-logs-sent-to-master', 'hc-logs-received-from-blade', 'hc-oper-sent-to-master', 'hc-oper-received-from-blade', 'hc-counters-sent-to-master', 'hc-counters-received-from-blade', 'hc-counters-dropped-from-blade', 'pe-acos-harmony-topic',
+                    'pe-acos-harmony-topic-enqueue-err', 'pe-acos-harmony-topic-dequeue-err', 'vpn-ipsec-sa-metrics-topic', 'vpn-ipsec-sa-metrics-topic-dequeue-err', 'vpn-ike-gateway-metrics-topic', 'vpn-ike-gateway-metrics-topic-dequeue-err', 'vpn-stats-metrics-topic', 'vpn-stats-metrics-topic-dequeue-err',
+                    'cgn-port-usage-hstgrm-acos-harmony-topic', 'cgn-port-usage-hstgrm-acos-harmony-topic-dequeue-err', 'avro-system-env-topic', 'avro-system-env-dequeue-err', 'cert-pinning-list-topic', 'cert-pinning-list-topic-dequeue-err'
                     ]
                 }
             },

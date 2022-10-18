@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging_disable_log_by_destination
 description:
     - Disable logging by destination ip address protocol and port
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

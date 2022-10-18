@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_port_mapping_files
 description:
     - Fixed NAT Port Mapping Files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -156,33 +156,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'file_list': {
-                'type': 'list',
-                'file_name': {
-                    'type': 'str',
-                    },
-                'write_status': {
-                    'type': 'str',
-                    }
-                },
-            'ntype': {
-                'type': 'str',
-                'choices': ['all', 'archive', 'regular']
-                },
-            'contain': {
-                'type': 'str',
-                },
-            'contain_case_sensitive': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'file_list': {'type': 'list', 'file_name': {'type': 'str', }, 'write_status': {'type': 'str', }}, 'ntype': {'type': 'str', 'choices': ['all', 'archive', 'regular']}, 'contain': {'type': 'str', }, 'contain_case_sensitive': {'type': 'str', }}})
     return rv
 
 

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_xaui_dlb_mode
 description:
     - Enable/Disable Dynamic Load Balancing traffic distribution support
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

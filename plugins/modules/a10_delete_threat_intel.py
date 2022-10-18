@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_delete_threat_intel
 description:
     - Delete threat-intel files
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

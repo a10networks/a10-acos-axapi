@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_hardware_forward_slb
 description:
     - Field slb
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -254,8 +254,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'entry-create', 'entry-create-failure', 'entry-create-fail-server-down', 'entry-create-fail-max-entry', 'entry-free', 'entry-free-opp-entry', 'entry-free-no-hw-prog', 'entry-free-no-conn', 'entry-free-no-sw-entry', 'entry-counter', 'entry-age-out', 'entry-age-out-idle',
-                    'entry-age-out-tcp-fin', 'entry-age-out-tcp-rst', 'entry-age-out-invalid-dst', 'entry-force-hw-invalidate', 'entry-invalidate-server-down', 'tcam-create', 'tcam-free', 'tcam-counter'
+                    'all', 'entry-create', 'entry-create-failure', 'entry-create-fail-server-down', 'entry-create-fail-max-entry', 'entry-free', 'entry-free-opp-entry', 'entry-free-no-hw-prog', 'entry-free-no-conn', 'entry-free-no-sw-entry', 'entry-counter', 'entry-age-out', 'entry-age-out-idle', 'entry-age-out-tcp-fin', 'entry-age-out-tcp-rst',
+                    'entry-age-out-invalid-dst', 'entry-force-hw-invalidate', 'entry-invalidate-server-down', 'tcam-create', 'tcam-free', 'tcam-counter'
                     ]
                 }
             },

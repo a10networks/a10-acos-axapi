@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_rtp
 description:
     - RTP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

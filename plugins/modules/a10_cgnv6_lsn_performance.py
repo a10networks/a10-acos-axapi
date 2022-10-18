@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_performance
 description:
     - Large-Scale NAT performance statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -220,8 +220,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'data-sessions-current-epoch', 'fullcone-created-current-epoch', 'user-quote-created-current-epoch', 'data-sessions-previous-epoch-first', 'fullcone-created-previous-epoch-first', 'user-quote-created-previous-epoch-first', 'data-sessions-previous-epoch-last',
-                    'fullcone-created-previous-epoch-last', 'user-quote-created-previous-epoch-last'
+                    'all', 'data-sessions-current-epoch', 'fullcone-created-current-epoch', 'user-quote-created-current-epoch', 'data-sessions-previous-epoch-first', 'fullcone-created-previous-epoch-first', 'user-quote-created-previous-epoch-first', 'data-sessions-previous-epoch-last', 'fullcone-created-previous-epoch-last',
+                    'user-quote-created-previous-epoch-last'
                     ]
                 }
             },

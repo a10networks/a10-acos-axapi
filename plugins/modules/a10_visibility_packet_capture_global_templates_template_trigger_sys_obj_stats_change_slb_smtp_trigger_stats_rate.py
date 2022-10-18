@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_smtp_trigger_stats_rate
 description:
     - Configure stats to trigger packet capture on increment rate
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -226,8 +226,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "duration", "forward_req_data_fail", "forward_req_fail", "get_all_headers_fail", "insert_resonse_line_fail", "line_extend_fail", "line_table_extend_fail", "line_too_long", "no_proxy", "parse_req_fail", "parse_request_line_fail", "parse_resonse_line_fail", "read_request_line_fail",
-    "recv_server_unknow_reply_code", "remove_resonse_line_fail", "send_client_service_not_ready", "server_select_fail", "server_STARTTLS_fail", "snat_fail", "threshold_exceeded_by", "too_many_headers", "uuid",
+    "duration", "forward_req_data_fail", "forward_req_fail", "get_all_headers_fail", "insert_resonse_line_fail", "line_extend_fail", "line_table_extend_fail", "line_too_long", "no_proxy", "parse_req_fail", "parse_request_line_fail", "parse_resonse_line_fail", "read_request_line_fail", "recv_server_unknow_reply_code", "remove_resonse_line_fail",
+    "send_client_service_not_ready", "server_select_fail", "server_STARTTLS_fail", "snat_fail", "threshold_exceeded_by", "too_many_headers", "uuid",
     ]
 
 

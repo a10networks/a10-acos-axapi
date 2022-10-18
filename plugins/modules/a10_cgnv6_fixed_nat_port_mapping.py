@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_port_mapping
 description:
     - Fixed NAT Port Mapping
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_system_ip_threat_list
 description:
     - Configure triggers for system.ip-threat-list object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

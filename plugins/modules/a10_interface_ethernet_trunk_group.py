@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet_trunk_group
 description:
     - Trunk Group Settings
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

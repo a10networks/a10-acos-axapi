@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_http_proxy
 description:
     - Configure HTTP Proxy global
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -254,7 +254,9 @@ options:
           'transfer_encoding_and_content_length'= Transfer-encoding header with Content-
           Length header; 'get_and_payload'= GET method with content-length header or
           transfer-encoding header; 'h2up_with_host_and_auth'= HTTP2 with host header and
-          authority header; 'header_filter_rule_hit'= Hit header filter rule;"
+          authority header; 'header_filter_rule_hit'= Hit header filter rule;
+          'http1_client_idle_timeout'= HTTP1 client idle timeout;
+          'http2_client_idle_timeout'= HTTP2 client idle timeout;"
                 type: str
     oper:
         description:
@@ -1196,36 +1198,33 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'num', 'curr_proxy', 'total_proxy', 'req', 'req_succ', 'noproxy', 'client_rst', 'server_rst', 'notuple', 'parsereq_fail', 'svrsel_fail', 'fwdreq_fail', 'fwdreq_fail_buff', 'fwdreq_fail_rport', 'fwdreq_fail_route', 'fwdreq_fail_persist', 'fwdreq_fail_server',
-                    'fwdreq_fail_tuple', 'fwdreqdata_fail', 'req_retran', 'req_ofo', 'server_resel', 'svr_prem_close', 'new_svrconn', 'snat_fail', 'tcpoutrst', 'full_proxy', 'full_proxy_post', 'full_proxy_pipeline', 'full_proxy_fpga_err', 'req_over_limit', 'req_rate_over_limit', 'l4_switching',
-                    'cookie_switching', 'aflex_switching', 'http_policy_switching', 'url_switching', 'host_switching', 'lb_switching', 'l4_switching_ok', 'cookie_switching_ok', 'aflex_switching_ok', 'http_policy_switching_ok', 'url_switching_ok', 'host_switching_ok', 'lb_switching_ok',
-                    'l4_switching_enqueue', 'cookie_switching_enqueue', 'aflex_switching_enqueue', 'http_policy_switching_enqueue', 'url_switching_enqueue', 'host_switching_enqueue', 'lb_switching_enqueue', 'retry_503', 'aflex_retry', 'aflex_lb_reselect', 'aflex_lb_reselect_ok',
-                    'client_rst_request', 'client_rst_connecting', 'client_rst_connected', 'client_rst_response', 'server_rst_request', 'server_rst_connecting', 'server_rst_connected', 'server_rst_response', 'invalid_header', 'too_many_headers', 'line_too_long', 'header_name_too_long',
-                    'wrong_resp_header', 'header_insert', 'header_delete', 'insert_client_ip', 'negative_req_remain', 'negative_resp_remain', 'large_cookie', 'large_cookie_header', 'huge_cookie', 'huge_cookie_header', 'parse_cookie_fail', 'parse_setcookie_fail', 'asm_cookie_fail',
-                    'asm_cookie_header_fail', 'asm_setcookie_fail', 'asm_setcookie_header_fail', 'client_req_unexp_flag', 'connecting_fin', 'connecting_fin_retrans', 'connecting_fin_ofo', 'connecting_rst', 'connecting_rst_retrans', 'connecting_rst_ofo', 'connecting_ack', 'pkts_ofo', 'pkts_retrans',
-                    'pkts_retrans_ack_finwait', 'pkts_retrans_fin', 'pkts_retrans_rst', 'pkts_retrans_push', 'stale_sess', 'server_resel_failed', 'compression_before', 'compression_after', 'response_1xx', 'response_100', 'response_101', 'response_102', 'response_2xx', 'response_200', 'response_201',
-                    'response_202', 'response_203', 'response_204', 'response_205', 'response_206', 'response_207', 'response_3xx', 'response_300', 'response_301', 'response_302', 'response_303', 'response_304', 'response_305', 'response_306', 'response_307', 'response_4xx', 'response_400',
-                    'response_401', 'response_402', 'response_403', 'response_404', 'response_405', 'response_406', 'response_407', 'response_408', 'response_409', 'response_410', 'response_411', 'response_412', 'response_413', 'response_414', 'response_415', 'response_416', 'response_417',
-                    'response_418', 'response_422', 'response_423', 'response_424', 'response_425', 'response_426', 'response_449', 'response_450', 'response_5xx', 'response_500', 'response_501', 'response_502', 'response_503', 'response_504', 'response_505', 'response_506', 'response_507',
-                    'response_508', 'response_509', 'response_510', 'response_6xx', 'response_unknown', 'req_http10', 'req_http11', 'response_http10', 'response_http11', 'req_get', 'req_head', 'req_put', 'req_post', 'req_trace', 'req_options', 'req_connect', 'req_delete', 'req_unknown',
-                    'req_content_len', 'rsp_content_len', 'rsp_chunk', 'req_chunk', 'compress_rsp', 'compress_del_accept_enc', 'compress_resp_already_compressed', 'compress_content_type_excluded', 'compress_no_content_type', 'compress_resp_lt_min', 'compress_resp_no_cl_or_ce',
-                    'compress_ratio_too_high', 'cache_rsp', 'close_on_ddos', 'req_http10_keepalive', 'req_sz_1k', 'req_sz_2k'
+                    'all', 'num', 'curr_proxy', 'total_proxy', 'req', 'req_succ', 'noproxy', 'client_rst', 'server_rst', 'notuple', 'parsereq_fail', 'svrsel_fail', 'fwdreq_fail', 'fwdreq_fail_buff', 'fwdreq_fail_rport', 'fwdreq_fail_route', 'fwdreq_fail_persist', 'fwdreq_fail_server', 'fwdreq_fail_tuple', 'fwdreqdata_fail', 'req_retran', 'req_ofo',
+                    'server_resel', 'svr_prem_close', 'new_svrconn', 'snat_fail', 'tcpoutrst', 'full_proxy', 'full_proxy_post', 'full_proxy_pipeline', 'full_proxy_fpga_err', 'req_over_limit', 'req_rate_over_limit', 'l4_switching', 'cookie_switching', 'aflex_switching', 'http_policy_switching', 'url_switching', 'host_switching', 'lb_switching',
+                    'l4_switching_ok', 'cookie_switching_ok', 'aflex_switching_ok', 'http_policy_switching_ok', 'url_switching_ok', 'host_switching_ok', 'lb_switching_ok', 'l4_switching_enqueue', 'cookie_switching_enqueue', 'aflex_switching_enqueue', 'http_policy_switching_enqueue', 'url_switching_enqueue', 'host_switching_enqueue',
+                    'lb_switching_enqueue', 'retry_503', 'aflex_retry', 'aflex_lb_reselect', 'aflex_lb_reselect_ok', 'client_rst_request', 'client_rst_connecting', 'client_rst_connected', 'client_rst_response', 'server_rst_request', 'server_rst_connecting', 'server_rst_connected', 'server_rst_response', 'invalid_header', 'too_many_headers',
+                    'line_too_long', 'header_name_too_long', 'wrong_resp_header', 'header_insert', 'header_delete', 'insert_client_ip', 'negative_req_remain', 'negative_resp_remain', 'large_cookie', 'large_cookie_header', 'huge_cookie', 'huge_cookie_header', 'parse_cookie_fail', 'parse_setcookie_fail', 'asm_cookie_fail', 'asm_cookie_header_fail',
+                    'asm_setcookie_fail', 'asm_setcookie_header_fail', 'client_req_unexp_flag', 'connecting_fin', 'connecting_fin_retrans', 'connecting_fin_ofo', 'connecting_rst', 'connecting_rst_retrans', 'connecting_rst_ofo', 'connecting_ack', 'pkts_ofo', 'pkts_retrans', 'pkts_retrans_ack_finwait', 'pkts_retrans_fin', 'pkts_retrans_rst',
+                    'pkts_retrans_push', 'stale_sess', 'server_resel_failed', 'compression_before', 'compression_after', 'response_1xx', 'response_100', 'response_101', 'response_102', 'response_2xx', 'response_200', 'response_201', 'response_202', 'response_203', 'response_204', 'response_205', 'response_206', 'response_207', 'response_3xx',
+                    'response_300', 'response_301', 'response_302', 'response_303', 'response_304', 'response_305', 'response_306', 'response_307', 'response_4xx', 'response_400', 'response_401', 'response_402', 'response_403', 'response_404', 'response_405', 'response_406', 'response_407', 'response_408', 'response_409', 'response_410',
+                    'response_411', 'response_412', 'response_413', 'response_414', 'response_415', 'response_416', 'response_417', 'response_418', 'response_422', 'response_423', 'response_424', 'response_425', 'response_426', 'response_449', 'response_450', 'response_5xx', 'response_500', 'response_501', 'response_502', 'response_503',
+                    'response_504', 'response_505', 'response_506', 'response_507', 'response_508', 'response_509', 'response_510', 'response_6xx', 'response_unknown', 'req_http10', 'req_http11', 'response_http10', 'response_http11', 'req_get', 'req_head', 'req_put', 'req_post', 'req_trace', 'req_options', 'req_connect', 'req_delete',
+                    'req_unknown', 'req_content_len', 'rsp_content_len', 'rsp_chunk', 'req_chunk', 'compress_rsp', 'compress_del_accept_enc', 'compress_resp_already_compressed', 'compress_content_type_excluded', 'compress_no_content_type', 'compress_resp_lt_min', 'compress_resp_no_cl_or_ce', 'compress_ratio_too_high', 'cache_rsp', 'close_on_ddos',
+                    'req_http10_keepalive', 'req_sz_1k', 'req_sz_2k'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'req_sz_4k', 'req_sz_8k', 'req_sz_16k', 'req_sz_32k', 'req_sz_64k', 'req_sz_256k', 'req_sz_gt_256k', 'rsp_sz_1k', 'rsp_sz_2k', 'rsp_sz_4k', 'rsp_sz_8k', 'rsp_sz_16k', 'rsp_sz_32k', 'rsp_sz_64k', 'rsp_sz_256k', 'rsp_sz_gt_256k', 'chunk_sz_512', 'chunk_sz_1k', 'chunk_sz_2k',
-                    'chunk_sz_4k', 'chunk_sz_gt_4k', 'pconn_connecting', 'pconn_connected', 'pconn_connecting_failed', 'chunk_bad', 'req_10u', 'req_20u', 'req_50u', 'req_100u', 'req_200u', 'req_500u', 'req_1m', 'req_2m', 'req_5m', 'req_10m', 'req_20m', 'req_50m', 'req_100m', 'req_200m', 'req_500m',
-                    'req_1s', 'req_2s', 'req_5s', 'req_over_5s', 'insert_client_port', 'req_track', 'connect_req', 'req_enter_ssli', 'non_http_bypass', 'decompression_before', 'decompression_after', 'req_http2', 'response_http2', 'req_timeout_retry', 'req_timeout_close', 'doh_req', 'doh_req_get',
-                    'doh_req_post', 'doh_non_doh_req', 'doh_non_doh_req_get', 'doh_non_doh_req_post', 'doh_resp', 'doh_tc_resp', 'doh_udp_dns_req', 'doh_udp_dns_resp', 'doh_tcp_dns_req', 'doh_tcp_dns_resp', 'doh_req_send_failed', 'doh_resp_send_failed', 'doh_malloc_fail', 'doh_req_udp_retry',
-                    'doh_req_udp_retry_fail', 'doh_req_tcp_retry', 'doh_req_tcp_retry_fail', 'doh_snat_failed', 'doh_path_not_found', 'doh_get_dns_arg_failed', 'doh_get_base64_decode_failed', 'doh_post_content_type_mismatch', 'doh_post_payload_not_found', 'doh_post_payload_extract_failed',
-                    'doh_non_doh_method', 'doh_tcp_send_failed', 'doh_udp_send_failed', 'doh_query_time_out', 'doh_dns_query_type_a', 'doh_dns_query_type_aaaa', 'doh_dns_query_type_ns', 'doh_dns_query_type_cname', 'doh_dns_query_type_any', 'doh_dns_query_type_srv', 'doh_dns_query_type_mx',
-                    'doh_dns_query_type_soa', 'doh_dns_query_type_others', 'doh_resp_setup_failed', 'doh_resp_header_alloc_failed', 'doh_resp_que_failed', 'doh_resp_udp_frags', 'doh_resp_tcp_frags', 'doh_serv_sel_failed', 'doh_retry_w_tcp', 'doh_get_uri_too_long', 'doh_post_payload_too_large',
-                    'doh_dns_malformed_query', 'doh_dns_resp_rcode_err_format', 'doh_dns_resp_rcode_err_server', 'doh_dns_resp_rcode_err_name', 'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse', 'doh_dns_resp_rcode_yxdomain', 'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset',
-                    'doh_dns_resp_rcode_notauth', 'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding',
-                    'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth', 'header_filter_rule_hit'
+                    'req_sz_4k', 'req_sz_8k', 'req_sz_16k', 'req_sz_32k', 'req_sz_64k', 'req_sz_256k', 'req_sz_gt_256k', 'rsp_sz_1k', 'rsp_sz_2k', 'rsp_sz_4k', 'rsp_sz_8k', 'rsp_sz_16k', 'rsp_sz_32k', 'rsp_sz_64k', 'rsp_sz_256k', 'rsp_sz_gt_256k', 'chunk_sz_512', 'chunk_sz_1k', 'chunk_sz_2k', 'chunk_sz_4k', 'chunk_sz_gt_4k', 'pconn_connecting',
+                    'pconn_connected', 'pconn_connecting_failed', 'chunk_bad', 'req_10u', 'req_20u', 'req_50u', 'req_100u', 'req_200u', 'req_500u', 'req_1m', 'req_2m', 'req_5m', 'req_10m', 'req_20m', 'req_50m', 'req_100m', 'req_200m', 'req_500m', 'req_1s', 'req_2s', 'req_5s', 'req_over_5s', 'insert_client_port', 'req_track', 'connect_req',
+                    'req_enter_ssli', 'non_http_bypass', 'decompression_before', 'decompression_after', 'req_http2', 'response_http2', 'req_timeout_retry', 'req_timeout_close', 'doh_req', 'doh_req_get', 'doh_req_post', 'doh_non_doh_req', 'doh_non_doh_req_get', 'doh_non_doh_req_post', 'doh_resp', 'doh_tc_resp', 'doh_udp_dns_req', 'doh_udp_dns_resp',
+                    'doh_tcp_dns_req', 'doh_tcp_dns_resp', 'doh_req_send_failed', 'doh_resp_send_failed', 'doh_malloc_fail', 'doh_req_udp_retry', 'doh_req_udp_retry_fail', 'doh_req_tcp_retry', 'doh_req_tcp_retry_fail', 'doh_snat_failed', 'doh_path_not_found', 'doh_get_dns_arg_failed', 'doh_get_base64_decode_failed',
+                    'doh_post_content_type_mismatch', 'doh_post_payload_not_found', 'doh_post_payload_extract_failed', 'doh_non_doh_method', 'doh_tcp_send_failed', 'doh_udp_send_failed', 'doh_query_time_out', 'doh_dns_query_type_a', 'doh_dns_query_type_aaaa', 'doh_dns_query_type_ns', 'doh_dns_query_type_cname', 'doh_dns_query_type_any',
+                    'doh_dns_query_type_srv', 'doh_dns_query_type_mx', 'doh_dns_query_type_soa', 'doh_dns_query_type_others', 'doh_resp_setup_failed', 'doh_resp_header_alloc_failed', 'doh_resp_que_failed', 'doh_resp_udp_frags', 'doh_resp_tcp_frags', 'doh_serv_sel_failed', 'doh_retry_w_tcp', 'doh_get_uri_too_long', 'doh_post_payload_too_large',
+                    'doh_dns_malformed_query', 'doh_dns_resp_rcode_err_format', 'doh_dns_resp_rcode_err_server', 'doh_dns_resp_rcode_err_name', 'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse', 'doh_dns_resp_rcode_yxdomain', 'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset', 'doh_dns_resp_rcode_notauth',
+                    'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth',
+                    'header_filter_rule_hit', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
                     ]
                 }
             },
@@ -2185,6 +2184,12 @@ def get_argspec():
                     'type': 'int',
                     },
                 'header_filter_rule_hit': {
+                    'type': 'int',
+                    },
+                'http1_client_idle_timeout': {
+                    'type': 'int',
+                    },
+                'http2_client_idle_timeout': {
                     'type': 'int',
                     }
                 },

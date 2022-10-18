@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_lldp
 description:
     - Configure LLDP
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

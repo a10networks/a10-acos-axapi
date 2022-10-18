@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_plat_cpu_drop
 description:
     - Miscellenious Information Used for CLI rendering
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

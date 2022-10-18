@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_health_check_gateway
 description:
     - Configure LSN health-check gateway
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

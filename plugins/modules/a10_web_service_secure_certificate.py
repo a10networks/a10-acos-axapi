@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service_secure_certificate
 description:
     - Web-service secure certificate operation
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

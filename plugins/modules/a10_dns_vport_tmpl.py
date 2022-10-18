@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dns_vport_tmpl
 description:
     - Configure template for counter.dns_vport
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

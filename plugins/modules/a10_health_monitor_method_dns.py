@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_dns
 description:
     - DNS type
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -249,10 +249,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "dns", "dns_domain", "dns_domain_expect", "dns_domain_port", "dns_domain_recurse", "dns_domain_tcp", "dns_domain_type", "dns_ip_key", "dns_ipv4_addr", "dns_ipv4_expect", "dns_ipv4_port", "dns_ipv4_recurse", "dns_ipv4_tcp", "dns_ipv6_addr", "dns_ipv6_expect", "dns_ipv6_port", "dns_ipv6_recurse",
-    "dns_ipv6_tcp", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["dns", "dns_domain", "dns_domain_expect", "dns_domain_port", "dns_domain_recurse", "dns_domain_tcp", "dns_domain_type", "dns_ip_key", "dns_ipv4_addr", "dns_ipv4_expect", "dns_ipv4_port", "dns_ipv4_recurse", "dns_ipv4_tcp", "dns_ipv6_addr", "dns_ipv6_expect", "dns_ipv6_port", "dns_ipv6_recurse", "dns_ipv6_tcp", "uuid", ]
 
 
 def get_default_argspec():

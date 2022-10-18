@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging
 description:
     - Logging Template
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -443,8 +443,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "batched_logging_disable", "custom", "disable_log_by_destination", "facility", "format", "include_destination", "include_http", "include_inside_user_mac", "include_partition_name", "include_port_block_account", "include_radius_attribute", "include_session_byte_count", "log", "log_receiver",
-    "name", "resolution", "rfc_custom", "rule", "service_group", "severity", "shared", "source_address", "source_port", "user_tag", "uuid",
+    "batched_logging_disable", "custom", "disable_log_by_destination", "facility", "format", "include_destination", "include_http", "include_inside_user_mac", "include_partition_name", "include_port_block_account", "include_radius_attribute", "include_session_byte_count", "log", "log_receiver", "name", "resolution", "rfc_custom", "rule",
+    "service_group", "severity", "shared", "source_address", "source_port", "user_tag", "uuid",
     ]
 
 

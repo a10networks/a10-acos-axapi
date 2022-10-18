@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_l4
 description:
     - CGNV6 L4 Statistics
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -259,12 +259,11 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'no-fwd-route', 'no-rev-route', 'out-of-session-memory', 'tcp-rst-sent', 'ipip-icmp-reply-sent', 'icmp-filtered-sent', 'icmp-host-unreachable-sent', 'icmp-reply-no-session-drop', 'ipip-truncated', 'ip-src-invalid-unicast', 'ip-dst-invalid-unicast',
-                    'ipv6-src-invalid-unicast', 'ipv6-dst-invalid-unicast', 'rate_drop_reset_unkn', 'bad-l3-protocol', 'special-ipv4-no-route', 'special-ipv6-no-route', 'icmp-reply-sent', 'icmpv6-reply-sent', 'out-of-state-dropped', 'ttl-exceeded-sent', 'cross-cpu-alg-gre-no-match',
-                    'cross-cpu-alg-gre-preprocess-err', 'lsn-fast-setup', 'lsn-fast-setup-err', 'nat64-fast-setup', 'nat64-fast-setup-err', 'dslite-fast-setup', 'dslite-fast-setup-err', 'fast-setup-delayed-err', 'fast-setup-mtu-too-small', 'fixed-nat44-fast-setup', 'fixed-nat44-fast-setup-err',
-                    'fixed-nat64-fast-setup', 'fixed-nat64-fast-setup-err', 'fixed-nat-dslite-fast-setup', 'fixed-nat-dslite-fast-setup-err', 'fixed-nat-fast-setup-delayed-err', 'fixed-nat-fast-setup-mtu-too-small', 'static-nat-fast-setup', 'static-nat-fast-setup-err', 'dst-nat-needed-drop',
-                    'invalid-nat64-translated-addr', 'tcp-rst-loop-drop', 'static-nat-alloc', 'static-nat-free', 'process-l4', 'preprocess-error', 'process-special', 'process-continue', 'process-error', 'fw-match-no-rule-drop', 'ip-unknown-process', 'src-nat-pool-not-found',
-                    'dst-nat-pool-not-found', 'l3-ip-src-invalid-unicast', 'l3-ip-dst-invalid-unicast', 'l3-ipv6-src-invalid-unicast', 'l3-ipv6-dst-invalid-unicast', 'fw-zone-mismatch-rerouting-drop', 'nat-range-list-acl-deny', 'nat-range-list-acl-permit', 'fw-next-action-incorrect-drop'
+                    'all', 'no-fwd-route', 'no-rev-route', 'out-of-session-memory', 'tcp-rst-sent', 'ipip-icmp-reply-sent', 'icmp-filtered-sent', 'icmp-host-unreachable-sent', 'icmp-reply-no-session-drop', 'ipip-truncated', 'ip-src-invalid-unicast', 'ip-dst-invalid-unicast', 'ipv6-src-invalid-unicast', 'ipv6-dst-invalid-unicast',
+                    'rate_drop_reset_unkn', 'bad-l3-protocol', 'special-ipv4-no-route', 'special-ipv6-no-route', 'icmp-reply-sent', 'icmpv6-reply-sent', 'out-of-state-dropped', 'ttl-exceeded-sent', 'cross-cpu-alg-gre-no-match', 'cross-cpu-alg-gre-preprocess-err', 'lsn-fast-setup', 'lsn-fast-setup-err', 'nat64-fast-setup', 'nat64-fast-setup-err',
+                    'dslite-fast-setup', 'dslite-fast-setup-err', 'fast-setup-delayed-err', 'fast-setup-mtu-too-small', 'fixed-nat44-fast-setup', 'fixed-nat44-fast-setup-err', 'fixed-nat64-fast-setup', 'fixed-nat64-fast-setup-err', 'fixed-nat-dslite-fast-setup', 'fixed-nat-dslite-fast-setup-err', 'fixed-nat-fast-setup-delayed-err',
+                    'fixed-nat-fast-setup-mtu-too-small', 'static-nat-fast-setup', 'static-nat-fast-setup-err', 'dst-nat-needed-drop', 'invalid-nat64-translated-addr', 'tcp-rst-loop-drop', 'static-nat-alloc', 'static-nat-free', 'process-l4', 'preprocess-error', 'process-special', 'process-continue', 'process-error', 'fw-match-no-rule-drop',
+                    'ip-unknown-process', 'src-nat-pool-not-found', 'dst-nat-pool-not-found', 'l3-ip-src-invalid-unicast', 'l3-ip-dst-invalid-unicast', 'l3-ipv6-src-invalid-unicast', 'l3-ipv6-dst-invalid-unicast', 'fw-zone-mismatch-rerouting-drop', 'nat-range-list-acl-deny', 'nat-range-list-acl-permit', 'fw-next-action-incorrect-drop'
                     ]
                 }
             },

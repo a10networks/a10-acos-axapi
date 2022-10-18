@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_all_vlan_limit
 description:
     - all vlan flooding packet limit
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

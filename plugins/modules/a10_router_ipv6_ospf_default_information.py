@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf_default_information
 description:
     - Control distribution of default information
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_aaa_policy_aaa_rule
 description:
     - Rules of AAA policy
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

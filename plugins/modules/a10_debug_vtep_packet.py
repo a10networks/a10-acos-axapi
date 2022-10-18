@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_vtep_packet
 description:
     - Debug Overlay packet forwarding
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

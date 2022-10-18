@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_template_message_selector_collector_group
 description:
     - Specify the log server group for receiving log messages
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

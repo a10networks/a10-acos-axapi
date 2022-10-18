@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_tcp
 description:
     - L4 TCP switch config
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
@@ -221,8 +221,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "alive_if_active", "del_session_on_server_down", "disable", "down", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "initial_window_size", "insert_client_ip", "lan_fast_ack", "logging", "name", "qos",
-    "re_select_if_server_down", "reset_follow_fin", "reset_fwd", "reset_rev", "user_tag", "uuid",
+    "alive_if_active", "del_session_on_server_down", "disable", "down", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "initial_window_size", "insert_client_ip", "lan_fast_ack", "logging", "name", "qos", "re_select_if_server_down", "reset_follow_fin", "reset_fwd",
+    "reset_rev", "user_tag", "uuid",
     ]
 
 

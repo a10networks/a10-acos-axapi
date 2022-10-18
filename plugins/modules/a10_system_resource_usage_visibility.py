@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_usage_visibility
 description:
     - Configure System Resource Usage for visibility
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

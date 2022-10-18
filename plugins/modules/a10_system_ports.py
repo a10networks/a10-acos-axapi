@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ports
 description:
     - System level port configurations
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

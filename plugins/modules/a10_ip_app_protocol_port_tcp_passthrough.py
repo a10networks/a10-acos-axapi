@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_app_protocol_port_tcp_passthrough
 description:
     - Controls TCP ports filtering on all interfaces, Default mode is enabled
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:

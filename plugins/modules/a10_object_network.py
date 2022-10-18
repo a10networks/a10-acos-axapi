@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: a10_object_network
 description:
     - Configure Network Object
-author: A10 Networks 2021
+author: A10 Networks
 options:
     state:
         description:
