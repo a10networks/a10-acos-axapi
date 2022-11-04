@@ -1,0 +1,12 @@
+- name: Upgrade acos example playbook
+  hosts: "{{desired_inventory_group}}"
+  connection: local
+  tasks:
+  - name: Upgrade a10.acos_axapi.a10_upgrade_hd instance
+    a10.acos_axapi.a10_upgrade_hd:
+      state: absent
+      image: pri
+      use_mgmt_port: 1
+      image_file: {{ image_name }}
+      file_path: {{ file_path }}
+      reboot_after_upgrade: 1

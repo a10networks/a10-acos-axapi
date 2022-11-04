@@ -1,22 +1,14 @@
 ---
-- name: Upload cert task
+- name: Cleanup slb template client ssl
+  a10.acos_axapi.a10_slb_template_client_ssl:
+    name: my-client-ssl
+    state: absent
+
+- name: "Cleanup ssl cert"
   a10.acos_axapi.a10_file_ssl_cert:
-    file: MyCertificate.crt
+    action: import
+    file: certificate.pem
+    file_path: certificate.pem
+    file_handle: certificate.pem
     certificate_type: pem
-    file_handle: "MyCertificate.crt"
-    file_path: "/opt/stack/test_playbooks/MyCertificate.crt"
     state: absent 
-
-- name: Upload key task
-  a10.acos_axapi.a10_file_ssl_key:
-    file: MyKey.key
-    file_handle: "MyKey.key"
-    file_path: "/opt/stack/test_playbooks/MyKey.key"
-    state: absent
-
-- name: Create template with cert
-  a10.acos_axapi.a10_slb_template_server_ssl:
-    name: test_template
-    cert: MyCertificate.crt
-    key: MyKey.key
-    state: absent

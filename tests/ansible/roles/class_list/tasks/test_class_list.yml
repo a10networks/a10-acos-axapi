@@ -1,0 +1,23 @@
+---
+- name: Create class list for acos
+  a10.acos_axapi.a10_class_list:
+    name: a10_class_list
+    ntype: ac
+    ac_list:
+      - ac_match_type: contains
+        ac_key_string : apple.com
+      - ac_match_type: equals
+        ac_key_string : logmein123.com
+      - ac_match_type: ends-with 
+        ac_key_string : office.com
+        
+  register: class_list
+
+- assert:
+    that:
+      - "class_list['modified_values']['class-list']['ac-list'][0]['ac-match-type'] == 'contains'"
+      - "class_list['modified_values']['class-list']['ac-list'][0]['ac-key-string'] == 'apple.com'"
+      - "class_list['modified_values']['class-list']['ac-list'][1]['ac-match-type'] == 'equals'"
+      - "class_list['modified_values']['class-list']['ac-list'][1]['ac-key-string'] == 'logmein123.com'"
+      - "class_list['modified_values']['class-list']['ac-list'][2]['ac-match-type'] == 'ends-with'"
+      - "class_list['modified_values']['class-list']['ac-list'][2]['ac-key-string'] == 'office.com'"

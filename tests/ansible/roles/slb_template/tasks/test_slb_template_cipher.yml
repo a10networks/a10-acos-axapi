@@ -1,0 +1,46 @@
+---   
+- name: Create slb template cipher for acos
+  a10.acos_axapi.a10_slb_template_cipher:
+    name: template-cipher
+    cipher_cfg:
+      - cipher_suite: TLS1_RSA_AES_128_SHA
+      - cipher_suite: TLS1_RSA_AES_256_SHA
+    user_tag: Security,ssli_in
+  
+  register: template_cipher
+
+- assert:
+    that:
+      - "template_cipher['modified_values']['cipher']['cipher-cfg'][0]['cipher-suite'] == 'TLS1_RSA_AES_128_SHA'"
+      - "template_cipher['modified_values']['cipher']['cipher-cfg'][0]['priority'] == 1"
+      - "template_cipher['modified_values']['cipher']['cipher-cfg'][1]['cipher-suite'] == 'TLS1_RSA_AES_256_SHA'"
+      - "template_cipher['modified_values']['cipher']['cipher-cfg'][1]['priority'] == 1"
+      - "template_cipher['modified_values']['cipher']['user-tag'] == 'Security,ssli_in'"
+
+
+- name: Create slb template server ssl for acos
+  a10.acos_axapi.a10_slb_template_server_ssl:
+    name: template-server-ssl
+    dh_type: 1024
+    ec_list:
+      - ec: secp256r1
+      - ec: secp384r1
+    version: 33
+    dgversion: 33
+    cipher_template: template-cipher
+    user_tag: Security,ssli_out
+    enable_tls_alert_logging: 1
+    alert_type: fatal
+  
+  register: template_server_ssl
+
+- assert:
+    that:
+      - "template_server_ssl['modified_values']['server-ssl']['dh-type'] == '1024'"
+      - "template_server_ssl['modified_values']['server-ssl']['ec-list'][0]['ec'] == 'secp256r1'"
+      - "template_server_ssl['modified_values']['server-ssl']['ec-list'][1]['ec'] == 'secp384r1'"
+      - "template_server_ssl['modified_values']['server-ssl']['version'] == 33"
+      - "template_server_ssl['modified_values']['server-ssl']['dgversion'] == 33"
+      - "template_server_ssl['modified_values']['server-ssl']['cipher-template'] == 'template-cipher'"
+      - "template_server_ssl['modified_values']['server-ssl']['user-tag'] == 'Security,ssli_out'"
+      - "template_server_ssl['modified_values']['server-ssl']['alert-type'] == 'fatal'"

@@ -1,0 +1,34 @@
+---   
+- name: Create slb template http for acos
+  a10.acos_axapi.a10_slb_template_http:
+    name: template-http
+    request_header_insert_list:
+      - request_header_insert: "X-Protocol-Port:https 443"
+      - request-header-insert: "TrackSSL:ON"
+    response_header_insert_list:
+      - response-header-insert: "alt-svc:h3 443"
+    keep_client_alive: 1
+    compression_content_type:
+      - content_type: image/jpeg
+      - content_type: video/mp4
+      - content_type: audio/mp3
+    compression_enable: 1
+    compression_level: 8
+    compression_keep_accept_encoding: 1
+    compression_keep_accept_encoding_enable: 1
+  
+  register: template_http
+
+- assert:
+    that:
+      - "template_http['modified_values']['http']['request-header-insert-list'][0]['request-header-insert'] == 'X-Protocol-Port:https 443'"
+      - "template_http['modified_values']['http']['request-header-insert-list'][1]['request-header-insert'] == 'TrackSSL:ON'"
+      - "template_http['modified_values']['http']['response-header-insert-list'][0]['response-header-insert'] == 'alt-svc:h3 443'"
+      - "template_http['modified_values']['http']['compression-content-type'][0]['content-type'] == 'image/jpeg'"
+      - "template_http['modified_values']['http']['compression-content-type'][1]['content-type'] == 'video/mp4'"
+      - "template_http['modified_values']['http']['compression-content-type'][2]['content-type'] == 'audio/mp3'"
+      - "template_http['modified_values']['http']['compression-enable'] == 1"
+      - "template_http['modified_values']['http']['compression-level'] == 8"
+      - "template_http['modified_values']['http']['keep-client-alive'] == 1"
+      - "template_http['modified_values']['http']['compression-keep-accept-encoding'] == 1"
+      - "template_http['modified_values']['http']['compression-keep-accept-encoding-enable'] == 1"

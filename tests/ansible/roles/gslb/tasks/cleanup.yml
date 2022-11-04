@@ -1,0 +1,34 @@
+---
+- name: Cleanup gslb zone
+  a10.acos_axapi.a10_gslb_zone:
+    name: example.com
+    state: absent
+
+- name: Cleanup gslb site 2
+  a10.acos_axapi.a10_gslb_site:
+    site_name: INTERNATIONAL
+    state: absent
+  
+- name: Cleanup gslb site 1
+  a10.acos_axapi.a10_gslb_site:
+    site_name: DOMESTIC
+    state: absent
+  
+- name: Cleanup gslb service ip 2
+  a10.acos_axapi.a10_gslb_service_ip:
+    node_name: VIP2
+    state: absent
+
+- name: Cleanup gslb service ip 1
+  a10.acos_axapi.a10_gslb_service_ip:
+    node_name: VIP1
+    state: absent
+
+- name: Cleanup gslb protocol
+  a10.acos_axapi.a10_gslb_protocol:
+    state: absent
+
+- name: Cleanup gslb policy
+  a10.acos_axapi.a10_gslb_policy:
+    name: mydomain-policy
+    state: absent

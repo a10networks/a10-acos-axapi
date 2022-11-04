@@ -1,0 +1,25 @@
+- name: Delete gslb site example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Delete a10.acos_axapi.a10_gslb_site instance
+    a10.acos_axapi.a10_gslb_site:
+      state: absent
+      site_name: DOMESTIC
+      slb_dev_list:
+        - device_name: A
+          ip_address: 10.64.3.183
+          vip_server: 
+            vip_server_name_list:
+              - vip_name: VIP1
+
+  - name: Delete a10.acos_axapi.a10_gslb_site instance
+    a10.acos_axapi.a10_gslb_site:
+      state: absent
+      site_name: INTERNATIONAL
+      slb_dev_list:
+        - device_name: B
+          ip_address: 10.64.3.185
+          vip_server: 
+            vip_server_name_list:
+              - vip_name: VIP2
