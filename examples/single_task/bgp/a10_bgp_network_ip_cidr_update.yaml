@@ -1,0 +1,9 @@
+- name: Update router bgp network ip cidr example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Update router bgp network ip cidr for acos
+    a10.acos_axapi.a10_router_bgp_network_ip_cidr:
+      state: present
+      network_ipv4_cidr: 20.10.10.0/26
+      bgp_as_number: 106

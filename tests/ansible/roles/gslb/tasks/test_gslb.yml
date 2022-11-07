@@ -1,0 +1,133 @@
+---
+- name: Test gslb policy create
+  a10.acos_axapi.a10_gslb_policy:
+    name: mydomain-policy
+    dns: 
+      selected_only: true
+      selected_only_value: 1
+      server: true
+      server_authoritative: 1 
+
+  register: gslb_policy
+
+- assert:
+    that:
+      - "gslb_policy['modified_values']['policy']['dns']['selected-only'] == true"
+      - "gslb_policy['modified_values']['policy']['dns']['selected-only-value'] == 1"
+      - "gslb_policy['modified_values']['policy']['dns']['server'] == true"
+      - "gslb_policy['modified_values']['policy']['dns']['server-authoritative'] == 1"
+
+- name: Test gslb protocol create
+  a10.acos_axapi.a10_gslb_protocol:
+    enable_list:
+      - ntype: controller
+      - ntype: device
+
+  register: gslb_protocol
+
+- assert:
+    that:
+      - "gslb_protocol['modified_values']['protocol']['enable-list'][0]['type'] == 'controller'"
+      - "gslb_protocol['modified_values']['protocol']['enable-list'][1]['type'] == 'device'"
+
+- name: Test gslb service ip 1 create
+  a10.acos_axapi.a10_gslb_service_ip:
+    node_name: VIP1
+    ip_address: 192.168.0.121
+    port_list:
+      - port_num: 80
+        port_proto: tcp
+      - port_num: 443
+        port_proto: tcp
+
+  register: gslb_service_ip_1
+
+- assert:
+    that:
+      - "gslb_service_ip_1['modified_values']['service-ip']['ip-address'] == '192.168.0.121'"
+      - "gslb_service_ip_1['modified_values']['service-ip']['port-list'][0]['port-num'] == 80"
+      - "gslb_service_ip_1['modified_values']['service-ip']['port-list'][0]['port-proto'] == 'tcp'"
+      - "gslb_service_ip_1['modified_values']['service-ip']['port-list'][1]['port-num'] == 443"
+      - "gslb_service_ip_1['modified_values']['service-ip']['port-list'][1]['port-proto'] == 'tcp'"
+
+- name: Test gslb service ip 2 create
+  a10.acos_axapi.a10_gslb_service_ip:
+    node_name: VIP2
+    ip_address: 192.168.0.122
+    port_list:
+      - port_num: 80
+        port_proto: tcp
+      - port_num: 443
+        port_proto: tcp
+
+  register: gslb_service_ip_2
+
+- assert:
+    that:
+      - "gslb_service_ip_2['modified_values']['service-ip']['ip-address'] == '192.168.0.122'"
+      - "gslb_service_ip_2['modified_values']['service-ip']['port-list'][0]['port-num'] == 80"
+      - "gslb_service_ip_2['modified_values']['service-ip']['port-list'][0]['port-proto'] == 'tcp'"
+      - "gslb_service_ip_2['modified_values']['service-ip']['port-list'][1]['port-num'] == 443"
+      - "gslb_service_ip_2['modified_values']['service-ip']['port-list'][1]['port-proto'] == 'tcp'"
+
+- name: Test gslb site 1 create
+  a10.acos_axapi.a10_gslb_site:
+    site_name: DOMESTIC
+    slb_dev_list:
+      - device_name: A
+        ip_address: 10.64.3.183
+        vip_server: 
+          vip_server_name_list:
+            - vip_name: VIP1
+
+  register: gslb_site_1
+
+- assert:
+    that:
+      - "gslb_site_1['modified_values']['site']['slb-dev-list'][0]['device-name'] == 'A'"
+      - "gslb_site_1['modified_values']['site']['slb-dev-list'][0]['ip-address'] == '10.64.3.183'"
+      - "gslb_site_1['modified_values']['site']['slb-dev-list'][0]['vip-server']['vip-server-name-list'][0]['vip-name'] == 'VIP1'"
+
+- name: Test gslb site 2 create
+  a10.acos_axapi.a10_gslb_site:
+    site_name: INTERNATIONAL
+    slb_dev_list:
+      - device_name: B
+        ip_address: 10.64.3.185
+        vip_server: 
+          vip_server_name_list:
+            - vip_name: VIP2
+
+  register: gslb_site_2
+
+- assert:
+    that:
+      - "gslb_site_2['modified_values']['site']['slb-dev-list'][0]['device-name'] == 'B'"
+      - "gslb_site_2['modified_values']['site']['slb-dev-list'][0]['ip-address'] == '10.64.3.185'"
+      - "gslb_site_2['modified_values']['site']['slb-dev-list'][0]['vip-server']['vip-server-name-list'][0]['vip-name'] == 'VIP2'"
+
+- name: Test gslb zone create
+  a10.acos_axapi.a10_gslb_zone:
+    name: example.com
+    policy: mydomain-policy
+    service_list:
+      - service_port: 80
+        service_name: www80
+        dns_a_record: 
+          dns_a_record_srv_list:
+            - svrname: VIP1
+              static: 1
+            - svrname: VIP2
+              static: 1
+
+  register: gslb_zone
+
+- assert:
+    that:
+      - "gslb_zone['modified_values']['zone']['policy'] == 'mydomain-policy'"
+      - "gslb_zone['modified_values']['zone']['service-list'][0]['service-name'] == 'www80'"
+      - "gslb_zone['modified_values']['zone']['service-list'][0]['service-port'] == 80"
+      - "gslb_zone['modified_values']['zone']['service-list'][0]['dns-a-record']['dns-a-record-srv-list'][0]['svrname'] == 'VIP1'"
+      - "gslb_zone['modified_values']['zone']['service-list'][0]['dns-a-record']['dns-a-record-srv-list'][0]['static'] == 1"
+      - "gslb_zone['modified_values']['zone']['service-list'][0]['dns-a-record']['dns-a-record-srv-list'][1]['svrname'] == 'VIP2'"
+      - "gslb_zone['modified_values']['zone']['service-list'][0]['dns-a-record']['dns-a-record-srv-list'][1]['static'] == 1"

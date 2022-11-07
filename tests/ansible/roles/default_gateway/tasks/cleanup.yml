@@ -1,0 +1,8 @@
+---
+- name: Cleanup DFG
+  a10.acos_axapi.a10_ip_route_rib:
+    state: absent
+    ip_dest_addr: "0.0.0.0"
+    ip_mask: "/0"
+    ip_nexthop_ipv4:
+      - ip_next_hop: "192.168.10.2"

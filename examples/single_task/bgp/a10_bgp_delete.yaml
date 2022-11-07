@@ -1,0 +1,8 @@
+- name: Delete bgp example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Delete router bgp for acos
+    a10.acos_axapi.a10_router_bgp:
+      state: absent
+      as_number: 106

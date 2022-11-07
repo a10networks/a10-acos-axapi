@@ -1,0 +1,18 @@
+- name: Update gslb zone example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Update a10.acos_axapi.a10_gslb_zone instance
+    a10.acos_axapi.a10_gslb_zone:
+      state: present
+      name: example.com
+      policy: mydomain-policy
+      service_list:
+        - service_port: 80
+          service_name: www80
+          dns_a_record: 
+            dns_a_record_srv_list:
+              - svrname: VIP1
+                static: 1
+              - svrname: VIP2
+                static: 1

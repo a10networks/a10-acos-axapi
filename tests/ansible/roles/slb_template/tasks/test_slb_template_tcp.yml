@@ -1,0 +1,25 @@
+---   
+- name: Create slb template tcp for acos
+  a10.acos_axapi.a10_slb_template_tcp:
+    name: tcp1
+    force_delete_timeout: 10
+    del_session_on_server_down: 1
+    re_select_if_server_down: 1
+    reset_fwd: 1
+    reset_rev: 1
+    idle_timeout: 60
+    half_close_idle_timeout: 100
+    initial_window_size: 65535
+
+  register: template_tcp
+
+- assert:
+    that:
+      - "template_tcp['modified_values']['tcp']['del-session-on-server-down'] == 1"
+      - "template_tcp['modified_values']['tcp']['force-delete-timeout'] == 10"
+      - "template_tcp['modified_values']['tcp']['half-close-idle-timeout'] == 100"
+      - "template_tcp['modified_values']['tcp']['idle-timeout'] == 60"
+      - "template_tcp['modified_values']['tcp']['initial-window-size'] == 65535"
+      - "template_tcp['modified_values']['tcp']['re-select-if-server-down'] == 1"
+      - "template_tcp['modified_values']['tcp']['reset-fwd'] == 1"
+      - "template_tcp['modified_values']['tcp']['reset-rev'] == 1"

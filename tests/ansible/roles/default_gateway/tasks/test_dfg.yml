@@ -1,0 +1,15 @@
+---
+- name: Create DFG for acos
+  a10.acos_axapi.a10_ip_route_rib:
+    ip_dest_addr: "0.0.0.0"
+    ip_mask: "/0"
+    ip_nexthop_ipv4:
+      - ip_next_hop: "192.168.10.2"
+
+  register: dfg
+
+- assert:
+    that:
+      - "dfg['modified_values']['rib']['ip-dest-addr'] == '0.0.0.0'"
+      - "dfg['modified_values']['rib']['ip-mask'] == '/0'"
+      - "dfg['modified_values']['rib']['ip-nexthop-ipv4'][0]['ip-next-hop'] == '192.168.10.2'"

@@ -1,0 +1,8 @@
+- name: Create VCS reload 
+  connection: local
+  hosts: "{{desired_inventory_group}}" 
+  tasks:
+  - name: Create a10.acos_axapi.a10_vcs_reload instance
+    a10.acos_axapi.a10_vcs_reload:
+      state: "present"
+      disable_merge: 0

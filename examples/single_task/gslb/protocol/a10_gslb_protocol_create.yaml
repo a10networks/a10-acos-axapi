@@ -1,0 +1,9 @@
+- name: Create gslb protocol example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_gslb_protocol instance
+    a10.acos_axapi.a10_gslb_protocol:
+      enable_list:
+        - ntype: controller
+        - ntype: device

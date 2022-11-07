@@ -1,0 +1,13 @@
+---   
+- name: Create slb template udp for acos
+  a10.acos_axapi.a10_slb_template_udp:
+    name: temp1
+    idle_timeout: 180
+    re_select_if_server_down: 1
+
+  register: template_udp
+
+- assert:
+    that:
+      - "template_udp['modified_values']['udp']['idle-timeout'] == 180"
+      - "template_udp['modified_values']['udp']['re-select-if-server-down'] == 1"
