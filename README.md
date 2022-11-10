@@ -11,11 +11,12 @@
 
 6. [Usage information](#Usage-Information)
 
-7. [Examples](#Examples)
+7. [Test Cases](#Test-Cases)
 
-8. [Issues and Inquiries](#Issues-and-Inquiries)
+8. [Examples](#Examples)
 
-9. [Test Cases](#Test-Cases)
+9. [Issues and Inquiries](#Issues-and-Inquiries)
+
 ## Overview
 
 #### Summary
