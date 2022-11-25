@@ -257,6 +257,9 @@ def report_changes(module, result, existing_config, payload):
 
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["hd"].items():
+        if k == 'action' and v == 'import':
+            change_results["changed"] = True
+
         if k not in file_check:
             continue
         v = 1 if str(v).lower() == "true" else v

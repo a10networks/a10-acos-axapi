@@ -1,0 +1,59 @@
+---   
+- name: Create class list for acos
+  a10.acos_axapi.a10_class_list:
+    name: a10_ipv4_class_list
+    ipv4_list:
+      - ipv4addr: "10.1.0.0/16"
+        lid: 1
+
+  register: ipv4_class_list
+
+- assert:
+    that:
+      - "ipv4_class_list['modified_values']['class-list']['ipv4-list'][0]['ipv4addr'] == '10.1.0.0/16'"
+      - "ipv4_class_list['modified_values']['class-list']['ipv4-list'][0]['lid'] == 1"
+
+
+- name: Create ip nat pool for acos
+  a10.acos_axapi.a10_ip_nat_pool:
+    pool_name: dns_nat_pool
+    start_address: 10.10.10.112
+    end_address: 10.10.10.112
+    netmask: /32
+  
+  register: ip_nat_pool
+
+- assert:
+    that:
+      - "ip_nat_pool['modified_values']['pool']['start-address'] == '10.10.10.112'"
+      - "ip_nat_pool['modified_values']['pool']['end-address'] == '10.10.10.112'"
+      - "ip_nat_pool['modified_values']['pool']['netmask'] == '/32'"
+
+
+
+- name: Create slb template dns for acos
+  a10.acos_axapi.a10_slb_template_dns:
+    name: template-dns
+    recursive_dns_resolution:
+      ipv4_nat_pool: dns_nat_pool
+    drop: 1
+    class_list:
+      name: a10_ipv4_class_list
+      lid_list:
+        - lidnum: 1
+        - conn_rate_limit: 1
+          per: 600
+        - over_limit_action: 1
+          action_value: forward
+          log: 1
+
+  register: template_dns
+
+- assert:
+    that:
+      - "template_dns['modified_values']['dns']['recursive-dns-resolution']['ipv4-nat-pool'] == 'dns_nat_pool'"
+      - "template_dns['modified_values']['dns']['class-list']['lid-list'][0]['lidnum'] == 1"
+      - "template_dns['modified_values']['dns']['class-list']['lid-list'][0]['log'] == 1"
+      - "template_dns['modified_values']['dns']['class-list']['lid-list'][0]['per'] == 600"
+      - "template_dns['modified_values']['dns']['class-list']['lid-list'][0]['action-value'] == 'forward'"
+      - "template_dns['modified_values']['dns']['class-list']['lid-list'][0]['over-limit-action'] == 1"

@@ -1,0 +1,8 @@
+- name: Update bgp example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Update router bgp for acos
+    a10.acos_axapi.a10_router_bgp:
+      state: present
+      as_number: 106

@@ -1,38 +1,38 @@
 ---
-- name: Upload cert task
+- name: "Create ssl cert for acos"
   a10.acos_axapi.a10_file_ssl_cert:
-    file: MyCertificate.crt
+    action: import
+    file: certificate.pem
+    file_path: ../ansible/roles/files/tasks/certificate.pem
+    file_handle: certificate.pem
     certificate_type: pem
-    file_handle: MyCertificate.crt
-    file_path: MyCertificate.crt
-    action: import
   register: ssl_cert
+  
 - assert:
-  - that:
-    - "ssl_cert['changed'] == True"
-    - "ssl_cert['modified_values']['file'] == 'MyCertificate.crt'"
-    - "ssl_cert['modified_values']['file-handle'] == 'MyCertificate.crt'"
+    that:
+      - "ssl_cert['changed'] == true"
+      - "ssl_cert['modified_values']['file'] == 'certificate.pem'"
+      - "ssl_cert['modified_values']['file-handle'] == 'certificate.pem'"
+      - "ssl_cert['modified_values']['action'] == 'import'"
+      - "ssl_cert['modified_values']['certificate-type'] == 'pem'"
 
-- name: Upload key task
-  a10.acos_axapi.a10_file_ssl_key:
-    file: MyKey.key
-    file_handle: MyKey.key
-    file_path: MyKey.key
-    action: import
-  register: ssl_key
-- assert:
-  - that:
-    - "ssl_key['changed'] == True"
-    - "ssl_key['modified_values']['file'] == 'MyKey.key'"
-    - "ssl_key['modified_values']['file-handle'] == 'MyCertificate.crt'" 
+- name: Create slb template client ssl for acos
+  a10.acos_axapi.a10_slb_template_client_ssl:
+    name: my-client-ssl
+    chain_cert: certificate.pem
+    dh_type: 1024 
+    ec_list:
+      - ec: secp256r1
+      - ec: secp384r1
+    version: 33
+    dgversion: 33
 
-- name: Create template with cert
-  a10.acos_axapi.a10_slb_template_server_ssl:
-    name: test_template
-    cert: MyCertificate.crt
-    key: MyKey.key
-  register: ssl_template
+  register: template_client_ssl
+
 - assert:
-  - that:
-    - "ssl_template['modified_values']['cert'] == 'MyCertificate.crt'"
-    - "ssl_template['modified_values']['key'] == 'MyKey.key'"
+    that:
+      - "template_client_ssl['modified_values']['client-ssl']['dh-type'] == '1024'"
+      - "template_client_ssl['modified_values']['client-ssl']['ec-list'][0]['ec'] == 'secp256r1'"
+      - "template_client_ssl['modified_values']['client-ssl']['ec-list'][1]['ec'] == 'secp384r1'"
+      - "template_client_ssl['modified_values']['client-ssl']['version'] == 33"
+      - "template_client_ssl['modified_values']['client-ssl']['dgversion'] == 33"

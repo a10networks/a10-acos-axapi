@@ -1,0 +1,4 @@
+---
+- name: Cleanup a10.acos_axapi.a10_delete_bw_list instance
+  a10.acos_axapi.a10_delete_bw_list:
+    file_name: bw_list.txt

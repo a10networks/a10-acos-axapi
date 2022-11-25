@@ -1,0 +1,5 @@
+---
+- name: Cleanup router bgp
+  a10.acos_axapi.a10_router_bgp:
+    as_number: 106
+    state: absent

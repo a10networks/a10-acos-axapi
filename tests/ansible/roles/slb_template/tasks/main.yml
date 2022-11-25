@@ -1,0 +1,7 @@
+---
+- include_tasks: test_slb_template_cipher.yml
+- include_tasks: test_slb_template_dns.yml
+- include_tasks: test_slb_template_http.yml
+- include_tasks: test_slb_template_tcp.yml
+- include_tasks: test_slb_template_udp.yml
+- include_tasks: cleanup.yml

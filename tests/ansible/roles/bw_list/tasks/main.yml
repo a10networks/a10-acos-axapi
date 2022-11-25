@@ -1,0 +1,3 @@
+---
+- include_tasks: test_bw_list.yml
+- include_tasks: cleanup.yml

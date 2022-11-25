@@ -1,0 +1,7 @@
+- name: Delete bw_list example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Delete bw_list for acos
+    a10.acos_axapi.a10_delete_bw_list:
+      file_name: bw-list.txt

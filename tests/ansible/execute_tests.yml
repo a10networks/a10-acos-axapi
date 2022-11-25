@@ -7,3 +7,10 @@
     - network
     - slb
     - check_mode
+    - class_list
+    - slb_template
+    - files
+    - bgp
+    - gslb
+    - default_gateway
+    - bw_list

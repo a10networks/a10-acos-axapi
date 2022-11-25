@@ -1,0 +1,10 @@
+- name: Delete gslb protocol example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Delete a10.acos_axapi.a10_gslb_protocol instance
+    a10.acos_axapi.a10_gslb_protocol:
+      state: absent
+      enable_list:
+        - ntype: controller
+        - ntype: device

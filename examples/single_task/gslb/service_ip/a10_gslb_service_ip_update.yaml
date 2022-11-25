@@ -1,0 +1,25 @@
+- name: Update gslb service ip example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Update a10.acos_axapi.a10_gslb_service_ip instance
+    a10.acos_axapi.a10_gslb_service_ip:
+      state: present
+      node_name: VIP1
+      ip_address: 192.168.0.121
+      port_list:
+        - port_num: 80
+          port_proto: tcp
+        - port_num: 443
+          port_proto: tcp
+
+  - name: Update a10.acos_axapi.a10_gslb_service_ip instance
+    a10.acos_axapi.a10_gslb_service_ip:
+      state: present
+      node_name: VIP2
+      ip_address: 192.168.0.122
+      port_list:
+        - port_num: 80
+          port_proto: tcp
+        - port_num: 443
+          port_proto: tcp

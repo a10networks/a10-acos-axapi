@@ -1,0 +1,5 @@
+---
+- name: Cleanup health monitor 
+  a10.acos_axapi.a10_class_list:
+    name: a10_class_list
+    state: absent
