@@ -1,0 +1,16 @@
+---
+- name: Create a10.acos_axapi.a10_file_bw_list instance
+  a10.acos_axapi.a10_file_bw_list:
+    state: present
+    file: bw_list.txt
+    file_path: ../ansible/roles/bw_list/tasks/bw_list.txt
+    file_handle: bw_list.txt
+    action: 'import'
+    dst_file: bw_list.txt
+  register: bw_list
+
+- assert:
+    that:
+      - "bw_list['changed'] == true"
+      - "bw_list['modified_values']['response']['msg'] == 'Done'"
+      - "bw_list['modified_values']['response']['status'] == 'OK'"

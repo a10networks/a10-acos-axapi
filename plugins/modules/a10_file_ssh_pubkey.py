@@ -192,6 +192,9 @@ def report_changes(module, result, existing_config, payload):
     file_check = ['file-handle', 'file']
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["ssh-pubkey"].items():
+        if k == 'action' and v == 'import':
+            change_results["changed"] = True
+
         if k not in file_check:
             continue
         v = 1 if str(v).lower() == "true" else v

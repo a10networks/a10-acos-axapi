@@ -1,0 +1,13 @@
+- name: Update bw list example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Update a10.acos_axapi.a10_file_bw_list instance
+    a10.acos_axapi.a10_file_bw_list:
+      state: present
+      file: bw_list.txt
+      file_path: ../single_task/bw_list/bw_list.txt
+      file_handle: bw_list.txt
+      action: 'import'
+      dst_file: bw_list.txt
+
