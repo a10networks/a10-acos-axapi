@@ -13,3 +13,4 @@
     - bgp
     - gslb
     - default_gateway
+    - bw_list
