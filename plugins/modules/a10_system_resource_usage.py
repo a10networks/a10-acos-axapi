@@ -137,11 +137,6 @@ options:
         - "Specify the maximum memory used by ram cache"
         type: int
         required: False
-    waf_template_count:
-        description:
-        - "Total configurable WAF Templates in the System"
-        type: int
-        required: False
     auth_session_count:
         description:
         - "Total auth sessions in the system"
@@ -172,6 +167,10 @@ options:
         type: dict
         required: False
         suboptions:
+            l4_session_count_cur:
+                description:
+                - "Field l4_session_count_cur"
+                type: int
             l4_session_count_min:
                 description:
                 - "Field l4_session_count_min"
@@ -183,6 +182,10 @@ options:
             l4_session_count_default:
                 description:
                 - "Field l4_session_count_default"
+                type: int
+            nat_pool_addr_cur:
+                description:
+                - "Field nat_pool_addr_cur"
                 type: int
             nat_pool_addr_min:
                 description:
@@ -196,6 +199,10 @@ options:
                 description:
                 - "Field nat_pool_addr_default"
                 type: int
+            class_list_ipv6_addr_cur:
+                description:
+                - "Field class_list_ipv6_addr_cur"
+                type: int
             class_list_ipv6_addr_min:
                 description:
                 - "Field class_list_ipv6_addr_min"
@@ -207,6 +214,10 @@ options:
             class_list_ipv6_addr_default:
                 description:
                 - "Field class_list_ipv6_addr_default"
+                type: int
+            class_list_ac_cur:
+                description:
+                - "Field class_list_ac_cur"
                 type: int
             class_list_ac_min:
                 description:
@@ -220,6 +231,10 @@ options:
                 description:
                 - "Field class_list_ac_default"
                 type: int
+            auth_portal_html_file_size_cur:
+                description:
+                - "Field auth_portal_html_file_size_cur"
+                type: int
             auth_portal_html_file_size_min:
                 description:
                 - "Field auth_portal_html_file_size_min"
@@ -231,6 +246,10 @@ options:
             auth_portal_html_file_size_default:
                 description:
                 - "Field auth_portal_html_file_size_default"
+                type: int
+            auth_portal_image_file_size_cur:
+                description:
+                - "Field auth_portal_image_file_size_cur"
                 type: int
             auth_portal_image_file_size_min:
                 description:
@@ -244,6 +263,10 @@ options:
                 description:
                 - "Field auth_portal_image_file_size_default"
                 type: int
+            aflex_file_size_cur:
+                description:
+                - "Field aflex_file_size_cur"
+                type: int
             aflex_file_size_min:
                 description:
                 - "Field aflex_file_size_min"
@@ -255,6 +278,10 @@ options:
             aflex_file_size_default:
                 description:
                 - "Field aflex_file_size_default"
+                type: int
+            aflex_table_entry_count_cur:
+                description:
+                - "Field aflex_table_entry_count_cur"
                 type: int
             aflex_table_entry_count_min:
                 description:
@@ -268,6 +295,10 @@ options:
                 description:
                 - "Field aflex_table_entry_count_default"
                 type: int
+            aflex_authz_collection_number_cur:
+                description:
+                - "Field aflex_authz_collection_number_cur"
+                type: int
             aflex_authz_collection_number_min:
                 description:
                 - "Field aflex_authz_collection_number_min"
@@ -279,6 +310,10 @@ options:
             aflex_authz_collection_number_default:
                 description:
                 - "Field aflex_authz_collection_number_default"
+                type: int
+            radius_table_size_cur:
+                description:
+                - "Field radius_table_size_cur"
                 type: int
             radius_table_size_min:
                 description:
@@ -292,6 +327,10 @@ options:
                 description:
                 - "Field radius_table_size_default"
                 type: int
+            visibility_mon_entity_cur:
+                description:
+                - "Field visibility_mon_entity_cur"
+                type: int
             visibility_mon_entity_min:
                 description:
                 - "Field visibility_mon_entity_min"
@@ -303,6 +342,10 @@ options:
             visibility_mon_entity_default:
                 description:
                 - "Field visibility_mon_entity_default"
+                type: int
+            authz_policy_number_cur:
+                description:
+                - "Field authz_policy_number_cur"
                 type: int
             authz_policy_number_min:
                 description:
@@ -316,6 +359,10 @@ options:
                 description:
                 - "Field authz_policy_number_default"
                 type: int
+            ipsec_sa_number_cur:
+                description:
+                - "Field ipsec_sa_number_cur"
+                type: int
             ipsec_sa_number_min:
                 description:
                 - "Field ipsec_sa_number_min"
@@ -327,6 +374,10 @@ options:
             ipsec_sa_number_default:
                 description:
                 - "Field ipsec_sa_number_default"
+                type: int
+            ram_cache_memory_limit_cur:
+                description:
+                - "Field ram_cache_memory_limit_cur"
                 type: int
             ram_cache_memory_limit_min:
                 description:
@@ -340,6 +391,10 @@ options:
                 description:
                 - "Field ram_cache_memory_limit_default"
                 type: int
+            waf_template_cur:
+                description:
+                - "Field waf_template_cur"
+                type: int
             waf_template_min:
                 description:
                 - "Field waf_template_min"
@@ -352,6 +407,10 @@ options:
                 description:
                 - "Field waf_template_default"
                 type: int
+            auth_session_count_cur:
+                description:
+                - "Field auth_session_count_cur"
+                type: int
             auth_session_count_min:
                 description:
                 - "Field auth_session_count_min"
@@ -363,6 +422,10 @@ options:
             auth_session_count_default:
                 description:
                 - "Field auth_session_count_default"
+                type: int
+            class_list_entry_cur:
+                description:
+                - "Field class_list_entry_cur"
                 type: int
             class_list_entry_min:
                 description:
@@ -432,7 +495,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "aflex_table_entry_count", "auth_portal_html_file_size", "auth_portal_image_file_size", "auth_session_count", "authz_policy_number", "class_list_ac_entry_count", "class_list_entry_count", "class_list_ipv6_addr_count", "ipsec_sa_number", "l4_session_count", "max_aflex_authz_collection_number", "max_aflex_file_size", "nat_pool_addr_count",
-    "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility", "waf_template_count",
+    "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility",
     ]
 
 
@@ -502,9 +565,6 @@ def get_argspec():
         'ram_cache_memory_limit': {
             'type': 'int',
             },
-        'waf_template_count': {
-            'type': 'int',
-            },
         'auth_session_count': {
             'type': 'int',
             },
@@ -522,6 +582,9 @@ def get_argspec():
             },
         'oper': {
             'type': 'dict',
+            'l4_session_count_cur': {
+                'type': 'int',
+                },
             'l4_session_count_min': {
                 'type': 'int',
                 },
@@ -529,6 +592,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'l4_session_count_default': {
+                'type': 'int',
+                },
+            'nat_pool_addr_cur': {
                 'type': 'int',
                 },
             'nat_pool_addr_min': {
@@ -540,6 +606,9 @@ def get_argspec():
             'nat_pool_addr_default': {
                 'type': 'int',
                 },
+            'class_list_ipv6_addr_cur': {
+                'type': 'int',
+                },
             'class_list_ipv6_addr_min': {
                 'type': 'int',
                 },
@@ -547,6 +616,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'class_list_ipv6_addr_default': {
+                'type': 'int',
+                },
+            'class_list_ac_cur': {
                 'type': 'int',
                 },
             'class_list_ac_min': {
@@ -558,6 +630,9 @@ def get_argspec():
             'class_list_ac_default': {
                 'type': 'int',
                 },
+            'auth_portal_html_file_size_cur': {
+                'type': 'int',
+                },
             'auth_portal_html_file_size_min': {
                 'type': 'int',
                 },
@@ -565,6 +640,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'auth_portal_html_file_size_default': {
+                'type': 'int',
+                },
+            'auth_portal_image_file_size_cur': {
                 'type': 'int',
                 },
             'auth_portal_image_file_size_min': {
@@ -576,6 +654,9 @@ def get_argspec():
             'auth_portal_image_file_size_default': {
                 'type': 'int',
                 },
+            'aflex_file_size_cur': {
+                'type': 'int',
+                },
             'aflex_file_size_min': {
                 'type': 'int',
                 },
@@ -583,6 +664,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'aflex_file_size_default': {
+                'type': 'int',
+                },
+            'aflex_table_entry_count_cur': {
                 'type': 'int',
                 },
             'aflex_table_entry_count_min': {
@@ -594,6 +678,9 @@ def get_argspec():
             'aflex_table_entry_count_default': {
                 'type': 'int',
                 },
+            'aflex_authz_collection_number_cur': {
+                'type': 'int',
+                },
             'aflex_authz_collection_number_min': {
                 'type': 'int',
                 },
@@ -601,6 +688,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'aflex_authz_collection_number_default': {
+                'type': 'int',
+                },
+            'radius_table_size_cur': {
                 'type': 'int',
                 },
             'radius_table_size_min': {
@@ -612,6 +702,9 @@ def get_argspec():
             'radius_table_size_default': {
                 'type': 'int',
                 },
+            'visibility_mon_entity_cur': {
+                'type': 'int',
+                },
             'visibility_mon_entity_min': {
                 'type': 'int',
                 },
@@ -619,6 +712,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'visibility_mon_entity_default': {
+                'type': 'int',
+                },
+            'authz_policy_number_cur': {
                 'type': 'int',
                 },
             'authz_policy_number_min': {
@@ -630,6 +726,9 @@ def get_argspec():
             'authz_policy_number_default': {
                 'type': 'int',
                 },
+            'ipsec_sa_number_cur': {
+                'type': 'int',
+                },
             'ipsec_sa_number_min': {
                 'type': 'int',
                 },
@@ -637,6 +736,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'ipsec_sa_number_default': {
+                'type': 'int',
+                },
+            'ram_cache_memory_limit_cur': {
                 'type': 'int',
                 },
             'ram_cache_memory_limit_min': {
@@ -648,6 +750,9 @@ def get_argspec():
             'ram_cache_memory_limit_default': {
                 'type': 'int',
                 },
+            'waf_template_cur': {
+                'type': 'int',
+                },
             'waf_template_min': {
                 'type': 'int',
                 },
@@ -657,6 +762,9 @@ def get_argspec():
             'waf_template_default': {
                 'type': 'int',
                 },
+            'auth_session_count_cur': {
+                'type': 'int',
+                },
             'auth_session_count_min': {
                 'type': 'int',
                 },
@@ -664,6 +772,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'auth_session_count_default': {
+                'type': 'int',
+                },
+            'class_list_entry_cur': {
                 'type': 'int',
                 },
             'class_list_entry_min': {

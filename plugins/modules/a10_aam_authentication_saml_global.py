@@ -79,9 +79,9 @@ options:
           success'= Total Single Logout Success; 'slo-error'= Total Single Logout Error;
           'sp-slo-req'= Total SP-initiated Single Logout Request; 'glo-slo-success'=
           Total Global Logout Success; 'loc-slo-success'= Total Local Logout Success;
-          'par-slo-success'= Total Partial Logout Success; 'relay-req'= some help string;
-          'relay-success'= some help string; 'relay-fail'= some help string; 'relay-
-          error'= some help string; 'other-error'= Total Other Error;"
+          'par-slo-success'= Total Partial Logout Success; 'relay-req'= relay-req;
+          'relay-success'= relay-success; 'relay-fail'= relay-fail; 'relay-error'= relay-
+          error; 'other-error'= Total Other Error;"
                 type: str
     stats:
         description:
@@ -159,19 +159,19 @@ options:
                 type: str
             relay_req:
                 description:
-                - "some help string"
+                - "Field relay_req"
                 type: str
             relay_success:
                 description:
-                - "some help string"
+                - "Field relay_success"
                 type: str
             relay_fail:
                 description:
-                - "some help string"
+                - "Field relay_fail"
                 type: str
             relay_error:
                 description:
-                - "some help string"
+                - "Field relay_error"
                 type: str
             other_error:
                 description:

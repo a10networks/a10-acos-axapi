@@ -91,6 +91,10 @@ options:
                 description:
                 - "Field log_route"
                 type: dict
+            rate_limit:
+                description:
+                - "Field rate_limit"
+                type: dict
 
 '''
 
@@ -202,6 +206,16 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                },
+            'rate_limit': {
+                'type': 'dict',
+                'rate_limit_val': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             }
         })
@@ -229,7 +243,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/acos-events/message-id/{log_msg}+{message_id_scope_route}"
+    url_base = "/axapi/v3/acos-events/message-id/"
 
     f_dict = {}
     f_dict["log_msg"] = ""

@@ -77,10 +77,30 @@ options:
         - "Every n'th response that would be rate-limited will be let through instead"
         type: int
         required: False
+    TC_rate:
+        description:
+        - "Every n'th response that would be rate-limited will respond with TC bit"
+        type: int
+        required: False
+    match_subnet:
+        description:
+        - "IP subnet mask (response rate by IP subnet mask)"
+        type: str
+        required: False
+    match_subnet_v6:
+        description:
+        - "IPV6 subnet mask (response rate by IPv6 subnet mask)"
+        type: int
+        required: False
     window:
         description:
         - "Rate-Limiting Interval in Seconds (default is one)"
         type: int
+        required: False
+    src_ip_only:
+        description:
+        - "Field src_ip_only"
+        type: bool
         required: False
     enable_log:
         description:
@@ -175,7 +195,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "enable_log", "filter_response_rate", "response_rate", "rrl_class_list_list", "slip_rate", "uuid", "window", ]
+AVAILABLE_PROPERTIES = ["action", "enable_log", "filter_response_rate", "match_subnet", "match_subnet_v6", "response_rate", "rrl_class_list_list", "slip_rate", "src_ip_only", "TC_rate", "uuid", "window", ]
 
 
 def get_default_argspec():
@@ -205,8 +225,20 @@ def get_argspec():
         'slip_rate': {
             'type': 'int',
             },
+        'TC_rate': {
+            'type': 'int',
+            },
+        'match_subnet': {
+            'type': 'str',
+            },
+        'match_subnet_v6': {
+            'type': 'int',
+            },
         'window': {
             'type': 'int',
+            },
+        'src_ip_only': {
+            'type': 'bool',
             },
         'enable_log': {
             'type': 'bool',
@@ -242,8 +274,20 @@ def get_argspec():
                 'lid_slip_rate': {
                     'type': 'int',
                     },
+                'lid_tc_rate': {
+                    'type': 'int',
+                    },
+                'lid_match_subnet': {
+                    'type': 'str',
+                    },
+                'lid_match_subnet_v6': {
+                    'type': 'int',
+                    },
                 'lid_window': {
                     'type': 'int',
+                    },
+                'lid_src_ip_only': {
+                    'type': 'bool',
                     },
                 'lid_enable_log': {
                     'type': 'bool',

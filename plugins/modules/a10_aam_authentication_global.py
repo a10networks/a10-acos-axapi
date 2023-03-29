@@ -88,7 +88,8 @@ options:
           number; 'authz-success'= Total Authorization success number; 'authz-failure'=
           Total Authorization failure number; 'active-session'= Total Active Auth-
           Sessions; 'active-user'= Total Active Users; 'dns-resolve-failed'= Total AAM
-          DNS resolve failed;"
+          DNS resolve failed; 'domain-wlist-match'= Total DOMAIN WHITELIST match number;
+          'domain-wlist-unmatch'= Total DOMAIN WHITELIST unmatch number;"
                 type: str
     stats:
         description:
@@ -184,6 +185,14 @@ options:
                 description:
                 - "Total AAM DNS resolve failed"
                 type: str
+            domain_wlist_match:
+                description:
+                - "Total DOMAIN WHITELIST match number"
+                type: str
+            domain_wlist_unmatch:
+                description:
+                - "Total DOMAIN WHITELIST unmatch number"
+                type: str
 
 '''
 
@@ -272,7 +281,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'requests', 'responses', 'misses', 'ocsp-stapling-requests-to-a10authd', 'ocsp-stapling-responses-from-a10authd', 'opened-socket', 'open-socket-failed', 'connect', 'connect-failed', 'created-timer', 'create-timer-failed', 'total-request', 'get-socket-option-failed', 'aflex-authz-succ', 'aflex-authz-fail', 'authn-success',
-                    'authn-failure', 'authz-success', 'authz-failure', 'active-session', 'active-user', 'dns-resolve-failed'
+                    'authn-failure', 'authz-success', 'authz-failure', 'active-session', 'active-user', 'dns-resolve-failed', 'domain-wlist-match', 'domain-wlist-unmatch'
                     ]
                 }
             },
@@ -342,6 +351,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'dns_resolve_failed': {
+                'type': 'str',
+                },
+            'domain_wlist_match': {
+                'type': 'str',
+                },
+            'domain_wlist_unmatch': {
                 'type': 'str',
                 }
             }

@@ -68,10 +68,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'db-lookup'= some help string; 'cloud-cache-lookup'= some help
-          string; 'cloud-lookup'= some help string; 'rtu-lookup'= some help string;
-          'lookup-latency'= some help string; 'db-mem'= some help string; 'rtu-cache-
-          mem'= some help string; 'lookup-cache-mem'= some help string;"
+                - "'all'= all; 'db-lookup'= db-lookup; 'cloud-cache-lookup'= cloud-cache-lookup;
+          'cloud-lookup'= cloud-lookup; 'rtu-lookup'= rtu-lookup; 'lookup-latency'=
+          lookup-latency; 'db-mem'= db-mem; 'rtu-cache-mem'= rtu-cache-mem; 'lookup-
+          cache-mem'= lookup-cache-mem;"
                 type: str
     oper:
         description:
@@ -115,35 +115,35 @@ options:
         suboptions:
             db_lookup:
                 description:
-                - "some help string"
+                - "Field db_lookup"
                 type: str
             cloud_cache_lookup:
                 description:
-                - "some help string"
+                - "Field cloud_cache_lookup"
                 type: str
             cloud_lookup:
                 description:
-                - "some help string"
+                - "Field cloud_lookup"
                 type: str
             rtu_lookup:
                 description:
-                - "some help string"
+                - "Field rtu_lookup"
                 type: str
             lookup_latency:
                 description:
-                - "some help string"
+                - "Field lookup_latency"
                 type: str
             db_mem:
                 description:
-                - "some help string"
+                - "Field db_mem"
                 type: str
             rtu_cache_mem:
                 description:
-                - "some help string"
+                - "Field rtu_cache_mem"
                 type: str
             lookup_cache_mem:
                 description:
-                - "some help string"
+                - "Field lookup_cache_mem"
                 type: str
 
 '''

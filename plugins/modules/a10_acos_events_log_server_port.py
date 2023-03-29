@@ -111,10 +111,6 @@ options:
         type: dict
         required: False
         suboptions:
-            msgs_sent:
-                description:
-                - "Number of log messages sent"
-                type: str
             port_number:
                 description:
                 - "Port Number"
@@ -232,9 +228,6 @@ def get_argspec():
             },
         'stats': {
             'type': 'dict',
-            'msgs_sent': {
-                'type': 'str',
-                },
             'port_number': {
                 'type': 'int',
                 'required': True,
@@ -276,7 +269,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/acos-events/log-server/{log_server_name}/port/{port_number}+{protocol}"
+    url_base = "/axapi/v3/acos-events/log-server/{log_server_name}/port/"
 
     f_dict = {}
     f_dict["port_number"] = ""

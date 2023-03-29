@@ -169,6 +169,16 @@ options:
           creation events; 'deletion'= Export only deletion events;"
         type: str
         required: False
+    ddos_general_stat:
+        description:
+        - "General DDOS statistics"
+        type: bool
+        required: False
+    ddos_http_stat:
+        description:
+        - "HTTP DDOS statistics"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -229,8 +239,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "dslite", "nat44", "nat64", "netflow_v5", "netflow_v5_ext", "port_batch_dslite", "port_batch_nat44", "port_batch_nat64", "port_batch_v2_dslite", "port_batch_v2_nat44", "port_batch_v2_nat64", "port_mapping_dslite", "port_mapping_nat44", "port_mapping_nat64", "sesn_event_dslite", "sesn_event_fw4", "sesn_event_fw6", "sesn_event_nat44",
-    "sesn_event_nat64", "uuid",
+    "ddos_general_stat", "ddos_http_stat", "dslite", "nat44", "nat64", "netflow_v5", "netflow_v5_ext", "port_batch_dslite", "port_batch_nat44", "port_batch_nat64", "port_batch_v2_dslite", "port_batch_v2_nat44", "port_batch_v2_nat64", "port_mapping_dslite", "port_mapping_nat44", "port_mapping_nat64", "sesn_event_dslite", "sesn_event_fw4",
+    "sesn_event_fw6", "sesn_event_nat44", "sesn_event_nat64", "uuid",
     ]
 
 
@@ -322,6 +332,12 @@ def get_argspec():
         'port_batch_v2_dslite': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
+            },
+        'ddos_general_stat': {
+            'type': 'bool',
+            },
+        'ddos_http_stat': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

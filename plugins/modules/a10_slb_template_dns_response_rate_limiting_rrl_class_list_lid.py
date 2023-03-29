@@ -76,10 +76,30 @@ options:
         - "Every n'th response that would be rate-limited will be let through instead"
         type: int
         required: False
+    lid_tc_rate:
+        description:
+        - "Every n'th response that would be rate-limited will respond with TC bit"
+        type: int
+        required: False
+    lid_match_subnet:
+        description:
+        - "IP subnet mask (response rate by IP subnet mask)"
+        type: str
+        required: False
+    lid_match_subnet_v6:
+        description:
+        - "IPV6 subnet mask (response rate by IPv6 subnet mask)"
+        type: int
+        required: False
     lid_window:
         description:
         - "Rate-Limiting Interval in Seconds (default is one)"
         type: int
+        required: False
+    lid_src_ip_only:
+        description:
+        - "Field lid_src_ip_only"
+        type: bool
         required: False
     lid_enable_log:
         description:
@@ -157,7 +177,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["lid_action", "lid_enable_log", "lid_response_rate", "lid_slip_rate", "lid_window", "lidnum", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["lid_action", "lid_enable_log", "lid_match_subnet", "lid_match_subnet_v6", "lid_response_rate", "lid_slip_rate", "lid_src_ip_only", "lid_tc_rate", "lid_window", "lidnum", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -177,7 +197,46 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'lidnum': {'type': 'int', 'required': True, }, 'lid_response_rate': {'type': 'int', }, 'lid_slip_rate': {'type': 'int', }, 'lid_window': {'type': 'int', }, 'lid_enable_log': {'type': 'bool', }, 'lid_action': {'type': 'str', 'choices': ['log-only', 'rate-limit', 'whitelist']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({
+        'lidnum': {
+            'type': 'int',
+            'required': True,
+            },
+        'lid_response_rate': {
+            'type': 'int',
+            },
+        'lid_slip_rate': {
+            'type': 'int',
+            },
+        'lid_tc_rate': {
+            'type': 'int',
+            },
+        'lid_match_subnet': {
+            'type': 'str',
+            },
+        'lid_match_subnet_v6': {
+            'type': 'int',
+            },
+        'lid_window': {
+            'type': 'int',
+            },
+        'lid_src_ip_only': {
+            'type': 'bool',
+            },
+        'lid_enable_log': {
+            'type': 'bool',
+            },
+        'lid_action': {
+            'type': 'str',
+            'choices': ['log-only', 'rate-limit', 'whitelist']
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            }
+        })
     # Parent keys
     rv.update(dict(dns_name=dict(type='str', required=True), ))
     return rv
@@ -204,7 +263,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/dns/{dns_name}/response-rate-limiting/rrl-class-list/{name}/lid/{lidnum}"
+    url_base = "/axapi/v3/slb/template/dns/{dns_name}/response-rate-limiting/rrl-class-list/{name}/lid"
 
     f_dict = {}
     f_dict["lidnum"] = ""

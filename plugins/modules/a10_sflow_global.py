@@ -70,7 +70,10 @@ options:
                 description:
                 - "'all'= all; 'total-packet-sample-records'= Total packet sample records; 'total-
           counter-sample-records'= Total counter sample records; 'total-sflow-packets-
-          sent'= Total sflow packets sent;"
+          sent'= Total sflow packets sent; 'total-sflow-local-packets-sent'= Total sflow
+          packets sent  desc  ; 'total-sflow-packets-sent-mgmt'= Total sflow packets
+          sent via Mgmt Interface; 'total-sflow-packets-drop-mgmt'= sflow packets dropped
+          because of rate limit via Mgmt Interface;"
                 type: str
     oper:
         description:
@@ -99,6 +102,18 @@ options:
             total_sflow_packets_sent:
                 description:
                 - "Total sflow packets sent"
+                type: str
+            total_sflow_local_packets_sent:
+                description:
+                - "Total sflow packets sent  desc  "
+                type: str
+            total_sflow_packets_sent_mgmt:
+                description:
+                - "Total sflow packets sent via Mgmt Interface"
+                type: str
+            total_sflow_packets_drop_mgmt:
+                description:
+                - "sflow packets dropped because of rate limit via Mgmt Interface"
                 type: str
 
 '''
@@ -182,7 +197,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'total-packet-sample-records', 'total-counter-sample-records', 'total-sflow-packets-sent']
+                'choices': ['all', 'total-packet-sample-records', 'total-counter-sample-records', 'total-sflow-packets-sent', 'total-sflow-local-packets-sent', 'total-sflow-packets-sent-mgmt', 'total-sflow-packets-drop-mgmt']
                 }
             },
         'oper': {
@@ -213,6 +228,15 @@ def get_argspec():
                 'type': 'str',
                 },
             'total_sflow_packets_sent': {
+                'type': 'str',
+                },
+            'total_sflow_local_packets_sent': {
+                'type': 'str',
+                },
+            'total_sflow_packets_sent_mgmt': {
+                'type': 'str',
+                },
+            'total_sflow_packets_drop_mgmt': {
                 'type': 'str',
                 }
             }

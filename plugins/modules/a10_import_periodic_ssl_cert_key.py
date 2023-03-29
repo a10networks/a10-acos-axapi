@@ -180,7 +180,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/import-periodic/ssl_cert_key/{ssl-cert-key}"
+    url_base = "/axapi/v3/import-periodic/ssl-cert-key"
 
     f_dict = {}
     f_dict["ssl_cert_key"] = ""

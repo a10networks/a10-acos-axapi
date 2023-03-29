@@ -81,16 +81,19 @@ options:
           Query ANY Type Drop; 'slb_dns_client_ssl_succ'= No. of client ssl success;
           'slb_dns_server_ssl_succ'= No. of server ssl success; 'slb_dns_udp_conn'= No.
           of backend udp connections; 'slb_dns_udp_conn_succ'= No. of backend udp conn
-          established; 'slb_dns_padding_to_server_removed'= some help string;
-          'slb_dns_padding_to_client_added'= some help string;
-          'slb_dns_edns_subnet_to_server_removed'= some help string;
-          'slb_dns_udp_retransmit'= some help string; 'slb_dns_udp_retransmit_fail'= some
-          help string; 'rpz_action_drop'= RPZ Action Drop; 'rpz_action_pass_thru'= RPZ
-          Action Pass Through; 'rpz_action_tcp_only'= RPZ Action TCP Only;
-          'rpz_action_nxdomain'= RPZ Action NXDOMAIN; 'rpz_action_nodata'= RPZ Action
-          NODATA; 'rpz_action_local_data'= RPZ Action Local Data; 'slb_drop'= DNS
-          requests drop; 'nat_slb_drop'= (NAT)DNS requests drop; 'invalid_q_len_to_udp'=
-          invalid query length to conver to UDP;"
+          established; 'slb_dns_padding_to_server_removed'=
+          slb_dns_padding_to_server_removed; 'slb_dns_padding_to_client_added'=
+          slb_dns_padding_to_client_added; 'slb_dns_edns_subnet_to_server_removed'=
+          slb_dns_edns_subnet_to_server_removed; 'slb_dns_udp_retransmit'=
+          slb_dns_udp_retransmit; 'slb_dns_udp_retransmit_fail'=
+          slb_dns_udp_retransmit_fail; 'rpz_action_drop'= RPZ Action Drop;
+          'rpz_action_pass_thru'= RPZ Action Pass Through; 'rpz_action_tcp_only'= RPZ
+          Action TCP Only; 'rpz_action_nxdomain'= RPZ Action NXDOMAIN;
+          'rpz_action_nodata'= RPZ Action NODATA; 'rpz_action_local_data'= RPZ Action
+          Local Data; 'slb_drop'= DNS requests drop; 'nat_slb_drop'= (NAT)DNS requests
+          drop; 'invalid_q_len_to_udp'= invalid query length to conver to UDP;
+          'slb_dns_edns_ecs_received'= Number of ecs from client received;
+          'slb_dns_edns_ecs_inserted'= Number of ecs inserted;"
                 type: str
     recursive_nameserver:
         description:
@@ -198,23 +201,23 @@ options:
                 type: str
             slb_dns_padding_to_server_removed:
                 description:
-                - "some help string"
+                - "Field slb_dns_padding_to_server_removed"
                 type: str
             slb_dns_padding_to_client_added:
                 description:
-                - "some help string"
+                - "Field slb_dns_padding_to_client_added"
                 type: str
             slb_dns_edns_subnet_to_server_removed:
                 description:
-                - "some help string"
+                - "Field slb_dns_edns_subnet_to_server_removed"
                 type: str
             slb_dns_udp_retransmit:
                 description:
-                - "some help string"
+                - "Field slb_dns_udp_retransmit"
                 type: str
             slb_dns_udp_retransmit_fail:
                 description:
-                - "some help string"
+                - "Field slb_dns_udp_retransmit_fail"
                 type: str
             rpz_action_drop:
                 description:
@@ -251,6 +254,14 @@ options:
             invalid_q_len_to_udp:
                 description:
                 - "invalid query length to conver to UDP"
+                type: str
+            slb_dns_edns_ecs_received:
+                description:
+                - "Number of ecs from client received"
+                type: str
+            slb_dns_edns_ecs_inserted:
+                description:
+                - "Number of ecs inserted"
                 type: str
 
 '''
@@ -338,7 +349,7 @@ def get_argspec():
                 'choices': [
                     'all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop', 'filter_type_any_drop', 'slb_dns_client_ssl_succ',
                     'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only', 'rpz_action_nxdomain',
-                    'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp'
+                    'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp', 'slb_dns_edns_ecs_received', 'slb_dns_edns_ecs_inserted'
                     ]
                 }
             },
@@ -468,6 +479,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'invalid_q_len_to_udp': {
+                'type': 'str',
+                },
+            'slb_dns_edns_ecs_received': {
+                'type': 'str',
+                },
+            'slb_dns_edns_ecs_inserted': {
                 'type': 'str',
                 }
             }

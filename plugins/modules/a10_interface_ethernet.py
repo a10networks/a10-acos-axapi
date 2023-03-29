@@ -308,7 +308,8 @@ options:
           'output_errors'= Output errors; 'collisions'= Collisions; 'giants_output'=
           Output Giants; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'=
           Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec;
-          'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval;"
+          'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval;
+          'drops'= Drops;"
                 type: str
     packet_capture_template:
         description:
@@ -1045,6 +1046,10 @@ options:
                 description:
                 - "Load Interval"
                 type: str
+            drops:
+                description:
+                - "Drops"
+                type: str
             ifnum:
                 description:
                 - "Ethernet interface number"
@@ -1285,7 +1290,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'runts', 'giants', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts', 'output_errors', 'collisions', 'giants_output',
-                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval'
+                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval', 'drops'
                     ]
                 }
             },
@@ -2547,6 +2552,9 @@ def get_argspec():
             'load_interval': {
                 'type': 'str',
                 },
+            'drops': {
+                'type': 'str',
+                },
             'ifnum': {
                 'type': 'str',
                 'required': True,
@@ -2573,7 +2581,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/ethernet/{ifnum}"
+    url_base = "/axapi/v3/interface/ethernet"
 
     f_dict = {}
     f_dict["ifnum"] = ""

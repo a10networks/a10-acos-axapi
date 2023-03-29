@@ -221,7 +221,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ip/mgmt-traffic/{traffic_type}"
+    url_base = "/axapi/v3/ip/mgmt-traffic"
 
     f_dict = {}
     f_dict["traffic_type"] = ""

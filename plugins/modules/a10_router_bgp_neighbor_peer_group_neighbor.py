@@ -73,7 +73,7 @@ options:
     peer_group_remote_as:
         description:
         - "Specify AS number of BGP neighbor"
-        type: int
+        type: str
         required: False
     activate:
         description:
@@ -106,11 +106,6 @@ options:
         - "Advertise dynamic capability to this neighbor"
         type: bool
         required: False
-    prefix_list_direction:
-        description:
-        - "'both'= both; 'receive'= receive; 'send'= send;"
-        type: str
-        required: False
     route_refresh:
         description:
         - "Advertise route-refresh capability to this neighbor"
@@ -141,25 +136,6 @@ options:
         - "Neighbor specific description (Up to 80 characters describing this neighbor)"
         type: str
         required: False
-    disallow_infinite_holdtime:
-        description:
-        - "BGP per neighbor disallow-infinite-holdtime"
-        type: bool
-        required: False
-    distribute_lists:
-        description:
-        - "Field distribute_lists"
-        type: list
-        required: False
-        suboptions:
-            distribute_list:
-                description:
-                - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
-                type: str
-            distribute_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-                type: str
     dont_capability_negotiate:
         description:
         - "Do not perform capability negotiation"
@@ -190,20 +166,6 @@ options:
         - "Enable multihop"
         type: bool
         required: False
-    neighbor_filter_lists:
-        description:
-        - "Field neighbor_filter_lists"
-        type: list
-        required: False
-        suboptions:
-            filter_list:
-                description:
-                - "Establish BGP filters (AS path access-list name)"
-                type: str
-            filter_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-                type: str
     maximum_prefix:
         description:
         - "Maximum number of prefix accept from this peer (maximum no. of prefix limit
@@ -214,11 +176,6 @@ options:
         description:
         - "threshold-value, 1 to 100 percent"
         type: int
-        required: False
-    next_hop_self:
-        description:
-        - "Disable the next hop calculation for this neighbor"
-        type: bool
         required: False
     override_capability:
         description:
@@ -240,20 +197,6 @@ options:
         - "Don't send open messages to this neighbor"
         type: bool
         required: False
-    neighbor_prefix_lists:
-        description:
-        - "Field neighbor_prefix_lists"
-        type: list
-        required: False
-        suboptions:
-            nbr_prefix_list:
-                description:
-                - "Filter updates to/from this neighbor (Name of a prefix list)"
-                type: str
-            nbr_prefix_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-                type: str
     remove_private_as:
         description:
         - "Remove private AS number from outbound updates"
@@ -273,13 +216,6 @@ options:
                 description:
                 - "'in'= in; 'out'= out;"
                 type: str
-    send_community_val:
-        description:
-        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
-          Sending Community attributes; 'standard'= Send Standard Community attributes;
-          'extended'= Send Extended Community attributes;"
-        type: str
-        required: False
     inbound:
         description:
         - "Allow inbound soft reconfiguration for this neighbor"
@@ -309,11 +245,6 @@ options:
         description:
         - "BGP connect timer"
         type: int
-        required: False
-    unsuppress_map:
-        description:
-        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
-        type: str
         required: False
     update_source_ip:
         description:
@@ -420,9 +351,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "bfd", "collide_established", "connect", "default_originate", "description", "disallow_infinite_holdtime", "distribute_lists", "dont_capability_negotiate", "dynamic", "ebgp_multihop", "ebgp_multihop_hop_count", "enforce_multihop", "ethernet",
-    "extended_nexthop", "inbound", "lif", "loopback", "maximum_prefix", "maximum_prefix_thres", "multihop", "neighbor_filter_lists", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "override_capability", "pass_encrypted", "pass_value", "passive", "peer_group", "peer_group_key", "peer_group_remote_as", "prefix_list_direction",
-    "remove_private_as", "route_map", "route_refresh", "send_community_val", "shutdown", "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk", "tunnel", "unsuppress_map", "update_source_ip", "update_source_ipv6", "uuid", "ve", "weight",
+    "activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "bfd", "collide_established", "connect", "default_originate", "description", "dont_capability_negotiate", "dynamic", "ebgp_multihop", "ebgp_multihop_hop_count", "enforce_multihop", "ethernet", "extended_nexthop", "inbound", "lif", "loopback",
+    "maximum_prefix", "maximum_prefix_thres", "multihop", "neighbor_route_map_lists", "override_capability", "pass_encrypted", "pass_value", "passive", "peer_group", "peer_group_key", "peer_group_remote_as", "remove_private_as", "route_map", "route_refresh", "shutdown", "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk",
+    "tunnel", "update_source_ip", "update_source_ipv6", "uuid", "ve", "weight",
     ]
 
 
@@ -452,7 +383,7 @@ def get_argspec():
             'type': 'bool',
             },
         'peer_group_remote_as': {
-            'type': 'int',
+            'type': 'str',
             },
         'activate': {
             'type': 'bool',
@@ -472,10 +403,6 @@ def get_argspec():
         'dynamic': {
             'type': 'bool',
             },
-        'prefix_list_direction': {
-            'type': 'str',
-            'choices': ['both', 'receive', 'send']
-            },
         'route_refresh': {
             'type': 'bool',
             },
@@ -493,19 +420,6 @@ def get_argspec():
             },
         'description': {
             'type': 'str',
-            },
-        'disallow_infinite_holdtime': {
-            'type': 'bool',
-            },
-        'distribute_lists': {
-            'type': 'list',
-            'distribute_list': {
-                'type': 'str',
-                },
-            'distribute_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                }
             },
         'dont_capability_negotiate': {
             'type': 'bool',
@@ -525,24 +439,11 @@ def get_argspec():
         'multihop': {
             'type': 'bool',
             },
-        'neighbor_filter_lists': {
-            'type': 'list',
-            'filter_list': {
-                'type': 'str',
-                },
-            'filter_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                }
-            },
         'maximum_prefix': {
             'type': 'int',
             },
         'maximum_prefix_thres': {
             'type': 'int',
-            },
-        'next_hop_self': {
-            'type': 'bool',
             },
         'override_capability': {
             'type': 'bool',
@@ -556,16 +457,6 @@ def get_argspec():
         'passive': {
             'type': 'bool',
             },
-        'neighbor_prefix_lists': {
-            'type': 'list',
-            'nbr_prefix_list': {
-                'type': 'str',
-                },
-            'nbr_prefix_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                }
-            },
         'remove_private_as': {
             'type': 'bool',
             },
@@ -578,10 +469,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['in', 'out']
                 }
-            },
-        'send_community_val': {
-            'type': 'str',
-            'choices': ['both', 'none', 'standard', 'extended']
             },
         'inbound': {
             'type': 'bool',
@@ -600,9 +487,6 @@ def get_argspec():
             },
         'connect': {
             'type': 'int',
-            },
-        'unsuppress_map': {
-            'type': 'str',
             },
         'update_source_ip': {
             'type': 'str',
@@ -661,7 +545,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/router/bgp/{bgp_as_number}/neighbor/peer_group-neighbor/{peer-group}"
+    url_base = "/axapi/v3/router/bgp/{bgp_as_number}/neighbor/peer-group-neighbor"
 
     f_dict = {}
     f_dict["peer_group"] = ""

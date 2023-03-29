@@ -81,7 +81,7 @@ options:
             glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
-                type: int
+                type: str
             lsn_lid:
                 description:
                 - "LSN Limit ID (LID index)"
@@ -169,7 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, }, 'ipv6_list': {'type': 'list', 'action': {'type': 'str', 'choices': ['add', 'delete']}, 'ipv6_addr': {'type': 'str', }, 'lid': {'type': 'int', }, 'glid': {'type': 'int', }, 'lsn_lid': {'type': 'int', }, 'lsn_radius_profile': {'type': 'int', }}, 'user_tag': {'type': 'str', }})
+    rv.update({'name': {'type': 'str', 'required': True, }, 'ipv6_list': {'type': 'list', 'action': {'type': 'str', 'choices': ['add', 'delete']}, 'ipv6_addr': {'type': 'str', }, 'lid': {'type': 'int', }, 'glid': {'type': 'str', }, 'lsn_lid': {'type': 'int', }, 'lsn_radius_profile': {'type': 'int', }}, 'user_tag': {'type': 'str', }})
     return rv
 
 
@@ -190,7 +190,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/ipv6-class-list/{name}"
+    url_base = "/axapi/v3/slb/ipv6-class-list"
 
     f_dict = {}
     f_dict["name"] = ""

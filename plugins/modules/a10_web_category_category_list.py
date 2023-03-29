@@ -410,29 +410,14 @@ options:
         - "Category Health and Medicine"
         type: bool
         required: False
-    confirmed_spam_sources:
-        description:
-        - "Category Confirmed SPAM Sources"
-        type: bool
-        required: False
     spam_urls:
         description:
         - "Category SPAM URLs"
         type: bool
         required: False
-    unconfirmed_spam_sources:
+    dynamically_generated_content:
         description:
-        - "Category Unconfirmed SPAM Sources"
-        type: bool
-        required: False
-    open_http_proxies:
-        description:
-        - "Category Open HTTP Proxies"
-        type: bool
-        required: False
-    dynamic_comment:
-        description:
-        - "Category Dynamic Comment"
+        - "Dynamically Generated Content"
         type: bool
         required: False
     parked_domains:
@@ -443,11 +428,6 @@ options:
     alcohol_and_tobacco:
         description:
         - "Category Alcohol and Tobacco"
-        type: bool
-        required: False
-    private_ip_addresses:
-        description:
-        - "Category Private IP Addresses"
         type: bool
         required: False
     image_and_video_search:
@@ -473,11 +453,6 @@ options:
     web_hosting_sites:
         description:
         - "Category Web Hosting Sites"
-        type: bool
-        required: False
-    food_and_dining:
-        description:
-        - "Category Food and Dining"
         type: bool
         required: False
     nudity_artistic:
@@ -550,15 +525,16 @@ options:
           category; 'health-and-medicine'= health and medicine category; 'confirmed-SPAM-
           sources'= confirmed SPAM sources category; 'SPAM-URLs'= SPAM URLs category;
           'unconfirmed-SPAM-sources'= unconfirmed SPAM sources category; 'open-HTTP-
-          proxies'= open HTTP proxies category; 'dynamic-comment'= dynamic comment
-          category; 'parked-domains'= parked domains category; 'alcohol-and-tobacco'=
-          alcohol and tobacco category; 'private-IP-addresses'= private IP addresses
-          category; 'image-and-video-search'= image and video search category; 'fashion-
-          and-beauty'= fashion and beauty category; 'recreation-and-hobbies'= recreation
-          and hobbies category; 'motor-vehicles'= motor vehicles category; 'web-hosting-
-          sites'= web hosting sites category; 'food-and-dining'= food and dining
-          category; 'nudity-artistic'= nudity join entertainment and arts; 'illegal-
-          pornography'= illegal join adult and pornography;"
+          proxies'= open HTTP proxies category; 'dynamically-generated-content'=
+          dynamically generated content category; 'parked-domains'= parked domains
+          category; 'alcohol-and-tobacco'= alcohol and tobacco category; 'private-IP-
+          addresses'= private IP addresses category; 'image-and-video-search'= image and
+          video search category; 'fashion-and-beauty'= fashion and beauty category;
+          'recreation-and-hobbies'= recreation and hobbies category; 'motor-vehicles'=
+          motor vehicles category; 'web-hosting-sites'= web hosting sites category;
+          'food-and-dining'= food and dining category; 'nudity-artistic'= nudity join
+          entertainment and arts; 'illegal-pornography'= illegal join adult and
+          pornography;"
                 type: str
     stats:
         description:
@@ -862,9 +838,9 @@ options:
                 description:
                 - "open HTTP proxies category"
                 type: str
-            dynamic_comment:
+            dynamically_generated_content:
                 description:
-                - "dynamic comment category"
+                - "dynamically generated content category"
                 type: str
             parked_domains:
                 description:
@@ -969,11 +945,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "abortion", "adult_and_pornography", "alcohol_and_tobacco", "auctions", "bot_nets", "business_and_economy", "cdns", "cheating", "computer_and_internet_info", "computer_and_internet_security", "confirmed_spam_sources", "cult_and_occult", "dating", "dead_sites", "drugs", "dynamic_comment", "educational_institutions", "entertainment_and_arts",
-    "fashion_and_beauty", "financial_services", "food_and_dining", "gambling", "games", "government", "gross", "hacking", "hate_and_racism", "health_and_medicine", "home_and_garden", "hunting_and_fishing", "illegal", "illegal_pornography", "image_and_video_search", "internet_communications", "internet_portals", "job_search",
-    "keyloggers_and_monitoring", "kids", "legal", "local_information", "malware_sites", "marijuana", "military", "motor_vehicles", "music", "name", "news_and_media", "nudity", "nudity_artistic", "online_greeting_cards", "open_http_proxies", "parked_domains", "pay_to_surf", "peer_to_peer", "personal_sites_and_blogs", "personal_storage",
-    "philosophy_and_politics", "phishing_and_other_fraud", "private_ip_addresses", "proxy_avoid_and_anonymizers", "questionable", "real_estate", "recreation_and_hobbies", "reference_and_research", "religion", "sampling_enable", "search_engines", "sex_education", "shareware_and_freeware", "shopping", "social_network", "society", "spam_urls",
-    "sports", "spyware_and_adware", "stats", "stock_advice_and_tools", "streaming_media", "swimsuits_and_intimate_apparel", "training_and_tools", "translation", "travel", "uncategorized", "unconfirmed_spam_sources", "user_tag", "uuid", "violence", "weapons", "web_advertisements", "web_based_email", "web_hosting_sites",
+    "abortion", "adult_and_pornography", "alcohol_and_tobacco", "auctions", "bot_nets", "business_and_economy", "cdns", "cheating", "computer_and_internet_info", "computer_and_internet_security", "cult_and_occult", "dating", "dead_sites", "drugs", "dynamically_generated_content", "educational_institutions", "entertainment_and_arts",
+    "fashion_and_beauty", "financial_services", "gambling", "games", "government", "gross", "hacking", "hate_and_racism", "health_and_medicine", "home_and_garden", "hunting_and_fishing", "illegal", "illegal_pornography", "image_and_video_search", "internet_communications", "internet_portals", "job_search", "keyloggers_and_monitoring", "kids",
+    "legal", "local_information", "malware_sites", "marijuana", "military", "motor_vehicles", "music", "name", "news_and_media", "nudity", "nudity_artistic", "online_greeting_cards", "parked_domains", "pay_to_surf", "peer_to_peer", "personal_sites_and_blogs", "personal_storage", "philosophy_and_politics", "phishing_and_other_fraud",
+    "proxy_avoid_and_anonymizers", "questionable", "real_estate", "recreation_and_hobbies", "reference_and_research", "religion", "sampling_enable", "search_engines", "sex_education", "shareware_and_freeware", "shopping", "social_network", "society", "spam_urls", "sports", "spyware_and_adware", "stats", "stock_advice_and_tools", "streaming_media",
+    "swimsuits_and_intimate_apparel", "training_and_tools", "translation", "travel", "uncategorized", "user_tag", "uuid", "violence", "weapons", "web_advertisements", "web_based_email", "web_hosting_sites",
     ]
 
 
@@ -1209,28 +1185,16 @@ def get_argspec():
         'health_and_medicine': {
             'type': 'bool',
             },
-        'confirmed_spam_sources': {
-            'type': 'bool',
-            },
         'spam_urls': {
             'type': 'bool',
             },
-        'unconfirmed_spam_sources': {
-            'type': 'bool',
-            },
-        'open_http_proxies': {
-            'type': 'bool',
-            },
-        'dynamic_comment': {
+        'dynamically_generated_content': {
             'type': 'bool',
             },
         'parked_domains': {
             'type': 'bool',
             },
         'alcohol_and_tobacco': {
-            'type': 'bool',
-            },
-        'private_ip_addresses': {
             'type': 'bool',
             },
         'image_and_video_search': {
@@ -1246,9 +1210,6 @@ def get_argspec():
             'type': 'bool',
             },
         'web_hosting_sites': {
-            'type': 'bool',
-            },
-        'food_and_dining': {
             'type': 'bool',
             },
         'nudity_artistic': {
@@ -1273,7 +1234,8 @@ def get_argspec():
                     'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games',
                     'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals',
                     'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'confirmed-SPAM-sources',
-                    'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamic-comment', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'nudity-artistic', 'illegal-pornography'
+                    'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'nudity-artistic',
+                    'illegal-pornography'
                     ]
                 }
             },
@@ -1501,7 +1463,7 @@ def get_argspec():
             'open_HTTP_proxies': {
                 'type': 'str',
                 },
-            'dynamic_comment': {
+            'dynamically_generated_content': {
                 'type': 'str',
                 },
             'parked_domains': {
@@ -1563,7 +1525,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/web-category/category-list/{name}"
+    url_base = "/axapi/v3/web-category/category-list"
 
     f_dict = {}
     f_dict["name"] = ""

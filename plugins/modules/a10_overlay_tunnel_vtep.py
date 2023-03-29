@@ -67,6 +67,11 @@ options:
           Encapsulation Type is VXLAN;"
         type: str
         required: False
+    dest_port:
+        description:
+        - "Layer-4 Destination Port (Port Number)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -438,7 +443,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encap", "host_list", "id", "local_ip_address", "local_ipv6_address", "remote_ip_address_list", "remote_ipv6_address_list", "sampling_enable", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["dest_port", "encap", "host_list", "id", "local_ip_address", "local_ipv6_address", "remote_ip_address_list", "remote_ipv6_address_list", "sampling_enable", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -466,6 +471,9 @@ def get_argspec():
         'encap': {
             'type': 'str',
             'choices': ['ip-encap', 'gre', 'nvgre', 'vxlan']
+            },
+        'dest_port': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -768,7 +776,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{id}"
+    url_base = "/axapi/v3/overlay-tunnel/vtep"
 
     f_dict = {}
     f_dict["id"] = ""

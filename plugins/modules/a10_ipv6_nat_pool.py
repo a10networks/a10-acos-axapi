@@ -114,8 +114,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'Port-Usage'= some help string; 'Total-Used'= some help string;
-          'Total-Freed'= some help string; 'Failed'= some help string;"
+                - "'all'= all; 'Port-Usage'= Port-Usage; 'Total-Used'= Total-Used; 'Total-Freed'=
+          Total-Freed; 'Failed'= Failed;"
                 type: str
     oper:
         description:
@@ -139,19 +139,19 @@ options:
         suboptions:
             Port_Usage:
                 description:
-                - "some help string"
+                - "Field Port_Usage"
                 type: str
             Total_Used:
                 description:
-                - "some help string"
+                - "Field Total_Used"
                 type: str
             Total_Freed:
                 description:
-                - "some help string"
+                - "Field Total_Freed"
                 type: str
             Failed:
                 description:
-                - "some help string"
+                - "Field Failed"
                 type: str
             pool_name:
                 description:
@@ -335,7 +335,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ipv6/nat/pool/{pool_name}"
+    url_base = "/axapi/v3/ipv6/nat/pool"
 
     f_dict = {}
     f_dict["pool_name"] = ""

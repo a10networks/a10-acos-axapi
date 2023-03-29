@@ -88,6 +88,12 @@ options:
           Netflow monitor is only activated when referenced by a firewall rule;"
         type: str
         required: False
+    counter_polling_interval:
+        description:
+        - "Configure the interval to export global counters (Number of seconds= default is
+          60)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -258,7 +264,10 @@ options:
           iDDoS L4 Entry Deleted Records Sent Failure; 'custom-gtp-rate-limit-periodic-
           records-sent'= Custom GTP Rate Limit Periodic Records Sent; 'custom-gtp-rate-
           limit-periodic-records-sent-failure'= Custom GTP Rate Limit Periodic Records
-          Sent Failure;"
+          Sent Failure; 'ddos-general-stat-records-sent'= ddos-general-stat-records-sent;
+          'ddos-general-stat-records-sent-failure'= ddos-general-stat-records-sent-
+          failure; 'ddos-http-stat-records-sent'= ddos-http-stat-records-sent; 'ddos-
+          http-stat-records-sent-failure'= ddos-http-stat-records-sent-failure;"
                 type: str
     packet_capture_template:
         description:
@@ -395,6 +404,14 @@ options:
                 - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
                 type: str
+            ddos_general_stat:
+                description:
+                - "General DDOS statistics"
+                type: bool
+            ddos_http_stat:
+                description:
+                - "HTTP DDOS statistics"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -491,6 +508,56 @@ options:
                 description:
                 - "Field nat_pool_list"
                 type: list
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            protocol:
+                description:
+                - "Field protocol"
+                type: str
+            status:
+                description:
+                - "Field status"
+                type: str
+            filter:
+                description:
+                - "Field filter"
+                type: str
+            destination:
+                description:
+                - "Field destination"
+                type: str
+            source_ip_use_mgmt:
+                description:
+                - "Field source_ip_use_mgmt"
+                type: str
+            source_ip_addr:
+                description:
+                - "Field source_ip_addr"
+                type: str
+            flow_timeout:
+                description:
+                - "Field flow_timeout"
+                type: str
+            counter_polling_interval:
+                description:
+                - "Field counter_polling_interval"
+                type: str
+            resend_template_per_records:
+                description:
+                - "Field resend_template_per_records"
+                type: str
+            resend_template_timeout:
+                description:
+                - "Field resend_template_timeout"
+                type: str
+            name:
+                description:
+                - "Name of netflow monitor"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -997,6 +1064,22 @@ options:
                 description:
                 - "Custom GTP Rate Limit Periodic Records Sent Failure"
                 type: str
+            ddos_general_stat_records_sent:
+                description:
+                - "Field ddos_general_stat_records_sent"
+                type: str
+            ddos_general_stat_records_sent_failure:
+                description:
+                - "Field ddos_general_stat_records_sent_failure"
+                type: str
+            ddos_http_stat_records_sent:
+                description:
+                - "Field ddos_http_stat_records_sent"
+                type: str
+            ddos_http_stat_records_sent_failure:
+                description:
+                - "Field ddos_http_stat_records_sent_failure"
+                type: str
             name:
                 description:
                 - "Name of netflow monitor"
@@ -1055,7 +1138,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom_record", "destination", "disable", "disable_log_by_destination", "flow_timeout", "name", "packet_capture_template", "protocol", "record", "resend_template", "sample", "sampling_enable", "scope", "source_address", "source_ip_use_mgmt", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["counter_polling_interval", "custom_record", "destination", "disable", "disable_log_by_destination", "flow_timeout", "name", "oper", "packet_capture_template", "protocol", "record", "resend_template", "sample", "sampling_enable", "scope", "source_address", "source_ip_use_mgmt", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -1097,6 +1180,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['global', 'firewall-rule']
             },
+        'counter_polling_interval': {
+            'type': 'int',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -1134,7 +1220,8 @@ def get_argspec():
                     'custom-port-batching-v2-dslite-deletion-records-sent-failure', 'reduced-logs-by-destination', 'custom-gtp-c-tunnel-event-records-sent', 'custom-gtp-c-tunnel-event-records-sent-failure', 'custom-gtp-u-tunnel-event-records-sent', 'custom-gtp-u-tunnel-event-records-sent-failure', 'custom-gtp-deny-event-records-sent',
                     'custom-gtp-deny-event-records-sent-failure', 'custom-gtp-info-event-records-sent', 'custom-gtp-info-event-records-sent-failure', 'custom-fw-iddos-entry-created-records-sent', 'custom-fw-iddos-entry-created-records-sent-failure', 'custom-fw-iddos-entry-deleted-records-sent', 'custom-fw-iddos-entry-deleted-records-sent-failure',
                     'custom-fw-sesn-limit-exceeded-records-sent', 'custom-fw-sesn-limit-exceeded-records-sent-failure', 'custom-nat-iddos-l3-entry-created-records-sent', 'custom-nat-iddos-l3-entry-created-records-sent-failure', 'custom-nat-iddos-l3-entry-deleted-records-sent', 'custom-nat-iddos-l3-entry-deleted-records-sent-failure',
-                    'custom-nat-iddos-l4-entry-created-records-sent', 'custom-nat-iddos-l4-entry-created-records-sent-failure', 'custom-nat-iddos-l4-entry-deleted-records-sent', 'custom-nat-iddos-l4-entry-deleted-records-sent-failure', 'custom-gtp-rate-limit-periodic-records-sent', 'custom-gtp-rate-limit-periodic-records-sent-failure'
+                    'custom-nat-iddos-l4-entry-created-records-sent', 'custom-nat-iddos-l4-entry-created-records-sent-failure', 'custom-nat-iddos-l4-entry-deleted-records-sent', 'custom-nat-iddos-l4-entry-deleted-records-sent-failure', 'custom-gtp-rate-limit-periodic-records-sent', 'custom-gtp-rate-limit-periodic-records-sent-failure',
+                    'ddos-general-stat-records-sent', 'ddos-general-stat-records-sent-failure', 'ddos-http-stat-records-sent', 'ddos-http-stat-records-sent-failure'
                     ]
                 }
             },
@@ -1318,6 +1405,12 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['both', 'creation', 'deletion']
                 },
+            'ddos_general_stat': {
+                'type': 'bool',
+                },
+            'ddos_http_stat': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -1426,6 +1519,43 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'protocol': {
+                'type': 'str',
+                },
+            'status': {
+                'type': 'str',
+                },
+            'filter': {
+                'type': 'str',
+                },
+            'destination': {
+                'type': 'str',
+                },
+            'source_ip_use_mgmt': {
+                'type': 'str',
+                },
+            'source_ip_addr': {
+                'type': 'str',
+                },
+            'flow_timeout': {
+                'type': 'str',
+                },
+            'counter_polling_interval': {
+                'type': 'str',
+                },
+            'resend_template_per_records': {
+                'type': 'str',
+                },
+            'resend_template_timeout': {
+                'type': 'str',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
                 }
             },
         'stats': {
@@ -1805,6 +1935,18 @@ def get_argspec():
             'custom_gtp_rate_limit_periodic_records_sent_failure': {
                 'type': 'str',
                 },
+            'ddos_general_stat_records_sent': {
+                'type': 'str',
+                },
+            'ddos_general_stat_records_sent_failure': {
+                'type': 'str',
+                },
+            'ddos_http_stat_records_sent': {
+                'type': 'str',
+                },
+            'ddos_http_stat_records_sent_failure': {
+                'type': 'str',
+                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -1831,7 +1973,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/netflow/monitor/{name}"
+    url_base = "/axapi/v3/netflow/monitor"
 
     f_dict = {}
     f_dict["name"] = ""
@@ -1975,6 +2117,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["monitor-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["monitor"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

@@ -260,7 +260,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel_dest_address}+{inside_addr}+{inside_start_port}+{inside_end_port}+{nat}+{nat_start_port}+{nat_end_port}"
+    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/++++++"
 
     f_dict = {}
     f_dict["inside"] = ""

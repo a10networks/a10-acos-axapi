@@ -105,6 +105,10 @@ options:
                 description:
                 - "Field host"
                 type: list
+            domain_whitelist:
+                description:
+                - "Specify the AC type class-list for the domain-whitelist"
+                type: str
             port:
                 description:
                 - "Specify port number for aaa-rule, default is 0 for all port numbers"
@@ -322,6 +326,9 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'domain_whitelist': {
+                'type': 'str',
+                },
             'port': {
                 'type': 'int',
                 },
@@ -458,7 +465,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/aaa-policy/{name}"
+    url_base = "/axapi/v3/aam/aaa-policy"
 
     f_dict = {}
     f_dict["name"] = ""

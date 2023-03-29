@@ -180,7 +180,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/remote-ip-address/{remote_ip_address_ip_address}/vni/{segment}"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/remote-ip-address/{remote_ip_address_ip_address}/vni"
 
     f_dict = {}
     f_dict["segment"] = ""

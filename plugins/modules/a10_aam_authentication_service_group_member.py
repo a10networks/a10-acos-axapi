@@ -107,9 +107,9 @@ options:
           status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse
           packets inspected status code non 5xx; 'curr_req'= Current requests;
           'total_req'= Total requests; 'total_req_succ'= Total requests successful;
-          'peak_conn'= some help string; 'response_time'= Response time;
-          'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response
-          time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
+          'peak_conn'= peak_conn; 'response_time'= Response time; 'fastest_rsp_time'=
+          Fastest response time; 'slowest_rsp_time'= Slowest response time;
+          'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
           connections; 'curr_conn_overflow'= Current connection counter overflow count;"
                 type: str
     packet_capture_template:
@@ -207,7 +207,7 @@ options:
                 type: str
             peak_conn:
                 description:
-                - "some help string"
+                - "Field peak_conn"
                 type: str
             response_time:
                 description:
@@ -561,7 +561,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/authentication/service-group/{service_group_name}/member/{name}+{port}"
+    url_base = "/axapi/v3/aam/authentication/service-group/{service_group_name}/member/"
 
     f_dict = {}
     f_dict["name"] = ""

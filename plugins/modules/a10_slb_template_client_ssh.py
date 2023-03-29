@@ -99,15 +99,15 @@ options:
         suboptions:
             successful_handshakes:
                 description:
-                - "some help string"
+                - "Field successful_handshakes"
                 type: str
             failed_handshakes:
                 description:
-                - "some help string"
+                - "Field failed_handshakes"
                 type: str
             forwarding_errors:
                 description:
-                - "some help string"
+                - "Field forwarding_errors"
                 type: str
             name:
                 description:
@@ -247,7 +247,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/client-ssh/{name}"
+    url_base = "/axapi/v3/slb/template/client-ssh"
 
     f_dict = {}
     f_dict["name"] = ""

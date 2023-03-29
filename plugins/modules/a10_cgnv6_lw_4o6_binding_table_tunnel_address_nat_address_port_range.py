@@ -203,7 +203,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lw-4o6/binding-table/{binding_table_name}/tunnel-address/{tunnel_address_ipv6_tunnel_addr}/nat-address/{nat_address_ipv4_nat_addr}/port-range/{port_start}+{port_end}+{tunnel_endpoint_address}"
+    url_base = "/axapi/v3/cgnv6/lw-4o6/binding-table/{binding_table_name}/tunnel-address/{tunnel_address_ipv6_tunnel_addr}/nat-address/{nat_address_ipv4_nat_addr}/port-range/+"
 
     f_dict = {}
     f_dict["port_start"] = ""

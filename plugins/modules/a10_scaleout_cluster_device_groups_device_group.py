@@ -190,7 +190,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/device_groups/device-group/{device-group}"
+    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/device-groups/device-group"
 
     f_dict = {}
     f_dict["device_group"] = ""

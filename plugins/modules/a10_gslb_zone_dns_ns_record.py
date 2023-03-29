@@ -252,7 +252,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/zone/{zone_name}/dns-ns-record/{ns_name}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/dns-ns-record"
 
     f_dict = {}
     f_dict["ns_name"] = ""

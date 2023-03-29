@@ -88,7 +88,7 @@ options:
         required: False
     fwdreqdata_fail:
         description:
-        - "Enable automatic packet-capture for some help string"
+        - "Enable automatic packet-capture for fwdreqdata_fail"
         type: bool
         required: False
     snat_fail:

@@ -58,7 +58,8 @@ options:
     feature_name:
         description:
         - "'app-fw'= Application Firewall Configuration; 'ca-bundle'= CA Certificate
-          Bundle; 'a10-threat-intel'= A10 Threat intel class list;"
+          Bundle; 'a10-threat-intel'= A10 Threat intel class list; 'central-cert-pin-
+          list'= Central updated cert pinning list;"
         type: str
         required: True
     debug:
@@ -185,7 +186,7 @@ def get_argspec():
         'feature_name': {
             'type': 'str',
             'required': True,
-            'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
+            'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel', 'central-cert-pin-list']
             },
         'debug': {
             'type': 'bool',
@@ -236,7 +237,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/automatic-update/config/{feature_name}"
+    url_base = "/axapi/v3/automatic-update/config"
 
     f_dict = {}
     f_dict["feature_name"] = ""

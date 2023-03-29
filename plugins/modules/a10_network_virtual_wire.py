@@ -278,7 +278,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/network/virtual-wire/{virtual_wire_id}"
+    url_base = "/axapi/v3/network/virtual-wire"
 
     f_dict = {}
     f_dict["virtual_wire_id"] = ""

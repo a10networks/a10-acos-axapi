@@ -87,9 +87,14 @@ options:
         required: False
     delete:
         description:
-        - "Delete one local GUI image"
-        type: str
+        - "Field delete"
+        type: list
         required: False
+        suboptions:
+            file:
+                description:
+                - "Delete one local GUI image"
+                type: str
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -112,12 +117,12 @@ options:
         required: False
     image_file:
         description:
-        - "Field image_file"
+        - "image file from AXAPI,"
         type: str
         required: False
     gui_upload:
         description:
-        - "Field gui_upload"
+        - "image file from AXAPI"
         type: bool
         required: False
 
@@ -212,7 +217,10 @@ def get_argspec():
             'type': 'str',
             },
         'delete': {
-            'type': 'str',
+            'type': 'list',
+            'file': {
+                'type': 'str',
+                }
             },
         'use_mgmt_port': {
             'type': 'bool',

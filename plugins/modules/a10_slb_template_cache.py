@@ -181,21 +181,20 @@ options:
           served from cache; 'total_req'= Total requests received; 'caching_req'= Total
           requests to cache; 'nc_req_header'= slbTemplateCacheNcReqHeader, help
           nc_req_header; 'nc_res_header'= slbTemplateCacheNcResHeader, help
-          nc_res_header; 'rv_success'= some help string; 'rv_failure'=
-          slbTemplateCacheRvFailure, help rv_failure; 'ims_request'= some help string;
-          'nm_response'= some help string; 'rsp_type_CL'= some help string;
-          'rsp_type_CE'= some help string; 'rsp_type_304'= some help string;
-          'rsp_type_other'= some help string; 'rsp_no_compress'= some help string;
-          'rsp_gzip'= some help string; 'rsp_deflate'= some help string; 'rsp_other'=
-          some help string; 'nocache_match'= some help string; 'match'= some help string;
-          'invalidate_match'= some help string; 'content_toobig'=
+          nc_res_header; 'rv_success'= rv_success; 'rv_failure'=
+          slbTemplateCacheRvFailure, help rv_failure; 'ims_request'= ims_request;
+          'nm_response'= nm_response; 'rsp_type_CL'= rsp_type_CL; 'rsp_type_CE'=
+          rsp_type_CE; 'rsp_type_304'= rsp_type_304; 'rsp_type_other'= rsp_type_other;
+          'rsp_no_compress'= rsp_no_compress; 'rsp_gzip'= rsp_gzip; 'rsp_deflate'=
+          rsp_deflate; 'rsp_other'= rsp_other; 'nocache_match'= nocache_match; 'match'=
+          match; 'invalidate_match'= invalidate_match; 'content_toobig'=
           slbTemplateCacheContentToobig, help content_toobig; 'content_toosmall'=
           slbTemplateCacheContentToosmall, help content_toosmall;
           'entry_create_failures'= slbTemplateCacheEntryCreateFailures, help
-          entry_create_failures; 'mem_size'= some help string; 'entry_num'= some help
-          string; 'replaced_entry'= some help string; 'aging_entry'= some help string;
-          'cleaned_entry'= some help string; 'rsp_type_stream'= some help string;
-          'header_save_error'= some help string;"
+          entry_create_failures; 'mem_size'= mem_size; 'entry_num'= entry_num;
+          'replaced_entry'= replaced_entry; 'aging_entry'= aging_entry; 'cleaned_entry'=
+          cleaned_entry; 'rsp_type_stream'= rsp_type_stream; 'header_save_error'=
+          header_save_error; 'rsp_br'= rsp_br;"
                 type: str
     packet_capture_template:
         description:
@@ -238,7 +237,7 @@ options:
                 type: str
             rv_success:
                 description:
-                - "some help string"
+                - "Field rv_success"
                 type: str
             rv_failure:
                 description:
@@ -246,55 +245,55 @@ options:
                 type: str
             ims_request:
                 description:
-                - "some help string"
+                - "Field ims_request"
                 type: str
             nm_response:
                 description:
-                - "some help string"
+                - "Field nm_response"
                 type: str
             rsp_type_CL:
                 description:
-                - "some help string"
+                - "Field rsp_type_CL"
                 type: str
             rsp_type_CE:
                 description:
-                - "some help string"
+                - "Field rsp_type_CE"
                 type: str
             rsp_type_304:
                 description:
-                - "some help string"
+                - "Field rsp_type_304"
                 type: str
             rsp_type_other:
                 description:
-                - "some help string"
+                - "Field rsp_type_other"
                 type: str
             rsp_no_compress:
                 description:
-                - "some help string"
+                - "Field rsp_no_compress"
                 type: str
             rsp_gzip:
                 description:
-                - "some help string"
+                - "Field rsp_gzip"
                 type: str
             rsp_deflate:
                 description:
-                - "some help string"
+                - "Field rsp_deflate"
                 type: str
             rsp_other:
                 description:
-                - "some help string"
+                - "Field rsp_other"
                 type: str
             nocache_match:
                 description:
-                - "some help string"
+                - "Field nocache_match"
                 type: str
             match:
                 description:
-                - "some help string"
+                - "Field match"
                 type: str
             invalidate_match:
                 description:
-                - "some help string"
+                - "Field invalidate_match"
                 type: str
             content_toobig:
                 description:
@@ -310,31 +309,35 @@ options:
                 type: str
             mem_size:
                 description:
-                - "some help string"
+                - "Field mem_size"
                 type: str
             entry_num:
                 description:
-                - "some help string"
+                - "Field entry_num"
                 type: str
             replaced_entry:
                 description:
-                - "some help string"
+                - "Field replaced_entry"
                 type: str
             aging_entry:
                 description:
-                - "some help string"
+                - "Field aging_entry"
                 type: str
             cleaned_entry:
                 description:
-                - "some help string"
+                - "Field cleaned_entry"
                 type: str
             rsp_type_stream:
                 description:
-                - "some help string"
+                - "Field rsp_type_stream"
                 type: str
             header_save_error:
                 description:
-                - "some help string"
+                - "Field header_save_error"
+                type: str
+            rsp_br:
+                description:
+                - "Field rsp_br"
                 type: str
             name:
                 description:
@@ -493,7 +496,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match',
-                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'header_save_error'
+                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'header_save_error', 'rsp_br'
                     ]
                 }
             },
@@ -598,6 +601,9 @@ def get_argspec():
             'header_save_error': {
                 'type': 'str',
                 },
+            'rsp_br': {
+                'type': 'str',
+                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -624,7 +630,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/cache/{name}"
+    url_base = "/axapi/v3/slb/template/cache"
 
     f_dict = {}
     f_dict["name"] = ""

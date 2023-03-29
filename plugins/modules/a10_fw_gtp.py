@@ -206,24 +206,28 @@ options:
           pu-bld-to-mstr-query-resp-sent'= GTP inter-PU GTP-C query response sent from
           Blade to Master; 'gtp-mstr-to-bld-query-resp-fail'= GTP inter-PU dcmsg of query
           response failed from Master to Blade; 'gtp-bld-to-mstr-query-resp-fail'= GTP
-          inter-PU dcmsg of query response failed from Blade to Master; 'gtp-v0-c-uplink-
-          ingress-packets'= GTPv0-C Uplink Ingress Packets; 'gtp-v0-c-uplink-egress-
-          packets'= GTPv0-C Uplink Egress Packets; 'gtp-v0-c-downlink-ingress-packets'=
-          GTPv0-C Downlink Ingress Packets; 'gtp-v0-c-downlink-egress-packets'= GTPv0-C
-          Downlink Egress Packets; 'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink
-          Ingress Bytes; 'gtp-v0-c-uplink-egress-bytes'= GTPv0-C Uplink Egress Bytes;
+          inter-PU dcmsg of query response failed from Blade to Master; 'gtp-c-smp-refer-
+          stale-idx'= GTP-C SMP referring stale C-conn idx; 'gtp-smp-dec-sess-count-
+          check-failed'= GTP-U session count is 0 in GTP-C SMP; 'gtp-c-freed-conn-check'=
+          GTP-C freed conn accessed; 'gtp-c-conn-not-in-rml-when-freed'= GTP-C conn not
+          in rml when tuple is freed; 'gtp-v0-c-uplink-ingress-packets'= GTPv0-C Uplink
+          Ingress Packets; 'gtp-v0-c-uplink-egress-packets'= GTPv0-C Uplink Egress
+          Packets; 'gtp-v0-c-downlink-ingress-packets'= GTPv0-C Downlink Ingress Packets;
+          'gtp-v0-c-downlink-egress-packets'= GTPv0-C Downlink Egress Packets;
+          'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink Ingress Bytes;
+          'gtp-v0-c-uplink-egress-bytes'= GTPv0-C Uplink Egress Bytes;
           'gtp-v0-c-downlink-ingress-bytes'= GTPv0-C Downlink Ingress Bytes;
           'gtp-v0-c-downlink-egress-bytes'= GTPv0-C Downlink Egress Bytes;
           'gtp-v1-c-uplink-ingress-packets'= GTPv1-C Uplink Ingress Packets;
-          'gtp-v1-c-uplink-egress-packets'= GTPv1-C Uplink Egress Packets;
-          'gtp-v1-c-downlink-ingress-packets'= GTPv1-C Downlink Ingress Packets;
-          'gtp-v1-c-downlink-egress-packets'= GTPv1-C Downlink Egress Packets;
-          'gtp-v1-c-uplink-ingress-bytes'= GTPv1-C Uplink Ingress Bytes;
-          'gtp-v1-c-uplink-egress-bytes'= GTPv1-C Uplink Egress Bytes;"
+          'gtp-v1-c-uplink-egress-packets'= GTPv1-C Uplink Egress Packets;"
                 type: str
             counters2:
                 description:
-                - "'gtp-v1-c-downlink-ingress-bytes'= GTPv1-C Downlink Ingress Bytes;
+                - "'gtp-v1-c-downlink-ingress-packets'= GTPv1-C Downlink Ingress Packets;
+          'gtp-v1-c-downlink-egress-packets'= GTPv1-C Downlink Egress Packets;
+          'gtp-v1-c-uplink-ingress-bytes'= GTPv1-C Uplink Ingress Bytes;
+          'gtp-v1-c-uplink-egress-bytes'= GTPv1-C Uplink Egress Bytes;
+          'gtp-v1-c-downlink-ingress-bytes'= GTPv1-C Downlink Ingress Bytes;
           'gtp-v1-c-downlink-egress-bytes'= GTPv1-C Downlink Egress Bytes;
           'gtp-v2-c-uplink-ingress-packets'= GTPv2-C Uplink Ingress Packets;
           'gtp-v2-c-uplink-egress-packets'= GTPv2-C Uplink Egress Packets;
@@ -418,6 +422,10 @@ options:
             gtp_c_handover_in_progress_with_conn:
                 description:
                 - "GTP-C mesg matching conn with HO In Progress"
+                type: str
+            gtp_smp_dec_sess_count_check_failed:
+                description:
+                - "GTP-U session count is 0 in GTP-C SMP"
                 type: str
             gtp_v0_c_uplink_ingress_packets:
                 description:
@@ -705,23 +713,23 @@ def get_argspec():
                     'gtp-correct-conn-ho-in-progress-handover-request', 'gtp-wrong-conn-ho-in-progress-handover-request', 'gtp-ho-in-progress-handover-response', 'gtp-ho-in-progress-c-mesg', 'gtp-unset-ho-flag-reuse-teid', 'gtp-refresh-c-conn-reuse-teid', 'gtp-rematch-smp-matching-conn', 'gtp-wrong-conn-handover-request',
                     'gtp-refresh-conn-set-ho-flag-latest', 'gtp-c-process-pkt-drop', 'gtp-c-fwd-pkt-drop', 'gtp-c-rev-pkt-drop', 'gtp-c-fwd-v1-other', 'gtp-c-fwd-v2-other', 'gtp-c-rev-v1-other', 'gtp-c-rev-v2-other', 'gtp-c-going-thru-fw-lookup', 'gtp-c-conn-create-pkt-drop', 'gtp-c-pkt-fwd-conn-create-no-fteid',
                     'gtp-inter-pu-mstr-to-bld-dcmsg-fail', 'gtp-inter-pu-mstr-to-bld-dcmsg-sent', 'gtp-inter-pu-mstr-to-bld-dcmsg-recv', 'gtp-inter-pu-mstr-to-bld-query-sent', 'gtp-inter-pu-mstr-to-bld-query-recv', 'gtp-inter-pu-mstr-to-bld-query-resp-sent', 'gtp-inter-pu-bld-to-mstr-dcmsg-fail', 'gtp-inter-pu-bld-to-mstr-dcmsg-sent',
-                    'gtp-inter-pu-bld-to-mstr-dcmsg-recv', 'gtp-inter-pu-bld-to-mstr-query-sent', 'gtp-inter-pu-bld-to-mstr-query-recv', 'gtp-inter-pu-bld-to-mstr-query-resp-sent', 'gtp-mstr-to-bld-query-resp-fail', 'gtp-bld-to-mstr-query-resp-fail', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets',
-                    'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes', 'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets', 'gtp-v1-c-downlink-ingress-packets',
-                    'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes'
+                    'gtp-inter-pu-bld-to-mstr-dcmsg-recv', 'gtp-inter-pu-bld-to-mstr-query-sent', 'gtp-inter-pu-bld-to-mstr-query-recv', 'gtp-inter-pu-bld-to-mstr-query-resp-sent', 'gtp-mstr-to-bld-query-resp-fail', 'gtp-bld-to-mstr-query-resp-fail', 'gtp-c-smp-refer-stale-idx', 'gtp-smp-dec-sess-count-check-failed', 'gtp-c-freed-conn-check',
+                    'gtp-c-conn-not-in-rml-when-freed', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes',
+                    'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets', 'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes',
-                    'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced',
-                    'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx', 'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced',
-                    'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced', 'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx', 'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby',
-                    'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced', 'gtp-v1-c-echo-create-synced', 'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx', 'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced',
-                    'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx', 'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced', 'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid',
-                    'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch', 'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward', 'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u_inner-ip-not-present',
-                    'gtp-ext_hdr-incorrect-length'
+                    'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets',
+                    'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes',
+                    'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx',
+                    'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced', 'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx',
+                    'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced', 'gtp-v1-c-echo-create-synced', 'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx',
+                    'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx', 'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced',
+                    'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch', 'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward',
+                    'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length'
                     ]
                 }
             },
@@ -815,6 +823,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'gtp_c_handover_in_progress_with_conn': {
+                'type': 'str',
+                },
+            'gtp_smp_dec_sess_count_check_failed': {
                 'type': 'str',
                 },
             'gtp_v0_c_uplink_ingress_packets': {

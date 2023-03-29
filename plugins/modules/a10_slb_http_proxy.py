@@ -76,7 +76,7 @@ options:
           buff; 'fwdreq_fail_rport'= Fwd req fail - rport; 'fwdreq_fail_route'= Fwd req
           fail - route; 'fwdreq_fail_persist'= Fwd req fail - persist;
           'fwdreq_fail_server'= Fwd req fail - server; 'fwdreq_fail_tuple'= Fwd req fail
-          - tuple; 'fwdreqdata_fail'= some help string; 'req_retran'= Packets retrans;
+          - tuple; 'fwdreqdata_fail'= fwdreqdata_fail; 'req_retran'= Packets retrans;
           'req_ofo'= Packets ofo; 'server_resel'= Server reselection; 'svr_prem_close'=
           Server premature close; 'new_svrconn'= Server conn made; 'snat_fail'= Source
           NAT failure; 'tcpoutrst'= Out RSTs; 'full_proxy'= Full proxy tot;
@@ -170,33 +170,33 @@ options:
           CL/CE; 'compress_ratio_too_high'= Compress ratio too high; 'cache_rsp'= HTTP
           req (cache succ); 'close_on_ddos'= Close on DDoS; 'req_http10_keepalive'= 1.0
           Keepalive; 'req_sz_1k'= Req less than equal to 1K; 'req_sz_2k'= Req less than
-          equal to 2K;"
+          equal to 2K; 'req_sz_4k'= Req less than equal to 4K;"
                 type: str
             counters2:
                 description:
-                - "'req_sz_4k'= Req less than equal to 4K; 'req_sz_8k'= Req less than equal to 8K;
-          'req_sz_16k'= Req less than equal to 16K; 'req_sz_32k'= Req less than equal to
-          32K; 'req_sz_64k'= Req less than equal to 64K; 'req_sz_256k'= Req less than
-          equal to 256K; 'req_sz_gt_256k'= Req greater than 256K; 'rsp_sz_1k'= Resp less
-          than equal to 1K; 'rsp_sz_2k'= Resp less than equal to 2K; 'rsp_sz_4k'= Resp
-          less than equal to 4K; 'rsp_sz_8k'= Resp less than equal to 8K; 'rsp_sz_16k'=
-          Resp less than equal to 16K; 'rsp_sz_32k'= Resp less than equal to 32K;
-          'rsp_sz_64k'= Resp less than equal to 64K; 'rsp_sz_256k'= Resp less than equal
-          to 256K; 'rsp_sz_gt_256k'= Resp greater than 256K; 'chunk_sz_512'= Chunk less
-          than equal to 512; 'chunk_sz_1k'= Chunk less than equal to 1K; 'chunk_sz_2k'=
-          Chunk less than equal to 2K; 'chunk_sz_4k'= Chunk less than equal to 4K;
-          'chunk_sz_gt_4k'= Chunk greater than 4K; 'pconn_connecting'= pconn connecting;
-          'pconn_connected'= pconn connected; 'pconn_connecting_failed'= pconn conn
-          failed; 'chunk_bad'= Bad Chunk; 'req_10u'= Rsp time less than 10u; 'req_20u'=
-          Rsp time less than 20u; 'req_50u'= Rsp time less than 50u; 'req_100u'= Rsp time
-          less than 100u; 'req_200u'= Rsp time less than 200u; 'req_500u'= Rsp time less
-          than 500u; 'req_1m'= Rsp time less than 1m; 'req_2m'= Rsp time less than 2m;
-          'req_5m'= Rsp time less than 5m; 'req_10m'= Rsp time less than 10m; 'req_20m'=
-          Rsp time less than 20m; 'req_50m'= Rsp time less than 50m; 'req_100m'= Rsp time
-          less than 100m; 'req_200m'= Rsp time less than 200m; 'req_500m'= Rsp time less
-          than 500m; 'req_1s'= Rsp time less than 1s; 'req_2s'= Rsp time less than 2s;
-          'req_5s'= Rsp time less than 5s; 'req_over_5s'= Rsp time greater than equal to
-          5s; 'insert_client_port'= Insert client Port; 'req_track'= Method TRACK;
+                - "'req_sz_8k'= Req less than equal to 8K; 'req_sz_16k'= Req less than equal to
+          16K; 'req_sz_32k'= Req less than equal to 32K; 'req_sz_64k'= Req less than
+          equal to 64K; 'req_sz_256k'= Req less than equal to 256K; 'req_sz_gt_256k'= Req
+          greater than 256K; 'rsp_sz_1k'= Resp less than equal to 1K; 'rsp_sz_2k'= Resp
+          less than equal to 2K; 'rsp_sz_4k'= Resp less than equal to 4K; 'rsp_sz_8k'=
+          Resp less than equal to 8K; 'rsp_sz_16k'= Resp less than equal to 16K;
+          'rsp_sz_32k'= Resp less than equal to 32K; 'rsp_sz_64k'= Resp less than equal
+          to 64K; 'rsp_sz_256k'= Resp less than equal to 256K; 'rsp_sz_gt_256k'= Resp
+          greater than 256K; 'chunk_sz_512'= Chunk less than equal to 512; 'chunk_sz_1k'=
+          Chunk less than equal to 1K; 'chunk_sz_2k'= Chunk less than equal to 2K;
+          'chunk_sz_4k'= Chunk less than equal to 4K; 'chunk_sz_gt_4k'= Chunk greater
+          than 4K; 'pconn_connecting'= pconn connecting; 'pconn_connected'= pconn
+          connected; 'pconn_connecting_failed'= pconn conn failed; 'chunk_bad'= Bad
+          Chunk; 'req_10u'= Rsp time less than 10u; 'req_20u'= Rsp time less than 20u;
+          'req_50u'= Rsp time less than 50u; 'req_100u'= Rsp time less than 100u;
+          'req_200u'= Rsp time less than 200u; 'req_500u'= Rsp time less than 500u;
+          'req_1m'= Rsp time less than 1m; 'req_2m'= Rsp time less than 2m; 'req_5m'= Rsp
+          time less than 5m; 'req_10m'= Rsp time less than 10m; 'req_20m'= Rsp time less
+          than 20m; 'req_50m'= Rsp time less than 50m; 'req_100m'= Rsp time less than
+          100m; 'req_200m'= Rsp time less than 200m; 'req_500m'= Rsp time less than 500m;
+          'req_1s'= Rsp time less than 1s; 'req_2s'= Rsp time less than 2s; 'req_5s'= Rsp
+          time less than 5s; 'req_over_5s'= Rsp time greater than equal to 5s;
+          'insert_client_port'= Insert client Port; 'req_track'= Method TRACK;
           'connect_req'= Total HTTP CONNECT requests; 'req_enter_ssli'= Total HTTP
           requests enter SSLi; 'non_http_bypass'= Non-HTTP bypass;
           'decompression_before'= Tot data before decompress; 'decompression_after'= Tot
@@ -245,6 +245,14 @@ options:
           'doh_dns_resp_rcode_notauth'= DoH DNS Response rcode NOTAUTH;
           'doh_dns_resp_rcode_notzone'= DoH DNS Response rcode NOTZONE;
           'doh_dns_resp_rcode_other'= DoH DNS Response rcode OTHER;
+          'compression_before_br'= Tot data before brotli compress;
+          'compression_after_br'= Tot data after brotli compress;
+          'compression_before_total'= Tot data before compress;
+          'compression_after_total'= Tot data after compress; 'decompression_before_br'=
+          Tot data before brotli decompress; 'decompression_after_br'= Tot data after
+          brotli decompress; 'decompression_before_total'= Tot data before decompress;
+          'decompression_after_total'= Tot data after decompress; 'compress_rsp_br'=
+          Compress req with brotli; 'compress_rsp_total'= Compress req;
           'h2up_content_length_alias'= HTTP2 content length alias;
           'malformed_h2up_header_value'= Malformed HTTP2 header value;
           'malformed_h2up_scheme_value'= Malformed HTTP2 scheme value;
@@ -254,7 +262,10 @@ options:
           'transfer_encoding_and_content_length'= Transfer-encoding header with Content-
           Length header; 'get_and_payload'= GET method with content-length header or
           transfer-encoding header; 'h2up_with_host_and_auth'= HTTP2 with host header and
-          authority header; 'header_filter_rule_hit'= Hit header filter rule;
+          authority header; 'req_http3'= Request 3.0; 'response_http3'= Resp 3.0;
+          'header_filter_rule_hit'= Hit header filter rule; 'current_stream'= Current
+          Stream; 'stream_create'= Stream Created; 'stream_free'= Stream Free;
+          'end_stream_rcvd'= End Stream Received; 'end_stream_sent'= End Stream Sent;
           'http1_client_idle_timeout'= HTTP1 client idle timeout;
           'http2_client_idle_timeout'= HTTP2 client idle timeout;"
                 type: str
@@ -328,7 +339,7 @@ options:
                 type: str
             fwdreqdata_fail:
                 description:
-                - "some help string"
+                - "Field fwdreqdata_fail"
                 type: str
             req_retran:
                 description:
@@ -1114,6 +1125,66 @@ options:
                 description:
                 - "DoH DNS Response rcode OTHER"
                 type: str
+            compression_before_br:
+                description:
+                - "Tot data before brotli compress"
+                type: str
+            compression_after_br:
+                description:
+                - "Tot data after brotli compress"
+                type: str
+            compression_before_total:
+                description:
+                - "Tot data before compress"
+                type: str
+            compression_after_total:
+                description:
+                - "Tot data after compress"
+                type: str
+            decompression_before_br:
+                description:
+                - "Tot data before brotli decompress"
+                type: str
+            decompression_after_br:
+                description:
+                - "Tot data after brotli decompress"
+                type: str
+            decompression_before_total:
+                description:
+                - "Tot data before decompress"
+                type: str
+            decompression_after_total:
+                description:
+                - "Tot data after decompress"
+                type: str
+            req_http3:
+                description:
+                - "Request 3.0"
+                type: str
+            response_http3:
+                description:
+                - "Resp 3.0"
+                type: str
+            current_stream:
+                description:
+                - "Current Stream"
+                type: str
+            stream_create:
+                description:
+                - "Stream Created"
+                type: str
+            stream_free:
+                description:
+                - "Stream Free"
+                type: str
+            end_stream_rcvd:
+                description:
+                - "End Stream Received"
+                type: str
+            end_stream_sent:
+                description:
+                - "End Stream Sent"
+                type: str
 
 '''
 
@@ -1209,22 +1280,23 @@ def get_argspec():
                     'response_411', 'response_412', 'response_413', 'response_414', 'response_415', 'response_416', 'response_417', 'response_418', 'response_422', 'response_423', 'response_424', 'response_425', 'response_426', 'response_449', 'response_450', 'response_5xx', 'response_500', 'response_501', 'response_502', 'response_503',
                     'response_504', 'response_505', 'response_506', 'response_507', 'response_508', 'response_509', 'response_510', 'response_6xx', 'response_unknown', 'req_http10', 'req_http11', 'response_http10', 'response_http11', 'req_get', 'req_head', 'req_put', 'req_post', 'req_trace', 'req_options', 'req_connect', 'req_delete',
                     'req_unknown', 'req_content_len', 'rsp_content_len', 'rsp_chunk', 'req_chunk', 'compress_rsp', 'compress_del_accept_enc', 'compress_resp_already_compressed', 'compress_content_type_excluded', 'compress_no_content_type', 'compress_resp_lt_min', 'compress_resp_no_cl_or_ce', 'compress_ratio_too_high', 'cache_rsp', 'close_on_ddos',
-                    'req_http10_keepalive', 'req_sz_1k', 'req_sz_2k'
+                    'req_http10_keepalive', 'req_sz_1k', 'req_sz_2k', 'req_sz_4k'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'req_sz_4k', 'req_sz_8k', 'req_sz_16k', 'req_sz_32k', 'req_sz_64k', 'req_sz_256k', 'req_sz_gt_256k', 'rsp_sz_1k', 'rsp_sz_2k', 'rsp_sz_4k', 'rsp_sz_8k', 'rsp_sz_16k', 'rsp_sz_32k', 'rsp_sz_64k', 'rsp_sz_256k', 'rsp_sz_gt_256k', 'chunk_sz_512', 'chunk_sz_1k', 'chunk_sz_2k', 'chunk_sz_4k', 'chunk_sz_gt_4k', 'pconn_connecting',
+                    'req_sz_8k', 'req_sz_16k', 'req_sz_32k', 'req_sz_64k', 'req_sz_256k', 'req_sz_gt_256k', 'rsp_sz_1k', 'rsp_sz_2k', 'rsp_sz_4k', 'rsp_sz_8k', 'rsp_sz_16k', 'rsp_sz_32k', 'rsp_sz_64k', 'rsp_sz_256k', 'rsp_sz_gt_256k', 'chunk_sz_512', 'chunk_sz_1k', 'chunk_sz_2k', 'chunk_sz_4k', 'chunk_sz_gt_4k', 'pconn_connecting',
                     'pconn_connected', 'pconn_connecting_failed', 'chunk_bad', 'req_10u', 'req_20u', 'req_50u', 'req_100u', 'req_200u', 'req_500u', 'req_1m', 'req_2m', 'req_5m', 'req_10m', 'req_20m', 'req_50m', 'req_100m', 'req_200m', 'req_500m', 'req_1s', 'req_2s', 'req_5s', 'req_over_5s', 'insert_client_port', 'req_track', 'connect_req',
                     'req_enter_ssli', 'non_http_bypass', 'decompression_before', 'decompression_after', 'req_http2', 'response_http2', 'req_timeout_retry', 'req_timeout_close', 'doh_req', 'doh_req_get', 'doh_req_post', 'doh_non_doh_req', 'doh_non_doh_req_get', 'doh_non_doh_req_post', 'doh_resp', 'doh_tc_resp', 'doh_udp_dns_req', 'doh_udp_dns_resp',
                     'doh_tcp_dns_req', 'doh_tcp_dns_resp', 'doh_req_send_failed', 'doh_resp_send_failed', 'doh_malloc_fail', 'doh_req_udp_retry', 'doh_req_udp_retry_fail', 'doh_req_tcp_retry', 'doh_req_tcp_retry_fail', 'doh_snat_failed', 'doh_path_not_found', 'doh_get_dns_arg_failed', 'doh_get_base64_decode_failed',
                     'doh_post_content_type_mismatch', 'doh_post_payload_not_found', 'doh_post_payload_extract_failed', 'doh_non_doh_method', 'doh_tcp_send_failed', 'doh_udp_send_failed', 'doh_query_time_out', 'doh_dns_query_type_a', 'doh_dns_query_type_aaaa', 'doh_dns_query_type_ns', 'doh_dns_query_type_cname', 'doh_dns_query_type_any',
                     'doh_dns_query_type_srv', 'doh_dns_query_type_mx', 'doh_dns_query_type_soa', 'doh_dns_query_type_others', 'doh_resp_setup_failed', 'doh_resp_header_alloc_failed', 'doh_resp_que_failed', 'doh_resp_udp_frags', 'doh_resp_tcp_frags', 'doh_serv_sel_failed', 'doh_retry_w_tcp', 'doh_get_uri_too_long', 'doh_post_payload_too_large',
                     'doh_dns_malformed_query', 'doh_dns_resp_rcode_err_format', 'doh_dns_resp_rcode_err_server', 'doh_dns_resp_rcode_err_name', 'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse', 'doh_dns_resp_rcode_yxdomain', 'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset', 'doh_dns_resp_rcode_notauth',
-                    'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth',
-                    'header_filter_rule_hit', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
+                    'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'compression_before_br', 'compression_after_br', 'compression_before_total', 'compression_after_total', 'decompression_before_br', 'decompression_after_br', 'decompression_before_total', 'decompression_after_total', 'compress_rsp_br', 'compress_rsp_total',
+                    'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth', 'req_http3', 'response_http3', 'header_filter_rule_hit',
+                    'current_stream', 'stream_create', 'stream_free', 'end_stream_rcvd', 'end_stream_sent', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
                     ]
                 }
             },
@@ -2156,6 +2228,36 @@ def get_argspec():
                 'doh_dns_resp_rcode_other': {
                     'type': 'int',
                     },
+                'compression_before_br': {
+                    'type': 'int',
+                    },
+                'compression_after_br': {
+                    'type': 'int',
+                    },
+                'compression_before_total': {
+                    'type': 'int',
+                    },
+                'compression_after_total': {
+                    'type': 'int',
+                    },
+                'decompression_before_br': {
+                    'type': 'int',
+                    },
+                'decompression_after_br': {
+                    'type': 'int',
+                    },
+                'decompression_before_total': {
+                    'type': 'int',
+                    },
+                'decompression_after_total': {
+                    'type': 'int',
+                    },
+                'compress_rsp_br': {
+                    'type': 'int',
+                    },
+                'compress_rsp_total': {
+                    'type': 'int',
+                    },
                 'h2up_content_length_alias': {
                     'type': 'int',
                     },
@@ -2184,6 +2286,21 @@ def get_argspec():
                     'type': 'int',
                     },
                 'header_filter_rule_hit': {
+                    'type': 'int',
+                    },
+                'current_stream': {
+                    'type': 'int',
+                    },
+                'stream_create': {
+                    'type': 'int',
+                    },
+                'stream_free': {
+                    'type': 'int',
+                    },
+                'end_stream_rcvd': {
+                    'type': 'int',
+                    },
+                'end_stream_sent': {
                     'type': 'int',
                     },
                 'http1_client_idle_timeout': {
@@ -2824,6 +2941,51 @@ def get_argspec():
                 'type': 'str',
                 },
             'doh_dns_resp_rcode_other': {
+                'type': 'str',
+                },
+            'compression_before_br': {
+                'type': 'str',
+                },
+            'compression_after_br': {
+                'type': 'str',
+                },
+            'compression_before_total': {
+                'type': 'str',
+                },
+            'compression_after_total': {
+                'type': 'str',
+                },
+            'decompression_before_br': {
+                'type': 'str',
+                },
+            'decompression_after_br': {
+                'type': 'str',
+                },
+            'decompression_before_total': {
+                'type': 'str',
+                },
+            'decompression_after_total': {
+                'type': 'str',
+                },
+            'req_http3': {
+                'type': 'str',
+                },
+            'response_http3': {
+                'type': 'str',
+                },
+            'current_stream': {
+                'type': 'str',
+                },
+            'stream_create': {
+                'type': 'str',
+                },
+            'stream_free': {
+                'type': 'str',
+                },
+            'end_stream_rcvd': {
+                'type': 'str',
+                },
+            'end_stream_sent': {
                 'type': 'str',
                 }
             }

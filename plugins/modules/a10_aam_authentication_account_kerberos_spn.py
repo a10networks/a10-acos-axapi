@@ -195,7 +195,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/authentication/account/kerberos-spn/{name}"
+    url_base = "/axapi/v3/aam/authentication/account/kerberos-spn"
 
     f_dict = {}
     f_dict["name"] = ""

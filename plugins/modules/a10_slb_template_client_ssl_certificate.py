@@ -197,7 +197,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/client-ssl/{client_ssl_name}/certificate/{cert}"
+    url_base = "/axapi/v3/slb/template/client-ssl/{client_ssl_name}/certificate"
 
     f_dict = {}
     f_dict["cert"] = ""

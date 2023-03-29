@@ -283,7 +283,8 @@ options:
           protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
           'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
           'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
-          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port;"
+          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; 'http-
+          over-quic'= HTTP3-over-quic port;"
                 type: str
             range:
                 description:
@@ -436,13 +437,13 @@ options:
                 description:
                 - "Enable syn-cookie"
                 type: bool
-            expand:
-                description:
-                - "expand syn-cookie with timestamp and wscale"
-                type: bool
             showtech_print_extended_stats:
                 description:
                 - "Enable print extended stats in showtech for dns vports"
+                type: bool
+            expand:
+                description:
+                - "expand syn-cookie with timestamp and wscale"
                 type: bool
             attack_detection:
                 description:
@@ -476,14 +477,6 @@ options:
                 description:
                 - "Field enable_scaleout"
                 type: bool
-            scaleout_bucket_count:
-                description:
-                - "Number of traffic buckets"
-                type: int
-            scaleout_device_group:
-                description:
-                - "Device group id"
-                type: int
             pool:
                 description:
                 - "Specify NAT pool or pool group"
@@ -893,10 +886,6 @@ options:
                 description:
                 - "FIX Template Name"
                 type: str
-            waf_template:
-                description:
-                - "WAF template (WAF Template Name)"
-                type: str
             template_ssli:
                 description:
                 - "SSLi template (SSLi Template Name)"
@@ -920,6 +909,26 @@ options:
             template_tcp_proxy_shared:
                 description:
                 - "TCP Proxy Template name"
+                type: str
+            template_quic_client:
+                description:
+                - "QUIC Config Client (QUIC Config name)"
+                type: str
+            template_quic_server:
+                description:
+                - "QUIC Config Server (QUIC Config name)"
+                type: str
+            template_quic:
+                description:
+                - "QUIC Template Name"
+                type: str
+            shared_partition_quic_template:
+                description:
+                - "Reference a QUIC template from shared partition"
+                type: bool
+            template_quic_shared:
+                description:
+                - "QUIC Template name"
                 type: str
             use_default_if_no_server:
                 description:
@@ -981,6 +990,15 @@ options:
             resolve_web_cat_list:
                 description:
                 - "Web Category List name"
+                type: str
+            ng_waf:
+                description:
+                - "Next-gen WAF"
+                type: bool
+            fast_path:
+                description:
+                - "'force'= Force fast path in SLB processing; 'disable'= Disable fast path in SLB
+          processing;"
                 type: str
             uuid:
                 description:
@@ -1300,9 +1318,14 @@ def get_argspec():
                 'required': True,
                 },
             'protocol': {
-                'type': 'str',
-                'required': True,
-                'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
+                'type':
+                'str',
+                'required':
+                True,
+                'choices': [
+                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix',
+                    'http-over-quic'
+                    ]
                 },
             'range': {
                 'type': 'int',
@@ -1422,10 +1445,10 @@ def get_argspec():
             'syn_cookie': {
                 'type': 'bool',
                 },
-            'expand': {
+            'showtech_print_extended_stats': {
                 'type': 'bool',
                 },
-            'showtech_print_extended_stats': {
+            'expand': {
                 'type': 'bool',
                 },
             'attack_detection': {
@@ -1529,12 +1552,6 @@ def get_argspec():
                 },
             'enable_scaleout': {
                 'type': 'bool',
-                },
-            'scaleout_bucket_count': {
-                'type': 'int',
-                },
-            'scaleout_device_group': {
-                'type': 'int',
                 },
             'pool': {
                 'type': 'str',
@@ -1841,9 +1858,6 @@ def get_argspec():
             'template_fix_shared': {
                 'type': 'str',
                 },
-            'waf_template': {
-                'type': 'str',
-                },
             'template_ssli': {
                 'type': 'str',
                 },
@@ -1860,6 +1874,21 @@ def get_argspec():
                 'type': 'bool',
                 },
             'template_tcp_proxy_shared': {
+                'type': 'str',
+                },
+            'template_quic_client': {
+                'type': 'str',
+                },
+            'template_quic_server': {
+                'type': 'str',
+                },
+            'template_quic': {
+                'type': 'str',
+                },
+            'shared_partition_quic_template': {
+                'type': 'bool',
+                },
+            'template_quic_shared': {
                 'type': 'str',
                 },
             'use_default_if_no_server': {
@@ -1910,6 +1939,13 @@ def get_argspec():
             'resolve_web_cat_list': {
                 'type': 'str',
                 },
+            'ng_waf': {
+                'type': 'bool',
+                },
+            'fast_path': {
+                'type': 'str',
+                'choices': ['force', 'disable']
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -1928,7 +1964,8 @@ def get_argspec():
                         'throughput-bits-per-sec', 'dynamic-memory-alloc', 'dynamic-memory-free', 'dynamic-memory', 'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts', 'total_dns_filter_type_drop', 'total_dns_filter_class_drop', 'dns_filter_type_a_drop', 'dns_filter_type_aaaa_drop',
                         'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop', 'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop',
                         'dns_filter_class_hesiod_drop', 'dns_filter_class_none_drop', 'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip',
-                        'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
+                        'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name', 'compression_bytes_before_br', 'compression_bytes_after_br', 'compression_bytes_before_total', 'compression_bytes_after_total', 'compression_hit_br', 'compression_miss_br', 'compression_hit_total',
+                        'compression_miss_total', 'dnsrrl_total_tc', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
                         ]
                     }
                 },
@@ -2015,10 +2052,14 @@ def get_argspec():
                     'required': True,
                     },
                 'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices':
-                    ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']
+                    'type':
+                    'str',
+                    'required':
+                    True,
+                    'choices': [
+                        'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix',
+                        'http-over-quic'
+                        ]
                     },
                 'oper': {
                     'type': 'dict',
@@ -2033,6 +2074,9 @@ def get_argspec():
                         'type': 'int',
                         },
                     'curr_conn_overflow': {
+                        'type': 'int',
+                        },
+                    'print_extended_stats': {
                         'type': 'int',
                         },
                     'loc_list': {
@@ -2734,7 +2778,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/virtual-server/{name}"
+    url_base = "/axapi/v3/slb/virtual-server"
 
     f_dict = {}
     f_dict["name"] = ""

@@ -231,7 +231,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/common/conn-rate-limit/src-ip/{disable_ipv6_support}+{protocol}"
+    url_base = "/axapi/v3/slb/common/conn-rate-limit/src-ip/"
 
     f_dict = {}
     f_dict["disable_ipv6_support"] = ""

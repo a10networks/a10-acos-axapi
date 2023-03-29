@@ -82,6 +82,10 @@ options:
                 description:
                 - "Field disk_usage"
                 type: list
+            alldynamic:
+                description:
+                - "Field alldynamic"
+                type: int
 
 '''
 
@@ -156,7 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'start_time': {'type': 'int', }, 'end_time': {'type': 'int', }, 'total_disk': {'type': 'str', }, 'disk_usage': {'type': 'list', 'time': {'type': 'int', }, 'disk_usage': {'type': 'str', }}}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'start_time': {'type': 'int', }, 'end_time': {'type': 'int', }, 'total_disk': {'type': 'str', }, 'disk_usage': {'type': 'list', 'time': {'type': 'int', }, 'disk_usage': {'type': 'str', }}, 'alldynamic': {'type': 'int', }}})
     return rv
 
 

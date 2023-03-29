@@ -179,7 +179,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/radius-server/host/ipv4/{ipv4_addr}"
+    url_base = "/axapi/v3/radius-server/host/ipv4"
 
     f_dict = {}
     f_dict["ipv4_addr"] = ""

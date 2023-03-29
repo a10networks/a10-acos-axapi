@@ -89,6 +89,16 @@ options:
         - "Max Response Time (Default is 100)"
         type: int
         required: False
+    inside:
+        description:
+        - "Configure interface as inside"
+        type: bool
+        required: False
+    outside:
+        description:
+        - "Configure interface as outside"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -196,7 +206,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address", "generate_membership_query", "generate_membership_query_val", "max_resp_time", "ospf", "rip", "uuid", ]
+AVAILABLE_PROPERTIES = ["address", "generate_membership_query", "generate_membership_query_val", "inside", "max_resp_time", "ospf", "outside", "rip", "uuid", ]
 
 
 def get_default_argspec():
@@ -240,6 +250,12 @@ def get_argspec():
             },
         'max_resp_time': {
             'type': 'int',
+            },
+        'inside': {
+            'type': 'bool',
+            },
+        'outside': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',
