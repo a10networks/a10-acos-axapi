@@ -111,7 +111,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'placeholder'= some help string;"
+                - "'all'= all; 'placeholder'= placeholder;"
                 type: str
     oper:
         description:
@@ -527,7 +527,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{lsn_rule_list_name}/domain-name/{name_domain}"
+    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{lsn_rule_list_name}/domain-name"
 
     f_dict = {}
     f_dict["name_domain"] = ""

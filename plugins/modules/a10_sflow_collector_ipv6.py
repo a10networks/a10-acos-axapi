@@ -65,11 +65,51 @@ options:
         - "Port number (default is 6343)"
         type: int
         required: True
+    use_mgmt_port:
+        description:
+        - "sFlow collector is through out-of-band management"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    customized_setting:
+        description:
+        - "Field customized_setting"
+        type: dict
+        required: False
+        suboptions:
+            export_enable:
+                description:
+                - "'export'= Customizes export settings for collector;"
+                type: str
+            packet_sampling:
+                description:
+                - "Enable packet sampling"
+                type: bool
+            counter_polling:
+                description:
+                - "Enable counter polling"
+                type: bool
+            a10_proprietary_polling:
+                description:
+                - "Enable counters for ACOS control blocks"
+                type: bool
+            event_notification:
+                description:
+                - "Enable event notification"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -124,7 +164,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["addr", "port", "uuid", ]
+AVAILABLE_PROPERTIES = ["addr", "customized_setting", "port", "use_mgmt_port", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,7 +184,47 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'addr': {'type': 'str', 'required': True, }, 'port': {'type': 'int', 'required': True, }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'addr': {
+            'type': 'str',
+            'required': True,
+            },
+        'port': {
+            'type': 'int',
+            'required': True,
+            },
+        'use_mgmt_port': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'customized_setting': {
+            'type': 'dict',
+            'export_enable': {
+                'type': 'str',
+                'choices': ['export']
+                },
+            'packet_sampling': {
+                'type': 'bool',
+                },
+            'counter_polling': {
+                'type': 'bool',
+                },
+            'a10_proprietary_polling': {
+                'type': 'bool',
+                },
+            'event_notification': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -169,7 +249,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/sflow/collector/ipv6/{addr}+{port}"
+    url_base = "/axapi/v3/sflow/collector/ipv6/"
 
     f_dict = {}
     f_dict["addr"] = ""

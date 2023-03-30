@@ -165,7 +165,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/vrrp-a/preferred-session-sync-port/ethernet/{pre_eth}"
+    url_base = "/axapi/v3/vrrp-a/preferred-session-sync-port/ethernet"
 
     f_dict = {}
     f_dict["pre_eth"] = ""

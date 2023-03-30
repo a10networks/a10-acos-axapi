@@ -986,6 +986,12 @@ def get_argspec():
                 'compress_rsp': {
                     'type': 'int',
                     },
+                'compress_rsp_br': {
+                    'type': 'int',
+                    },
+                'compress_rsp_total': {
+                    'type': 'int',
+                    },
                 'compress_del_accept_enc': {
                     'type': 'int',
                     },

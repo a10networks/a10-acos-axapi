@@ -398,7 +398,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/service-ip/{service_ip_node_name}/port/{port_num}+{port_proto}"
+    url_base = "/axapi/v3/gslb/service-ip/{service_ip_node_name}/port/"
 
     f_dict = {}
     f_dict["port_num"] = ""

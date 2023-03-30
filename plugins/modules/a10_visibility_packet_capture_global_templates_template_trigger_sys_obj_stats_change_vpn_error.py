@@ -60,11 +60,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    dummy:
-        description:
-        - "dummy to make intermediate obj to single"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -78,155 +73,155 @@ options:
         suboptions:
             bad_opcode:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_opcode"
                 type: bool
             bad_sg_write_len:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_sg_write_len"
                 type: bool
             bad_len:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_len"
                 type: bool
             bad_ipsec_protocol:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_protocol"
                 type: bool
             bad_ipsec_auth:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_auth"
                 type: bool
             bad_ipsec_padding:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_padding"
                 type: bool
             bad_ip_version:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ip_version"
                 type: bool
             bad_auth_type:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_auth_type"
                 type: bool
             bad_encrypt_type:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_encrypt_type"
                 type: bool
             bad_ipsec_spi:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_spi"
                 type: bool
             bad_checksum:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_checksum"
                 type: bool
             bad_ipsec_context:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_context"
                 type: bool
             bad_ipsec_context_direction:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_context_direction"
                 type: bool
             bad_ipsec_context_flag_mismatch:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_context_flag_mismatch"
                 type: bool
             ipcomp_payload:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipcomp_payload"
                 type: bool
             bad_selector_match:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_selector_match"
                 type: bool
             bad_fragment_size:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_fragment_size"
                 type: bool
             bad_inline_data:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_inline_data"
                 type: bool
             bad_frag_size_configuration:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_frag_size_configuration"
                 type: bool
             dummy_payload:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for dummy_payload"
                 type: bool
             bad_ip_payload_type:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ip_payload_type"
                 type: bool
             bad_min_frag_size_auth_sha384_512:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_min_frag_size_auth_sha384_512"
                 type: bool
             bad_esp_next_header:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_esp_next_header"
                 type: bool
             bad_gre_header:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_gre_header"
                 type: bool
             bad_gre_protocol:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_gre_protocol"
                 type: bool
             ipv6_extension_headers_too_big:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_extension_headers_too_big"
                 type: bool
             ipv6_hop_by_hop_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_hop_by_hop_error"
                 type: bool
             error_ipv6_decrypt_rh_segs_left_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for error_ipv6_decrypt_rh_segs_left_error"
                 type: bool
             ipv6_rh_length_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_rh_length_error"
                 type: bool
             ipv6_outbound_rh_copy_addr_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_outbound_rh_copy_addr_error"
                 type: bool
             error_IPv6_extension_header_bad:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for error_IPv6_extension_header_bad"
                 type: bool
             bad_encrypt_type_ctr_gcm:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_encrypt_type_ctr_gcm"
                 type: bool
             ah_not_supported_with_gcm_gmac_sha2:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ah_not_supported_with_gcm_gmac_sha2"
                 type: bool
             tfc_padding_with_prefrag_not_supported:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for tfc_padding_with_prefrag_not_supported"
                 type: bool
             bad_srtp_auth_tag:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_srtp_auth_tag"
                 type: bool
             bad_ipcomp_configuration:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipcomp_configuration"
                 type: bool
             dsiv_incorrect_param:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for dsiv_incorrect_param"
                 type: bool
             bad_ipsec_unknown:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_unknown"
                 type: bool
             uuid:
                 description:
@@ -249,155 +244,155 @@ options:
                 type: int
             bad_opcode:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_opcode"
                 type: bool
             bad_sg_write_len:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_sg_write_len"
                 type: bool
             bad_len:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_len"
                 type: bool
             bad_ipsec_protocol:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_protocol"
                 type: bool
             bad_ipsec_auth:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_auth"
                 type: bool
             bad_ipsec_padding:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_padding"
                 type: bool
             bad_ip_version:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ip_version"
                 type: bool
             bad_auth_type:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_auth_type"
                 type: bool
             bad_encrypt_type:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_encrypt_type"
                 type: bool
             bad_ipsec_spi:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_spi"
                 type: bool
             bad_checksum:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_checksum"
                 type: bool
             bad_ipsec_context:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_context"
                 type: bool
             bad_ipsec_context_direction:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_context_direction"
                 type: bool
             bad_ipsec_context_flag_mismatch:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_context_flag_mismatch"
                 type: bool
             ipcomp_payload:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipcomp_payload"
                 type: bool
             bad_selector_match:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_selector_match"
                 type: bool
             bad_fragment_size:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_fragment_size"
                 type: bool
             bad_inline_data:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_inline_data"
                 type: bool
             bad_frag_size_configuration:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_frag_size_configuration"
                 type: bool
             dummy_payload:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for dummy_payload"
                 type: bool
             bad_ip_payload_type:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ip_payload_type"
                 type: bool
             bad_min_frag_size_auth_sha384_512:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_min_frag_size_auth_sha384_512"
                 type: bool
             bad_esp_next_header:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_esp_next_header"
                 type: bool
             bad_gre_header:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_gre_header"
                 type: bool
             bad_gre_protocol:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_gre_protocol"
                 type: bool
             ipv6_extension_headers_too_big:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_extension_headers_too_big"
                 type: bool
             ipv6_hop_by_hop_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_hop_by_hop_error"
                 type: bool
             error_ipv6_decrypt_rh_segs_left_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for error_ipv6_decrypt_rh_segs_left_error"
                 type: bool
             ipv6_rh_length_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_rh_length_error"
                 type: bool
             ipv6_outbound_rh_copy_addr_error:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ipv6_outbound_rh_copy_addr_error"
                 type: bool
             error_IPv6_extension_header_bad:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for error_IPv6_extension_header_bad"
                 type: bool
             bad_encrypt_type_ctr_gcm:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_encrypt_type_ctr_gcm"
                 type: bool
             ah_not_supported_with_gcm_gmac_sha2:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for ah_not_supported_with_gcm_gmac_sha2"
                 type: bool
             tfc_padding_with_prefrag_not_supported:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for tfc_padding_with_prefrag_not_supported"
                 type: bool
             bad_srtp_auth_tag:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_srtp_auth_tag"
                 type: bool
             bad_ipcomp_configuration:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipcomp_configuration"
                 type: bool
             dsiv_incorrect_param:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for dsiv_incorrect_param"
                 type: bool
             bad_ipsec_unknown:
                 description:
-                - "Enable automatic packet-capture for some help string"
+                - "Enable automatic packet-capture for bad_ipsec_unknown"
                 type: bool
             uuid:
                 description:
@@ -457,7 +452,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -478,9 +473,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dummy': {
-            'type': 'bool',
-            },
         'uuid': {
             'type': 'str',
             },

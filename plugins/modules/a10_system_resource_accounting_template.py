@@ -176,6 +176,10 @@ options:
                 description:
                 - "Field link_cost_template_cfg"
                 type: dict
+            pbslb_entry_cfg:
+                description:
+                - "Field pbslb_entry_cfg"
+                type: dict
             persist_cookie_template_cfg:
                 description:
                 - "Field persist_cookie_template_cfg"
@@ -616,6 +620,15 @@ def get_argspec():
                     'type': 'int',
                     }
                 },
+            'pbslb_entry_cfg': {
+                'type': 'dict',
+                'pbslb_entry_max': {
+                    'type': 'int',
+                    },
+                'pbslb_entry_min_guarantee': {
+                    'type': 'int',
+                    }
+                },
             'persist_cookie_template_cfg': {
                 'type': 'dict',
                 'persist_cookie_template_max': {
@@ -851,7 +864,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-accounting/template/{name}"
+    url_base = "/axapi/v3/system/resource-accounting/template"
 
     f_dict = {}
     f_dict["name"] = ""

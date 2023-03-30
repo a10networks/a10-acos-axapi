@@ -86,6 +86,10 @@ options:
                 description:
                 - "Field oracle"
                 type: dict
+            k8s:
+                description:
+                - "Field k8s"
+                type: dict
 
 '''
 
@@ -249,6 +253,29 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     'choices': ['enable', 'disable']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'k8s': {
+                'type': 'dict',
+                'action': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'health_check_interval': {
+                    'type': 'str',
+                    'choices': ['5', '10', '15', '20']
+                    },
+                'cluster_config_file': {
+                    'type': 'str',
+                    },
+                'service_label': {
+                    'type': 'list',
+                    'service_label_name': {
+                        'type': 'str',
+                        }
                     },
                 'uuid': {
                     'type': 'str',

@@ -629,10 +629,10 @@ def get_argspec():
                     'type': 'str',
                     },
                 'num': {
-                    'type': 'int',
+                    'type': 'str',
                     },
                 'num2': {
-                    'type': 'int',
+                    'type': 'str',
                     }
                 },
             'atomic_aggregate': {
@@ -761,7 +761,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/route-map/{tag}+{action}+{sequence}"
+    url_base = "/axapi/v3/route-map/+"
 
     f_dict = {}
     f_dict["tag"] = ""

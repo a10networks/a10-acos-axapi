@@ -174,7 +174,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/stateful-firewall/tcp/stun-timeout/{port}+{port_end}"
+    url_base = "/axapi/v3/cgnv6/stateful-firewall/tcp/stun-timeout/"
 
     f_dict = {}
     f_dict["port"] = ""

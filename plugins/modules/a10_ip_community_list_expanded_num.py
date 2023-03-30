@@ -174,7 +174,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ip/community-list/expanded-num/{ext_list_num}"
+    url_base = "/axapi/v3/ip/community-list/expanded-num"
 
     f_dict = {}
     f_dict["ext_list_num"] = ""

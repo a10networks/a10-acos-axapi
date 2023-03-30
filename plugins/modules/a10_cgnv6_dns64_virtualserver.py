@@ -546,6 +546,9 @@ def get_argspec():
                     'curr_conn_overflow': {
                         'type': 'int',
                         },
+                    'print_extended_stats': {
+                        'type': 'int',
+                        },
                     'loc_list': {
                         'type': 'str',
                         },
@@ -881,6 +884,42 @@ def get_argspec():
                         'stream_closed': {
                             'type': 'int',
                             },
+                        'jsi_requests': {
+                            'type': 'int',
+                            },
+                        'jsi_responses': {
+                            'type': 'int',
+                            },
+                        'jsi_pri_requests': {
+                            'type': 'int',
+                            },
+                        'jsi_api_requests': {
+                            'type': 'int',
+                            },
+                        'jsi_api_responses': {
+                            'type': 'int',
+                            },
+                        'jsi_api_no_auth_hdr': {
+                            'type': 'int',
+                            },
+                        'jsi_api_no_token': {
+                            'type': 'int',
+                            },
+                        'jsi_skip_no_fi': {
+                            'type': 'int',
+                            },
+                        'jsi_skip_no_ua': {
+                            'type': 'int',
+                            },
+                        'jsi_skip_not_browser': {
+                            'type': 'int',
+                            },
+                        'jsi_hash_add_fails': {
+                            'type': 'int',
+                            },
+                        'jsi_hash_lookup_fails': {
+                            'type': 'int',
+                            },
                         'header_length_long': {
                             'type': 'int',
                             },
@@ -988,6 +1027,186 @@ def get_argspec():
                             },
                         'rsp_chunk': {
                             'type': 'int',
+                            },
+                        'doh_req': {
+                            'type': 'int',
+                            },
+                        'doh_req_get': {
+                            'type': 'int',
+                            },
+                        'doh_req_post': {
+                            'type': 'int',
+                            },
+                        'doh_non_doh_req': {
+                            'type': 'int',
+                            },
+                        'doh_non_doh_req_get': {
+                            'type': 'int',
+                            },
+                        'doh_non_doh_req_post': {
+                            'type': 'int',
+                            },
+                        'doh_resp': {
+                            'type': 'int',
+                            },
+                        'doh_tc_resp': {
+                            'type': 'int',
+                            },
+                        'doh_udp_dns_req': {
+                            'type': 'int',
+                            },
+                        'doh_udp_dns_resp': {
+                            'type': 'int',
+                            },
+                        'doh_tcp_dns_req': {
+                            'type': 'int',
+                            },
+                        'doh_tcp_dns_resp': {
+                            'type': 'int',
+                            },
+                        'doh_req_send_failed': {
+                            'type': 'int',
+                            },
+                        'doh_resp_send_failed': {
+                            'type': 'int',
+                            },
+                        'doh_malloc_fail': {
+                            'type': 'int',
+                            },
+                        'doh_req_udp_retry': {
+                            'type': 'int',
+                            },
+                        'doh_req_udp_retry_fail': {
+                            'type': 'int',
+                            },
+                        'doh_req_tcp_retry': {
+                            'type': 'int',
+                            },
+                        'doh_req_tcp_retry_fail': {
+                            'type': 'int',
+                            },
+                        'doh_snat_failed': {
+                            'type': 'int',
+                            },
+                        'doh_path_not_found': {
+                            'type': 'int',
+                            },
+                        'doh_get_dns_arg_failed': {
+                            'type': 'int',
+                            },
+                        'doh_get_base64_decode_failed': {
+                            'type': 'int',
+                            },
+                        'doh_post_content_type_mismatch': {
+                            'type': 'int',
+                            },
+                        'doh_post_payload_not_found': {
+                            'type': 'int',
+                            },
+                        'doh_post_payload_extract_failed': {
+                            'type': 'int',
+                            },
+                        'doh_non_doh_method': {
+                            'type': 'int',
+                            },
+                        'doh_tcp_send_failed': {
+                            'type': 'int',
+                            },
+                        'doh_udp_send_failed': {
+                            'type': 'int',
+                            },
+                        'doh_query_time_out': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_a': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_aaaa': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_ns': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_cname': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_any': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_srv': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_mx': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_soa': {
+                            'type': 'int',
+                            },
+                        'doh_dns_query_type_others': {
+                            'type': 'int',
+                            },
+                        'doh_resp_setup_failed': {
+                            'type': 'int',
+                            },
+                        'doh_resp_header_alloc_failed': {
+                            'type': 'int',
+                            },
+                        'doh_resp_que_failed': {
+                            'type': 'int',
+                            },
+                        'doh_resp_udp_frags': {
+                            'type': 'int',
+                            },
+                        'doh_resp_tcp_frags': {
+                            'type': 'int',
+                            },
+                        'doh_serv_sel_failed': {
+                            'type': 'int',
+                            },
+                        'doh_retry_w_tcp': {
+                            'type': 'int',
+                            },
+                        'doh_get_uri_too_long': {
+                            'type': 'int',
+                            },
+                        'doh_post_payload_too_large': {
+                            'type': 'int',
+                            },
+                        'doh_dns_malformed_query': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_err_format': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_err_server': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_err_name': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_err_type': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_refuse': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_yxdomain': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_yxrrset': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_nxrrset': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_notauth': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_notzone': {
+                            'type': 'int',
+                            },
+                        'doh_dns_resp_rcode_other': {
+                            'type': 'int',
                             }
                         },
                     'cpu_count': {
@@ -1029,7 +1248,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/{name}"
+    url_base = "/axapi/v3/cgnv6/dns64-virtualserver"
 
     f_dict = {}
     f_dict["name"] = ""

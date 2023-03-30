@@ -171,7 +171,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/netflow/monitor/{monitor_name}/sample/nat-pool/{pool_name}"
+    url_base = "/axapi/v3/netflow/monitor/{monitor_name}/sample/nat-pool"
 
     f_dict = {}
     f_dict["pool_name"] = ""

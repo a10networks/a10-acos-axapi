@@ -113,6 +113,11 @@ options:
         - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure"
         type: bool
         required: False
+    gtp_smp_dec_sess_count_check_failed:
+        description:
+        - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -173,7 +178,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "gtp_c_ref_count_smp_exceeded", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure", "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_check_failed", "gtp_smp_path_check_failed", "gtp_smp_session_count_check_failed", "gtp_tunnel_rate_limit_entry_create_fail", "gtp_u_smp_in_rml_with_sess", "out_of_session_memory", "uuid",
+    "gtp_c_ref_count_smp_exceeded", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure", "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_check_failed", "gtp_smp_dec_sess_count_check_failed", "gtp_smp_path_check_failed", "gtp_smp_session_count_check_failed", "gtp_tunnel_rate_limit_entry_create_fail",
+    "gtp_u_smp_in_rml_with_sess", "out_of_session_memory", "uuid",
     ]
 
 
@@ -223,6 +229,9 @@ def get_argspec():
             'type': 'bool',
             },
         'gtp_rate_limit_entry_create_failure': {
+            'type': 'bool',
+            },
+        'gtp_smp_dec_sess_count_check_failed': {
             'type': 'bool',
             },
         'uuid': {

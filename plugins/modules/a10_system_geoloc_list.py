@@ -103,8 +103,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'hit-count'= some help string; 'total-geoloc'= some help string;
-          'total-active'= some help string;"
+                - "'all'= all; 'hit-count'= hit-count; 'total-geoloc'= total-geoloc; 'total-
+          active'= total-active;"
                 type: str
     oper:
         description:
@@ -128,15 +128,15 @@ options:
         suboptions:
             hit_count:
                 description:
-                - "some help string"
+                - "Field hit_count"
                 type: str
             total_geoloc:
                 description:
-                - "some help string"
+                - "Field total_geoloc"
                 type: str
             total_active:
                 description:
-                - "some help string"
+                - "Field total_active"
                 type: str
             name:
                 description:
@@ -308,7 +308,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/geoloc-list/{name}"
+    url_base = "/axapi/v3/system/geoloc-list"
 
     f_dict = {}
     f_dict["name"] = ""

@@ -70,11 +70,6 @@ options:
         - "Port template (Port template name)"
         type: str
         required: False
-    template_server:
-        description:
-        - "Server template (Server template name)"
-        type: str
-        required: False
     template_policy:
         description:
         - "Policy template (Policy template name)"
@@ -660,7 +655,7 @@ AVAILABLE_PROPERTIES = [
     "backup_server_event_log", "conn_rate", "conn_rate_duration", "conn_rate_grace_period", "conn_rate_log", "conn_rate_revert_duration", "conn_revert_rate", "extended_stats", "health_check", "health_check_disable", "l4_session_revert_duration", "l4_session_usage", "l4_session_usage_duration", "l4_session_usage_grace_period",
     "l4_session_usage_log", "l4_session_usage_revert_rate", "lb_method", "lc_method", "lclb_method", "link_probe_template", "llb_method", "member_list", "min_active_member", "min_active_member_action", "name", "oper", "persist_scoring", "priorities", "priority_affinity", "protocol", "pseudo_round_robin", "report_delay", "reset",
     "reset_on_server_selection_fail", "reset_priority_affinity", "rpt_ext_server", "sample_rsp_time", "sampling_enable", "shared_partition_policy_template", "shared_partition_svcgrp_health_check", "stateless_auto_switch", "stateless_lb_method", "stateless_lb_method2", "stats", "stats_data_action", "strict_select", "svcgrp_health_check_shared",
-    "template_policy", "template_policy_shared", "template_port", "template_server", "top_fastest", "top_slowest", "traffic_replication_mirror", "traffic_replication_mirror_da_repl", "traffic_replication_mirror_ip_repl", "traffic_replication_mirror_sa_da_repl", "traffic_replication_mirror_sa_repl", "user_tag", "uuid",
+    "template_policy", "template_policy_shared", "template_port", "top_fastest", "top_slowest", "traffic_replication_mirror", "traffic_replication_mirror_da_repl", "traffic_replication_mirror_ip_repl", "traffic_replication_mirror_sa_da_repl", "traffic_replication_mirror_sa_repl", "user_tag", "uuid",
     ]
 
 
@@ -691,9 +686,6 @@ def get_argspec():
             'choices': ['tcp', 'udp']
             },
         'template_port': {
-            'type': 'str',
-            },
-        'template_server': {
             'type': 'str',
             },
         'template_policy': {
@@ -1238,7 +1230,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/service-group/{name}"
+    url_base = "/axapi/v3/slb/service-group"
 
     f_dict = {}
     f_dict["name"] = ""

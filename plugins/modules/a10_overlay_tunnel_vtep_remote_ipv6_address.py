@@ -88,8 +88,7 @@ options:
                 type: str
             lif:
                 description:
-                - "Logical interface binding the Provider Partition to the User Partition (logical
-          interface name)"
+                - "Logical interface (logical interface name)"
                 type: str
             uuid:
                 description:
@@ -196,7 +195,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/remote-ipv6_address/{ipv6-address}"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/remote-ipv6-address"
 
     f_dict = {}
     f_dict["ipv6_address"] = ""

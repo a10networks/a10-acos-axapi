@@ -79,49 +79,6 @@ options:
         - "Number of occurrences of AS number"
         type: int
         required: False
-    prefix_list_direction:
-        description:
-        - "'both'= both; 'receive'= receive; 'send'= send;"
-        type: str
-        required: False
-    default_originate:
-        description:
-        - "Originate default route to this neighbor"
-        type: bool
-        required: False
-    route_map:
-        description:
-        - "Route-map to specify criteria to originate default (route-map name)"
-        type: str
-        required: False
-    distribute_lists:
-        description:
-        - "Field distribute_lists"
-        type: list
-        required: False
-        suboptions:
-            distribute_list:
-                description:
-                - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
-                type: str
-            distribute_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-                type: str
-    neighbor_filter_lists:
-        description:
-        - "Field neighbor_filter_lists"
-        type: list
-        required: False
-        suboptions:
-            filter_list:
-                description:
-                - "Establish BGP filters (AS path access-list name)"
-                type: str
-            filter_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-                type: str
     maximum_prefix:
         description:
         - "Maximum number of prefix accept from this peer (maximum no. of prefix limit
@@ -138,20 +95,6 @@ options:
         - "Disable the next hop calculation for this neighbor"
         type: bool
         required: False
-    neighbor_prefix_lists:
-        description:
-        - "Field neighbor_prefix_lists"
-        type: list
-        required: False
-        suboptions:
-            nbr_prefix_list:
-                description:
-                - "Filter updates to/from this neighbor (Name of a prefix list)"
-                type: str
-            nbr_prefix_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-                type: str
     remove_private_as:
         description:
         - "Remove private AS number from outbound updates"
@@ -171,22 +114,10 @@ options:
                 description:
                 - "'in'= in; 'out'= out;"
                 type: str
-    send_community_val:
-        description:
-        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
-          Sending Community attributes; 'standard'= Send Standard Community attributes;
-          'extended'= Send Extended Community attributes;"
-        type: str
-        required: False
     inbound:
         description:
         - "Allow inbound soft reconfiguration for this neighbor"
         type: bool
-        required: False
-    unsuppress_map:
-        description:
-        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
-        type: str
         required: False
     weight:
         description:
@@ -252,10 +183,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "activate", "allowas_in", "allowas_in_count", "default_originate", "distribute_lists", "inbound", "maximum_prefix", "maximum_prefix_thres", "neighbor_filter_lists", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "peer_group", "prefix_list_direction", "remove_private_as", "route_map", "send_community_val",
-    "unsuppress_map", "uuid", "weight",
-    ]
+AVAILABLE_PROPERTIES = ["activate", "allowas_in", "allowas_in_count", "inbound", "maximum_prefix", "maximum_prefix_thres", "neighbor_route_map_lists", "next_hop_self", "peer_group", "remove_private_as", "uuid", "weight", ]
 
 
 def get_default_argspec():
@@ -289,36 +217,6 @@ def get_argspec():
         'allowas_in_count': {
             'type': 'int',
             },
-        'prefix_list_direction': {
-            'type': 'str',
-            'choices': ['both', 'receive', 'send']
-            },
-        'default_originate': {
-            'type': 'bool',
-            },
-        'route_map': {
-            'type': 'str',
-            },
-        'distribute_lists': {
-            'type': 'list',
-            'distribute_list': {
-                'type': 'str',
-                },
-            'distribute_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                }
-            },
-        'neighbor_filter_lists': {
-            'type': 'list',
-            'filter_list': {
-                'type': 'str',
-                },
-            'filter_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                }
-            },
         'maximum_prefix': {
             'type': 'int',
             },
@@ -327,16 +225,6 @@ def get_argspec():
             },
         'next_hop_self': {
             'type': 'bool',
-            },
-        'neighbor_prefix_lists': {
-            'type': 'list',
-            'nbr_prefix_list': {
-                'type': 'str',
-                },
-            'nbr_prefix_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-                }
             },
         'remove_private_as': {
             'type': 'bool',
@@ -351,15 +239,8 @@ def get_argspec():
                 'choices': ['in', 'out']
                 }
             },
-        'send_community_val': {
-            'type': 'str',
-            'choices': ['both', 'none', 'standard', 'extended']
-            },
         'inbound': {
             'type': 'bool',
-            },
-        'unsuppress_map': {
-            'type': 'str',
             },
         'weight': {
             'type': 'int',
@@ -394,7 +275,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/router/bgp/{bgp_as_number}/address-family/ipv6/neighbor/peer_group-neighbor/{peer-group}"
+    url_base = "/axapi/v3/router/bgp/{bgp_as_number}/address-family/ipv6/neighbor/peer-group-neighbor"
 
     f_dict = {}
     f_dict["peer_group"] = ""

@@ -239,7 +239,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/acos-events/message-selector/{message_selector_name}/rule/{index}"
+    url_base = "/axapi/v3/acos-events/message-selector/{message_selector_name}/rule"
 
     f_dict = {}
     f_dict["index"] = ""

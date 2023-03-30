@@ -73,8 +73,7 @@ options:
         required: False
     lif:
         description:
-        - "Logical interface binding the Provider Partition to the User Partition (logical
-          interface name)"
+        - "Logical interface (logical interface name)"
         type: str
         required: False
     uuid:

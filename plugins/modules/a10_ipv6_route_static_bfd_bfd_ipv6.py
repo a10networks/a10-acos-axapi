@@ -184,7 +184,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ipv6/route/static/bfd/bfd-ipv6/{local_ipv6}+{nexthop_ipv6}"
+    url_base = "/axapi/v3/ipv6/route/static/bfd/bfd-ipv6/"
 
     f_dict = {}
     f_dict["local_ipv6"] = ""

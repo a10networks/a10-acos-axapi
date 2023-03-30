@@ -165,7 +165,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ipv6/nat/inside/source/list/{list_name}"
+    url_base = "/axapi/v3/ipv6/nat/inside/source/list"
 
     f_dict = {}
     f_dict["list_name"] = ""

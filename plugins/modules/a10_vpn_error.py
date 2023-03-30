@@ -68,155 +68,155 @@ options:
         suboptions:
             bad_opcode:
                 description:
-                - "some help string"
+                - "Field bad_opcode"
                 type: str
             bad_sg_write_len:
                 description:
-                - "some help string"
+                - "Field bad_sg_write_len"
                 type: str
             bad_len:
                 description:
-                - "some help string"
+                - "Field bad_len"
                 type: str
             bad_ipsec_protocol:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_protocol"
                 type: str
             bad_ipsec_auth:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_auth"
                 type: str
             bad_ipsec_padding:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_padding"
                 type: str
             bad_ip_version:
                 description:
-                - "some help string"
+                - "Field bad_ip_version"
                 type: str
             bad_auth_type:
                 description:
-                - "some help string"
+                - "Field bad_auth_type"
                 type: str
             bad_encrypt_type:
                 description:
-                - "some help string"
+                - "Field bad_encrypt_type"
                 type: str
             bad_ipsec_spi:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_spi"
                 type: str
             bad_checksum:
                 description:
-                - "some help string"
+                - "Field bad_checksum"
                 type: str
             bad_ipsec_context:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_context"
                 type: str
             bad_ipsec_context_direction:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_context_direction"
                 type: str
             bad_ipsec_context_flag_mismatch:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_context_flag_mismatch"
                 type: str
             ipcomp_payload:
                 description:
-                - "some help string"
+                - "Field ipcomp_payload"
                 type: str
             bad_selector_match:
                 description:
-                - "some help string"
+                - "Field bad_selector_match"
                 type: str
             bad_fragment_size:
                 description:
-                - "some help string"
+                - "Field bad_fragment_size"
                 type: str
             bad_inline_data:
                 description:
-                - "some help string"
+                - "Field bad_inline_data"
                 type: str
             bad_frag_size_configuration:
                 description:
-                - "some help string"
+                - "Field bad_frag_size_configuration"
                 type: str
             dummy_payload:
                 description:
-                - "some help string"
+                - "Field dummy_payload"
                 type: str
             bad_ip_payload_type:
                 description:
-                - "some help string"
+                - "Field bad_ip_payload_type"
                 type: str
             bad_min_frag_size_auth_sha384_512:
                 description:
-                - "some help string"
+                - "Field bad_min_frag_size_auth_sha384_512"
                 type: str
             bad_esp_next_header:
                 description:
-                - "some help string"
+                - "Field bad_esp_next_header"
                 type: str
             bad_gre_header:
                 description:
-                - "some help string"
+                - "Field bad_gre_header"
                 type: str
             bad_gre_protocol:
                 description:
-                - "some help string"
+                - "Field bad_gre_protocol"
                 type: str
             ipv6_extension_headers_too_big:
                 description:
-                - "some help string"
+                - "Field ipv6_extension_headers_too_big"
                 type: str
             ipv6_hop_by_hop_error:
                 description:
-                - "some help string"
+                - "Field ipv6_hop_by_hop_error"
                 type: str
             error_ipv6_decrypt_rh_segs_left_error:
                 description:
-                - "some help string"
+                - "Field error_ipv6_decrypt_rh_segs_left_error"
                 type: str
             ipv6_rh_length_error:
                 description:
-                - "some help string"
+                - "Field ipv6_rh_length_error"
                 type: str
             ipv6_outbound_rh_copy_addr_error:
                 description:
-                - "some help string"
+                - "Field ipv6_outbound_rh_copy_addr_error"
                 type: str
             error_IPv6_extension_header_bad:
                 description:
-                - "some help string"
+                - "Field error_IPv6_extension_header_bad"
                 type: str
             bad_encrypt_type_ctr_gcm:
                 description:
-                - "some help string"
+                - "Field bad_encrypt_type_ctr_gcm"
                 type: str
             ah_not_supported_with_gcm_gmac_sha2:
                 description:
-                - "some help string"
+                - "Field ah_not_supported_with_gcm_gmac_sha2"
                 type: str
             tfc_padding_with_prefrag_not_supported:
                 description:
-                - "some help string"
+                - "Field tfc_padding_with_prefrag_not_supported"
                 type: str
             bad_srtp_auth_tag:
                 description:
-                - "some help string"
+                - "Field bad_srtp_auth_tag"
                 type: str
             bad_ipcomp_configuration:
                 description:
-                - "some help string"
+                - "Field bad_ipcomp_configuration"
                 type: str
             dsiv_incorrect_param:
                 description:
-                - "some help string"
+                - "Field dsiv_incorrect_param"
                 type: str
             bad_ipsec_unknown:
                 description:
-                - "some help string"
+                - "Field bad_ipsec_unknown"
                 type: str
 
 '''

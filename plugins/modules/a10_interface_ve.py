@@ -600,6 +600,10 @@ options:
                 description:
                 - "Field ip_unnumbered_peer_lla"
                 type: str
+            mtu:
+                description:
+                - "Field mtu"
+                type: int
             ifnum:
                 description:
                 - "Virtual ethernet interface number"
@@ -1779,6 +1783,9 @@ def get_argspec():
             'ip_unnumbered_peer_lla': {
                 'type': 'str',
                 },
+            'mtu': {
+                'type': 'int',
+                },
             'ifnum': {
                 'type': 'int',
                 'required': True,
@@ -1857,7 +1864,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/ve/{ifnum}"
+    url_base = "/axapi/v3/interface/ve"
 
     f_dict = {}
     f_dict["ifnum"] = ""

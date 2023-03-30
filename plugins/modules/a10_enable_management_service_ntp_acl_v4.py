@@ -261,7 +261,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/enable-management/service/ntp/acl-v4/{acl_id}"
+    url_base = "/axapi/v3/enable-management/service/ntp/acl-v4"
 
     f_dict = {}
     f_dict["acl_id"] = ""

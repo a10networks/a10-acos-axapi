@@ -137,16 +137,19 @@ options:
           Received on GTP VIP; 'reselect_svrselfail'= Server reselect failure;
           'snat_port_overload_fail'= Snat port overload fail;
           'snat_force_preserve_alloc'= Snat port preserve allocated;
-          'snat_force_preserve_free'= Snat port preserve freed;
-          'slb_gtp_proxy_pkt_rcv_rr'= SLB GTP proxy packet received on RR;
-          'slb_gtp_proxy_smp_match'= SLB GTP proxy helper session found;
+          'snat_force_preserve_free'= Snat port preserve freed; 'proxy_header_insert'=
+          PROXY protocol header inserted; 'proxy_header_rexmit'= PROXY protocol header
+          retransmitted; 'proxy_prot_error'= PROXY protocol error; 'proxy_prot_drop'=
+          PROXY protocol drop; 'slb_gtp_proxy_pkt_rcv_rr'= SLB GTP proxy packet received
+          on RR; 'slb_gtp_proxy_smp_match'= SLB GTP proxy helper session found;
           'slb_gtp_proxy_smp_no_match'= SLB GTP proxy helper session not found;
           'slb_gtp_proxy_c_process_local_rr'= SLB GTP proxy messageprocessed locally on
           RR; 'slb_gtp_proxy_smp_creation_failed'= SLB GTP proxy helper session creation
           failed; 'slb_gtp_proxy_smp_created'= SLB GTP proxy helper session created;
           'slb_gtp_proxy_smp_free_not_found'= SLB GTP proxy session helper not found
           during cleanup; 'slb_gtp_proxy_smp_freed'= SLB GTP proxy session helper freed;
-          'slb_gtp_proxy_retx_requests'= SLB GTP proxy retx requests;"
+          'slb_gtp_proxy_retx_requests'= SLB GTP proxy retx requests;
+          'pbslb_entry_limit_exceed'= pbslb entry limit Exceed;"
                 type: str
     oper:
         description:
@@ -656,6 +659,22 @@ options:
                 description:
                 - "Snat port preserve freed"
                 type: str
+            proxy_header_insert:
+                description:
+                - "PROXY protocol header inserted"
+                type: str
+            proxy_header_rexmit:
+                description:
+                - "PROXY protocol header retransmitted"
+                type: str
+            proxy_prot_error:
+                description:
+                - "PROXY protocol error"
+                type: str
+            proxy_prot_drop:
+                description:
+                - "PROXY protocol drop"
+                type: str
             slb_gtp_proxy_smp_match:
                 description:
                 - "SLB GTP proxy helper session found"
@@ -687,6 +706,10 @@ options:
             slb_gtp_proxy_retx_requests:
                 description:
                 - "SLB GTP proxy retx requests"
+                type: str
+            pbslb_entry_limit_exceed:
+                description:
+                - "pbslb entry limit Exceed"
                 type: str
 
 '''
@@ -779,8 +802,8 @@ def get_argspec():
                     'bw_rate_limit_exceed', 'bw_watermark_drop', 'l4_cps_exceed', 'nat_cps_exceed', 'l7_cps_exceed', 'ssl_cps_exceed', 'ssl_tpt_exceed', 'ssl_watermark_drop', 'concurrent_conn_exceed', 'svr_syn_handshake_fail', 'stateless_conn_timeout', 'tcp_ax_rexmit_syn', 'tcp_syn_rcv_ack', 'tcp_syn_rcv_rst', 'tcp_sess_noest_aged_out',
                     'tcp_sess_noest_csyn_rcv_aged_out', 'tcp_sess_noest_ssyn_xmit_aged_out', 'tcp_rexmit_syn', 'tcp_rexmit_syn_delq', 'tcp_rexmit_synack', 'tcp_rexmit_synack_delq', 'tcp_fwd_fin_dup', 'tcp_rev_fin_dup', 'tcp_rev_ackfin', 'tcp_fwd_rst', 'tcp_rev_rst', 'udp_req_oneplus_no_resp', 'udp_req_one_oneplus_resp', 'udp_req_resp_notmatch',
                     'udp_req_more_resp', 'udp_resp_more_req', 'udp_req_oneplus', 'udp_resp_oneplus', 'out_seq_ack_drop', 'tcp_est', 'synattack', 'syn_rate', 'syncookie_buff_drop', 'syncookie_buff_queue', 'skip_insert_client_ip', 'synreceived_hw', 'dns_id_switch', 'server_down_del', 'dnssec_switch', 'rate_drop_reset_unkn', 'tcp_connections_closed',
-                    'gtp_c_invalid_port', 'gtp_c_invalid_header', 'gtp_c_invalid_message', 'reselect_svrselfail', 'snat_port_overload_fail', 'snat_force_preserve_alloc', 'snat_force_preserve_free', 'slb_gtp_proxy_pkt_rcv_rr', 'slb_gtp_proxy_smp_match', 'slb_gtp_proxy_smp_no_match', 'slb_gtp_proxy_c_process_local_rr',
-                    'slb_gtp_proxy_smp_creation_failed', 'slb_gtp_proxy_smp_created', 'slb_gtp_proxy_smp_free_not_found', 'slb_gtp_proxy_smp_freed', 'slb_gtp_proxy_retx_requests'
+                    'gtp_c_invalid_port', 'gtp_c_invalid_header', 'gtp_c_invalid_message', 'reselect_svrselfail', 'snat_port_overload_fail', 'snat_force_preserve_alloc', 'snat_force_preserve_free', 'proxy_header_insert', 'proxy_header_rexmit', 'proxy_prot_error', 'proxy_prot_drop', 'slb_gtp_proxy_pkt_rcv_rr', 'slb_gtp_proxy_smp_match',
+                    'slb_gtp_proxy_smp_no_match', 'slb_gtp_proxy_c_process_local_rr', 'slb_gtp_proxy_smp_creation_failed', 'slb_gtp_proxy_smp_created', 'slb_gtp_proxy_smp_free_not_found', 'slb_gtp_proxy_smp_freed', 'slb_gtp_proxy_retx_requests', 'pbslb_entry_limit_exceed'
                     ]
                 }
             },
@@ -1145,6 +1168,18 @@ def get_argspec():
                 'snat_force_preserve_free': {
                     'type': 'int',
                     },
+                'proxy_header_insert': {
+                    'type': 'int',
+                    },
+                'proxy_header_rexmit': {
+                    'type': 'int',
+                    },
+                'proxy_prot_error': {
+                    'type': 'int',
+                    },
+                'proxy_prot_drop': {
+                    'type': 'int',
+                    },
                 'slb_gtp_proxy_pkt_rcv_rr': {
                     'type': 'int',
                     },
@@ -1170,6 +1205,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'slb_gtp_proxy_retx_requests': {
+                    'type': 'int',
+                    },
+                'pbslb_entry_limit_exceed': {
                     'type': 'int',
                     }
                 },
@@ -1545,6 +1583,18 @@ def get_argspec():
             'snat_force_preserve_free': {
                 'type': 'str',
                 },
+            'proxy_header_insert': {
+                'type': 'str',
+                },
+            'proxy_header_rexmit': {
+                'type': 'str',
+                },
+            'proxy_prot_error': {
+                'type': 'str',
+                },
+            'proxy_prot_drop': {
+                'type': 'str',
+                },
             'slb_gtp_proxy_smp_match': {
                 'type': 'str',
                 },
@@ -1567,6 +1617,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'slb_gtp_proxy_retx_requests': {
+                'type': 'str',
+                },
+            'pbslb_entry_limit_exceed': {
                 'type': 'str',
                 }
             }

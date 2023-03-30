@@ -179,7 +179,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ip/nat/translation/service-timeout/{service_type}+{port}"
+    url_base = "/axapi/v3/ip/nat/translation/service-timeout/"
 
     f_dict = {}
     f_dict["service_type"] = ""

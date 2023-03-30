@@ -60,11 +60,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    dummy:
-        description:
-        - "dummy to make intermediate obj to single"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -118,6 +113,10 @@ options:
             gtp_rate_limit_entry_create_failure:
                 description:
                 - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure"
+                type: bool
+            gtp_smp_dec_sess_count_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
                 type: bool
             uuid:
                 description:
@@ -181,6 +180,10 @@ options:
                 description:
                 - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure"
                 type: bool
+            gtp_smp_dec_sess_count_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -239,7 +242,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -260,9 +263,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dummy': {
-            'type': 'bool',
-            },
         'uuid': {
             'type': 'str',
             },
@@ -296,6 +296,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'gtp_rate_limit_entry_create_failure': {
+                'type': 'bool',
+                },
+            'gtp_smp_dec_sess_count_check_failed': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -338,6 +341,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'gtp_rate_limit_entry_create_failure': {
+                'type': 'bool',
+                },
+            'gtp_smp_dec_sess_count_check_failed': {
                 'type': 'bool',
                 },
             'uuid': {

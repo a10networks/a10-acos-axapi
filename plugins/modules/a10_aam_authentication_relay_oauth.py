@@ -101,8 +101,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'relay-req'= some help string; 'relay-succ'= some help string;
-          'relay-fail'= some help string;"
+                - "'all'= all; 'relay-req'= relay-req; 'relay-succ'= relay-succ; 'relay-fail'=
+          relay-fail;"
                 type: str
     stats:
         description:
@@ -112,15 +112,15 @@ options:
         suboptions:
             relay_req:
                 description:
-                - "some help string"
+                - "Field relay_req"
                 type: str
             relay_succ:
                 description:
-                - "some help string"
+                - "Field relay_succ"
                 type: str
             relay_fail:
                 description:
-                - "some help string"
+                - "Field relay_fail"
                 type: str
             name:
                 description:
@@ -269,7 +269,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/authentication/relay/oauth/{name}"
+    url_base = "/axapi/v3/aam/authentication/relay/oauth"
 
     f_dict = {}
     f_dict["name"] = ""

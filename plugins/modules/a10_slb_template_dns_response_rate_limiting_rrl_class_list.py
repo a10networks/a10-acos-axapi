@@ -94,10 +94,26 @@ options:
                 description:
                 - "Every n'th response that would be rate-limited will be let through instead"
                 type: int
+            lid_tc_rate:
+                description:
+                - "Every n'th response that would be rate-limited will respond with TC bit"
+                type: int
+            lid_match_subnet:
+                description:
+                - "IP subnet mask (response rate by IP subnet mask)"
+                type: str
+            lid_match_subnet_v6:
+                description:
+                - "IPV6 subnet mask (response rate by IPv6 subnet mask)"
+                type: int
             lid_window:
                 description:
                 - "Rate-Limiting Interval in Seconds (default is one)"
                 type: int
+            lid_src_ip_only:
+                description:
+                - "Field lid_src_ip_only"
+                type: bool
             lid_enable_log:
                 description:
                 - "Enable logging"
@@ -213,8 +229,20 @@ def get_argspec():
             'lid_slip_rate': {
                 'type': 'int',
                 },
+            'lid_tc_rate': {
+                'type': 'int',
+                },
+            'lid_match_subnet': {
+                'type': 'str',
+                },
+            'lid_match_subnet_v6': {
+                'type': 'int',
+                },
             'lid_window': {
                 'type': 'int',
+                },
+            'lid_src_ip_only': {
+                'type': 'bool',
                 },
             'lid_enable_log': {
                 'type': 'bool',
@@ -257,7 +285,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/dns/{dns_name}/response-rate-limiting/rrl-class-list/{name}"
+    url_base = "/axapi/v3/slb/template/dns/{dns_name}/response-rate-limiting/rrl-class-list"
 
     f_dict = {}
     f_dict["name"] = ""

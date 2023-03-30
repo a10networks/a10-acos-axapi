@@ -237,7 +237,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/sys-ut/template/{template_name}/l2/mac/{src_dst}"
+    url_base = "/axapi/v3/sys-ut/template/{template_name}/l2/mac"
 
     f_dict = {}
     f_dict["src_dst"] = ""

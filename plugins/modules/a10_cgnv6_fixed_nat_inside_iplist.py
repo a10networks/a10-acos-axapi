@@ -327,7 +327,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/iplist/{inside_ip_list}+{partition}"
+    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/iplist/"
 
     f_dict = {}
     f_dict["inside_ip_list"] = ""

@@ -73,13 +73,55 @@ options:
         required: False
     counter_polling_interval:
         description:
-        - "sFlow counter polling interval, default is 10"
+        - "sFlow counter polling interval, default is 20"
+        type: int
+        required: False
+    management_link_utilization_percentage:
+        description:
+        - "percentage limit of the management link speed (Default is 30%)"
+        type: int
+        required: False
+    management_link_utilization:
+        description:
+        - "limit management link speed in (Mbps)"
         type: int
         required: False
     local_collection:
         description:
-        - "Enable local sflow collection"
-        type: bool
+        - "'enable'= Enable local sflow collection; 'disable'= Disable local sflow
+          collection;"
+        type: str
+        required: False
+    randomize_source_port:
+        description:
+        - "'enable'= Randomize source port; 'disable'= Fix source port 6343; 'packet-
+          sampling-only'= Only randomized source port for packet-sampling (Default);"
+        type: str
+        required: False
+    port_range_start:
+        description:
+        - "Source port-range"
+        type: int
+        required: False
+    port_range_end:
+        description:
+        - "Source port-range end"
+        type: int
+        required: False
+    local_t1_polling_interval:
+        description:
+        - "Set sFlow local counter polling interval for T1 stats"
+        type: int
+        required: False
+    local_t2_polling_interval:
+        description:
+        - "Set sFlow local counter polling interval for T2 stats"
+        type: int
+        required: False
+    default_counter_polling_mtu:
+        description:
+        - "Default MTU for counter-polling packets - DDoS 3.2 format only (Default= 1500)"
+        type: int
         required: False
     uuid:
         description:
@@ -140,7 +182,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["counter_polling_interval", "local_collection", "max_header", "packet_sampling_rate", "source_ip_use_mgmt", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "counter_polling_interval", "default_counter_polling_mtu", "local_collection", "local_t1_polling_interval", "local_t2_polling_interval", "management_link_utilization", "management_link_utilization_percentage", "max_header", "packet_sampling_rate", "port_range_end", "port_range_start", "randomize_source_port", "source_ip_use_mgmt", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -160,7 +204,52 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'max_header': {'type': 'int', }, 'source_ip_use_mgmt': {'type': 'bool', }, 'packet_sampling_rate': {'type': 'int', }, 'counter_polling_interval': {'type': 'int', }, 'local_collection': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'max_header': {
+            'type': 'int',
+            },
+        'source_ip_use_mgmt': {
+            'type': 'bool',
+            },
+        'packet_sampling_rate': {
+            'type': 'int',
+            },
+        'counter_polling_interval': {
+            'type': 'int',
+            },
+        'management_link_utilization_percentage': {
+            'type': 'int',
+            },
+        'management_link_utilization': {
+            'type': 'int',
+            },
+        'local_collection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'randomize_source_port': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'packet-sampling-only']
+            },
+        'port_range_start': {
+            'type': 'int',
+            },
+        'port_range_end': {
+            'type': 'int',
+            },
+        'local_t1_polling_interval': {
+            'type': 'int',
+            },
+        'local_t2_polling_interval': {
+            'type': 'int',
+            },
+        'default_counter_polling_mtu': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 

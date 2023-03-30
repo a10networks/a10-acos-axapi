@@ -156,6 +156,20 @@ options:
         - "Delete session if the server/port goes down (either disabled/hm down)"
         type: bool
         required: False
+    proxy_header:
+        description:
+        - "Field proxy_header"
+        type: dict
+        required: False
+        suboptions:
+            proxy_header_action:
+                description:
+                - "'insert'= Insert proxy header;"
+                type: str
+            proxy_header_version:
+                description:
+                - "'v1'= version 1; 'v2'= version 2;"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -221,8 +235,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "alive_if_active", "del_session_on_server_down", "disable", "down", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "initial_window_size", "insert_client_ip", "lan_fast_ack", "logging", "name", "qos", "re_select_if_server_down", "reset_follow_fin", "reset_fwd",
-    "reset_rev", "user_tag", "uuid",
+    "alive_if_active", "del_session_on_server_down", "disable", "down", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout", "half_open_idle_timeout", "idle_timeout", "initial_window_size", "insert_client_ip", "lan_fast_ack", "logging", "name", "proxy_header", "qos", "re_select_if_server_down", "reset_follow_fin",
+    "reset_fwd", "reset_rev", "user_tag", "uuid",
     ]
 
 
@@ -303,6 +317,17 @@ def get_argspec():
         'del_session_on_server_down': {
             'type': 'bool',
             },
+        'proxy_header': {
+            'type': 'dict',
+            'proxy_header_action': {
+                'type': 'str',
+                'choices': ['insert']
+                },
+            'proxy_header_version': {
+                'type': 'str',
+                'choices': ['v1', 'v2']
+                }
+            },
         'uuid': {
             'type': 'str',
             },
@@ -330,7 +355,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/tcp/{name}"
+    url_base = "/axapi/v3/slb/template/tcp"
 
     f_dict = {}
     f_dict["name"] = ""

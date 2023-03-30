@@ -66,10 +66,10 @@ options:
         type: dict
         required: False
         suboptions:
-            status:
+            file_list:
                 description:
-                - "Field status"
-                type: int
+                - "Field file_list"
+                type: list
 
 '''
 
@@ -144,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'status': {'type': 'int', }}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'file_list': {'type': 'list', 'file': {'type': 'str', }, 'update_time': {'type': 'str', }, 'size': {'type': 'int', }}}})
     return rv
 
 

@@ -107,10 +107,6 @@ options:
                 description:
                 - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
                 type: str
-            src_class_list:
-                description:
-                - "Match source IP against class-list"
-                type: str
             src_geoloc_name:
                 description:
                 - "Single geolocation name"
@@ -131,6 +127,10 @@ options:
                 description:
                 - "'any'= Any IPv6 address;"
                 type: str
+            src_class_list:
+                description:
+                - "Match source IP against class-list"
+                type: str
             source_list:
                 description:
                 - "Field source_list"
@@ -146,10 +146,6 @@ options:
             src_threat_list:
                 description:
                 - "Bind threat-list for source IP based filtering"
-                type: str
-            dst_class_list:
-                description:
-                - "Match destination IP against class-list"
                 type: str
             dst_geoloc_name:
                 description:
@@ -170,6 +166,10 @@ options:
             dst_ipv6_any:
                 description:
                 - "'any'= Any IPv6 address;"
+                type: str
+            dst_class_list:
+                description:
+                - "Match destination IP against class-list"
                 type: str
             dest_list:
                 description:
@@ -379,9 +379,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['v4', 'v6']
                 },
-            'src_class_list': {
-                'type': 'str',
-                },
             'src_geoloc_name': {
                 'type': 'str',
                 },
@@ -398,6 +395,9 @@ def get_argspec():
             'src_ipv6_any': {
                 'type': 'str',
                 'choices': ['any']
+                },
+            'src_class_list': {
+                'type': 'str',
                 },
             'source_list': {
                 'type': 'list',
@@ -427,9 +427,6 @@ def get_argspec():
             'src_threat_list': {
                 'type': 'str',
                 },
-            'dst_class_list': {
-                'type': 'str',
-                },
             'dst_geoloc_name': {
                 'type': 'str',
                 },
@@ -446,6 +443,9 @@ def get_argspec():
             'dst_ipv6_any': {
                 'type': 'str',
                 'choices': ['any']
+                },
+            'dst_class_list': {
+                'type': 'str',
                 },
             'dest_list': {
                 'type': 'list',
@@ -699,7 +699,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/traffic-control/rule-set/{name}"
+    url_base = "/axapi/v3/traffic-control/rule-set"
 
     f_dict = {}
     f_dict["name"] = ""

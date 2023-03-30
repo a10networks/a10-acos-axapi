@@ -68,10 +68,9 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'auth-req'= some help string; 'auth-succ'= some help string; 'auth-
-          fail'= some help string; 'auth-error'= some help string; 'relay-req'= some help
-          string; 'relay-succ'= some help string; 'relay-fail'= some help string; 'other-
-          error'= some help string;"
+                - "'all'= all; 'auth-req'= auth-req; 'auth-succ'= auth-succ; 'auth-fail'= auth-
+          fail; 'auth-error'= auth-error; 'relay-req'= relay-req; 'relay-succ'= relay-
+          succ; 'relay-fail'= relay-fail; 'other-error'= other-error;"
                 type: str
     stats:
         description:
@@ -81,35 +80,35 @@ options:
         suboptions:
             auth_req:
                 description:
-                - "some help string"
+                - "Field auth_req"
                 type: str
             auth_succ:
                 description:
-                - "some help string"
+                - "Field auth_succ"
                 type: str
             auth_fail:
                 description:
-                - "some help string"
+                - "Field auth_fail"
                 type: str
             auth_error:
                 description:
-                - "some help string"
+                - "Field auth_error"
                 type: str
             relay_req:
                 description:
-                - "some help string"
+                - "Field relay_req"
                 type: str
             relay_succ:
                 description:
-                - "some help string"
+                - "Field relay_succ"
                 type: str
             relay_fail:
                 description:
-                - "some help string"
+                - "Field relay_fail"
                 type: str
             other_error:
                 description:
-                - "some help string"
+                - "Field other_error"
                 type: str
 
 '''

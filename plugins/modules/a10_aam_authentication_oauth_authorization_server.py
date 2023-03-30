@@ -116,9 +116,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'auth-req'= some help string; 'auth-succ'= some help string; 'auth-
-          fail'= some help string; 'auth-error'= some help string; 'other-error'= some
-          help string;"
+                - "'all'= all; 'auth-req'= auth-req; 'auth-succ'= auth-succ; 'auth-fail'= auth-
+          fail; 'auth-error'= auth-error; 'other-error'= other-error;"
                 type: str
     stats:
         description:
@@ -128,23 +127,23 @@ options:
         suboptions:
             auth_req:
                 description:
-                - "some help string"
+                - "Field auth_req"
                 type: str
             auth_succ:
                 description:
-                - "some help string"
+                - "Field auth_succ"
                 type: str
             auth_fail:
                 description:
-                - "some help string"
+                - "Field auth_fail"
                 type: str
             auth_error:
                 description:
-                - "some help string"
+                - "Field auth_error"
                 type: str
             other_error:
                 description:
-                - "some help string"
+                - "Field other_error"
                 type: str
             name:
                 description:
@@ -308,7 +307,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/authentication/oauth/authorization-server/{name}"
+    url_base = "/axapi/v3/aam/authentication/oauth/authorization-server"
 
     f_dict = {}
     f_dict["name"] = ""

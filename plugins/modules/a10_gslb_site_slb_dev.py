@@ -75,6 +75,18 @@ options:
         - "IPv6 address"
         type: str
         required: False
+    domain:
+        description:
+        - "Device hostname"
+        type: str
+        required: False
+    dev_resolve_as:
+        description:
+        - "'resolve-to-ipv4'= Use A Query only to resolve FQDN (Default Query type);
+          'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-
+          ipv6'= Use A as well as AAAA Query to resolve FQDN;"
+        type: str
+        required: False
     admin_preference:
         description:
         - "Specify administrative preference (Specify admin-preference value,default is
@@ -295,8 +307,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "admin_preference", "auto_detect", "auto_map", "client_ip", "device_name", "gateway_ip_addr", "health_check_action", "ip_address", "ipv6_address", "max_client", "msg_format_acos_2x", "oper", "probe_timer", "proto_aging_fast", "proto_aging_time", "proto_compatible", "rdt_type", "rdt_value", "session_number", "session_utilization", "user_tag",
-    "uuid", "vip_server",
+    "admin_preference", "auto_detect", "auto_map", "client_ip", "dev_resolve_as", "device_name", "domain", "gateway_ip_addr", "health_check_action", "ip_address", "ipv6_address", "max_client", "msg_format_acos_2x", "oper", "probe_timer", "proto_aging_fast", "proto_aging_time", "proto_compatible", "rdt_type", "rdt_value", "session_number",
+    "session_utilization", "user_tag", "uuid", "vip_server",
     ]
 
 
@@ -327,6 +339,13 @@ def get_argspec():
             },
         'ipv6_address': {
             'type': 'str',
+            },
+        'domain': {
+            'type': 'str',
+            },
+        'dev_resolve_as': {
+            'type': 'str',
+            'choices': ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
             },
         'admin_preference': {
             'type': 'int',
@@ -617,7 +636,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/site/{site_name}/slb-dev/{device_name}"
+    url_base = "/axapi/v3/gslb/site/{site_name}/slb-dev"
 
     f_dict = {}
     f_dict["device_name"] = ""

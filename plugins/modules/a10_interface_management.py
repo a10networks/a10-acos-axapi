@@ -99,6 +99,11 @@ options:
                 - "packets per second. Default is 500. (packets per second. Please specify an even
           number. Default is 500)"
                 type: int
+    mtu:
+        description:
+        - "Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))"
+        type: int
+        required: False
     ip:
         description:
         - "Field ip"
@@ -448,7 +453,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list", "action", "broadcast_rate_limit", "duplexity", "flow_control", "ip", "ipv6", "lldp", "oper", "sampling_enable", "secondary_ip", "speed", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["access_list", "action", "broadcast_rate_limit", "duplexity", "flow_control", "ip", "ipv6", "lldp", "mtu", "oper", "sampling_enable", "secondary_ip", "speed", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -497,6 +502,9 @@ def get_argspec():
             'rate': {
                 'type': 'int',
                 }
+            },
+        'mtu': {
+            'type': 'int',
             },
         'ip': {
             'type': 'dict',

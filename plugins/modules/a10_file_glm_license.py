@@ -80,11 +80,6 @@ options:
         - "full path of the uploaded file"
         type: str
         required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        type: str
-        required: False
 
 '''
 
@@ -139,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "device", "dst_file", "file", "file_handle", ]
+AVAILABLE_PROPERTIES = ["action", "device", "file", "file_handle", ]
 
 
 def get_default_argspec():
@@ -159,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'file_path': {'type': 'str', }, 'device': {'type': 'int', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['import']}, 'file_handle': {'type': 'str', }, 'dst_file': {'type': 'str', }})
+    rv.update({'file_path': {'type': 'str', }, 'device': {'type': 'int', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['import']}, 'file_handle': {'type': 'str', }})
     return rv
 
 

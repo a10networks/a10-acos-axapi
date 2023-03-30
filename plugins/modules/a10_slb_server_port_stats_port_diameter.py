@@ -70,6 +70,16 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    port_number:
+        description:
+        - "Port Number"
+        type: int
+        required: True
+    protocol:
+        description:
+        - "'tcp'= TCP Port; 'udp'= UDP Port;"
+        type: str
+        required: True
     stats:
         description:
         - "Field stats"
@@ -134,7 +144,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["stats", ]
+AVAILABLE_PROPERTIES = ["port_number", "protocol", "stats", ]
 
 
 def get_default_argspec():
@@ -155,6 +165,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'port_number': {
+            'type': 'int',
+            'required': True,
+            },
+        'protocol': {
+            'type': 'str',
+            'required': True,
+            'choices': ['tcp', 'udp']
+            },
         'stats': {
             'type': 'dict',
             'port_diameter': {

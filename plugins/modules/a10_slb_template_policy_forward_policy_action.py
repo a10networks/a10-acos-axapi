@@ -87,6 +87,11 @@ options:
         - "Source NAT pool or pool group"
         type: str
         required: False
+    forward_snat_pt_only:
+        description:
+        - "Source port translation only"
+        type: bool
+        required: False
     fall_back:
         description:
         - "Fallback service group for Internet"
@@ -96,6 +101,11 @@ options:
         description:
         - "Source NAT pool or pool group for fallback server"
         type: str
+        required: False
+    fall_back_snat_pt_only:
+        description:
+        - "Source port translation only for fallback server"
+        type: bool
         required: False
     proxy_chaining:
         description:
@@ -226,7 +236,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action1", "drop_message", "drop_redirect_url", "drop_response_code", "fake_sg", "fall_back", "fall_back_snat", "forward_snat", "http_status_code", "log", "name", "proxy_chaining", "proxy_chaining_bypass", "real_sg", "sampling_enable", "stats", "support_cert_fetch", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "action1", "drop_message", "drop_redirect_url", "drop_response_code", "fake_sg", "fall_back", "fall_back_snat", "fall_back_snat_pt_only", "forward_snat", "forward_snat_pt_only", "http_status_code", "log", "name", "proxy_chaining", "proxy_chaining_bypass", "real_sg", "sampling_enable", "stats", "support_cert_fetch", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -264,11 +276,17 @@ def get_argspec():
         'forward_snat': {
             'type': 'str',
             },
+        'forward_snat_pt_only': {
+            'type': 'bool',
+            },
         'fall_back': {
             'type': 'str',
             },
         'fall_back_snat': {
             'type': 'str',
+            },
+        'fall_back_snat_pt_only': {
+            'type': 'bool',
             },
         'proxy_chaining': {
             'type': 'bool',
@@ -345,7 +363,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/policy/{policy_name}/forward-policy/action/{name}"
+    url_base = "/axapi/v3/slb/template/policy/{policy_name}/forward-policy/action"
 
     f_dict = {}
     f_dict["name"] = ""

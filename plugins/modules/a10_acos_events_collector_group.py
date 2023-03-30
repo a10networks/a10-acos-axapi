@@ -94,6 +94,18 @@ options:
         - "Use managament port to connect to the log servers"
         type: bool
         required: False
+    log_distribution:
+        description:
+        - "'round-robin'= Log server selection will be based on round-robin (Default);
+          'hashing'= Log messages at this node only;"
+        type: str
+        required: False
+    server_distribution_hash:
+        description:
+        - "'name'= Hashing will be based on log server name (Default); 'ip-tuple'= Hashing
+          will be based on ip-tuple;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -143,14 +155,6 @@ options:
             msgs_sent:
                 description:
                 - "Number of log messages sent"
-                type: str
-            msgs_rate_limited:
-                description:
-                - "Number of rate limited log messages"
-                type: str
-            msgs_dropped:
-                description:
-                - "Number of messages dropped for other reasons"
                 type: str
             name:
                 description:
@@ -210,7 +214,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["facility", "format", "health_check", "log_server_list", "name", "protocol", "rate", "sampling_enable", "stats", "use_mgmt_port", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["facility", "format", "health_check", "log_distribution", "log_server_list", "name", "protocol", "rate", "sampling_enable", "server_distribution_hash", "stats", "use_mgmt_port", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -256,6 +260,14 @@ def get_argspec():
         'use_mgmt_port': {
             'type': 'bool',
             },
+        'log_distribution': {
+            'type': 'str',
+            'choices': ['round-robin', 'hashing']
+            },
+        'server_distribution_hash': {
+            'type': 'str',
+            'choices': ['name', 'ip-tuple']
+            },
         'uuid': {
             'type': 'str',
             },
@@ -288,12 +300,6 @@ def get_argspec():
             'msgs_sent': {
                 'type': 'str',
                 },
-            'msgs_rate_limited': {
-                'type': 'str',
-                },
-            'msgs_dropped': {
-                'type': 'str',
-                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -320,7 +326,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/acos-events/collector-group/{name}"
+    url_base = "/axapi/v3/acos-events/collector-group"
 
     f_dict = {}
     f_dict["name"] = ""
