@@ -1,0 +1,7 @@
+all:
+  hosts:
+    vthunder:
+      ansible_host: 10.64.3.183
+      ansible_username: admin
+      ansible_password: a10
+      ansible_port: 443

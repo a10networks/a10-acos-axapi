@@ -373,6 +373,10 @@ $ ansible-playbook -i <path_to_inventory> <playbook_name>.yml --check-mode
 $ ansible-doc -M <collection-dir-path> <module_name>
 ```
 
+## Change Password Documentation
+```
+Please refer : /examples/single_task/admin/adminPassword/README.md
+```
 ## Test Cases
 Sample test cases added for the following configurations:
   - Bgp
