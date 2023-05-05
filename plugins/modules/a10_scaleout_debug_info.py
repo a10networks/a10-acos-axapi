@@ -66,13 +66,17 @@ options:
         type: dict
         required: False
         suboptions:
+            zk_server_list:
+                description:
+                - "Field zk_server_list"
+                type: list
             scaleout_enabled:
                 description:
                 - "Field scaleout_enabled"
                 type: int
-            db_process_running:
+            zk_process_running:
                 description:
-                - "Field db_process_running"
+                - "Field zk_process_running"
                 type: int
             g_scaleout:
                 description:
@@ -81,6 +85,18 @@ options:
             scaleout_current_role:
                 description:
                 - "Field scaleout_current_role"
+                type: int
+            so_single_node_mode:
+                description:
+                - "Field so_single_node_mode"
+                type: int
+            so_single_node_disabled:
+                description:
+                - "Field so_single_node_disabled"
+                type: int
+            so_single_node_admin_down:
+                description:
+                - "Field so_single_node_admin_down"
                 type: int
             traffic_map_update:
                 description:
@@ -130,9 +146,9 @@ options:
                 description:
                 - "Field cluster_discovery_start_timestamp"
                 type: int
-            db_operation_max_retry:
+            zk_operation_max_retry:
                 description:
-                - "Field db_operation_max_retry"
+                - "Field zk_operation_max_retry"
                 type: int
             so_device_count:
                 description:
@@ -222,16 +238,40 @@ def get_argspec():
             },
         'oper': {
             'type': 'dict',
+            'zk_server_list': {
+                'type': 'list',
+                'device': {
+                    'type': 'int',
+                    },
+                'ip': {
+                    'type': 'int',
+                    },
+                'server_port': {
+                    'type': 'int',
+                    },
+                'app_port': {
+                    'type': 'int',
+                    }
+                },
             'scaleout_enabled': {
                 'type': 'int',
                 },
-            'db_process_running': {
+            'zk_process_running': {
                 'type': 'int',
                 },
             'g_scaleout': {
                 'type': 'int',
                 },
             'scaleout_current_role': {
+                'type': 'int',
+                },
+            'so_single_node_mode': {
+                'type': 'int',
+                },
+            'so_single_node_disabled': {
+                'type': 'int',
+                },
+            'so_single_node_admin_down': {
                 'type': 'int',
                 },
             'traffic_map_update': {
@@ -270,7 +310,7 @@ def get_argspec():
             'cluster_discovery_start_timestamp': {
                 'type': 'int',
                 },
-            'db_operation_max_retry': {
+            'zk_operation_max_retry': {
                 'type': 'int',
                 },
             'so_device_count': {

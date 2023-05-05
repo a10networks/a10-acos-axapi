@@ -256,16 +256,6 @@ options:
                 description:
                 - "IPv6 address"
                 type: str
-            domain:
-                description:
-                - "Device hostname"
-                type: str
-            dev_resolve_as:
-                description:
-                - "'resolve-to-ipv4'= Use A Query only to resolve FQDN (Default Query type);
-          'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-
-          ipv6'= Use A as well as AAAA Query to resolve FQDN;"
-                type: str
             admin_preference:
                 description:
                 - "Specify administrative preference (Specify admin-preference value,default is
@@ -396,6 +386,10 @@ options:
             ip_server_list:
                 description:
                 - "Field ip_server_list"
+                type: list
+            slb_dev_list:
+                description:
+                - "Field slb_dev_list"
                 type: list
 
 '''
@@ -605,13 +599,6 @@ def get_argspec():
                 },
             'ipv6_address': {
                 'type': 'str',
-                },
-            'domain': {
-                'type': 'str',
-                },
-            'dev_resolve_as': {
-                'type': 'str',
-                'choices': ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
                 },
             'admin_preference': {
                 'type': 'int',
@@ -986,6 +973,9 @@ def get_argspec():
                         'type': 'str',
                         }
                     }
+                },
+            'slb_dev_list': {
+                'type': 'list',
                 }
             }
         })

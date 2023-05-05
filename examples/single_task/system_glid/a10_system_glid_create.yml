@@ -1,0 +1,7 @@
+- hosts: vthunder
+  connection: local
+  tasks:
+  - name: "Create ssl cert "
+    a10.acos_axapi.a10_system_glid:
+      glid_id: 2
+      non_shared: 1

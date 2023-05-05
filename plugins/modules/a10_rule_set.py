@@ -138,15 +138,11 @@ options:
             policy:
                 description:
                 - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet; 'ipsec'= Apply IPsec
-          encapsulation; 'ipsec-group'= Apply IPsec encapsulation from a group;"
+          encapsulation;"
                 type: str
             vpn_ipsec_name:
                 description:
                 - "VPN IPsec name"
-                type: str
-            vpn_ipsec_group_name:
-                description:
-                - "VPN IPsec Group name"
                 type: str
             forward_listen_on_port:
                 description:
@@ -705,12 +701,9 @@ def get_argspec():
                 },
             'policy': {
                 'type': 'str',
-                'choices': ['cgnv6', 'forward', 'ipsec', 'ipsec-group']
+                'choices': ['cgnv6', 'forward', 'ipsec']
                 },
             'vpn_ipsec_name': {
-                'type': 'str',
-                },
-            'vpn_ipsec_group_name': {
                 'type': 'str',
                 },
             'forward_listen_on_port': {
@@ -1078,13 +1071,7 @@ def get_argspec():
                 'ipsec': {
                     'type': 'bool',
                     },
-                'ipsec_group': {
-                    'type': 'bool',
-                    },
                 'vpn_ipsec_name': {
-                    'type': 'str',
-                    },
-                'vpn_ipsec_group_name': {
                     'type': 'str',
                     },
                 'cgnv6': {
@@ -1110,21 +1097,14 @@ def get_argspec():
                 'permit_limit_policy': {
                     'type': 'int',
                     },
+                'deny_reset_limit_policy': {
+                    'type': 'int',
+                    },
                 'permit_respond_to_user_mac': {
                     'type': 'bool',
                     },
                 'reset_respond_to_user_mac': {
                     'type': 'bool',
-                    },
-                'set_dscp': {
-                    'type': 'bool',
-                    },
-                'dscp_value': {
-                    'type': 'str',
-                    'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']
-                    },
-                'dscp_number': {
-                    'type': 'int',
                     },
                 'uuid': {
                     'type': 'str',
@@ -1405,8 +1385,14 @@ def get_argspec():
                     'app_stat': {
                         'type': 'str',
                         },
+                    'protocol': {
+                        'type': 'int',
+                        },
                     'rule': {
                         'type': 'str',
+                        },
+                    'rule_set_only': {
+                        'type': 'int',
                         },
                     'rule_list': {
                         'type': 'list',

@@ -65,6 +65,11 @@ options:
         - "IPv6 Address of the remote VTEP"
         type: str
         required: True
+    class_list:
+        description:
+        - "Name of the class-list"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -90,6 +95,20 @@ options:
                 description:
                 - "Logical interface (logical interface name)"
                 type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    vni_list:
+        description:
+        - "Field vni_list"
+        type: list
+        required: False
+        suboptions:
+            segment:
+                description:
+                - "VNI configured for the remote VTEP"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -148,7 +167,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ipv6_address", "use_lif", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["class_list", "ipv6_address", "use_lif", "user_tag", "uuid", "vni_list", ]
 
 
 def get_default_argspec():
@@ -168,7 +187,43 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ipv6_address': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'use_lif': {'type': 'dict', 'partition': {'type': 'str', }, 'lif': {'type': 'str', }, 'uuid': {'type': 'str', }}})
+    rv.update({
+        'ipv6_address': {
+            'type': 'str',
+            'required': True,
+            },
+        'class_list': {
+            'type': 'str',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'use_lif': {
+            'type': 'dict',
+            'partition': {
+                'type': 'str',
+                },
+            'lif': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'vni_list': {
+            'type': 'list',
+            'segment': {
+                'type': 'int',
+                'required': True,
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     # Parent keys
     rv.update(dict(vtep_id=dict(type='str', required=True), ))
     return rv

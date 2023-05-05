@@ -118,9 +118,17 @@ options:
                 description:
                 - "Field advertised_redirect_ip_list"
                 type: list
+            advertised_redirect_ipv6_list:
+                description:
+                - "Field advertised_redirect_ipv6_list"
+                type: list
             dest_redirect_ip_list:
                 description:
                 - "Field dest_redirect_ip_list"
+                type: list
+            dest_redirect_ipv6_list:
+                description:
+                - "Field dest_redirect_ipv6_list"
                 type: list
             active_interface_list:
                 description:
@@ -130,6 +138,10 @@ options:
                 description:
                 - "Field advertised_session_sync_ip_list"
                 type: list
+            advertised_session_sync_ipv6_list:
+                description:
+                - "Field advertised_session_sync_ipv6_list"
+                type: list
             dest_session_sync_ip_list:
                 description:
                 - "Field dest_session_sync_ip_list"
@@ -137,6 +149,10 @@ options:
             exclude_interface_ip_list:
                 description:
                 - "Field exclude_interface_ip_list"
+                type: list
+            exclude_interface_ipv6_list:
+                description:
+                - "Field exclude_interface_ipv6_list"
                 type: list
 
 '''
@@ -272,6 +288,12 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'advertised_redirect_ipv6_list': {
+                'type': 'list',
+                'ipv6': {
+                    'type': 'str',
+                    }
+                },
             'dest_redirect_ip_list': {
                 'type': 'list',
                 'device_id': {
@@ -284,6 +306,18 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'dest_redirect_ipv6_list': {
+                'type': 'list',
+                'device_id': {
+                    'type': 'int',
+                    },
+                'direction': {
+                    'type': 'str',
+                    },
+                'ipv6': {
+                    'type': 'str',
+                    }
+                },
             'active_interface_list': {
                 'type': 'list',
                 'interface': {
@@ -293,6 +327,12 @@ def get_argspec():
             'advertised_session_sync_ip_list': {
                 'type': 'list',
                 'ip': {
+                    'type': 'str',
+                    }
+                },
+            'advertised_session_sync_ipv6_list': {
+                'type': 'list',
+                'ipv6': {
                     'type': 'str',
                     }
                 },
@@ -311,6 +351,12 @@ def get_argspec():
             'exclude_interface_ip_list': {
                 'type': 'list',
                 'ip': {
+                    'type': 'str',
+                    }
+                },
+            'exclude_interface_ipv6_list': {
+                'type': 'list',
+                'ipv6': {
                     'type': 'str',
                     }
                 }

@@ -629,10 +629,10 @@ def get_argspec():
                     'type': 'str',
                     },
                 'num': {
-                    'type': 'str',
+                    'type': 'int',
                     },
                 'num2': {
-                    'type': 'str',
+                    'type': 'int',
                     }
                 },
             'atomic_aggregate': {

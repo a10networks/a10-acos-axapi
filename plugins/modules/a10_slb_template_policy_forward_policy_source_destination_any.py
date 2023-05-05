@@ -65,11 +65,6 @@ options:
         - "Action to be performed"
         type: str
         required: False
-    dual_stack_action:
-        description:
-        - "Dual-stack action to be performed"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -149,7 +144,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "dual_stack_action", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -169,7 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'action': {'type': 'str', }, 'dual_stack_action': {'type': 'str', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}, 'stats': {'type': 'dict', 'hits': {'type': 'str', }}})
+    rv.update({'action': {'type': 'str', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}, 'stats': {'type': 'dict', 'hits': {'type': 'str', }}})
     # Parent keys
     rv.update(dict(policy_name=dict(type='str', required=True), ))
     return rv

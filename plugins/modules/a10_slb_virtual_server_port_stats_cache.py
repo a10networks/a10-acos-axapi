@@ -70,27 +70,9 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    port_number:
+    name:
         description:
-        - "Port"
-        type: int
-        required: True
-    protocol:
-        description:
-        - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do
-          IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
-          'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
-          'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'imap'= imap proxy port; 'mlb'= Message based load
-          balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
-          'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
-          Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
-          'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
-          protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
-          'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
-          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; 'http-
-          over-quic'= HTTP3-over-quic port;"
+        - "Specify cache template name"
         type: str
         required: True
     stats:
@@ -157,7 +139,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["port_number", "protocol", "stats", ]
+AVAILABLE_PROPERTIES = ["name", "stats", ]
 
 
 def get_default_argspec():
@@ -178,19 +160,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'port_number': {
-            'type': 'int',
+        'name': {
+            'type': 'str',
             'required': True,
-            },
-        'protocol': {
-            'type':
-            'str',
-            'required':
-            True,
-            'choices': [
-                'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix',
-                'http-over-quic'
-                ]
             },
         'stats': {
             'type': 'dict',
@@ -290,9 +262,6 @@ def get_argspec():
                     'type': 'str',
                     },
                 'header_save_error': {
-                    'type': 'str',
-                    },
-                'rsp_br': {
                     'type': 'str',
                     }
                 }

@@ -110,10 +110,6 @@ options:
                 description:
                 - "Field global"
                 type: bool
-            cache_content:
-                description:
-                - "Field cache_content"
-                type: bool
             vport:
                 description:
                 - "Field vport"
@@ -154,26 +150,6 @@ options:
                 description:
                 - "domain name"
                 type: str
-            content_mode:
-                description:
-                - "Field content_mode"
-                type: str
-            rdata_size_value:
-                description:
-                - "Field rdata_size_value"
-                type: int
-            rdata_all:
-                description:
-                - "Field rdata_all"
-                type: bool
-            record_num_value:
-                description:
-                - "Field record_num_value"
-                type: int
-            record_all:
-                description:
-                - "Field record_all"
-                type: bool
     stats:
         description:
         - "Field stats"
@@ -394,9 +370,6 @@ def get_argspec():
                 'dnssec': {
                     'type': 'int',
                     },
-                'cache_negative': {
-                    'type': 'int',
-                    },
                 'cache_type': {
                     'type': 'int',
                     },
@@ -420,36 +393,6 @@ def get_argspec():
                     },
                 'hits': {
                     'type': 'int',
-                    },
-                'an_count': {
-                    'type': 'int',
-                    },
-                'ns_count': {
-                    'type': 'int',
-                    },
-                'ar_count': {
-                    'type': 'int',
-                    },
-                'entry_record': {
-                    'type': 'list',
-                    'record_type': {
-                        'type': 'int',
-                        },
-                    'record_class': {
-                        'type': 'int',
-                        },
-                    'record_ttl': {
-                        'type': 'int',
-                        },
-                    'record_rdlen': {
-                        'type': 'int',
-                        },
-                    'record_rdata': {
-                        'type': 'str',
-                        },
-                    'record_rdata_tc': {
-                        'type': 'int',
-                        }
                     }
                 },
             'total': {
@@ -462,9 +405,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'global': {
-                'type': 'bool',
-                },
-            'cache_content': {
                 'type': 'bool',
                 },
             'vport': {
@@ -498,22 +438,6 @@ def get_argspec():
                 },
             'domain_name': {
                 'type': 'str',
-                },
-            'content_mode': {
-                'type': 'str',
-                'choices': ['brief', 'detailed']
-                },
-            'rdata_size_value': {
-                'type': 'int',
-                },
-            'rdata_all': {
-                'type': 'bool',
-                },
-            'record_num_value': {
-                'type': 'int',
-                },
-            'record_all': {
-                'type': 'bool',
                 }
             },
         'stats': {

@@ -59,11 +59,6 @@ options:
         - "don't merge this vBlade's configuration to aVCS chassis"
         type: bool
         required: False
-    cluster_discovery:
-        description:
-        - "apply the configuration change on the aVCS cluster"
-        type: bool
-        required: False
 
 '''
 
@@ -118,7 +113,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cluster_discovery", "disable_merge", ]
+AVAILABLE_PROPERTIES = ["disable_merge", ]
 
 
 def get_default_argspec():
@@ -138,7 +133,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'disable_merge': {'type': 'bool', }, 'cluster_discovery': {'type': 'bool', }})
+    rv.update({'disable_merge': {'type': 'bool', }})
     return rv
 
 

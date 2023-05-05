@@ -151,6 +151,10 @@ options:
                 description:
                 - "source destination match rule name"
                 type: str
+            destination:
+                description:
+                - "Field destination"
+                type: dict
 
 '''
 
@@ -266,9 +270,6 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     },
-                'dual_stack_action': {
-                    'type': 'str',
-                    },
                 'ntype': {
                     'type': 'str',
                     'choices': ['host', 'url', 'ip']
@@ -278,6 +279,13 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
                     }
                 },
             'web_reputation_scope_list': {
@@ -289,9 +297,6 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     },
-                'dual_stack_action': {
-                    'type': 'str',
-                    },
                 'ntype': {
                     'type': 'str',
                     'choices': ['host', 'url']
@@ -301,6 +306,13 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
                     }
                 },
             'web_category_list_list': {
@@ -312,9 +324,6 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     },
-                'dual_stack_action': {
-                    'type': 'str',
-                    },
                 'ntype': {
                     'type': 'str',
                     'choices': ['host', 'url']
@@ -324,14 +333,18 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
                     }
                 },
             'any': {
                 'type': 'dict',
                 'action': {
-                    'type': 'str',
-                    },
-                'dual_stack_action': {
                     'type': 'str',
                     },
                 'uuid': {
@@ -360,6 +373,9 @@ def get_argspec():
             'name': {
                 'type': 'str',
                 'required': True,
+                },
+            'destination': {
+                'type': 'dict',
                 }
             }
         })

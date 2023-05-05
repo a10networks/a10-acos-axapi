@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    use_syslog_standard_header:
+        description:
+        - "Send syslog messages with Standard Header format"
+        type: bool
+        required: False
     add_msgid_in_header:
         description:
         - "Add Message ID in log messages"
@@ -63,6 +68,11 @@ options:
     enable_8K_tcp_syslog:
         description:
         - "Enable 8K size remote TCP syslog"
+        type: bool
+        required: False
+    use_old_descriptive_name:
+        description:
+        - "Use the old descriptive name for CEF and LEEF logs"
         type: bool
         required: False
     uuid:
@@ -124,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add_msgid_in_header", "enable_8K_tcp_syslog", "uuid", ]
+AVAILABLE_PROPERTIES = ["add_msgid_in_header", "enable_8K_tcp_syslog", "use_old_descriptive_name", "use_syslog_standard_header", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'add_msgid_in_header': {'type': 'bool', }, 'enable_8K_tcp_syslog': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'use_syslog_standard_header': {'type': 'bool', }, 'add_msgid_in_header': {'type': 'bool', }, 'enable_8K_tcp_syslog': {'type': 'bool', }, 'use_old_descriptive_name': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

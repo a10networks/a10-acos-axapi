@@ -190,12 +190,6 @@ def get_argspec():
                 'service_name': {
                     'type': 'str',
                     },
-                'user_grp_num': {
-                    'type': 'int',
-                    },
-                'running_device_num': {
-                    'type': 'int',
-                    },
                 'map_entries_list': {
                     'type': 'list',
                     'user_group': {

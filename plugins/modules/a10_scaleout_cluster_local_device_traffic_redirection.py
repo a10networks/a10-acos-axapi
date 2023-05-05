@@ -110,6 +110,24 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    encap:
+        description:
+        - "Field encap"
+        type: dict
+        required: False
+        suboptions:
+            ntype:
+                description:
+                - "'vxlan'= Use vxlan for encapsulation;"
+                type: str
+            use_v4_vxlan:
+                description:
+                - "Always use IPv4 VxLAN for redirection"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -164,7 +182,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["follow_shared", "interfaces", "reachability_options", "uuid", ]
+AVAILABLE_PROPERTIES = ["encap", "follow_shared", "interfaces", "reachability_options", "uuid", ]
 
 
 def get_default_argspec():
@@ -224,6 +242,19 @@ def get_argspec():
         'reachability_options': {
             'type': 'dict',
             'skip_default_route': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'encap': {
+            'type': 'dict',
+            'ntype': {
+                'type': 'str',
+                'choices': ['vxlan']
+                },
+            'use_v4_vxlan': {
                 'type': 'bool',
                 },
             'uuid': {

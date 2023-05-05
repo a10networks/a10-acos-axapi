@@ -58,7 +58,7 @@ options:
     as_number:
         description:
         - "AS number"
-        type: str
+        type: int
         required: True
     aggregate_address_list:
         description:
@@ -126,6 +126,10 @@ options:
                 - "Override current router identifier (peers will reset) (Manually configured
           router identifier)"
                 type: str
+            override_validation:
+                description:
+                - "override router-id validation"
+                type: bool
             scan_time:
                 description:
                 - "Configure background scan interval (Scan interval (sec) [Default=60 Disable=0])"
@@ -225,10 +229,6 @@ options:
             synchronization:
                 description:
                 - "Field synchronization"
-                type: dict
-            monitor:
-                description:
-                - "Field monitor"
                 type: dict
             ip_cidr_list:
                 description:
@@ -332,14 +332,6 @@ options:
                 description:
                 - "Field ipv6"
                 type: dict
-            ipv4_flowspec:
-                description:
-                - "Field ipv4_flowspec"
-                type: dict
-            ipv6_flowspec:
-                description:
-                - "Field ipv6_flowspec"
-                type: dict
 
 '''
 
@@ -416,7 +408,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update({
         'as_number': {
-            'type': 'str',
+            'type': 'int',
             'required': True,
             },
         'aggregate_address_list': {
@@ -499,6 +491,9 @@ def get_argspec():
             'router_id': {
                 'type': 'str',
                 },
+            'override_validation': {
+                'type': 'bool',
+                },
             'scan_time': {
                 'type': 'int',
                 },
@@ -571,18 +566,6 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
-            'monitor': {
-                'type': 'dict',
-                'default': {
-                    'type': 'dict',
-                    'network_monitor_default': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    }
-                },
             'ip_cidr_list': {
                 'type': 'list',
                 'network_ipv4_cidr': {
@@ -618,7 +601,7 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'peer_group_remote_as': {
-                    'type': 'str',
+                    'type': 'int',
                     },
                 'activate': {
                     'type': 'bool',
@@ -638,6 +621,10 @@ def get_argspec():
                 'dynamic': {
                     'type': 'bool',
                     },
+                'prefix_list_direction': {
+                    'type': 'str',
+                    'choices': ['both', 'receive', 'send']
+                    },
                 'route_refresh': {
                     'type': 'bool',
                     },
@@ -655,6 +642,19 @@ def get_argspec():
                     },
                 'description': {
                     'type': 'str',
+                    },
+                'disallow_infinite_holdtime': {
+                    'type': 'bool',
+                    },
+                'distribute_lists': {
+                    'type': 'list',
+                    'distribute_list': {
+                        'type': 'str',
+                        },
+                    'distribute_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                        }
                     },
                 'dont_capability_negotiate': {
                     'type': 'bool',
@@ -674,11 +674,24 @@ def get_argspec():
                 'multihop': {
                     'type': 'bool',
                     },
+                'neighbor_filter_lists': {
+                    'type': 'list',
+                    'filter_list': {
+                        'type': 'str',
+                        },
+                    'filter_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                        }
+                    },
                 'maximum_prefix': {
                     'type': 'int',
                     },
                 'maximum_prefix_thres': {
                     'type': 'int',
+                    },
+                'next_hop_self': {
+                    'type': 'bool',
                     },
                 'override_capability': {
                     'type': 'bool',
@@ -692,6 +705,16 @@ def get_argspec():
                 'passive': {
                     'type': 'bool',
                     },
+                'neighbor_prefix_lists': {
+                    'type': 'list',
+                    'nbr_prefix_list': {
+                        'type': 'str',
+                        },
+                    'nbr_prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                        }
+                    },
                 'remove_private_as': {
                     'type': 'bool',
                     },
@@ -704,6 +727,10 @@ def get_argspec():
                         'type': 'str',
                         'choices': ['in', 'out']
                         }
+                    },
+                'send_community_val': {
+                    'type': 'str',
+                    'choices': ['both', 'none', 'standard', 'extended']
                     },
                 'inbound': {
                     'type': 'bool',
@@ -722,6 +749,9 @@ def get_argspec():
                     },
                 'connect': {
                     'type': 'int',
+                    },
+                'unsuppress_map': {
+                    'type': 'str',
                     },
                 'update_source_ip': {
                     'type': 'str',
@@ -761,7 +791,7 @@ def get_argspec():
                     'required': True,
                     },
                 'nbr_remote_as': {
-                    'type': 'str',
+                    'type': 'int',
                     },
                 'peer_group_name': {
                     'type': 'str',
@@ -820,9 +850,6 @@ def get_argspec():
                         }
                     },
                 'acos_application_only': {
-                    'type': 'bool',
-                    },
-                'telemetry': {
                     'type': 'bool',
                     },
                 'dont_capability_negotiate': {
@@ -976,7 +1003,7 @@ def get_argspec():
                     'required': True,
                     },
                 'nbr_remote_as': {
-                    'type': 'str',
+                    'type': 'int',
                     },
                 'peer_group_name': {
                     'type': 'str',
@@ -1038,9 +1065,6 @@ def get_argspec():
                         }
                     },
                 'acos_application_only': {
-                    'type': 'bool',
-                    },
-                'telemetry': {
                     'type': 'bool',
                     },
                 'dont_capability_negotiate': {
@@ -1440,18 +1464,6 @@ def get_argspec():
                             'type': 'str',
                             }
                         },
-                    'monitor': {
-                        'type': 'dict',
-                        'default': {
-                            'type': 'dict',
-                            'network_monitor_default': {
-                                'type': 'bool',
-                                },
-                            'uuid': {
-                                'type': 'str',
-                                }
-                            }
-                        },
                     'ipv6_network_list': {
                         'type': 'list',
                         'network_ipv6': {
@@ -1492,6 +1504,36 @@ def get_argspec():
                         'allowas_in_count': {
                             'type': 'int',
                             },
+                        'prefix_list_direction': {
+                            'type': 'str',
+                            'choices': ['both', 'receive', 'send']
+                            },
+                        'default_originate': {
+                            'type': 'bool',
+                            },
+                        'route_map': {
+                            'type': 'str',
+                            },
+                        'distribute_lists': {
+                            'type': 'list',
+                            'distribute_list': {
+                                'type': 'str',
+                                },
+                            'distribute_list_direction': {
+                                'type': 'str',
+                                'choices': ['in', 'out']
+                                }
+                            },
+                        'neighbor_filter_lists': {
+                            'type': 'list',
+                            'filter_list': {
+                                'type': 'str',
+                                },
+                            'filter_list_direction': {
+                                'type': 'str',
+                                'choices': ['in', 'out']
+                                }
+                            },
                         'maximum_prefix': {
                             'type': 'int',
                             },
@@ -1500,6 +1542,16 @@ def get_argspec():
                             },
                         'next_hop_self': {
                             'type': 'bool',
+                            },
+                        'neighbor_prefix_lists': {
+                            'type': 'list',
+                            'nbr_prefix_list': {
+                                'type': 'str',
+                                },
+                            'nbr_prefix_list_direction': {
+                                'type': 'str',
+                                'choices': ['in', 'out']
+                                }
                             },
                         'remove_private_as': {
                             'type': 'bool',
@@ -1514,8 +1566,15 @@ def get_argspec():
                                 'choices': ['in', 'out']
                                 }
                             },
+                        'send_community_val': {
+                            'type': 'str',
+                            'choices': ['both', 'none', 'standard', 'extended']
+                            },
                         'inbound': {
                             'type': 'bool',
+                            },
+                        'unsuppress_map': {
+                            'type': 'str',
                             },
                         'weight': {
                             'type': 'int',
@@ -1903,116 +1962,6 @@ def get_argspec():
                         },
                     'uuid': {
                         'type': 'str',
-                        }
-                    }
-                },
-            'ipv4_flowspec': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                    },
-                'neighbor': {
-                    'type': 'dict',
-                    'ipv4_neighbor_list': {
-                        'type': 'list',
-                        'neighbor_ipv4': {
-                            'type': 'str',
-                            'required': True,
-                            },
-                        'activate': {
-                            'type': 'bool',
-                            },
-                        'neighbor_route_map_lists': {
-                            'type': 'list',
-                            'nbr_route_map': {
-                                'type': 'str',
-                                },
-                            'nbr_rmap_direction': {
-                                'type': 'str',
-                                'choices': ['in', 'out']
-                                }
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'ipv6_neighbor_list': {
-                        'type': 'list',
-                        'neighbor_ipv6': {
-                            'type': 'str',
-                            'required': True,
-                            },
-                        'activate': {
-                            'type': 'bool',
-                            },
-                        'neighbor_route_map_lists': {
-                            'type': 'list',
-                            'nbr_route_map': {
-                                'type': 'str',
-                                },
-                            'nbr_rmap_direction': {
-                                'type': 'str',
-                                'choices': ['in', 'out']
-                                }
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        }
-                    }
-                },
-            'ipv6_flowspec': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                    },
-                'neighbor': {
-                    'type': 'dict',
-                    'ipv4_neighbor_list': {
-                        'type': 'list',
-                        'neighbor_ipv4': {
-                            'type': 'str',
-                            'required': True,
-                            },
-                        'activate': {
-                            'type': 'bool',
-                            },
-                        'neighbor_route_map_lists': {
-                            'type': 'list',
-                            'nbr_route_map': {
-                                'type': 'str',
-                                },
-                            'nbr_rmap_direction': {
-                                'type': 'str',
-                                'choices': ['in', 'out']
-                                }
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'ipv6_neighbor_list': {
-                        'type': 'list',
-                        'neighbor_ipv6': {
-                            'type': 'str',
-                            'required': True,
-                            },
-                        'activate': {
-                            'type': 'bool',
-                            },
-                        'neighbor_route_map_lists': {
-                            'type': 'list',
-                            'nbr_route_map': {
-                                'type': 'str',
-                                },
-                            'nbr_rmap_direction': {
-                                'type': 'str',
-                                'choices': ['in', 'out']
-                                }
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
                         }
                     }
                 }

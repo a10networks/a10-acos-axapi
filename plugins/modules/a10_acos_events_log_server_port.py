@@ -111,6 +111,10 @@ options:
         type: dict
         required: False
         suboptions:
+            msgs_sent:
+                description:
+                - "Number of log messages sent"
+                type: str
             port_number:
                 description:
                 - "Port Number"
@@ -228,6 +232,9 @@ def get_argspec():
             },
         'stats': {
             'type': 'dict',
+            'msgs_sent': {
+                'type': 'str',
+                },
             'port_number': {
                 'type': 'int',
                 'required': True,

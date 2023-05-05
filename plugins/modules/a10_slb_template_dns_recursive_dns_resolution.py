@@ -71,12 +71,6 @@ options:
                 - "Hostnames class-list name (dns type), perform resolution while query name
           matched"
                 type: str
-    csubnet_retry:
-        description:
-        - "retry when server REFUSED AX inserted EDNS(0) subnet, works only when insert-
-          client-subnet is configured"
-        type: bool
-        required: False
     ns_cache_lookup:
         description:
         - "'disabled'= Disable NS Cache Lookup; 'enabled'= Enable NS Cache Lookup;"
@@ -155,92 +149,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    lookup_order:
-        description:
-        - "Field lookup_order"
-        type: dict
-        required: False
-        suboptions:
-            query_type:
-                description:
-                - "Field query_type"
-                type: list
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    gateway_health_check:
-        description:
-        - "Field gateway_health_check"
-        type: dict
-        required: False
-        suboptions:
-            query_name:
-                description:
-                - "Specify the query name used in probe queries, default 'a10networks.com'"
-                type: str
-            retry:
-                description:
-                - "Maximum number of DNS query retries at each server level before health check
-          fails, default 6 (Retry count (default 6))"
-                type: int
-            timeout:
-                description:
-                - "Specify the health check timeout before retrying or finish, default is 5 sec
-          (Timeout value, in seconds (default 5))"
-                type: int
-            interval:
-                description:
-                - "Specify the health check interval, default is 10 sec (Interval value, in
-          seconds (default 10))"
-                type: int
-            up_retry:
-                description:
-                - "Specify number of times that health check consecutively passes before declaring
-          gateway UP, default 1 (up-retry count (default 1))"
-                type: int
-            retry_multi:
-                description:
-                - "Specify number of times that health check consecutively fails before declaring
-          gateway DOWN, default 1 (retry-multi count (default 1))"
-                type: int
-            gwhc_ns_cache_lookup:
-                description:
-                - "'disabled'= Disable NS Cache Lookup; 'enabled'= Enable NS Cache Lookup;"
-                type: str
-            str_query_type:
-                description:
-                - "'A'= Address record; 'AAAA'= IPv6 Address record; 'CNAME'= Canonical name
-          record; 'MX'= Mail exchange record; 'NS'= Name server record; 'SRV'= Service
-          locator; 'PTR'= PTR resource record; 'SOA'= Start of authority record; 'TXT'=
-          Text record;"
-                type: str
-            num_query_type:
-                description:
-                - "Other record type value"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            gwhc_status:
-                description:
-                - "Field gwhc_status"
-                type: str
-            gwhc_up_retries:
-                description:
-                - "Field gwhc_up_retries"
-                type: int
-            gwhc_down_retries:
-                description:
-                - "Field gwhc_down_retries"
-                type: int
 
 '''
 
@@ -295,10 +203,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "csubnet_retry", "default_recursive", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_trials", "ns_cache_lookup", "oper", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval", "use_client_qid",
-    "use_service_group_response", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["default_recursive", "force_cname_resolution", "full_response", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "max_trials", "ns_cache_lookup", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval", "use_client_qid", "use_service_group_response", "uuid", ]
 
 
 def get_default_argspec():
@@ -324,9 +229,6 @@ def get_argspec():
             'hostnames': {
                 'type': 'str',
                 }
-            },
-        'csubnet_retry': {
-            'type': 'bool',
             },
         'ns_cache_lookup': {
             'type': 'str',
@@ -373,73 +275,6 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
-            },
-        'lookup_order': {
-            'type': 'dict',
-            'query_type': {
-                'type': 'list',
-                'str_query_type': {
-                    'type': 'str',
-                    'choices': ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA', 'TXT', 'ANY']
-                    },
-                'num_query_type': {
-                    'type': 'int',
-                    },
-                'order': {
-                    'type': 'str',
-                    'choices': ['ipv4-precede-ipv6', 'ipv6-precede-ipv4']
-                    }
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'gateway_health_check': {
-            'type': 'dict',
-            'query_name': {
-                'type': 'str',
-                },
-            'retry': {
-                'type': 'int',
-                },
-            'timeout': {
-                'type': 'int',
-                },
-            'interval': {
-                'type': 'int',
-                },
-            'up_retry': {
-                'type': 'int',
-                },
-            'retry_multi': {
-                'type': 'int',
-                },
-            'gwhc_ns_cache_lookup': {
-                'type': 'str',
-                'choices': ['disabled', 'enabled']
-                },
-            'str_query_type': {
-                'type': 'str',
-                'choices': ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA', 'TXT']
-                },
-            'num_query_type': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'oper': {
-            'type': 'dict',
-            'gwhc_status': {
-                'type': 'str',
-                },
-            'gwhc_up_retries': {
-                'type': 'int',
-                },
-            'gwhc_down_retries': {
-                'type': 'int',
-                }
             }
         })
     # Parent keys
@@ -608,11 +443,6 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["recursive-dns-resolution-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["recursive-dns-resolution"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
