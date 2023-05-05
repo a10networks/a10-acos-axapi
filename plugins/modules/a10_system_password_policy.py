@@ -61,10 +61,9 @@ options:
         - "'Strict'= Strict= Min length=8, Min Lower Case=2, Min Upper Case=2, Min
           Numbers=2, Min Special Character=1, CHANGE Min 8 Characters; 'Medium'= Medium=
           Min length=6, Min Lower Case=2, Min Upper Case=2, Min Numbers=1, Min Special
-          Character=1, CHANGE Min 6 Characters; 'Default'= Default= Min length=9, Min
-          Lower Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=1, CHANGE
-          Min 1 Characters; 'Simple'= Simple= Min length=4, Min Lower Case=1, Min Upper
-          Case=1, Min Numbers=1, Min Special Character=0, CHANGE Min 4 Characters;"
+          Character=1, CHANGE Min 6 Characters; 'Simple'= Simple= Min length=4, Min Lower
+          Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=0, CHANGE Min 4
+          Characters;"
         type: str
         required: False
     aging:
@@ -84,26 +83,6 @@ options:
         description:
         - "Configure custom password length"
         type: int
-        required: False
-    username_check:
-        description:
-        - "'enable'= Prohibition to set password contains user account, case sensitive;
-          'disable'= Will not check if the password contains user account;"
-        type: str
-        required: False
-    repeat_character_check:
-        description:
-        - "'enable'= Prohibition of consecutive repeated input of the same letter/number,
-          case sensitive; 'disable'= Will not check if the password contains repeat
-          characters;"
-        type: str
-        required: False
-    forbid_consecutive_character:
-        description:
-        - "'0'= Will disable the check; '3'= Three consecutive characters on keyboard will
-          not be allowed.; '4'= Four consecutive characters on keyboard will not be
-          allowed.; '5'= Five consecutive characters on keyboard will not be allowed.;"
-        type: str
         required: False
     uuid:
         description:
@@ -164,7 +143,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aging", "complexity", "forbid_consecutive_character", "history", "min_pswd_len", "repeat_character_check", "username_check", "uuid", ]
+AVAILABLE_PROPERTIES = ["aging", "complexity", "history", "min_pswd_len", "uuid", ]
 
 
 def get_default_argspec():
@@ -184,38 +163,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'complexity': {
-            'type': 'str',
-            'choices': ['Strict', 'Medium', 'Default', 'Simple']
-            },
-        'aging': {
-            'type': 'str',
-            'choices': ['Strict', 'Medium', 'Simple']
-            },
-        'history': {
-            'type': 'str',
-            'choices': ['Strict', 'Medium', 'Simple']
-            },
-        'min_pswd_len': {
-            'type': 'int',
-            },
-        'username_check': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        'repeat_character_check': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        'forbid_consecutive_character': {
-            'type': 'str',
-            'choices': ['0', '3', '4', '5']
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'complexity': {'type': 'str', 'choices': ['Strict', 'Medium', 'Simple']}, 'aging': {'type': 'str', 'choices': ['Strict', 'Medium', 'Simple']}, 'history': {'type': 'str', 'choices': ['Strict', 'Medium', 'Simple']}, 'min_pswd_len': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

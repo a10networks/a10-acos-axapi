@@ -173,11 +173,11 @@ options:
             num:
                 description:
                 - "AS number"
-                type: str
+                type: int
             num2:
                 description:
                 - "AS number"
-                type: str
+                type: int
     atomic_aggregate:
         description:
         - "BGP atomic aggregate attribute"
@@ -470,10 +470,10 @@ def get_argspec():
                 'type': 'str',
                 },
             'num': {
-                'type': 'str',
+                'type': 'int',
                 },
             'num2': {
-                'type': 'str',
+                'type': 'int',
                 }
             },
         'atomic_aggregate': {

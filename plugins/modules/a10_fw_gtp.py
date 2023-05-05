@@ -126,19 +126,19 @@ options:
           Failed; 'gtp-smp-path-created'= GTP SMP PATH Created; 'gtp-smp-path-freed'= GTP
           SMP PATH MEM freed; 'gtp-smp-path-allocated'= GTP SMP PATH MEM allocated; 'gtp-
           smp-path-creation-failed'= GTP SMP PATH creation Failed; 'gtp-smp-path-check-
-          failed'= GTP SMP PATH check Failed; 'gtp-smp-check-failed'= GTP SMP check
+          failed'= GTP SMP PATH check Failed; 'gtp-smp-c-check-failed'= GTP C-SMP check
           Failed; 'gtp-smp-session-count-check-failed'= GTP-U session count is not in
           range of 0-11 in GTP-C SMP; 'gtp-c-ref-count-smp-exceeded'= GTP-C session count
-          on C-smp exceeded 2; 'gtp-u-smp-in-rml-with-sess'= GTP-U smp is marked RML with
-          U-session; 'gtp-u-pkt-fwd-conn-create'= GTP-U pkt fwded while creating conn
-          with gtp toggling; 'gtp-c-pkt-fwd-conn-create'= GTP-C pkt fwded while creating
-          conn with gtp toggling; 'gtp-echo-pkt-fwd-conn-create'= GTP-ECHO pkt fwded
-          while creating conn with gtp toggling; 'gtp-tunnel-rate-limit-entry-create-
-          success'= GTP Tunnel Level Rate Limit Entry Create Success; 'gtp-tunnel-rate-
-          limit-entry-create-failure'= GTP Tunnel Level Rate Limit Entry Create Failure;
-          'gtp-tunnel-rate-limit-entry-deleted'= GTP Tunnel Level Rate Limit Entry
-          Deleted; 'gtp-rate-limit-smp-created'= GTP Rate Limit SMP Created; 'gtp-rate-
-          limit-smp-freed'= GTP Rate Limit SMP Freed; 'gtp-rate-limit-smp-create-
+          on C-smp exceeded 2; 'gtp-u-smp-in-rml-with-sess'= GTP-U smp is linked when
+          C-smp is in rml; 'gtp-u-pkt-fwd-conn-create'= GTP-U pkt fwded while creating
+          conn with gtp toggling; 'gtp-c-pkt-fwd-conn-create'= GTP-C pkt fwded while
+          creating conn with gtp toggling; 'gtp-echo-pkt-fwd-conn-create'= GTP-ECHO pkt
+          fwded while creating conn with gtp toggling; 'gtp-tunnel-rate-limit-entry-
+          create-success'= GTP Tunnel Level Rate Limit Entry Create Success; 'gtp-tunnel-
+          rate-limit-entry-create-failure'= GTP Tunnel Level Rate Limit Entry Create
+          Failure; 'gtp-tunnel-rate-limit-entry-deleted'= GTP Tunnel Level Rate Limit
+          Entry Deleted; 'gtp-rate-limit-smp-created'= GTP Rate Limit SMP Created; 'gtp-
+          rate-limit-smp-freed'= GTP Rate Limit SMP Freed; 'gtp-rate-limit-smp-create-
           failure'= GTP Rate Limit SMP Create Failure; 'gtp-rate-limit-t3-ctr-create-
           failure'= GTP Rate Limit Dynamic Counters Create Failure; 'gtp-rate-limit-
           entry-create-failure'= GTP Rate Limit Entry Create Failure; 'gtp-echo-conn-
@@ -210,20 +210,39 @@ options:
           stale-idx'= GTP-C SMP referring stale C-conn idx; 'gtp-smp-dec-sess-count-
           check-failed'= GTP-U session count is 0 in GTP-C SMP; 'gtp-c-freed-conn-check'=
           GTP-C freed conn accessed; 'gtp-c-conn-not-in-rml-when-freed'= GTP-C conn not
-          in rml when tuple is freed; 'gtp-v0-c-uplink-ingress-packets'= GTPv0-C Uplink
-          Ingress Packets; 'gtp-v0-c-uplink-egress-packets'= GTPv0-C Uplink Egress
-          Packets; 'gtp-v0-c-downlink-ingress-packets'= GTPv0-C Downlink Ingress Packets;
-          'gtp-v0-c-downlink-egress-packets'= GTPv0-C Downlink Egress Packets;
-          'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink Ingress Bytes;
+          in rml when tuple is freed; 'gtp-u-smp-check-failed'= GTP U-SMP check Failed;
+          'gtp-c-smp-already-in-rml'= GTP-C smp already in rml; 'gtp-u-smp-already-in-
+          rml'= GTP-U smp already in rml; 'gtp-info-ext-not-found'= GTP-Info ext not
+          found while freeing C-smp; 'gtp-c-smp-unlink-from-hash-fail'= GTP-C smp unlink
+          from hash table failed; 'gtp-u-smp-unlink-from-hash-fail'= GTP-U smp unlink
+          from hash table failed; 'gtp-smp-link-to-hash-in-rml'= GTP smp linked to hash
+          table when in rml; 'gtp-c-conn-ptr-not-found'= GTP-C conn ptr not found; 'gtp-
+          smp-already-in-del-queue'= GTP SMP already in del queue, cannot be added again;"
+                type: str
+            counters2:
+                description:
+                - "'gtp-smp-path-already-in-del-queue'= GTP SMP-PATH already in del queue, cannot
+          be added again; 'gtp-smp-double-free'= GTP SMP added twice to del queue; 'gtp-
+          smp-path-double-free'= GTP SMP path added twice to del queue, cannot be added
+          again; 'gtp-c-smp-not-found-in-hash'= GTP-C SMP not found in hash table to
+          unlink; 'gtp-u-smp-not-found-in-hash'= GTP-U SMP not found in hash table to
+          unlink; 'gtp-smp-already-in-UL-hash'= GTP SMP already linked in uplink hash;
+          'gtp-smp-already-in-DL-hash'= GTP SMP already linked in downlink hash; 'gtp-c-
+          smp-in-rml-c-conn-age-upd'= GTP-C SMP in RML during C-conn age update; 'gtp-c-
+          ref-count-max-smp-set-for-ageout'= GTP-C SMP set for deletion during age out
+          with refcount max; 'gtp-c-smp-del-max-ref-count'= GTP-C SMP with del flag and
+          max ref count during ageout; 'gtp-u-smp-unlinked-u-conn-creation'= GTP-U smp
+          unlinked from HT while creating U-conn; 'gtp-v0-c-uplink-ingress-packets'=
+          GTPv0-C Uplink Ingress Packets; 'gtp-v0-c-uplink-egress-packets'= GTPv0-C
+          Uplink Egress Packets; 'gtp-v0-c-downlink-ingress-packets'= GTPv0-C Downlink
+          Ingress Packets; 'gtp-v0-c-downlink-egress-packets'= GTPv0-C Downlink Egress
+          Packets; 'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink Ingress Bytes;
           'gtp-v0-c-uplink-egress-bytes'= GTPv0-C Uplink Egress Bytes;
           'gtp-v0-c-downlink-ingress-bytes'= GTPv0-C Downlink Ingress Bytes;
           'gtp-v0-c-downlink-egress-bytes'= GTPv0-C Downlink Egress Bytes;
           'gtp-v1-c-uplink-ingress-packets'= GTPv1-C Uplink Ingress Packets;
-          'gtp-v1-c-uplink-egress-packets'= GTPv1-C Uplink Egress Packets;"
-                type: str
-            counters2:
-                description:
-                - "'gtp-v1-c-downlink-ingress-packets'= GTPv1-C Downlink Ingress Packets;
+          'gtp-v1-c-uplink-egress-packets'= GTPv1-C Uplink Egress Packets;
+          'gtp-v1-c-downlink-ingress-packets'= GTPv1-C Downlink Ingress Packets;
           'gtp-v1-c-downlink-egress-packets'= GTPv1-C Downlink Egress Packets;
           'gtp-v1-c-uplink-ingress-bytes'= GTPv1-C Uplink Ingress Bytes;
           'gtp-v1-c-uplink-egress-bytes'= GTPv1-C Uplink Egress Bytes;
@@ -335,9 +354,9 @@ options:
                 description:
                 - "GTP SMP PATH check Failed"
                 type: str
-            gtp_smp_check_failed:
+            gtp_smp_c_check_failed:
                 description:
-                - "GTP SMP check Failed"
+                - "GTP C-SMP check Failed"
                 type: str
             gtp_smp_session_count_check_failed:
                 description:
@@ -349,7 +368,7 @@ options:
                 type: str
             gtp_u_smp_in_rml_with_sess:
                 description:
-                - "GTP-U smp is marked RML with U-session"
+                - "GTP-U smp is linked when C-smp is in rml"
                 type: str
             gtp_tunnel_rate_limit_entry_create_failure:
                 description:
@@ -426,6 +445,26 @@ options:
             gtp_smp_dec_sess_count_check_failed:
                 description:
                 - "GTP-U session count is 0 in GTP-C SMP"
+                type: str
+            gtp_u_smp_check_failed:
+                description:
+                - "GTP U-SMP check Failed"
+                type: str
+            gtp_info_ext_not_found:
+                description:
+                - "GTP-Info ext not found while freeing C-smp"
+                type: str
+            gtp_c_smp_unlink_from_hash_fail:
+                description:
+                - "GTP-C smp unlink from hash table failed"
+                type: str
+            gtp_u_smp_unlink_from_hash_fail:
+                description:
+                - "GTP-U smp unlink from hash table failed"
+                type: str
+            gtp_smp_link_to_hash_in_rml:
+                description:
+                - "GTP smp linked to hash table when in rml"
                 type: str
             gtp_v0_c_uplink_ingress_packets:
                 description:
@@ -704,7 +743,7 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'out-of-session-memory', 'no-fwd-route', 'no-rev-route', 'gtp-smp-created', 'gtp-smp-marked-deleted', 'gtp-smp-deleted', 'smp-creation-failed', 'gtp-smp-path-created', 'gtp-smp-path-freed', 'gtp-smp-path-allocated', 'gtp-smp-path-creation-failed', 'gtp-smp-path-check-failed', 'gtp-smp-check-failed',
+                    'all', 'out-of-session-memory', 'no-fwd-route', 'no-rev-route', 'gtp-smp-created', 'gtp-smp-marked-deleted', 'gtp-smp-deleted', 'smp-creation-failed', 'gtp-smp-path-created', 'gtp-smp-path-freed', 'gtp-smp-path-allocated', 'gtp-smp-path-creation-failed', 'gtp-smp-path-check-failed', 'gtp-smp-c-check-failed',
                     'gtp-smp-session-count-check-failed', 'gtp-c-ref-count-smp-exceeded', 'gtp-u-smp-in-rml-with-sess', 'gtp-u-pkt-fwd-conn-create', 'gtp-c-pkt-fwd-conn-create', 'gtp-echo-pkt-fwd-conn-create', 'gtp-tunnel-rate-limit-entry-create-success', 'gtp-tunnel-rate-limit-entry-create-failure', 'gtp-tunnel-rate-limit-entry-deleted',
                     'gtp-rate-limit-smp-created', 'gtp-rate-limit-smp-freed', 'gtp-rate-limit-smp-create-failure', 'gtp-rate-limit-t3-ctr-create-failure', 'gtp-rate-limit-entry-create-failure', 'gtp-echo-conn-created', 'gtp-echo-conn-deleted', 'gtp-node-restart-echo', 'gtp-c-echo-path-failure', 'drop-vld-gtp-echo-out-of-state-',
                     'drop-vld-gtp-echo-ie-len-exceed-msg-len', 'gtp-create-session-request-retransmit', 'gtp-add-bearer-request-retransmit', 'gtp-delete-session-request-retransmit', 'gtp-handover-request-retransmit', 'gtp-del-bearer-request-retransmit', 'gtp-add-bearer-response-retransmit', 'gtp-create-session-request-retx-drop',
@@ -714,22 +753,23 @@ def get_argspec():
                     'gtp-refresh-conn-set-ho-flag-latest', 'gtp-c-process-pkt-drop', 'gtp-c-fwd-pkt-drop', 'gtp-c-rev-pkt-drop', 'gtp-c-fwd-v1-other', 'gtp-c-fwd-v2-other', 'gtp-c-rev-v1-other', 'gtp-c-rev-v2-other', 'gtp-c-going-thru-fw-lookup', 'gtp-c-conn-create-pkt-drop', 'gtp-c-pkt-fwd-conn-create-no-fteid',
                     'gtp-inter-pu-mstr-to-bld-dcmsg-fail', 'gtp-inter-pu-mstr-to-bld-dcmsg-sent', 'gtp-inter-pu-mstr-to-bld-dcmsg-recv', 'gtp-inter-pu-mstr-to-bld-query-sent', 'gtp-inter-pu-mstr-to-bld-query-recv', 'gtp-inter-pu-mstr-to-bld-query-resp-sent', 'gtp-inter-pu-bld-to-mstr-dcmsg-fail', 'gtp-inter-pu-bld-to-mstr-dcmsg-sent',
                     'gtp-inter-pu-bld-to-mstr-dcmsg-recv', 'gtp-inter-pu-bld-to-mstr-query-sent', 'gtp-inter-pu-bld-to-mstr-query-recv', 'gtp-inter-pu-bld-to-mstr-query-resp-sent', 'gtp-mstr-to-bld-query-resp-fail', 'gtp-bld-to-mstr-query-resp-fail', 'gtp-c-smp-refer-stale-idx', 'gtp-smp-dec-sess-count-check-failed', 'gtp-c-freed-conn-check',
-                    'gtp-c-conn-not-in-rml-when-freed', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes',
-                    'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets'
+                    'gtp-c-conn-not-in-rml-when-freed', 'gtp-u-smp-check-failed', 'gtp-c-smp-already-in-rml', 'gtp-u-smp-already-in-rml', 'gtp-info-ext-not-found', 'gtp-c-smp-unlink-from-hash-fail', 'gtp-u-smp-unlink-from-hash-fail', 'gtp-smp-link-to-hash-in-rml', 'gtp-c-conn-ptr-not-found', 'gtp-smp-already-in-del-queue'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets',
-                    'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes',
-                    'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx',
-                    'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced', 'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx',
-                    'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced', 'gtp-v1-c-echo-create-synced', 'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx',
-                    'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx', 'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced',
-                    'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch', 'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward',
-                    'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length'
+                    'gtp-smp-path-already-in-del-queue', 'gtp-smp-double-free', 'gtp-smp-path-double-free', 'gtp-c-smp-not-found-in-hash', 'gtp-u-smp-not-found-in-hash', 'gtp-smp-already-in-UL-hash', 'gtp-smp-already-in-DL-hash', 'gtp-c-smp-in-rml-c-conn-age-upd', 'gtp-c-ref-count-max-smp-set-for-ageout', 'gtp-c-smp-del-max-ref-count',
+                    'gtp-u-smp-unlinked-u-conn-creation', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes',
+                    'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets', 'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets',
+                    'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets', 'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets',
+                    'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced',
+                    'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx', 'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced',
+                    'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx', 'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced', 'gtp-v1-c-echo-create-synced',
+                    'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx', 'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx',
+                    'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced', 'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch',
+                    'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward', 'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length'
                     ]
                 }
             },
@@ -759,7 +799,7 @@ def get_argspec():
             'gtp_smp_path_check_failed': {
                 'type': 'str',
                 },
-            'gtp_smp_check_failed': {
+            'gtp_smp_c_check_failed': {
                 'type': 'str',
                 },
             'gtp_smp_session_count_check_failed': {
@@ -826,6 +866,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'gtp_smp_dec_sess_count_check_failed': {
+                'type': 'str',
+                },
+            'gtp_u_smp_check_failed': {
+                'type': 'str',
+                },
+            'gtp_info_ext_not_found': {
+                'type': 'str',
+                },
+            'gtp_c_smp_unlink_from_hash_fail': {
+                'type': 'str',
+                },
+            'gtp_u_smp_unlink_from_hash_fail': {
+                'type': 'str',
+                },
+            'gtp_smp_link_to_hash_in_rml': {
                 'type': 'str',
                 },
             'gtp_v0_c_uplink_ingress_packets': {

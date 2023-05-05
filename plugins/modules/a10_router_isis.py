@@ -237,7 +237,7 @@ options:
                 type: str
             lif:
                 description:
-                - "Logical interface (Lif interface name)"
+                - "Logical interface (Lif interface number)"
                 type: str
             ve:
                 description:

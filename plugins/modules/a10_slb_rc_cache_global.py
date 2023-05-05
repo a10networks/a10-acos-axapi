@@ -85,7 +85,7 @@ options:
           Entry Create failures; 'mem_size'= Memory Used; 'entry_num'= Entry Cached;
           'replaced_entry'= Entry Replaced; 'aging_entry'= Entry Aged Out;
           'cleaned_entry'= Entry Cleaned; 'rsp_type_stream'= Responses from http2 server
-          200 OK - Stream; 'rsp_br'= Responses from cache 200 OK - Brotli;"
+          200 OK - Stream;"
                 type: str
     oper:
         description:
@@ -375,10 +375,6 @@ options:
                 description:
                 - "Responses from http2 server 200 OK - Stream"
                 type: str
-            rsp_br:
-                description:
-                - "Responses from cache 200 OK - Brotli"
-                type: str
 
 '''
 
@@ -464,7 +460,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match',
-                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'rsp_br'
+                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream'
                     ]
                 }
             },
@@ -828,9 +824,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'rsp_type_stream': {
-                'type': 'str',
-                },
-            'rsp_br': {
                 'type': 'str',
                 }
             }

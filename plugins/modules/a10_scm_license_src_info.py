@@ -126,10 +126,6 @@ options:
                 description:
                 - "Field source3_module_list"
                 type: list
-            hw_serialno:
-                description:
-                - "Field hw_serialno"
-                type: str
 
 '''
 
@@ -281,9 +277,6 @@ def get_argspec():
                 'source3_notes': {
                     'type': 'str',
                     }
-                },
-            'hw_serialno': {
-                'type': 'str',
                 }
             }
         })

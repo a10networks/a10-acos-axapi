@@ -1,0 +1,9 @@
+- hosts: vthunder
+  connection: local
+  tasks:
+  - name: "Create ssl cert "
+    a10.acos_axapi.a10_scaleout_cluster_local_device_traffic_redirection_encap:
+      state: absent
+      cluster_id: 2
+      ntype: vxlan
+      use_v4_vxlan: 1

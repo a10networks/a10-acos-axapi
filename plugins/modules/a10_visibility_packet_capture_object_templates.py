@@ -55,14 +55,19 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    dummy:
+        description:
+        - "dummy to make intermediate obj to single"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    templ_gtp_plcy_tmpl_list:
+    tmpl_gtp_plcy_tmpl_list:
         description:
-        - "Field templ_gtp_plcy_tmpl_list"
+        - "Field tmpl_gtp_plcy_tmpl_list"
         type: list
         required: False
         suboptions:
@@ -706,9 +711,9 @@ options:
                 description:
                 - "Field trigger_stats_rate"
                 type: dict
-    slb_templ_cache_tmpl_list:
+    slb_tmpl_cache_tmpl_list:
         description:
-        - "Field slb_templ_cache_tmpl_list"
+        - "Field slb_tmpl_cache_tmpl_list"
         type: list
         required: False
         suboptions:
@@ -1205,8 +1210,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "aam_aaa_policy_tmpl_list", "aam_auth_captcha_inst_tmpl_list", "aam_auth_logon_http_ins_tmpl_list", "aam_auth_relay_form_inst_tmpl_list", "aam_auth_relay_hbase_inst_tmpl_list", "aam_auth_relay_ntlm_tmpl_list", "aam_auth_relay_ws_fed_tmpl_list", "aam_auth_saml_id_prov_tmpl_list", "aam_auth_saml_service_prov_tmpl_list",
     "aam_auth_server_ldap_inst_tmpl_list", "aam_auth_server_ocsp_inst_tmpl_list", "aam_auth_server_rad_inst_tmpl_list", "aam_auth_server_win_inst_tmpl_list", "aam_auth_service_group_mem_tmpl_list", "aam_auth_service_group_tmpl_list", "aam_jwt_authorization_tmpl_list", "cgnv6_dns64_vs_port_tmpl_list", "cgnv6_encap_domain_tmpl_list",
-    "cgnv6_map_trans_domain_tmpl_list", "cgnv6_serv_group_tmpl_list", "dns_vport_tmpl_list", "fw_server_port_tmpl_list", "fw_service_group_mem_tmpl_list", "fw_service_group_tmpl_list", "interface_ethernet_tmpl_list", "interface_tunnel_tmpl_list", "netflow_monitor_tmpl_list", "rule_set_tmpl_list", "slb_port_tmpl_list", "slb_templ_cache_tmpl_list",
-    "slb_vport_tmpl_list", "templ_gtp_plcy_tmpl_list", "uuid",
+    "cgnv6_map_trans_domain_tmpl_list", "cgnv6_serv_group_tmpl_list", "dns_vport_tmpl_list", "dummy", "fw_server_port_tmpl_list", "fw_service_group_mem_tmpl_list", "fw_service_group_tmpl_list", "interface_ethernet_tmpl_list", "interface_tunnel_tmpl_list", "netflow_monitor_tmpl_list", "rule_set_tmpl_list", "slb_port_tmpl_list",
+    "slb_tmpl_cache_tmpl_list", "slb_vport_tmpl_list", "tmpl_gtp_plcy_tmpl_list", "uuid",
     ]
 
 
@@ -1228,10 +1233,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'dummy': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
-        'templ_gtp_plcy_tmpl_list': {
+        'tmpl_gtp_plcy_tmpl_list': {
             'type': 'list',
             'name': {
                 'type': 'str',
@@ -3089,7 +3097,7 @@ def get_argspec():
                     }
                 }
             },
-        'slb_templ_cache_tmpl_list': {
+        'slb_tmpl_cache_tmpl_list': {
             'type': 'list',
             'name': {
                 'type': 'str',

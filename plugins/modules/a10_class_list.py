@@ -90,7 +90,7 @@ options:
             glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
-                type: str
+                type: int
             shared_partition_glid:
                 description:
                 - "Reference a glid from shared partition"
@@ -98,7 +98,7 @@ options:
             glid_shared:
                 description:
                 - "Use global Limit ID"
-                type: str
+                type: int
             lsn_lid:
                 description:
                 - "LSN Limit ID (LID index)"
@@ -132,7 +132,7 @@ options:
             v6_glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
-                type: str
+                type: int
             shared_partition_v6_glid:
                 description:
                 - "Reference a glid from shared partition"
@@ -140,7 +140,7 @@ options:
             v6_glid_shared:
                 description:
                 - "Use global Limit ID"
-                type: str
+                type: int
             v6_lsn_lid:
                 description:
                 - "LSN Limit ID (LID index)"
@@ -179,7 +179,7 @@ options:
             dns_glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
-                type: str
+                type: int
             shared_partition_dns_glid:
                 description:
                 - "Reference a glid from shared partition"
@@ -187,7 +187,7 @@ options:
             dns_glid_shared:
                 description:
                 - "Use global Limit ID"
-                type: str
+                type: int
     str_list:
         description:
         - "Field str_list"
@@ -213,7 +213,7 @@ options:
             str_glid:
                 description:
                 - "Global LID index"
-                type: str
+                type: int
             shared_partition_str_glid:
                 description:
                 - "Reference a glid from shared partition"
@@ -221,7 +221,7 @@ options:
             str_glid_shared:
                 description:
                 - "Use global Limit ID"
-                type: str
+                type: int
             value_str:
                 description:
                 - "Specify value string"
@@ -249,20 +249,6 @@ options:
             gtp_rate_limit_policy_str:
                 description:
                 - "GTP Rate Limit Template Name"
-                type: str
-    geo_list:
-        description:
-        - "Field geo_list"
-        type: list
-        required: False
-        suboptions:
-            geo_location:
-                description:
-                - "Specify geo-location"
-                type: str
-            geo_location_ipv6:
-                description:
-                - "Specify IPv6 geo-location"
                 type: str
     uuid:
         description:
@@ -320,9 +306,9 @@ options:
                 description:
                 - "Field ac_total_entries"
                 type: int
-            geo_location_total_entries:
+            geo_total_entries:
                 description:
-                - "Field geo_location_total_entries"
+                - "Field geo_total_entries"
                 type: int
             ipv4_entries:
                 description:
@@ -343,10 +329,6 @@ options:
             ac_entries:
                 description:
                 - "Field ac_entries"
-                type: list
-            geo_location_entries:
-                description:
-                - "Field geo_location_entries"
                 type: list
             name:
                 description:
@@ -406,7 +388,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ac_list", "dns", "file", "geo_list", "ipv4_list", "ipv6_list", "name", "oper", "str_list", "ntype", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["ac_list", "dns", "file", "ipv4_list", "ipv6_list", "name", "oper", "str_list", "ntype", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -447,13 +429,13 @@ def get_argspec():
                 'type': 'int',
                 },
             'glid': {
-                'type': 'str',
+                'type': 'int',
                 },
             'shared_partition_glid': {
                 'type': 'bool',
                 },
             'glid_shared': {
-                'type': 'str',
+                'type': 'int',
                 },
             'lsn_lid': {
                 'type': 'int',
@@ -477,13 +459,13 @@ def get_argspec():
                 'type': 'int',
                 },
             'v6_glid': {
-                'type': 'str',
+                'type': 'int',
                 },
             'shared_partition_v6_glid': {
                 'type': 'bool',
                 },
             'v6_glid_shared': {
-                'type': 'str',
+                'type': 'int',
                 },
             'v6_lsn_lid': {
                 'type': 'int',
@@ -511,13 +493,13 @@ def get_argspec():
                 'type': 'int',
                 },
             'dns_glid': {
-                'type': 'str',
+                'type': 'int',
                 },
             'shared_partition_dns_glid': {
                 'type': 'bool',
                 },
             'dns_glid_shared': {
-                'type': 'str',
+                'type': 'int',
                 }
             },
         'str_list': {
@@ -535,13 +517,13 @@ def get_argspec():
                 'type': 'bool',
                 },
             'str_glid': {
-                'type': 'str',
+                'type': 'int',
                 },
             'shared_partition_str_glid': {
                 'type': 'bool',
                 },
             'str_glid_shared': {
-                'type': 'str',
+                'type': 'int',
                 },
             'value_str': {
                 'type': 'str',
@@ -560,15 +542,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'gtp_rate_limit_policy_str': {
-                'type': 'str',
-                }
-            },
-        'geo_list': {
-            'type': 'list',
-            'geo_location': {
-                'type': 'str',
-                },
-            'geo_location_ipv6': {
                 'type': 'str',
                 }
             },
@@ -612,7 +585,7 @@ def get_argspec():
             'ac_total_entries': {
                 'type': 'int',
                 },
-            'geo_location_total_entries': {
+            'geo_total_entries': {
                 'type': 'int',
                 },
             'ipv4_entries': {
@@ -731,12 +704,6 @@ def get_argspec():
                     'type': 'int',
                     },
                 'ac_gtp_policy': {
-                    'type': 'str',
-                    }
-                },
-            'geo_location_entries': {
-                'type': 'list',
-                'geo_location': {
                     'type': 'str',
                     }
                 },

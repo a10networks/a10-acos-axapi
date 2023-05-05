@@ -182,6 +182,20 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    sctp:
+        description:
+        - "Field sctp"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'disable'= disable; 'enable'= enable;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     icmp:
         description:
         - "Field icmp"
@@ -250,7 +264,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dns", "esp", "ftp", "icmp", "pptp", "rtsp", "sip", "tftp", "uuid", ]
+AVAILABLE_PROPERTIES = ["dns", "esp", "ftp", "icmp", "pptp", "rtsp", "sctp", "sip", "tftp", "uuid", ]
 
 
 def get_default_argspec():
@@ -404,6 +418,16 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml']
                     }
+                }
+            },
+        'sctp': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                'choices': ['disable', 'enable']
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'icmp': {

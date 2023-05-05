@@ -115,6 +115,11 @@ options:
         - "Include the destination IP and port in logs"
         type: bool
         required: False
+    include_year:
+        description:
+        - "including the 4-digit year in CEF, compact and default logs"
+        type: bool
+        required: False
     include_inside_user_mac:
         description:
         - "Include the inside user MAC address in logs"
@@ -443,8 +448,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "batched_logging_disable", "custom", "disable_log_by_destination", "facility", "format", "include_destination", "include_http", "include_inside_user_mac", "include_partition_name", "include_port_block_account", "include_radius_attribute", "include_session_byte_count", "log", "log_receiver", "name", "resolution", "rfc_custom", "rule",
-    "service_group", "severity", "shared", "source_address", "source_port", "user_tag", "uuid",
+    "batched_logging_disable", "custom", "disable_log_by_destination", "facility", "format", "include_destination", "include_http", "include_inside_user_mac", "include_partition_name", "include_port_block_account", "include_radius_attribute", "include_session_byte_count", "include_year", "log", "log_receiver", "name", "resolution", "rfc_custom",
+    "rule", "service_group", "severity", "shared", "source_address", "source_port", "user_tag", "uuid",
     ]
 
 
@@ -549,6 +554,9 @@ def get_argspec():
                 }
             },
         'include_destination': {
+            'type': 'bool',
+            },
+        'include_year': {
             'type': 'bool',
             },
         'include_inside_user_mac': {

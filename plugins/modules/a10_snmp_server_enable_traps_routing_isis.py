@@ -140,11 +140,6 @@ options:
         - "Enable isisVersionSkew traps"
         type: bool
         required: False
-    isisLSPErrorDetected:
-        description:
-        - "Enable isisLSPErrorDetected traps"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -205,8 +200,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "isisAdjacencyChange", "isisAreaMismatch", "isisAttemptToExceedMaxSequence", "isisAuthenticationFailure", "isisAuthenticationTypeFailure", "isisCorruptedLSPDetected", "isisDatabaseOverload", "isisIDLenMismatch", "isisLSPErrorDetected", "isisLSPTooLargeToPropagate", "isisManualAddressDrops", "isisMaxAreaAddressesMismatch",
-    "isisOriginatingLSPBufferSizeMismatch", "isisOwnLSPPurge", "isisProtocolsSupportedMismatch", "isisRejectedAdjacency", "isisSequenceNumberSkip", "isisVersionSkew", "uuid",
+    "isisAdjacencyChange", "isisAreaMismatch", "isisAttemptToExceedMaxSequence", "isisAuthenticationFailure", "isisAuthenticationTypeFailure", "isisCorruptedLSPDetected", "isisDatabaseOverload", "isisIDLenMismatch", "isisLSPTooLargeToPropagate", "isisManualAddressDrops", "isisMaxAreaAddressesMismatch", "isisOriginatingLSPBufferSizeMismatch",
+    "isisOwnLSPPurge", "isisProtocolsSupportedMismatch", "isisRejectedAdjacency", "isisSequenceNumberSkip", "isisVersionSkew", "uuid",
     ]
 
 
@@ -277,9 +272,6 @@ def get_argspec():
             'type': 'bool',
             },
         'isisVersionSkew': {
-            'type': 'bool',
-            },
-        'isisLSPErrorDetected': {
             'type': 'bool',
             },
         'uuid': {

@@ -240,6 +240,10 @@ options:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
                 type: bool
+            dmz:
+                description:
+                - "DMZ network facing interface for IPv4/v6 traffic"
+                type: bool
             cache_spoofing_port:
                 description:
                 - "This interface connects to spoofing cache"
@@ -657,10 +661,6 @@ options:
                 description:
                 - "Field ip_unnumbered_peer_lla"
                 type: str
-            mtu:
-                description:
-                - "Field mtu"
-                type: int
             ifnum:
                 description:
                 - "Trunk interface number"
@@ -925,6 +925,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
+                'type': 'bool',
+                },
+            'dmz': {
                 'type': 'bool',
                 },
             'cache_spoofing_port': {
@@ -1908,9 +1911,6 @@ def get_argspec():
                 },
             'ip_unnumbered_peer_lla': {
                 'type': 'str',
-                },
-            'mtu': {
-                'type': 'int',
                 },
             'ifnum': {
                 'type': 'int',

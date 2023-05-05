@@ -280,10 +280,6 @@ options:
                 description:
                 - "Field full_width"
                 type: bool
-            ext_filter_name:
-                description:
-                - "Field ext_filter_name"
-                type: str
             ext:
                 description:
                 - "Field ext"
@@ -465,27 +461,6 @@ def get_argspec():
                 'hash_idx': {
                     'type': 'int',
                     },
-                'ddos_total_fwd_bytes': {
-                    'type': 'int',
-                    },
-                'ddos_total_rev_bytes': {
-                    'type': 'int',
-                    },
-                'ddos_total_out_of_order': {
-                    'type': 'int',
-                    },
-                'ddos_total_zero_window': {
-                    'type': 'int',
-                    },
-                'ddos_total_retrans': {
-                    'type': 'int',
-                    },
-                'ddos_current_pkt_rate': {
-                    'type': 'int',
-                    },
-                'ddos_exceeded_pkt_rate': {
-                    'type': 'int',
-                    },
                 'extension_fields_list': {
                     'type': 'list',
                     'ext_field_name': {
@@ -510,7 +485,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'debug', 'application',
-                    'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp', 'extended_filter'
+                    'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp'
                     ]
                 },
             'src_ipv4_addr': {
@@ -640,9 +615,6 @@ def get_argspec():
                 },
             'full_width': {
                 'type': 'bool',
-                },
-            'ext_filter_name': {
-                'type': 'str',
                 },
             'ext': {
                 'type': 'dict',

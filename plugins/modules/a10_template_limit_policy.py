@@ -60,11 +60,6 @@ options:
         - "Limit Policy Number"
         type: int
         required: True
-    parent:
-        description:
-        - "Specify the parent of limit-policy"
-        type: int
-        required: False
     max_min_fair:
         description:
         - "Enable max-min-fairness"
@@ -89,6 +84,11 @@ options:
     prefix_length:
         description:
         - "Prefix length"
+        type: int
+        required: False
+    parent:
+        description:
+        - "Specify the parent of limit-policy"
         type: int
         required: False
     uuid:
@@ -159,8 +159,12 @@ options:
         suboptions:
             uplink:
                 description:
-                - "Uplink Throughput limit (Mega Bits per second)"
+                - "Uplink Throughput limit (Mega (default) or Kilo Bits per second)"
                 type: int
+            uplink_unit:
+                description:
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+                type: str
             uplink_burstsize:
                 description:
                 - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
@@ -171,8 +175,12 @@ options:
                 type: bool
             downlink:
                 description:
-                - "Downlink Throughput limit (Mega Bits per second)"
+                - "Downlink Throughput limit (Mega (default) or Kilo Bits per second)"
                 type: int
+            downlink_unit:
+                description:
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+                type: str
             downlink_burstsize:
                 description:
                 - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
@@ -183,8 +191,12 @@ options:
                 type: bool
             total:
                 description:
-                - "Total Throughput limit (Mega Bits per second)"
+                - "Total Throughput limit (Mega (default) or Kilo Bits per second)"
                 type: int
+            total_unit:
+                description:
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+                type: str
             total_burstsize:
                 description:
                 - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
@@ -298,9 +310,6 @@ def get_argspec():
             'type': 'int',
             'required': True,
             },
-        'parent': {
-            'type': 'int',
-            },
         'max_min_fair': {
             'type': 'bool',
             },
@@ -315,6 +324,9 @@ def get_argspec():
             'choices': ['aggregate', 'subscriber-ip', 'subscriber-prefix']
             },
         'prefix_length': {
+            'type': 'int',
+            },
+        'parent': {
             'type': 'int',
             },
         'uuid': {
@@ -364,6 +376,10 @@ def get_argspec():
             'uplink': {
                 'type': 'int',
                 },
+            'uplink_unit': {
+                'type': 'str',
+                'choices': ['Mbps', 'Kbps']
+                },
             'uplink_burstsize': {
                 'type': 'int',
                 },
@@ -373,6 +389,10 @@ def get_argspec():
             'downlink': {
                 'type': 'int',
                 },
+            'downlink_unit': {
+                'type': 'str',
+                'choices': ['Mbps', 'Kbps']
+                },
             'downlink_burstsize': {
                 'type': 'int',
                 },
@@ -381,6 +401,10 @@ def get_argspec():
                 },
             'total': {
                 'type': 'int',
+                },
+            'total_unit': {
+                'type': 'str',
+                'choices': ['Mbps', 'Kbps']
                 },
             'total_burstsize': {
                 'type': 'int',

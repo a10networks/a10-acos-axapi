@@ -78,30 +78,6 @@ options:
                 description:
                 - "Field server_name"
                 type: str
-            central_list:
-                description:
-                - "Field central_list"
-                type: bool
-            local_list:
-                description:
-                - "Field local_list"
-                type: bool
-            bypassed:
-                description:
-                - "Field bypassed"
-                type: bool
-            alphabet_order:
-                description:
-                - "Field alphabet_order"
-                type: bool
-            all:
-                description:
-                - "Field all"
-                type: bool
-            stats_only:
-                description:
-                - "Field stats_only"
-                type: bool
 
 '''
 
@@ -176,56 +152,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'candidate_list': {
-                'type': 'list',
-                'servername': {
-                    'type': 'str',
-                    },
-                'conn_failure_count': {
-                    'type': 'int',
-                    },
-                'bypass_count': {
-                    'type': 'int',
-                    },
-                'list_type': {
-                    'type': 'str',
-                    },
-                'ttl': {
-                    'type': 'int',
-                    }
-                },
-            'mid_request': {
-                'type': 'bool',
-                },
-            'server_name': {
-                'type': 'str',
-                },
-            'central_list': {
-                'type': 'bool',
-                },
-            'local_list': {
-                'type': 'bool',
-                },
-            'bypassed': {
-                'type': 'bool',
-                },
-            'alphabet_order': {
-                'type': 'bool',
-                },
-            'all': {
-                'type': 'bool',
-                },
-            'stats_only': {
-                'type': 'bool',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'candidate_list': {'type': 'list', 'servername': {'type': 'str', }, 'counter': {'type': 'int', }, 'ttl': {'type': 'int', }}, 'mid_request': {'type': 'bool', }, 'server_name': {'type': 'str', }}})
     return rv
 
 

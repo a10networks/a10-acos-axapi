@@ -100,11 +100,6 @@ options:
                 description:
                 - "Specify URI string"
                 type: str
-    domain_whitelist:
-        description:
-        - "Specify the AC type class-list for the domain-whitelist"
-        type: str
-        required: False
     port:
         description:
         - "Specify port number for aaa-rule, default is 0 for all port numbers"
@@ -289,7 +284,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list", "action", "auth_failure_bypass", "authentication_template", "authorize_policy", "captcha_authz_policy", "domain_name", "domain_whitelist", "host", "index", "match_encoded_uri", "port", "sampling_enable", "stats", "uri", "user_agent", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["access_list", "action", "auth_failure_bypass", "authentication_template", "authorize_policy", "captcha_authz_policy", "domain_name", "host", "index", "match_encoded_uri", "port", "sampling_enable", "stats", "uri", "user_agent", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -333,9 +328,6 @@ def get_argspec():
             'host_str': {
                 'type': 'str',
                 }
-            },
-        'domain_whitelist': {
-            'type': 'str',
             },
         'port': {
             'type': 'int',

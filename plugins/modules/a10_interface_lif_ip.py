@@ -89,6 +89,21 @@ options:
         - "This interface connects to spoofing cache"
         type: bool
         required: False
+    client:
+        description:
+        - "Client facing interface for IPv4/v6 traffic"
+        type: bool
+        required: False
+    server:
+        description:
+        - "Server facing interface for IPv4/v6 traffic"
+        type: bool
+        required: False
+    dmz:
+        description:
+        - "DMZ network facing interface for IPv4/v6 traffic"
+        type: bool
+        required: False
     inside:
         description:
         - "Configure interface as inside"
@@ -236,7 +251,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address_list", "allow_promiscuous_vip", "cache_spoofing_port", "dhcp", "generate_membership_query", "inside", "max_resp_time", "ospf", "outside", "query_interval", "rip", "router", "unnumbered", "uuid", ]
+AVAILABLE_PROPERTIES = ["address_list", "allow_promiscuous_vip", "cache_spoofing_port", "client", "dhcp", "dmz", "generate_membership_query", "inside", "max_resp_time", "ospf", "outside", "query_interval", "rip", "router", "server", "unnumbered", "uuid", ]
 
 
 def get_default_argspec():
@@ -273,6 +288,15 @@ def get_argspec():
             'type': 'bool',
             },
         'cache_spoofing_port': {
+            'type': 'bool',
+            },
+        'client': {
+            'type': 'bool',
+            },
+        'server': {
+            'type': 'bool',
+            },
+        'dmz': {
             'type': 'bool',
             },
         'inside': {

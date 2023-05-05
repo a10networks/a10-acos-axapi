@@ -99,21 +99,6 @@ options:
         - "TCP Proxy Template name"
         type: str
         required: False
-    dns:
-        description:
-        - "DNS Template Name"
-        type: str
-        required: False
-    shared_partition_dns_template:
-        description:
-        - "Reference a DNS template from shared partition"
-        type: bool
-        required: False
-    template_dns_shared:
-        description:
-        - "DNS Template name"
-        type: str
-        required: False
     conn_reuse:
         description:
         - "'enable'= Enable Connection Reuse; 'disable'= Disable Connection-Reuse
@@ -182,10 +167,6 @@ options:
                 description:
                 - "Bind a UDP Service Group to the template (Service Group Name)"
                 type: str
-            bypass_doh:
-                description:
-                - "Forward valid DoH HTTP request as is, no DNS packet extraction (Bypass DoH)"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -269,7 +250,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["conn_reuse", "dns", "dns_retry", "forwarder", "name", "non_dns_request", "reject_status_code", "shared_partition_dns_template", "shared_partition_tcp_proxy_template", "snat_pool", "source_nat", "tcp_proxy", "template_dns_shared", "template_tcp_proxy_shared", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["conn_reuse", "dns_retry", "forwarder", "name", "non_dns_request", "reject_status_code", "shared_partition_tcp_proxy_template", "snat_pool", "source_nat", "tcp_proxy", "template_tcp_proxy_shared", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -318,15 +299,6 @@ def get_argspec():
         'template_tcp_proxy_shared': {
             'type': 'str',
             },
-        'dns': {
-            'type': 'str',
-            },
-        'shared_partition_dns_template': {
-            'type': 'bool',
-            },
-        'template_dns_shared': {
-            'type': 'str',
-            },
         'conn_reuse': {
             'type': 'str',
             'choices': ['enable', 'disable']
@@ -370,9 +342,6 @@ def get_argspec():
                 },
             'udp_service_group': {
                 'type': 'str',
-                },
-            'bypass_doh': {
-                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

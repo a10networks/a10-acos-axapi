@@ -1,0 +1,8 @@
+- hosts: vthunder
+  connection: local
+  tasks:
+  - name: "Create ssl cert "
+    a10.acos_axapi.a10_call_home_profile:
+      export_policy: permissive
+      time: 20
+      action: register

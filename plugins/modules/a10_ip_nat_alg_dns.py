@@ -60,6 +60,11 @@ options:
         - "'disable'= Disable DNS NAT ALG; 'enable'= Enable DNS NAT ALG;"
         type: str
         required: False
+    query_id_switch:
+        description:
+        - "Use DNS query ID to create session (UDP session only)"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -119,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dns_alg", "uuid", ]
+AVAILABLE_PROPERTIES = ["dns_alg", "query_id_switch", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'dns_alg': {'type': 'str', 'choices': ['disable', 'enable']}, 'uuid': {'type': 'str', }})
+    rv.update({'dns_alg': {'type': 'str', 'choices': ['disable', 'enable']}, 'query_id_switch': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

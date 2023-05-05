@@ -132,8 +132,7 @@ options:
             feature_name:
                 description:
                 - "'app-fw'= Application Firewall Configuration; 'ca-bundle'= CA Certificate
-          Bundle; 'a10-threat-intel'= A10 Threat intel class list; 'central-cert-pin-
-          list'= Central updated cert pinning list;"
+          Bundle; 'a10-threat-intel'= A10 Threat intel class list;"
                 type: str
             debug:
                 description:
@@ -181,8 +180,7 @@ options:
             feature_name:
                 description:
                 - "'app-fw'= Application Firewall; 'ca-bundle'= CA Certificate Bundle;
-          'a10-threat-intel'= A10 Threat intel class list; 'central-cert-pin-list'=
-          Central updated cert pinning list;"
+          'a10-threat-intel'= A10 Threat intel class list;"
                 type: str
             prod_ver:
                 description:
@@ -216,7 +214,7 @@ options:
             feature_name:
                 description:
                 - "'app-fw'= Application Firewall; 'a10-threat-intel'= A10 Threat intel class
-          list; 'central-cert-pin-list'= Central updated cert pinning list;"
+          list;"
                 type: str
     reset:
         description:
@@ -354,7 +352,7 @@ def get_argspec():
             'feature_name': {
                 'type': 'str',
                 'required': True,
-                'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel', 'central-cert-pin-list']
+                'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
                 },
             'debug': {
                 'type': 'bool',
@@ -389,7 +387,7 @@ def get_argspec():
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
-                'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel', 'central-cert-pin-list']
+                'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
                 },
             'prod_ver': {
                 'type': 'str',
@@ -411,7 +409,7 @@ def get_argspec():
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
-                'choices': ['app-fw', 'a10-threat-intel', 'central-cert-pin-list']
+                'choices': ['app-fw', 'a10-threat-intel']
                 }
             },
         'reset': {
