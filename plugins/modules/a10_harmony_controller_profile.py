@@ -127,13 +127,6 @@ options:
         - "availablity zone of the thunder-device"
         type: str
         required: False
-    analytics:
-        description:
-        - "'all'= Export all the analytics information. This is the default value.;
-          'system'= Export only system level policy for device management.; 'disable'=
-          Disable all the exports from the device.;"
-        type: str
-        required: False
     action:
         description:
         - "'register'= Register the device to the controller; 'deregister'= Deregister the
@@ -327,7 +320,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "analytics", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "host", "host_ipv6", "interval", "oper", "password_encrypted", "port", "provider", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "host", "host_ipv6", "interval", "oper", "password_encrypted", "port", "provider", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid", ]
 
 
 def get_default_argspec():
@@ -390,10 +383,6 @@ def get_argspec():
             },
         'availability_zone': {
             'type': 'str',
-            },
-        'analytics': {
-            'type': 'str',
-            'choices': ['all', 'system', 'disable']
             },
         'action': {
             'type': 'str',

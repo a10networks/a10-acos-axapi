@@ -54,6 +54,36 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    capture_config:
+        description:
+        - "Capture-config pcapng file"
+        type: str
+        required: False
+    capture_config_realtime:
+        description:
+        - "Capture-config pcapng real-time file (For GUI)"
+        type: str
+        required: False
+    pkt_count:
+        description:
+        - "Specify number of latest packets to export"
+        type: int
+        required: False
+    debug_traffic_capture_chassis:
+        description:
+        - "Debug-Traffic-Capture pcapng file"
+        type: str
+        required: False
+    debug_traffic_capture_chassis_slot:
+        description:
+        - "specify slot id in chassis"
+        type: int
+        required: False
+    debug_traffic_capture:
+        description:
+        - "Debug-Traffic-Capture pcapng file"
+        type: str
+        required: False
     axdebug:
         description:
         - "AX Debug Packet File"
@@ -84,16 +114,6 @@ options:
         - "XML-Schema File"
         type: str
         required: False
-    wsdl:
-        description:
-        - "Web Services Definition Language File"
-        type: str
-        required: False
-    policy:
-        description:
-        - "WAF policy File"
-        type: str
-        required: False
     bw_list:
         description:
         - "Black white List File"
@@ -102,6 +122,11 @@ options:
     class_list:
         description:
         - "Class List File"
+        type: str
+        required: False
+    domain_list:
+        description:
+        - "Domain List File"
         type: str
         required: False
     lw_4o6:
@@ -269,6 +294,11 @@ options:
         - "Response Policy Zone File"
         type: str
         required: False
+    tsig:
+        description:
+        - "Transaction SIGnatures Key file"
+        type: str
+        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -277,6 +307,11 @@ options:
     remote_file:
         description:
         - "profile name for remote url"
+        type: str
+        required: False
+    password:
+        description:
+        - "password for the remote site"
         type: str
         required: False
     store_name:
@@ -305,6 +340,30 @@ options:
             remote_file:
                 description:
                 - "Field remote_file"
+                type: str
+    geo_location_archive:
+        description:
+        - "Field geo_location_archive"
+        type: dict
+        required: False
+        suboptions:
+            geo_location_archive_name:
+                description:
+                - "'GeoLite2-ASN-Archive'= GeoLite2-ASN CSV Zipped File; 'GeoLite2-City-Archive'=
+          GeoLite2-City CSV Zipped File; 'GeoLite2-Country-Archive'= GeoLite2-Country CSV
+          Zipped File;"
+                type: str
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            remote_file:
+                description:
+                - "Profile name for remote url"
+                type: str
+            password:
+                description:
+                - "password for the remote site"
                 type: str
 
 '''
@@ -361,8 +420,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "axdebug", "bw_list", "ca_cert", "class_list", "csr", "debug_monitor", "dnssec_dnskey", "dnssec_ds", "externalfilename", "fixed_nat", "fixed_nat_archive", "geo_location", "ip_map_list", "ipsec_error_dump", "local_uri_file", "lw_4o6", "lw_4o6_binding_table_validation_log", "merged_pcap",
-    "mon_entity_debug_file", "per_cpu", "pktcapture_file", "policy", "profile", "remote_file", "rpz", "running_config", "saml_idp_name", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "startup_config", "status_check", "store", "store_name", "syslog", "tgz", "thales_kmdata", "thales_secworld", "use_mgmt_port", "visibility", "wsdl", "xml_schema",
+    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "axdebug", "bw_list", "ca_cert", "capture_config", "capture_config_realtime", "class_list", "csr", "debug_monitor", "debug_traffic_capture", "debug_traffic_capture_chassis", "debug_traffic_capture_chassis_slot", "dnssec_dnskey", "dnssec_ds", "domain_list", "externalfilename",
+    "fixed_nat", "fixed_nat_archive", "geo_location", "geo_location_archive", "ip_map_list", "ipsec_error_dump", "local_uri_file", "lw_4o6", "lw_4o6_binding_table_validation_log", "merged_pcap", "mon_entity_debug_file", "password", "per_cpu", "pkt_count", "pktcapture_file", "profile", "remote_file", "rpz", "running_config", "saml_idp_name",
+    "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "startup_config", "status_check", "store", "store_name", "syslog", "tgz", "thales_kmdata", "thales_secworld", "tsig", "use_mgmt_port", "visibility", "xml_schema",
     ]
 
 
@@ -384,6 +444,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'capture_config': {
+            'type': 'str',
+            },
+        'capture_config_realtime': {
+            'type': 'str',
+            },
+        'pkt_count': {
+            'type': 'int',
+            },
+        'debug_traffic_capture_chassis': {
+            'type': 'str',
+            },
+        'debug_traffic_capture_chassis_slot': {
+            'type': 'int',
+            },
+        'debug_traffic_capture': {
+            'type': 'str',
+            },
         'axdebug': {
             'type': 'str',
             },
@@ -402,16 +480,13 @@ def get_argspec():
         'xml_schema': {
             'type': 'str',
             },
-        'wsdl': {
-            'type': 'str',
-            },
-        'policy': {
-            'type': 'str',
-            },
         'bw_list': {
             'type': 'str',
             },
         'class_list': {
+            'type': 'str',
+            },
+        'domain_list': {
             'type': 'str',
             },
         'lw_4o6': {
@@ -513,10 +588,16 @@ def get_argspec():
         'rpz': {
             'type': 'str',
             },
+        'tsig': {
+            'type': 'str',
+            },
         'use_mgmt_port': {
             'type': 'bool',
             },
         'remote_file': {
+            'type': 'str',
+            },
+        'password': {
             'type': 'str',
             },
         'store_name': {
@@ -534,6 +615,22 @@ def get_argspec():
                 'type': 'str',
                 },
             'remote_file': {
+                'type': 'str',
+                }
+            },
+        'geo_location_archive': {
+            'type': 'dict',
+            'geo_location_archive_name': {
+                'type': 'str',
+                'choices': ['GeoLite2-ASN-Archive', 'GeoLite2-City-Archive', 'GeoLite2-Country-Archive']
+                },
+            'use_mgmt_port': {
+                'type': 'bool',
+                },
+            'remote_file': {
+                'type': 'str',
+                },
+            'password': {
                 'type': 'str',
                 }
             }

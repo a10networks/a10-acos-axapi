@@ -91,7 +91,9 @@ options:
           connections; 'curr_conn_in_buff'= Current buffered async connections;
           'async_conn_timeout'= SSLi Async connections failures due to timeout;
           'async_conn_limit_drop'= SSLi Async connections failures due to limit;
-          'cert_in_cache'= Certificates in cache used by HC SSLi App;"
+          'cert_in_cache'= Certificates in cache used by HC SSLi App; 'bypass-client-ip-
+          sessions'= Bypass Client IP sessions; 'bypass-server-ip-sessions'= Bypass
+          Server IP sessions;"
                 type: str
     stats:
         description:
@@ -235,6 +237,14 @@ options:
                 description:
                 - "Certificates in cache used by HC SSLi App"
                 type: str
+            bypass_client_ip_sessions:
+                description:
+                - "Bypass Client IP sessions"
+                type: str
+            bypass_server_ip_sessions:
+                description:
+                - "Bypass Server IP sessions"
+                type: str
 
 '''
 
@@ -321,7 +331,7 @@ def get_argspec():
                 'choices': [
                     'all', 'cert_create', 'cert_expr', 'cert_hit', 'cert_miss', 'conn_bypass', 'conn_inspect', 'bypass-failsafe-ssl-sessions', 'bypass-sni-sessions', 'bypass-client-auth-sessions', 'failed-in-ssl-handshakes', 'failed-in-crypto-operations', 'failed-in-tcp', 'failed-in-certificate-verification', 'failed-in-certificate-signing',
                     'invalid-ocsp-stapling-response', 'revoked-ocsp-response', 'unsupported-ssl-version', 'certificates-in-cache', 'connections-failed', 'aflex-bypass', 'bypass-cert-subject-sessions', 'bypass-cert-issuer-sessions', 'bypass-cert-san-sessions', 'bypass-no-sni-sessions', 'reset-no-sni-sessions', 'bypass-esni-sessions',
-                    'drop-esni-sessions', 'bypass-username-sessions', 'bypass-ad-group-sessions', 'tot_conn_in_buff', 'curr_conn_in_buff', 'async_conn_timeout', 'async_conn_limit_drop', 'cert_in_cache'
+                    'drop-esni-sessions', 'bypass-username-sessions', 'bypass-ad-group-sessions', 'tot_conn_in_buff', 'curr_conn_in_buff', 'async_conn_timeout', 'async_conn_limit_drop', 'cert_in_cache', 'bypass-client-ip-sessions', 'bypass-server-ip-sessions'
                     ]
                 }
             },
@@ -427,6 +437,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'cert_in_cache': {
+                'type': 'str',
+                },
+            'bypass_client_ip_sessions': {
+                'type': 'str',
+                },
+            'bypass_server_ip_sessions': {
                 'type': 'str',
                 }
             }

@@ -70,33 +70,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    vni_list:
-        description:
-        - "Field vni_list"
-        type: list
-        required: False
-        suboptions:
-            segment:
-                description:
-                - "Id of the segment that is being extended"
-                type: int
-            partition:
-                description:
-                - "Name of the Partition with the L2 segment being extended (Name of the User
-          Partition with the L2 segment being extended)"
-                type: str
-            gateway:
-                description:
-                - "This is a Gateway segment id"
-                type: bool
-            lif:
-                description:
-                - "Logical interface (logical interface name)"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
 
 '''
 
@@ -151,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ipv6_address", "uuid", "vni_list", ]
+AVAILABLE_PROPERTIES = ["ipv6_address", "uuid", ]
 
 
 def get_default_argspec():
@@ -171,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ipv6_address': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'vni_list': {'type': 'list', 'segment': {'type': 'int', 'required': True, }, 'partition': {'type': 'str', }, 'gateway': {'type': 'bool', }, 'lif': {'type': 'str', }, 'uuid': {'type': 'str', }}})
+    rv.update({'ipv6_address': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(vtep_id=dict(type='str', required=True), ))
     return rv

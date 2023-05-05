@@ -241,6 +241,11 @@ options:
         - "IKE SA age in seconds"
         type: int
         required: False
+    fragment_size:
+        description:
+        - "Enable IKE message fragment and set fragment size"
+        type: int
+        required: False
     nat_traversal:
         description:
         - "Field nat_traversal"
@@ -652,8 +657,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auth_method", "configuration_payload", "dh_group", "dhcp_server", "disable_rekey", "dpd", "enc_cfg", "ike_version", "interface_management", "key", "key_passphrase", "key_passphrase_encrypted", "lifetime", "local_address", "local_cert", "local_id", "mode", "name", "nat_traversal", "oper", "preshare_key_encrypted", "preshare_key_value",
-    "radius_server", "remote_address", "remote_ca_cert", "remote_id", "sampling_enable", "stats", "user_tag", "uuid", "vrid",
+    "auth_method", "configuration_payload", "dh_group", "dhcp_server", "disable_rekey", "dpd", "enc_cfg", "fragment_size", "ike_version", "interface_management", "key", "key_passphrase", "key_passphrase_encrypted", "lifetime", "local_address", "local_cert", "local_id", "mode", "name", "nat_traversal", "oper", "preshare_key_encrypted",
+    "preshare_key_value", "radius_server", "remote_address", "remote_ca_cert", "remote_id", "sampling_enable", "stats", "user_tag", "uuid", "vrid",
     ]
 
 
@@ -785,6 +790,9 @@ def get_argspec():
         'lifetime': {
             'type': 'int',
             },
+        'fragment_size': {
+            'type': 'int',
+            },
         'nat_traversal': {
             'type': 'bool',
             },
@@ -891,6 +899,18 @@ def get_argspec():
                     'type': 'str',
                     },
                 'DH_Group': {
+                    'type': 'int',
+                    },
+                'Fragment_message_generated': {
+                    'type': 'int',
+                    },
+                'Fragment_message_received': {
+                    'type': 'int',
+                    },
+                'Fragmentation_error': {
+                    'type': 'int',
+                    },
+                'Fragment_reassemble_error': {
                     'type': 'int',
                     }
                 },

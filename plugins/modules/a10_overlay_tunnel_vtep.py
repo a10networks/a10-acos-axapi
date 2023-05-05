@@ -67,6 +67,11 @@ options:
           Encapsulation Type is VXLAN;"
         type: str
         required: False
+    dest_port:
+        description:
+        - "Layer-4 Destination Port (Port Number)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -139,10 +144,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-            vni_list:
-                description:
-                - "Field vni_list"
-                type: list
     remote_ip_address_list:
         description:
         - "Field remote_ip_address_list"
@@ -152,10 +153,6 @@ options:
             ip_address:
                 description:
                 - "IP Address of the remote VTEP"
-                type: str
-            class_list:
-                description:
-                - "Name of the class-list"
                 type: str
             encap:
                 description:
@@ -196,10 +193,6 @@ options:
                 description:
                 - "IPv6 Address of the remote VTEP"
                 type: str
-            class_list:
-                description:
-                - "Name of the class-list"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -212,10 +205,6 @@ options:
                 description:
                 - "Field use_lif"
                 type: dict
-            vni_list:
-                description:
-                - "Field vni_list"
-                type: list
     host_list:
         description:
         - "Field host_list"
@@ -225,10 +214,6 @@ options:
             ip_addr:
                 description:
                 - "IPv4 address of the overlay host"
-                type: str
-            ipv6_addr:
-                description:
-                - "IPv6 address of the overlay host"
                 type: str
             overlay_mac_addr:
                 description:
@@ -241,10 +226,6 @@ options:
             remote_vtep:
                 description:
                 - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
-                type: str
-            remote_ipv6_vtep:
-                description:
-                - "Configure the VTEP IPv6 address (IPv6 address of the VTEP for the remote host)"
                 type: str
             uuid:
                 description:
@@ -462,7 +443,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encap", "host_list", "id", "local_ip_address", "local_ipv6_address", "remote_ip_address_list", "remote_ipv6_address_list", "sampling_enable", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["dest_port", "encap", "host_list", "id", "local_ip_address", "local_ipv6_address", "remote_ip_address_list", "remote_ipv6_address_list", "sampling_enable", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -490,6 +471,9 @@ def get_argspec():
         'encap': {
             'type': 'str',
             'choices': ['ip-encap', 'gre', 'nvgre', 'vxlan']
+            },
+        'dest_port': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -544,25 +528,6 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
-                },
-            'vni_list': {
-                'type': 'list',
-                'segment': {
-                    'type': 'int',
-                    'required': True,
-                    },
-                'partition': {
-                    'type': 'str',
-                    },
-                'gateway': {
-                    'type': 'bool',
-                    },
-                'lif': {
-                    'type': 'str',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
                 }
             },
         'remote_ip_address_list': {
@@ -570,9 +535,6 @@ def get_argspec():
             'ip_address': {
                 'type': 'str',
                 'required': True,
-                },
-            'class_list': {
-                'type': 'str',
                 },
             'encap': {
                 'type': 'str',
@@ -634,9 +596,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 },
-            'class_list': {
-                'type': 'str',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -654,16 +613,6 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
-                },
-            'vni_list': {
-                'type': 'list',
-                'segment': {
-                    'type': 'int',
-                    'required': True,
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
                 }
             },
         'host_list': {
@@ -671,9 +620,6 @@ def get_argspec():
             'ip_addr': {
                 'type': 'str',
                 'required': True,
-                },
-            'ipv6_addr': {
-                'type': 'str',
                 },
             'overlay_mac_addr': {
                 'type': 'str',
@@ -684,10 +630,6 @@ def get_argspec():
                 'required': True,
                 },
             'remote_vtep': {
-                'type': 'str',
-                'required': True,
-                },
-            'remote_ipv6_vtep': {
                 'type': 'str',
                 'required': True,
                 },

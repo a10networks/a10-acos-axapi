@@ -122,11 +122,6 @@ options:
                 description:
                 - "Partition Name"
                 type: str
-    privilege_shell:
-        description:
-        - "Set shell privilege"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -301,7 +296,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access", "access_list", "action", "aws_accesskey", "azure_cred", "encrypted", "passwd_string", "password", "password_key", "privilege_global", "privilege_list", "privilege_shell", "ssh_pubkey", "trusted_host", "trusted_host_acl_id", "trusted_host_cidr", "user", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["access", "access_list", "action", "aws_accesskey", "azure_cred", "encrypted", "passwd_string", "password", "password_key", "privilege_global", "privilege_list", "ssh_pubkey", "trusted_host", "trusted_host_acl_id", "trusted_host_cidr", "user", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -364,9 +359,6 @@ def get_argspec():
             'partition_name': {
                 'type': 'str',
                 }
-            },
-        'privilege_shell': {
-            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

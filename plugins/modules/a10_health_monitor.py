@@ -70,6 +70,12 @@ options:
         - "Specify the Healthcheck Retries (Retry Count (default 3))"
         type: int
         required: False
+    dplane:
+        description:
+        - "'enable'= Enable health-check on dplane; 'disable'= Disable health-check on
+          dplane; 'auto(default)'= Auto select;"
+        type: str
+        required: False
     up_retry:
         description:
         - "Specify the Healthcheck Retries before declaring target up (Up-retry count
@@ -142,6 +148,11 @@ options:
           should be less than or equal to interval)"
         type: int
         required: False
+    template_server_ssl:
+        description:
+        - "Server side SSL template for health monitor (Server side SSL Name)"
+        type: str
+        required: False
     ssl_ciphers:
         description:
         - "Specify OpenSSL Cipher Suite name(s) for Health check (OpenSSL Cipher Suite(s)
@@ -194,6 +205,10 @@ options:
             icmp:
                 description:
                 - "Field icmp"
+                type: dict
+            quic:
+                description:
+                - "Field quic"
                 type: dict
             tcp:
                 description:
@@ -275,6 +290,20 @@ options:
                 description:
                 - "Field compound"
                 type: dict
+    proxy_header:
+        description:
+        - "Field proxy_header"
+        type: dict
+        required: False
+        suboptions:
+            proxy_header_ver:
+                description:
+                - "'v1'= version 1; 'v2'= version 2;  (version number)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     header_insert:
         description:
         - "Field header_insert"
@@ -344,8 +373,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "default_state_up", "disable_after_down", "dsr_l2_strict", "header_insert", "interval", "method", "name", "override_ipv4", "override_ipv6", "override_port", "passive", "passive_interval", "retry", "sample_threshold", "ssl_ciphers", "ssl_dgversion", "ssl_ticket", "ssl_ticket_lifetime", "ssl_version", "status_code",
-    "strict_retry_on_server_err_resp", "threshold", "timeout", "up_retry", "user_tag", "uuid",
+    "default_state_up", "disable_after_down", "dplane", "dsr_l2_strict", "header_insert", "interval", "method", "name", "override_ipv4", "override_ipv6", "override_port", "passive", "passive_interval", "proxy_header", "retry", "sample_threshold", "ssl_ciphers", "ssl_dgversion", "ssl_ticket", "ssl_ticket_lifetime", "ssl_version", "status_code",
+    "strict_retry_on_server_err_resp", "template_server_ssl", "threshold", "timeout", "up_retry", "user_tag", "uuid",
     ]
 
 
@@ -376,6 +405,10 @@ def get_argspec():
             },
         'retry': {
             'type': 'int',
+            },
+        'dplane': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'auto(default)']
             },
         'up_retry': {
             'type': 'int',
@@ -417,6 +450,9 @@ def get_argspec():
         'timeout': {
             'type': 'int',
             },
+        'template_server_ssl': {
+            'type': 'str',
+            },
         'ssl_ciphers': {
             'type': 'str',
             },
@@ -456,6 +492,15 @@ def get_argspec():
                     },
                 'ip': {
                     'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'quic': {
+                'type': 'dict',
+                'quic': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -513,6 +558,9 @@ def get_argspec():
                     },
                 'http_port': {
                     'type': 'int',
+                    },
+                'version2': {
+                    'type': 'bool',
                     },
                 'http_expect': {
                     'type': 'bool',
@@ -1112,6 +1160,10 @@ def get_argspec():
                 'disable_sslv2hello': {
                     'type': 'bool',
                     },
+                'http_version': {
+                    'type': 'str',
+                    'choices': ['http-version2', 'http-version3']
+                    },
                 'https_host': {
                     'type': 'str',
                     },
@@ -1274,6 +1326,16 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'proxy_header': {
+            'type': 'dict',
+            'proxy_header_ver': {
+                'type': 'str',
+                'choices': ['v1', 'v2']
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'header_insert': {

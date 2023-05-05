@@ -62,13 +62,8 @@ options:
         required: True
     uplink:
         description:
-        - "Uplink Throughput limit (Mega (default) or Kilo Bits per second)"
+        - "Uplink Throughput limit (Mega Bits per second)"
         type: int
-        required: False
-    uplink_unit:
-        description:
-        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
-        type: str
         required: False
     uplink_burstsize:
         description:
@@ -82,13 +77,8 @@ options:
         required: False
     downlink:
         description:
-        - "Downlink Throughput limit (Mega (default) or Kilo Bits per second)"
+        - "Downlink Throughput limit (Mega Bits per second)"
         type: int
-        required: False
-    downlink_unit:
-        description:
-        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
-        type: str
         required: False
     downlink_burstsize:
         description:
@@ -102,13 +92,8 @@ options:
         required: False
     total:
         description:
-        - "Total Throughput limit (Mega (default) or Kilo Bits per second)"
+        - "Total Throughput limit (Mega Bits per second)"
         type: int
-        required: False
-    total_unit:
-        description:
-        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
-        type: str
         required: False
     total_burstsize:
         description:
@@ -179,7 +164,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["downlink", "downlink_burstsize", "downlink_relaxed", "downlink_unit", "total", "total_burstsize", "total_relaxed", "total_unit", "uplink", "uplink_burstsize", "uplink_relaxed", "uplink_unit", "uuid", ]
+AVAILABLE_PROPERTIES = ["downlink", "downlink_burstsize", "downlink_relaxed", "total", "total_burstsize", "total_relaxed", "uplink", "uplink_burstsize", "uplink_relaxed", "uuid", ]
 
 
 def get_default_argspec():
@@ -203,10 +188,6 @@ def get_argspec():
         'uplink': {
             'type': 'int',
             },
-        'uplink_unit': {
-            'type': 'str',
-            'choices': ['Mbps', 'Kbps']
-            },
         'uplink_burstsize': {
             'type': 'int',
             },
@@ -216,10 +197,6 @@ def get_argspec():
         'downlink': {
             'type': 'int',
             },
-        'downlink_unit': {
-            'type': 'str',
-            'choices': ['Mbps', 'Kbps']
-            },
         'downlink_burstsize': {
             'type': 'int',
             },
@@ -228,10 +205,6 @@ def get_argspec():
             },
         'total': {
             'type': 'int',
-            },
-        'total_unit': {
-            'type': 'str',
-            'choices': ['Mbps', 'Kbps']
             },
         'total_burstsize': {
             'type': 'int',

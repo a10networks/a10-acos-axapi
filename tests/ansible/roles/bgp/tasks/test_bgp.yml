@@ -7,7 +7,7 @@
 
 - assert:
     that:
-      - "bgp['modified_values']['bgp']['as-number'] == 106"
+      - "bgp['modified_values']['bgp']['as-number'] == '106'"
 
 - name: Create router bgp network ip cidr for acos
   a10.acos_axapi.a10_router_bgp_network_ip_cidr:

@@ -65,11 +65,6 @@ options:
         - "IP Address of the remote VTEP"
         type: str
         required: True
-    class_list:
-        description:
-        - "Name of the class-list"
-        type: str
-        required: False
     encap:
         description:
         - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type
@@ -205,7 +200,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list", "encap", "gre_keepalive", "ip_address", "use_gre_key", "use_lif", "user_tag", "uuid", "vni_list", ]
+AVAILABLE_PROPERTIES = ["encap", "gre_keepalive", "ip_address", "use_gre_key", "use_lif", "user_tag", "uuid", "vni_list", ]
 
 
 def get_default_argspec():
@@ -229,9 +224,6 @@ def get_argspec():
         'ip_address': {
             'type': 'str',
             'required': True,
-            },
-        'class_list': {
-            'type': 'str',
             },
         'encap': {
             'type': 'str',

@@ -357,6 +357,36 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    dns_caa_record_list:
+        description:
+        - "Field dns_caa_record_list"
+        type: list
+        required: False
+        suboptions:
+            critical_flag:
+                description:
+                - "Issuer Critical Flag"
+                type: int
+            property_tag:
+                description:
+                - "Specify other property tags, only allowed lowercase alphanumeric"
+                type: str
+            rdata:
+                description:
+                - "Specify the Issuer Domain Name or a URL"
+                type: str
+            ttl:
+                description:
+                - "Specify TTL"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     dns_record_list:
         description:
         - "Field dns_record_list"
@@ -505,10 +535,6 @@ options:
                 description:
                 - "Specify the service name for the zone, * for wildcard"
                 type: str
-            dns_a_record:
-                description:
-                - "Field dns_a_record"
-                type: dict
             dns_cname_record_list:
                 description:
                 - "Field dns_cname_record_list"
@@ -536,6 +562,10 @@ options:
             dns_txt_record_list:
                 description:
                 - "Field dns_txt_record_list"
+                type: list
+            dns_caa_record_list:
+                description:
+                - "Field dns_caa_record_list"
                 type: list
 
 '''
@@ -592,8 +622,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "disable", "dns_a_record", "dns_cname_record_list", "dns_mx_record_list", "dns_naptr_record_list", "dns_ns_record_list", "dns_ptr_record_list", "dns_record_list", "dns_srv_record_list", "dns_txt_record_list", "forward_type", "geo_location_list", "health_check_gateway", "health_check_port", "oper", "policy", "sampling_enable",
-    "service_name", "service_port", "stats", "user_tag", "uuid",
+    "action", "disable", "dns_a_record", "dns_caa_record_list", "dns_cname_record_list", "dns_mx_record_list", "dns_naptr_record_list", "dns_ns_record_list", "dns_ptr_record_list", "dns_record_list", "dns_srv_record_list", "dns_txt_record_list", "forward_type", "geo_location_list", "health_check_gateway", "health_check_port", "oper", "policy",
+    "sampling_enable", "service_name", "service_port", "stats", "user_tag", "uuid",
     ]
 
 
@@ -944,6 +974,34 @@ def get_argspec():
                     }
                 }
             },
+        'dns_caa_record_list': {
+            'type': 'list',
+            'critical_flag': {
+                'type': 'int',
+                'required': True,
+                },
+            'property_tag': {
+                'type': 'str',
+                'required': True,
+                },
+            'rdata': {
+                'type': 'str',
+                'required': True,
+                },
+            'ttl': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'hits']
+                    }
+                }
+            },
         'dns_record_list': {
             'type': 'list',
             'ntype': {
@@ -1121,9 +1179,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 },
-            'dns_a_record': {
-                'type': 'dict',
-                },
             'dns_cname_record_list': {
                 'type': 'list',
                 'alias_name': {
@@ -1217,6 +1272,27 @@ def get_argspec():
             'dns_txt_record_list': {
                 'type': 'list',
                 'record_name': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'dns_caa_record_list': {
+                'type': 'list',
+                'critical_flag': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'property_tag': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'rdata': {
                     'type': 'str',
                     'required': True,
                     },

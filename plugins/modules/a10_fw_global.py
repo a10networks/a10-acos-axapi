@@ -248,8 +248,7 @@ options:
           'dyn_blist_pkt_rate_low'= Dynamic Blacklist - Pkt Rate Low;
           'dyn_blist_pkt_rate_high'= Dynamic Blacklist - Pkt Rate High;
           'dyn_blist_version_mismatch'= Dynamic Blacklist - Version Mismatch;
-          'dyn_blist_no_active_policy'= Dynamic Blacklist - No Active Policy; 'fw-def-
-          pkt-dir'= default direction assigned to packet irrespective of interface tags;
+          'dyn_blist_no_active_policy'= Dynamic Blacklist - No Active Policy;
           'fullcone_in_del_q'= Full-cone session found in delete queue;
           'fullcone_retry_lookup'= Full-cone session retry look-up; 'fullcone_not_found'=
           Full-cone session not found; 'fullcone_overflow_eim'= Full-cone Session EIM
@@ -291,34 +290,8 @@ options:
           Forward Route; 'no_rev_route'= No Reverse Route; 'no_fwd_l2_dst'= No Forward
           Mac Entry; 'no_rev_l2_dst'= No Reverse Mac Entry; 'l2_dst_in_out_same'= L2
           route to same port as received; 'l2_vlan_changed'= L2 forwarding vlan changed
-          after session create; 'urpf_pkt_drop'= URPF check packet drop; 'fw-inside-
-          single-v4-entries-added'= FW inside v4 single ip entries are added to brcm;
-          'fw-inside-subnet-v4-entries-added'= FW inside v4 subnet entries are added to
-          brcm; 'fw-inside-single-v6-entries-added'= FW inside v6 single ip entries are
-          added to brcm; 'fw-inside-subnet-v6-entries-added'= FW inside v6 subnet entries
-          are added to brcm; 'fw-inside-single-v4-entries-deleted'= FW inside v4 single
-          ip entries are deleted from brcm; 'fw-inside-subnet-v4-entries-deleted'= FW
-          inside v4 subnet entries are deleted from brcm; 'fw-inside-single-v6-entries-
-          deleted'= FW inside v6 single ip entries are deleted from brcm; 'fw-inside-
-          subnet-v6-entries-deleted'= FW inside v6 subnet entries are deleted from brcm;
-          'fw-inside-subnet-entry-creation-error'= FW inside error in entry creation in
-          brcm; 'fw-inside-subnet-entry-del-error'= FW inside error in entry deletion
-          from brcm; 'fw-inside-cl-bound'= FW client ips bound via Classlist; 'fw-inside-
-          cl-unbound'= FW client CL unbound; 'fw-inside-populate-v4-entry'= FW inside
-          populate v4 lookup entry; 'fw-inside-populate-v6-entry'= FW inside populate v6
-          lookup entry; 'fw-inside-update-v4-entry'= FW inside update v4 lookup entry;
-          'fw-inside-update-v6-entry'= FW inside update v6 lookup entry; 'fw-inside-
-          remove-v4-entry'= FW inside remove v4 lookup entry; 'fw-inside-
-          remove-v6-entry'= FW inside remove v6 lookup entry; 'fw-inside-cl-reset-idx'=
-          inside CL index reset; 'fw-inside-cl-load'= fw inside CL is loaded; 'fw-inside-
-          entries-not-added-no-dmz-intf'= no dmz interface found and lookup entries are
-          not added; 'fw-inside-entrie-add-cl-bound-first'= lookup entries added when CL
-          is bound first and intf is dmz tagged later; 'fw-inside-entries-removed-dmz-
-          untaged-first'= lookup entries removed, when CL is bound and dmz intf is
-          untagged; 'fw-inside-cl-entry-update'= fw inside CL entry update is called;
-          'no_fw_class_list_match'= No FW inside Class-List Match; 'fw-inside-cl-type-
-          mismatch'= fw inside CL TYPE mismatch; 'fw-inside-cl-id-mismatch'= fw inside CL
-          ID mismatch; 'fwd_ingress_packets_tcp'= Forward Ingress Packets TCP;
+          after session create; 'urpf_pkt_drop'= URPF check packet drop;
+          'fwd_ingress_packets_tcp'= Forward Ingress Packets TCP;
           'fwd_egress_packets_tcp'= Forward Egress Packets TCP;
           'rev_ingress_packets_tcp'= Reverse Ingress Packets TCP;
           'rev_egress_packets_tcp'= Reverse Egress Packets TCP; 'fwd_ingress_bytes_tcp'=
@@ -339,11 +312,8 @@ options:
           ICMP; 'rev_egress_bytes_icmp'= Reverse Egress Bytes ICMP;
           'fwd_ingress_packets_others'= Forward Ingress Packets OTHERS;
           'fwd_egress_packets_others'= Forward Egress Packets OTHERS;
-          'rev_ingress_packets_others'= Reverse Ingress Packets OTHERS;"
-                type: str
-            counters2:
-                description:
-                - "'rev_egress_packets_others'= Reverse Egress Packets OTHERS;
+          'rev_ingress_packets_others'= Reverse Ingress Packets OTHERS;
+          'rev_egress_packets_others'= Reverse Egress Packets OTHERS;
           'fwd_ingress_bytes_others'= Forward Ingress Bytes OTHERS;
           'fwd_egress_bytes_others'= Forward Egress Bytes OTHERS;
           'rev_ingress_bytes_others'= Reverse Ingress Bytes OTHERS;
@@ -781,24 +751,16 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_creation_failure', 'data_session_created', 'data_session_created_local', 'dyn_blist_sess_sp', 'data_session_freed', 'data_session_freed_local', 'dyn_blist_sess_created', 'dyn_blist_sess_freed', 'dyn_blist_pkt_drop',
-                    'dyn_blist_pkt_rate_low', 'dyn_blist_pkt_rate_high', 'dyn_blist_version_mismatch', 'dyn_blist_no_active_policy', 'fw-def-pkt-dir', 'fullcone_in_del_q', 'fullcone_retry_lookup', 'fullcone_not_found', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'udp_fullcone_created_shadow', 'tcp_fullcone_created_shadow',
-                    'udp_fullcone_freed_shadow', 'tcp_fullcone_freed_shadow', 'fullcone_created', 'fullcone_freed', 'fullcone_ext_too_many', 'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_mem_freed', 'fullcone_ext_added', 'ha_fullcone_failure', 'data_session_created_shadow',
+                    'dyn_blist_pkt_rate_low', 'dyn_blist_pkt_rate_high', 'dyn_blist_version_mismatch', 'dyn_blist_no_active_policy', 'fullcone_in_del_q', 'fullcone_retry_lookup', 'fullcone_not_found', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'udp_fullcone_created_shadow', 'tcp_fullcone_created_shadow', 'udp_fullcone_freed_shadow',
+                    'tcp_fullcone_freed_shadow', 'fullcone_created', 'fullcone_freed', 'fullcone_ext_too_many', 'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_mem_freed', 'fullcone_ext_added', 'ha_fullcone_failure', 'data_session_created_shadow',
                     'data_session_created_shadow_local', 'data_session_freed_shadow', 'data_session_freed_shadow_local', 'active_fullcone_session', 'limit-entry-failure', 'limit-entry-allocated', 'limit-entry-mem-freed', 'limit-entry-created', 'limit-entry-found', 'limit-entry-not-in-bucket', 'limit-entry-marked-deleted',
                     'undetermined-rule-counter', 'non_syn_pkt_fwd_allowed', 'invalid-lid-drop', 'src-session-limit-exceeded', 'uplink-pps-limit-exceeded', 'downlink-pps-limit-exceeded', 'total-pps-limit-exceeded', 'uplink-throughput-limit-exceeded', 'downlink-throughput-limit-exceeded', 'total-throughput-limit-exceeded', 'cps-limit-exceeded',
-                    'limit-exceeded', 'limit-entry-per-cpu-mem-allocated', 'limit-entry-per-cpu-mem-allocation-failed', 'limit-entry-per-cpu-mem-freed', 'alg_default_port_disable', 'no_fwd_route', 'no_rev_route', 'no_fwd_l2_dst', 'no_rev_l2_dst', 'l2_dst_in_out_same', 'l2_vlan_changed', 'urpf_pkt_drop', 'fw-inside-single-v4-entries-added',
-                    'fw-inside-subnet-v4-entries-added', 'fw-inside-single-v6-entries-added', 'fw-inside-subnet-v6-entries-added', 'fw-inside-single-v4-entries-deleted', 'fw-inside-subnet-v4-entries-deleted', 'fw-inside-single-v6-entries-deleted', 'fw-inside-subnet-v6-entries-deleted', 'fw-inside-subnet-entry-creation-error',
-                    'fw-inside-subnet-entry-del-error', 'fw-inside-cl-bound', 'fw-inside-cl-unbound', 'fw-inside-populate-v4-entry', 'fw-inside-populate-v6-entry', 'fw-inside-update-v4-entry', 'fw-inside-update-v6-entry', 'fw-inside-remove-v4-entry', 'fw-inside-remove-v6-entry', 'fw-inside-cl-reset-idx', 'fw-inside-cl-load',
-                    'fw-inside-entries-not-added-no-dmz-intf', 'fw-inside-entrie-add-cl-bound-first', 'fw-inside-entries-removed-dmz-untaged-first', 'fw-inside-cl-entry-update', 'no_fw_class_list_match', 'fw-inside-cl-type-mismatch', 'fw-inside-cl-id-mismatch', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp',
-                    'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp',
-                    'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others'
-                    ]
-                },
-            'counters2': {
-                'type':
-                'str',
-                'choices': [
-                    'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
-                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
+                    'limit-exceeded', 'limit-entry-per-cpu-mem-allocated', 'limit-entry-per-cpu-mem-allocation-failed', 'limit-entry-per-cpu-mem-freed', 'alg_default_port_disable', 'no_fwd_route', 'no_rev_route', 'no_fwd_l2_dst', 'no_rev_l2_dst', 'l2_dst_in_out_same', 'l2_vlan_changed', 'urpf_pkt_drop', 'fwd_ingress_packets_tcp',
+                    'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp',
+                    'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others',
+                    'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4',
+                    'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2',
+                    'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
                     ]
                 }
             },

@@ -58,7 +58,7 @@ options:
     glid_id:
         description:
         - "Apply limits to the whole system"
-        type: int
+        type: str
         required: False
     non_shared:
         description:
@@ -145,7 +145,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'glid_id': {'type': 'int', }, 'non_shared': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'glid_id': {'type': 'str', }, 'non_shared': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 
