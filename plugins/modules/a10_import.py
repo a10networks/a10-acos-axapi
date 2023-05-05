@@ -64,6 +64,11 @@ options:
         - "Cloud Credentials File"
         type: str
         required: False
+    ddos_script:
+        description:
+        - "Python/Perl/Bash/TCL script to be used with ddos action-list"
+        type: str
+        required: False
     ssl_cert:
         description:
         - "SSL Cert File(enter bulk when import an archive file)"
@@ -99,19 +104,14 @@ options:
         - "XML-Schema File"
         type: str
         required: False
-    wsdl:
-        description:
-        - "Web Service Definition Language File"
-        type: str
-        required: False
-    policy:
-        description:
-        - "WAF policy File"
-        type: str
-        required: False
     bw_list:
         description:
         - "Black white List File"
+        type: str
+        required: False
+    domain_list:
+        description:
+        - "Domain List File"
         type: str
         required: False
     class_list:
@@ -210,6 +210,16 @@ options:
           insensitive'= string-case-insensitive;"
         type: str
         required: False
+    csr_generate:
+        description:
+        - "Generate CSR file"
+        type: bool
+        required: False
+    digest:
+        description:
+        - "'sha1'= sha1; 'sha256'= sha256; 'sha384'= sha384; 'sha512'= sha512;"
+        type: str
+        required: False
     pfx_password:
         description:
         - "The password for certificate file (pfx type only)"
@@ -228,6 +238,16 @@ options:
     rpz:
         description:
         - "Response Policy Zone File"
+        type: str
+        required: False
+    zone_transfer:
+        description:
+        - "'zone-transfer'= zone-transfer;"
+        type: str
+        required: False
+    tsig:
+        description:
+        - "Transaction SIGnatures Key file"
         type: str
         required: False
     terminal:
@@ -251,6 +271,11 @@ options:
         type: bool
         required: False
     remote_file:
+        description:
+        - "profile name for remote url"
+        type: str
+        required: False
+    remote_file_zone_transfer:
         description:
         - "profile name for remote url"
         type: str
@@ -320,6 +345,54 @@ options:
             remote_file:
                 description:
                 - "Field remote_file"
+                type: str
+    ng_waf_module:
+        description:
+        - "Field ng_waf_module"
+        type: dict
+        required: False
+        suboptions:
+            overwrite:
+                description:
+                - "Overwrite existing file"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management interface for reachability"
+                type: bool
+            remote_file:
+                description:
+                - "Profile name for remote url"
+                type: str
+            password:
+                description:
+                - "password for the remote site"
+                type: str
+    ng_waf_custom_page:
+        description:
+        - "Field ng_waf_custom_page"
+        type: dict
+        required: False
+        suboptions:
+            custom_page:
+                description:
+                - "Custom html file for ng-waf"
+                type: str
+            overwrite:
+                description:
+                - "Overwrite existing file"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management interface for reachability"
+                type: bool
+            remote_file:
+                description:
+                - "Profile name for remote url"
+                type: str
+            password:
+                description:
+                - "password for the remote site"
                 type: str
     auth_saml_idp:
         description:
@@ -407,6 +480,47 @@ options:
                 description:
                 - "password for the remote site"
                 type: str
+    ips:
+        description:
+        - "Field ips"
+        type: dict
+        required: False
+        suboptions:
+            profile:
+                description:
+                - "Field profile"
+                type: dict
+            signature:
+                description:
+                - "Field signature"
+                type: dict
+            a10_signature:
+                description:
+                - "Field a10_signature"
+                type: dict
+    geo_location_archive:
+        description:
+        - "Field geo_location_archive"
+        type: dict
+        required: False
+        suboptions:
+            geo_location_archive_format:
+                description:
+                - "'GeoLite2-ASN'= GeoLite2-ASN CSV Zipped File; 'GeoLite2-City'= GeoLite2-City
+          CSV Zipped File; 'GeoLite2-Country'= GeoLite2-Country CSV Zipped File;"
+                type: str
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            remote_file:
+                description:
+                - "Profile name for remote url"
+                type: str
+            password:
+                description:
+                - "password for the remote site"
+                type: str
 
 '''
 
@@ -462,8 +576,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "auth_saml_idp", "bios_file", "bw_list", "ca_cert", "certificate_type", "class_list", "class_list_convert", "class_list_type", "cloud_config", "cloud_creds", "dnssec_dnskey", "dnssec_ds", "geo_location", "glm_cert", "glm_license", "health_external", "health_postfile", "ip_map_list",
-    "local_uri_file", "lw_4o6", "overwrite", "password", "pfx_password", "policy", "remote_file", "rpz", "secured", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "store", "store_name", "terminal", "thales_kmdata", "thales_secworld", "to_device", "usb_license", "use_mgmt_port", "user_tag", "web_category_license", "wsdl", "xml_schema",
+    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "auth_saml_idp", "bios_file", "bw_list", "ca_cert", "certificate_type", "class_list", "class_list_convert", "class_list_type", "cloud_config", "cloud_creds", "csr_generate", "ddos_script", "digest", "dnssec_dnskey", "dnssec_ds", "domain_list", "geo_location", "geo_location_archive",
+    "glm_cert", "glm_license", "health_external", "health_postfile", "ip_map_list", "ips", "local_uri_file", "lw_4o6", "ng_waf_custom_page", "ng_waf_module", "overwrite", "password", "pfx_password", "remote_file", "remote_file_zone_transfer", "rpz", "secured", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "store", "store_name", "terminal",
+    "thales_kmdata", "thales_secworld", "to_device", "tsig", "usb_license", "use_mgmt_port", "user_tag", "web_category_license", "xml_schema", "zone_transfer",
     ]
 
 
@@ -491,6 +606,9 @@ def get_argspec():
         'cloud_creds': {
             'type': 'str',
             },
+        'ddos_script': {
+            'type': 'str',
+            },
         'ssl_cert': {
             'type': 'str',
             },
@@ -513,13 +631,10 @@ def get_argspec():
         'xml_schema': {
             'type': 'str',
             },
-        'wsdl': {
-            'type': 'str',
-            },
-        'policy': {
-            'type': 'str',
-            },
         'bw_list': {
+            'type': 'str',
+            },
+        'domain_list': {
             'type': 'str',
             },
         'class_list': {
@@ -581,6 +696,13 @@ def get_argspec():
             'type': 'str',
             'choices': ['ac', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
             },
+        'csr_generate': {
+            'type': 'bool',
+            },
+        'digest': {
+            'type': 'str',
+            'choices': ['sha1', 'sha256', 'sha384', 'sha512']
+            },
         'pfx_password': {
             'type': 'str',
             },
@@ -591,6 +713,13 @@ def get_argspec():
             'type': 'str',
             },
         'rpz': {
+            'type': 'str',
+            },
+        'zone_transfer': {
+            'type': 'str',
+            'choices': ['zone-transfer']
+            },
+        'tsig': {
             'type': 'str',
             },
         'terminal': {
@@ -606,6 +735,9 @@ def get_argspec():
             'type': 'bool',
             },
         'remote_file': {
+            'type': 'str',
+            },
+        'remote_file_zone_transfer': {
             'type': 'str',
             },
         'password': {
@@ -650,6 +782,39 @@ def get_argspec():
                 'type': 'str',
                 },
             'remote_file': {
+                'type': 'str',
+                }
+            },
+        'ng_waf_module': {
+            'type': 'dict',
+            'overwrite': {
+                'type': 'bool',
+                },
+            'use_mgmt_port': {
+                'type': 'bool',
+                },
+            'remote_file': {
+                'type': 'str',
+                },
+            'password': {
+                'type': 'str',
+                }
+            },
+        'ng_waf_custom_page': {
+            'type': 'dict',
+            'custom_page': {
+                'type': 'str',
+                },
+            'overwrite': {
+                'type': 'bool',
+                },
+            'use_mgmt_port': {
+                'type': 'bool',
+                },
+            'remote_file': {
+                'type': 'str',
+                },
+            'password': {
                 'type': 'str',
                 }
             },
@@ -702,6 +867,73 @@ def get_argspec():
                 },
             'overwrite': {
                 'type': 'bool',
+                },
+            'use_mgmt_port': {
+                'type': 'bool',
+                },
+            'remote_file': {
+                'type': 'str',
+                },
+            'password': {
+                'type': 'str',
+                }
+            },
+        'ips': {
+            'type': 'dict',
+            'profile': {
+                'type': 'dict',
+                'profile_filename': {
+                    'type': 'str',
+                    },
+                'overwrite': {
+                    'type': 'bool',
+                    },
+                'use_mgmt_port': {
+                    'type': 'bool',
+                    },
+                'remote_file': {
+                    'type': 'str',
+                    },
+                'password': {
+                    'type': 'str',
+                    }
+                },
+            'signature': {
+                'type': 'dict',
+                'signature_filename': {
+                    'type': 'str',
+                    },
+                'use_mgmt_port': {
+                    'type': 'bool',
+                    },
+                'remote_file': {
+                    'type': 'str',
+                    },
+                'password': {
+                    'type': 'str',
+                    }
+                },
+            'a10_signature': {
+                'type': 'dict',
+                'a10_signature_filename': {
+                    'type': 'str',
+                    },
+                'use_mgmt_port': {
+                    'type': 'bool',
+                    },
+                'remote_file': {
+                    'type': 'str',
+                    },
+                'password': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'geo_location_archive': {
+            'type': 'dict',
+            'geo_location_archive_format': {
+                'type': 'str',
+                'choices': ['GeoLite2-ASN', 'GeoLite2-City', 'GeoLite2-Country']
                 },
             'use_mgmt_port': {
                 'type': 'bool',

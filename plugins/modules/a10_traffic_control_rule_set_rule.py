@@ -487,20 +487,6 @@ options:
                 description:
                 - "'all'= all; 'hit-count'= Hit counts;"
                 type: str
-    move_rule:
-        description:
-        - "Field move_rule"
-        type: dict
-        required: False
-        suboptions:
-            location:
-                description:
-                - "'top'= top; 'before'= before; 'after'= after; 'bottom'= bottom;"
-                type: str
-            target_rule:
-                description:
-                - "Field target_rule"
-                type: str
     action_group:
         description:
         - "Field action_group"
@@ -602,8 +588,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action_group", "app_list", "application_any", "dest_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "ip_version", "move_rule", "name", "oper", "remark", "sampling_enable", "service_any", "service_list",
-    "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "user_tag", "uuid",
+    "action_group", "app_list", "application_any", "dest_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "ip_version", "name", "oper", "remark", "sampling_enable", "service_any", "service_list", "source_list",
+    "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "user_tag", "uuid",
     ]
 
 
@@ -863,16 +849,6 @@ def get_argspec():
             'counters1': {
                 'type': 'str',
                 'choices': ['all', 'hit-count']
-                }
-            },
-        'move_rule': {
-            'type': 'dict',
-            'location': {
-                'type': 'str',
-                'choices': ['top', 'before', 'after', 'bottom']
-                },
-            'target_rule': {
-                'type': 'str',
                 }
             },
         'action_group': {

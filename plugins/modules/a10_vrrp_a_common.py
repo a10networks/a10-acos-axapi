@@ -98,6 +98,16 @@ options:
           is 4)"
         type: int
         required: False
+    ttl:
+        description:
+        - "VRRP-A packet IPv4 header TTL (TTL, default is 128)"
+        type: int
+        required: False
+    hop_limit:
+        description:
+        - "VRRP-A packet IPv6 header hop-limit (hop-limit, default is 64)"
+        type: int
+        required: False
     track_event_delay:
         description:
         - "Delay before changing state after up/down event (Units of 100 milliseconds
@@ -150,11 +160,6 @@ options:
     forward_l4_packet_on_standby:
         description:
         - "Enables Layer 2/3 forwarding of Layer 4 traffic on the Standby ACOS device"
-        type: bool
-        required: False
-    enable_sync_session_seq_number:
-        description:
-        - "enable monitoring sending and receiving sync packets with sequence number"
         type: bool
         required: False
     uuid:
@@ -226,7 +231,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "arp_retry", "dead_timer", "device_id", "disable_default_vrid", "enable_sync_session_seq_number", "forward_l4_packet_on_standby", "get_ready_time", "hello_interval", "hostid_append_to_vrid", "inline_mode_cfg", "preemption_delay", "restart_time", "set_id", "stats", "track_event_delay", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "arp_retry", "dead_timer", "device_id", "disable_default_vrid", "forward_l4_packet_on_standby", "get_ready_time", "hello_interval", "hop_limit", "hostid_append_to_vrid", "inline_mode_cfg", "preemption_delay", "restart_time", "set_id", "stats", "track_event_delay", "ttl", "uuid", ]
 
 
 def get_default_argspec():
@@ -272,6 +277,12 @@ def get_argspec():
         'arp_retry': {
             'type': 'int',
             },
+        'ttl': {
+            'type': 'int',
+            },
+        'hop_limit': {
+            'type': 'int',
+            },
         'track_event_delay': {
             'type': 'int',
             },
@@ -303,9 +314,6 @@ def get_argspec():
                 }
             },
         'forward_l4_packet_on_standby': {
-            'type': 'bool',
-            },
-        'enable_sync_session_seq_number': {
             'type': 'bool',
             },
         'uuid': {

@@ -89,7 +89,7 @@ options:
         required: False
     time:
         description:
-        - "Set export time of the data. default 0 (12 AM)"
+        - "Set export time of the data. default 0 (12 AM), default 0"
         type: int
         required: False
     action:

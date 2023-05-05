@@ -115,8 +115,7 @@ options:
         suboptions:
             ec:
                 description:
-                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; 'secp521r1'= secp521r1;
-          'x25519'= x25519;"
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
                 type: str
     local_logging:
         description:
@@ -187,6 +186,11 @@ options:
         description:
         - "Specify retry timeout (Default is 30 mins)"
         type: int
+        required: False
+    ssli_inbound_enable:
+        description:
+        - "Enable inbound SSLi"
+        type: bool
         required: False
     ssli_logging:
         description:
@@ -1291,25 +1295,13 @@ options:
                 description:
                 - "Category Health and Medicine"
                 type: bool
-            confirmed_spam_sources:
-                description:
-                - "Category Confirmed SPAM Sources"
-                type: bool
             spam_urls:
                 description:
                 - "Category SPAM URLs"
                 type: bool
-            unconfirmed_spam_sources:
+            dynamically_generated_content:
                 description:
-                - "Category Unconfirmed SPAM Sources"
-                type: bool
-            open_http_proxies:
-                description:
-                - "Category Open HTTP Proxies"
-                type: bool
-            dynamic_comment:
-                description:
-                - "Category Dynamic Comment"
+                - "Dynamically Generated Content"
                 type: bool
             parked_domains:
                 description:
@@ -1318,10 +1310,6 @@ options:
             alcohol_and_tobacco:
                 description:
                 - "Category Alcohol and Tobacco"
-                type: bool
-            private_ip_addresses:
-                description:
-                - "Category Private IP Addresses"
                 type: bool
             image_and_video_search:
                 description:
@@ -1342,10 +1330,6 @@ options:
             web_hosting_sites:
                 description:
                 - "Category Web Hosting Sites"
-                type: bool
-            food_and_dining:
-                description:
-                - "Category Food and Dining"
                 type: bool
             nudity_artistic:
                 description:
@@ -1641,25 +1625,13 @@ options:
                 description:
                 - "Category Health and Medicine"
                 type: bool
-            exception_confirmed_spam_sources:
-                description:
-                - "Category Confirmed SPAM Sources"
-                type: bool
             exception_spam_urls:
                 description:
                 - "Category SPAM URLs"
                 type: bool
-            exception_unconfirmed_spam_sources:
+            exception_dynamically_generated_content:
                 description:
-                - "Category Unconfirmed SPAM Sources"
-                type: bool
-            exception_open_http_proxies:
-                description:
-                - "Category Open HTTP Proxies"
-                type: bool
-            exception_dynamic_comment:
-                description:
-                - "Category Dynamic Comment"
+                - "Dynamically Generated Content"
                 type: bool
             exception_parked_domains:
                 description:
@@ -1668,10 +1640,6 @@ options:
             exception_alcohol_and_tobacco:
                 description:
                 - "Category Alcohol and Tobacco"
-                type: bool
-            exception_private_ip_addresses:
-                description:
-                - "Category Private IP Addresses"
                 type: bool
             exception_image_and_video_search:
                 description:
@@ -1693,10 +1661,6 @@ options:
                 description:
                 - "Category Web Hosting Sites"
                 type: bool
-            exception_food_and_dining:
-                description:
-                - "Category Food and Dining"
-                type: bool
             exception_nudity_artistic:
                 description:
                 - "Category Nudity join Entertainment and Arts"
@@ -1708,6 +1672,103 @@ options:
     require_web_category:
         description:
         - "Wait for web category to be resolved before taking bypass decision"
+        type: bool
+        required: False
+    client_ipv4_list:
+        description:
+        - "Field client_ipv4_list"
+        type: list
+        required: False
+        suboptions:
+            client_ipv4_list_name:
+                description:
+                - "IPV4 client class-list name"
+                type: str
+    client_ipv6_list:
+        description:
+        - "Field client_ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            client_ipv6_list_name:
+                description:
+                - "IPV6 client class-list name"
+                type: str
+    server_ipv4_list:
+        description:
+        - "Field server_ipv4_list"
+        type: list
+        required: False
+        suboptions:
+            server_ipv4_list_name:
+                description:
+                - "IPV4 server class-list name"
+                type: str
+    server_ipv6_list:
+        description:
+        - "Field server_ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            server_ipv6_list_name:
+                description:
+                - "IPV6 server class-list name"
+                type: str
+    exception_client_ipv4_list:
+        description:
+        - "Field exception_client_ipv4_list"
+        type: list
+        required: False
+        suboptions:
+            exception_client_ipv4_list_name:
+                description:
+                - "IPV4 exception client class-list name"
+                type: str
+    exception_client_ipv6_list:
+        description:
+        - "Field exception_client_ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            exception_client_ipv6_list_name:
+                description:
+                - "IPV6 exception client class-list name"
+                type: str
+    exception_server_ipv4_list:
+        description:
+        - "Field exception_server_ipv4_list"
+        type: list
+        required: False
+        suboptions:
+            exception_server_ipv4_list_name:
+                description:
+                - "IPV4 exception server class-list name"
+                type: str
+    exception_server_ipv6_list:
+        description:
+        - "Field exception_server_ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            exception_server_ipv6_list_name:
+                description:
+                - "IPV6 exception server class-list name"
+                type: str
+    local_cert_pin_list:
+        description:
+        - "Field local_cert_pin_list"
+        type: dict
+        required: False
+        suboptions:
+            local_cert_pin_list_bypass_fail_count:
+                description:
+                - "Set the connection fail count as bypass criteria (Bypass when connection
+          failure count is greater than the criteria (1-65536))"
+                type: int
+    central_cert_pin_list:
+        description:
+        - "Forward proxy bypass if SNI string is contained in central updated cert-
+          pinning-candidate list"
         type: bool
         required: False
     forward_proxy_require_sni_cert_matched:
@@ -1749,36 +1810,43 @@ options:
         suboptions:
             cipher_wo_prio:
                 description:
-                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'=
-          SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA;
-          'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'=
-          TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256;
-          'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256;
-          'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256;
-          'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA;
-          'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256;
-          'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384;
-          'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA;
-          'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256;
-          'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256;
-          'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA;
-          'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256;
-          'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384;
-          'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA;
-          'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256;
-          'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA;
-          'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256;
-          'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384;
-          'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA;
-          'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256;
-          'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384;
-          'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384;
-          'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384;
-          'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256'=
-          TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256;
+                - "'SSL3_RSA_DES_192_CBC3_SHA'= TLS_RSA_WITH_3DES_EDE_CBC_SHA (0x000A);
+          'SSL3_RSA_RC4_128_MD5'= TLS_RSA_WITH_RC4_128_MD5 (0x0004);
+          'SSL3_RSA_RC4_128_SHA'= TLS_RSA_WITH_RC4_128_SHA (0x0005);
+          'TLS1_RSA_AES_128_SHA'= TLS_RSA_WITH_AES_128_CBC_SHA (0x002F);
+          'TLS1_RSA_AES_256_SHA'= TLS_RSA_WITH_AES_256_CBC_SHA (0x0035);
+          'TLS1_RSA_AES_128_SHA256'= TLS_RSA_WITH_AES_128_CBC_SHA256 (0x003C);
+          'TLS1_RSA_AES_256_SHA256'= TLS_RSA_WITH_AES_256_CBC_SHA256 (0x003D);
+          'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+          (0x009E); 'TLS1_DHE_RSA_AES_128_SHA'= TLS_DHE_RSA_WITH_AES_128_CBC_SHA
+          (0x0033); 'TLS1_DHE_RSA_AES_128_SHA256'= TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
+          (0x0067); 'TLS1_DHE_RSA_AES_256_GCM_SHA384'=
+          TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x009F); 'TLS1_DHE_RSA_AES_256_SHA'=
+          TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039); 'TLS1_DHE_RSA_AES_256_SHA256'=
+          TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x006B);
+          'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+          (0xC02B); 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+          (0xC009); 'TLS1_ECDHE_ECDSA_AES_128_SHA256'=
+          TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xC023);
+          'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+          (0xC02C); 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA
+          (0xC00A); 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'=
+          TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xC02F); 'TLS1_ECDHE_RSA_AES_128_SHA'=
+          TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xC013); 'TLS1_ECDHE_RSA_AES_128_SHA256'=
+          TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xC027);
+          'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (0xC030); 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+          (0xC014); 'TLS1_RSA_AES_128_GCM_SHA256'= TLS_RSA_WITH_AES_128_GCM_SHA256
+          (0x009C); 'TLS1_RSA_AES_256_GCM_SHA384'= TLS_RSA_WITH_AES_256_GCM_SHA384
+          (0x009D); 'TLS1_ECDHE_RSA_AES_256_SHA384'=
+          TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xC028);
+          'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
+          (0xC024); 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256'=
+          TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xCCA8);
           'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'=
-          TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256;
-          'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256;"
+          TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xCCA9);
+          'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'=
+          TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xCCAA);"
                 type: str
     server_name_list:
         description:
@@ -2039,6 +2107,32 @@ options:
         description:
         - "Disable anti-replay protection for TLS 1.3 early data (0-RTT data)"
         type: bool
+        required: False
+    ja3_enable:
+        description:
+        - "Enable JA3 features"
+        type: bool
+        required: False
+    ja3_insert_http_header:
+        description:
+        - "Insert the JA3 hash into this request as a HTTP header (HTTP Header Name)"
+        type: str
+        required: False
+    ja3_reject_class_list:
+        description:
+        - "Drop request if the JA3 hash matches this class-list (type string-case-
+          insensitive) (Class-List Name)"
+        type: str
+        required: False
+    ja3_reject_max_number_per_host:
+        description:
+        - "Drop request if numbers of JA3 of this client address exceeded"
+        type: int
+        required: False
+    ja3_ttl:
+        description:
+        - "seconds to keep each JA3 record"
+        type: int
         required: False
     uuid:
         description:
@@ -2397,9 +2491,9 @@ options:
                 description:
                 - "open HTTP proxies category"
                 type: str
-            dynamic_comment:
+            dynamically_generated_content:
                 description:
-                - "dynamic comment category"
+                - "dynamically generated content category"
                 type: str
             parked_domains:
                 description:
@@ -2533,19 +2627,20 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "ad_group_list", "alert_type", "auth_sg", "auth_sg_dn", "auth_sg_filter", "auth_username", "auth_username_attribute", "authen_name", "authorization", "bypass_cert_issuer_class_list_name", "bypass_cert_issuer_multi_class_list", "bypass_cert_san_class_list_name", "bypass_cert_san_multi_class_list", "bypass_cert_subject_class_list_name",
-    "bypass_cert_subject_multi_class_list", "ca_certs", "cache_persistence_list_name", "case_insensitive", "cert_revoke_action", "cert_unknown_action", "certificate_issuer_contains_list", "certificate_issuer_ends_with_list", "certificate_issuer_equals_list", "certificate_issuer_starts_with_list", "certificate_list", "certificate_san_contains_list",
-    "certificate_san_ends_with_list", "certificate_san_equals_list", "certificate_san_starts_with_list", "certificate_subject_contains_list", "certificate_subject_ends_with_list", "certificate_subject_equals_list", "certificate_subject_starts_with_list", "chain_cert", "chain_cert_shared_str", "cipher_without_prio_list", "class_list_name",
-    "client_auth_case_insensitive", "client_auth_class_list", "client_auth_contains_list", "client_auth_ends_with_list", "client_auth_equals_list", "client_auth_starts_with_list", "client_certificate", "close_notify", "contains_list", "crl_certs", "dgversion", "dh_type", "direct_client_server_auth", "disable_sslv3", "early_data", "ec_list",
-    "enable_ssli_ftp_alg", "enable_tls_alert_logging", "ends_with_list", "equals_list", "exception_ad_group_list", "exception_certificate_issuer_cl_name", "exception_certificate_san_cl_name", "exception_certificate_subject_cl_name", "exception_sni_cl_name", "exception_user_name_list", "exception_web_category", "exception_web_reputation",
-    "expire_hours", "forward_encrypted", "forward_passphrase", "forward_proxy_alt_sign", "forward_proxy_block_message", "forward_proxy_ca_cert", "forward_proxy_ca_key", "forward_proxy_cert_cache_limit", "forward_proxy_cert_cache_timeout", "forward_proxy_cert_expiry", "forward_proxy_cert_not_ready_action", "forward_proxy_cert_revoke_action",
-    "forward_proxy_cert_unknown_action", "forward_proxy_crl_disable", "forward_proxy_decrypted_dscp", "forward_proxy_decrypted_dscp_bypass", "forward_proxy_enable", "forward_proxy_esni_action", "forward_proxy_failsafe_disable", "forward_proxy_hash_persistence_interval", "forward_proxy_log_disable", "forward_proxy_no_shared_cipher_action",
-    "forward_proxy_no_sni_action", "forward_proxy_ocsp_disable", "forward_proxy_require_sni_cert_matched", "forward_proxy_selfsign_redir", "forward_proxy_ssl_version", "forward_proxy_trusted_ca_lists", "forward_proxy_verify_cert_fail_action", "fp_alt_cert", "fp_alt_chain_cert", "fp_alt_encrypted", "fp_alt_key", "fp_alt_passphrase", "fp_alt_shared",
-    "fp_ca_certificate", "fp_ca_certificate_shared", "fp_ca_chain_cert", "fp_ca_key", "fp_ca_key_encrypted", "fp_ca_key_passphrase", "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name",
-    "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type", "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ldap_base_dn_from_cert", "ldap_search_filter", "local_logging",
+    "bypass_cert_subject_multi_class_list", "ca_certs", "cache_persistence_list_name", "case_insensitive", "central_cert_pin_list", "cert_revoke_action", "cert_unknown_action", "certificate_issuer_contains_list", "certificate_issuer_ends_with_list", "certificate_issuer_equals_list", "certificate_issuer_starts_with_list", "certificate_list",
+    "certificate_san_contains_list", "certificate_san_ends_with_list", "certificate_san_equals_list", "certificate_san_starts_with_list", "certificate_subject_contains_list", "certificate_subject_ends_with_list", "certificate_subject_equals_list", "certificate_subject_starts_with_list", "chain_cert", "chain_cert_shared_str",
+    "cipher_without_prio_list", "class_list_name", "client_auth_case_insensitive", "client_auth_class_list", "client_auth_contains_list", "client_auth_ends_with_list", "client_auth_equals_list", "client_auth_starts_with_list", "client_certificate", "client_ipv4_list", "client_ipv6_list", "close_notify", "contains_list", "crl_certs", "dgversion",
+    "dh_type", "direct_client_server_auth", "disable_sslv3", "early_data", "ec_list", "enable_ssli_ftp_alg", "enable_tls_alert_logging", "ends_with_list", "equals_list", "exception_ad_group_list", "exception_certificate_issuer_cl_name", "exception_certificate_san_cl_name", "exception_certificate_subject_cl_name", "exception_client_ipv4_list",
+    "exception_client_ipv6_list", "exception_server_ipv4_list", "exception_server_ipv6_list", "exception_sni_cl_name", "exception_user_name_list", "exception_web_category", "exception_web_reputation", "expire_hours", "forward_encrypted", "forward_passphrase", "forward_proxy_alt_sign", "forward_proxy_block_message", "forward_proxy_ca_cert",
+    "forward_proxy_ca_key", "forward_proxy_cert_cache_limit", "forward_proxy_cert_cache_timeout", "forward_proxy_cert_expiry", "forward_proxy_cert_not_ready_action", "forward_proxy_cert_revoke_action", "forward_proxy_cert_unknown_action", "forward_proxy_crl_disable", "forward_proxy_decrypted_dscp", "forward_proxy_decrypted_dscp_bypass",
+    "forward_proxy_enable", "forward_proxy_esni_action", "forward_proxy_failsafe_disable", "forward_proxy_hash_persistence_interval", "forward_proxy_log_disable", "forward_proxy_no_shared_cipher_action", "forward_proxy_no_sni_action", "forward_proxy_ocsp_disable", "forward_proxy_require_sni_cert_matched", "forward_proxy_selfsign_redir",
+    "forward_proxy_ssl_version", "forward_proxy_trusted_ca_lists", "forward_proxy_verify_cert_fail_action", "fp_alt_cert", "fp_alt_chain_cert", "fp_alt_encrypted", "fp_alt_key", "fp_alt_passphrase", "fp_alt_shared", "fp_ca_certificate", "fp_ca_certificate_shared", "fp_ca_chain_cert", "fp_ca_key", "fp_ca_key_encrypted", "fp_ca_key_passphrase",
+    "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name", "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type",
+    "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ja3_enable", "ja3_insert_http_header", "ja3_reject_class_list", "ja3_reject_max_number_per_host", "ja3_ttl", "ldap_base_dn_from_cert", "ldap_search_filter", "local_cert_pin_list", "local_logging",
     "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth", "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days",
-    "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout",
-    "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list",
-    "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation",
+    "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list", "session_cache_size",
+    "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable", "ssli_logging", "sslilogging",
+    "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation",
     ]
 
 
@@ -2606,7 +2701,7 @@ def get_argspec():
             'type': 'list',
             'ec': {
                 'type': 'str',
-                'choices': ['secp256r1', 'secp384r1', 'secp521r1', 'x25519']
+                'choices': ['secp256r1', 'secp384r1']
                 }
             },
         'local_logging': {
@@ -2650,6 +2745,9 @@ def get_argspec():
             },
         'ocspst_sg_timeout': {
             'type': 'int',
+            },
+        'ssli_inbound_enable': {
+            'type': 'bool',
             },
         'ssli_logging': {
             'type': 'bool',
@@ -3357,28 +3455,16 @@ def get_argspec():
             'health_and_medicine': {
                 'type': 'bool',
                 },
-            'confirmed_spam_sources': {
-                'type': 'bool',
-                },
             'spam_urls': {
                 'type': 'bool',
                 },
-            'unconfirmed_spam_sources': {
-                'type': 'bool',
-                },
-            'open_http_proxies': {
-                'type': 'bool',
-                },
-            'dynamic_comment': {
+            'dynamically_generated_content': {
                 'type': 'bool',
                 },
             'parked_domains': {
                 'type': 'bool',
                 },
             'alcohol_and_tobacco': {
-                'type': 'bool',
-                },
-            'private_ip_addresses': {
                 'type': 'bool',
                 },
             'image_and_video_search': {
@@ -3394,9 +3480,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'web_hosting_sites': {
-                'type': 'bool',
-                },
-            'food_and_dining': {
                 'type': 'bool',
                 },
             'nudity_artistic': {
@@ -3618,28 +3701,16 @@ def get_argspec():
             'exception_health_and_medicine': {
                 'type': 'bool',
                 },
-            'exception_confirmed_spam_sources': {
-                'type': 'bool',
-                },
             'exception_spam_urls': {
                 'type': 'bool',
                 },
-            'exception_unconfirmed_spam_sources': {
-                'type': 'bool',
-                },
-            'exception_open_http_proxies': {
-                'type': 'bool',
-                },
-            'exception_dynamic_comment': {
+            'exception_dynamically_generated_content': {
                 'type': 'bool',
                 },
             'exception_parked_domains': {
                 'type': 'bool',
                 },
             'exception_alcohol_and_tobacco': {
-                'type': 'bool',
-                },
-            'exception_private_ip_addresses': {
                 'type': 'bool',
                 },
             'exception_image_and_video_search': {
@@ -3657,9 +3728,6 @@ def get_argspec():
             'exception_web_hosting_sites': {
                 'type': 'bool',
                 },
-            'exception_food_and_dining': {
-                'type': 'bool',
-                },
             'exception_nudity_artistic': {
                 'type': 'bool',
                 },
@@ -3668,6 +3736,63 @@ def get_argspec():
                 }
             },
         'require_web_category': {
+            'type': 'bool',
+            },
+        'client_ipv4_list': {
+            'type': 'list',
+            'client_ipv4_list_name': {
+                'type': 'str',
+                }
+            },
+        'client_ipv6_list': {
+            'type': 'list',
+            'client_ipv6_list_name': {
+                'type': 'str',
+                }
+            },
+        'server_ipv4_list': {
+            'type': 'list',
+            'server_ipv4_list_name': {
+                'type': 'str',
+                }
+            },
+        'server_ipv6_list': {
+            'type': 'list',
+            'server_ipv6_list_name': {
+                'type': 'str',
+                }
+            },
+        'exception_client_ipv4_list': {
+            'type': 'list',
+            'exception_client_ipv4_list_name': {
+                'type': 'str',
+                }
+            },
+        'exception_client_ipv6_list': {
+            'type': 'list',
+            'exception_client_ipv6_list_name': {
+                'type': 'str',
+                }
+            },
+        'exception_server_ipv4_list': {
+            'type': 'list',
+            'exception_server_ipv4_list_name': {
+                'type': 'str',
+                }
+            },
+        'exception_server_ipv6_list': {
+            'type': 'list',
+            'exception_server_ipv6_list_name': {
+                'type': 'str',
+                }
+            },
+        'local_cert_pin_list': {
+            'type': 'dict',
+            'local_cert_pin_list_bypass_fail_count': {
+                'type': 'int',
+                }
+            },
+        'central_cert_pin_list': {
             'type': 'bool',
             },
         'forward_proxy_require_sni_cert_matched': {
@@ -3867,6 +3992,21 @@ def get_argspec():
             },
         'no_anti_replay': {
             'type': 'bool',
+            },
+        'ja3_enable': {
+            'type': 'bool',
+            },
+        'ja3_insert_http_header': {
+            'type': 'str',
+            },
+        'ja3_reject_class_list': {
+            'type': 'str',
+            },
+        'ja3_reject_max_number_per_host': {
+            'type': 'int',
+            },
+        'ja3_ttl': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -4145,7 +4285,7 @@ def get_argspec():
             'open_HTTP_proxies': {
                 'type': 'str',
                 },
-            'dynamic_comment': {
+            'dynamically_generated_content': {
                 'type': 'str',
                 },
             'parked_domains': {

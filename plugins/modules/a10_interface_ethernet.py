@@ -241,8 +241,8 @@ options:
         required: False
     traffic_distribution_mode:
         description:
-        - "'sip'= sip; 'dip'= dip; 'l3-lookup'= l3-lookup; 'primary'= primary; 'blade'=
-          blade; 'l4-src-port'= l4-src-port; 'l4-dst-port'= l4-dst-port;"
+        - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'=
+          l4-src-port; 'l4-dst-port'= l4-dst-port;"
         type: str
         required: False
     virtual_wire:
@@ -309,9 +309,7 @@ options:
           Output Giants; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'=
           Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec;
           'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval;
-          'transmit_drops'= Transmit Drops; 'receive_drops'= Receive Drops;
-          'input_utilization'= Input Utilization; 'output_utilization'= Output
-          Utilization;"
+          'drops'= Drops;"
                 type: str
     packet_capture_template:
         description:
@@ -427,10 +425,6 @@ options:
             server:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
-                type: bool
-            dmz:
-                description:
-                - "DMZ network facing interface for IPv4/v6 traffic"
                 type: bool
             unnumbered:
                 description:
@@ -1052,21 +1046,9 @@ options:
                 description:
                 - "Load Interval"
                 type: str
-            transmit_drops:
+            drops:
                 description:
-                - "Transmit Drops"
-                type: str
-            receive_drops:
-                description:
-                - "Receive Drops"
-                type: str
-            input_utilization:
-                description:
-                - "Input Utilization"
-                type: str
-            output_utilization:
-                description:
-                - "Output Utilization"
+                - "Drops"
                 type: str
             ifnum:
                 description:
@@ -1270,7 +1252,7 @@ def get_argspec():
             },
         'traffic_distribution_mode': {
             'type': 'str',
-            'choices': ['sip', 'dip', 'l3-lookup', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
+            'choices': ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
             },
         'virtual_wire': {
             'type': 'bool',
@@ -1308,7 +1290,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'runts', 'giants', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts', 'output_errors', 'collisions', 'giants_output',
-                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval', 'transmit_drops', 'receive_drops', 'input_utilization', 'output_utilization'
+                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval', 'drops'
                     ]
                 }
             },
@@ -1444,9 +1426,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
-                'type': 'bool',
-                },
-            'dmz': {
                 'type': 'bool',
                 },
             'unnumbered': {
@@ -2573,16 +2552,7 @@ def get_argspec():
             'load_interval': {
                 'type': 'str',
                 },
-            'transmit_drops': {
-                'type': 'str',
-                },
-            'receive_drops': {
-                'type': 'str',
-                },
-            'input_utilization': {
-                'type': 'str',
-                },
-            'output_utilization': {
+            'drops': {
                 'type': 'str',
                 },
             'ifnum': {

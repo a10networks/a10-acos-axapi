@@ -113,7 +113,19 @@ options:
         required: False
     compression_level:
         description:
-        - "compression level, default 1 (compression level value, default is 1)"
+        - "gzip compression level, default 1 (gzip compression level value, default is 1)"
+        type: int
+        required: False
+    compression_br_level:
+        description:
+        - "brotli compression level, default 1 (brotli compression level value, default is
+          1)"
+        type: int
+        required: False
+    compression_br_sliding_window_size:
+        description:
+        - "brotli compression sliding window size, default 10 (brotli compression sliding
+          window size in the form of log (i.e., 10 means 1k-16MB bytes))"
         type: int
         required: False
     compression_minimum_content_length:
@@ -121,6 +133,12 @@ options:
         - "Minimum Content Length (Minimum content length for compression in bytes.
           Default is 120.)"
         type: int
+        required: False
+    compression_method_order:
+        description:
+        - "Method Order (Order to decide which compression algorithm to be applied when
+          multiple algorithms are acceptable)"
+        type: str
         required: False
     default_charset:
         description:
@@ -379,6 +397,12 @@ options:
           be sent"
         type: bool
         required: False
+    http2_client_no_snat:
+        description:
+        - "Set max-concurrent-stream = 1 when the client side is HTTP2 and no source-nat
+          configuration is under vport"
+        type: bool
+        required: False
     url_hash_persist:
         description:
         - "Use URL's hash value to select server"
@@ -485,16 +509,6 @@ options:
         - "Client session timeout if the next request is not received (timeout in seconds.
           0 means disable, default is 0)"
         type: int
-        required: False
-    disallowed_methods:
-        description:
-        - "Enable disallowed-method check (List of disallowed HTTP methods)"
-        type: str
-        required: False
-    disallowed_methods_action:
-        description:
-        - "'drop'= Respond 400 directly;"
-        type: str
         required: False
     uuid:
         description:
@@ -611,11 +625,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "http_100_cont_wait_for_req_complete", "bypass_sg", "client_idle_timeout", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_content_type", "compression_enable", "compression_exclude_content_type", "compression_exclude_uri", "compression_keep_accept_encoding",
-    "compression_keep_accept_encoding_enable", "compression_level", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "disallowed_methods", "disallowed_methods_action", "failover_url", "frame_limit", "host_switching", "http_protocol_check", "insert_client_ip", "insert_client_ip_header_name",
-    "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code", "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val", "request_header_erase_list",
-    "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx", "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only", "server_support_http2_only_value",
-    "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid",
+    "http_100_cont_wait_for_req_complete", "bypass_sg", "client_idle_timeout", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_br_level", "compression_br_sliding_window_size", "compression_content_type", "compression_enable", "compression_exclude_content_type", "compression_exclude_uri",
+    "compression_keep_accept_encoding", "compression_keep_accept_encoding_enable", "compression_level", "compression_method_order", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "failover_url", "frame_limit", "host_switching", "http_protocol_check", "http2_client_no_snat", "insert_client_ip",
+    "insert_client_ip_header_name", "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code", "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val",
+    "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx", "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only",
+    "server_support_http2_only_value", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid",
     ]
 
 
@@ -674,8 +688,17 @@ def get_argspec():
         'compression_level': {
             'type': 'int',
             },
+        'compression_br_level': {
+            'type': 'int',
+            },
+        'compression_br_sliding_window_size': {
+            'type': 'int',
+            },
         'compression_minimum_content_length': {
             'type': 'int',
+            },
+        'compression_method_order': {
+            'type': 'str',
             },
         'default_charset': {
             'type': 'str',
@@ -838,6 +861,9 @@ def get_argspec():
         'http_100_cont_wait_for_req_complete': {
             'type': 'bool',
             },
+        'http2_client_no_snat': {
+            'type': 'bool',
+            },
         'url_hash_persist': {
             'type': 'bool',
             },
@@ -899,13 +925,6 @@ def get_argspec():
             },
         'client_idle_timeout': {
             'type': 'int',
-            },
-        'disallowed_methods': {
-            'type': 'str',
-            },
-        'disallowed_methods_action': {
-            'type': 'str',
-            'choices': ['drop']
             },
         'uuid': {
             'type': 'str',

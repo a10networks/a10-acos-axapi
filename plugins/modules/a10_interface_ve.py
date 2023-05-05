@@ -205,10 +205,6 @@ options:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
                 type: bool
-            dmz:
-                description:
-                - "DMZ network facing interface for IPv4/v6 traffic"
-                type: bool
             helper_address_list:
                 description:
                 - "Field helper_address_list"
@@ -604,6 +600,10 @@ options:
                 description:
                 - "Field ip_unnumbered_peer_lla"
                 type: str
+            mtu:
+                description:
+                - "Field mtu"
+                type: int
             ifnum:
                 description:
                 - "Virtual ethernet interface number"
@@ -848,9 +848,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
-                'type': 'bool',
-                },
-            'dmz': {
                 'type': 'bool',
                 },
             'helper_address_list': {
@@ -1785,6 +1782,9 @@ def get_argspec():
                 },
             'ip_unnumbered_peer_lla': {
                 'type': 'str',
+                },
+            'mtu': {
+                'type': 'int',
                 },
             'ifnum': {
                 'type': 'int',

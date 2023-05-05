@@ -160,6 +160,32 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    k8s:
+        description:
+        - "Field k8s"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'enable'= Enable Configuration; 'disable'= Disable Configuration;"
+                type: str
+            health_check_interval:
+                description:
+                - "'5'= 5 seconds; '10'= 10 seconds; '15'= 15 seconds; '20'= 20 seconds;"
+                type: str
+            cluster_config_file:
+                description:
+                - "Enter cluster config file name"
+                type: str
+            service_label:
+                description:
+                - "Field service_label"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -214,7 +240,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["consul", "dummy", "oracle", "uuid", ]
+AVAILABLE_PROPERTIES = ["consul", "dummy", "k8s", "oracle", "uuid", ]
 
 
 def get_default_argspec():
@@ -315,6 +341,29 @@ def get_argspec():
             'action': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'k8s': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'health_check_interval': {
+                'type': 'str',
+                'choices': ['5', '10', '15', '20']
+                },
+            'cluster_config_file': {
+                'type': 'str',
+                },
+            'service_label': {
+                'type': 'list',
+                'service_label_name': {
+                    'type': 'str',
+                    }
                 },
             'uuid': {
                 'type': 'str',
