@@ -1,0 +1,10 @@
+- name: Create a10_cloud_services_cloud_provider_vmware_log example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_cloud_services_cloud_provider_vmware_log instance
+    a10.acos_axapi.a10_cloud_services_cloud_provider_vmware_log:
+      state: absent
+      action: enable
+      active_partitions: vmwarePartition
+      vrli_host: 10.20.10.20

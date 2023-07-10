@@ -480,6 +480,174 @@ def get_argspec():
                     },
                 'client_ehlo_saved': {
                     'type': 'str',
+                    },
+                'request': {
+                    'type': 'str',
+                    },
+                'request_success': {
+                    'type': 'str',
+                    },
+                'no_proxy': {
+                    'type': 'str',
+                    },
+                'client_reset': {
+                    'type': 'str',
+                    },
+                'server_reset': {
+                    'type': 'str',
+                    },
+                'no_tuple': {
+                    'type': 'str',
+                    },
+                'parse_req_fail': {
+                    'type': 'str',
+                    },
+                'server_select_fail': {
+                    'type': 'str',
+                    },
+                'forward_req_fail': {
+                    'type': 'str',
+                    },
+                'forward_req_data_fail': {
+                    'type': 'str',
+                    },
+                'req_retran': {
+                    'type': 'str',
+                    },
+                'req_ofo': {
+                    'type': 'str',
+                    },
+                'server_reselect': {
+                    'type': 'str',
+                    },
+                'server_prem_close': {
+                    'type': 'str',
+                    },
+                'new_server_conn': {
+                    'type': 'str',
+                    },
+                'snat_fail': {
+                    'type': 'str',
+                    },
+                'tcp_out_reset': {
+                    'type': 'str',
+                    },
+                'send_client_service_ready': {
+                    'type': 'str',
+                    },
+                'send_client_service_not_ready': {
+                    'type': 'str',
+                    },
+                'send_client_close_connection': {
+                    'type': 'str',
+                    },
+                'send_client_go_ahead': {
+                    'type': 'str',
+                    },
+                'send_client_start_TLS_first': {
+                    'type': 'str',
+                    },
+                'send_client_TLS_not_available': {
+                    'type': 'str',
+                    },
+                'send_client_no_command': {
+                    'type': 'str',
+                    },
+                'send_server_cmd_reset': {
+                    'type': 'str',
+                    },
+                'TLS_established': {
+                    'type': 'str',
+                    },
+                'L4_switch': {
+                    'type': 'str',
+                    },
+                'recv_server_service_not_ready': {
+                    'type': 'str',
+                    },
+                'recv_server_unknow_reply_code': {
+                    'type': 'str',
+                    },
+                'client_domain_switch': {
+                    'type': 'str',
+                    },
+                'client_domain_switch_ok': {
+                    'type': 'str',
+                    },
+                'LB_switch': {
+                    'type': 'str',
+                    },
+                'LB_switch_ok': {
+                    'type': 'str',
+                    },
+                'read_request_line_fail': {
+                    'type': 'str',
+                    },
+                'get_all_headers_fail': {
+                    'type': 'str',
+                    },
+                'too_many_headers': {
+                    'type': 'str',
+                    },
+                'line_too_long': {
+                    'type': 'str',
+                    },
+                'line_across_packet': {
+                    'type': 'str',
+                    },
+                'line_extend': {
+                    'type': 'str',
+                    },
+                'line_extend_fail': {
+                    'type': 'str',
+                    },
+                'line_table_extend': {
+                    'type': 'str',
+                    },
+                'line_table_extend_fail': {
+                    'type': 'str',
+                    },
+                'parse_request_line_fail': {
+                    'type': 'str',
+                    },
+                'insert_resonse_line_fail': {
+                    'type': 'str',
+                    },
+                'remove_resonse_line_fail': {
+                    'type': 'str',
+                    },
+                'parse_resonse_line_fail': {
+                    'type': 'str',
+                    },
+                'Aflex_lb_reselect': {
+                    'type': 'str',
+                    },
+                'Aflex_lb_reselect_ok': {
+                    'type': 'str',
+                    },
+                'server_STARTTLS_init': {
+                    'type': 'str',
+                    },
+                'server_STARTTLS_fail': {
+                    'type': 'str',
+                    },
+                'rserver_STARTTLS_disable': {
+                    'type': 'str',
+                    },
+                'recv_client_command_TURN': {
+                    'type': 'str',
+                    },
+                'recv_client_command_ETRN': {
+                    'type': 'str',
+                    },
+                'recv_client_command_others': {
+                    'type': 'str',
+                    },
+                'recv_client_command_STARTTLS': {
+                    'type': 'str',
+                    },
+                'recv_client_command_RCPT': {
+                    'type': 'str',
                     }
                 }
             }

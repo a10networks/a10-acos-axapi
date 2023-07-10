@@ -310,6 +310,41 @@ options:
                 description:
                 - "unknown heritage"
                 type: bool
+    large_comm_list:
+        description:
+        - "Field large_comm_list"
+        type: dict
+        required: False
+        suboptions:
+            l_v_std:
+                description:
+                - "Large Community-list number (standard)"
+                type: int
+            l_v_std_delete:
+                description:
+                - "Delete matching large communities"
+                type: bool
+            l_v_exp:
+                description:
+                - "Large Community-list number (expanded)"
+                type: int
+            l_v_exp_delete:
+                description:
+                - "Delete matching large communities"
+                type: bool
+            l_name:
+                description:
+                - "Large Community-list name"
+                type: str
+            large_name_delete:
+                description:
+                - "Delete matching large communities"
+                type: bool
+    large_community:
+        description:
+        - "BGP large community attribute"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -369,7 +404,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aggregator", "as_path", "atomic_aggregate", "comm_list", "community", "dampening_cfg", "ddos", "extcommunity", "ip", "ipv6", "level", "local_preference", "metric", "metric_type", "origin", "originator_id", "tag", "uuid", "weight", ]
+AVAILABLE_PROPERTIES = ["aggregator", "as_path", "atomic_aggregate", "comm_list", "community", "dampening_cfg", "ddos", "extcommunity", "ip", "ipv6", "large_comm_list", "large_community", "level", "local_preference", "metric", "metric_type", "origin", "originator_id", "tag", "uuid", "weight", ]
 
 
 def get_default_argspec():
@@ -568,6 +603,30 @@ def get_argspec():
             'incomplete': {
                 'type': 'bool',
                 }
+            },
+        'large_comm_list': {
+            'type': 'dict',
+            'l_v_std': {
+                'type': 'int',
+                },
+            'l_v_std_delete': {
+                'type': 'bool',
+                },
+            'l_v_exp': {
+                'type': 'int',
+                },
+            'l_v_exp_delete': {
+                'type': 'bool',
+                },
+            'l_name': {
+                'type': 'str',
+                },
+            'large_name_delete': {
+                'type': 'bool',
+                }
+            },
+        'large_community': {
+            'type': 'str',
             },
         'uuid': {
             'type': 'str',

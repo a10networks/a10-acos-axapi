@@ -132,6 +132,12 @@ options:
         - "'enable'= Enable detection notification debug log (default= disabled);"
         type: str
         required: False
+    de_escalation_quiet_time:
+        description:
+        - "Configure de-escalation needed time in minutes from level 1 to 0.(default 1
+          minutes)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -150,8 +156,7 @@ options:
                 type: str
             de_escalation_quiet_time:
                 description:
-                - "Configure de-escalation needed time in minutes from level 1 to 0.(default 6
-          minutes)"
+                - "Configure de-escalation needed time in minutes from level 1 to 0.(legacy)"
                 type: int
             uuid:
                 description:
@@ -219,7 +224,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ctrl_cpu_usage", "dedicated_cpus", "detection_window_size", "detector_mode", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "notification_debug_log", "pkt_sampling", "standalone_settings", "top_k_reset_interval", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "notification_debug_log", "pkt_sampling", "standalone_settings", "top_k_reset_interval", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -286,6 +293,9 @@ def get_argspec():
         'notification_debug_log': {
             'type': 'str',
             'choices': ['enable']
+            },
+        'de_escalation_quiet_time': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',

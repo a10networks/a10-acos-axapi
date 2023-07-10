@@ -502,6 +502,10 @@ options:
                 - "'enabled'= Force CNAME resolution always; 'disabled'= Use answer record in
           CNAME response if it exists, else resolve;"
                 type: str
+            fast_ns_selection:
+                description:
+                - "'enabled'= Enable fast NS selection; 'disabled'= Disable fast NS selection;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -1021,6 +1025,10 @@ def get_argspec():
                 'type': 'bool',
                 },
             'force_cname_resolution': {
+                'type': 'str',
+                'choices': ['enabled', 'disabled']
+                },
+            'fast_ns_selection': {
                 'type': 'str',
                 'choices': ['enabled', 'disabled']
                 },

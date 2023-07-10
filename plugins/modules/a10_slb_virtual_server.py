@@ -219,6 +219,11 @@ options:
         - "Route map reference (Name of route-map)"
         type: str
         required: False
+    gaming_protocol_compliance:
+        description:
+        - "Enable Gaming Protocol Compliance Check"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -439,7 +444,7 @@ options:
                 type: bool
             showtech_print_extended_stats:
                 description:
-                - "Enable print extended stats in showtech for dns vports"
+                - "Enable print extended stats in showtech"
                 type: bool
             expand:
                 description:
@@ -1161,8 +1166,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "acl_id", "acl_id_shared", "acl_name", "acl_name_shared", "arp_disable", "description", "disable_vip_adv", "enable_disable_action", "ethernet", "extended_stats", "ha_dynamic", "ip_address", "ipv6_acl", "ipv6_acl_shared", "ipv6_address", "migrate_vip", "name", "netmask", "oper", "port_list", "redistribute_route_map", "redistribution_flagged",
-    "shared_partition_policy_template", "shared_partition_vs_template", "stats_data_action", "suppress_internal_loopback", "template_logging", "template_policy", "template_policy_shared", "template_scaleout", "template_virtual_server", "template_virtual_server_shared", "use_if_ip", "user_tag", "uuid", "vport_disable_action", "vrid",
+    "acl_id", "acl_id_shared", "acl_name", "acl_name_shared", "arp_disable", "description", "disable_vip_adv", "enable_disable_action", "ethernet", "extended_stats", "gaming_protocol_compliance", "ha_dynamic", "ip_address", "ipv6_acl", "ipv6_acl_shared", "ipv6_address", "migrate_vip", "name", "netmask", "oper", "port_list",
+    "redistribute_route_map", "redistribution_flagged", "shared_partition_policy_template", "shared_partition_vs_template", "stats_data_action", "suppress_internal_loopback", "template_logging", "template_policy", "template_policy_shared", "template_scaleout", "template_virtual_server", "template_virtual_server_shared", "use_if_ip", "user_tag",
+    "uuid", "vport_disable_action", "vrid",
     ]
 
 
@@ -1283,6 +1289,9 @@ def get_argspec():
             },
         'redistribute_route_map': {
             'type': 'str',
+            },
+        'gaming_protocol_compliance': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

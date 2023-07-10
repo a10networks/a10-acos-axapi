@@ -443,6 +443,9 @@ def get_argspec():
                 'comm_value': {
                     'type': 'str',
                     },
+                'lcomm_value': {
+                    'type': 'str',
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -585,7 +588,7 @@ def get_argspec():
                     },
                 'send_community_val': {
                     'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
+                    'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
                     },
                 'inbound': {
                     'type': 'bool',
@@ -688,7 +691,7 @@ def get_argspec():
                     },
                 'send_community_val': {
                     'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
+                    'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
                     },
                 'inbound': {
                     'type': 'bool',

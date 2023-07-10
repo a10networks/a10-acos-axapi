@@ -1405,8 +1405,14 @@ def get_argspec():
                     'app_stat': {
                         'type': 'str',
                         },
+                    'protocol': {
+                        'type': 'int',
+                        },
                     'rule': {
                         'type': 'str',
+                        },
+                    'rule_set_only': {
+                        'type': 'int',
                         },
                     'rule_list': {
                         'type': 'list',

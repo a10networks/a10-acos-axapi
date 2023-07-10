@@ -110,6 +110,10 @@ options:
                 description:
                 - "Field hw_serialno"
                 type: str
+            product_desc:
+                description:
+                - "Field product_desc"
+                type: str
 
 '''
 
@@ -230,6 +234,9 @@ def get_argspec():
                     }
                 },
             'hw_serialno': {
+                'type': 'str',
+                },
+            'product_desc': {
                 'type': 'str',
                 }
             }

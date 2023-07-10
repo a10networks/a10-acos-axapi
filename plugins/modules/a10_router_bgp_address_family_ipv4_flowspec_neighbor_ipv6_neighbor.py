@@ -83,6 +83,14 @@ options:
                 description:
                 - "'in'= in; 'out'= out;"
                 type: str
+    send_community_val:
+        description:
+        - "'all'= Send Standard, Extended, and Large Community attributes; 'both'= Send
+          Standard and Extended Community attributes; 'none'= Disable Sending Community
+          attributes; 'standard'= Send Standard Community attributes; 'extended'= Send
+          Extended Community attributes; 'large'= Send Large Community attributes;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -142,7 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["activate", "neighbor_ipv6", "neighbor_route_map_lists", "uuid", ]
+AVAILABLE_PROPERTIES = ["activate", "neighbor_ipv6", "neighbor_route_map_lists", "send_community_val", "uuid", ]
 
 
 def get_default_argspec():
@@ -162,7 +170,32 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'neighbor_ipv6': {'type': 'str', 'required': True, }, 'activate': {'type': 'bool', }, 'neighbor_route_map_lists': {'type': 'list', 'nbr_route_map': {'type': 'str', }, 'nbr_rmap_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'uuid': {'type': 'str', }})
+    rv.update({
+        'neighbor_ipv6': {
+            'type': 'str',
+            'required': True,
+            },
+        'activate': {
+            'type': 'bool',
+            },
+        'neighbor_route_map_lists': {
+            'type': 'list',
+            'nbr_route_map': {
+                'type': 'str',
+                },
+            'nbr_rmap_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+                }
+            },
+        'send_community_val': {
+            'type': 'str',
+            'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
     rv.update(dict(bgp_as_number=dict(type='str', required=True), ))
     return rv

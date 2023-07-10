@@ -80,6 +80,16 @@ options:
         - "Wait for web category to be resolved before taking proxy decision"
         type: bool
         required: False
+    forward_http_connect_to_icap:
+        description:
+        - "Forward HTTP CONNECT request to ICAP server"
+        type: bool
+        required: False
+    reqmod_icap:
+        description:
+        - "ICAP reqmod template (Reqmod ICAP Template Name)"
+        type: str
+        required: False
     filtering:
         description:
         - "Field filtering"
@@ -349,7 +359,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acos_event_log", "action_list", "dual_stack_action_list", "filtering", "local_logging", "no_client_conn_reuse", "require_web_category", "san_filtering", "source_list", "uuid", ]
+AVAILABLE_PROPERTIES = ["acos_event_log", "action_list", "dual_stack_action_list", "filtering", "forward_http_connect_to_icap", "local_logging", "no_client_conn_reuse", "reqmod_icap", "require_web_category", "san_filtering", "source_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -381,6 +391,12 @@ def get_argspec():
             },
         'require_web_category': {
             'type': 'bool',
+            },
+        'forward_http_connect_to_icap': {
+            'type': 'bool',
+            },
+        'reqmod_icap': {
+            'type': 'str',
             },
         'filtering': {
             'type': 'list',

@@ -273,7 +273,7 @@ options:
         required: False
     showtech_print_extended_stats:
         description:
-        - "Enable print extended stats in showtech for dns vports"
+        - "Enable print extended stats in showtech"
         type: bool
         required: False
     expand:

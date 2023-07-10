@@ -129,6 +129,11 @@ options:
                 description:
                 - "DDOS encap template (IPv6-over-IPv4 / IPv4-over-IPv6 are not supported.)"
                 type: str
+    close_sessions_for_unauth_sources:
+        description:
+        - "Close session for unauthenticated sources"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -193,7 +198,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["config", "glid_action", "src_default_glid", "user_tag", "uuid", "zone_template", ]
+AVAILABLE_PROPERTIES = ["close_sessions_for_unauth_sources", "config", "glid_action", "src_default_glid", "user_tag", "uuid", "zone_template", ]
 
 
 def get_default_argspec():
@@ -252,6 +257,9 @@ def get_argspec():
             'encap': {
                 'type': 'str',
                 }
+            },
+        'close_sessions_for_unauth_sources': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

@@ -263,11 +263,10 @@ options:
           Length header; 'get_and_payload'= GET method with content-length header or
           transfer-encoding header; 'h2up_with_host_and_auth'= HTTP2 with host header and
           authority header; 'req_http3'= Request 3.0; 'response_http3'= Resp 3.0;
-          'header_filter_rule_hit'= Hit header filter rule; 'current_stream'= Current
-          Stream; 'stream_create'= Stream Created; 'stream_free'= Stream Free;
-          'end_stream_rcvd'= End Stream Received; 'end_stream_sent'= End Stream Sent;
-          'http1_client_idle_timeout'= HTTP1 client idle timeout;
-          'http2_client_idle_timeout'= HTTP2 client idle timeout;"
+          'header_filter_rule_hit'= Hit header filter rule; 'http1_client_idle_timeout'=
+          HTTP1 client idle timeout; 'http2_client_idle_timeout'= HTTP2 client idle
+          timeout; 'http_disallowed_methods'= HTTP disallowed methods;
+          'http_allowed_methods'= HTTP allowed methods;"
                 type: str
     oper:
         description:
@@ -1165,26 +1164,6 @@ options:
                 description:
                 - "Resp 3.0"
                 type: str
-            current_stream:
-                description:
-                - "Current Stream"
-                type: str
-            stream_create:
-                description:
-                - "Stream Created"
-                type: str
-            stream_free:
-                description:
-                - "Stream Free"
-                type: str
-            end_stream_rcvd:
-                description:
-                - "End Stream Received"
-                type: str
-            end_stream_sent:
-                description:
-                - "End Stream Sent"
-                type: str
 
 '''
 
@@ -1296,7 +1275,7 @@ def get_argspec():
                     'doh_dns_malformed_query', 'doh_dns_resp_rcode_err_format', 'doh_dns_resp_rcode_err_server', 'doh_dns_resp_rcode_err_name', 'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse', 'doh_dns_resp_rcode_yxdomain', 'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset', 'doh_dns_resp_rcode_notauth',
                     'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'compression_before_br', 'compression_after_br', 'compression_before_total', 'compression_after_total', 'decompression_before_br', 'decompression_after_br', 'decompression_before_total', 'decompression_after_total', 'compress_rsp_br', 'compress_rsp_total',
                     'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth', 'req_http3', 'response_http3', 'header_filter_rule_hit',
-                    'current_stream', 'stream_create', 'stream_free', 'end_stream_rcvd', 'end_stream_sent', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
+                    'http1_client_idle_timeout', 'http2_client_idle_timeout', 'http_disallowed_methods', 'http_allowed_methods'
                     ]
                 }
             },
@@ -2288,25 +2267,16 @@ def get_argspec():
                 'header_filter_rule_hit': {
                     'type': 'int',
                     },
-                'current_stream': {
-                    'type': 'int',
-                    },
-                'stream_create': {
-                    'type': 'int',
-                    },
-                'stream_free': {
-                    'type': 'int',
-                    },
-                'end_stream_rcvd': {
-                    'type': 'int',
-                    },
-                'end_stream_sent': {
-                    'type': 'int',
-                    },
                 'http1_client_idle_timeout': {
                     'type': 'int',
                     },
                 'http2_client_idle_timeout': {
+                    'type': 'int',
+                    },
+                'http_disallowed_methods': {
+                    'type': 'int',
+                    },
+                'http_allowed_methods': {
                     'type': 'int',
                     }
                 },
@@ -2971,21 +2941,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'response_http3': {
-                'type': 'str',
-                },
-            'current_stream': {
-                'type': 'str',
-                },
-            'stream_create': {
-                'type': 'str',
-                },
-            'stream_free': {
-                'type': 'str',
-                },
-            'end_stream_rcvd': {
-                'type': 'str',
-                },
-            'end_stream_sent': {
                 'type': 'str',
                 }
             }

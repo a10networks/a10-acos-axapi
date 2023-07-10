@@ -141,13 +141,9 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/enable-site-license/{hash_key}"
+    url_base = "/axapi/v3/enable-site-license"
 
     f_dict = {}
-    if '/' in str(module.params["hash_key"]):
-        f_dict["hash_key"] = module.params["hash_key"].replace("/", "%2F")
-    else:
-        f_dict["hash_key"] = module.params["hash_key"]
 
     return url_base.format(**f_dict)
 
@@ -158,7 +154,6 @@ def new_url(module):
     url_base = "/axapi/v3/enable-site-license"
 
     f_dict = {}
-    f_dict["hash_key"] = ""
 
     return url_base.format(**f_dict)
 

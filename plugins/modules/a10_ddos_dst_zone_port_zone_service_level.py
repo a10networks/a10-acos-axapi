@@ -145,6 +145,11 @@ options:
                 description:
                 - "DDOS encap template (IPv6-over-IPv4 / IPv4-over-IPv6 are not supported.)"
                 type: str
+    close_sessions_for_unauth_sources:
+        description:
+        - "Close session for unauthenticated sources"
+        type: bool
+        required: False
     start_signature_extraction:
         description:
         - "Start signature extraction from this level"
@@ -290,7 +295,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["apply_extracted_filters", "glid_action", "indicator_list", "level_num", "src_default_glid", "src_escalation_score", "src_violation_actions", "start_pattern_recognition", "start_signature_extraction", "user_tag", "uuid", "zone_escalation_score", "zone_template", "zone_violation_actions", ]
+AVAILABLE_PROPERTIES = [
+    "apply_extracted_filters", "close_sessions_for_unauth_sources", "glid_action", "indicator_list", "level_num", "src_default_glid", "src_escalation_score", "src_violation_actions", "start_pattern_recognition", "start_signature_extraction", "user_tag", "uuid", "zone_escalation_score", "zone_template", "zone_violation_actions",
+    ]
 
 
 def get_default_argspec():
@@ -361,6 +368,9 @@ def get_argspec():
             'encap': {
                 'type': 'str',
                 }
+            },
+        'close_sessions_for_unauth_sources': {
+            'type': 'bool',
             },
         'start_signature_extraction': {
             'type': 'bool',

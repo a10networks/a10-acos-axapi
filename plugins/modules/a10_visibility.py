@@ -2940,6 +2940,54 @@ def get_argspec():
                                     }
                                 }
                             },
+                        'aam_rdns': {
+                            'type': 'dict',
+                            'uuid': {
+                                'type': 'str',
+                                },
+                            'trigger_stats_inc': {
+                                'type': 'dict',
+                                'request_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'response_failure': {
+                                    'type': 'bool',
+                                    },
+                                'response_error': {
+                                    'type': 'bool',
+                                    },
+                                'response_timeout': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                },
+                            'trigger_stats_rate': {
+                                'type': 'dict',
+                                'threshold_exceeded_by': {
+                                    'type': 'int',
+                                    },
+                                'duration': {
+                                    'type': 'int',
+                                    },
+                                'request_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'response_failure': {
+                                    'type': 'bool',
+                                    },
+                                'response_error': {
+                                    'type': 'bool',
+                                    },
+                                'response_timeout': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                }
+                            },
                         'aam_auth_server_ldap': {
                             'type': 'dict',
                             'uuid': {
@@ -13908,6 +13956,528 @@ def get_argspec():
                             'type': 'bool',
                             },
                         'dnsrrl_bad_fqdn': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
+                'smtp_vport_tmpl_list': {
+                    'type': 'list',
+                    'name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'capture_config': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_severity': {
+                        'type': 'dict',
+                        'error': {
+                            'type': 'bool',
+                            },
+                        'error_alert': {
+                            'type': 'bool',
+                            },
+                        'error_warning': {
+                            'type': 'bool',
+                            },
+                        'error_critical': {
+                            'type': 'bool',
+                            },
+                        'drop': {
+                            'type': 'bool',
+                            },
+                        'drop_alert': {
+                            'type': 'bool',
+                            },
+                        'drop_warning': {
+                            'type': 'bool',
+                            },
+                        'drop_critical': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'no_proxy': {
+                            'type': 'bool',
+                            },
+                        'parse_req_fail': {
+                            'type': 'bool',
+                            },
+                        'server_select_fail': {
+                            'type': 'bool',
+                            },
+                        'forward_req_fail': {
+                            'type': 'bool',
+                            },
+                        'forward_req_data_fail': {
+                            'type': 'bool',
+                            },
+                        'snat_fail': {
+                            'type': 'bool',
+                            },
+                        'send_client_service_not_ready': {
+                            'type': 'bool',
+                            },
+                        'recv_server_unknow_reply_code': {
+                            'type': 'bool',
+                            },
+                        'read_request_line_fail': {
+                            'type': 'bool',
+                            },
+                        'get_all_headers_fail': {
+                            'type': 'bool',
+                            },
+                        'too_many_headers': {
+                            'type': 'bool',
+                            },
+                        'line_too_long': {
+                            'type': 'bool',
+                            },
+                        'line_extend_fail': {
+                            'type': 'bool',
+                            },
+                        'line_table_extend_fail': {
+                            'type': 'bool',
+                            },
+                        'parse_request_line_fail': {
+                            'type': 'bool',
+                            },
+                        'insert_resonse_line_fail': {
+                            'type': 'bool',
+                            },
+                        'remove_resonse_line_fail': {
+                            'type': 'bool',
+                            },
+                        'parse_resonse_line_fail': {
+                            'type': 'bool',
+                            },
+                        'server_STARTTLS_fail': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'no_proxy': {
+                            'type': 'bool',
+                            },
+                        'parse_req_fail': {
+                            'type': 'bool',
+                            },
+                        'server_select_fail': {
+                            'type': 'bool',
+                            },
+                        'forward_req_fail': {
+                            'type': 'bool',
+                            },
+                        'forward_req_data_fail': {
+                            'type': 'bool',
+                            },
+                        'snat_fail': {
+                            'type': 'bool',
+                            },
+                        'send_client_service_not_ready': {
+                            'type': 'bool',
+                            },
+                        'recv_server_unknow_reply_code': {
+                            'type': 'bool',
+                            },
+                        'read_request_line_fail': {
+                            'type': 'bool',
+                            },
+                        'get_all_headers_fail': {
+                            'type': 'bool',
+                            },
+                        'too_many_headers': {
+                            'type': 'bool',
+                            },
+                        'line_too_long': {
+                            'type': 'bool',
+                            },
+                        'line_extend_fail': {
+                            'type': 'bool',
+                            },
+                        'line_table_extend_fail': {
+                            'type': 'bool',
+                            },
+                        'parse_request_line_fail': {
+                            'type': 'bool',
+                            },
+                        'insert_resonse_line_fail': {
+                            'type': 'bool',
+                            },
+                        'remove_resonse_line_fail': {
+                            'type': 'bool',
+                            },
+                        'parse_resonse_line_fail': {
+                            'type': 'bool',
+                            },
+                        'server_STARTTLS_fail': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
+                'pop3_vport_tmpl_list': {
+                    'type': 'list',
+                    'name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'capture_config': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_severity': {
+                        'type': 'dict',
+                        'error': {
+                            'type': 'bool',
+                            },
+                        'error_alert': {
+                            'type': 'bool',
+                            },
+                        'error_warning': {
+                            'type': 'bool',
+                            },
+                        'error_critical': {
+                            'type': 'bool',
+                            },
+                        'drop': {
+                            'type': 'bool',
+                            },
+                        'drop_alert': {
+                            'type': 'bool',
+                            },
+                        'drop_warning': {
+                            'type': 'bool',
+                            },
+                        'drop_critical': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'svrsel_fail': {
+                            'type': 'bool',
+                            },
+                        'no_route': {
+                            'type': 'bool',
+                            },
+                        'snat_fail': {
+                            'type': 'bool',
+                            },
+                        'line_too_long': {
+                            'type': 'bool',
+                            },
+                        'invalid_start_line': {
+                            'type': 'bool',
+                            },
+                        'unsupported_command': {
+                            'type': 'bool',
+                            },
+                        'bad_sequence': {
+                            'type': 'bool',
+                            },
+                        'rsv_persist_conn_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v6_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v4_fail': {
+                            'type': 'bool',
+                            },
+                        'insert_tuple_fail': {
+                            'type': 'bool',
+                            },
+                        'cl_est_err': {
+                            'type': 'bool',
+                            },
+                        'ser_connecting_err': {
+                            'type': 'bool',
+                            },
+                        'server_response_err': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'svrsel_fail': {
+                            'type': 'bool',
+                            },
+                        'no_route': {
+                            'type': 'bool',
+                            },
+                        'snat_fail': {
+                            'type': 'bool',
+                            },
+                        'line_too_long': {
+                            'type': 'bool',
+                            },
+                        'invalid_start_line': {
+                            'type': 'bool',
+                            },
+                        'unsupported_command': {
+                            'type': 'bool',
+                            },
+                        'bad_sequence': {
+                            'type': 'bool',
+                            },
+                        'rsv_persist_conn_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v6_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v4_fail': {
+                            'type': 'bool',
+                            },
+                        'insert_tuple_fail': {
+                            'type': 'bool',
+                            },
+                        'cl_est_err': {
+                            'type': 'bool',
+                            },
+                        'ser_connecting_err': {
+                            'type': 'bool',
+                            },
+                        'server_response_err': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
+                'imap_vport_tmpl_list': {
+                    'type': 'list',
+                    'name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'capture_config': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_severity': {
+                        'type': 'dict',
+                        'error': {
+                            'type': 'bool',
+                            },
+                        'error_alert': {
+                            'type': 'bool',
+                            },
+                        'error_warning': {
+                            'type': 'bool',
+                            },
+                        'error_critical': {
+                            'type': 'bool',
+                            },
+                        'drop': {
+                            'type': 'bool',
+                            },
+                        'drop_alert': {
+                            'type': 'bool',
+                            },
+                        'drop_warning': {
+                            'type': 'bool',
+                            },
+                        'drop_critical': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'svrsel_fail': {
+                            'type': 'bool',
+                            },
+                        'no_route': {
+                            'type': 'bool',
+                            },
+                        'snat_fail': {
+                            'type': 'bool',
+                            },
+                        'line_too_long': {
+                            'type': 'bool',
+                            },
+                        'invalid_start_line': {
+                            'type': 'bool',
+                            },
+                        'cant_find_pasv': {
+                            'type': 'bool',
+                            },
+                        'smp_create_fail': {
+                            'type': 'bool',
+                            },
+                        'data_server_conn_fail': {
+                            'type': 'bool',
+                            },
+                        'data_send_fail': {
+                            'type': 'bool',
+                            },
+                        'cant_find_epsv': {
+                            'type': 'bool',
+                            },
+                        'auth_unsupported': {
+                            'type': 'bool',
+                            },
+                        'unsupported_pbsz_value': {
+                            'type': 'bool',
+                            },
+                        'unsupported_prot_value': {
+                            'type': 'bool',
+                            },
+                        'bad_sequence': {
+                            'type': 'bool',
+                            },
+                        'rsv_persist_conn_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v6_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v4_fail': {
+                            'type': 'bool',
+                            },
+                        'insert_tuple_fail': {
+                            'type': 'bool',
+                            },
+                        'cl_est_err': {
+                            'type': 'bool',
+                            },
+                        'ser_connecting_err': {
+                            'type': 'bool',
+                            },
+                        'server_response_err': {
+                            'type': 'bool',
+                            },
+                        'cl_request_err': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'svrsel_fail': {
+                            'type': 'bool',
+                            },
+                        'no_route': {
+                            'type': 'bool',
+                            },
+                        'snat_fail': {
+                            'type': 'bool',
+                            },
+                        'line_too_long': {
+                            'type': 'bool',
+                            },
+                        'invalid_start_line': {
+                            'type': 'bool',
+                            },
+                        'cant_find_pasv': {
+                            'type': 'bool',
+                            },
+                        'smp_create_fail': {
+                            'type': 'bool',
+                            },
+                        'data_server_conn_fail': {
+                            'type': 'bool',
+                            },
+                        'data_send_fail': {
+                            'type': 'bool',
+                            },
+                        'cant_find_epsv': {
+                            'type': 'bool',
+                            },
+                        'auth_unsupported': {
+                            'type': 'bool',
+                            },
+                        'unsupported_pbsz_value': {
+                            'type': 'bool',
+                            },
+                        'unsupported_prot_value': {
+                            'type': 'bool',
+                            },
+                        'bad_sequence': {
+                            'type': 'bool',
+                            },
+                        'rsv_persist_conn_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v6_fail': {
+                            'type': 'bool',
+                            },
+                        'smp_v4_fail': {
+                            'type': 'bool',
+                            },
+                        'insert_tuple_fail': {
+                            'type': 'bool',
+                            },
+                        'cl_est_err': {
+                            'type': 'bool',
+                            },
+                        'ser_connecting_err': {
+                            'type': 'bool',
+                            },
+                        'server_response_err': {
+                            'type': 'bool',
+                            },
+                        'cl_request_err': {
                             'type': 'bool',
                             },
                         'uuid': {

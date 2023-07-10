@@ -148,6 +148,23 @@ options:
         - "Allow traffic to be distributed among blades on Chassis"
         type: bool
         required: False
+    non_zero_win_size_syncookie:
+        description:
+        - "Send syn-cookie with fix TCP window size if SYN packet has zero window size
+          (default disabled)"
+        type: bool
+        required: False
+    hw_blocking_enable:
+        description:
+        - "Enable hardware blacklist blocking for src or dst default entries (default
+          disabled)"
+        type: bool
+        required: False
+    hw_blocking_threshold_limit:
+        description:
+        - "Threshold to initiate hardware blocking (default 10000)"
+        type: int
+        required: False
     progression_tracking:
         description:
         - "'enable'= enable; 'disable'= disable;"
@@ -158,30 +175,22 @@ options:
         - "Disallow RST-ACK passing syn-auth"
         type: bool
         required: False
+    fast_path_disable:
+        description:
+        - "Disable fast path in SLB processing"
+        type: bool
+        required: False
+    close_sess_for_unauth_src_without_rst:
+        description:
+        - "When closing unauthenticated sessions, don't send TCP RST for established TCP
+          sessions. (Default disabled / sending TCP RST for"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    hw_blocking:
-        description:
-        - "Field hw_blocking"
-        type: dict
-        required: False
-        suboptions:
-            hw_blocking_enable:
-                description:
-                - "Enable hardware blacklist blocking for src or dst default entries (default
-          disabled)"
-                type: bool
-            hw_blocking_threshold_limit:
-                description:
-                - "Threshold to initiate hardware blocking (default 10000)"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     ipv6_src_hash_mask_bits:
         description:
         - "Field ipv6_src_hash_mask_bits"
@@ -419,6 +428,10 @@ options:
                 description:
                 - "Field disallow_rst_ack_in_syn_auth"
                 type: str
+            non_zero_win_size_syncookie:
+                description:
+                - "Field non_zero_win_size_syncookie"
+                type: str
             hw_blocking:
                 description:
                 - "Field hw_blocking"
@@ -490,8 +503,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "disable_advanced_core_analysis", "disable_delay_dynamic_src_learning", "disable_on_reboot", "disallow_rst_ack_in_syn_auth", "enable_now", "fast_aging", "force_routing_on_transp", "force_traffic_to_same_blade_disable", "hw_blocking", "ipv6_src_hash_mask_bits", "mpls", "multi_pu_zone_distribution", "oper", "progression_tracking",
-    "rate_interval", "rexmit_syn_log", "src_dst_entry_limit", "src_ip_hash_bit", "src_ipv6_hash_bit", "src_zone_port_entry_limit", "toggle", "use_route", "uuid",
+    "close_sess_for_unauth_src_without_rst", "disable_advanced_core_analysis", "disable_delay_dynamic_src_learning", "disable_on_reboot", "disallow_rst_ack_in_syn_auth", "enable_now", "fast_aging", "fast_path_disable", "force_routing_on_transp", "force_traffic_to_same_blade_disable", "hw_blocking_enable", "hw_blocking_threshold_limit",
+    "ipv6_src_hash_mask_bits", "mpls", "multi_pu_zone_distribution", "non_zero_win_size_syncookie", "oper", "progression_tracking", "rate_interval", "rexmit_syn_log", "src_dst_entry_limit", "src_ip_hash_bit", "src_ipv6_hash_bit", "src_zone_port_entry_limit", "toggle", "use_route", "uuid",
     ]
 
 
@@ -571,6 +584,15 @@ def get_argspec():
         'force_traffic_to_same_blade_disable': {
             'type': 'bool',
             },
+        'non_zero_win_size_syncookie': {
+            'type': 'bool',
+            },
+        'hw_blocking_enable': {
+            'type': 'bool',
+            },
+        'hw_blocking_threshold_limit': {
+            'type': 'int',
+            },
         'progression_tracking': {
             'type': 'str',
             'choices': ['enable', 'disable']
@@ -578,20 +600,14 @@ def get_argspec():
         'disallow_rst_ack_in_syn_auth': {
             'type': 'bool',
             },
+        'fast_path_disable': {
+            'type': 'bool',
+            },
+        'close_sess_for_unauth_src_without_rst': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
-            },
-        'hw_blocking': {
-            'type': 'dict',
-            'hw_blocking_enable': {
-                'type': 'bool',
-                },
-            'hw_blocking_threshold_limit': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
             },
         'ipv6_src_hash_mask_bits': {
             'type': 'dict',
@@ -796,6 +812,10 @@ def get_argspec():
                 'type': 'int',
                 },
             'disallow_rst_ack_in_syn_auth': {
+                'type': 'str',
+                'choices': ['enabled', 'disabled']
+                },
+            'non_zero_win_size_syncookie': {
                 'type': 'str',
                 'choices': ['enabled', 'disabled']
                 },

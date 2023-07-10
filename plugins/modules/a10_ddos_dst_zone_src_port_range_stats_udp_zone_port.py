@@ -554,6 +554,48 @@ def get_argspec():
                     },
                 'exceed_action_drop': {
                     'type': 'str',
+                    },
+                'ew_inbound_port_rcv': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_drop': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_sent': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_byte_rcv': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_byte_drop': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_byte_sent': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_rcv': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_drop': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_sent': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_byte_rcv': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_byte_sent': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_byte_drop': {
+                    'type': 'str',
+                    },
+                'no_route_drop': {
+                    'type': 'str',
+                    },
+                'unauth_src_session_reset': {
+                    'type': 'str',
                     }
                 }
             }

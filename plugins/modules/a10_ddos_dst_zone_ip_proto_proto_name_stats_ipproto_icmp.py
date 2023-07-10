@@ -378,6 +378,75 @@ def get_argspec():
                     },
                 'exceed_action_drop': {
                     'type': 'str',
+                    },
+                'ew_inbound_port_rcv': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_drop': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_sent': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_byte_rcv': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_byte_drop': {
+                    'type': 'str',
+                    },
+                'ew_inbound_port_byte_sent': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_rcv': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_drop': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_sent': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_byte_rcv': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_byte_sent': {
+                    'type': 'str',
+                    },
+                'ew_outbound_port_byte_drop': {
+                    'type': 'str',
+                    },
+                'no_route_drop': {
+                    'type': 'str',
+                    },
+                'filter1_match': {
+                    'type': 'str',
+                    },
+                'filter2_match': {
+                    'type': 'str',
+                    },
+                'filter3_match': {
+                    'type': 'str',
+                    },
+                'filter4_match': {
+                    'type': 'str',
+                    },
+                'filter5_match': {
+                    'type': 'str',
+                    },
+                'filter_none_match': {
+                    'type': 'str',
+                    },
+                'filter_action_blacklist': {
+                    'type': 'str',
+                    },
+                'filter_action_drop': {
+                    'type': 'str',
+                    },
+                'filter_action_default_pass': {
+                    'type': 'str',
+                    },
+                'filter_total_not_match': {
+                    'type': 'str',
                     }
                 }
             }

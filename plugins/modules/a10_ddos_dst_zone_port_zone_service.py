@@ -348,6 +348,10 @@ options:
                 description:
                 - "Field zone_template"
                 type: dict
+            close_sessions_for_unauth_sources:
+                description:
+                - "Close session for unauthenticated sources"
+                type: bool
             start_signature_extraction:
                 description:
                 - "Start signature extraction from this level"
@@ -395,6 +399,10 @@ options:
                 description:
                 - "Field zone_template"
                 type: dict
+            close_sessions_for_unauth_sources:
+                description:
+                - "Close session for unauthenticated sources"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -954,6 +962,9 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'close_sessions_for_unauth_sources': {
+                'type': 'bool',
+                },
             'start_signature_extraction': {
                 'type': 'bool',
                 },
@@ -1051,6 +1062,9 @@ def get_argspec():
                 'encap': {
                     'type': 'str',
                     }
+                },
+            'close_sessions_for_unauth_sources': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

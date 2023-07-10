@@ -1148,6 +1148,108 @@ options:
                 description:
                 - "Field trigger_stats_rate"
                 type: dict
+    smtp_vport_tmpl_list:
+        description:
+        - "Field smtp_vport_tmpl_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Packet Capture Template Name"
+                type: str
+            capture_config:
+                description:
+                - "Specify name of the capture-config to use with this template"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            trigger_stats_severity:
+                description:
+                - "Field trigger_stats_severity"
+                type: dict
+            trigger_stats_inc:
+                description:
+                - "Field trigger_stats_inc"
+                type: dict
+            trigger_stats_rate:
+                description:
+                - "Field trigger_stats_rate"
+                type: dict
+    pop3_vport_tmpl_list:
+        description:
+        - "Field pop3_vport_tmpl_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Packet Capture Template Name"
+                type: str
+            capture_config:
+                description:
+                - "Specify name of the capture-config to use with this template"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            trigger_stats_severity:
+                description:
+                - "Field trigger_stats_severity"
+                type: dict
+            trigger_stats_inc:
+                description:
+                - "Field trigger_stats_inc"
+                type: dict
+            trigger_stats_rate:
+                description:
+                - "Field trigger_stats_rate"
+                type: dict
+    imap_vport_tmpl_list:
+        description:
+        - "Field imap_vport_tmpl_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Packet Capture Template Name"
+                type: str
+            capture_config:
+                description:
+                - "Specify name of the capture-config to use with this template"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            trigger_stats_severity:
+                description:
+                - "Field trigger_stats_severity"
+                type: dict
+            trigger_stats_inc:
+                description:
+                - "Field trigger_stats_inc"
+                type: dict
+            trigger_stats_rate:
+                description:
+                - "Field trigger_stats_rate"
+                type: dict
 
 '''
 
@@ -1205,8 +1307,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "aam_aaa_policy_tmpl_list", "aam_auth_captcha_inst_tmpl_list", "aam_auth_logon_http_ins_tmpl_list", "aam_auth_relay_form_inst_tmpl_list", "aam_auth_relay_hbase_inst_tmpl_list", "aam_auth_relay_ntlm_tmpl_list", "aam_auth_relay_ws_fed_tmpl_list", "aam_auth_saml_id_prov_tmpl_list", "aam_auth_saml_service_prov_tmpl_list",
     "aam_auth_server_ldap_inst_tmpl_list", "aam_auth_server_ocsp_inst_tmpl_list", "aam_auth_server_rad_inst_tmpl_list", "aam_auth_server_win_inst_tmpl_list", "aam_auth_service_group_mem_tmpl_list", "aam_auth_service_group_tmpl_list", "aam_jwt_authorization_tmpl_list", "cgnv6_dns64_vs_port_tmpl_list", "cgnv6_encap_domain_tmpl_list",
-    "cgnv6_map_trans_domain_tmpl_list", "cgnv6_serv_group_tmpl_list", "dns_vport_tmpl_list", "fw_server_port_tmpl_list", "fw_service_group_mem_tmpl_list", "fw_service_group_tmpl_list", "interface_ethernet_tmpl_list", "interface_tunnel_tmpl_list", "netflow_monitor_tmpl_list", "rule_set_tmpl_list", "slb_port_tmpl_list", "slb_templ_cache_tmpl_list",
-    "slb_vport_tmpl_list", "templ_gtp_plcy_tmpl_list", "uuid",
+    "cgnv6_map_trans_domain_tmpl_list", "cgnv6_serv_group_tmpl_list", "dns_vport_tmpl_list", "fw_server_port_tmpl_list", "fw_service_group_mem_tmpl_list", "fw_service_group_tmpl_list", "imap_vport_tmpl_list", "interface_ethernet_tmpl_list", "interface_tunnel_tmpl_list", "netflow_monitor_tmpl_list", "pop3_vport_tmpl_list", "rule_set_tmpl_list",
+    "slb_port_tmpl_list", "slb_templ_cache_tmpl_list", "slb_vport_tmpl_list", "smtp_vport_tmpl_list", "templ_gtp_plcy_tmpl_list", "uuid",
     ]
 
 
@@ -4724,6 +4826,528 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'dnsrrl_bad_fqdn': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'smtp_vport_tmpl_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'capture_config': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'trigger_stats_severity': {
+                'type': 'dict',
+                'error': {
+                    'type': 'bool',
+                    },
+                'error_alert': {
+                    'type': 'bool',
+                    },
+                'error_warning': {
+                    'type': 'bool',
+                    },
+                'error_critical': {
+                    'type': 'bool',
+                    },
+                'drop': {
+                    'type': 'bool',
+                    },
+                'drop_alert': {
+                    'type': 'bool',
+                    },
+                'drop_warning': {
+                    'type': 'bool',
+                    },
+                'drop_critical': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_inc': {
+                'type': 'dict',
+                'no_proxy': {
+                    'type': 'bool',
+                    },
+                'parse_req_fail': {
+                    'type': 'bool',
+                    },
+                'server_select_fail': {
+                    'type': 'bool',
+                    },
+                'forward_req_fail': {
+                    'type': 'bool',
+                    },
+                'forward_req_data_fail': {
+                    'type': 'bool',
+                    },
+                'snat_fail': {
+                    'type': 'bool',
+                    },
+                'send_client_service_not_ready': {
+                    'type': 'bool',
+                    },
+                'recv_server_unknow_reply_code': {
+                    'type': 'bool',
+                    },
+                'read_request_line_fail': {
+                    'type': 'bool',
+                    },
+                'get_all_headers_fail': {
+                    'type': 'bool',
+                    },
+                'too_many_headers': {
+                    'type': 'bool',
+                    },
+                'line_too_long': {
+                    'type': 'bool',
+                    },
+                'line_extend_fail': {
+                    'type': 'bool',
+                    },
+                'line_table_extend_fail': {
+                    'type': 'bool',
+                    },
+                'parse_request_line_fail': {
+                    'type': 'bool',
+                    },
+                'insert_resonse_line_fail': {
+                    'type': 'bool',
+                    },
+                'remove_resonse_line_fail': {
+                    'type': 'bool',
+                    },
+                'parse_resonse_line_fail': {
+                    'type': 'bool',
+                    },
+                'server_STARTTLS_fail': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_rate': {
+                'type': 'dict',
+                'threshold_exceeded_by': {
+                    'type': 'int',
+                    },
+                'duration': {
+                    'type': 'int',
+                    },
+                'no_proxy': {
+                    'type': 'bool',
+                    },
+                'parse_req_fail': {
+                    'type': 'bool',
+                    },
+                'server_select_fail': {
+                    'type': 'bool',
+                    },
+                'forward_req_fail': {
+                    'type': 'bool',
+                    },
+                'forward_req_data_fail': {
+                    'type': 'bool',
+                    },
+                'snat_fail': {
+                    'type': 'bool',
+                    },
+                'send_client_service_not_ready': {
+                    'type': 'bool',
+                    },
+                'recv_server_unknow_reply_code': {
+                    'type': 'bool',
+                    },
+                'read_request_line_fail': {
+                    'type': 'bool',
+                    },
+                'get_all_headers_fail': {
+                    'type': 'bool',
+                    },
+                'too_many_headers': {
+                    'type': 'bool',
+                    },
+                'line_too_long': {
+                    'type': 'bool',
+                    },
+                'line_extend_fail': {
+                    'type': 'bool',
+                    },
+                'line_table_extend_fail': {
+                    'type': 'bool',
+                    },
+                'parse_request_line_fail': {
+                    'type': 'bool',
+                    },
+                'insert_resonse_line_fail': {
+                    'type': 'bool',
+                    },
+                'remove_resonse_line_fail': {
+                    'type': 'bool',
+                    },
+                'parse_resonse_line_fail': {
+                    'type': 'bool',
+                    },
+                'server_STARTTLS_fail': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'pop3_vport_tmpl_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'capture_config': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'trigger_stats_severity': {
+                'type': 'dict',
+                'error': {
+                    'type': 'bool',
+                    },
+                'error_alert': {
+                    'type': 'bool',
+                    },
+                'error_warning': {
+                    'type': 'bool',
+                    },
+                'error_critical': {
+                    'type': 'bool',
+                    },
+                'drop': {
+                    'type': 'bool',
+                    },
+                'drop_alert': {
+                    'type': 'bool',
+                    },
+                'drop_warning': {
+                    'type': 'bool',
+                    },
+                'drop_critical': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_inc': {
+                'type': 'dict',
+                'svrsel_fail': {
+                    'type': 'bool',
+                    },
+                'no_route': {
+                    'type': 'bool',
+                    },
+                'snat_fail': {
+                    'type': 'bool',
+                    },
+                'line_too_long': {
+                    'type': 'bool',
+                    },
+                'invalid_start_line': {
+                    'type': 'bool',
+                    },
+                'unsupported_command': {
+                    'type': 'bool',
+                    },
+                'bad_sequence': {
+                    'type': 'bool',
+                    },
+                'rsv_persist_conn_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v6_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v4_fail': {
+                    'type': 'bool',
+                    },
+                'insert_tuple_fail': {
+                    'type': 'bool',
+                    },
+                'cl_est_err': {
+                    'type': 'bool',
+                    },
+                'ser_connecting_err': {
+                    'type': 'bool',
+                    },
+                'server_response_err': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_rate': {
+                'type': 'dict',
+                'threshold_exceeded_by': {
+                    'type': 'int',
+                    },
+                'duration': {
+                    'type': 'int',
+                    },
+                'svrsel_fail': {
+                    'type': 'bool',
+                    },
+                'no_route': {
+                    'type': 'bool',
+                    },
+                'snat_fail': {
+                    'type': 'bool',
+                    },
+                'line_too_long': {
+                    'type': 'bool',
+                    },
+                'invalid_start_line': {
+                    'type': 'bool',
+                    },
+                'unsupported_command': {
+                    'type': 'bool',
+                    },
+                'bad_sequence': {
+                    'type': 'bool',
+                    },
+                'rsv_persist_conn_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v6_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v4_fail': {
+                    'type': 'bool',
+                    },
+                'insert_tuple_fail': {
+                    'type': 'bool',
+                    },
+                'cl_est_err': {
+                    'type': 'bool',
+                    },
+                'ser_connecting_err': {
+                    'type': 'bool',
+                    },
+                'server_response_err': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'imap_vport_tmpl_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'capture_config': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'trigger_stats_severity': {
+                'type': 'dict',
+                'error': {
+                    'type': 'bool',
+                    },
+                'error_alert': {
+                    'type': 'bool',
+                    },
+                'error_warning': {
+                    'type': 'bool',
+                    },
+                'error_critical': {
+                    'type': 'bool',
+                    },
+                'drop': {
+                    'type': 'bool',
+                    },
+                'drop_alert': {
+                    'type': 'bool',
+                    },
+                'drop_warning': {
+                    'type': 'bool',
+                    },
+                'drop_critical': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_inc': {
+                'type': 'dict',
+                'svrsel_fail': {
+                    'type': 'bool',
+                    },
+                'no_route': {
+                    'type': 'bool',
+                    },
+                'snat_fail': {
+                    'type': 'bool',
+                    },
+                'line_too_long': {
+                    'type': 'bool',
+                    },
+                'invalid_start_line': {
+                    'type': 'bool',
+                    },
+                'cant_find_pasv': {
+                    'type': 'bool',
+                    },
+                'smp_create_fail': {
+                    'type': 'bool',
+                    },
+                'data_server_conn_fail': {
+                    'type': 'bool',
+                    },
+                'data_send_fail': {
+                    'type': 'bool',
+                    },
+                'cant_find_epsv': {
+                    'type': 'bool',
+                    },
+                'auth_unsupported': {
+                    'type': 'bool',
+                    },
+                'unsupported_pbsz_value': {
+                    'type': 'bool',
+                    },
+                'unsupported_prot_value': {
+                    'type': 'bool',
+                    },
+                'bad_sequence': {
+                    'type': 'bool',
+                    },
+                'rsv_persist_conn_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v6_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v4_fail': {
+                    'type': 'bool',
+                    },
+                'insert_tuple_fail': {
+                    'type': 'bool',
+                    },
+                'cl_est_err': {
+                    'type': 'bool',
+                    },
+                'ser_connecting_err': {
+                    'type': 'bool',
+                    },
+                'server_response_err': {
+                    'type': 'bool',
+                    },
+                'cl_request_err': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_rate': {
+                'type': 'dict',
+                'threshold_exceeded_by': {
+                    'type': 'int',
+                    },
+                'duration': {
+                    'type': 'int',
+                    },
+                'svrsel_fail': {
+                    'type': 'bool',
+                    },
+                'no_route': {
+                    'type': 'bool',
+                    },
+                'snat_fail': {
+                    'type': 'bool',
+                    },
+                'line_too_long': {
+                    'type': 'bool',
+                    },
+                'invalid_start_line': {
+                    'type': 'bool',
+                    },
+                'cant_find_pasv': {
+                    'type': 'bool',
+                    },
+                'smp_create_fail': {
+                    'type': 'bool',
+                    },
+                'data_server_conn_fail': {
+                    'type': 'bool',
+                    },
+                'data_send_fail': {
+                    'type': 'bool',
+                    },
+                'cant_find_epsv': {
+                    'type': 'bool',
+                    },
+                'auth_unsupported': {
+                    'type': 'bool',
+                    },
+                'unsupported_pbsz_value': {
+                    'type': 'bool',
+                    },
+                'unsupported_prot_value': {
+                    'type': 'bool',
+                    },
+                'bad_sequence': {
+                    'type': 'bool',
+                    },
+                'rsv_persist_conn_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v6_fail': {
+                    'type': 'bool',
+                    },
+                'smp_v4_fail': {
+                    'type': 'bool',
+                    },
+                'insert_tuple_fail': {
+                    'type': 'bool',
+                    },
+                'cl_est_err': {
+                    'type': 'bool',
+                    },
+                'ser_connecting_err': {
+                    'type': 'bool',
+                    },
+                'server_response_err': {
+                    'type': 'bool',
+                    },
+                'cl_request_err': {
                     'type': 'bool',
                     },
                 'uuid': {

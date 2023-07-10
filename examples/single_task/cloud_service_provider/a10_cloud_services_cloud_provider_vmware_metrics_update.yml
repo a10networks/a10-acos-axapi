@@ -1,0 +1,25 @@
+- name: Create a10_cloud_services_cloud_provider_vmware_metrics example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_cloud_services_cloud_provider_vmware_metrics instance
+    a10.acos_axapi.a10_cloud_services_cloud_provider_vmware_metrics:
+      state: present
+      action: enable
+      active_partitions: vmwareMetricsPartition
+      vrops_host: 20.10.20.10
+      resource_id: vmwaretest2023
+      cpu: enable
+      memory: enable
+      disk: enable
+      throughput: enable
+      interfaces: enable
+      cps: enable
+      tps: enable
+      server_down_count: enable
+      server_down_percentage: enable
+      ssl_cert: enable
+      server_error: enable
+      sessions: enable
+      packet_drop: enable
+

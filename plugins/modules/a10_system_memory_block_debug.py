@@ -57,7 +57,7 @@ options:
         required: False
     assert_block:
         description:
-        - "Over size block allocation (Assert memory block over size (default= 16384))"
+        - "Over size block allocation (Assert memory block over size (default= 65536))"
         type: int
         required: False
     pktdump_block:

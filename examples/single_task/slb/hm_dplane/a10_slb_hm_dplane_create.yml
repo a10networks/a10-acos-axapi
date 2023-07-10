@@ -1,0 +1,8 @@
+- name: Create a10_slb_hm_dplane example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_slb_hm_dplane instance
+    a10.acos_axapi.a10_slb_hm_dplane:
+      sampling_enable:
+        - counters1: all

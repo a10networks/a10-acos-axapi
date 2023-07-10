@@ -104,12 +104,17 @@ options:
         required: False
     radius_lb_method_hash_type:
         description:
-        - "'ip'= IP-Hash;"
+        - "'ip'= IP-Hash; 'ipv6'= IPv6-Hash;"
         type: str
         required: False
     avp:
         description:
         - "'4'= NAS-IP-address; '8'= Framed-IP-Address;"
+        type: str
+        required: False
+    v6avp:
+        description:
+        - "'168'= Framed-IPv6-Address; '97'= Framed-IPv6-PrefixFramed-IPv6-Prefix;"
         type: str
         required: False
     uuid:
@@ -176,7 +181,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["age", "avp", "disable_clear_session", "idle_timeout", "immediate", "name", "qos", "radius_lb_method_hash_type", "re_select_if_server_down", "short", "stateless_conn_timeout", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["age", "avp", "disable_clear_session", "idle_timeout", "immediate", "name", "qos", "radius_lb_method_hash_type", "re_select_if_server_down", "short", "stateless_conn_timeout", "user_tag", "uuid", "v6avp", ]
 
 
 def get_default_argspec():
@@ -227,11 +232,15 @@ def get_argspec():
             },
         'radius_lb_method_hash_type': {
             'type': 'str',
-            'choices': ['ip']
+            'choices': ['ip', 'ipv6']
             },
         'avp': {
             'type': 'str',
             'choices': ['4', '8']
+            },
+        'v6avp': {
+            'type': 'str',
+            'choices': ['168', '97']
             },
         'uuid': {
             'type': 'str',

@@ -107,6 +107,10 @@ options:
                 description:
                 - "Field total_req_lookup_processed"
                 type: int
+            clear_cache:
+                description:
+                - "Field clear_cache"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -264,6 +268,9 @@ def get_argspec():
                 },
             'total_req_lookup_processed': {
                 'type': 'int',
+                },
+            'clear_cache': {
+                'type': 'str',
                 }
             },
         'stats': {
