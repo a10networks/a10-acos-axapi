@@ -510,6 +510,26 @@ options:
           0 means disable, default is 0)"
         type: int
         required: False
+    disallowed_methods:
+        description:
+        - "Enable disallowed-method check (List of disallowed HTTP methods)"
+        type: str
+        required: False
+    disallowed_methods_action:
+        description:
+        - "'drop'= Respond 400 directly;"
+        type: str
+        required: False
+    allowed_methods:
+        description:
+        - "Enable allowed-method check (List of allowed HTTP methods)"
+        type: str
+        required: False
+    allowed_methods_action:
+        description:
+        - "'drop'= Respond 400 directly;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -625,11 +645,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "http_100_cont_wait_for_req_complete", "bypass_sg", "client_idle_timeout", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_br_level", "compression_br_sliding_window_size", "compression_content_type", "compression_enable", "compression_exclude_content_type", "compression_exclude_uri",
-    "compression_keep_accept_encoding", "compression_keep_accept_encoding_enable", "compression_level", "compression_method_order", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "failover_url", "frame_limit", "host_switching", "http_protocol_check", "http2_client_no_snat", "insert_client_ip",
-    "insert_client_ip_header_name", "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code", "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val",
-    "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx", "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only",
-    "server_support_http2_only_value", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid",
+    "http_100_cont_wait_for_req_complete", "allowed_methods", "allowed_methods_action", "bypass_sg", "client_idle_timeout", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_br_level", "compression_br_sliding_window_size", "compression_content_type", "compression_enable",
+    "compression_exclude_content_type", "compression_exclude_uri", "compression_keep_accept_encoding", "compression_keep_accept_encoding_enable", "compression_level", "compression_method_order", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "disallowed_methods", "disallowed_methods_action",
+    "failover_url", "frame_limit", "host_switching", "http_protocol_check", "http2_client_no_snat", "insert_client_ip", "insert_client_ip_header_name", "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code",
+    "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val", "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx",
+    "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only", "server_support_http2_only_value", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid",
     ]
 
 
@@ -925,6 +945,20 @@ def get_argspec():
             },
         'client_idle_timeout': {
             'type': 'int',
+            },
+        'disallowed_methods': {
+            'type': 'str',
+            },
+        'disallowed_methods_action': {
+            'type': 'str',
+            'choices': ['drop']
+            },
+        'allowed_methods': {
+            'type': 'str',
+            },
+        'allowed_methods_action': {
+            'type': 'str',
+            'choices': ['drop']
             },
         'uuid': {
             'type': 'str',

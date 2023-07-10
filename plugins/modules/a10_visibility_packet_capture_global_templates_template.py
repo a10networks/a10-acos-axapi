@@ -159,6 +159,10 @@ options:
                 description:
                 - "Field aam_authentication_global"
                 type: dict
+            aam_rdns:
+                description:
+                - "Field aam_rdns"
+                type: dict
             aam_auth_server_ldap:
                 description:
                 - "Field aam_auth_server_ldap"
@@ -1557,6 +1561,54 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'dns_resolve_failed': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'aam_rdns': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                    },
+                'trigger_stats_inc': {
+                    'type': 'dict',
+                    'request_dropped': {
+                        'type': 'bool',
+                        },
+                    'response_failure': {
+                        'type': 'bool',
+                        },
+                    'response_error': {
+                        'type': 'bool',
+                        },
+                    'response_timeout': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'trigger_stats_rate': {
+                    'type': 'dict',
+                    'threshold_exceeded_by': {
+                        'type': 'int',
+                        },
+                    'duration': {
+                        'type': 'int',
+                        },
+                    'request_dropped': {
+                        'type': 'bool',
+                        },
+                    'response_failure': {
+                        'type': 'bool',
+                        },
+                    'response_error': {
+                        'type': 'bool',
+                        },
+                    'response_timeout': {
                         'type': 'bool',
                         },
                     'uuid': {

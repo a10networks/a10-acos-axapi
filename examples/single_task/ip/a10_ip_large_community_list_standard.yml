@@ -1,0 +1,10 @@
+- name: Create a10_ip_large_community_list_standard example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_ip_large_community_list_standard instance
+    a10.acos_axapi.a10_ip_large_community_list_standard:
+      standard: "std_list"
+      rules_list:
+        - standard_lcom_action: "permit"
+          standard_lcomm_value: "11:33:44"

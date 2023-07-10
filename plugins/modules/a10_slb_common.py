@@ -666,6 +666,11 @@ options:
         - "IPv4 Octet Offset for Hash"
         type: int
         required: False
+    ipv6_subnet:
+        description:
+        - "IPv6 Octet Valid Subnet Length for Hash"
+        type: int
+        required: False
     pbslb_entry_age:
         description:
         - "Set global pbslb entry age (minute)"
@@ -711,9 +716,34 @@ options:
         - "Specify the custom webpage name"
         type: str
         required: False
+    use_https_proxy:
+        description:
+        - "NG-WAF connects to Cloud through proxy server"
+        type: bool
+        required: False
+    ngwaf_proxy_ipv4:
+        description:
+        - "IPv4 address"
+        type: str
+        required: False
+    ngwaf_proxy_ipv6:
+        description:
+        - "IPv6 address"
+        type: str
+        required: False
+    ngwaf_proxy_port:
+        description:
+        - "Port"
+        type: int
+        required: False
     use_mgmt_port:
         description:
         - "Use management port to connect"
+        type: bool
+        required: False
+    enable_fast_path_rerouting:
+        description:
+        - "Enable Fast-Path Rerouting"
         type: bool
         required: False
     uuid:
@@ -900,12 +930,13 @@ AVAILABLE_PROPERTIES = [
     "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "attack_resp_code", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "cache_expire_time", "cert_pinning",
     "clientside_ip", "clientside_ipv6", "compress_block_size", "conn_rate_limit", "custom_message", "custom_page", "custom_signal_clist", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age",
     "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_sync", "dns_cache_sync_entry_size", "dns_cache_sync_ttl_threshold", "dns_cache_ttl_adjustment_enable", "dns_negative_cache_enable", "dns_persistent_cache_enable", "dns_persistent_cache_hit_threshold",
-    "dns_persistent_cache_ttl_threshold", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_ddos", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable",
-    "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_persistent_cache", "max_remote_rate", "monitor_mode_enable",
-    "msl_time", "mss_table", "N5_new", "N5_old", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "pbslb_overflow_glid", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port", "port_scan_detection", "pre_process_enable",
-    "QAT", "quic", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "serverside_ip", "serverside_ipv6", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd",
-    "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "software_tls13_offload", "sort_res", "ssl_module_usage_enable", "ssl_n5_delay_tx_enable", "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_silent_termination_enable", "ssli_sni_hash_enable",
-    "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_mgmt_port", "use_mss_tab", "uuid", "vport_global", "vport_l3v",
+    "dns_persistent_cache_ttl_threshold", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_ddos", "enable_fast_path_rerouting", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown",
+    "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "ipv6_subnet", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_persistent_cache",
+    "max_remote_rate", "monitor_mode_enable", "msl_time", "mss_table", "N5_new", "N5_old", "ngwaf_proxy_ipv4", "ngwaf_proxy_ipv6", "ngwaf_proxy_port", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "pbslb_overflow_glid", "per_thr_percent", "ping_sweep_detection",
+    "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port", "port_scan_detection", "pre_process_enable", "QAT", "quic", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "serverside_ip",
+    "serverside_ipv6", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "software_tls13_offload", "sort_res", "ssl_module_usage_enable", "ssl_n5_delay_tx_enable",
+    "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_silent_termination_enable", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_https_proxy", "use_mgmt_port", "use_mss_tab", "uuid",
+    "vport_global", "vport_l3v",
     ]
 
 
@@ -1311,6 +1342,9 @@ def get_argspec():
         'ipv4_offset': {
             'type': 'int',
             },
+        'ipv6_subnet': {
+            'type': 'int',
+            },
         'pbslb_entry_age': {
             'type': 'int',
             },
@@ -1338,7 +1372,22 @@ def get_argspec():
         'custom_page': {
             'type': 'str',
             },
+        'use_https_proxy': {
+            'type': 'bool',
+            },
+        'ngwaf_proxy_ipv4': {
+            'type': 'str',
+            },
+        'ngwaf_proxy_ipv6': {
+            'type': 'str',
+            },
+        'ngwaf_proxy_port': {
+            'type': 'int',
+            },
         'use_mgmt_port': {
+            'type': 'bool',
+            },
+        'enable_fast_path_rerouting': {
             'type': 'bool',
             },
         'uuid': {

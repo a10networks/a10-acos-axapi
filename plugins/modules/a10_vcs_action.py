@@ -62,7 +62,7 @@ options:
         required: False
     action:
         description:
-        - "'enable'= enable VCS; 'disable'= disable VCS;"
+        - "'disable'= disable VCS; 'enable'= enable VCS;"
         type: str
         required: False
     uuid:
@@ -144,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'database_distribution': {'type': 'str', 'choices': ['enable', 'disable']}, 'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
+    rv.update({'database_distribution': {'type': 'str', 'choices': ['enable', 'disable']}, 'action': {'type': 'str', 'choices': ['disable', 'enable']}, 'uuid': {'type': 'str', }})
     return rv
 
 

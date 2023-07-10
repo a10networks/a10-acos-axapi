@@ -79,10 +79,18 @@ options:
                 description:
                 - "Field app_stat"
                 type: str
+            protocol:
+                description:
+                - "Field protocol"
+                type: int
             rule:
                 description:
                 - "Field rule"
                 type: str
+            rule_set_only:
+                description:
+                - "Field rule_set_only"
+                type: int
             rule_list:
                 description:
                 - "Field rule_list"
@@ -173,8 +181,14 @@ def get_argspec():
             'app_stat': {
                 'type': 'str',
                 },
+            'protocol': {
+                'type': 'int',
+                },
             'rule': {
                 'type': 'str',
+                },
+            'rule_set_only': {
+                'type': 'int',
                 },
             'rule_list': {
                 'type': 'list',

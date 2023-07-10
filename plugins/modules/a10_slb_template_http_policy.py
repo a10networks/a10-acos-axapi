@@ -93,14 +93,6 @@ options:
                 description:
                 - "Service Group to be used (Service Group Name)"
                 type: str
-            template:
-                description:
-                - "'waf'= waf;  (WAF template to be used)"
-                type: str
-            template_name:
-                description:
-                - "WAF template to be used (Template Name)"
-                type: str
     geo_location_match:
         description:
         - "Field geo_location_match"
@@ -114,14 +106,6 @@ options:
             geo_location_service_group:
                 description:
                 - "Service Group to be used (Service Group Name)"
-                type: str
-            geo_location_template:
-                description:
-                - "'waf'= waf;  (WAF template to be used)"
-                type: str
-            geo_location_template_name:
-                description:
-                - "WAF template to be used (Template Name)"
                 type: str
     uuid:
         description:
@@ -408,10 +392,6 @@ options:
                 description:
                 - "Service Group to be used (Service Group Name)"
                 type: str
-            template_waf:
-                description:
-                - "Waf Template to be used (Waf Template Name)"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -517,13 +497,6 @@ def get_argspec():
                 },
             'service_group': {
                 'type': 'str',
-                },
-            'template': {
-                'type': 'str',
-                'choices': ['waf']
-                },
-            'template_name': {
-                'type': 'str',
                 }
             },
         'geo_location_match': {
@@ -532,13 +505,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'geo_location_service_group': {
-                'type': 'str',
-                },
-            'geo_location_template': {
-                'type': 'str',
-                'choices': ['waf']
-                },
-            'geo_location_template_name': {
                 'type': 'str',
                 }
             },
@@ -782,9 +748,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'service_group': {
-                'type': 'str',
-                },
-            'template_waf': {
                 'type': 'str',
                 },
             'uuid': {

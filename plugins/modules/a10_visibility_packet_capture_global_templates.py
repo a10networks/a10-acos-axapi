@@ -1210,6 +1210,54 @@ def get_argspec():
                             }
                         }
                     },
+                'aam_rdns': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'request_dropped': {
+                            'type': 'bool',
+                            },
+                        'response_failure': {
+                            'type': 'bool',
+                            },
+                        'response_error': {
+                            'type': 'bool',
+                            },
+                        'response_timeout': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'request_dropped': {
+                            'type': 'bool',
+                            },
+                        'response_failure': {
+                            'type': 'bool',
+                            },
+                        'response_error': {
+                            'type': 'bool',
+                            },
+                        'response_timeout': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
                 'aam_auth_server_ldap': {
                     'type': 'dict',
                     'uuid': {

@@ -685,7 +685,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'dev_vip_hits']
+                            'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                             }
                         }
                     },
@@ -702,7 +702,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'dev_vip_hits']
+                            'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                             }
                         }
                     },
@@ -719,7 +719,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'dev_vip_hits']
+                            'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                             }
                         }
                     }
@@ -798,6 +798,33 @@ def get_argspec():
                         },
                     'state': {
                         'type': 'str',
+                        },
+                    'service_ip': {
+                        'type': 'str',
+                        },
+                    'port_count': {
+                        'type': 'int',
+                        },
+                    'virtual_server': {
+                        'type': 'int',
+                        },
+                    'disabled': {
+                        'type': 'int',
+                        },
+                    'gslb_protocol': {
+                        'type': 'int',
+                        },
+                    'local_protocol': {
+                        'type': 'int',
+                        },
+                    'manually_health_check': {
+                        'type': 'int',
+                        },
+                    'use_gslb_state': {
+                        'type': 'int',
+                        },
+                    'dynamic': {
+                        'type': 'int',
                         },
                     'ip_server_port': {
                         'type': 'list',
@@ -983,6 +1010,9 @@ def get_argspec():
                 'stats': {
                     'type': 'dict',
                     'hits': {
+                        'type': 'str',
+                        },
+                    'recent': {
                         'type': 'str',
                         }
                     }

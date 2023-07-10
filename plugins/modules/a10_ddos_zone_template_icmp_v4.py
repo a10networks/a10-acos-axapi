@@ -166,6 +166,49 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    filter_list:
+        description:
+        - "Field filter_list"
+        type: list
+        required: False
+        suboptions:
+            icmp_filter_name:
+                description:
+                - "Field icmp_filter_name"
+                type: str
+            icmp_filter_seq:
+                description:
+                - "sequence number"
+                type: int
+            icmp_filter_regex:
+                description:
+                - "Regex Expression"
+                type: str
+            icmp_filter_inverse_match:
+                description:
+                - "Inverse the result of matching"
+                type: bool
+            byte_offset_filter:
+                description:
+                - "filter using Berkeley packet filter syntax"
+                type: str
+            icmp_filter_action_list_name:
+                description:
+                - "Configure action-list to take"
+                type: str
+            icmp_filter_action:
+                description:
+                - "'drop'= Drop packets (Default); 'ignore'= Take no action; 'blacklist-src'=
+          Blacklist-src;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -220,7 +263,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["icmp_tmpl_name", "type_list", "type_other", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["filter_list", "icmp_tmpl_name", "type_list", "type_other", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -385,6 +428,38 @@ def get_argspec():
                     }
                 },
             'uuid': {
+                'type': 'str',
+                }
+            },
+        'filter_list': {
+            'type': 'list',
+            'icmp_filter_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'icmp_filter_seq': {
+                'type': 'int',
+                },
+            'icmp_filter_regex': {
+                'type': 'str',
+                },
+            'icmp_filter_inverse_match': {
+                'type': 'bool',
+                },
+            'byte_offset_filter': {
+                'type': 'str',
+                },
+            'icmp_filter_action_list_name': {
+                'type': 'str',
+                },
+            'icmp_filter_action': {
+                'type': 'str',
+                'choices': ['drop', 'ignore', 'blacklist-src']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
                 'type': 'str',
                 }
             }

@@ -111,6 +111,11 @@ options:
         - "Ethernet interface"
         type: str
         required: False
+    chunk_sharing:
+        description:
+        - "Share NAT pool chunk across CPUs"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -210,7 +215,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["end_address", "ethernet", "gateway", "ip_rr", "netmask", "oper", "pool_name", "port_overload", "scaleout_device_id", "start_address", "stats", "use_if_ip", "uuid", "vrid", ]
+AVAILABLE_PROPERTIES = ["chunk_sharing", "end_address", "ethernet", "gateway", "ip_rr", "netmask", "oper", "pool_name", "port_overload", "scaleout_device_id", "start_address", "stats", "use_if_ip", "uuid", "vrid", ]
 
 
 def get_default_argspec():
@@ -264,6 +269,9 @@ def get_argspec():
             },
         'ethernet': {
             'type': 'str',
+            },
+        'chunk_sharing': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

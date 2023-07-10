@@ -151,6 +151,11 @@ options:
                 description:
                 - "'enable'= Enable detection notification debug log (default= disabled);"
                 type: str
+            de_escalation_quiet_time:
+                description:
+                - "Configure de-escalation needed time in minutes from level 1 to 0.(default 1
+          minutes)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -359,6 +364,9 @@ def get_argspec():
             'notification_debug_log': {
                 'type': 'str',
                 'choices': ['enable']
+                },
+            'de_escalation_quiet_time': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',

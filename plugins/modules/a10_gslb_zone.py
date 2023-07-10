@@ -366,6 +366,10 @@ options:
                 description:
                 - "Field state"
                 type: str
+            dns_soa_record_list:
+                description:
+                - "Field dns_soa_record_list"
+                type: list
             name:
                 description:
                 - "Specify the name for the DNS zone"
@@ -1081,6 +1085,33 @@ def get_argspec():
             'state': {
                 'type': 'str',
                 },
+            'dns_soa_record_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    },
+                'ntype': {
+                    'type': 'str',
+                    },
+                'expire': {
+                    'type': 'int',
+                    },
+                'refresh': {
+                    'type': 'int',
+                    },
+                'serial': {
+                    'type': 'int',
+                    },
+                'retry': {
+                    'type': 'int',
+                    },
+                'ttl': {
+                    'type': 'int',
+                    },
+                'mx_name': {
+                    'type': 'str',
+                    }
+                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -1095,6 +1126,12 @@ def get_argspec():
                     'type': 'dict',
                     'last_server': {
                         'type': 'str',
+                        },
+                    'hits': {
+                        'type': 'int',
+                        },
+                    'priority': {
+                        'type': 'int',
                         }
                     }
                 },
@@ -1108,6 +1145,9 @@ def get_argspec():
                     'type': 'dict',
                     'last_server': {
                         'type': 'str',
+                        },
+                    'hits': {
+                        'type': 'int',
                         }
                     }
                 },
@@ -1206,6 +1246,15 @@ def get_argspec():
                         },
                     'total_sessions': {
                         'type': 'int',
+                        },
+                    'dns_a_record_list': {
+                        'type': 'list',
+                        'ip': {
+                            'type': 'str',
+                            },
+                        'rec_ttl': {
+                            'type': 'int',
+                            }
                         }
                     },
                 'dns_mx_record_list': {
@@ -1218,6 +1267,12 @@ def get_argspec():
                         'type': 'dict',
                         'last_server': {
                             'type': 'str',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            },
+                        'priority': {
+                            'type': 'int',
                             }
                         }
                     },
@@ -1231,6 +1286,9 @@ def get_argspec():
                         'type': 'dict',
                         'last_server': {
                             'type': 'str',
+                            },
+                        'hits': {
+                            'type': 'int',
                             }
                         }
                     }

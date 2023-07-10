@@ -63,8 +63,7 @@ options:
         required: False
     de_escalation_quiet_time:
         description:
-        - "Configure de-escalation needed time in minutes from level 1 to 0.(default 6
-          minutes)"
+        - "Configure de-escalation needed time in minutes from level 1 to 0.(legacy)"
         type: int
         required: False
     uuid:

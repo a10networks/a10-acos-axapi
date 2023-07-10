@@ -78,33 +78,38 @@ options:
           Server connection local closed; 'server_conn_remote_closed'= Server connection
           remote closed; 'server_conn_failed'= Server connection failed;
           'q_conn_created'= Q connection created; 'q_conn_freed'= Q connection freed;
-          'local_bi_stream_created'= Local bi-stream created; 'remote_bi_stream_created'=
-          Remote bi-stream created; 'local_bi_stream_closed'= Local bi-stream closed;
-          'remote_bi_stream_closed'= Remote bi-stream closed; 'local_uni_stream_created'=
-          Local uni-stream created; 'remote_uni_stream_created'= Remote uni-stream
-          created; 'local_uni_stream_closed'= Local uni-stream closed;
-          'remote_uni_stream_closed'= Remote uni-stream closed; 'stream_error'= Stream
-          error; 'padding_frame_rx'= padding frame receive; 'padding_frame_tx'= padding
-          frame send; 'ping_frame_rx'= ping frame receive; 'ping_frame_tx'= ping frame
-          send; 'ack_frame_rx'= ack frame receive; 'ack_frame_tx'= ack frame send;
-          'ack_ecn_frame_rx'= ack enc frame receive; 'ack_ecn_frame_tx'= ack enc frame
-          send; 'stream_rst_frame_rx'= stream reset frame receive; 'stream_rst_frame_tx'=
-          stream reset frame send; 'stream_stop_frame_rx'= stream stop frame receive;
-          'stream_stop_frame_tx'= stream stop frame send; 'crypto_frame_rx'= crypto frame
-          receive; 'crypto_frame_tx'= crypto frame send; 'new_token_frame_rx'= new token
-          frame receive; 'new_token_frame_tx'= new token frame send; 'stream_frame_rx'=
-          stream frame receive; 'stream_frame_tx'= stream frame send;
-          'stream_09_frame_rx'= stream 09 frame receive; 'stream_09_frame_tx'= stream 09
-          frame send; 'stream_0a_frame_rx'= stream 0a frame receive;
-          'stream_0a_frame_tx'= stream 0a frame send; 'stream_0b_frame_rx'= stream 0b
-          frame receive; 'stream_0b_frame_tx'= stream 0b frame send;
-          'stream_0c_frame_rx'= stream 0c frame receive; 'stream_0c_frame_tx'= stream 0c
-          frame send; 'stream_0d_frame_rx'= stream 0d frame receive;
-          'stream_0d_frame_tx'= stream 0d frame send; 'stream_0e_frame_rx'= stream 0e
-          frame receive; 'stream_0e_frame_tx'= stream 0e frame send;
-          'stream_0f_frame_rx'= stream 0f frame receive; 'stream_0f_frame_tx'= stream 0f
-          frame send; 'max_data_frame_rx'= max data frame receive; 'max_data_frame_tx'=
-          max data frame send; 'max_stream_data_frame_rx'= max stream data frame receive;
+          'local_bi_stream_current'= Current local bi-stream; 'remote_bi_stream_current'=
+          Current remote bi-stream; 'local_bi_stream_created'= Local bi-stream created;
+          'remote_bi_stream_created'= Remote bi-stream created; 'local_bi_stream_closed'=
+          Local bi-stream closed; 'remote_bi_stream_closed'= Remote bi-stream closed;
+          'local_uni_stream_current'= Current local uni-stream;
+          'remote_uni_stream_current'= Current remote uni-stream;
+          'local_uni_stream_created'= Local uni-stream created;
+          'remote_uni_stream_created'= Remote uni-stream created;
+          'local_uni_stream_closed'= Local uni-stream closed; 'remote_uni_stream_closed'=
+          Remote uni-stream closed; 'stream_error'= Stream error;
+          'stream_fail_to_insert'= Stream fail to insert; 'padding_frame_rx'= padding
+          frame receive; 'padding_frame_tx'= padding frame send; 'ping_frame_rx'= ping
+          frame receive; 'ping_frame_tx'= ping frame send; 'ack_frame_rx'= ack frame
+          receive; 'ack_frame_tx'= ack frame send; 'ack_ecn_frame_rx'= ack enc frame
+          receive; 'ack_ecn_frame_tx'= ack enc frame send; 'stream_rst_frame_rx'= stream
+          reset frame receive; 'stream_rst_frame_tx'= stream reset frame send;
+          'stream_stop_frame_rx'= stream stop frame receive; 'stream_stop_frame_tx'=
+          stream stop frame send; 'crypto_frame_rx'= crypto frame receive;
+          'crypto_frame_tx'= crypto frame send; 'new_token_frame_rx'= new token frame
+          receive; 'new_token_frame_tx'= new token frame send; 'stream_frame_rx'= stream
+          frame receive; 'stream_frame_tx'= stream frame send; 'stream_09_frame_rx'=
+          stream 09 frame receive; 'stream_09_frame_tx'= stream 09 frame send;
+          'stream_0a_frame_rx'= stream 0a frame receive; 'stream_0a_frame_tx'= stream 0a
+          frame send; 'stream_0b_frame_rx'= stream 0b frame receive;
+          'stream_0b_frame_tx'= stream 0b frame send; 'stream_0c_frame_rx'= stream 0c
+          frame receive; 'stream_0c_frame_tx'= stream 0c frame send;
+          'stream_0d_frame_rx'= stream 0d frame receive; 'stream_0d_frame_tx'= stream 0d
+          frame send; 'stream_0e_frame_rx'= stream 0e frame receive;
+          'stream_0e_frame_tx'= stream 0e frame send; 'stream_0f_frame_rx'= stream 0f
+          frame receive; 'stream_0f_frame_tx'= stream 0f frame send; 'max_data_frame_rx'=
+          max data frame receive; 'max_data_frame_tx'= max data frame send;
+          'max_stream_data_frame_rx'= max stream data frame receive;
           'max_stream_data_frame_tx'= max stream data frame send;
           'max_bi_stream_frame_rx'= max bi stream frame receive;
           'max_bi_stream_frame_tx'= max bi stream frame send; 'max_uni_stream_frame_rx'=
@@ -132,19 +137,19 @@ options:
           up; 'stream_fin_down'= Stream FIN down; 'stream_fin_send'= Stream FIN send;
           'stream_congest'= Stream congest; 'stream_open'= Stream open;
           'stream_pause_data'= Stream pause data; 'stream_resume_data'= Stream resume
-          data; 'stream_not_send'= Stream not send; 'stream_created'= Stream created;
-          'stream_freed'= Stream freed; 'INITIAL_rx'= INITIAL receive; 'INITIAL_tx'=
-          INITIAL send; 'RTT_0_rx'= RTT_0 receive; 'RTT_0_tx'= RTT_0 send;
-          'HANDSHAKE_rx'= HANDSHAKE receive; 'HANDSHAKE_tx'= HANDSHAKE send; 'RETRY_rx'=
-          RETRY receive; 'RETRY_tx'= RETRY send; 'VER_rx'= Version receive; 'VER_tx'=
-          Version send; 'RTT_updated'= RTT updated; 'Needs_ack'= Needs ACK;
-          'Delayed_ack'= Delayed ACK; 'Packet_rx'= Packet receive; 'Packet_tx'= Packet
-          send; 'Packet_tx_failed'= Packet send failed; 'Congest_wnd_inc'= Congestion
-          window increase; 'Congest_wnd_dec'= Congestion window decrease;
-          'No_congest_wnd'= No congestion window; 'Burst_limited'= Burst limited;
-          'Packet_loop_limited'= Packet loop limited; 'Receive_wnd_limited'= Receive
-          window limited; 'Parse_error'= Parse error; 'Error_close'= Conn closed of
-          error; 'Unknown_scid'= Unknown scid; 'Dcid_mismatch'= Dcid mismatch;
+          data; 'stream_not_send'= Stream not send; 'stream_stop_send'= Stream stop send;
+          'stream_created'= Stream created; 'stream_freed'= Stream freed; 'INITIAL_rx'=
+          INITIAL receive; 'INITIAL_tx'= INITIAL send; 'RTT_0_rx'= RTT_0 receive;
+          'RTT_0_tx'= RTT_0 send; 'HANDSHAKE_rx'= HANDSHAKE receive; 'HANDSHAKE_tx'=
+          HANDSHAKE send; 'RETRY_rx'= RETRY receive; 'RETRY_tx'= RETRY send; 'VER_rx'=
+          Version receive; 'VER_tx'= Version send; 'RTT_updated'= RTT updated;
+          'Needs_ack'= Needs ACK; 'Delayed_ack'= Delayed ACK; 'Packet_rx'= Packet
+          receive; 'Packet_tx'= Packet send; 'Packet_tx_failed'= Packet send failed;
+          'Congest_wnd_inc'= Congestion window increase; 'Congest_wnd_dec'= Congestion
+          window decrease; 'No_congest_wnd'= No congestion window; 'Burst_limited'= Burst
+          limited; 'Packet_loop_limited'= Packet loop limited; 'Receive_wnd_limited'=
+          Receive window limited; 'Parse_error'= Parse error; 'Error_close'= Conn closed
+          of error; 'Unknown_scid'= Unknown scid; 'Dcid_mismatch'= Dcid mismatch;
           'Packet_too_short'= Packet_too_short; 'Invalid_version'= Invalid version;
           'Invalid_Packet'= Invalid packet; 'Invalid_conn_match'= Invalid conn match;
           'Invalid_session_packet'= Invalid session packet; 'Stateless_reset'= Stateless
@@ -166,15 +171,15 @@ options:
           Cannot_insert_srt; 'Cannot_retire_cid'= Cannot_retire_cid; 'No_next_scid'=
           No_next_scid; 'Token_len_too_long'= Token_len_too_long;
           'Server_receive_new_token'= Server_receive_new_token; 'Zero_frame_packet'=
-          Zero_frame_packet; 'Err_frame_dec1'= Err_frame_dec1; 'Err_frame_dec'=
-          Err_frame_dec; 'Err_frame_decb'= Err_frame_decb; 'Err_frame_final_size'=
-          Err_frame_final_size; 'Err_flow_control'= Err_flow_control;
-          'Err_protocol_violation'= Err_protocol_violation; 'Server_rx_handshake_done'=
-          Server_rx_handshake_done;"
+          Zero_frame_packet;"
                 type: str
             counters2:
                 description:
-                - "'Pkt_acked_failed'= Pkt_acked_failed; 'Pn_insert_failed'= Pn insert failed;
+                - "'Err_frame_dec1'= Err_frame_dec1; 'Err_frame_dec'= Err_frame_dec;
+          'Err_frame_decb'= Err_frame_decb; 'Err_frame_final_size'= Err_frame_final_size;
+          'Err_flow_control'= Err_flow_control; 'Err_protocol_violation'=
+          Err_protocol_violation; 'Server_rx_handshake_done'= Server_rx_handshake_done;
+          'Pkt_acked_failed'= Pkt_acked_failed; 'Pn_insert_failed'= Pn insert failed;
           'Pn_delete_failed'= Pn delete failed; 'Acked_packet_freed'= Acked packet freed;
           'Tx_buffer_enq'= Tx buffer enqueued; 'Tx_buffer_deq'= Tx buffer dequeued;
           'App_buffer_enq'= App buffer enqueued; 'App_buffer_deq'= App buffer dequeued;
@@ -269,6 +274,14 @@ options:
                 description:
                 - "Q connection freed"
                 type: str
+            local_bi_stream_current:
+                description:
+                - "Current local bi-stream"
+                type: str
+            remote_bi_stream_current:
+                description:
+                - "Current remote bi-stream"
+                type: str
             local_bi_stream_created:
                 description:
                 - "Local bi-stream created"
@@ -284,6 +297,14 @@ options:
             remote_bi_stream_closed:
                 description:
                 - "Remote bi-stream closed"
+                type: str
+            local_uni_stream_current:
+                description:
+                - "Current local uni-stream"
+                type: str
+            remote_uni_stream_current:
+                description:
+                - "Current remote uni-stream"
                 type: str
             local_uni_stream_created:
                 description:
@@ -304,6 +325,10 @@ options:
             stream_error:
                 description:
                 - "Stream error"
+                type: str
+            stream_fail_to_insert:
+                description:
+                - "Stream fail to insert"
                 type: str
             padding_frame_rx:
                 description:
@@ -592,6 +617,10 @@ options:
             stream_not_send:
                 description:
                 - "Stream not send"
+                type: str
+            stream_stop_send:
+                description:
+                - "Stream stop send"
                 type: str
             stream_created:
                 description:
@@ -1134,26 +1163,26 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'client_conn_attempted', 'client_conn_handshake', 'client_conn_created', 'client_conn_local_closed', 'client_conn_remote_closed', 'client_conn_failed', 'server_conn_attempted', 'server_conn_handshake', 'server_conn_created', 'server_conn_local_closed', 'server_conn_remote_closed', 'server_conn_failed', 'q_conn_created',
-                    'q_conn_freed', 'local_bi_stream_created', 'remote_bi_stream_created', 'local_bi_stream_closed', 'remote_bi_stream_closed', 'local_uni_stream_created', 'remote_uni_stream_created', 'local_uni_stream_closed', 'remote_uni_stream_closed', 'stream_error', 'padding_frame_rx', 'padding_frame_tx', 'ping_frame_rx', 'ping_frame_tx',
-                    'ack_frame_rx', 'ack_frame_tx', 'ack_ecn_frame_rx', 'ack_ecn_frame_tx', 'stream_rst_frame_rx', 'stream_rst_frame_tx', 'stream_stop_frame_rx', 'stream_stop_frame_tx', 'crypto_frame_rx', 'crypto_frame_tx', 'new_token_frame_rx', 'new_token_frame_tx', 'stream_frame_rx', 'stream_frame_tx', 'stream_09_frame_rx', 'stream_09_frame_tx',
-                    'stream_0a_frame_rx', 'stream_0a_frame_tx', 'stream_0b_frame_rx', 'stream_0b_frame_tx', 'stream_0c_frame_rx', 'stream_0c_frame_tx', 'stream_0d_frame_rx', 'stream_0d_frame_tx', 'stream_0e_frame_rx', 'stream_0e_frame_tx', 'stream_0f_frame_rx', 'stream_0f_frame_tx', 'max_data_frame_rx', 'max_data_frame_tx',
-                    'max_stream_data_frame_rx', 'max_stream_data_frame_tx', 'max_bi_stream_frame_rx', 'max_bi_stream_frame_tx', 'max_uni_stream_frame_rx', 'max_uni_stream_frame_tx', 'data_blocked_frame_rx', 'data_blocked_frame_tx', 'stream_data_blocked_frame_rx', 'stream_data_blocked_frame_tx', 'bi_stream_data_blocked_frame_rx',
-                    'bi_stream_data_blocked_frame_tx', 'uni_stream_data_blocked_frame_rx', 'uni_stream_data_blocked_frame_tx', 'new_conn_id_frame_rx', 'new_conn_id_frame_tx', 'retire_conn_id_frame_rx', 'retire_conn_id_frame_tx', 'path_challenge_frame_rx', 'path_challenge_frame_tx', 'path_response_frame_rx', 'path_response_frame_tx',
-                    'conn_close_frame_rx', 'conn_close_frame_tx', 'app_conn_close_frame_rx', 'app_conn_close_frame_tx', 'handshake_done_frame_rx', 'handshake_done_frame_tx', 'unknown_frame', 'stream_fin_receive', 'stream_fin_up', 'stream_fin_down', 'stream_fin_send', 'stream_congest', 'stream_open', 'stream_pause_data', 'stream_resume_data',
-                    'stream_not_send', 'stream_created', 'stream_freed', 'INITIAL_rx', 'INITIAL_tx', 'RTT_0_rx', 'RTT_0_tx', 'HANDSHAKE_rx', 'HANDSHAKE_tx', 'RETRY_rx', 'RETRY_tx', 'VER_rx', 'VER_tx', 'RTT_updated', 'Needs_ack', 'Delayed_ack', 'Packet_rx', 'Packet_tx', 'Packet_tx_failed', 'Congest_wnd_inc', 'Congest_wnd_dec', 'No_congest_wnd',
-                    'Burst_limited', 'Packet_loop_limited', 'Receive_wnd_limited', 'Parse_error', 'Error_close', 'Unknown_scid', 'Dcid_mismatch', 'Packet_too_short', 'Invalid_version', 'Invalid_Packet', 'Invalid_conn_match', 'Invalid_session_packet', 'Stateless_reset', 'Packet_lost', 'Packet_drop', 'Packet_retransmit', 'Packet_out_of_order',
-                    'Quic_packet_drop', 'Encode_error', 'Decode_failed', 'Decode_stream_error', 'Exceed_flow_control', 'Crypto_stream_not_found', 'Exceed_max_stream_id', 'Stream_id_mismatch', 'Ack_delay_huge', 'Ack_rng_huge_1', 'Ack_rng_huge_2', 'Ack_rng_huge_3', 'Too_noisy_fuzzing', 'Max_stream_too_big', 'Stream_blocked', 'New_conn_id_len_zero',
-                    'New_conn_id_len_non_zero', 'Illegal_stream_len', 'Illegal_reason_len', 'Illegal_seq', 'Illegal_rpt', 'Illegal_len', 'Illegal_token_len', 'Cannot_insert_cid', 'Cannot_insert_srt', 'Cannot_retire_cid', 'No_next_scid', 'Token_len_too_long', 'Server_receive_new_token', 'Zero_frame_packet', 'Err_frame_dec1', 'Err_frame_dec',
-                    'Err_frame_decb', 'Err_frame_final_size', 'Err_flow_control', 'Err_protocol_violation', 'Server_rx_handshake_done'
+                    'q_conn_freed', 'local_bi_stream_current', 'remote_bi_stream_current', 'local_bi_stream_created', 'remote_bi_stream_created', 'local_bi_stream_closed', 'remote_bi_stream_closed', 'local_uni_stream_current', 'remote_uni_stream_current', 'local_uni_stream_created', 'remote_uni_stream_created', 'local_uni_stream_closed',
+                    'remote_uni_stream_closed', 'stream_error', 'stream_fail_to_insert', 'padding_frame_rx', 'padding_frame_tx', 'ping_frame_rx', 'ping_frame_tx', 'ack_frame_rx', 'ack_frame_tx', 'ack_ecn_frame_rx', 'ack_ecn_frame_tx', 'stream_rst_frame_rx', 'stream_rst_frame_tx', 'stream_stop_frame_rx', 'stream_stop_frame_tx', 'crypto_frame_rx',
+                    'crypto_frame_tx', 'new_token_frame_rx', 'new_token_frame_tx', 'stream_frame_rx', 'stream_frame_tx', 'stream_09_frame_rx', 'stream_09_frame_tx', 'stream_0a_frame_rx', 'stream_0a_frame_tx', 'stream_0b_frame_rx', 'stream_0b_frame_tx', 'stream_0c_frame_rx', 'stream_0c_frame_tx', 'stream_0d_frame_rx', 'stream_0d_frame_tx',
+                    'stream_0e_frame_rx', 'stream_0e_frame_tx', 'stream_0f_frame_rx', 'stream_0f_frame_tx', 'max_data_frame_rx', 'max_data_frame_tx', 'max_stream_data_frame_rx', 'max_stream_data_frame_tx', 'max_bi_stream_frame_rx', 'max_bi_stream_frame_tx', 'max_uni_stream_frame_rx', 'max_uni_stream_frame_tx', 'data_blocked_frame_rx',
+                    'data_blocked_frame_tx', 'stream_data_blocked_frame_rx', 'stream_data_blocked_frame_tx', 'bi_stream_data_blocked_frame_rx', 'bi_stream_data_blocked_frame_tx', 'uni_stream_data_blocked_frame_rx', 'uni_stream_data_blocked_frame_tx', 'new_conn_id_frame_rx', 'new_conn_id_frame_tx', 'retire_conn_id_frame_rx',
+                    'retire_conn_id_frame_tx', 'path_challenge_frame_rx', 'path_challenge_frame_tx', 'path_response_frame_rx', 'path_response_frame_tx', 'conn_close_frame_rx', 'conn_close_frame_tx', 'app_conn_close_frame_rx', 'app_conn_close_frame_tx', 'handshake_done_frame_rx', 'handshake_done_frame_tx', 'unknown_frame', 'stream_fin_receive',
+                    'stream_fin_up', 'stream_fin_down', 'stream_fin_send', 'stream_congest', 'stream_open', 'stream_pause_data', 'stream_resume_data', 'stream_not_send', 'stream_stop_send', 'stream_created', 'stream_freed', 'INITIAL_rx', 'INITIAL_tx', 'RTT_0_rx', 'RTT_0_tx', 'HANDSHAKE_rx', 'HANDSHAKE_tx', 'RETRY_rx', 'RETRY_tx', 'VER_rx',
+                    'VER_tx', 'RTT_updated', 'Needs_ack', 'Delayed_ack', 'Packet_rx', 'Packet_tx', 'Packet_tx_failed', 'Congest_wnd_inc', 'Congest_wnd_dec', 'No_congest_wnd', 'Burst_limited', 'Packet_loop_limited', 'Receive_wnd_limited', 'Parse_error', 'Error_close', 'Unknown_scid', 'Dcid_mismatch', 'Packet_too_short', 'Invalid_version',
+                    'Invalid_Packet', 'Invalid_conn_match', 'Invalid_session_packet', 'Stateless_reset', 'Packet_lost', 'Packet_drop', 'Packet_retransmit', 'Packet_out_of_order', 'Quic_packet_drop', 'Encode_error', 'Decode_failed', 'Decode_stream_error', 'Exceed_flow_control', 'Crypto_stream_not_found', 'Exceed_max_stream_id', 'Stream_id_mismatch',
+                    'Ack_delay_huge', 'Ack_rng_huge_1', 'Ack_rng_huge_2', 'Ack_rng_huge_3', 'Too_noisy_fuzzing', 'Max_stream_too_big', 'Stream_blocked', 'New_conn_id_len_zero', 'New_conn_id_len_non_zero', 'Illegal_stream_len', 'Illegal_reason_len', 'Illegal_seq', 'Illegal_rpt', 'Illegal_len', 'Illegal_token_len', 'Cannot_insert_cid',
+                    'Cannot_insert_srt', 'Cannot_retire_cid', 'No_next_scid', 'Token_len_too_long', 'Server_receive_new_token', 'Zero_frame_packet'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'Pkt_acked_failed', 'Pn_insert_failed', 'Pn_delete_failed', 'Acked_packet_freed', 'Tx_buffer_enq', 'Tx_buffer_deq', 'App_buffer_enq', 'App_buffer_deq', 'App_buffer_queue_full', 'Iov_buffer_bind', 'Iov_buffer_unbind', 'Iov_buffer_dup', 'Iov_alloc_len', 'Iov_IO', 'Iov_System', 'No_tx_queue', 'wsocket_created', 'wsocket_closed',
-                    'a10_socket_created', 'a10_socket_closed', 'No_a10_socket', 'No_other_side_socket', 'No_w_engine', 'No_w_socket', 'on_ld_timeout', 'idle_alarm', 'ack_alarm', 'close_alarm', 'delay_alarm', 'quic_malloc', 'quic_free', 'quic_malloc_failure', 'quick_malloc_failure', 'quic_lb', 'cid_zero', 'cid_cpu_hash', 'invalid_cid_sig',
-                    'key_update_rx', 'key_update_tx'
+                    'Err_frame_dec1', 'Err_frame_dec', 'Err_frame_decb', 'Err_frame_final_size', 'Err_flow_control', 'Err_protocol_violation', 'Server_rx_handshake_done', 'Pkt_acked_failed', 'Pn_insert_failed', 'Pn_delete_failed', 'Acked_packet_freed', 'Tx_buffer_enq', 'Tx_buffer_deq', 'App_buffer_enq', 'App_buffer_deq', 'App_buffer_queue_full',
+                    'Iov_buffer_bind', 'Iov_buffer_unbind', 'Iov_buffer_dup', 'Iov_alloc_len', 'Iov_IO', 'Iov_System', 'No_tx_queue', 'wsocket_created', 'wsocket_closed', 'a10_socket_created', 'a10_socket_closed', 'No_a10_socket', 'No_other_side_socket', 'No_w_engine', 'No_w_socket', 'on_ld_timeout', 'idle_alarm', 'ack_alarm', 'close_alarm',
+                    'delay_alarm', 'quic_malloc', 'quic_free', 'quic_malloc_failure', 'quick_malloc_failure', 'quic_lb', 'cid_zero', 'cid_cpu_hash', 'invalid_cid_sig', 'key_update_rx', 'key_update_tx'
                     ]
                 }
             },
@@ -1321,6 +1350,12 @@ def get_argspec():
             'q_conn_freed': {
                 'type': 'str',
                 },
+            'local_bi_stream_current': {
+                'type': 'str',
+                },
+            'remote_bi_stream_current': {
+                'type': 'str',
+                },
             'local_bi_stream_created': {
                 'type': 'str',
                 },
@@ -1331,6 +1366,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'remote_bi_stream_closed': {
+                'type': 'str',
+                },
+            'local_uni_stream_current': {
+                'type': 'str',
+                },
+            'remote_uni_stream_current': {
                 'type': 'str',
                 },
             'local_uni_stream_created': {
@@ -1346,6 +1387,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'stream_error': {
+                'type': 'str',
+                },
+            'stream_fail_to_insert': {
                 'type': 'str',
                 },
             'padding_frame_rx': {
@@ -1562,6 +1606,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'stream_not_send': {
+                'type': 'str',
+                },
+            'stream_stop_send': {
                 'type': 'str',
                 },
             'stream_created': {

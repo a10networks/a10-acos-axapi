@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_slb_hm_dplane_entry
+module: a10_slb_hm_dplane
 description:
-    - Show SLB HM Dplane entries
+    - Configure hm-dplane
 author: A10 Networks
 options:
     state:
@@ -68,29 +68,34 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'curr_entries'= Current Entry Count; 'total_created'= Total Entry
-          Created; 'total_inserted'= Total Entry Inserted; 'total_ready_to_free'= Total
-          Entry Ready To Free; 'total_freed'= Total Entry Freed;
-          'err_entry_create_failed'= Entry Creation Failure; 'err_entry_create_oom'=
-          Entry Creation Out of Memory; 'err_entry_insert_failed'= Entry Insert Failed;
-          'total_tcp_err'= Total TCP errors in health check sent out;
-          'err_smart_nat_alloc'= Error creating Smart NAT Instance;
-          'err_smart_nat_port_alloc'= Error obtaining Smart NAT source port;
+                - "'all'= all; 'curr_entries'= Current HM Entries; 'total_created'= Total HM
+          Entries Created; 'total_inserted'= Total HM entries inserted;
+          'total_ready_to_free'= Total HM entries ready to free; 'total_freed'= Total HM
+          entries freed; 'err_entry_create_failed'= Entry Creation Failure;
+          'err_entry_create_oom'= Entry creation out of memory;
+          'err_entry_insert_failed'= Entry insert failed; 'total_tcp_err'= Total TCP
+          errors in health-checks sent; 'err_smart_nat_alloc'= Error creating smart-nat
+          instance; 'err_smart_nat_port_alloc'= Error obtaining smart-nat source port;
           'err_l4_sess_alloc'= Error allocating L4 session for HM;
-          'err_hm_tcp_conn_send'= Error in initiating TCP connection for HM;
-          'hm_tcp_conn_sent'= TCP connection sent for HM; 'entry_deleted'= Entry Deleted;
-          'err_entry_create_vip_failed'= Error in creating HM internal VIP;
+          'err_hm_tcp_conn_sent'= Error in initiating TCP connection for HM;
+          'hm_tcp_conn_sent'= Total TCP connections sent for HM; 'entry_deleted'= Entry
+          deleted; 'err_entry_create_vip_failed'= Error in creating HM internal VIP;
           'total_match_resp_code'= Total HTTP received response with match response code;
           'total_match_default_resp_code'= Total HTTP received response with match 200
-          response code; 'total_maintenance_received'= Total HTTP received response with
-          match 200 response code; 'total_wrong_status_received'= Total HTTP received
-          response with wrong response code; 'err_no_hm_entry'= Error no HM entry found;
+          response code; 'total_maintenance_received'= Total maintenace response
+          received; 'total_wrong_status_received'= Total HTTP received response with
+          wrong response code; 'err_no_hm_entry'= Error no HM entry found;
           'err_ssl_cert_name_mismatch'= Error SSL cert name mismatch;
           'err_server_syn_timeout'= Error SSL server SYN timeout; 'err_http2_callback'=
-          Error SSL server SYN timeout; 'err_l7_sess_process_tcp_estab_failed'= L7
-          session process TCP estab. failed; 'err_l7_sess_process_tcp_data_failed'= L7
-          session process TCP data failed; 'err_http2_ver_mismatch'= Error http2 version
-          mismatch;"
+          Error HTTP2 callback; 'err_l7_sess_process_tcp_estab_failed'= L7 session
+          process TCP established failed; 'err_l7_sess_process_tcp_data_failed'= L7
+          session process TCP data failed; 'err_http2_ver_mismatch'= Error HTTP2 version
+          mismatch; 'smart_nat_alloc'= Total smart-nat allocation successful;
+          'smart_nat_release'= Total smart-nat release successful;
+          'smart_nat_alloc_failed'= Total smart-nat allocation failed;
+          'smart_nat_release_failed'= Total smart-nat release failed;
+          'total_server_quic_conn'= Total start server QUIC connections;
+          'total_server_quic_conn_err'= Total start server QUIC connections error;"
                 type: str
     stats:
         description:
@@ -100,23 +105,23 @@ options:
         suboptions:
             curr_entries:
                 description:
-                - "Current Entry Count"
+                - "Current HM Entries"
                 type: str
             total_created:
                 description:
-                - "Total Entry Created"
+                - "Total HM Entries Created"
                 type: str
             total_inserted:
                 description:
-                - "Total Entry Inserted"
+                - "Total HM entries inserted"
                 type: str
             total_ready_to_free:
                 description:
-                - "Total Entry Ready To Free"
+                - "Total HM entries ready to free"
                 type: str
             total_freed:
                 description:
-                - "Total Entry Freed"
+                - "Total HM entries freed"
                 type: str
             err_entry_create_failed:
                 description:
@@ -124,39 +129,39 @@ options:
                 type: str
             err_entry_create_oom:
                 description:
-                - "Entry Creation Out of Memory"
+                - "Entry creation out of memory"
                 type: str
             err_entry_insert_failed:
                 description:
-                - "Entry Insert Failed"
+                - "Entry insert failed"
                 type: str
             total_tcp_err:
                 description:
-                - "Total TCP errors in health check sent out"
+                - "Total TCP errors in health-checks sent"
                 type: str
             err_smart_nat_alloc:
                 description:
-                - "Error creating Smart NAT Instance"
+                - "Error creating smart-nat instance"
                 type: str
             err_smart_nat_port_alloc:
                 description:
-                - "Error obtaining Smart NAT source port"
+                - "Error obtaining smart-nat source port"
                 type: str
             err_l4_sess_alloc:
                 description:
                 - "Error allocating L4 session for HM"
                 type: str
-            err_hm_tcp_conn_send:
+            err_hm_tcp_conn_sent:
                 description:
                 - "Error in initiating TCP connection for HM"
                 type: str
             hm_tcp_conn_sent:
                 description:
-                - "TCP connection sent for HM"
+                - "Total TCP connections sent for HM"
                 type: str
             entry_deleted:
                 description:
-                - "Entry Deleted"
+                - "Entry deleted"
                 type: str
             err_entry_create_vip_failed:
                 description:
@@ -172,7 +177,7 @@ options:
                 type: str
             total_maintenance_received:
                 description:
-                - "Total HTTP received response with match 200 response code"
+                - "Total maintenace response received"
                 type: str
             total_wrong_status_received:
                 description:
@@ -192,11 +197,11 @@ options:
                 type: str
             err_http2_callback:
                 description:
-                - "Error SSL server SYN timeout"
+                - "Error HTTP2 callback"
                 type: str
             err_l7_sess_process_tcp_estab_failed:
                 description:
-                - "L7 session process TCP estab. failed"
+                - "L7 session process TCP established failed"
                 type: str
             err_l7_sess_process_tcp_data_failed:
                 description:
@@ -204,7 +209,31 @@ options:
                 type: str
             err_http2_ver_mismatch:
                 description:
-                - "Error http2 version mismatch"
+                - "Error HTTP2 version mismatch"
+                type: str
+            smart_nat_alloc:
+                description:
+                - "Total smart-nat allocation successful"
+                type: str
+            smart_nat_release:
+                description:
+                - "Total smart-nat release successful"
+                type: str
+            smart_nat_alloc_failed:
+                description:
+                - "Total smart-nat allocation failed"
+                type: str
+            smart_nat_release_failed:
+                description:
+                - "Total smart-nat release failed"
+                type: str
+            total_server_quic_conn:
+                description:
+                - "Total start server QUIC connections"
+                type: str
+            total_server_quic_conn_err:
+                description:
+                - "Total start server QUIC connections error"
                 type: str
 
 '''
@@ -290,9 +319,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'curr_entries', 'total_created', 'total_inserted', 'total_ready_to_free', 'total_freed', 'err_entry_create_failed', 'err_entry_create_oom', 'err_entry_insert_failed', 'total_tcp_err', 'err_smart_nat_alloc', 'err_smart_nat_port_alloc', 'err_l4_sess_alloc', 'err_hm_tcp_conn_send', 'hm_tcp_conn_sent', 'entry_deleted',
+                    'all', 'curr_entries', 'total_created', 'total_inserted', 'total_ready_to_free', 'total_freed', 'err_entry_create_failed', 'err_entry_create_oom', 'err_entry_insert_failed', 'total_tcp_err', 'err_smart_nat_alloc', 'err_smart_nat_port_alloc', 'err_l4_sess_alloc', 'err_hm_tcp_conn_sent', 'hm_tcp_conn_sent', 'entry_deleted',
                     'err_entry_create_vip_failed', 'total_match_resp_code', 'total_match_default_resp_code', 'total_maintenance_received', 'total_wrong_status_received', 'err_no_hm_entry', 'err_ssl_cert_name_mismatch', 'err_server_syn_timeout', 'err_http2_callback', 'err_l7_sess_process_tcp_estab_failed', 'err_l7_sess_process_tcp_data_failed',
-                    'err_http2_ver_mismatch'
+                    'err_http2_ver_mismatch', 'smart_nat_alloc', 'smart_nat_release', 'smart_nat_alloc_failed', 'smart_nat_release_failed', 'total_server_quic_conn', 'total_server_quic_conn_err'
                     ]
                 }
             },
@@ -334,7 +363,7 @@ def get_argspec():
             'err_l4_sess_alloc': {
                 'type': 'str',
                 },
-            'err_hm_tcp_conn_send': {
+            'err_hm_tcp_conn_sent': {
                 'type': 'str',
                 },
             'hm_tcp_conn_sent': {
@@ -378,6 +407,24 @@ def get_argspec():
                 },
             'err_http2_ver_mismatch': {
                 'type': 'str',
+                },
+            'smart_nat_alloc': {
+                'type': 'str',
+                },
+            'smart_nat_release': {
+                'type': 'str',
+                },
+            'smart_nat_alloc_failed': {
+                'type': 'str',
+                },
+            'smart_nat_release_failed': {
+                'type': 'str',
+                },
+            'total_server_quic_conn': {
+                'type': 'str',
+                },
+            'total_server_quic_conn_err': {
+                'type': 'str',
                 }
             }
         })
@@ -387,7 +434,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/hm-dplane/entry"
+    url_base = "/axapi/v3/slb/hm-dplane"
 
     f_dict = {}
 
@@ -397,7 +444,7 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/hm-dplane/entry"
+    url_base = "/axapi/v3/slb/hm-dplane"
 
     f_dict = {}
 
@@ -411,13 +458,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["entry"].items():
+    for k, v in payload["hm-dplane"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["entry"].get(k) != v:
+        if config_changes["hm-dplane"].get(k) != v:
             change_results["changed"] = True
-            config_changes["entry"][k] = v
+            config_changes["hm-dplane"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -443,7 +490,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("entry", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("hm-dplane", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -533,18 +580,18 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["entry"] if info != "NotFound" else info
+                result["acos_info"] = info["hm-dplane"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["entry-list"] if info != "NotFound" else info
+                result["acos_info"] = info["hm-dplane-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["entry"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["hm-dplane"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

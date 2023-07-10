@@ -473,6 +473,10 @@ options:
                 description:
                 - "Field total_sessions"
                 type: int
+            dns_a_record_list:
+                description:
+                - "Field dns_a_record_list"
+                type: list
             service_port:
                 description:
                 - "Port number of the service"
@@ -1113,6 +1117,15 @@ def get_argspec():
             'total_sessions': {
                 'type': 'int',
                 },
+            'dns_a_record_list': {
+                'type': 'list',
+                'ip': {
+                    'type': 'str',
+                    },
+                'rec_ttl': {
+                    'type': 'int',
+                    }
+                },
             'service_port': {
                 'type': 'int',
                 'required': True,
@@ -1131,6 +1144,12 @@ def get_argspec():
                     'type': 'dict',
                     'last_server': {
                         'type': 'str',
+                        },
+                    'hits': {
+                        'type': 'int',
+                        },
+                    'priority': {
+                        'type': 'int',
                         }
                     }
                 },
@@ -1144,6 +1163,9 @@ def get_argspec():
                     'type': 'dict',
                     'last_server': {
                         'type': 'str',
+                        },
+                    'hits': {
+                        'type': 'int',
                         }
                     }
                 }

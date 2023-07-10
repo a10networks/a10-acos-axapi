@@ -90,6 +90,14 @@ options:
                 description:
                 - "Field matching_rules_total"
                 type: int
+            show_all:
+                description:
+                - "Field show_all"
+                type: bool
+            vlan:
+                description:
+                - "Field vlan"
+                type: int
             src_ipv4_addr:
                 description:
                 - "Field src_ipv4_addr"
@@ -106,38 +114,6 @@ options:
                 description:
                 - "Field dst_ipv6_addr"
                 type: str
-            src_port:
-                description:
-                - "Field src_port"
-                type: int
-            dst_port:
-                description:
-                - "Field dst_port"
-                type: int
-            vlan:
-                description:
-                - "Field vlan"
-                type: int
-            ethernet:
-                description:
-                - "Field ethernet"
-                type: int
-            lif:
-                description:
-                - "Field lif"
-                type: int
-            trunk:
-                description:
-                - "Field trunk"
-                type: int
-            tunnel:
-                description:
-                - "Field tunnel"
-                type: int
-            ve:
-                description:
-                - "Field ve"
-                type: int
             tcp:
                 description:
                 - "Field tcp"
@@ -150,14 +126,18 @@ options:
                 description:
                 - "Field icmp"
                 type: bool
+            src_port:
+                description:
+                - "Field src_port"
+                type: int
+            dst_port:
+                description:
+                - "Field dst_port"
+                type: int
             icmp_type:
                 description:
                 - "Field icmp_type"
                 type: int
-            show_all:
-                description:
-                - "Field show_all"
-                type: bool
 
 '''
 
@@ -262,6 +242,12 @@ def get_argspec():
             'matching_rules_total': {
                 'type': 'int',
                 },
+            'show_all': {
+                'type': 'bool',
+                },
+            'vlan': {
+                'type': 'int',
+                },
             'src_ipv4_addr': {
                 'type': 'str',
                 },
@@ -274,30 +260,6 @@ def get_argspec():
             'dst_ipv6_addr': {
                 'type': 'str',
                 },
-            'src_port': {
-                'type': 'int',
-                },
-            'dst_port': {
-                'type': 'int',
-                },
-            'vlan': {
-                'type': 'int',
-                },
-            'ethernet': {
-                'type': 'int',
-                },
-            'lif': {
-                'type': 'int',
-                },
-            'trunk': {
-                'type': 'int',
-                },
-            'tunnel': {
-                'type': 'int',
-                },
-            've': {
-                'type': 'int',
-                },
             'tcp': {
                 'type': 'bool',
                 },
@@ -307,11 +269,14 @@ def get_argspec():
             'icmp': {
                 'type': 'bool',
                 },
-            'icmp_type': {
+            'src_port': {
                 'type': 'int',
                 },
-            'show_all': {
-                'type': 'bool',
+            'dst_port': {
+                'type': 'int',
+                },
+            'icmp_type': {
+                'type': 'int',
                 }
             }
         })

@@ -236,6 +236,14 @@ options:
                 description:
                 - "Wait for web category to be resolved before taking proxy decision"
                 type: bool
+            forward_http_connect_to_icap:
+                description:
+                - "Forward HTTP CONNECT request to ICAP server"
+                type: bool
+            reqmod_icap:
+                description:
+                - "ICAP reqmod template (Reqmod ICAP Template Name)"
+                type: str
             filtering:
                 description:
                 - "Field filtering"
@@ -599,6 +607,12 @@ def get_argspec():
                 },
             'require_web_category': {
                 'type': 'bool',
+                },
+            'forward_http_connect_to_icap': {
+                'type': 'bool',
+                },
+            'reqmod_icap': {
+                'type': 'str',
                 },
             'filtering': {
                 'type': 'list',

@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ddos_protection_hw_blocking
+module: a10_visibility_packet_capture_object_templates_smtp_vport_tmpl_trigger_stats_severity
 description:
-    - Leverage hardware to drop blacklisted packets
+    - Configure triggers severity for system object stats
 author: A10 Networks
 options:
     state:
@@ -55,16 +55,50 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    hw_blocking_enable:
+    smtp_vport_tmpl_name:
         description:
-        - "Enable hardware blacklist blocking for src or dst default entries (default
-          disabled)"
+        - Key to identify parent object
+        type: str
+        required: True
+    error:
+        description:
+        - "Enable packet capture on all error counters (Default disabled)"
         type: bool
         required: False
-    hw_blocking_threshold_limit:
+    error_alert:
         description:
-        - "Threshold to initiate hardware blocking (default 10000)"
-        type: int
+        - "Enable packet capture on all alert error counters (Default disabled)"
+        type: bool
+        required: False
+    error_warning:
+        description:
+        - "Enable packet capture on all warning error counters (Default disabled)"
+        type: bool
+        required: False
+    error_critical:
+        description:
+        - "Enable packet capture on all critical error counters (Default disabled)"
+        type: bool
+        required: False
+    drop:
+        description:
+        - "Enable packet capture on all drop counters (Default disabled)"
+        type: bool
+        required: False
+    drop_alert:
+        description:
+        - "Enable packet capture on all alert drop counters (Default disabled)"
+        type: bool
+        required: False
+    drop_warning:
+        description:
+        - "Enable packet capture on all warning drop counters (Default disabled)"
+        type: bool
+        required: False
+    drop_critical:
+        description:
+        - "Enable packet capture on all critical drop counters (Default disabled)"
+        type: bool
         required: False
     uuid:
         description:
@@ -125,7 +159,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["hw_blocking_enable", "hw_blocking_threshold_limit", "uuid", ]
+AVAILABLE_PROPERTIES = ["drop", "drop_alert", "drop_critical", "drop_warning", "error", "error_alert", "error_critical", "error_warning", "uuid", ]
 
 
 def get_default_argspec():
@@ -145,16 +179,22 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'hw_blocking_enable': {'type': 'bool', }, 'hw_blocking_threshold_limit': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'error': {'type': 'bool', }, 'error_alert': {'type': 'bool', }, 'error_warning': {'type': 'bool', }, 'error_critical': {'type': 'bool', }, 'drop': {'type': 'bool', }, 'drop_alert': {'type': 'bool', }, 'drop_warning': {'type': 'bool', }, 'drop_critical': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    # Parent keys
+    rv.update(dict(smtp_vport_tmpl_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ddos/protection/hw-blocking"
+    url_base = "/axapi/v3/visibility/packet-capture/object-templates/smtp-vport-tmpl/{smtp_vport_tmpl_name}/trigger-stats-severity"
 
     f_dict = {}
+    if '/' in module.params["smtp_vport_tmpl_name"]:
+        f_dict["smtp_vport_tmpl_name"] = module.params["smtp_vport_tmpl_name"].replace("/", "%2F")
+    else:
+        f_dict["smtp_vport_tmpl_name"] = module.params["smtp_vport_tmpl_name"]
 
     return url_base.format(**f_dict)
 
@@ -162,9 +202,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ddos/protection/hw-blocking"
+    url_base = "/axapi/v3/visibility/packet-capture/object-templates/smtp-vport-tmpl/{smtp_vport_tmpl_name}/trigger-stats-severity"
 
     f_dict = {}
+    f_dict["smtp_vport_tmpl_name"] = module.params["smtp_vport_tmpl_name"]
 
     return url_base.format(**f_dict)
 
@@ -176,13 +217,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["hw-blocking"].items():
+    for k, v in payload["trigger-stats-severity"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["hw-blocking"].get(k) != v:
+        if config_changes["trigger-stats-severity"].get(k) != v:
             change_results["changed"] = True
-            config_changes["hw-blocking"][k] = v
+            config_changes["trigger-stats-severity"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -208,7 +249,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("hw-blocking", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-severity", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -298,13 +339,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["hw-blocking"] if info != "NotFound" else info
+                result["acos_info"] = info["trigger-stats-severity"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["hw-blocking-list"] if info != "NotFound" else info
+                result["acos_info"] = info["trigger-stats-severity-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

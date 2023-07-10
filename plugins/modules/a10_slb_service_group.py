@@ -98,6 +98,12 @@ options:
           odd/even hash based of client src-ip;"
         type: str
         required: False
+    lrprr_method:
+        description:
+        - "'service-least-request-pseudo-round-robin'= Least request on service port level
+          and select the oldest node for sub-select;"
+        type: str
+        required: False
     lc_method:
         description:
         - "'least-connection'= Least connection on server level; 'service-least-
@@ -653,7 +659,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "backup_server_event_log", "conn_rate", "conn_rate_duration", "conn_rate_grace_period", "conn_rate_log", "conn_rate_revert_duration", "conn_revert_rate", "extended_stats", "health_check", "health_check_disable", "l4_session_revert_duration", "l4_session_usage", "l4_session_usage_duration", "l4_session_usage_grace_period",
-    "l4_session_usage_log", "l4_session_usage_revert_rate", "lb_method", "lc_method", "lclb_method", "link_probe_template", "llb_method", "member_list", "min_active_member", "min_active_member_action", "name", "oper", "persist_scoring", "priorities", "priority_affinity", "protocol", "pseudo_round_robin", "report_delay", "reset",
+    "l4_session_usage_log", "l4_session_usage_revert_rate", "lb_method", "lc_method", "lclb_method", "link_probe_template", "llb_method", "lrprr_method", "member_list", "min_active_member", "min_active_member_action", "name", "oper", "persist_scoring", "priorities", "priority_affinity", "protocol", "pseudo_round_robin", "report_delay", "reset",
     "reset_on_server_selection_fail", "reset_priority_affinity", "rpt_ext_server", "sample_rsp_time", "sampling_enable", "shared_partition_policy_template", "shared_partition_svcgrp_health_check", "stateless_auto_switch", "stateless_lb_method", "stateless_lb_method2", "stats", "stats_data_action", "strict_select", "svcgrp_health_check_shared",
     "template_policy", "template_policy_shared", "template_port", "top_fastest", "top_slowest", "traffic_replication_mirror", "traffic_replication_mirror_da_repl", "traffic_replication_mirror_ip_repl", "traffic_replication_mirror_sa_da_repl", "traffic_replication_mirror_sa_repl", "user_tag", "uuid",
     ]
@@ -700,6 +706,10 @@ def get_argspec():
         'lb_method': {
             'type': 'str',
             'choices': ['dst-ip-hash', 'dst-ip-only-hash', 'fastest-response', 'least-request', 'src-ip-hash', 'src-ip-only-hash', 'weighted-rr', 'service-weighted-rr', 'round-robin', 'round-robin-strict', 'odd-even-hash']
+            },
+        'lrprr_method': {
+            'type': 'str',
+            'choices': ['service-least-request-pseudo-round-robin']
             },
         'lc_method': {
             'type': 'str',

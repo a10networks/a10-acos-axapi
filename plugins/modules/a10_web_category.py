@@ -1418,6 +1418,9 @@ def get_argspec():
                         },
                     'total_req_lookup_processed': {
                         'type': 'int',
+                        },
+                    'clear_cache': {
+                        'type': 'str',
                         }
                     }
                 },

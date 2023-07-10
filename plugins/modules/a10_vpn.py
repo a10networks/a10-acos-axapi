@@ -126,6 +126,11 @@ options:
           DES/3DES/MD5/null will not work."
         type: bool
         required: False
+    signature_authentication:
+        description:
+        - "Enable use of different hash algorithms for signature authentication in IKEv2"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -229,6 +234,11 @@ options:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED pre-shared key string)"
+                type: str
+            hash:
+                description:
+                - "'sha256'= Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384;
+          'sha512'= Secure Hash Algorithm 512;"
                 type: str
             interface_management:
                 description:
@@ -806,7 +816,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "asymmetric_flow_support", "crl", "default", "enable_vpn_metrics", "error", "errordump", "extended_matching", "fragment_after_encap", "group_list", "ike_acc_enable", "ike_gateway_list", "ike_logging_enable", "ike_sa", "ike_sa_brief", "ike_sa_clients", "ike_sa_timeout", "ike_stats_by_gw", "ike_stats_global", "ipsec_cipher_check",
-    "ipsec_error_dump", "ipsec_group_list", "ipsec_list", "ipsec_mgmt_default_policy_drop", "ipsec_sa", "ipsec_sa_by_gw", "ipsec_sa_clients", "ipsec_sa_stats_list", "jumbo_fragment", "log", "nat_traversal_flow_affinity", "ocsp", "oper", "revocation_list", "sampling_enable", "stateful_mode", "stats", "tcp_mss_adjust_disable", "uuid",
+    "ipsec_error_dump", "ipsec_group_list", "ipsec_list", "ipsec_mgmt_default_policy_drop", "ipsec_sa", "ipsec_sa_by_gw", "ipsec_sa_clients", "ipsec_sa_stats_list", "jumbo_fragment", "log", "nat_traversal_flow_affinity", "ocsp", "oper", "revocation_list", "sampling_enable", "signature_authentication", "stateful_mode", "stats",
+    "tcp_mss_adjust_disable", "uuid",
     ]
 
 
@@ -868,6 +879,9 @@ def get_argspec():
             'type': 'bool',
             },
         'ipsec_cipher_check': {
+            'type': 'bool',
+            },
+        'signature_authentication': {
             'type': 'bool',
             },
         'uuid': {
@@ -946,6 +960,10 @@ def get_argspec():
                 },
             'preshare_key_encrypted': {
                 'type': 'str',
+                },
+            'hash': {
+                'type': 'str',
+                'choices': ['sha256', 'sha384', 'sha512']
                 },
             'interface_management': {
                 'type': 'bool',
@@ -1508,6 +1526,9 @@ def get_argspec():
                     },
                 'partition_name': {
                     'type': 'str',
+                    },
+                'Signed_auth_flag': {
+                    'type': 'int',
                     }
                 },
             'all_partitions': {
@@ -1680,6 +1701,9 @@ def get_argspec():
                             'type': 'str',
                             },
                         'Hash': {
+                            'type': 'str',
+                            },
+                        'Sign_hash': {
                             'type': 'str',
                             },
                         'Lifetime': {

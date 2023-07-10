@@ -89,7 +89,8 @@ options:
           Total Authorization failure number; 'active-session'= Total Active Auth-
           Sessions; 'active-user'= Total Active Users; 'dns-resolve-failed'= Total AAM
           DNS resolve failed; 'domain-wlist-match'= Total DOMAIN WHITELIST match number;
-          'domain-wlist-unmatch'= Total DOMAIN WHITELIST unmatch number;"
+          'domain-wlist-unmatch'= Total DOMAIN WHITELIST unmatch number; 'auth_ctx_num'=
+          Total Auth Contexts;"
                 type: str
     stats:
         description:
@@ -193,6 +194,10 @@ options:
                 description:
                 - "Total DOMAIN WHITELIST unmatch number"
                 type: str
+            auth_ctx_num:
+                description:
+                - "Total Auth Contexts"
+                type: str
 
 '''
 
@@ -281,7 +286,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'requests', 'responses', 'misses', 'ocsp-stapling-requests-to-a10authd', 'ocsp-stapling-responses-from-a10authd', 'opened-socket', 'open-socket-failed', 'connect', 'connect-failed', 'created-timer', 'create-timer-failed', 'total-request', 'get-socket-option-failed', 'aflex-authz-succ', 'aflex-authz-fail', 'authn-success',
-                    'authn-failure', 'authz-success', 'authz-failure', 'active-session', 'active-user', 'dns-resolve-failed', 'domain-wlist-match', 'domain-wlist-unmatch'
+                    'authn-failure', 'authz-success', 'authz-failure', 'active-session', 'active-user', 'dns-resolve-failed', 'domain-wlist-match', 'domain-wlist-unmatch', 'auth_ctx_num'
                     ]
                 }
             },
@@ -357,6 +362,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'domain_wlist_unmatch': {
+                'type': 'str',
+                },
+            'auth_ctx_num': {
                 'type': 'str',
                 }
             }

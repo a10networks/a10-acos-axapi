@@ -102,6 +102,33 @@ options:
                 description:
                 - "Specify next token page name for RSA-RADIUS"
                 type: str
+    csp_support:
+        description:
+        - "Field csp_support"
+        type: dict
+        required: False
+        suboptions:
+            none:
+                description:
+                - "Set CSP frame-ancestors to none (also X-Frame-Options deny)"
+                type: bool
+            self:
+                description:
+                - "Set CSP frame-ancestors to self (also X-Frame-Options same-origin)"
+                type: bool
+            specificURI:
+                description:
+                - "Set customized CSP frame-ancestors (maximum 2 URIs can be set)"
+                type: str
+            optional_second_URI:
+                description:
+                - "Set optional second customized CSP URI"
+                type: str
+    hsts_timeout:
+        description:
+        - "Set HSTS policy expired timeout in seconds, 0 means to disable HSTS policy"
+        type: int
+        required: False
     logon_page_cfg:
         description:
         - "Field logon_page_cfg"
@@ -298,7 +325,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["account_lock", "challenge_variable", "cp_page_cfg", "duration", "logon_page_cfg", "name", "new_pin_variable", "next_token_variable", "notify_cp_page_cfg", "portal", "retry", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["account_lock", "challenge_variable", "cp_page_cfg", "csp_support", "duration", "hsts_timeout", "logon_page_cfg", "name", "new_pin_variable", "next_token_variable", "notify_cp_page_cfg", "portal", "retry", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -352,6 +379,24 @@ def get_argspec():
             'next_token_page': {
                 'type': 'str',
                 }
+            },
+        'csp_support': {
+            'type': 'dict',
+            'none': {
+                'type': 'bool',
+                },
+            'self': {
+                'type': 'bool',
+                },
+            'specificURI': {
+                'type': 'str',
+                },
+            'optional_second_URI': {
+                'type': 'str',
+                }
+            },
+        'hsts_timeout': {
+            'type': 'int',
             },
         'logon_page_cfg': {
             'type': 'dict',

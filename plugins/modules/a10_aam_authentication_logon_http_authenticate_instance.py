@@ -78,6 +78,11 @@ options:
                 description:
                 - "Field negotiate"
                 type: dict
+    hsts_timeout:
+        description:
+        - "Set HSTS policy expired timeout in seconds, 0 means to disable HSTS policy"
+        type: int
+        required: False
     retry:
         description:
         - "Maximum number of consecutive failed logon attempts (default 3)"
@@ -190,7 +195,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["account_lock", "auth_method", "duration", "name", "packet_capture_template", "retry", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["account_lock", "auth_method", "duration", "hsts_timeout", "name", "packet_capture_template", "retry", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -259,6 +264,9 @@ def get_argspec():
                     'type': 'bool',
                     }
                 }
+            },
+        'hsts_timeout': {
+            'type': 'int',
             },
         'retry': {
             'type': 'int',

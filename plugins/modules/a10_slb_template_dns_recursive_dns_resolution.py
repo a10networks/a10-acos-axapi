@@ -150,6 +150,11 @@ options:
           CNAME response if it exists, else resolve;"
         type: str
         required: False
+    fast_ns_selection:
+        description:
+        - "'enabled'= Enable fast NS selection; 'disabled'= Disable fast NS selection;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -296,8 +301,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "csubnet_retry", "default_recursive", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_trials", "ns_cache_lookup", "oper", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval", "use_client_qid",
-    "use_service_group_response", "uuid",
+    "csubnet_retry", "default_recursive", "fast_ns_selection", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_trials", "ns_cache_lookup", "oper", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval",
+    "use_client_qid", "use_service_group_response", "uuid",
     ]
 
 
@@ -368,6 +373,10 @@ def get_argspec():
             'type': 'bool',
             },
         'force_cname_resolution': {
+            'type': 'str',
+            'choices': ['enabled', 'disabled']
+            },
+        'fast_ns_selection': {
             'type': 'str',
             'choices': ['enabled', 'disabled']
             },

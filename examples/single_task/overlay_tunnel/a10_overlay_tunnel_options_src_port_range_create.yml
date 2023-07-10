@@ -1,0 +1,8 @@
+- name: Create a10_overlay_tunnel_options_src_port_range example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_overlay_tunnel_options_src_port_range instance
+    a10.acos_axapi.a10_overlay_tunnel_options_src_port_range:
+      min_port: 20
+      max_port: 60

@@ -419,7 +419,7 @@ def get_argspec():
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
-                        'choices': ['all', 'dev_vip_hits']
+                        'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                         }
                     }
                 },
@@ -436,7 +436,7 @@ def get_argspec():
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
-                        'choices': ['all', 'dev_vip_hits']
+                        'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                         }
                     }
                 },
@@ -453,7 +453,7 @@ def get_argspec():
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
-                        'choices': ['all', 'dev_vip_hits']
+                        'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                         }
                     }
                 }

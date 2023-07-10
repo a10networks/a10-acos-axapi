@@ -122,6 +122,11 @@ options:
                 description:
                 - "Partition Name"
                 type: str
+    privilege_shell_root:
+        description:
+        - "Set shell root privilege"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -183,6 +188,63 @@ options:
             show:
                 description:
                 - "Show authorized azure credentials"
+                type: bool
+    gcp_cred:
+        description:
+        - "Field gcp_cred"
+        type: dict
+        required: False
+        suboptions:
+            nimport:
+                description:
+                - "Import an GCP-credentials"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            file_url:
+                description:
+                - "File URL"
+                type: str
+            delete:
+                description:
+                - "Delete an authorized GCP credentials"
+                type: bool
+            show:
+                description:
+                - "Show authorized GCP credentials"
+                type: bool
+    cloud_cred:
+        description:
+        - "Field cloud_cred"
+        type: dict
+        required: False
+        suboptions:
+            ntype:
+                description:
+                - "'aws-cred'= aws-cred; 'aws-config'= aws-config; 'azure-cred'= azure-cred;
+          'vmware-cred'= vmware-cred;"
+                type: str
+            nimport:
+                description:
+                - "Import an Cloud-Cred and Cloud-Config"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            file_url:
+                description:
+                - "File URL"
+                type: str
+            delete:
+                description:
+                - "Delete an authorized cloud credentials and cloud configuration"
+                type: bool
+            show:
+                description:
+                - "Show authorized cloud credentials and cloud configuration"
                 type: bool
     ssh_pubkey:
         description:
@@ -296,7 +358,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access", "access_list", "action", "aws_accesskey", "azure_cred", "encrypted", "passwd_string", "password", "password_key", "privilege_global", "privilege_list", "ssh_pubkey", "trusted_host", "trusted_host_acl_id", "trusted_host_cidr", "user", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["access", "access_list", "action", "aws_accesskey", "azure_cred", "cloud_cred", "encrypted", "gcp_cred", "passwd_string", "password", "password_key", "privilege_global", "privilege_list", "privilege_shell_root", "ssh_pubkey", "trusted_host", "trusted_host_acl_id", "trusted_host_cidr", "user", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -360,6 +422,9 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'privilege_shell_root': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -386,6 +451,46 @@ def get_argspec():
             },
         'azure_cred': {
             'type': 'dict',
+            'nimport': {
+                'type': 'bool',
+                },
+            'use_mgmt_port': {
+                'type': 'bool',
+                },
+            'file_url': {
+                'type': 'str',
+                },
+            'delete': {
+                'type': 'bool',
+                },
+            'show': {
+                'type': 'bool',
+                }
+            },
+        'gcp_cred': {
+            'type': 'dict',
+            'nimport': {
+                'type': 'bool',
+                },
+            'use_mgmt_port': {
+                'type': 'bool',
+                },
+            'file_url': {
+                'type': 'str',
+                },
+            'delete': {
+                'type': 'bool',
+                },
+            'show': {
+                'type': 'bool',
+                }
+            },
+        'cloud_cred': {
+            'type': 'dict',
+            'ntype': {
+                'type': 'str',
+                'choices': ['aws-cred', 'aws-config', 'azure-cred', 'vmware-cred']
+                },
             'nimport': {
                 'type': 'bool',
                 },

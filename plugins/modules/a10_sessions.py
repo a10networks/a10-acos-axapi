@@ -284,6 +284,58 @@ options:
                 description:
                 - "Field ext_filter_name"
                 type: str
+            uie:
+                description:
+                - "Field uie"
+                type: str
+            persist_ipv4:
+                description:
+                - "Field persist_ipv4"
+                type: bool
+            persist_type:
+                description:
+                - "Field persist_type"
+                type: str
+            persist_source_addr:
+                description:
+                - "Field persist_source_addr"
+                type: str
+            persist_source_port:
+                description:
+                - "Field persist_source_port"
+                type: int
+            persist_dest_addr:
+                description:
+                - "Field persist_dest_addr"
+                type: str
+            persist_dest_port:
+                description:
+                - "Field persist_dest_port"
+                type: int
+            persist_ipv6:
+                description:
+                - "Field persist_ipv6"
+                type: bool
+            persist_ipv6_type:
+                description:
+                - "Field persist_ipv6_type"
+                type: str
+            persist_v6_source_addr:
+                description:
+                - "Field persist_v6_source_addr"
+                type: str
+            persist_v6_source_port:
+                description:
+                - "Field persist_v6_source_port"
+                type: int
+            persist_v6_dest_addr:
+                description:
+                - "Field persist_v6_dest_addr"
+                type: str
+            persist_v6_dest_port:
+                description:
+                - "Field persist_v6_dest_port"
+                type: int
             ext:
                 description:
                 - "Field ext"
@@ -510,7 +562,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'debug', 'application',
-                    'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp', 'extended_filter'
+                    'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp', 'extended_filter', 'hm'
                     ]
                 },
             'src_ipv4_addr': {
@@ -643,6 +695,45 @@ def get_argspec():
                 },
             'ext_filter_name': {
                 'type': 'str',
+                },
+            'uie': {
+                'type': 'str',
+                },
+            'persist_ipv4': {
+                'type': 'bool',
+                },
+            'persist_type': {
+                'type': 'str',
+                },
+            'persist_source_addr': {
+                'type': 'str',
+                },
+            'persist_source_port': {
+                'type': 'int',
+                },
+            'persist_dest_addr': {
+                'type': 'str',
+                },
+            'persist_dest_port': {
+                'type': 'int',
+                },
+            'persist_ipv6': {
+                'type': 'bool',
+                },
+            'persist_ipv6_type': {
+                'type': 'str',
+                },
+            'persist_v6_source_addr': {
+                'type': 'str',
+                },
+            'persist_v6_source_port': {
+                'type': 'int',
+                },
+            'persist_v6_dest_addr': {
+                'type': 'str',
+                },
+            'persist_v6_dest_port': {
+                'type': 'int',
                 },
             'ext': {
                 'type': 'dict',

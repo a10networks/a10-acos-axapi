@@ -100,7 +100,8 @@ options:
           forward tcp FIN ageout received count; 'hw-fwd-tcp-rst-ageout-rcvd'= Hardware
           forward tcp RST ageout received count; 'hw-fwd-lookup-fail-rcvd'= Hardware
           forward entry lookup fail count; 'hw-fwd-stats-update-rcvd'= Hardware forward
-          entry stats update count;"
+          entry stats update count; 'hw-fwd-flow-sflow-count'= hardware forward rate drop
+          count;"
                 type: str
     slb:
         description:
@@ -250,6 +251,10 @@ options:
                 description:
                 - "Hardware forward entry stats update count"
                 type: str
+            hw_fwd_flow_sflow_count:
+                description:
+                - "hardware forward rate drop count"
+                type: str
             slb:
                 description:
                 - "Field slb"
@@ -343,7 +348,7 @@ def get_argspec():
                 'choices': [
                     'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count', 'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index',
                     'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop', 'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop',
-                    'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count', 'hw-fwd-normal-ageout-rcvd', 'hw-fwd-tcp-fin-ageout-rcvd', 'hw-fwd-tcp-rst-ageout-rcvd', 'hw-fwd-lookup-fail-rcvd', 'hw-fwd-stats-update-rcvd'
+                    'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count', 'hw-fwd-normal-ageout-rcvd', 'hw-fwd-tcp-fin-ageout-rcvd', 'hw-fwd-tcp-rst-ageout-rcvd', 'hw-fwd-lookup-fail-rcvd', 'hw-fwd-stats-update-rcvd', 'hw-fwd-flow-sflow-count'
                     ]
                 }
             },
@@ -460,6 +465,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'hw_fwd_stats_update_rcvd': {
+                'type': 'str',
+                },
+            'hw_fwd_flow_sflow_count': {
                 'type': 'str',
                 },
             'slb': {

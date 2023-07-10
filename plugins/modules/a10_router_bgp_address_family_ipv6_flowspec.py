@@ -177,6 +177,10 @@ def get_argspec():
                         'choices': ['in', 'out']
                         }
                     },
+                'send_community_val': {
+                    'type': 'str',
+                    'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -199,6 +203,10 @@ def get_argspec():
                         'type': 'str',
                         'choices': ['in', 'out']
                         }
+                    },
+                'send_community_val': {
+                    'type': 'str',
+                    'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
                     },
                 'uuid': {
                     'type': 'str',

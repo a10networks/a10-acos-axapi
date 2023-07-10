@@ -1,0 +1,16 @@
+- name: Create a10_visibility_packet_capture_object_templates_smtp_vport_tmpl_trigger_stats_severity example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_visibility_packet_capture_object_templates_smtp_vport_tmpl_trigger_stats_severity instance
+    a10.acos_axapi.a10_visibility_packet_capture_object_templates_smtp_vport_tmpl_trigger_stats_severity:
+      smtp_vport_tmpl_name: testing
+      error: 1
+      error_alert: 1
+      error_warning: 1
+      error_critical: 1
+      drop: 1
+      drop_alert: 1
+      drop_warning: 1
+      drop_critical: 1
+

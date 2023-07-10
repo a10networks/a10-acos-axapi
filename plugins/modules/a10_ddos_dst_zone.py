@@ -4073,6 +4073,9 @@ def get_argspec():
                             'type': 'str',
                             }
                         },
+                    'close_sessions_for_unauth_sources': {
+                        'type': 'bool',
+                        },
                     'start_signature_extraction': {
                         'type': 'bool',
                         },
@@ -4170,6 +4173,9 @@ def get_argspec():
                         'encap': {
                             'type': 'str',
                             }
+                        },
+                    'close_sessions_for_unauth_sources': {
+                        'type': 'bool',
                         },
                     'uuid': {
                         'type': 'str',
@@ -4607,6 +4613,9 @@ def get_argspec():
                             'type': 'str',
                             }
                         },
+                    'close_sessions_for_unauth_sources': {
+                        'type': 'bool',
+                        },
                     'start_pattern_recognition': {
                         'type': 'bool',
                         },
@@ -4686,6 +4695,9 @@ def get_argspec():
                         'encap': {
                             'type': 'str',
                             }
+                        },
+                    'close_sessions_for_unauth_sources': {
+                        'type': 'bool',
                         },
                     'uuid': {
                         'type': 'str',
@@ -5113,6 +5125,9 @@ def get_argspec():
                         'type': 'str',
                         }
                     },
+                'close_sessions_for_unauth_sources': {
+                    'type': 'bool',
+                    },
                 'start_pattern_recognition': {
                     'type': 'bool',
                     },
@@ -5207,6 +5222,9 @@ def get_argspec():
                     'encap': {
                         'type': 'str',
                         }
+                    },
+                'close_sessions_for_unauth_sources': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',

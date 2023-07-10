@@ -90,6 +90,11 @@ options:
                 description:
                 - "Field hashed_certificate"
                 type: list
+            hashed_persist_entries:
+                description:
+                - "DELETE method specific option to clear the hashed persistence entries for one
+          vport"
+                type: bool
 
 '''
 
@@ -218,6 +223,9 @@ def get_argspec():
                 'expires_after': {
                     'type': 'int',
                     },
+                'alpn_protocol': {
+                    'type': 'int',
+                    },
                 'version': {
                     'type': 'int',
                     },
@@ -257,6 +265,9 @@ def get_argspec():
                 'serial': {
                     'type': 'str',
                     }
+                },
+            'hashed_persist_entries': {
+                'type': 'bool',
                 }
             }
         })

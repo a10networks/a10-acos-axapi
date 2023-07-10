@@ -1,0 +1,37 @@
+- name: Create a10_slb_virtual_server_port_stats_pop3_vport example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Create a10.acos_axapi.a10_slb_virtual_server_port_stats_pop3_vport instance
+    a10.acos_axapi.a10_slb_virtual_server_port_stats_pop3_vport:
+      state: present
+      virtual_server_name: test_virtual_server
+      port_number: 80
+      protocol: pop3
+      stats:
+        pop3_vport:
+          bad_sequence: 1
+          cl_est_err: 1
+          cl_request_err: 1
+          control_to_ssl: 1
+          curr: 1
+          insert_tuple_fail: 1
+          invalid_start_line: 1
+          line_mem_freed: 1
+          line_too_long: 1
+          no_route: 1
+          num: 1
+          request: 1
+          request_dont_care: 1
+          rsv_persist_conn_fail: 1
+          ser_connecting_err: 1
+          server_response_err: 1
+          smp_v4_fail: 1
+          smp_v6_fail: 1
+          snat_fail: 1
+          stls: 1
+          svrsel_fail: 1
+          total: 1
+          unsupported_command: 1
+
+

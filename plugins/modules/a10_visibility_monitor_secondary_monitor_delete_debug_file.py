@@ -150,13 +150,9 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/monitor/secondary-monitor/delete-debug-file/{debug_ip_addr}"
+    url_base = "/axapi/v3/visibility/monitor/secondary-monitor/delete-debug-file"
 
     f_dict = {}
-    if '/' in str(module.params["debug_ip_addr"]):
-        f_dict["debug_ip_addr"] = module.params["debug_ip_addr"].replace("/", "%2F")
-    else:
-        f_dict["debug_ip_addr"] = module.params["debug_ip_addr"]
 
     return url_base.format(**f_dict)
 
@@ -167,7 +163,6 @@ def new_url(module):
     url_base = "/axapi/v3/visibility/monitor/secondary-monitor/delete-debug-file"
 
     f_dict = {}
-    f_dict["debug_ip_addr"] = ""
 
     return url_base.format(**f_dict)
 
