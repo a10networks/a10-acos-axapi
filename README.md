@@ -13,9 +13,13 @@
 
 7. [Test Cases](#Test-Cases)
 
-8. [Examples](#Examples)
+8. [License](#License)
 
-9. [Issues and Inquiries](#Issues-and-Inquiries)
+9. [Open Source Disclaimer](#Open-Source-Disclaimer)
+
+10. [Examples](#Examples)
+
+11. [Issues and Inquiries](#Issues-and-Inquiries)
 
 ## Overview
 
@@ -399,6 +403,16 @@ To test configurations on the acos using ansible playbooks goto ``` test ``` dir
 sh run_test_playbooks.sh
 
 ```
+
+## License
+[APACHE LICENSE VERSION 2.0](LICENSE.txt)
+
+All rights reserved @A10 Networks Inc.
+
+## Open Source Disclaimer
+
+	For more information, please refer [/OPEN-SOURCE-DISCLAIMER.pdf]
+	For more open source licenses, please refer [/LICENSES]
 
 ## Examples
 Please see (https://github.com/a10networks/a10-acos-axapi/tree/master/examples) for example playbooks.
