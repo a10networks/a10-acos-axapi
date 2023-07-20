@@ -405,7 +405,7 @@ sh run_test_playbooks.sh
 ```
 
 ## License
-[A10 ACOS ANSIBLE MODULES END USER SOFTWARE LICENSE AGREEMENT](LICENSE.txt)
+[APACHE LICENSE VERSION 2.0](LICENSE.txt)
 
 All rights reserved @A10 Networks Inc.
 
