@@ -154,169 +154,8 @@ options:
           'gtp_cum_conn_freed_counter'= GTP cumulative Conn Freed; 'fw_blacklist_sess'=
           Blacklist Sessions; 'fw_blacklist_sess_created'= Blacklist Session Created;
           'fw_blacklist_sess_freed'= Blacklist Session Freed; 'server_tcp_est_counter'=
-          Server TCP Established; 'server_tcp_half_open_counter'= Server TCP Half Open;
-          'sched_conn_with_wrong_next_idx_to_rml'= Attempt to Put a Conn to RML Whose
-          next_idx is NOT Invalid; 'free_conn_not_in_sp'= Attempt to Free a Conn Whoes
-          Address Not in Session Pool;"
+          Server TCP Established; 'server_tcp_half_open_counter'= Server TCP Half Open;"
                 type: str
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            all:
-                description:
-                - "Field all"
-                type: bool
-            filter_name:
-                description:
-                - "Field filter_name"
-                type: str
-            ipv4:
-                description:
-                - "Field ipv4"
-                type: bool
-            source_v4_addr:
-                description:
-                - "Field source_v4_addr"
-                type: str
-            dest_v4_addr:
-                description:
-                - "Field dest_v4_addr"
-                type: str
-            source_port:
-                description:
-                - "Field source_port"
-                type: int
-            dest_port:
-                description:
-                - "Field dest_port"
-                type: int
-            ipv6:
-                description:
-                - "Field ipv6"
-                type: bool
-            source_v6_addr:
-                description:
-                - "Field source_v6_addr"
-                type: str
-            dest_v6_addr:
-                description:
-                - "Field dest_v6_addr"
-                type: str
-            v6_source_port:
-                description:
-                - "Field v6_source_port"
-                type: int
-            v6_dest_port:
-                description:
-                - "Field v6_dest_port"
-                type: int
-            persist:
-                description:
-                - "Field persist"
-                type: bool
-            uie:
-                description:
-                - "Field uie"
-                type: bool
-            persist_type:
-                description:
-                - "Field persist_type"
-                type: str
-            persist_source_v4_addr:
-                description:
-                - "Field persist_source_v4_addr"
-                type: str
-            persist_dest_v4_addr:
-                description:
-                - "Field persist_dest_v4_addr"
-                type: str
-            persist_source_v6_addr:
-                description:
-                - "Field persist_source_v6_addr"
-                type: str
-            persist_dest_v6_addr:
-                description:
-                - "Field persist_dest_v6_addr"
-                type: str
-            persist_source_port:
-                description:
-                - "Field persist_source_port"
-                type: int
-            persist_dest_port:
-                description:
-                - "Field persist_dest_port"
-                type: int
-            persist_ipv6:
-                description:
-                - "Field persist_ipv6"
-                type: bool
-            persist_ipv6_type:
-                description:
-                - "Field persist_ipv6_type"
-                type: str
-            persist_v6_source_addr:
-                description:
-                - "Field persist_v6_source_addr"
-                type: str
-            persist_v6_dest_addr:
-                description:
-                - "Field persist_v6_dest_addr"
-                type: str
-            persist_v6_source_port:
-                description:
-                - "Field persist_v6_source_port"
-                type: int
-            persist_v6_dest_port:
-                description:
-                - "Field persist_v6_dest_port"
-                type: int
-            fw:
-                description:
-                - "Field fw"
-                type: bool
-            helper_sessions:
-                description:
-                - "Field helper_sessions"
-                type: bool
-            fw_ipv4:
-                description:
-                - "Field fw_ipv4"
-                type: bool
-            fw_ipv6:
-                description:
-                - "Field fw_ipv6"
-                type: bool
-            sip:
-                description:
-                - "Field sip"
-                type: bool
-            sip_source_v4_addr:
-                description:
-                - "Field sip_source_v4_addr"
-                type: str
-            sip_dest_v4_addr:
-                description:
-                - "Field sip_dest_v4_addr"
-                type: str
-            sip_source_v6_addr:
-                description:
-                - "Field sip_source_v6_addr"
-                type: str
-            sip_dest_v6_addr:
-                description:
-                - "Field sip_dest_v6_addr"
-                type: str
-            sip_source_port:
-                description:
-                - "Field sip_source_port"
-                type: int
-            sip_dest_port:
-                description:
-                - "Field sip_dest_port"
-                type: int
     stats:
         description:
         - "Field stats"
@@ -685,7 +524,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -724,125 +563,8 @@ def get_argspec():
                     'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total', 'ssl_forward_proxy_cert_issuer_bypass_total', 'ssl_forward_proxy_cert_san_bypass_total', 'ssl_forward_proxy_no_sni_bypass_total',
                     'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter', 'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total', 'total_clientside_early_data_connections',
                     'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections', 'total_serverside_failed_early_data-connections', 'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter', 'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter',
-                    'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter', 'sched_conn_with_wrong_next_idx_to_rml', 'free_conn_not_in_sp'
+                    'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter'
                     ]
-                }
-            },
-        'oper': {
-            'type': 'dict',
-            'all': {
-                'type': 'bool',
-                },
-            'filter_name': {
-                'type': 'str',
-                },
-            'ipv4': {
-                'type': 'bool',
-                },
-            'source_v4_addr': {
-                'type': 'str',
-                },
-            'dest_v4_addr': {
-                'type': 'str',
-                },
-            'source_port': {
-                'type': 'int',
-                },
-            'dest_port': {
-                'type': 'int',
-                },
-            'ipv6': {
-                'type': 'bool',
-                },
-            'source_v6_addr': {
-                'type': 'str',
-                },
-            'dest_v6_addr': {
-                'type': 'str',
-                },
-            'v6_source_port': {
-                'type': 'int',
-                },
-            'v6_dest_port': {
-                'type': 'int',
-                },
-            'persist': {
-                'type': 'bool',
-                },
-            'uie': {
-                'type': 'bool',
-                },
-            'persist_type': {
-                'type': 'str',
-                },
-            'persist_source_v4_addr': {
-                'type': 'str',
-                },
-            'persist_dest_v4_addr': {
-                'type': 'str',
-                },
-            'persist_source_v6_addr': {
-                'type': 'str',
-                },
-            'persist_dest_v6_addr': {
-                'type': 'str',
-                },
-            'persist_source_port': {
-                'type': 'int',
-                },
-            'persist_dest_port': {
-                'type': 'int',
-                },
-            'persist_ipv6': {
-                'type': 'bool',
-                },
-            'persist_ipv6_type': {
-                'type': 'str',
-                },
-            'persist_v6_source_addr': {
-                'type': 'str',
-                },
-            'persist_v6_dest_addr': {
-                'type': 'str',
-                },
-            'persist_v6_source_port': {
-                'type': 'int',
-                },
-            'persist_v6_dest_port': {
-                'type': 'int',
-                },
-            'fw': {
-                'type': 'bool',
-                },
-            'helper_sessions': {
-                'type': 'bool',
-                },
-            'fw_ipv4': {
-                'type': 'bool',
-                },
-            'fw_ipv6': {
-                'type': 'bool',
-                },
-            'sip': {
-                'type': 'bool',
-                },
-            'sip_source_v4_addr': {
-                'type': 'str',
-                },
-            'sip_dest_v4_addr': {
-                'type': 'str',
-                },
-            'sip_source_v6_addr': {
-                'type': 'str',
-                },
-            'sip_dest_v6_addr': {
-                'type': 'str',
-                },
-            'sip_source_port': {
-                'type': 'int',
-                },
-            'sip_dest_port': {
-                'type': 'int',
                 }
             },
         'stats': {
@@ -1239,11 +961,6 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["session-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["session"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

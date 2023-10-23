@@ -116,11 +116,6 @@ options:
         - "Bind a UDP Service Group to the template (Service Group Name)"
         type: str
         required: False
-    bypass_doh:
-        description:
-        - "Forward valid DoH HTTP request as is, no DNS packet extraction (Bypass DoH)"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -180,7 +175,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bypass_doh", "forwarding_ipv4", "forwarding_ipv6", "tcp_service_group", "udp_service_group", "uuid", "v4_internal", "v4_l4_proto", "v4_port", "v6_internal", "v6_l4_proto", "v6_port", ]
+AVAILABLE_PROPERTIES = ["forwarding_ipv4", "forwarding_ipv6", "tcp_service_group", "udp_service_group", "uuid", "v4_internal", "v4_l4_proto", "v4_port", "v6_internal", "v6_l4_proto", "v6_port", ]
 
 
 def get_default_argspec():
@@ -232,9 +227,6 @@ def get_argspec():
             },
         'udp_service_group': {
             'type': 'str',
-            },
-        'bypass_doh': {
-            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

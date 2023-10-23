@@ -138,11 +138,6 @@ options:
         - "Health Check Monitor (Health monitor name)"
         type: str
         required: False
-    l2_health_check_path:
-        description:
-        - "L2 health check path"
-        type: str
-        required: False
     shared_partition_health_check:
         description:
         - "Reference a health-check from shared partition"
@@ -574,8 +569,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "alternate_server", "conn_limit", "conn_resume", "ethernet", "extended_stats", "external_ip", "fqdn_name", "health_check", "health_check_disable", "health_check_shared", "host", "ipv6", "l2_health_check_path", "name", "no_logging", "oper", "port_list", "resolve_as", "sampling_enable", "server_ipv6_addr",
-    "shared_partition_health_check", "shared_partition_server_template", "slow_start", "spoofing_cache", "stats", "stats_data_action", "template_link_cost", "template_server", "template_server_shared", "trunk", "use_aam_server", "user_tag", "uuid", "weight",
+    "action", "alternate_server", "conn_limit", "conn_resume", "ethernet", "extended_stats", "external_ip", "fqdn_name", "health_check", "health_check_disable", "health_check_shared", "host", "ipv6", "name", "no_logging", "oper", "port_list", "resolve_as", "sampling_enable", "server_ipv6_addr", "shared_partition_health_check",
+    "shared_partition_server_template", "slow_start", "spoofing_cache", "stats", "stats_data_action", "template_link_cost", "template_server", "template_server_shared", "trunk", "use_aam_server", "user_tag", "uuid", "weight",
     ]
 
 
@@ -646,9 +641,6 @@ def get_argspec():
             'type': 'str',
             },
         'health_check': {
-            'type': 'str',
-            },
-        'l2_health_check_path': {
             'type': 'str',
             },
         'shared_partition_health_check': {

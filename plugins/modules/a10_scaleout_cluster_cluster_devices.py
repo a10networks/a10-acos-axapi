@@ -89,6 +89,10 @@ options:
         type: dict
         required: False
         suboptions:
+            timer_val:
+                description:
+                - "Cluster node discovery timeout value (secs (Default= 120))"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -99,6 +103,10 @@ options:
         type: list
         required: False
         suboptions:
+            device_id:
+                description:
+                - "scaleout device id"
+                type: int
             ip:
                 description:
                 - "Field ip"
@@ -110,6 +118,10 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
                 type: str
 
 '''
@@ -203,12 +215,19 @@ def get_argspec():
             },
         'cluster_discovery_timeout': {
             'type': 'dict',
+            'timer_val': {
+                'type': 'int',
+                },
             'uuid': {
                 'type': 'str',
                 }
             },
         'device_id_list': {
             'type': 'list',
+            'device_id': {
+                'type': 'int',
+                'required': True,
+                },
             'ip': {
                 'type': 'str',
                 },
@@ -217,6 +236,9 @@ def get_argspec():
                 'choices': ['enable', 'disable']
                 },
             'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
                 'type': 'str',
                 }
             }

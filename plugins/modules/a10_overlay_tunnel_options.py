@@ -95,24 +95,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    src_port_range:
-        description:
-        - "Field src_port_range"
-        type: dict
-        required: False
-        suboptions:
-            min_port:
-                description:
-                - "Minimum Port Number"
-                type: int
-            max_port:
-                description:
-                - "Maximum Port Number"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
 
 '''
 
@@ -167,7 +149,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fragmentation_mode_inner", "gateway_mac", "ip_dscp_preserve", "nvgre_disable_flow_id", "nvgre_key_mode_lower24", "src_port_range", "tcp_mss_adjust_disable", "uuid", "vxlan_dest_port", ]
+AVAILABLE_PROPERTIES = ["fragmentation_mode_inner", "gateway_mac", "ip_dscp_preserve", "nvgre_disable_flow_id", "nvgre_key_mode_lower24", "tcp_mss_adjust_disable", "uuid", "vxlan_dest_port", ]
 
 
 def get_default_argspec():
@@ -187,44 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'ip_dscp_preserve': {
-            'type': 'bool',
-            },
-        'nvgre_disable_flow_id': {
-            'type': 'bool',
-            },
-        'nvgre_key_mode_lower24': {
-            'type': 'bool',
-            },
-        'tcp_mss_adjust_disable': {
-            'type': 'bool',
-            },
-        'gateway_mac': {
-            'type': 'str',
-            },
-        'fragmentation_mode_inner': {
-            'type': 'bool',
-            },
-        'vxlan_dest_port': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'src_port_range': {
-            'type': 'dict',
-            'min_port': {
-                'type': 'int',
-                },
-            'max_port': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'ip_dscp_preserve': {'type': 'bool', }, 'nvgre_disable_flow_id': {'type': 'bool', }, 'nvgre_key_mode_lower24': {'type': 'bool', }, 'tcp_mss_adjust_disable': {'type': 'bool', }, 'gateway_mac': {'type': 'str', }, 'fragmentation_mode_inner': {'type': 'bool', }, 'vxlan_dest_port': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

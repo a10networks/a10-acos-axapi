@@ -149,6 +149,11 @@ options:
         - "Server facing interface for IPv4/v6 traffic"
         type: bool
         required: False
+    dmz:
+        description:
+        - "DMZ network facing interface for IPv4/v6 traffic"
+        type: bool
+        required: False
     unnumbered:
         description:
         - "Set the interface as unnumbered"
@@ -301,7 +306,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address_list", "allow_promiscuous_vip", "cache_spoofing_port", "client", "dhcp", "generate_membership_query", "helper_address_list", "inside", "max_resp_time", "ospf", "outside", "query_interval", "rip", "router", "server", "slb_partition_redirect", "stateful_firewall", "syn_cookie", "ttl_ignore", "unnumbered", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "address_list", "allow_promiscuous_vip", "cache_spoofing_port", "client", "dhcp", "dmz", "generate_membership_query", "helper_address_list", "inside", "max_resp_time", "ospf", "outside", "query_interval", "rip", "router", "server", "slb_partition_redirect", "stateful_firewall", "syn_cookie", "ttl_ignore", "unnumbered", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -374,6 +381,9 @@ def get_argspec():
             'type': 'bool',
             },
         'server': {
+            'type': 'bool',
+            },
+        'dmz': {
             'type': 'bool',
             },
         'unnumbered': {

@@ -80,16 +80,6 @@ options:
         - "Enable IPv6 processing"
         type: bool
         required: False
-    inside:
-        description:
-        - "Configure interface as inside"
-        type: bool
-        required: False
-    outside:
-        description:
-        - "Configure interface as outside"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -217,7 +207,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address_cfg", "inside", "ipv6_enable", "ospf", "outside", "router", "uuid", ]
+AVAILABLE_PROPERTIES = ["address_cfg", "ipv6_enable", "ospf", "router", "uuid", ]
 
 
 def get_default_argspec():
@@ -249,12 +239,6 @@ def get_argspec():
                 }
             },
         'ipv6_enable': {
-            'type': 'bool',
-            },
-        'inside': {
-            'type': 'bool',
-            },
-        'outside': {
             'type': 'bool',
             },
         'uuid': {

@@ -57,7 +57,7 @@ options:
         required: False
     primary_monitor:
         description:
-        - "'traffic'= Mointor traffic; 'xflow'= Monitor xflow samples;"
+        - "'traffic'= Mointor traffic;"
         type: str
         required: True
     monitor_key:
@@ -69,12 +69,12 @@ options:
         required: False
     mon_entity_topk:
         description:
-        - "Enable topk for primary entities"
+        - "Enable monitoring entity topk for primary entities"
         type: bool
         required: False
     source_entity_topk:
         description:
-        - "Enable topk for sources to primary-entities"
+        - "Enable monitoring entity topk for sources to primary-entities"
         type: bool
         required: False
     index_sessions:
@@ -335,7 +335,7 @@ def get_argspec():
         'primary_monitor': {
             'type': 'str',
             'required': True,
-            'choices': ['traffic', 'xflow']
+            'choices': ['traffic']
             },
         'monitor_key': {
             'type': 'str',

@@ -83,8 +83,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'dev_vip_hits'= Number of times the service-ip was selected;
-          'dev_vip_recent'= Recent hits;"
+                - "'all'= all; 'dev_vip_hits'= Number of times the service-ip was selected;"
                 type: str
     oper:
         description:
@@ -117,10 +116,6 @@ options:
             dev_vip_hits:
                 description:
                 - "Number of times the service-ip was selected"
-                type: str
-            dev_vip_recent:
-                description:
-                - "Recent hits"
                 type: str
             ipv6:
                 description:
@@ -212,7 +207,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
+                'choices': ['all', 'dev_vip_hits']
                 }
             },
         'oper': {
@@ -240,9 +235,6 @@ def get_argspec():
         'stats': {
             'type': 'dict',
             'dev_vip_hits': {
-                'type': 'str',
-                },
-            'dev_vip_recent': {
                 'type': 'str',
                 },
             'ipv6': {

@@ -60,22 +60,6 @@ options:
         - "Load built-in IANA Database"
         type: bool
         required: False
-    geo_location_iana_system:
-        description:
-        - "Load built-in IANA Database"
-        type: bool
-        required: False
-    geo_location_geolite2_asn:
-        description:
-        - "Load built-in Maxmind GeoLite2-ASN database. Database available from
-          http=//www.maxmind.com"
-        type: bool
-        required: False
-    geolite2_asn_include_ipv6:
-        description:
-        - "Include IPv6 address"
-        type: bool
-        required: False
     geo_location_geolite2_city:
         description:
         - "Load built-in Maxmind GeoLite2-City database. Database available from
@@ -108,10 +92,6 @@ options:
                 description:
                 - "Specify file to be loaded"
                 type: str
-            geo_location_load_file_include_ipv6:
-                description:
-                - "Include IPv6 address"
-                type: bool
             template_name:
                 description:
                 - "CSV template to load this file"
@@ -197,7 +177,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["entry_list", "geo_location_geolite2_asn", "geo_location_geolite2_city", "geo_location_geolite2_country", "geo_location_iana", "geo_location_iana_system", "geolite2_asn_include_ipv6", "geolite2_city_include_ipv6", "geolite2_country_include_ipv6", "geoloc_load_file_list", "uuid", ]
+AVAILABLE_PROPERTIES = ["entry_list", "geo_location_geolite2_city", "geo_location_geolite2_country", "geo_location_iana", "geolite2_city_include_ipv6", "geolite2_country_include_ipv6", "geoloc_load_file_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -221,15 +201,6 @@ def get_argspec():
         'geo_location_iana': {
             'type': 'bool',
             },
-        'geo_location_iana_system': {
-            'type': 'bool',
-            },
-        'geo_location_geolite2_asn': {
-            'type': 'bool',
-            },
-        'geolite2_asn_include_ipv6': {
-            'type': 'bool',
-            },
         'geo_location_geolite2_city': {
             'type': 'bool',
             },
@@ -246,9 +217,6 @@ def get_argspec():
             'type': 'list',
             'geo_location_load_filename': {
                 'type': 'str',
-                },
-            'geo_location_load_file_include_ipv6': {
-                'type': 'bool',
                 },
             'template_name': {
                 'type': 'str',

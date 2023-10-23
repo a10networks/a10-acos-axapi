@@ -158,10 +158,7 @@ options:
           topic'= System environment sent; 'avro-system-env-dequeue-err'= System
           Environmet dropped,enq error analytics queues; 'cert-pinning-list-topic'= Cert-
           pinning candidate list sent; 'cert-pinning-list-topic-dequeue-err'= Cert-
-          pinning candidate list dropped,enq error analytics queues; 'ngwaf-hc-ep-topic'=
-          NGWAF HC PE export; 'ngwaf-hc-ep-topic-dequeue-err'= NGWAF HC PE export failed;
-          'ngwaf-hc-metrics-topic'= NGWAF HC metrics export; 'ngwaf-hc-metrics-topic-
-          dequeue-err'= NGWAF HC metrics export failed;"
+          pinning candidate list dropped,enq error analytics queues;"
                 type: str
     oper:
         description:
@@ -507,22 +504,6 @@ options:
                 description:
                 - "Cert-pinning candidate list dropped,enq error analytics queues"
                 type: str
-            ngwaf_hc_ep_topic:
-                description:
-                - "NGWAF HC PE export"
-                type: str
-            ngwaf_hc_ep_topic_dequeue_err:
-                description:
-                - "NGWAF HC PE export failed"
-                type: str
-            ngwaf_hc_metrics_topic:
-                description:
-                - "NGWAF HC metrics export"
-                type: str
-            ngwaf_hc_metrics_topic_dequeue_err:
-                description:
-                - "NGWAF HC metrics export failed"
-                type: str
 
 '''
 
@@ -624,8 +605,7 @@ def get_argspec():
                     'pc-throttle-drop', 'metrics-dropped-pt-missing', 'ssli-pc-acos-harmony-topic', 'ssli-pc-acos-harmony-topic-dequeue-err', 'ssli-pe-acos-harmony-topic', 'ssli-pe-acos-harmony-topic-dequeue-err', 'analytics-bus-restart', 'waf-learn-pr-topic', 'waf-learn-pr-topic-dequeue-err', 'waf-events-topic', 'waf-events-topic-dequeue-err',
                     'visibility-topn-harmony-topic', 'visibility-topn-harmony-topic-dequeue-err', 'hc-logs-sent-to-master', 'hc-logs-received-from-blade', 'hc-oper-sent-to-master', 'hc-oper-received-from-blade', 'hc-counters-sent-to-master', 'hc-counters-received-from-blade', 'hc-counters-dropped-from-blade', 'pe-acos-harmony-topic',
                     'pe-acos-harmony-topic-enqueue-err', 'pe-acos-harmony-topic-dequeue-err', 'vpn-ipsec-sa-metrics-topic', 'vpn-ipsec-sa-metrics-topic-dequeue-err', 'vpn-ike-gateway-metrics-topic', 'vpn-ike-gateway-metrics-topic-dequeue-err', 'vpn-stats-metrics-topic', 'vpn-stats-metrics-topic-dequeue-err',
-                    'cgn-port-usage-hstgrm-acos-harmony-topic', 'cgn-port-usage-hstgrm-acos-harmony-topic-dequeue-err', 'avro-system-env-topic', 'avro-system-env-dequeue-err', 'cert-pinning-list-topic', 'cert-pinning-list-topic-dequeue-err', 'ngwaf-hc-ep-topic', 'ngwaf-hc-ep-topic-dequeue-err', 'ngwaf-hc-metrics-topic',
-                    'ngwaf-hc-metrics-topic-dequeue-err'
+                    'cgn-port-usage-hstgrm-acos-harmony-topic', 'cgn-port-usage-hstgrm-acos-harmony-topic-dequeue-err', 'avro-system-env-topic', 'avro-system-env-dequeue-err', 'cert-pinning-list-topic', 'cert-pinning-list-topic-dequeue-err'
                     ]
                 }
             },
@@ -882,18 +862,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'cert_pinning_list_topic_dequeue_err': {
-                'type': 'str',
-                },
-            'ngwaf_hc_ep_topic': {
-                'type': 'str',
-                },
-            'ngwaf_hc_ep_topic_dequeue_err': {
-                'type': 'str',
-                },
-            'ngwaf_hc_metrics_topic': {
-                'type': 'str',
-                },
-            'ngwaf_hc_metrics_topic_dequeue_err': {
                 'type': 'str',
                 }
             }

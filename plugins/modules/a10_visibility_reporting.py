@@ -132,6 +132,10 @@ options:
                 description:
                 - "Total jobs dequeued"
                 type: str
+            template:
+                description:
+                - "Field template"
+                type: dict
 
 '''
 
@@ -346,6 +350,9 @@ def get_argspec():
                 },
             'dequeued': {
                 'type': 'str',
+                },
+            'template': {
+                'type': 'dict',
                 }
             }
         })
