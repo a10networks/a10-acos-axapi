@@ -71,6 +71,10 @@ options:
         type: dict
         required: False
         suboptions:
+            dummy_config:
+                description:
+                - "dummy"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -162,6 +166,9 @@ def get_argspec():
             },
         'message_selector': {
             'type': 'dict',
+            'dummy_config': {
+                'type': 'str',
+                },
             'uuid': {
                 'type': 'str',
                 },

@@ -128,20 +128,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    enterprise_ha_host_list:
-        description:
-        - "Field enterprise_ha_host_list"
-        type: list
-        required: False
-        suboptions:
-            host_entry:
-                description:
-                - "Enter the ELM hostname, IP or [IPV6]"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     send:
         description:
         - "Field send"
@@ -151,10 +137,6 @@ options:
             license_request:
                 description:
                 - "Immediately send a single GLM license request"
-                type: bool
-            ha_status:
-                description:
-                - "Send a ELM HA status request"
                 type: bool
     new_license:
         description:
@@ -327,7 +309,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["allocate_bandwidth", "appliance_name", "burst", "check_expiration", "create_license_request", "enable_requests", "enterprise", "enterprise_ha_host_list", "enterprise_request_type", "host", "interval", "new_license", "port", "proxy_server", "send", "thunder_capacity_license", "token", "use_mgmt_port", "uuid", ]
+AVAILABLE_PROPERTIES = ["allocate_bandwidth", "appliance_name", "burst", "check_expiration", "create_license_request", "enable_requests", "enterprise", "enterprise_request_type", "host", "interval", "new_license", "port", "proxy_server", "send", "thunder_capacity_license", "token", "use_mgmt_port", "uuid", ]
 
 
 def get_default_argspec():
@@ -391,22 +373,9 @@ def get_argspec():
         'uuid': {
             'type': 'str',
             },
-        'enterprise_ha_host_list': {
-            'type': 'list',
-            'host_entry': {
-                'type': 'str',
-                'required': True,
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
         'send': {
             'type': 'dict',
             'license_request': {
-                'type': 'bool',
-                },
-            'ha_status': {
                 'type': 'bool',
                 }
             },

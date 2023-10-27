@@ -60,26 +60,6 @@ options:
         - "Enable the router to send 4-octet ASN capabilities"
         type: bool
         required: False
-    disable_advertisement:
-        description:
-        - "Field disable_advertisement"
-        type: dict
-        required: False
-        suboptions:
-            on_boot:
-                description:
-                - "Upon boot-up"
-                type: bool
-    asdot:
-        description:
-        - "Enable ASDot notation"
-        type: bool
-        required: False
-    asdot_plus:
-        description:
-        - "Enable ASDot+ notation"
-        type: bool
-        required: False
     nexthop_trigger:
         description:
         - "Field nexthop_trigger"
@@ -154,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["asdot", "asdot_plus", "disable_advertisement", "extended_asn_cap", "nexthop_trigger", "uuid", ]
+AVAILABLE_PROPERTIES = ["extended_asn_cap", "nexthop_trigger", "uuid", ]
 
 
 def get_default_argspec():
@@ -174,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'extended_asn_cap': {'type': 'bool', }, 'disable_advertisement': {'type': 'dict', 'on_boot': {'type': 'bool', }}, 'asdot': {'type': 'bool', }, 'asdot_plus': {'type': 'bool', }, 'nexthop_trigger': {'type': 'dict', 'enable': {'type': 'bool', }, 'delay': {'type': 'int', }}, 'uuid': {'type': 'str', }})
+    rv.update({'extended_asn_cap': {'type': 'bool', }, 'nexthop_trigger': {'type': 'dict', 'enable': {'type': 'bool', }, 'delay': {'type': 'int', }}, 'uuid': {'type': 'str', }})
     return rv
 
 

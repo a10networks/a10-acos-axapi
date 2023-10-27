@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_debug_l4
 description:
-    - Layer 4
+    - Debug Layer 4
 author: A10 Networks
 options:
     state:

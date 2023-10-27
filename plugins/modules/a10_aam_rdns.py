@@ -70,48 +70,6 @@ options:
                 description:
                 - "Field entry_list"
                 type: list
-            mode:
-                description:
-                - "Field mode"
-                type: str
-            addr:
-                description:
-                - "Field addr"
-                type: str
-    stats:
-        description:
-        - "Field stats"
-        type: dict
-        required: False
-        suboptions:
-            request_normal:
-                description:
-                - "Total Normal Request"
-                type: str
-            request_dropped:
-                description:
-                - "Total Dropped Request"
-                type: str
-            response_success:
-                description:
-                - "Total Success Response"
-                type: str
-            response_failure:
-                description:
-                - "Total Failure Response"
-                type: str
-            response_error:
-                description:
-                - "Total Error Response"
-                type: str
-            response_timeout:
-                description:
-                - "Total Timeout Response"
-                type: str
-            response_other:
-                description:
-                - "Total Other Response"
-                type: str
 
 '''
 
@@ -166,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -186,59 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'entry_list': {
-                'type': 'list',
-                'ntype': {
-                    'type': 'str',
-                    },
-                'address': {
-                    'type': 'str',
-                    },
-                'domain': {
-                    'type': 'str',
-                    },
-                'ttl': {
-                    'type': 'int',
-                    }
-                },
-            'mode': {
-                'type': 'str',
-                },
-            'addr': {
-                'type': 'str',
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'request_normal': {
-                'type': 'str',
-                },
-            'request_dropped': {
-                'type': 'str',
-                },
-            'response_success': {
-                'type': 'str',
-                },
-            'response_failure': {
-                'type': 'str',
-                },
-            'response_error': {
-                'type': 'str',
-                },
-            'response_timeout': {
-                'type': 'str',
-                },
-            'response_other': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'entry_list': {'type': 'list', 'ntype': {'type': 'str', }, 'address': {'type': 'str', }, 'domain': {'type': 'str', }, 'ttl': {'type': 'int', }}}})
     return rv
 
 
@@ -390,11 +296,6 @@ def run_command(module):
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["rdns"]["oper"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_type_result)
-                info = get_type_result["response_body"]
-                result["acos_info"] = info["rdns"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

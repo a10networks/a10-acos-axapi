@@ -60,6 +60,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    dummy:
+        description:
+        - "dummy to make intermediate obj to single"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -156,7 +161,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -176,7 +181,38 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'trigger_stats_inc': {'type': 'dict', 'method_unknown': {'type': 'bool', }, 'uuid': {'type': 'str', }}, 'trigger_stats_rate': {'type': 'dict', 'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'method_unknown': {'type': 'bool', }, 'uuid': {'type': 'str', }}})
+    rv.update({
+        'dummy': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'trigger_stats_inc': {
+            'type': 'dict',
+            'method_unknown': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'trigger_stats_rate': {
+            'type': 'dict',
+            'threshold_exceeded_by': {
+                'type': 'int',
+                },
+            'duration': {
+                'type': 'int',
+                },
+            'method_unknown': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     # Parent keys
     rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv

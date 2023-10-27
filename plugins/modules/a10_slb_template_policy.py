@@ -236,14 +236,6 @@ options:
                 description:
                 - "Wait for web category to be resolved before taking proxy decision"
                 type: bool
-            forward_http_connect_to_icap:
-                description:
-                - "Forward HTTP CONNECT request to ICAP server"
-                type: bool
-            reqmod_icap:
-                description:
-                - "ICAP reqmod template (Reqmod ICAP Template Name)"
-                type: str
             filtering:
                 description:
                 - "Field filtering"
@@ -259,10 +251,6 @@ options:
             action_list:
                 description:
                 - "Field action_list"
-                type: list
-            dual_stack_action_list:
-                description:
-                - "Field dual_stack_action_list"
                 type: list
             source_list:
                 description:
@@ -318,6 +306,10 @@ options:
                 description:
                 - "Policy template name"
                 type: str
+            forward_policy:
+                description:
+                - "Field forward_policy"
+                type: dict
 
 '''
 
@@ -608,12 +600,6 @@ def get_argspec():
             'require_web_category': {
                 'type': 'bool',
                 },
-            'forward_http_connect_to_icap': {
-                'type': 'bool',
-                },
-            'reqmod_icap': {
-                'type': 'str',
-                },
             'filtering': {
                 'type': 'list',
                 'ssli_url_filtering': {
@@ -650,17 +636,11 @@ def get_argspec():
                 'forward_snat': {
                     'type': 'str',
                     },
-                'forward_snat_pt_only': {
-                    'type': 'bool',
-                    },
                 'fall_back': {
                     'type': 'str',
                     },
                 'fall_back_snat': {
                     'type': 'str',
-                    },
-                'fall_back_snat_pt_only': {
-                    'type': 'bool',
                     },
                 'proxy_chaining': {
                     'type': 'bool',
@@ -686,47 +666,6 @@ def get_argspec():
                 'http_status_code': {
                     'type': 'str',
                     'choices': ['301', '302']
-                    },
-                'uuid': {
-                    'type': 'str',
-                    },
-                'user_tag': {
-                    'type': 'str',
-                    },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                        }
-                    }
-                },
-            'dual_stack_action_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                    },
-                'ipv4': {
-                    'type': 'str',
-                    },
-                'ipv4_snat': {
-                    'type': 'str',
-                    },
-                'ipv6': {
-                    'type': 'str',
-                    },
-                'ipv6_snat': {
-                    'type': 'str',
-                    },
-                'fall_back': {
-                    'type': 'str',
-                    },
-                'fall_back_snat': {
-                    'type': 'str',
-                    },
-                'log': {
-                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -784,9 +723,6 @@ def get_argspec():
                         'action': {
                             'type': 'str',
                             },
-                        'dual_stack_action': {
-                            'type': 'str',
-                            },
                         'ntype': {
                             'type': 'str',
                             'choices': ['host', 'url', 'ip']
@@ -796,6 +732,13 @@ def get_argspec():
                             },
                         'uuid': {
                             'type': 'str',
+                            },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                                }
                             }
                         },
                     'web_reputation_scope_list': {
@@ -807,9 +750,6 @@ def get_argspec():
                         'action': {
                             'type': 'str',
                             },
-                        'dual_stack_action': {
-                            'type': 'str',
-                            },
                         'ntype': {
                             'type': 'str',
                             'choices': ['host', 'url']
@@ -819,6 +759,13 @@ def get_argspec():
                             },
                         'uuid': {
                             'type': 'str',
+                            },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                                }
                             }
                         },
                     'web_category_list_list': {
@@ -830,9 +777,6 @@ def get_argspec():
                         'action': {
                             'type': 'str',
                             },
-                        'dual_stack_action': {
-                            'type': 'str',
-                            },
                         'ntype': {
                             'type': 'str',
                             'choices': ['host', 'url']
@@ -842,14 +786,18 @@ def get_argspec():
                             },
                         'uuid': {
                             'type': 'str',
+                            },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                                }
                             }
                         },
                     'any': {
                         'type': 'dict',
                         'action': {
-                            'type': 'str',
-                            },
-                        'dual_stack_action': {
                             'type': 'str',
                             },
                         'uuid': {
@@ -901,6 +849,9 @@ def get_argspec():
             'name': {
                 'type': 'str',
                 'required': True,
+                },
+            'forward_policy': {
+                'type': 'dict',
                 }
             }
         })

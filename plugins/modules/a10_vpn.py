@@ -126,11 +126,6 @@ options:
           DES/3DES/MD5/null will not work."
         type: bool
         required: False
-    signature_authentication:
-        description:
-        - "Enable use of different hash algorithms for signature authentication in IKEv2"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -235,11 +230,6 @@ options:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED pre-shared key string)"
                 type: str
-            hash:
-                description:
-                - "'sha256'= Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384;
-          'sha512'= Secure Hash Algorithm 512;"
-                type: str
             interface_management:
                 description:
                 - "only handle traffic on management interface, share partition only"
@@ -301,10 +291,6 @@ options:
             lifetime:
                 description:
                 - "IKE SA age in seconds"
-                type: int
-            fragment_size:
-                description:
-                - "Enable IKE message fragment and set fragment size"
                 type: int
             nat_traversal:
                 description:
@@ -407,8 +393,7 @@ options:
                 description:
                 - "'0'= Disable Anti-Replay Window Check; '32'= Window size of 32; '64'= Window
           size of 64; '128'= Window size of 128; '256'= Window size of 256; '512'= Window
-          size of 512; '1024'= Window size of 1024; '2048'= Window size of 2048; '3072'=
-          Window size of 3072; '4096'= Window size of 4096; '8192'= Window size of 8192;"
+          size of 512; '1024'= Window size of 1024;"
                 type: str
             up:
                 description:
@@ -446,38 +431,6 @@ options:
                 description:
                 - "Field ipsec_gateway"
                 type: dict
-    ipsec_group_list:
-        description:
-        - "Field ipsec_group_list"
-        type: list
-        required: False
-        suboptions:
-            name:
-                description:
-                - "Group name"
-                type: str
-            ipsecgroup_cfg:
-                description:
-                - "Field ipsecgroup_cfg"
-                type: list
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            user_tag:
-                description:
-                - "Customized tag"
-                type: str
-    group_list:
-        description:
-        - "Field group_list"
-        type: dict
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     ipsec_sa_stats_list:
         description:
         - "Field ipsec_sa_stats_list"
@@ -686,10 +639,6 @@ options:
                 description:
                 - "Field ipsec_list"
                 type: list
-            group_list:
-                description:
-                - "Field group_list"
-                type: dict
             crl:
                 description:
                 - "Field crl"
@@ -815,9 +764,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "asymmetric_flow_support", "crl", "default", "enable_vpn_metrics", "error", "errordump", "extended_matching", "fragment_after_encap", "group_list", "ike_acc_enable", "ike_gateway_list", "ike_logging_enable", "ike_sa", "ike_sa_brief", "ike_sa_clients", "ike_sa_timeout", "ike_stats_by_gw", "ike_stats_global", "ipsec_cipher_check",
-    "ipsec_error_dump", "ipsec_group_list", "ipsec_list", "ipsec_mgmt_default_policy_drop", "ipsec_sa", "ipsec_sa_by_gw", "ipsec_sa_clients", "ipsec_sa_stats_list", "jumbo_fragment", "log", "nat_traversal_flow_affinity", "ocsp", "oper", "revocation_list", "sampling_enable", "signature_authentication", "stateful_mode", "stats",
-    "tcp_mss_adjust_disable", "uuid",
+    "asymmetric_flow_support", "crl", "default", "enable_vpn_metrics", "error", "errordump", "extended_matching", "fragment_after_encap", "ike_acc_enable", "ike_gateway_list", "ike_logging_enable", "ike_sa", "ike_sa_brief", "ike_sa_clients", "ike_sa_timeout", "ike_stats_by_gw", "ike_stats_global", "ipsec_cipher_check", "ipsec_error_dump",
+    "ipsec_list", "ipsec_mgmt_default_policy_drop", "ipsec_sa", "ipsec_sa_by_gw", "ipsec_sa_clients", "ipsec_sa_stats_list", "jumbo_fragment", "log", "nat_traversal_flow_affinity", "ocsp", "oper", "revocation_list", "sampling_enable", "stateful_mode", "stats", "tcp_mss_adjust_disable", "uuid",
     ]
 
 
@@ -879,9 +827,6 @@ def get_argspec():
             'type': 'bool',
             },
         'ipsec_cipher_check': {
-            'type': 'bool',
-            },
-        'signature_authentication': {
             'type': 'bool',
             },
         'uuid': {
@@ -960,10 +905,6 @@ def get_argspec():
                 },
             'preshare_key_encrypted': {
                 'type': 'str',
-                },
-            'hash': {
-                'type': 'str',
-                'choices': ['sha256', 'sha384', 'sha512']
                 },
             'interface_management': {
                 'type': 'bool',
@@ -1051,9 +992,6 @@ def get_argspec():
                     }
                 },
             'lifetime': {
-                'type': 'int',
-                },
-            'fragment_size': {
                 'type': 'int',
                 },
             'nat_traversal': {
@@ -1170,7 +1108,7 @@ def get_argspec():
                 },
             'anti_replay_window': {
                 'type': 'str',
-                'choices': ['0', '32', '64', '128', '256', '512', '1024', '2048', '3072', '4096', '8192']
+                'choices': ['0', '32', '64', '128', '256', '512', '1024']
                 },
             'up': {
                 'type': 'bool',
@@ -1273,34 +1211,6 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
-                }
-            },
-        'ipsec_group_list': {
-            'type': 'list',
-            'name': {
-                'type': 'str',
-                'required': True,
-                },
-            'ipsecgroup_cfg': {
-                'type': 'list',
-                'ipsec': {
-                    'type': 'str',
-                    },
-                'priority': {
-                    'type': 'int',
-                    }
-                },
-            'uuid': {
-                'type': 'str',
-                },
-            'user_tag': {
-                'type': 'str',
-                }
-            },
-        'group_list': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
                 }
             },
         'ipsec_sa_stats_list': {
@@ -1526,9 +1436,6 @@ def get_argspec():
                     },
                 'partition_name': {
                     'type': 'str',
-                    },
-                'Signed_auth_flag': {
-                    'type': 'int',
                     }
                 },
             'all_partitions': {
@@ -1703,9 +1610,6 @@ def get_argspec():
                         'Hash': {
                             'type': 'str',
                             },
-                        'Sign_hash': {
-                            'type': 'str',
-                            },
                         'Lifetime': {
                             'type': 'int',
                             },
@@ -1719,18 +1623,6 @@ def get_argspec():
                             'type': 'str',
                             },
                         'DH_Group': {
-                            'type': 'int',
-                            },
-                        'Fragment_message_generated': {
-                            'type': 'int',
-                            },
-                        'Fragment_message_received': {
-                            'type': 'int',
-                            },
-                        'Fragmentation_error': {
-                            'type': 'int',
-                            },
-                        'Fragment_reassemble_error': {
                             'type': 'int',
                             }
                         }
@@ -1915,42 +1807,6 @@ def get_argspec():
                             'type': 'int',
                             },
                         'enforce_ts_decap_drop': {
-                            'type': 'int',
-                            }
-                        }
-                    }
-                },
-            'group_list': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'group_name': {
-                        'type': 'str',
-                        },
-                    'group_list': {
-                        'type': 'list',
-                        'Name': {
-                            'type': 'str',
-                            },
-                        'Ipsec_sa_name': {
-                            'type': 'str',
-                            },
-                        'Ike_gateway_name': {
-                            'type': 'str',
-                            },
-                        'Priority': {
-                            'type': 'int',
-                            },
-                        'Status': {
-                            'type': 'str',
-                            },
-                        'Role': {
-                            'type': 'str',
-                            },
-                        'Is_new_group': {
-                            'type': 'int',
-                            },
-                        'Grp_member_count': {
                             'type': 'int',
                             }
                         }

@@ -192,12 +192,6 @@ def get_argspec():
                 'rate_byte_rcvd': {
                     'type': 'int',
                     },
-                'input_utilization': {
-                    'type': 'int',
-                    },
-                'output_utilization': {
-                    'type': 'int',
-                    },
                 'type_vendor_part': {
                     'type': 'str',
                     },

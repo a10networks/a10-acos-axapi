@@ -70,6 +70,10 @@ options:
                 description:
                 - "Field ip"
                 type: int
+            ipv6:
+                description:
+                - "Field ipv6"
+                type: int
             mac:
                 description:
                 - "Field mac"
@@ -152,7 +156,44 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'ip': {'type': 'int', }, 'mac': {'type': 'int', }, 'hash_list': {'type': 'list', 'hash': {'type': 'int', }, 'node': {'type': 'int', }, 'so_vnp_id': {'type': 'int', }, 'so_ip': {'type': 'str', }, 'so_mac': {'type': 'str', }, 'ref_count': {'type': 'int', }}}})
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'oper': {
+            'type': 'dict',
+            'ip': {
+                'type': 'int',
+                },
+            'ipv6': {
+                'type': 'int',
+                },
+            'mac': {
+                'type': 'int',
+                },
+            'hash_list': {
+                'type': 'list',
+                'hash': {
+                    'type': 'int',
+                    },
+                'node': {
+                    'type': 'int',
+                    },
+                'so_vnp_id': {
+                    'type': 'int',
+                    },
+                'so_ip': {
+                    'type': 'str',
+                    },
+                'so_mac': {
+                    'type': 'str',
+                    },
+                'ref_count': {
+                    'type': 'int',
+                    }
+                }
+            }
+        })
     return rv
 
 

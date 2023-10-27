@@ -87,7 +87,7 @@ options:
         required: False
     cloud_query_cache_size:
         description:
-        - "Maximum cache size for storing cloud query results"
+        - "Maximum cache size for storing cloud query results, default= 1"
         type: int
         required: False
     db_update_time:
@@ -107,7 +107,7 @@ options:
         required: False
     rtu_cache_size:
         description:
-        - "Maximum cache size for storing RTU updates"
+        - "Maximum cache size for storing RTU updates, default= 1"
         type: int
         required: False
     use_mgmt_port:
@@ -512,13 +512,25 @@ options:
                 description:
                 - "Category Health and Medicine"
                 type: bool
+            confirmed_spam_sources:
+                description:
+                - "Category Confirmed SPAM Sources"
+                type: bool
             spam_urls:
                 description:
                 - "Category SPAM URLs"
                 type: bool
-            dynamically_generated_content:
+            unconfirmed_spam_sources:
                 description:
-                - "Dynamically Generated Content"
+                - "Category Unconfirmed SPAM Sources"
+                type: bool
+            open_http_proxies:
+                description:
+                - "Category Open HTTP Proxies"
+                type: bool
+            dynamic_comment:
+                description:
+                - "Category Dynamic Comment"
                 type: bool
             parked_domains:
                 description:
@@ -527,6 +539,10 @@ options:
             alcohol_and_tobacco:
                 description:
                 - "Category Alcohol and Tobacco"
+                type: bool
+            private_ip_addresses:
+                description:
+                - "Category Private IP Addresses"
                 type: bool
             image_and_video_search:
                 description:
@@ -547,6 +563,10 @@ options:
             web_hosting_sites:
                 description:
                 - "Category Web Hosting Sites"
+                type: bool
+            food_and_dining:
+                description:
+                - "Category Food and Dining"
                 type: bool
             nudity_artistic:
                 description:
@@ -1104,16 +1124,28 @@ def get_argspec():
             'health_and_medicine': {
                 'type': 'bool',
                 },
+            'confirmed_spam_sources': {
+                'type': 'bool',
+                },
             'spam_urls': {
                 'type': 'bool',
                 },
-            'dynamically_generated_content': {
+            'unconfirmed_spam_sources': {
+                'type': 'bool',
+                },
+            'open_http_proxies': {
+                'type': 'bool',
+                },
+            'dynamic_comment': {
                 'type': 'bool',
                 },
             'parked_domains': {
                 'type': 'bool',
                 },
             'alcohol_and_tobacco': {
+                'type': 'bool',
+                },
+            'private_ip_addresses': {
                 'type': 'bool',
                 },
             'image_and_video_search': {
@@ -1129,6 +1161,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'web_hosting_sites': {
+                'type': 'bool',
+                },
+            'food_and_dining': {
                 'type': 'bool',
                 },
             'nudity_artistic': {
@@ -1153,8 +1188,8 @@ def get_argspec():
                         'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games',
                         'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals',
                         'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine',
-                        'confirmed-SPAM-sources', 'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining',
-                        'nudity-artistic', 'illegal-pornography'
+                        'confirmed-SPAM-sources', 'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamic-comment', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'nudity-artistic',
+                        'illegal-pornography'
                         ]
                     }
                 }
@@ -1418,9 +1453,6 @@ def get_argspec():
                         },
                     'total_req_lookup_processed': {
                         'type': 'int',
-                        },
-                    'clear_cache': {
-                        'type': 'str',
                         }
                     }
                 },

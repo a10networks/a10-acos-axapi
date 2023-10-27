@@ -101,11 +101,6 @@ options:
         - "Nat Pool Port overload"
         type: bool
         required: False
-    chunk_sharing:
-        description:
-        - "Share NAT pool chunk across CPUs"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -216,7 +211,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["chunk_sharing", "end_address", "gateway", "ip_rr", "netmask", "oper", "pool_name", "port_overload", "sampling_enable", "scaleout_device_id", "start_address", "stats", "uuid", "vrid", ]
+AVAILABLE_PROPERTIES = ["end_address", "gateway", "ip_rr", "netmask", "oper", "pool_name", "port_overload", "sampling_enable", "scaleout_device_id", "start_address", "stats", "uuid", "vrid", ]
 
 
 def get_default_argspec():
@@ -263,9 +258,6 @@ def get_argspec():
             'type': 'bool',
             },
         'port_overload': {
-            'type': 'bool',
-            },
-        'chunk_sharing': {
             'type': 'bool',
             },
         'uuid': {

@@ -445,17 +445,9 @@ options:
                 description:
                 - "Only run GSLB as DNS server mode"
                 type: bool
-            zone_owner_mode:
-                description:
-                - "Only run GSLB as DNS server mode with zone ownership"
-                type: bool
             server_cname:
                 description:
                 - "Provide CNAME Records"
-                type: bool
-            server_caa:
-                description:
-                - "Provide CAA Records"
                 type: bool
             ipv6:
                 description:
@@ -1020,13 +1012,7 @@ def get_argspec():
             'server_mode_only': {
                 'type': 'bool',
                 },
-            'zone_owner_mode': {
-                'type': 'bool',
-                },
             'server_cname': {
-                'type': 'bool',
-                },
-            'server_caa': {
                 'type': 'bool',
                 },
             'ipv6': {

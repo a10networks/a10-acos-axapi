@@ -71,11 +71,6 @@ options:
           of 10)"
         type: int
         required: False
-    QAT:
-        description:
-        - "HW assisted QAT SSL module"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -146,7 +141,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["crypto_core", "crypto_mem", "fpga_decrypt", "packet_round_robin", "QAT", "uuid", ]
+AVAILABLE_PROPERTIES = ["crypto_core", "crypto_mem", "fpga_decrypt", "packet_round_robin", "uuid", ]
 
 
 def get_default_argspec():
@@ -166,7 +161,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'packet_round_robin': {'type': 'bool', }, 'crypto_core': {'type': 'int', }, 'crypto_mem': {'type': 'int', }, 'QAT': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'fpga_decrypt': {'type': 'dict', 'action': {'type': 'str', 'choices': ['enable', 'disable']}}})
+    rv.update({'packet_round_robin': {'type': 'bool', }, 'crypto_core': {'type': 'int', }, 'crypto_mem': {'type': 'int', }, 'uuid': {'type': 'str', }, 'fpga_decrypt': {'type': 'dict', 'action': {'type': 'str', 'choices': ['enable', 'disable']}}})
     return rv
 
 

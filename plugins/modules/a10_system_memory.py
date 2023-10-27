@@ -88,6 +88,14 @@ options:
                 description:
                 - "Field system_memory_counts"
                 type: int
+            AC_trie_memory:
+                description:
+                - "Field AC_trie_memory"
+                type: list
+            ac_trie_memory_counts:
+                description:
+                - "Field ac_trie_memory_counts"
+                type: int
             aFleX_memory:
                 description:
                 - "Field aFleX_memory"
@@ -257,6 +265,21 @@ def get_argspec():
                     }
                 },
             'system_memory_counts': {
+                'type': 'int',
+                },
+            'AC_trie_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                    },
+                'Allocated': {
+                    'type': 'int',
+                    },
+                'Max': {
+                    'type': 'int',
+                    }
+                },
+            'ac_trie_memory_counts': {
                 'type': 'int',
                 },
             'aFleX_memory': {

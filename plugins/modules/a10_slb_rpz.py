@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_slb_rpz
 description:
-    - Manage RPZ Scripts
+    - Manage rpz Scripts
 author: A10 Networks
 options:
     state:

@@ -133,7 +133,14 @@ options:
           prefix mismatch; 'bw_ignore_limit'= BW Limit ignored packets count;
           'ppsl_drop_egr'= Packet-Per-Sec Limit Drop at egress; 'ppsl_drop_ing'= Packet-
           Per-Sec Limit Drop at ingress; 'ppsl_ignore_limit'= Packet-Per-Sec Limit
-          ignored packets count; 'closed_port_syn_drop'= Linux Closed Port SYN Drop;"
+          ignored packets count; 'closed_port_syn_drop'= Linux Closed Port SYN Drop;
+          'ip_icmp_error_drop'= IP ICMP Error Drop; 'tls13_drop_req'= TLS13-Request-Per-
+          Sec Limit Drop at ingress; 'tls13_ignore_req'= TLS13-Request-Per-Sec Limit
+          ignored packets count; 'tls12_drop_req'= TLS12-Request-Per-Sec Limit Drop at
+          ingress; 'tls12_ignore_req'= TLS12-Request-Per-Sec Limit ignored packets count;
+          'tls12_tls13_drop_req'= TLS12--TLS13-Request-Per-Sec Limit Drop at ingress;
+          'tls12_tls13_ignore_req'= TLS12-TLS13-Request-Per-Sec Limit ignored packets
+          count;"
                 type: str
     stats:
         description:
@@ -549,6 +556,34 @@ options:
                 description:
                 - "Linux Closed Port SYN Drop"
                 type: str
+            ip_icmp_error_drop:
+                description:
+                - "IP ICMP Error Drop"
+                type: str
+            tls13_drop_req:
+                description:
+                - "TLS13-Request-Per-Sec Limit Drop at ingress"
+                type: str
+            tls13_ignore_req:
+                description:
+                - "TLS13-Request-Per-Sec Limit ignored packets count"
+                type: str
+            tls12_drop_req:
+                description:
+                - "TLS12-Request-Per-Sec Limit Drop at ingress"
+                type: str
+            tls12_ignore_req:
+                description:
+                - "TLS12-Request-Per-Sec Limit ignored packets count"
+                type: str
+            tls12_tls13_drop_req:
+                description:
+                - "TLS12--TLS13-Request-Per-Sec Limit Drop at ingress"
+                type: str
+            tls12_tls13_ignore_req:
+                description:
+                - "TLS12-TLS13-Request-Per-Sec Limit ignored packets count"
+                type: str
 
 '''
 
@@ -639,7 +674,8 @@ def get_argspec():
                     'fpga_error_pkt2', 'max_arp_drop', 'ipv6frag_tcp', 'ipv6frag_icmp', 'ipv6frag_ospf', 'ipv6frag_esp', 'l4_in_ctrl_cpu', 'mgmt_svc_drop', 'jumbo_frag_drop', 'ipv6_jumbo_frag_drop', 'ipipv6_jumbo_frag_drop', 'ipv6_ndisc_dad_solicits', 'ipv6_ndisc_dad_adverts', 'ipv6_ndisc_mac_changes', 'ipv6_ndisc_out_of_memory',
                     'sp_non_ctrl_pkt_drop', 'urpf_pkt_drop', 'fw_smp_zone_mismatch', 'ipfrag_udp', 'ipfrag_icmp', 'ipfrag_ospf', 'ipfrag_esp', 'ipfrag_tcp_dropped', 'ipfrag_udp_dropped', 'ipfrag_ipip_dropped', 'redirect_fwd_fail', 'redirect_fwd_sent', 'redirect_rev_fail', 'redirect_rev_sent', 'redirect_setup_fail', 'ip_frag_sent',
                     'invalid_rx_arp_pkt', 'invalid_sender_mac_arp_drop', 'dev_based_arp_drop', 'scaleout_arp_drop', 'virtual_ip_not_found_arp_drop', 'inactive_static_nat_pool_arp_drop', 'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop', 'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop', 'ip_not_found_arp_drop', 'dev_link_down_arp_drop',
-                    'lacp_tx_intf_err_drop', 'service_chain_sent', 'service_chain_rcvd', 'unnumbered_nat_error', 'unnumbered_unsupported_drop', 'ipv6frag_gre_dropped', 'ipv6_ndisc_dad_prefix_mismatch_drop', 'bw_ignore_limit', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'closed_port_syn_drop'
+                    'lacp_tx_intf_err_drop', 'service_chain_sent', 'service_chain_rcvd', 'unnumbered_nat_error', 'unnumbered_unsupported_drop', 'ipv6frag_gre_dropped', 'ipv6_ndisc_dad_prefix_mismatch_drop', 'bw_ignore_limit', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'closed_port_syn_drop', 'ip_icmp_error_drop', 'tls13_drop_req',
+                    'tls13_ignore_req', 'tls12_drop_req', 'tls12_ignore_req', 'tls12_tls13_drop_req', 'tls12_tls13_ignore_req'
                     ]
                 }
             },
@@ -949,6 +985,27 @@ def get_argspec():
                 'type': 'str',
                 },
             'closed_port_syn_drop': {
+                'type': 'str',
+                },
+            'ip_icmp_error_drop': {
+                'type': 'str',
+                },
+            'tls13_drop_req': {
+                'type': 'str',
+                },
+            'tls13_ignore_req': {
+                'type': 'str',
+                },
+            'tls12_drop_req': {
+                'type': 'str',
+                },
+            'tls12_ignore_req': {
+                'type': 'str',
+                },
+            'tls12_tls13_drop_req': {
+                'type': 'str',
+                },
+            'tls12_tls13_ignore_req': {
                 'type': 'str',
                 }
             }

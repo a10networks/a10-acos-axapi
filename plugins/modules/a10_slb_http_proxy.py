@@ -245,14 +245,6 @@ options:
           'doh_dns_resp_rcode_notauth'= DoH DNS Response rcode NOTAUTH;
           'doh_dns_resp_rcode_notzone'= DoH DNS Response rcode NOTZONE;
           'doh_dns_resp_rcode_other'= DoH DNS Response rcode OTHER;
-          'compression_before_br'= Tot data before brotli compress;
-          'compression_after_br'= Tot data after brotli compress;
-          'compression_before_total'= Tot data before compress;
-          'compression_after_total'= Tot data after compress; 'decompression_before_br'=
-          Tot data before brotli decompress; 'decompression_after_br'= Tot data after
-          brotli decompress; 'decompression_before_total'= Tot data before decompress;
-          'decompression_after_total'= Tot data after decompress; 'compress_rsp_br'=
-          Compress req with brotli; 'compress_rsp_total'= Compress req;
           'h2up_content_length_alias'= HTTP2 content length alias;
           'malformed_h2up_header_value'= Malformed HTTP2 header value;
           'malformed_h2up_scheme_value'= Malformed HTTP2 scheme value;
@@ -262,11 +254,11 @@ options:
           'transfer_encoding_and_content_length'= Transfer-encoding header with Content-
           Length header; 'get_and_payload'= GET method with content-length header or
           transfer-encoding header; 'h2up_with_host_and_auth'= HTTP2 with host header and
-          authority header; 'req_http3'= Request 3.0; 'response_http3'= Resp 3.0;
-          'header_filter_rule_hit'= Hit header filter rule; 'http1_client_idle_timeout'=
-          HTTP1 client idle timeout; 'http2_client_idle_timeout'= HTTP2 client idle
-          timeout; 'http_disallowed_methods'= HTTP disallowed methods;
-          'http_allowed_methods'= HTTP allowed methods;"
+          authority header; 'header_filter_rule_hit'= Hit header filter rule;
+          'http1_client_idle_timeout'= HTTP1 client idle timeout;
+          'http2_client_idle_timeout'= HTTP2 client idle timeout;
+          'http_disallowed_methods'= HTTP disallowed methods; 'upgrade_to_new_proxy'= H2C
+          upgrade; 'del_h2c_header'= H2C header deletion;"
                 type: str
     oper:
         description:
@@ -1124,46 +1116,6 @@ options:
                 description:
                 - "DoH DNS Response rcode OTHER"
                 type: str
-            compression_before_br:
-                description:
-                - "Tot data before brotli compress"
-                type: str
-            compression_after_br:
-                description:
-                - "Tot data after brotli compress"
-                type: str
-            compression_before_total:
-                description:
-                - "Tot data before compress"
-                type: str
-            compression_after_total:
-                description:
-                - "Tot data after compress"
-                type: str
-            decompression_before_br:
-                description:
-                - "Tot data before brotli decompress"
-                type: str
-            decompression_after_br:
-                description:
-                - "Tot data after brotli decompress"
-                type: str
-            decompression_before_total:
-                description:
-                - "Tot data before decompress"
-                type: str
-            decompression_after_total:
-                description:
-                - "Tot data after decompress"
-                type: str
-            req_http3:
-                description:
-                - "Request 3.0"
-                type: str
-            response_http3:
-                description:
-                - "Resp 3.0"
-                type: str
 
 '''
 
@@ -1273,9 +1225,8 @@ def get_argspec():
                     'doh_post_content_type_mismatch', 'doh_post_payload_not_found', 'doh_post_payload_extract_failed', 'doh_non_doh_method', 'doh_tcp_send_failed', 'doh_udp_send_failed', 'doh_query_time_out', 'doh_dns_query_type_a', 'doh_dns_query_type_aaaa', 'doh_dns_query_type_ns', 'doh_dns_query_type_cname', 'doh_dns_query_type_any',
                     'doh_dns_query_type_srv', 'doh_dns_query_type_mx', 'doh_dns_query_type_soa', 'doh_dns_query_type_others', 'doh_resp_setup_failed', 'doh_resp_header_alloc_failed', 'doh_resp_que_failed', 'doh_resp_udp_frags', 'doh_resp_tcp_frags', 'doh_serv_sel_failed', 'doh_retry_w_tcp', 'doh_get_uri_too_long', 'doh_post_payload_too_large',
                     'doh_dns_malformed_query', 'doh_dns_resp_rcode_err_format', 'doh_dns_resp_rcode_err_server', 'doh_dns_resp_rcode_err_name', 'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse', 'doh_dns_resp_rcode_yxdomain', 'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset', 'doh_dns_resp_rcode_notauth',
-                    'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'compression_before_br', 'compression_after_br', 'compression_before_total', 'compression_after_total', 'decompression_before_br', 'decompression_after_br', 'decompression_before_total', 'decompression_after_total', 'compress_rsp_br', 'compress_rsp_total',
-                    'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth', 'req_http3', 'response_http3', 'header_filter_rule_hit',
-                    'http1_client_idle_timeout', 'http2_client_idle_timeout', 'http_disallowed_methods', 'http_allowed_methods'
+                    'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth',
+                    'header_filter_rule_hit', 'http1_client_idle_timeout', 'http2_client_idle_timeout', 'http_disallowed_methods', 'upgrade_to_new_proxy', 'del_h2c_header'
                     ]
                 }
             },
@@ -2207,36 +2158,6 @@ def get_argspec():
                 'doh_dns_resp_rcode_other': {
                     'type': 'int',
                     },
-                'compression_before_br': {
-                    'type': 'int',
-                    },
-                'compression_after_br': {
-                    'type': 'int',
-                    },
-                'compression_before_total': {
-                    'type': 'int',
-                    },
-                'compression_after_total': {
-                    'type': 'int',
-                    },
-                'decompression_before_br': {
-                    'type': 'int',
-                    },
-                'decompression_after_br': {
-                    'type': 'int',
-                    },
-                'decompression_before_total': {
-                    'type': 'int',
-                    },
-                'decompression_after_total': {
-                    'type': 'int',
-                    },
-                'compress_rsp_br': {
-                    'type': 'int',
-                    },
-                'compress_rsp_total': {
-                    'type': 'int',
-                    },
                 'h2up_content_length_alias': {
                     'type': 'int',
                     },
@@ -2276,7 +2197,10 @@ def get_argspec():
                 'http_disallowed_methods': {
                     'type': 'int',
                     },
-                'http_allowed_methods': {
+                'upgrade_to_new_proxy': {
+                    'type': 'int',
+                    },
+                'del_h2c_header': {
                     'type': 'int',
                     }
                 },
@@ -2911,36 +2835,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'doh_dns_resp_rcode_other': {
-                'type': 'str',
-                },
-            'compression_before_br': {
-                'type': 'str',
-                },
-            'compression_after_br': {
-                'type': 'str',
-                },
-            'compression_before_total': {
-                'type': 'str',
-                },
-            'compression_after_total': {
-                'type': 'str',
-                },
-            'decompression_before_br': {
-                'type': 'str',
-                },
-            'decompression_after_br': {
-                'type': 'str',
-                },
-            'decompression_before_total': {
-                'type': 'str',
-                },
-            'decompression_after_total': {
-                'type': 'str',
-                },
-            'req_http3': {
-                'type': 'str',
-                },
-            'response_http3': {
                 'type': 'str',
                 }
             }

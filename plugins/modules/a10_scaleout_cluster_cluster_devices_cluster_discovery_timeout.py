@@ -60,6 +60,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    timer_val:
+        description:
+        - "Cluster node discovery timeout value (secs (Default= 120))"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -119,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid", ]
+AVAILABLE_PROPERTIES = ["timer_val", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }})
+    rv.update({'timer_val': {'type': 'int', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv
@@ -170,10 +175,23 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["cluster-discovery-timeout"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["cluster-discovery-timeout"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["cluster-discovery-timeout"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):

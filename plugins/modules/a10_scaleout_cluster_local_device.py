@@ -139,6 +139,10 @@ options:
                 description:
                 - "Field reachability_options"
                 type: dict
+            encap:
+                description:
+                - "Field encap"
+                type: dict
     session_sync:
         description:
         - "Field session_sync"
@@ -355,6 +359,19 @@ def get_argspec():
             'reachability_options': {
                 'type': 'dict',
                 'skip_default_route': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'encap': {
+                'type': 'dict',
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['vxlan']
+                    },
+                'use_v4_vxlan': {
                     'type': 'bool',
                     },
                 'uuid': {

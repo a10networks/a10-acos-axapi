@@ -70,11 +70,6 @@ options:
         - "Action to be performed"
         type: str
         required: False
-    dual_stack_action:
-        description:
-        - "Dual-stack action to be performed"
-        type: str
-        required: False
     ntype:
         description:
         - "'host'= Match hostname; 'url'= match URL;"
@@ -90,6 +85,16 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'hits'= Number of requests matching this destination rule;"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -158,7 +163,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "dual_stack_action", "priority", "stats", "ntype", "uuid", "web_category_list", ]
+AVAILABLE_PROPERTIES = ["action", "priority", "sampling_enable", "stats", "ntype", "uuid", "web_category_list", ]
 
 
 def get_default_argspec():
@@ -186,9 +191,6 @@ def get_argspec():
         'action': {
             'type': 'str',
             },
-        'dual_stack_action': {
-            'type': 'str',
-            },
         'ntype': {
             'type': 'str',
             'choices': ['host', 'url']
@@ -198,6 +200,13 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits']
+                }
             },
         'stats': {
             'type': 'dict',

@@ -188,10 +188,9 @@ options:
                 type: str
     send_community_val:
         description:
-        - "'all'= Send Standard, Extended, and Large Community attributes; 'both'= Send
-          Standard and Extended Community attributes; 'none'= Disable Sending Community
-          attributes; 'standard'= Send Standard Community attributes; 'extended'= Send
-          Extended Community attributes; 'large'= Send Large Community attributes;"
+        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
+          Sending Community attributes; 'standard'= Send Standard Community attributes;
+          'extended'= Send Extended Community attributes;"
         type: str
         required: False
     inbound:
@@ -378,7 +377,7 @@ def get_argspec():
             },
         'send_community_val': {
             'type': 'str',
-            'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
+            'choices': ['both', 'none', 'standard', 'extended']
             },
         'inbound': {
             'type': 'bool',
