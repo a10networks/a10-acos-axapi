@@ -1,39 +1,105 @@
 ## Table of Contents
-1. [Overview](#Overview)
+1. [Introduction](#Introduction)
 
-2. [Installation](#Installation)
+2. [Support Matrix](#Support-Matrix)
 
-3. [Plugin Configuration](#Plugin-Configuration)
+3. [How it works](#How-it-works)
 
-4. [Collection module usage options ](#Collection-module-usage-options)
+4. [How to install Ansbile on Ubuntu](#How-to-install-Ansbile-on-Ubuntu)
 
-5. [Setup and Configurations](#Setup-and-Configurations)
+5. [How to install Ansbile on MacOS](#How-to-install-Ansbile-on-MacOS)
 
-6. [Usage information](#Usage-Information)
+6. [How to install A10 Ansible modules](#How-to-install-A10-Ansible-modules)
 
-7. [Test Cases](#Test-Cases)
+7. [How to configure A10 Ansible modules](#How-to-A10-Ansible-modules)
 
-8. [License](#License)
+8. [How to use A10 Ansible module collections](#How-to-use-A10-Ansible-module-collections)
 
-9. [Open Source Disclaimer](#Open-Source-Disclaimer)
+9. [How to search Ansible module configurations](#How-to-search-Ansible-module-configurations)
 
-10. [Examples](#Examples)
+10. [How to create new Ansible playbook example](#How-to-create-new-Ansible-playbook-example)
 
-11. [Issues and Inquiries](#Issues-and-Inquiries)
+11. [How to execute Ansible playbooks from CLI](#How-to-execute-Ansible-playbooks-from-CLI)
 
-## Overview
+12. [How to verify on Thunder](#How-to-verify-on-Thunder)
 
-#### Summary
-This repository is a set of Ansible modules and example playbooks for interacting with AXAPI v3 for configuration and monitoring of A10 ACOS-based hardware and virtual appliances. The module code and example playbooks are generated using a combination of Python code and Jinja templates.
+13. [How to change Thunder Password](#How-to-change-Thunder-Password)
+
+14. [How to contribute](#How-to-contribute)
+
+15. [Documentation](#Documentation)
+
+16. [Test cases](#Test-cases)
+
+17. [License](#License)
+
+18. [Open Source Disclaimer](#Open-Source-Disclaimer)
+
+19. [Report a issue](#Report-a-Issue)
+
+20. [Support](#Support)
+
+## Introduction
+
+Thunder® ADCs (Application Delivery Controllers) are high-performance solutions to accelerate and optimize critical applications to ensure delivery and reliability.
+
+A10 Ansible modules is a custom plugin to do configurations on Thunder. It includes example playbooks to apply on hardware and virtual appliances.
 
 We only support Ansible version >=2.9
 
 This code is now being generated using the SDK generator at https://github.com/a10networks/sdkgenerator
 
-#### Documentation
-A10 Documentation Link: https://documentation.a10networks.com/docs/IaC/Ansible/ansible
+## Support Matrix
 
-## Installation
+| ACOS Version | Ansible Version | GitHub Branch |
+| :--------: | :-------: | :-------:  |
+| `ACOS 6.0.1` | [6.0.1-71123](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.1-71123)  | [Acos 6.0.1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_601)  |
+| `ACOS 6.0.0-p2` | [6.0.0-p2-050523](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.0-p2-050523)  | [ACOS 6.0.0-p2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_600_p2)  |
+| `ACOS 6.0.0-p1` |  [6.0.0-p1-033023](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.0-p1-033023)  | [ACOS 6.0.0-p1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_600_p1) |
+| `ACOS 5.2.1-p8` |  [5.2.1-p8-102723](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p8-102723)  | [ACOS 5.2.1-p8](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p8)  |
+| `ACOS 5.2.1-p7` |  [5.2.1-p7-050523](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p7-050523)  | [ACOS 5.2.1-p7](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p7) |
+| `ACOS 5.2.1-p6` |  [5.2.1-p6-112522](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p6-112522)  | [ACOS 5.2.1-p6](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p6) |
+| `ACOS 5.2.1-p5`| [5.2.1-p5-100922](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p5-100922)  | [ACOS 5.2.1-p5](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p5) |
+| `ACOS 5.2.1-p4` | [5.2.1-p4-091922](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p4-091922) | [ACOS 5.2.1-p4](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p4) |
+| `ACOS 5.2.1-p3` | [1.2.10](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.10) | [ACOS 5.2.1-p3](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p3)  |
+| `ACOS 5.2.1-p2` | [1.2.9](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.9) | [ACOS 5.2.1-p2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p2)  |
+| `ACOS 5.2.1-p1` | [1.2.8](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.8) | [ACOS 5.2.1-p1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p1)  |
+| `ACOS 5.2.1` | [1.2.7](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.7) | [ACOS 5.2.1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521)  |
+| `ACOS 5.2.0-p1` | [1.2.6](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.6) | [ACOS 5.2.0-p1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_520_p1)  |
+| `ACOS 5.2.0` | [1.2.5](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.5) | [ACOS 5.2.0](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_520)  |
+| `ACOS 5.1.0-p6` | [1.2.4](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.4) | [ACOS 5.1.0-p6](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_510_p6)  |
+| `ACOS 5.1.0-p5` | [1.2.3](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.3) | [ACOS 5.1.0-p5](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_510_p5)  |
+| `ACOS 5.1.0-p4` | [1.2.2](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.2) | [ACOS 5.1.0-p4](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_510_p4)  |
+| `ACOS 5.1.0-p3` | [1.2.1](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.1) | [ACOS 5.1.0-p3](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_510_p3)  |
+| `ACOS 5.1.0` | [1.2.0](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.2.0) | [ACOS 5.1.0](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_510)  |
+| `ACOS 4.1.4-gr1-p9` | [1.1.2](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.1.2) | [ACOS 4.1.4-gr1-p9](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_414_gr1_p9) |
+| `ACOS 4.1.4-gr1-p8` | [1.1.1](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.1.1) | [ACOS 4.1.4-gr1-p8](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_414_gr1_p8) |
+| `ACOS 4.1.4-gr1-p7` | [1.1.0](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.1.0) | [ACOS 4.1.4-gr1-p7](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_414_gr1_p7) |
+| `ACOS 4.1.4-gr1-p6` | [1.0.0](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=1.0.0) | [ACOS 4.1.4-gr1-p6](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_414_gr1_p6) |
+
+For older versions, please visit https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/
+
+## How it works
+   1. Install Ansible on your local OS, Please refer below sections for more details.
+   2. Search required Ansible configuration from examples. In case not found create a new one, Please refer below sections for more details.
+   3. Execute Ansible playbooks to apply thunder configuration, Please refer below sections for more details.
+   4. Verify thunder configuration after ansible playbook is applied, Please refer below sections for more details.
+
+## How to install Ansbile on Ubuntu
+To install Ansible on Ubuntu, Run the following command to download and install the latest version of Ansible:
+
+```
+apt install ansible
+```
+
+## How to install Ansbile on MacOS
+To install Ansible on MacOS, Run the following command to download and install the latest version of Ansible:
+
+```
+brew install ansible
+```
+
+## How to install A10 Ansible modules
 a10-acos-axapi is collection of custom ansible modules crated by a10Networks. It can be installed using following ways, it is assumed that ansible is already installed and configured.
 
 ### 1. Install from galaxy hub
@@ -58,35 +124,8 @@ In this example the collection directory path is: `/opt/.ansible/collections/ans
   ansible-galaxy collection build
   ansible-galaxy collection install a10-acos_axapi*.tar.gz -p ./collections
   ~~~
-  - #### Methods to set collection path (Only one required)
 
-  1. Copy collection folder we got from tarball inside
-     - ~/.ansible/collections
-     - /usr/share/ansible/collections folder
-
-  2. Export following environment variables for new session
-
-      ```bash
-      ANSIBLE_COLLECTIONS_PATHS=<path-to-collections-folders>
-      ```
-
-  3. Add below line in /etc/ansible/ansible.cfg File
-
-      ```bash
-      collections_paths=<path-to-collection1>:<path-to-collection2>
-      ```
-
-  4. Keep your playbooks to run in relative to collection
-
-      ~~~
-      |── myplaybook.yml
-      ├── collections/
-      │   └── ansible_collections/
-      │               └── a10/
-      │                   └── acos_axapi/<collection structure lives here>
-      ~~~
-
-## Plugin Configuration
+## How to configure A10 Ansible Modules
 
 #### 1. Set plugin path
 
@@ -96,7 +135,7 @@ Add below line in the `/etc/ansible/ansible.cfg` file
 action_plugins  = <collection-dir-path>/a10/acos_axapi/plugins/action
 ```
 
-#### 2a. Alternative methods to set path
+#### 2. Alternative methods to set path
 
   1. Copy action plugin into one of the following
      - ~/.ansible/plugins
@@ -116,10 +155,17 @@ action_plugins  = <collection-dir-path>/a10/acos_axapi/plugins/action
 
 
 
-## Collection module usage options
+## How to use A10 Ansible module collections
+Ansible collections are a powerful way to organize and distribute Ansible content, such as roles, modules, and plugins.
 
-### Any of the following options can be used for writing playbooks for Collection modules:
-### Option 1 (Ansbile >=2.8):  Use the 'collections' keyword
+Action and module names are formatted based upon their API endpoint. For example, the virtual server endpoint is as follows: /axapi/v3/slb/virtual-server. As such, the action name is a10_slb_virtual_server and the module is a10_slb_virtual_server.py.
+
+**Note that when getting information, changes made to the playbook will not result in a create, update or delete as the state has been put into no-op.
+
+### Creating / updating a resource
+Any of the following method can be used to create and run playbooks.
+
+#### 1: Use the 'collections' keyword
 
 ```yaml
 collections:
@@ -132,7 +178,7 @@ tasks:
     - argument
 ```
 
-### Option 2: Use the FQCN (namespace.collection_name.module_name)
+#### 2: Use the Fully Qualified Collection Name (namespace.collection_name.module_name)
 
 ```yaml
 tasks:
@@ -140,106 +186,6 @@ tasks:
     - argument
   - a10.acos_axapi.module_name:
     - argument
-```
-
-
-## Setup and Configurations
-
-### 1. With Inventory file
-Sample Inventory file:
-
-```shell
-[vthunder]
-<vthunder host_name/ip_address>
-
-[vthunder:vars]
-ansible_username=<username>
-ansible_password=<password>
-ansible_port=<port>
-```
-
-If you want to use an Inventory file to perform respective configurations through a playbook, you don't need to specify `ansible_host`, `ansible_username`, `ansible_password` and `ansible_port` in the playbook.
-
-For example,
-```
-- name: <Description of playbook>
-  connection: local
-  hosts: <inventory_hostname>
-  collections:
-    <a10.acos_axapi>
-  tasks:
-    - name: <Description of task>
-      <module_name>:
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
-```
-
-Use the following command to run playbook using an Inventory file parameters:
-```shell
-ansible-playbook -i <path_to_inventory> <name_of_playbook>
-```
-
-### 2. Without Inventory file
-If you don't want to use Inventory file, then specify `ansible_host`, `ansible_username`, `ansible_password` and `ansible_port` arguments into playbook itself with hosts as `localhost`. And then the configurations will be performed on provided `ansible_host`.
-
-For example,
-```
-- name: <Description of playbook>
-  connection: local
-  hosts: localhost
-  collections:
-    <a10.acos_axapi>
-  tasks:
-    - name: <Description of task>
-      <module_name>:
-        ansible_host: {{ ansible_host }}
-        ansible_username: {{ ansible_username }}
-        ansible_password: {{ ansible_password }}
-        ansible_port: {{ ansible_port }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
-```
-
-Use the following command to run the playbook with local arguments:
-```shell
-ansible-playbook <name_of_playbook>
-```
-
-Use the following command to run the playbook:
-```shell
-ansible-playbook -i <path_to_inventory> <name_of_playbook>
-```
-
-## Usage Information
-Action and module names are formatted based upon their API endpoint. For example, the virtual server endpoint is as follows: `/axapi/v3/slb/virtual-server`. As such, the action name is `a10_slb_virtual_server` and the module is `a10_slb_virtual_server.py`.
-
-**Note that when getting information, changes made to the playbook will not result in a create, update or delete as the state has been put into no-op.
-
-### Creating / updating a resource
-#### Option 1: (Ansbile >=2.8): Use the 'collections' keyword
-```
-- name: <Description of playbook>
-  connection: local
-  hosts: <inventory_hostname>
-  collections:
-    <a10.acos_axapi>
-  tasks:
-    - name: <Description of task>
-      <module_name>:
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
-```
-
-#### Option 2: Use the FQCN (namespace.collection_name.module_name)
-```
-- name: <Description of playbook>
-  connection: local
-  hosts: <inventory_hostname>
-  tasks:
-    - name: <Description of task>
-      <a10.acos_axapi.module_name>:
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
 ```
 
 ### Deleting a resource
@@ -374,16 +320,163 @@ $ ansible-playbook -i <path_to_inventory> <playbook_name>.yml --check-mode
 ```
 
 
-## Module Documentation
+## How to search Ansible module configurations
+To search for a Ansible Module Configuration in the existing examples, perform the following steps:
+
+  1. Search the required Ansible Module configuration script directory navigate to examples > single_task directory.
+
+     **Example:**
+
+      If you want to apply the bgp router configuration on Thunder, search for the bgp directory under the single_task directory.
+
+  2. Open the Ansible playbook from the directory.
+
+     **Example:**
+
+      Open a10_bgp_create.yaml playbook under the single_task directory.
+
+  3. Update the **hosts** parameter in playbook and add, modify, or remove the Ansible module configuration parameters and their corresponding values as appropriate.
+
+  ```
+  - name: Create bgp example playbook
+    connection: local
+    hosts: "{{desired_inventory_group}}"
+    tasks:
+    - name: Create router bgp for acos
+      a10.acos_axapi.a10_router_bgp:
+        as_number: 106
+  ```
+
+  4. Save the playbook.
+
+## How to create new Ansible playbook example
+
+Here are step-by-step instructions for creating ansible playbook example.
+For example if you want to apply bgp router configuration on thunder and which doesn't exist in examples.
+
+1. Create a new directory to house your ansible playbook files.
 
 ```
-$ ansible-doc -M <collection-dir-path> <module_name>
+  mkdir bgp
+  cd bgp
 ```
 
-## Change Password Documentation
+2. Create a `.yaml` file, such as `a10_bgp_create.yaml`, in your "bgp" directory. In this file, define the ROUTER BGP configurations. Refer to the official documentation: https://documentation.a10networks.com/docs/IaC/Ansible/ansible/  for the required parameters.
+
+  Here is basic example:
+
+    - name: Create bgp example playbook
+      connection: local
+      hosts: "{{desired_inventory_group}}"        # Replace with your desired hosts
+      tasks:
+      - name: Create router bgp for acos
+        a10.acos_axapi.a10_router_bgp:            # Replace with your desired module name
+          as_number: 106                          # Replace with your desired bgp number
+
+Adjust the BGP configuration parameters as needed.
+
+
+## How to execute Ansible playbooks from CLI
+
+### 1. With Inventory file
+Sample Inventory file:
+
+```shell
+[vthunder]
+<vthunder host_name/ip_address>
+
+[vthunder:vars]
+ansible_username=<username>
+ansible_password=<password>
+ansible_port=<port>
+```
+
+If you want to use an Inventory file to perform respective configurations through a playbook, you don't need to specify `ansible_host`, `ansible_username`, `ansible_password` and `ansible_port` in the playbook.
+
+For example,
+```
+- name: <Description of playbook>
+  connection: local
+  hosts: <inventory_hostname>
+  collections:
+    <a10.acos_axapi>
+  tasks:
+    - name: <Description of task>
+      <module_name>:
+        <resource_key>: <resource_val>
+        <another_resource_key>: <another_resource_val>
+```
+
+Use the following command to run playbook using an Inventory file parameters:
+```shell
+ansible-playbook -i <path_to_inventory> <name_of_playbook>
+```
+
+### 2. Without Inventory file
+If you don't want to use Inventory file, then specify `ansible_host`, `ansible_username`, `ansible_password` and `ansible_port` arguments into playbook itself with hosts as `localhost`. And then the configurations will be performed on provided `ansible_host`.
+
+For example,
+```
+- name: <Description of playbook>
+  connection: local
+  hosts: localhost
+  collections:
+    <a10.acos_axapi>
+  tasks:
+    - name: <Description of task>
+      <module_name>:
+        ansible_host: {{ ansible_host }}
+        ansible_username: {{ ansible_username }}
+        ansible_password: {{ ansible_password }}
+        ansible_port: {{ ansible_port }}
+        <resource_key>: <resource_val>
+        <another_resource_key>: <another_resource_val>
+```
+
+Use the following command to run the playbook with local arguments:
+```shell
+ansible-playbook <name_of_playbook>
+```
+
+Use the following command to run the playbook:
+```shell
+ansible-playbook -i <path_to_inventory> <name_of_playbook>
+```
+
+
+## How to verify on Thunder
+
+  To verify the applied configurations, follow below steps:
+
+  1. SSH into the Thunder device using your username and password.
+  2. Once connected, enter the following commands:
+
+     1. `enable`
+
+        ![image](https://github.com/smundhe-a10/terraform-provider-thunder/assets/107971633/7e532cee-fa8e-4af7-aa50-da56a24dd4c3)
+
+
+     3. `show running-config`
+
+        ![image](https://github.com/smundhe-a10/terraform-provider-thunder/assets/107971633/ae37e53d-c650-43f0-b71f-2416f4e5d65a)
+
+## How to change Thunder Password
 ```
 Please refer : /examples/single_task/admin/adminPassword/README.md
 ```
+
+## How to contribute
+
+If you have created a new example, please save the playbook file with a module-specific name, such as 'a10_bgp_create.yaml,' in a module name directory, like 'bgp'.
+
+1. Clone the repository.
+2. Copy the newly created playbook directory and place it under the /examples/single_task directory.
+3. Create a MR against the master branch.
+
+## Documentation
+
+A10 Thunder AXAPI support documentation available at https://documentation.a10networks.com/docs/IaC/Ansible/ansible/
+
 ## Test Cases
 Sample test cases added for the following configurations:
   - Bgp
@@ -414,9 +507,10 @@ All rights reserved @A10 Networks Inc.
 	For more information, please refer [/OPEN-SOURCE-DISCLAIMER.pdf]
 	For more open source licenses, please refer [/LICENSES]
 
-## Examples
-Please see (https://github.com/a10networks/a10-acos-axapi/tree/master/examples) for example playbooks.
 
+## Report a Issue
 
-## Issues and Inquiries
+Please raise issue in github repository. Please include the Ansible playbook or ansible module files that demonstrates the bug and the command output and stack traces will be helpful.
+
+## Support
 For all issues, please send an email to support@a10networks.com
