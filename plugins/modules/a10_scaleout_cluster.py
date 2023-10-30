@@ -60,10 +60,10 @@ options:
         - "Scaleout cluster-id"
         type: int
         required: True
-    follow_vcs:
+    slog_level:
         description:
-        - "Field follow_vcs"
-        type: bool
+        - "Set the level of slog for Scaleout"
+        type: int
         required: False
     uuid:
         description:
@@ -302,7 +302,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cluster_devices", "cluster_id", "db_config", "device_groups", "follow_vcs", "local_device", "service_config", "tracking_template", "uuid", ]
+AVAILABLE_PROPERTIES = ["cluster_devices", "cluster_id", "db_config", "device_groups", "local_device", "service_config", "slog_level", "tracking_template", "uuid", ]
 
 
 def get_default_argspec():
@@ -327,8 +327,8 @@ def get_argspec():
             'type': 'int',
             'required': True,
             },
-        'follow_vcs': {
-            'type': 'bool',
+        'slog_level': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -414,19 +414,6 @@ def get_argspec():
                 'reachability_options': {
                     'type': 'dict',
                     'skip_default_route': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    },
-                'encap': {
-                    'type': 'dict',
-                    'ntype': {
-                        'type': 'str',
-                        'choices': ['vxlan']
-                        },
-                    'use_v4_vxlan': {
                         'type': 'bool',
                         },
                     'uuid': {
@@ -587,19 +574,12 @@ def get_argspec():
                 },
             'cluster_discovery_timeout': {
                 'type': 'dict',
-                'timer_val': {
-                    'type': 'int',
-                    },
                 'uuid': {
                     'type': 'str',
                     }
                 },
             'device_id_list': {
                 'type': 'list',
-                'device_id': {
-                    'type': 'int',
-                    'required': True,
-                    },
                 'ip': {
                     'type': 'str',
                     },
@@ -608,9 +588,6 @@ def get_argspec():
                     'choices': ['enable', 'disable']
                     },
                 'uuid': {
-                    'type': 'str',
-                    },
-                'user_tag': {
                     'type': 'str',
                     }
                 }

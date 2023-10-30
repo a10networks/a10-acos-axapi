@@ -309,6 +309,16 @@ options:
         - "to enable pattern recognition hardware filter"
         type: bool
         required: False
+    collector:
+        description:
+        - "Field collector"
+        type: list
+        required: False
+        suboptions:
+            sflow_name:
+                description:
+                - "Name of configured custom sFlow collector"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -604,7 +614,11 @@ options:
           Sample Collected= Connection; 'prog_req_samples'= Sample Collected= Req-Resp;
           'prog_win_samples'= Sample Collected= Time Window; 'victim_ip_learned'= Victim
           Identification= IP Entry Learned; 'victim_ip_aged'= Victim Identification= IP
-          Entry Aged;"
+          Entry Aged; 'prog_conn_samples_processed'= Sample Processed= Connnection;
+          'prog_req_samples_processed'= Sample Processed= Req-Resp;
+          'prog_win_samples_processed'= Sample Processed= Time Window;
+          'dst_src_learn_overflow'= Src Dynamic Entry Count Overflow; 'dst_tcp_auth_rst'=
+          TCP Auth= Reset;"
                 type: str
     detection:
         description:
@@ -766,6 +780,14 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            port_ind:
+                description:
+                - "Field port_ind"
+                type: dict
+            level_list:
+                description:
+                - "Field level_list"
+                type: list
     src_port:
         description:
         - "Field src_port"
@@ -909,10 +931,6 @@ options:
                 description:
                 - "Idle age for ip entry"
                 type: int
-            zone_template:
-                description:
-                - "Field zone_template"
-                type: dict
             outbound_only:
                 description:
                 - "Only allow outbound traffic"
@@ -921,6 +939,10 @@ options:
                 description:
                 - "De-escalate faster in standalone mode"
                 type: bool
+            ip_filtering_policy:
+                description:
+                - "Configure IP Filter"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -929,6 +951,10 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             pattern_recognition:
                 description:
                 - "Field pattern_recognition"
@@ -2384,6 +2410,26 @@ options:
                 description:
                 - "Victim Identification= IP Entry Aged"
                 type: str
+            prog_conn_samples_processed:
+                description:
+                - "Sample Processed= Connnection"
+                type: str
+            prog_req_samples_processed:
+                description:
+                - "Sample Processed= Req-Resp"
+                type: str
+            prog_win_samples_processed:
+                description:
+                - "Sample Processed= Time Window"
+                type: str
+            dst_src_learn_overflow:
+                description:
+                - "Src Dynamic Entry Count Overflow"
+                type: str
+            dst_tcp_auth_rst:
+                description:
+                - "TCP Auth= Reset"
+                type: str
             zone_name:
                 description:
                 - "Field zone_name"
@@ -2443,9 +2489,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action_list", "advertised_enable", "capture_config_list", "continuous_learning", "description", "dest_nat_ip", "dest_nat_ipv6", "detection", "drop_frag_pkt", "enable_top_k", "force_operational_mode", "glid", "hw_blacklist_blocking", "inbound_forward_dscp", "ip", "ip_proto", "ipv6", "is_from_wizard", "log_enable", "log_high_frequency",
-    "log_periodic", "non_restrictive", "oper", "operational_mode", "outbound_forward_dscp", "outbound_policy", "packet_anomaly_detection", "pattern_recognition_hw_filter_enable", "pattern_recognition_sensitivity", "per_addr_glid", "port", "port_range_list", "rate_limit", "reporting_disabled", "sampling_enable", "set_counter_base_val",
-    "sflow_common", "sflow_http", "sflow_layer_4", "sflow_packets", "sflow_tcp", "source_nat_pool", "src_port", "src_port_range_list", "stats", "telemetry_enable", "topk_destinations", "traffic_distribution_mode", "user_tag", "uuid", "web_gui", "zone_name", "zone_profile", "zone_template",
+    "action_list", "advertised_enable", "capture_config_list", "collector", "continuous_learning", "description", "dest_nat_ip", "dest_nat_ipv6", "detection", "drop_frag_pkt", "enable_top_k", "force_operational_mode", "glid", "hw_blacklist_blocking", "inbound_forward_dscp", "ip", "ip_proto", "ipv6", "is_from_wizard", "log_enable",
+    "log_high_frequency", "log_periodic", "non_restrictive", "oper", "operational_mode", "outbound_forward_dscp", "outbound_policy", "packet_anomaly_detection", "pattern_recognition_hw_filter_enable", "pattern_recognition_sensitivity", "per_addr_glid", "port", "port_range_list", "rate_limit", "reporting_disabled", "sampling_enable",
+    "set_counter_base_val", "sflow_common", "sflow_http", "sflow_layer_4", "sflow_packets", "sflow_tcp", "source_nat_pool", "src_port", "src_port_range_list", "stats", "telemetry_enable", "topk_destinations", "traffic_distribution_mode", "user_tag", "uuid", "web_gui", "zone_name", "zone_profile", "zone_template",
     ]
 
 
@@ -2624,6 +2670,12 @@ def get_argspec():
         'pattern_recognition_hw_filter_enable': {
             'type': 'bool',
             },
+        'collector': {
+            'type': 'list',
+            'sflow_name': {
+                'type': 'str',
+                }
+            },
         'uuid': {
             'type': 'str',
             },
@@ -2677,7 +2729,7 @@ def get_argspec():
                     'prog_response_len_exceed', 'prog_resp_req_ratio_exceed', 'prog_resp_req_time_exceed', 'entry_sync_message_received', 'entry_sync_message_sent', 'prog_conn_sent_exceed', 'prog_conn_rcvd_exceed', 'prog_conn_time_exceed', 'prog_conn_rcvd_sent_ratio_exceed', 'prog_win_sent_exceed', 'prog_win_rcvd_exceed',
                     'prog_win_rcvd_sent_ratio_exceed', 'prog_exceed_drop', 'prog_exceed_bl', 'prog_conn_exceed_drop', 'prog_conn_exceed_bl', 'prog_win_exceed_drop', 'prog_win_exceed_bl', 'east_west_inbound_rcv_pkt', 'east_west_inbound_drop_pkt', 'east_west_inbound_fwd_pkt', 'east_west_inbound_rcv_byte', 'east_west_inbound_drop_byte',
                     'east_west_inbound_fwd_byte', 'east_west_outbound_rcv_pkt', 'east_west_outbound_drop_pkt', 'east_west_outbound_fwd_pkt', 'east_west_outbound_rcv_byte', 'east_west_outbound_drop_byte', 'east_west_outbound_fwd_byte', 'dst_exceed_action_drop', 'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'victim_ip_learned',
-                    'victim_ip_aged'
+                    'victim_ip_aged', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'dst_src_learn_overflow', 'dst_tcp_auth_rst'
                     ]
                 }
             },
@@ -2757,6 +2809,9 @@ def get_argspec():
                         'type': 'int',
                         },
                     'threshold_num': {
+                        'type': 'int',
+                        },
+                    'threshold_large_num': {
                         'type': 'int',
                         },
                     'threshold_str': {
@@ -2965,6 +3020,46 @@ def get_argspec():
                 },
             'user_tag': {
                 'type': 'str',
+                },
+            'port_ind': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'level_list': {
+                'type': 'list',
+                'level_num': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['0', '1']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    },
+                'indicator_list': {
+                    'type': 'list',
+                    'ntype': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['pkt-rate', 'bit-rate']
+                        },
+                    'zone_threshold_num': {
+                        'type': 'int',
+                        },
+                    'zone_threshold_large_num': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        }
+                    }
                 }
             },
         'src_port': {
@@ -3017,6 +3112,46 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'port_ind': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'level_list': {
+                    'type': 'list',
+                    'level_num': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['0', '1']
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'indicator_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type': 'str',
+                            'required': True,
+                            'choices': ['pkt-rate', 'bit-rate']
+                            },
+                        'zone_threshold_num': {
+                            'type': 'int',
+                            },
+                        'zone_threshold_large_num': {
+                            'type': 'int',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            },
+                        'user_tag': {
+                            'type': 'str',
+                            }
+                        }
                     }
                 },
             'zone_src_port_other_list': {
@@ -3061,6 +3196,46 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'port_ind': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'level_list': {
+                    'type': 'list',
+                    'level_num': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['0', '1']
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'indicator_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type': 'str',
+                            'required': True,
+                            'choices': ['pkt-rate', 'bit-rate']
+                            },
+                        'zone_threshold_num': {
+                            'type': 'int',
+                            },
+                        'zone_threshold_large_num': {
+                            'type': 'int',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            },
+                        'user_tag': {
+                            'type': 'str',
+                            }
+                        }
                     }
                 }
             },
@@ -3145,8 +3320,17 @@ def get_argspec():
                 'faster_de_escalation': {
                     'type': 'bool',
                     },
+                'ip_filtering_policy': {
+                    'type': 'str',
+                    },
                 'uuid': {
                     'type': 'str',
+                    },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
                     },
                 'src_based_policy_list': {
                     'type': 'list',
@@ -3327,6 +3511,9 @@ def get_argspec():
                         'src_threshold_num': {
                             'type': 'int',
                             },
+                        'src_threshold_large_num': {
+                            'type': 'int',
+                            },
                         'src_threshold_str': {
                             'type': 'str',
                             },
@@ -3334,6 +3521,9 @@ def get_argspec():
                             'type': 'str',
                             },
                         'zone_threshold_num': {
+                            'type': 'int',
+                            },
+                        'zone_threshold_large_num': {
                             'type': 'int',
                             },
                         'zone_threshold_str': {
@@ -3454,8 +3644,17 @@ def get_argspec():
                 'set_counter_base_val': {
                     'type': 'int',
                     },
+                'ip_filtering_policy': {
+                    'type': 'str',
+                    },
                 'uuid': {
                     'type': 'str',
+                    },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
                     }
                 },
             'proto_name_list': {
@@ -3535,8 +3734,17 @@ def get_argspec():
                 'faster_de_escalation': {
                     'type': 'bool',
                     },
+                'ip_filtering_policy': {
+                    'type': 'str',
+                    },
                 'uuid': {
                     'type': 'str',
+                    },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
                     },
                 'level_list': {
                     'type': 'list',
@@ -3601,6 +3809,9 @@ def get_argspec():
                         'src_threshold_num': {
                             'type': 'int',
                             },
+                        'src_threshold_large_num': {
+                            'type': 'int',
+                            },
                         'src_threshold_str': {
                             'type': 'str',
                             },
@@ -3608,6 +3819,9 @@ def get_argspec():
                             'type': 'str',
                             },
                         'zone_threshold_num': {
+                            'type': 'int',
+                            },
+                        'zone_threshold_large_num': {
                             'type': 'int',
                             },
                         'zone_threshold_str': {
@@ -3951,17 +4165,14 @@ def get_argspec():
                 'set_counter_base_val': {
                     'type': 'int',
                     },
-                'zone_template': {
-                    'type': 'dict',
-                    'ips': {
-                        'type': 'str',
-                        }
-                    },
                 'outbound_only': {
                     'type': 'bool',
                     },
                 'faster_de_escalation': {
                     'type': 'bool',
+                    },
+                'ip_filtering_policy': {
+                    'type': 'str',
                     },
                 'uuid': {
                     'type': 'str',
@@ -4015,6 +4226,12 @@ def get_argspec():
                         }
                     },
                 'pattern_recognition_pu_details': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'ip_filtering_policy_oper': {
                     'type': 'dict',
                     'uuid': {
                         'type': 'str',
@@ -4110,11 +4327,17 @@ def get_argspec():
                         'src_threshold_num': {
                             'type': 'int',
                             },
+                        'src_threshold_large_num': {
+                            'type': 'int',
+                            },
                         'src_threshold_str': {
                             'type': 'str',
                             },
                         'src_violation_actions': {
                             'type': 'str',
+                            },
+                        'zone_threshold_large_num': {
+                            'type': 'int',
                             },
                         'zone_threshold_num': {
                             'type': 'int',
@@ -4304,9 +4527,6 @@ def get_argspec():
                                 'type': 'str',
                                 },
                             'encap': {
-                                'type': 'str',
-                                },
-                            'ips': {
                                 'type': 'str',
                                 },
                             'logging': {
@@ -4534,8 +4754,17 @@ def get_argspec():
                 'faster_de_escalation': {
                     'type': 'bool',
                     },
+                'ip_filtering_policy': {
+                    'type': 'str',
+                    },
                 'uuid': {
                     'type': 'str',
+                    },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                        }
                     },
                 'pattern_recognition': {
                     'type': 'dict',
@@ -4647,6 +4876,9 @@ def get_argspec():
                         'src_threshold_num': {
                             'type': 'int',
                             },
+                        'src_threshold_large_num': {
+                            'type': 'int',
+                            },
                         'src_threshold_str': {
                             'type': 'str',
                             },
@@ -4654,6 +4886,9 @@ def get_argspec():
                             'type': 'str',
                             },
                         'zone_threshold_num': {
+                            'type': 'int',
+                            },
+                        'zone_threshold_large_num': {
                             'type': 'int',
                             },
                         'zone_threshold_str': {
@@ -4788,9 +5023,6 @@ def get_argspec():
                                 'type': 'str',
                                 },
                             'encap': {
-                                'type': 'str',
-                                },
-                            'ips': {
                                 'type': 'str',
                                 },
                             'logging': {
@@ -5013,23 +5245,26 @@ def get_argspec():
             'age': {
                 'type': 'int',
                 },
-            'zone_template': {
-                'type': 'dict',
-                'ips': {
-                    'type': 'str',
-                    }
-                },
             'outbound_only': {
                 'type': 'bool',
                 },
             'faster_de_escalation': {
                 'type': 'bool',
                 },
+            'ip_filtering_policy': {
+                'type': 'str',
+                },
             'uuid': {
                 'type': 'str',
                 },
             'user_tag': {
                 'type': 'str',
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
             'pattern_recognition': {
                 'type': 'dict',
@@ -5159,6 +5394,9 @@ def get_argspec():
                     'src_threshold_num': {
                         'type': 'int',
                         },
+                    'src_threshold_large_num': {
+                        'type': 'int',
+                        },
                     'src_threshold_str': {
                         'type': 'str',
                         },
@@ -5166,6 +5404,9 @@ def get_argspec():
                         'type': 'str',
                         },
                     'zone_threshold_num': {
+                        'type': 'int',
+                        },
+                    'zone_threshold_large_num': {
                         'type': 'int',
                         },
                     'zone_threshold_str': {
@@ -5347,9 +5588,6 @@ def get_argspec():
                             'type': 'str',
                             },
                         'encap': {
-                            'type': 'str',
-                            },
-                        'ips': {
                             'type': 'str',
                             },
                         'logging': {
@@ -6203,12 +6441,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -6232,6 +6464,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',
@@ -6435,6 +6673,45 @@ def get_argspec():
                     'hw_blacklisted': {
                         'type': 'bool',
                         }
+                    },
+                'port_ind': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'indicators': {
+                            'type': 'list',
+                            'indicator_name': {
+                                'type': 'str',
+                                },
+                            'indicator_index': {
+                                'type': 'int',
+                                },
+                            'rate': {
+                                'type': 'str',
+                                },
+                            'indicator_cfg': {
+                                'type': 'list',
+                                'level': {
+                                    'type': 'int',
+                                    },
+                                'zone_threshold': {
+                                    'type': 'str',
+                                    },
+                                'source_threshold': {
+                                    'type': 'str',
+                                    }
+                                }
+                            },
+                        'detection_data_source': {
+                            'type': 'str',
+                            },
+                        'current_level': {
+                            'type': 'str',
+                            },
+                        'details': {
+                            'type': 'bool',
+                            }
+                        }
                     }
                 },
             'src_port': {
@@ -6632,6 +6909,45 @@ def get_argspec():
                         'hw_blacklisted': {
                             'type': 'bool',
                             }
+                        },
+                    'port_ind': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'indicators': {
+                                'type': 'list',
+                                'indicator_name': {
+                                    'type': 'str',
+                                    },
+                                'indicator_index': {
+                                    'type': 'int',
+                                    },
+                                'rate': {
+                                    'type': 'str',
+                                    },
+                                'indicator_cfg': {
+                                    'type': 'list',
+                                    'level': {
+                                        'type': 'int',
+                                        },
+                                    'zone_threshold': {
+                                        'type': 'str',
+                                        },
+                                    'source_threshold': {
+                                        'type': 'str',
+                                        }
+                                    }
+                                },
+                            'detection_data_source': {
+                                'type': 'str',
+                                },
+                            'current_level': {
+                                'type': 'str',
+                                },
+                            'details': {
+                                'type': 'bool',
+                                }
+                            }
                         }
                     },
                 'zone_src_port_other_list': {
@@ -6825,6 +7141,45 @@ def get_argspec():
                         'hw_blacklisted': {
                             'type': 'bool',
                             }
+                        },
+                    'port_ind': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'indicators': {
+                                'type': 'list',
+                                'indicator_name': {
+                                    'type': 'str',
+                                    },
+                                'indicator_index': {
+                                    'type': 'int',
+                                    },
+                                'rate': {
+                                    'type': 'str',
+                                    },
+                                'indicator_cfg': {
+                                    'type': 'list',
+                                    'level': {
+                                        'type': 'int',
+                                        },
+                                    'zone_threshold': {
+                                        'type': 'str',
+                                        },
+                                    'source_threshold': {
+                                        'type': 'str',
+                                        }
+                                    }
+                                },
+                            'detection_data_source': {
+                                'type': 'str',
+                                },
+                            'current_level': {
+                                'type': 'str',
+                                },
+                            'details': {
+                                'type': 'bool',
+                                }
+                            }
                         }
                     }
                 },
@@ -6854,6 +7209,12 @@ def get_argspec():
                                 },
                             'level': {
                                 'type': 'int',
+                                },
+                            'bl_reasoning_rcode': {
+                                'type': 'str',
+                                },
+                            'bl_reasoning_timestamp': {
+                                'type': 'str',
                                 },
                             'current_connections': {
                                 'type': 'str',
@@ -6981,6 +7342,21 @@ def get_argspec():
                             },
                         'domain_name': {
                             'type': 'str',
+                            }
+                        },
+                    'ip_filtering_policy_oper': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'rule_list': {
+                                'type': 'list',
+                                'seq': {
+                                    'type': 'int',
+                                    },
+                                'hits': {
+                                    'type': 'int',
+                                    }
+                                }
                             }
                         },
                     'port_ind': {
@@ -7148,12 +7524,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -7177,6 +7547,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -7208,12 +7584,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -7237,6 +7607,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -7439,6 +7815,21 @@ def get_argspec():
                         'domain_name': {
                             'type': 'str',
                             }
+                        },
+                    'ip_filtering_policy_oper': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'rule_list': {
+                                'type': 'list',
+                                'seq': {
+                                    'type': 'int',
+                                    },
+                                'hits': {
+                                    'type': 'int',
+                                    }
+                                }
+                            }
                         }
                     },
                 'proto_name_list': {
@@ -7463,6 +7854,12 @@ def get_argspec():
                                 },
                             'level': {
                                 'type': 'int',
+                                },
+                            'bl_reasoning_rcode': {
+                                'type': 'str',
+                                },
+                            'bl_reasoning_timestamp': {
+                                'type': 'str',
                                 },
                             'current_connections': {
                                 'type': 'str',
@@ -7590,6 +7987,21 @@ def get_argspec():
                             },
                         'domain_name': {
                             'type': 'str',
+                            }
+                        },
+                    'ip_filtering_policy_oper': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'rule_list': {
+                                'type': 'list',
+                                'seq': {
+                                    'type': 'int',
+                                    },
+                                'hits': {
+                                    'type': 'int',
+                                    }
+                                }
                             }
                         },
                     'port_ind': {
@@ -7757,12 +8169,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -7786,6 +8192,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -7859,12 +8271,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -7888,6 +8294,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -7930,6 +8342,12 @@ def get_argspec():
                                 },
                             'level': {
                                 'type': 'int',
+                                },
+                            'bl_reasoning_rcode': {
+                                'type': 'str',
+                                },
+                            'bl_reasoning_timestamp': {
+                                'type': 'str',
                                 },
                             'current_connections': {
                                 'type': 'str',
@@ -8263,6 +8681,21 @@ def get_argspec():
                                 }
                             }
                         },
+                    'ip_filtering_policy_oper': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'rule_list': {
+                                'type': 'list',
+                                'seq': {
+                                    'type': 'int',
+                                    },
+                                'hits': {
+                                    'type': 'int',
+                                    }
+                                }
+                            }
+                        },
                     'ips': {
                         'type': 'dict',
                         'oper': {
@@ -8443,12 +8876,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -8472,6 +8899,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -8545,12 +8978,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -8574,6 +9001,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -8611,6 +9044,12 @@ def get_argspec():
                                 },
                             'level': {
                                 'type': 'int',
+                                },
+                            'bl_reasoning_rcode': {
+                                'type': 'str',
+                                },
+                            'bl_reasoning_timestamp': {
+                                'type': 'str',
                                 },
                             'current_connections': {
                                 'type': 'str',
@@ -8813,6 +9252,21 @@ def get_argspec():
                             },
                         'domain_name': {
                             'type': 'str',
+                            }
+                        },
+                    'ip_filtering_policy_oper': {
+                        'type': 'dict',
+                        'oper': {
+                            'type': 'dict',
+                            'rule_list': {
+                                'type': 'list',
+                                'seq': {
+                                    'type': 'int',
+                                    },
+                                'hits': {
+                                    'type': 'int',
+                                    }
+                                }
                             }
                         },
                     'pattern_recognition': {
@@ -9079,12 +9533,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -9108,6 +9556,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -9181,12 +9635,6 @@ def get_argspec():
                                         }
                                     }
                                 },
-                            'next_indicator': {
-                                'type': 'int',
-                                },
-                            'finished': {
-                                'type': 'int',
-                                },
                             'entry_list': {
                                 'type': 'list',
                                 'address_str': {
@@ -9210,6 +9658,12 @@ def get_argspec():
                                         'type': 'int',
                                         }
                                     }
+                                },
+                            'next_indicator': {
+                                'type': 'int',
+                                },
+                            'finished': {
+                                'type': 'int',
                                 },
                             'details': {
                                 'type': 'bool',
@@ -9251,6 +9705,12 @@ def get_argspec():
                             },
                         'level': {
                             'type': 'int',
+                            },
+                        'bl_reasoning_rcode': {
+                            'type': 'str',
+                            },
+                        'bl_reasoning_timestamp': {
+                            'type': 'str',
                             },
                         'current_connections': {
                             'type': 'str',
@@ -9483,6 +9943,21 @@ def get_argspec():
                         },
                     'domain_name': {
                         'type': 'str',
+                        }
+                    },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'rule_list': {
+                            'type': 'list',
+                            'seq': {
+                                'type': 'int',
+                                },
+                            'hits': {
+                                'type': 'int',
+                                }
+                            }
                         }
                     },
                 'pattern_recognition': {
@@ -9764,12 +10239,6 @@ def get_argspec():
                                     }
                                 }
                             },
-                        'next_indicator': {
-                            'type': 'int',
-                            },
-                        'finished': {
-                            'type': 'int',
-                            },
                         'entry_list': {
                             'type': 'list',
                             'address_str': {
@@ -9793,6 +10262,12 @@ def get_argspec():
                                     'type': 'int',
                                     }
                                 }
+                            },
+                        'next_indicator': {
+                            'type': 'int',
+                            },
+                        'finished': {
+                            'type': 'int',
                             },
                         'details': {
                             'type': 'bool',
@@ -9824,12 +10299,6 @@ def get_argspec():
                                     }
                                 }
                             },
-                        'next_indicator': {
-                            'type': 'int',
-                            },
-                        'finished': {
-                            'type': 'int',
-                            },
                         'entry_list': {
                             'type': 'list',
                             'address_str': {
@@ -9853,6 +10322,12 @@ def get_argspec():
                                     'type': 'int',
                                     }
                                 }
+                            },
+                        'next_indicator': {
+                            'type': 'int',
+                            },
+                        'finished': {
+                            'type': 'int',
                             },
                         'details': {
                             'type': 'bool',
@@ -10827,6 +11302,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'victim_ip_aged': {
+                'type': 'str',
+                },
+            'prog_conn_samples_processed': {
+                'type': 'str',
+                },
+            'prog_req_samples_processed': {
+                'type': 'str',
+                },
+            'prog_win_samples_processed': {
+                'type': 'str',
+                },
+            'dst_src_learn_overflow': {
+                'type': 'str',
+                },
+            'dst_tcp_auth_rst': {
                 'type': 'str',
                 },
             'zone_name': {

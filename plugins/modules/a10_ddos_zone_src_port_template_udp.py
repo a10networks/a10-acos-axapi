@@ -60,6 +60,12 @@ options:
         - "DDOS UDP Template Name"
         type: str
         required: True
+    filter_match_type:
+        description:
+        - "'default'= Stop matching on drop/blacklist action; 'stop-on-first-match'= Stop
+          matching on first match;"
+        type: str
+        required: False
     ntp_monlist_cfg:
         description:
         - "Field ntp_monlist_cfg"
@@ -226,7 +232,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["filter_list", "max_payload_size_cfg", "min_payload_size_cfg", "name", "ntp_monlist_cfg", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["filter_list", "filter_match_type", "max_payload_size_cfg", "min_payload_size_cfg", "name", "ntp_monlist_cfg", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -250,6 +256,10 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
+            },
+        'filter_match_type': {
+            'type': 'str',
+            'choices': ['default', 'stop-on-first-match']
             },
         'ntp_monlist_cfg': {
             'type': 'dict',

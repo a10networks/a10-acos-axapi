@@ -105,6 +105,10 @@ options:
                 description:
                 - "Field last_server"
                 type: str
+            hits:
+                description:
+                - "Field hits"
+                type: int
             ns_name:
                 description:
                 - "Specify Domain Name"
@@ -219,6 +223,9 @@ def get_argspec():
             'type': 'dict',
             'last_server': {
                 'type': 'str',
+                },
+            'hits': {
+                'type': 'int',
                 },
             'ns_name': {
                 'type': 'str',

@@ -60,6 +60,12 @@ options:
         - "DDOS Ip-proto Template Name"
         type: str
         required: True
+    filter_match_type:
+        description:
+        - "'default'= Stop matching on drop/blacklist action; 'stop-on-first-match'= Stop
+          matching on first match;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -167,7 +173,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["filter_list", "name", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["filter_list", "filter_match_type", "name", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -191,6 +197,10 @@ def get_argspec():
         'name': {
             'type': 'str',
             'required': True,
+            },
+        'filter_match_type': {
+            'type': 'str',
+            'choices': ['default', 'stop-on-first-match']
             },
         'uuid': {
             'type': 'str',

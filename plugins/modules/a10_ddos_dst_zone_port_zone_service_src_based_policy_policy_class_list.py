@@ -150,10 +150,6 @@ options:
                 description:
                 - "DDOS encap template (IPv6-over-IPv4 / IPv4-over-IPv6 are not supported.)"
                 type: str
-            ips:
-                description:
-                - "IPS template"
-                type: str
             logging:
                 description:
                 - "DDOS logging template"
@@ -368,9 +364,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'encap': {
-                'type': 'str',
-                },
-            'ips': {
                 'type': 'str',
                 },
             'logging': {

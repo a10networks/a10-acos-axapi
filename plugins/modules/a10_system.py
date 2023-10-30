@@ -75,6 +75,11 @@ options:
         - "log DDoS attack anomalies"
         type: bool
         required: False
+    anomaly_log_rate_limit:
+        description:
+        - "Anomaly log rate-limit per second, default 32"
+        type: int
+        required: False
     sockstress_disable:
         description:
         - "Disable sockstress protection"
@@ -90,11 +95,16 @@ options:
         - "'high'= high cpu usage; 'low'= low cpu usage; 'medium'= medium cpu usage;"
         type: str
         required: False
-    rfc_ipfix_ie_spec:
+    default_mtu:
         description:
-        - "'enable'= Use RFC-defined IPFIX information element lengths; 'disable'= Use
-          non-standard IPFIX information element lengths;"
-        type: str
+        - "Set all interfaces default mtu (Interface MTU, default 1 (System jumbo needs to
+          be enabled))"
+        type: int
+        required: False
+    hw_blocking_enable:
+        description:
+        - "Enable system hardware blocking (default disabled)"
+        type: bool
         required: False
     src_ip_hash_enable:
         description:
@@ -119,6 +129,11 @@ options:
     dynamic_service_dns_socket_pool:
         description:
         - "Enable socket pool for dynamic-service DNS"
+        type: bool
+        required: False
+    system_chassis_port_split_enable:
+        description:
+        - "Enable port split for the chassis"
         type: bool
         required: False
     ipv6_prefix_length:
@@ -252,43 +267,6 @@ options:
         - "Field probe_network_devices"
         type: dict
         required: False
-    asic_mmu_fail_safe:
-        description:
-        - "Field asic_mmu_fail_safe"
-        type: dict
-        required: False
-        suboptions:
-            recovery_threshold:
-                description:
-                - "ASIC Fail-safe recovery threshold in Errors (Units of 1 Errors (default 2))"
-                type: int
-            monitor_interval:
-                description:
-                - "ASIC Fail-safe monitoring intervals in Seconds (Units of 1 Seconds (default
-          60))"
-                type: int
-            monitor_disable:
-                description:
-                - "Enable Fail-safe software error monitoring and act on it"
-                type: bool
-            reboot_disable:
-                description:
-                - "Disable system reboot if system encounters mmu error"
-                type: bool
-            inject_error:
-                description:
-                - "Inject MMU SER/Parity errors"
-                type: bool
-            test_pattern_type:
-                description:
-                - "'all-zeros'= Inject all bits 0s in a byte; 'all-ones'= Inject all bits 1s in a
-          byte; 'lcb'= Logical checker board; 'inverse-lcb'= Inverse Logical checker
-          board;"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     management_interface_mode:
         description:
         - "Field management_interface_mode"
@@ -699,10 +677,6 @@ options:
                 description:
                 - "Specify the maximum memory used by ram cache"
                 type: int
-            waf_template_count:
-                description:
-                - "Total configurable WAF Templates in the System"
-                type: int
             auth_session_count:
                 description:
                 - "Total auth sessions in the system"
@@ -724,6 +698,20 @@ options:
             enable:
                 description:
                 - "Enable/Disable link capabilities"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    netvsc_monitor:
+        description:
+        - "Field netvsc_monitor"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable/Disable auto-recovery from Rx/Tx hang"
                 type: bool
             uuid:
                 description:
@@ -813,6 +801,10 @@ options:
                 - "Crypto memory percentage assigned for IPsec processing (rounded to increments
           of 10)"
                 type: int
+            QAT:
+                description:
+                - "HW assisted QAT SSL module"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -853,20 +845,43 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    deep_hrxq:
+    memory_block_debug:
         description:
-        - "Field deep_hrxq"
+        - "Field memory_block_debug"
         type: dict
         required: False
         suboptions:
-            enable:
+            assert_block:
                 description:
-                - "Field enable"
+                - "Over size block allocation (Assert memory block over size (default= 65536))"
+                type: int
+            pktdump_block:
+                description:
+                - "Enable pktdump Oversize block request packet"
                 type: bool
-            hrxq_num_chunks:
+            first_blk:
                 description:
-                - "'2048'= Set FPGA Deep HRXQ depth as 2048 per CPU; '1024'= Set FPGA Deep HRXQ
-          depth as 1024 per CPU; '512'= Set FPGA Deep HRXQ depth as 512 per CPU;"
+                - "First memory block ascending order (default= 8192) (Memory blocks
+          32,64,128,256,512,1K,2K,4K,8K,16K,32K,64K)"
+                type: int
+            second_blk:
+                description:
+                - "Second memory block (default= 16384) (Memory blocks
+          32,64,128,256,512,1K,2K,4K,8K,16K,32K,64K)"
+                type: int
+            third_blk:
+                description:
+                - "Third memory block (default= 32768) (Memory blocks
+          32,64,128,256,512,1K,2K,4K,8K,16K,32K,64K)"
+                type: int
+            fourth_blk:
+                description:
+                - "Fourth memory block (default= 65536) (Memory blocks
+          32,64,128,256,512,1K,2K,4K,8K,16K,32K,64K)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
                 type: str
     hrxq_status:
         description:
@@ -903,6 +918,10 @@ options:
             udp:
                 description:
                 - "Disallow redistribution of new UDP sessions"
+                type: bool
+            others:
+                description:
+                - "Disallow redistribution of new non TCP/UDP IP sessions"
                 type: bool
             uuid:
                 description:
@@ -1099,12 +1118,16 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    hardware_forward:
+    hardware_accelerate:
         description:
-        - "Field hardware_forward"
+        - "Field hardware_accelerate"
         type: dict
         required: False
         suboptions:
+            session_forwarding:
+                description:
+                - "Configure session-forwarding in Hardware (default=off)"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1117,6 +1140,16 @@ options:
                 description:
                 - "Field slb"
                 type: dict
+    power_on_self_test:
+        description:
+        - "Field power_on_self_test"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     throughput:
         description:
         - "Field throughput"
@@ -1376,9 +1409,10 @@ options:
                 - "'Strict'= Strict= Min length=8, Min Lower Case=2, Min Upper Case=2, Min
           Numbers=2, Min Special Character=1, CHANGE Min 8 Characters; 'Medium'= Medium=
           Min length=6, Min Lower Case=2, Min Upper Case=2, Min Numbers=1, Min Special
-          Character=1, CHANGE Min 6 Characters; 'Simple'= Simple= Min length=4, Min Lower
-          Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=0, CHANGE Min 4
-          Characters;"
+          Character=1, CHANGE Min 6 Characters; 'Default'= Default= Min length=9, Min
+          Lower Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=1, CHANGE
+          Min 1 Characters; 'Simple'= Simple= Min length=4, Min Lower Case=1, Min Upper
+          Case=1, Min Numbers=1, Min Special Character=0, CHANGE Min 4 Characters;"
                 type: str
             aging:
                 description:
@@ -1395,6 +1429,23 @@ options:
                 description:
                 - "Configure custom password length"
                 type: int
+            username_check:
+                description:
+                - "'enable'= Prohibition to set password contains user account, case sensitive;
+          'disable'= Will not check if the password contains user account;"
+                type: str
+            repeat_character_check:
+                description:
+                - "'enable'= Prohibition of consecutive repeated input of the same letter/number,
+          case sensitive; 'disable'= Will not check if the password contains repeat
+          characters;"
+                type: str
+            forbid_consecutive_character:
+                description:
+                - "'0'= Will disable the check; '3'= Three consecutive characters on keyboard will
+          not be allowed.; '4'= Four consecutive characters on keyboard will not be
+          allowed.; '5'= Five consecutive characters on keyboard will not be allowed.;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -1495,6 +1546,19 @@ options:
                 description:
                 - "Load built-in IANA Database"
                 type: bool
+            geo_location_iana_system:
+                description:
+                - "Load built-in IANA Database"
+                type: bool
+            geo_location_geolite2_asn:
+                description:
+                - "Load built-in Maxmind GeoLite2-ASN database. Database available from
+          http=//www.maxmind.com"
+                type: bool
+            geolite2_asn_include_ipv6:
+                description:
+                - "Include IPv6 address"
+                type: bool
             geo_location_geolite2_city:
                 description:
                 - "Load built-in Maxmind GeoLite2-City database. Database available from
@@ -1544,6 +1608,57 @@ options:
             enable:
                 description:
                 - "Enable/Disable L2L3 ASIC traffic discard/drop events and Dump debug information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    asic_mmu_fail_safe:
+        description:
+        - "Field asic_mmu_fail_safe"
+        type: dict
+        required: False
+        suboptions:
+            recovery_threshold:
+                description:
+                - "ASIC Fail-safe recovery threshold in Errors (Units of 1 Errors (default 2))"
+                type: int
+            monitor_interval:
+                description:
+                - "ASIC Fail-safe monitoring intervals in Seconds (Units of 1 Seconds (default
+          60))"
+                type: int
+            monitor_disable:
+                description:
+                - "Enable Fail-safe software error monitoring and act on it"
+                type: bool
+            reboot_disable:
+                description:
+                - "Disable system reboot if system encounters mmu error"
+                type: bool
+            inject_error:
+                description:
+                - "Inject MMU SER/Parity errors"
+                type: bool
+            test_pattern_type:
+                description:
+                - "'all-zeros'= Inject all bits 0s in a byte; 'all-ones'= Inject all bits 1s in a
+          byte; 'lcb'= Logical checker board; 'inverse-lcb'= Inverse Logical checker
+          board;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ext_only_logging:
+        description:
+        - "Field ext_only_logging"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "enable external only logging for packet driven DDOS logs"
                 type: bool
             uuid:
                 description:
@@ -1718,6 +1833,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable_all_ports:
+                description:
+                - "Enable 802.1QinQ on all physical ports"
+                type: bool
             inner_tpid:
                 description:
                 - "TPID for inner VLAN (Inner TPID, 16 bit hex value, default is 8100)"
@@ -1726,13 +1845,116 @@ options:
                 description:
                 - "TPID for outer VLAN (Outer TPID, 16 bit hex value, default is 8100)"
                 type: str
-            enable_all_ports:
-                description:
-                - "Enable 802.1QinQ on all physical ports"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    port_count:
+        description:
+        - "Field port_count"
+        type: dict
+        required: False
+        suboptions:
+            port_count_kernel:
+                description:
+                - "Total Ports to be allocated for kernel."
+                type: int
+            port_count_hm:
+                description:
+                - "Total Ports to be allocated for hm."
+                type: int
+            port_count_logging:
+                description:
+                - "Total Ports to be allocated for logging."
+                type: int
+            port_count_alg:
+                description:
+                - "Total Ports to be allocated for alg types."
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    health_check_list:
+        description:
+        - "Field health_check_list"
+        type: list
+        required: False
+        suboptions:
+            l2hm_hc_name:
+                description:
+                - "Monitor Name"
+                type: str
+            method_l2bfd:
+                description:
+                - "Method is l2bfd"
+                type: bool
+            l2bfd_tx_interval:
+                description:
+                - "Transmit interval between BFD packets"
+                type: int
+            l2bfd_rx_interval:
+                description:
+                - "Minimum receive interval capability (Milliseconds (default= 800))"
+                type: int
+            l2bfd_multiplier:
+                description:
+                - "Multiplier value used to compute holddown (value used to multiply the interval
+          (default= 4))"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    path_list:
+        description:
+        - "Field path_list"
+        type: list
+        required: False
+        suboptions:
+            l2hm_path_name:
+                description:
+                - "Monitor Name"
+                type: str
+            l2hm_vlan:
+                description:
+                - "VLAN id"
+                type: int
+            l2hm_setup_test_api:
+                description:
+                - "Test-API Interface (Ethernet Interface)"
+                type: str
+            ifpair_eth_start:
+                description:
+                - "Ethernet port (Interface number)"
+                type: str
+            ifpair_eth_end:
+                description:
+                - "Ethernet port"
+                type: str
+            ifpair_trunk_start:
+                description:
+                - "Trunk groups"
+                type: int
+            ifpair_trunk_end:
+                description:
+                - "Trunk Group"
+                type: int
+            l2hm_attach:
+                description:
+                - "Monitor Name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
                 type: str
     xaui_dlb_mode:
         description:
@@ -1757,11 +1979,25 @@ options:
             glid_id:
                 description:
                 - "Apply limits to the whole system"
-                type: int
+                type: str
             non_shared:
                 description:
                 - "Apply global limit ID to the whole system at per data cpu level (default
           disabled)"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    enable_password:
+        description:
+        - "Field enable_password"
+        type: dict
+        required: False
+        suboptions:
+            follow_password_policy:
+                description:
+                - "enable-password will follow password policy complexity"
                 type: bool
             uuid:
                 description:
@@ -1989,6 +2225,20 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    job_offload:
+        description:
+        - "Field job_offload"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     dns:
         description:
         - "Field dns"
@@ -2158,13 +2408,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "control_cpu", "core", "cosq_show", "cosq_stats", "counter_lib_accounting", "cpu_hyper_thread",
-    "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "deep_hrxq", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn", "dynamic_service_dns_socket_pool", "environment", "fpga_core_crc",
-    "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_forward", "high_memory_l4_session", "hrxq_status", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache",
-    "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "link_capability", "link_monitor", "lro", "management_interface_mode", "memory", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support",
-    "ndisc_ra", "nsm_a10lb", "password_policy", "pbslb", "per_vlan_limit", "platformtype", "port_info", "port_list", "ports", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size",
-    "set_rxtx_queue", "set_tcp_syn_per_sec", "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "table_integrity", "tcp",
-    "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
+    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "control_cpu", "core", "cosq_show", "cosq_stats",
+    "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn",
+    "dynamic_service_dns_socket_pool", "enable_password", "environment", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate", "health_check_list",
+    "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro", "management_interface_mode",
+    "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype", "port_count", "port_info", "port_list",
+    "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec", "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown",
+    "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp", "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template",
+    "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
     ]
 
 
@@ -2198,6 +2449,9 @@ def get_argspec():
         'ddos_log': {
             'type': 'bool',
             },
+        'anomaly_log_rate_limit': {
+            'type': 'int',
+            },
         'sockstress_disable': {
             'type': 'bool',
             },
@@ -2208,9 +2462,11 @@ def get_argspec():
             'type': 'str',
             'choices': ['high', 'low', 'medium']
             },
-        'rfc_ipfix_ie_spec': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
+        'default_mtu': {
+            'type': 'int',
+            },
+        'hw_blocking_enable': {
+            'type': 'bool',
             },
         'src_ip_hash_enable': {
             'type': 'bool',
@@ -2225,6 +2481,9 @@ def get_argspec():
             'type': 'bool',
             },
         'dynamic_service_dns_socket_pool': {
+            'type': 'bool',
+            },
+        'system_chassis_port_split_enable': {
             'type': 'bool',
             },
         'ipv6_prefix_length': {
@@ -2315,31 +2574,6 @@ def get_argspec():
             },
         'probe_network_devices': {
             'type': 'dict',
-            },
-        'asic_mmu_fail_safe': {
-            'type': 'dict',
-            'recovery_threshold': {
-                'type': 'int',
-                },
-            'monitor_interval': {
-                'type': 'int',
-                },
-            'monitor_disable': {
-                'type': 'bool',
-                },
-            'reboot_disable': {
-                'type': 'bool',
-                },
-            'inject_error': {
-                'type': 'bool',
-                },
-            'test_pattern_type': {
-                'type': 'str',
-                'choices': ['all-zeros', 'all-ones', 'lcb', 'inverse-lcb']
-                },
-            'uuid': {
-                'type': 'str',
-                }
             },
         'management_interface_mode': {
             'type': 'dict',
@@ -2714,9 +2948,6 @@ def get_argspec():
             'ram_cache_memory_limit': {
                 'type': 'int',
                 },
-            'waf_template_count': {
-                'type': 'int',
-                },
             'auth_session_count': {
                 'type': 'int',
                 },
@@ -2734,6 +2965,15 @@ def get_argspec():
                 }
             },
         'link_capability': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'netvsc_monitor': {
             'type': 'dict',
             'enable': {
                 'type': 'bool',
@@ -2983,6 +3223,15 @@ def get_argspec():
                             'type': 'int',
                             },
                         'link_cost_template_min_guarantee': {
+                            'type': 'int',
+                            }
+                        },
+                    'pbslb_entry_cfg': {
+                        'type': 'dict',
+                        'pbslb_entry_max': {
+                            'type': 'int',
+                            },
+                        'pbslb_entry_min_guarantee': {
                             'type': 'int',
                             }
                         },
@@ -3302,6 +3551,9 @@ def get_argspec():
             'crypto_mem': {
                 'type': 'int',
                 },
+            'QAT': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3332,14 +3584,28 @@ def get_argspec():
                 'type': 'str',
                 }
             },
-        'deep_hrxq': {
+        'memory_block_debug': {
             'type': 'dict',
-            'enable': {
+            'assert_block': {
+                'type': 'int',
+                },
+            'pktdump_block': {
                 'type': 'bool',
                 },
-            'hrxq_num_chunks': {
+            'first_blk': {
+                'type': 'int',
+                },
+            'second_blk': {
+                'type': 'int',
+                },
+            'third_blk': {
+                'type': 'int',
+                },
+            'fourth_blk': {
+                'type': 'int',
+                },
+            'uuid': {
                 'type': 'str',
-                'choices': ['2048', '1024', '512']
                 }
             },
         'hrxq_status': {
@@ -3372,6 +3638,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'udp': {
+                'type': 'bool',
+                },
+            'others': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -3502,8 +3771,11 @@ def get_argspec():
                 'type': 'str',
                 }
             },
-        'hardware_forward': {
+        'hardware_accelerate': {
             'type': 'dict',
+            'session_forwarding': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3515,7 +3787,7 @@ def get_argspec():
                     'choices': [
                         'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count', 'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index',
                         'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop', 'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop',
-                        'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count'
+                        'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-rate-drop-count', 'hw-fwd-normal-ageout-rcvd', 'hw-fwd-tcp-fin-ageout-rcvd', 'hw-fwd-tcp-rst-ageout-rcvd', 'hw-fwd-lookup-fail-rcvd', 'hw-fwd-stats-update-rcvd', 'hw-fwd-flow-sflow-count'
                         ]
                     }
                 },
@@ -3535,6 +3807,12 @@ def get_argspec():
                             ]
                         }
                     }
+                }
+            },
+        'power_on_self_test': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
                 }
             },
         'throughput': {
@@ -3758,7 +4036,7 @@ def get_argspec():
             'type': 'dict',
             'complexity': {
                 'type': 'str',
-                'choices': ['Strict', 'Medium', 'Simple']
+                'choices': ['Strict', 'Medium', 'Default', 'Simple']
                 },
             'aging': {
                 'type': 'str',
@@ -3770,6 +4048,18 @@ def get_argspec():
                 },
             'min_pswd_len': {
                 'type': 'int',
+                },
+            'username_check': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'repeat_character_check': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'forbid_consecutive_character': {
+                'type': 'str',
+                'choices': ['0', '3', '4', '5']
                 },
             'uuid': {
                 'type': 'str',
@@ -3969,6 +4259,15 @@ def get_argspec():
             'geo_location_iana': {
                 'type': 'bool',
                 },
+            'geo_location_iana_system': {
+                'type': 'bool',
+                },
+            'geo_location_geolite2_asn': {
+                'type': 'bool',
+                },
+            'geolite2_asn_include_ipv6': {
+                'type': 'bool',
+                },
             'geo_location_geolite2_city': {
                 'type': 'bool',
                 },
@@ -3985,6 +4284,9 @@ def get_argspec():
                 'type': 'list',
                 'geo_location_load_filename': {
                     'type': 'str',
+                    },
+                'geo_location_load_file_include_ipv6': {
+                    'type': 'bool',
                     },
                 'template_name': {
                     'type': 'str',
@@ -4035,6 +4337,40 @@ def get_argspec():
                 }
             },
         'asic_debug_dump': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'asic_mmu_fail_safe': {
+            'type': 'dict',
+            'recovery_threshold': {
+                'type': 'int',
+                },
+            'monitor_interval': {
+                'type': 'int',
+                },
+            'monitor_disable': {
+                'type': 'bool',
+                },
+            'reboot_disable': {
+                'type': 'bool',
+                },
+            'inject_error': {
+                'type': 'bool',
+                },
+            'test_pattern_type': {
+                'type': 'str',
+                'choices': ['all-zeros', 'all-ones', 'lcb', 'inverse-lcb']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ext_only_logging': {
             'type': 'dict',
             'enable': {
                 'type': 'bool',
@@ -4247,16 +4583,93 @@ def get_argspec():
             },
         'q_in_q': {
             'type': 'dict',
+            'enable_all_ports': {
+                'type': 'bool',
+                },
             'inner_tpid': {
                 'type': 'str',
                 },
             'outer_tpid': {
                 'type': 'str',
                 },
-            'enable_all_ports': {
-                'type': 'bool',
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'port_count': {
+            'type': 'dict',
+            'port_count_kernel': {
+                'type': 'int',
+                },
+            'port_count_hm': {
+                'type': 'int',
+                },
+            'port_count_logging': {
+                'type': 'int',
+                },
+            'port_count_alg': {
+                'type': 'int',
                 },
             'uuid': {
+                'type': 'str',
+                }
+            },
+        'health_check_list': {
+            'type': 'list',
+            'l2hm_hc_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'method_l2bfd': {
+                'type': 'bool',
+                },
+            'l2bfd_tx_interval': {
+                'type': 'int',
+                },
+            'l2bfd_rx_interval': {
+                'type': 'int',
+                },
+            'l2bfd_multiplier': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                }
+            },
+        'path_list': {
+            'type': 'list',
+            'l2hm_path_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'l2hm_vlan': {
+                'type': 'int',
+                },
+            'l2hm_setup_test_api': {
+                'type': 'str',
+                },
+            'ifpair_eth_start': {
+                'type': 'str',
+                },
+            'ifpair_eth_end': {
+                'type': 'str',
+                },
+            'ifpair_trunk_start': {
+                'type': 'int',
+                },
+            'ifpair_trunk_end': {
+                'type': 'int',
+                },
+            'l2hm_attach': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
                 'type': 'str',
                 }
             },
@@ -4272,9 +4685,18 @@ def get_argspec():
         'glid': {
             'type': 'dict',
             'glid_id': {
-                'type': 'int',
+                'type': 'str',
                 },
             'non_shared': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'enable_password': {
+            'type': 'dict',
+            'follow_password_policy': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -4491,6 +4913,19 @@ def get_argspec():
                     }
                 }
             },
+        'job_offload': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'jobs', 'submit', 'receive', 'execute', 'snt_home', 'rcv_home', 'complete', 'fail_submit', 'q_no_space', 'fail_execute', 'fail_complete']
+                    }
+                }
+            },
         'dns': {
             'type': 'dict',
             'uuid': {
@@ -4504,7 +4939,7 @@ def get_argspec():
                     'choices': [
                         'all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop', 'filter_type_any_drop', 'slb_dns_client_ssl_succ',
                         'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only',
-                        'rpz_action_nxdomain', 'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp'
+                        'rpz_action_nxdomain', 'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp', 'slb_dns_edns_ecs_received', 'slb_dns_edns_ecs_inserted'
                         ]
                     }
                 },
@@ -4567,7 +5002,8 @@ def get_argspec():
                         'client_template_int_err', 'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total', 'ssl_forward_proxy_cert_issuer_bypass_total', 'ssl_forward_proxy_cert_san_bypass_total',
                         'ssl_forward_proxy_no_sni_bypass_total', 'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter', 'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total',
                         'total_clientside_early_data_connections', 'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections', 'total_serverside_failed_early_data-connections', 'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter',
-                        'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter', 'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter'
+                        'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter', 'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter',
+                        'sched_conn_with_wrong_next_idx_to_rml', 'free_conn_not_in_sp'
                         ]
                     }
                 }

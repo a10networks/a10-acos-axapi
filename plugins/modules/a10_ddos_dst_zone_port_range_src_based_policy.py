@@ -269,9 +269,6 @@ def get_argspec():
                 'encap': {
                     'type': 'str',
                     },
-                'ips': {
-                    'type': 'str',
-                    },
                 'logging': {
                     'type': 'str',
                     }

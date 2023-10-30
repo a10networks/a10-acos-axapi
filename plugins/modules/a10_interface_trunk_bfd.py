@@ -117,6 +117,32 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    per_member_port:
+        description:
+        - "Field per_member_port"
+        type: dict
+        required: False
+        suboptions:
+            local_address:
+                description:
+                - "IPv4 local-address"
+                type: str
+            neighbor_address:
+                description:
+                - "IPv4 neighbor address"
+                type: str
+            ipv6_local:
+                description:
+                - "IPv6 local-address"
+                type: str
+            ipv6_nbr:
+                description:
+                - "IPv6 neighbor-address"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -171,7 +197,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["authentication", "demand", "echo", "interval_cfg", "uuid", ]
+AVAILABLE_PROPERTIES = ["authentication", "demand", "echo", "interval_cfg", "per_member_port", "uuid", ]
 
 
 def get_default_argspec():
@@ -228,6 +254,24 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'per_member_port': {
+            'type': 'dict',
+            'local_address': {
+                'type': 'str',
+                },
+            'neighbor_address': {
+                'type': 'str',
+                },
+            'ipv6_local': {
+                'type': 'str',
+                },
+            'ipv6_nbr': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             }
         })
     # Parent keys

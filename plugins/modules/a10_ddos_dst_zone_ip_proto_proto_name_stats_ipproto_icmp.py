@@ -447,6 +447,18 @@ def get_argspec():
                     },
                 'filter_total_not_match': {
                     'type': 'str',
+                    },
+                'src_hw_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_bl': {
+                    'type': 'str',
+                    },
+                'src_learn_overflow': {
+                    'type': 'str',
                     }
                 }
             }

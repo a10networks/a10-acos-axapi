@@ -421,6 +421,15 @@ def get_argspec():
                         'type': 'int',
                         }
                     },
+                'pbslb_entry_cfg': {
+                    'type': 'dict',
+                    'pbslb_entry_max': {
+                        'type': 'int',
+                        },
+                    'pbslb_entry_min_guarantee': {
+                        'type': 'int',
+                        }
+                    },
                 'persist_cookie_template_cfg': {
                     'type': 'dict',
                     'persist_cookie_template_max': {

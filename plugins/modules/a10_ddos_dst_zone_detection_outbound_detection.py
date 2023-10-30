@@ -135,6 +135,10 @@ options:
                 description:
                 - "Threshold for each geo-location"
                 type: int
+            threshold_large_num:
+                description:
+                - "Threshold for each geo-location"
+                type: int
             threshold_str:
                 description:
                 - "Threshold for each geo-location (Non-zero floating point)"
@@ -296,6 +300,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'threshold_num': {
+                'type': 'int',
+                },
+            'threshold_large_num': {
                 'type': 'int',
                 },
             'threshold_str': {

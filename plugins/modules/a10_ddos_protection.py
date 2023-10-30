@@ -186,6 +186,11 @@ options:
           sessions. (Default disabled / sending TCP RST for"
         type: bool
         required: False
+    blacklist_reason_tracking:
+        description:
+        - "Enable blacklist reason tracking"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -503,8 +508,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "close_sess_for_unauth_src_without_rst", "disable_advanced_core_analysis", "disable_delay_dynamic_src_learning", "disable_on_reboot", "disallow_rst_ack_in_syn_auth", "enable_now", "fast_aging", "fast_path_disable", "force_routing_on_transp", "force_traffic_to_same_blade_disable", "hw_blocking_enable", "hw_blocking_threshold_limit",
-    "ipv6_src_hash_mask_bits", "mpls", "multi_pu_zone_distribution", "non_zero_win_size_syncookie", "oper", "progression_tracking", "rate_interval", "rexmit_syn_log", "src_dst_entry_limit", "src_ip_hash_bit", "src_ipv6_hash_bit", "src_zone_port_entry_limit", "toggle", "use_route", "uuid",
+    "blacklist_reason_tracking", "close_sess_for_unauth_src_without_rst", "disable_advanced_core_analysis", "disable_delay_dynamic_src_learning", "disable_on_reboot", "disallow_rst_ack_in_syn_auth", "enable_now", "fast_aging", "fast_path_disable", "force_routing_on_transp", "force_traffic_to_same_blade_disable", "hw_blocking_enable",
+    "hw_blocking_threshold_limit", "ipv6_src_hash_mask_bits", "mpls", "multi_pu_zone_distribution", "non_zero_win_size_syncookie", "oper", "progression_tracking", "rate_interval", "rexmit_syn_log", "src_dst_entry_limit", "src_ip_hash_bit", "src_ipv6_hash_bit", "src_zone_port_entry_limit", "toggle", "use_route", "uuid",
     ]
 
 
@@ -604,6 +609,9 @@ def get_argspec():
             'type': 'bool',
             },
         'close_sess_for_unauth_src_without_rst': {
+            'type': 'bool',
+            },
+        'blacklist_reason_tracking': {
             'type': 'bool',
             },
         'uuid': {

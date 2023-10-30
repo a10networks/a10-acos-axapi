@@ -435,7 +435,11 @@ options:
           0 and 200; 'rev_egress_pkt_size_range2'= Reverse Egress Packet size between 201
           and 800; 'rev_egress_pkt_size_range3'= Reverse Egress Packet size between 801
           and 1550; 'rev_egress_pkt_size_range4'= Reverse Egress Packet size between 1551
-          and 9000; 'prefix_quota_mismatch'= Prefix Quota NAT IP Mismatch;"
+          and 9000; 'prefix_quota_mismatch'= Prefix Quota NAT IP Mismatch;
+          'port_overloading_port_tcp_inserted'= Port Overloading NAT Port TCP Inserted;
+          'port_overloading_port_udp_inserted'= Port Overloading NAT Port UDP Inserted;
+          'port_overloading_port_free_tcp'= TCP Port Overloading NAT Port Freed;
+          'port_overloading_port_free_udp'= UDP Port Overloading NAT Port Freed;"
                 type: str
     stats:
         description:
@@ -839,6 +843,22 @@ options:
                 description:
                 - "Prefix Quota NAT IP Mismatch"
                 type: str
+            port_overloading_port_tcp_inserted:
+                description:
+                - "Port Overloading NAT Port TCP Inserted"
+                type: str
+            port_overloading_port_udp_inserted:
+                description:
+                - "Port Overloading NAT Port UDP Inserted"
+                type: str
+            port_overloading_port_free_tcp:
+                description:
+                - "TCP Port Overloading NAT Port Freed"
+                type: str
+            port_overloading_port_free_udp:
+                description:
+                - "UDP Port Overloading NAT Port Freed"
+                type: str
 
 '''
 
@@ -1024,7 +1044,8 @@ def get_argspec():
                     'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp',
                     'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others',
                     'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4',
-                    'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'prefix_quota_mismatch'
+                    'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'prefix_quota_mismatch', 'port_overloading_port_tcp_inserted',
+                    'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp'
                     ]
                 }
             },
@@ -1325,6 +1346,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'prefix_quota_mismatch': {
+                'type': 'str',
+                },
+            'port_overloading_port_tcp_inserted': {
+                'type': 'str',
+                },
+            'port_overloading_port_udp_inserted': {
+                'type': 'str',
+                },
+            'port_overloading_port_free_tcp': {
+                'type': 'str',
+                },
+            'port_overloading_port_free_udp': {
                 'type': 'str',
                 }
             }

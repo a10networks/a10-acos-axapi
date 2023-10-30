@@ -411,6 +411,18 @@ def get_argspec():
                     },
                 'no_route_drop': {
                     'type': 'str',
+                    },
+                'src_hw_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_bl': {
+                    'type': 'str',
+                    },
+                'src_learn_overflow': {
+                    'type': 'str',
                     }
                 }
             }

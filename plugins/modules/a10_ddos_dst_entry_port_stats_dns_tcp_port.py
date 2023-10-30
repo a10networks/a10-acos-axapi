@@ -917,6 +917,21 @@ def get_argspec():
                     },
                 'prog_win_samples': {
                     'type': 'str',
+                    },
+                'prog_conn_samples_processed': {
+                    'type': 'str',
+                    },
+                'prog_req_samples_processed': {
+                    'type': 'str',
+                    },
+                'prog_win_samples_processed': {
+                    'type': 'str',
+                    },
+                'tcp_auth_rst': {
+                    'type': 'str',
+                    },
+                'src_tcp_auth_rst': {
+                    'type': 'str',
                     }
                 }
             }

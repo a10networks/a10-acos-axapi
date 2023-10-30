@@ -141,16 +141,6 @@ options:
         - "SMP resource type 4 (Threshold value, default 32767)"
         type: int
         required: False
-    ctrl_btdump:
-        description:
-        - "Generate ctrl-cpu-btdump on threshold exceeeds"
-        type: bool
-        required: False
-    data_btdump:
-        description:
-        - "Generate data-cpu-btdump on threshold exceeeds"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -210,7 +200,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["buffer_drop", "buffer_usage", "conn_type0", "conn_type1", "conn_type2", "conn_type3", "conn_type4", "ctrl_btdump", "ctrl_cpu", "data_btdump", "data_cpu", "disk", "memory", "smp_type0", "smp_type1", "smp_type2", "smp_type3", "smp_type4", "uuid", "warn_temp", ]
+AVAILABLE_PROPERTIES = ["buffer_drop", "buffer_usage", "conn_type0", "conn_type1", "conn_type2", "conn_type3", "conn_type4", "ctrl_cpu", "data_cpu", "disk", "memory", "smp_type0", "smp_type1", "smp_type2", "smp_type3", "smp_type4", "uuid", "warn_temp", ]
 
 
 def get_default_argspec():
@@ -281,12 +271,6 @@ def get_argspec():
             },
         'smp_type4': {
             'type': 'int',
-            },
-        'ctrl_btdump': {
-            'type': 'bool',
-            },
-        'data_btdump': {
-            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

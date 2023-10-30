@@ -206,10 +206,6 @@ options:
                 description:
                 - "Field active_standby_local"
                 type: str
-            failover_list:
-                description:
-                - "Field failover_list"
-                type: list
             peer_list:
                 description:
                 - "Field peer_list"
@@ -575,12 +571,6 @@ def get_argspec():
                 },
             'active_standby_local': {
                 'type': 'str',
-                },
-            'failover_list': {
-                'type': 'list',
-                'failover_reason': {
-                    'type': 'str',
-                    }
                 },
             'peer_list': {
                 'type': 'list',

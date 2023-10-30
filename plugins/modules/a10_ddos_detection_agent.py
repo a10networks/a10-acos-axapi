@@ -127,7 +127,8 @@ options:
           Reduced Size Invalid; 'netflow-sample-flow-dur-error'= Netflow Sample Flow
           Duration Error; 'flow-dst-entry-miss'= DDoS Destination Entry Lookup Failures;
           'flow-ip-proto-or-port-miss'= DDoS Destination Service Lookup Failures; 'flow-
-          detection-msgq-full'= Detection Message Enqueue Failures;"
+          detection-msgq-full'= Detection Message Enqueue Failures; 'flow-network-entry-
+          miss'= DDoS Destination Network-object Entry Lookup Failures;"
                 type: str
     sflow:
         description:
@@ -329,6 +330,10 @@ options:
                 description:
                 - "Detection Message Enqueue Failures"
                 type: str
+            flow_network_entry_miss:
+                description:
+                - "DDoS Destination Network-object Entry Lookup Failures"
+                type: str
             agent_name:
                 description:
                 - "Specify name for the agent"
@@ -437,7 +442,7 @@ def get_argspec():
                     'all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2', 'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled',
                     'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len',
                     'netflow-v9-sample-flowset-bad-padding', 'netflow-v9-max-records-exceed', 'netflow-v9-template-not-found', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received',
-                    'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full'
+                    'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss'
                     ]
                 }
             },
@@ -584,6 +589,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'flow_detection_msgq_full': {
+                'type': 'str',
+                },
+            'flow_network_entry_miss': {
                 'type': 'str',
                 },
             'agent_name': {

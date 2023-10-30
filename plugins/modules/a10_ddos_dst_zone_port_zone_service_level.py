@@ -213,6 +213,10 @@ options:
                 description:
                 - "Indicator per-src threshold"
                 type: int
+            src_threshold_large_num:
+                description:
+                - "Indicator per-src threshold"
+                type: int
             src_threshold_str:
                 description:
                 - "Indicator per-src threshold (Non-zero floating point)"
@@ -221,6 +225,10 @@ options:
                 description:
                 - "Violation actions to use when this src indicator threshold reaches"
                 type: str
+            zone_threshold_large_num:
+                description:
+                - "Threshold for the entire zone"
+                type: int
             zone_threshold_num:
                 description:
                 - "Threshold for the entire zone"
@@ -406,11 +414,17 @@ def get_argspec():
             'src_threshold_num': {
                 'type': 'int',
                 },
+            'src_threshold_large_num': {
+                'type': 'int',
+                },
             'src_threshold_str': {
                 'type': 'str',
                 },
             'src_violation_actions': {
                 'type': 'str',
+                },
+            'zone_threshold_large_num': {
+                'type': 'int',
                 },
             'zone_threshold_num': {
                 'type': 'int',

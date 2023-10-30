@@ -86,6 +86,11 @@ options:
           advertise|no-export"
         type: str
         required: False
+    lcomm_value:
+        description:
+        - "Large community value in the format XX=YY=ZZ"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -145,7 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["backdoor", "comm_value", "description", "network_ipv4_cidr", "route_map", "uuid", ]
+AVAILABLE_PROPERTIES = ["backdoor", "comm_value", "description", "lcomm_value", "network_ipv4_cidr", "route_map", "uuid", ]
 
 
 def get_default_argspec():
@@ -165,7 +170,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'network_ipv4_cidr': {'type': 'str', 'required': True, }, 'route_map': {'type': 'str', }, 'backdoor': {'type': 'bool', }, 'description': {'type': 'str', }, 'comm_value': {'type': 'str', }, 'uuid': {'type': 'str', }})
+    rv.update({'network_ipv4_cidr': {'type': 'str', 'required': True, }, 'route_map': {'type': 'str', }, 'backdoor': {'type': 'bool', }, 'description': {'type': 'str', }, 'comm_value': {'type': 'str', }, 'lcomm_value': {'type': 'str', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(bgp_as_number=dict(type='str', required=True), ))
     return rv

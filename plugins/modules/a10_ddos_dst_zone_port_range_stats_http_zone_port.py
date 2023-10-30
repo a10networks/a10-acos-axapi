@@ -1333,6 +1333,33 @@ def get_argspec():
                     },
                 'unauth_src_session_reset': {
                     'type': 'str',
+                    },
+                'prog_conn_samples_processed': {
+                    'type': 'str',
+                    },
+                'prog_req_samples_processed': {
+                    'type': 'str',
+                    },
+                'prog_win_samples_processed': {
+                    'type': 'str',
+                    },
+                'src_hw_drop': {
+                    'type': 'str',
+                    },
+                'tcp_auth_rst': {
+                    'type': 'str',
+                    },
+                'src_tcp_auth_rst': {
+                    'type': 'str',
+                    },
+                'addr_filter_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_bl': {
+                    'type': 'str',
+                    },
+                'src_learn_overflow': {
+                    'type': 'str',
                     }
                 }
             }

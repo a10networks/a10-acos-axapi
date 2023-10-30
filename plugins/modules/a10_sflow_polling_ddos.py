@@ -86,6 +86,11 @@ options:
         - "Enable Polling for system wide anomaly statistics"
         type: bool
         required: False
+    dyn_entry_stats:
+        description:
+        - "Enable polling for dynamic entry statistics"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -145,7 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["2_9_compatibility", "3_0_compatibility", "address_byte_order_host", "dns_cache_zone_stats", "enable_anomaly_stats", "toggle", "uuid", ]
+AVAILABLE_PROPERTIES = ["2_9_compatibility", "3_0_compatibility", "address_byte_order_host", "dns_cache_zone_stats", "dyn_entry_stats", "enable_anomaly_stats", "toggle", "uuid", ]
 
 
 def get_default_argspec():
@@ -165,7 +170,33 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'toggle': {'type': 'str', 'choices': ['enable', 'disable']}, '3_0_compatibility': {'type': 'bool', }, 'address_byte_order_host': {'type': 'bool', }, '2_9_compatibility': {'type': 'bool', }, 'dns_cache_zone_stats': {'type': 'bool', }, 'enable_anomaly_stats': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'toggle': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        '3_0_compatibility': {
+            'type': 'bool',
+            },
+        'address_byte_order_host': {
+            'type': 'bool',
+            },
+        '2_9_compatibility': {
+            'type': 'bool',
+            },
+        'dns_cache_zone_stats': {
+            'type': 'bool',
+            },
+        'enable_anomaly_stats': {
+            'type': 'bool',
+            },
+        'dyn_entry_stats': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 

@@ -90,6 +90,12 @@ options:
           ENCRYPTED pre-shared key string)"
         type: str
         required: False
+    hash:
+        description:
+        - "'sha256'= Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384;
+          'sha512'= Secure Hash Algorithm 512;"
+        type: str
+        required: False
     interface_management:
         description:
         - "only handle traffic on management interface, share partition only"
@@ -239,6 +245,11 @@ options:
     lifetime:
         description:
         - "IKE SA age in seconds"
+        type: int
+        required: False
+    fragment_size:
+        description:
+        - "Enable IKE message fragment and set fragment size"
         type: int
         required: False
     nat_traversal:
@@ -652,8 +663,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auth_method", "configuration_payload", "dh_group", "dhcp_server", "disable_rekey", "dpd", "enc_cfg", "ike_version", "interface_management", "key", "key_passphrase", "key_passphrase_encrypted", "lifetime", "local_address", "local_cert", "local_id", "mode", "name", "nat_traversal", "oper", "preshare_key_encrypted", "preshare_key_value",
-    "radius_server", "remote_address", "remote_ca_cert", "remote_id", "sampling_enable", "stats", "user_tag", "uuid", "vrid",
+    "auth_method", "configuration_payload", "dh_group", "dhcp_server", "disable_rekey", "dpd", "enc_cfg", "fragment_size", "hash", "ike_version", "interface_management", "key", "key_passphrase", "key_passphrase_encrypted", "lifetime", "local_address", "local_cert", "local_id", "mode", "name", "nat_traversal", "oper", "preshare_key_encrypted",
+    "preshare_key_value", "radius_server", "remote_address", "remote_ca_cert", "remote_id", "sampling_enable", "stats", "user_tag", "uuid", "vrid",
     ]
 
 
@@ -696,6 +707,10 @@ def get_argspec():
             },
         'preshare_key_encrypted': {
             'type': 'str',
+            },
+        'hash': {
+            'type': 'str',
+            'choices': ['sha256', 'sha384', 'sha512']
             },
         'interface_management': {
             'type': 'bool',
@@ -783,6 +798,9 @@ def get_argspec():
                 }
             },
         'lifetime': {
+            'type': 'int',
+            },
+        'fragment_size': {
             'type': 'int',
             },
         'nat_traversal': {
@@ -878,6 +896,9 @@ def get_argspec():
                 'Hash': {
                     'type': 'str',
                     },
+                'Sign_hash': {
+                    'type': 'str',
+                    },
                 'Lifetime': {
                     'type': 'int',
                     },
@@ -891,6 +912,18 @@ def get_argspec():
                     'type': 'str',
                     },
                 'DH_Group': {
+                    'type': 'int',
+                    },
+                'Fragment_message_generated': {
+                    'type': 'int',
+                    },
+                'Fragment_message_received': {
+                    'type': 'int',
+                    },
+                'Fragmentation_error': {
+                    'type': 'int',
+                    },
+                'Fragment_reassemble_error': {
                     'type': 'int',
                     }
                 },

@@ -89,7 +89,8 @@ options:
         required: False
     time:
         description:
-        - "Set export time of the data. default 0 (12 AM)"
+        - "Set export time of the data in minutes. default 0 (12 AM). exported between
+          12-01 AM"
         type: int
         required: False
     action:

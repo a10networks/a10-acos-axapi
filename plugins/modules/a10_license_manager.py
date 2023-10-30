@@ -182,6 +182,20 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    ng_waf_module:
+        description:
+        - "Field ng_waf_module"
+        type: dict
+        required: False
+        suboptions:
+            access_key_id:
+                description:
+                - "access-key"
+                type: str
+            secret_access_key:
+                description:
+                - "Field secret_access_key"
+                type: str
 
 '''
 
@@ -236,7 +250,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bandwidth_base", "bandwidth_unrestricted", "connect", "host_list", "instance_name", "interval", "overage", "reminder_list", "sn", "use_mgmt_port", "uuid", ]
+AVAILABLE_PROPERTIES = ["bandwidth_base", "bandwidth_unrestricted", "connect", "host_list", "instance_name", "interval", "ng_waf_module", "overage", "reminder_list", "sn", "use_mgmt_port", "uuid", ]
 
 
 def get_default_argspec():
@@ -341,6 +355,15 @@ def get_argspec():
                 'type': 'bool',
                 },
             'uuid': {
+                'type': 'str',
+                }
+            },
+        'ng_waf_module': {
+            'type': 'dict',
+            'access_key_id': {
+                'type': 'str',
+                },
+            'secret_access_key': {
                 'type': 'str',
                 }
             }

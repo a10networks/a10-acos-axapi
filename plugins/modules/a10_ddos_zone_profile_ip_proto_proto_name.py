@@ -196,6 +196,9 @@ def get_argspec():
                 'src_threshold_num': {
                     'type': 'int',
                     },
+                'src_threshold_large_num': {
+                    'type': 'int',
+                    },
                 'src_threshold_str': {
                     'type': 'str',
                     }
@@ -203,6 +206,9 @@ def get_argspec():
             'zone_threshold_cfg': {
                 'type': 'dict',
                 'zone_threshold_num': {
+                    'type': 'int',
+                    },
+                'zone_threshold_large_num': {
                     'type': 'int',
                     },
                 'zone_threshold_str': {

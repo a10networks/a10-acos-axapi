@@ -67,8 +67,7 @@ options:
         required: False
     action:
         description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        - "'create'= create; 'import'= import; 'export'= export; 'replace'= replace;"
         type: str
         required: False
     file_handle:
@@ -80,11 +79,6 @@ options:
         description:
         - "Mark keys as non-exportable"
         type: bool
-        required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        type: str
         required: False
 
 '''
@@ -140,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "dst_file", "file", "file_handle", "secured", ]
+AVAILABLE_PROPERTIES = ["action", "file", "file_handle", "secured", ]
 
 
 def get_default_argspec():
@@ -160,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'file_path': {'type': 'str', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']}, 'file_handle': {'type': 'str', }, 'secured': {'type': 'bool', }, 'dst_file': {'type': 'str', }})
+    rv.update({'file_path': {'type': 'str', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['create', 'import', 'export', 'replace']}, 'file_handle': {'type': 'str', }, 'secured': {'type': 'bool', }})
     return rv
 
 

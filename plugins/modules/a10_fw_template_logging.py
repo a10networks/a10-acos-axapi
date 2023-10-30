@@ -76,11 +76,6 @@ options:
         - "Merge creation and deletion of session logs to one"
         type: bool
         required: False
-    include_year:
-        description:
-        - "include the 4-digit year in logs"
-        type: bool
-        required: False
     log:
         description:
         - "Field log"
@@ -285,7 +280,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "include_year", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -318,9 +313,6 @@ def get_argspec():
             'type': 'bool',
             },
         'merged_style': {
-            'type': 'bool',
-            },
-        'include_year': {
             'type': 'bool',
             },
         'log': {

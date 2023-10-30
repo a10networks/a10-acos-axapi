@@ -59,6 +59,41 @@ options:
         - "don't merge this vBlade's configuration to aVCS chassis"
         type: bool
         required: False
+    db_safe:
+        description:
+        - "keep database safe"
+        type: bool
+        required: False
+    start:
+        description:
+        - "Field start"
+        type: bool
+        required: False
+    timeout:
+        description:
+        - "automatically complete the db-safe mode when timeout"
+        type: int
+        required: False
+    complete:
+        description:
+        - "Field complete"
+        type: bool
+        required: False
+    force:
+        description:
+        - "force to complete"
+        type: bool
+        required: False
+    cluster_discovery:
+        description:
+        - "apply the configuration change on the aVCS cluster"
+        type: bool
+        required: False
+    device:
+        description:
+        - "Reload a specific device when VCS is enabled (device id)"
+        type: int
+        required: False
 
 '''
 
@@ -113,7 +148,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable_merge", ]
+AVAILABLE_PROPERTIES = ["cluster_discovery", "complete", "db_safe", "device", "disable_merge", "force", "start", "timeout", ]
 
 
 def get_default_argspec():
@@ -133,7 +168,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'disable_merge': {'type': 'bool', }})
+    rv.update({'disable_merge': {'type': 'bool', }, 'db_safe': {'type': 'bool', }, 'start': {'type': 'bool', }, 'timeout': {'type': 'int', }, 'complete': {'type': 'bool', }, 'force': {'type': 'bool', }, 'cluster_discovery': {'type': 'bool', }, 'device': {'type': 'int', }})
     return rv
 
 

@@ -458,6 +458,10 @@ options:
                 description:
                 - "Progression= Violation Exceeded Reset"
                 type: str
+            tcp_auth_rst:
+                description:
+                - "TCP Auth Reset"
+                type: str
 
 '''
 
@@ -830,6 +834,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'tcp_progression_violation_exceed_reset': {
+                'type': 'str',
+                },
+            'tcp_auth_rst': {
                 'type': 'str',
                 }
             }

@@ -151,6 +151,11 @@ options:
                 description:
                 - "Named Access List"
                 type: str
+    gaming_protocol_compliance:
+        description:
+        - "Enable Gaming Protocol Compliance Check"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -204,10 +209,6 @@ options:
             server:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
-                type: bool
-            dmz:
-                description:
-                - "DMZ network facing interface for IPv4/v6 traffic"
                 type: bool
             helper_address_list:
                 description:
@@ -604,6 +605,10 @@ options:
                 description:
                 - "Field ip_unnumbered_peer_lla"
                 type: str
+            mtu:
+                description:
+                - "Field mtu"
+                type: int
             ifnum:
                 description:
                 - "Virtual ethernet interface number"
@@ -732,7 +737,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list", "action", "bfd", "ddos", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipv6", "isis", "l3_vlan_fwd_disable", "lw_4o6", "map", "mtu", "name", "nptv6", "oper", "ping_sweep_detection", "port_scan_detection", "sampling_enable", "stats", "trap_source", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["access_list", "action", "bfd", "ddos", "gaming_protocol_compliance", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipv6", "isis", "l3_vlan_fwd_disable", "lw_4o6", "map", "mtu", "name", "nptv6", "oper", "ping_sweep_detection", "port_scan_detection", "sampling_enable", "stats", "trap_source", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -814,6 +819,9 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'gaming_protocol_compliance': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -848,9 +856,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
-                'type': 'bool',
-                },
-            'dmz': {
                 'type': 'bool',
                 },
             'helper_address_list': {
@@ -1785,6 +1790,9 @@ def get_argspec():
                 },
             'ip_unnumbered_peer_lla': {
                 'type': 'str',
+                },
+            'mtu': {
+                'type': 'int',
                 },
             'ifnum': {
                 'type': 'int',

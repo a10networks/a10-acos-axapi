@@ -194,7 +194,7 @@ options:
           entry_create_failures; 'mem_size'= mem_size; 'entry_num'= entry_num;
           'replaced_entry'= replaced_entry; 'aging_entry'= aging_entry; 'cleaned_entry'=
           cleaned_entry; 'rsp_type_stream'= rsp_type_stream; 'header_save_error'=
-          header_save_error;"
+          header_save_error; 'rsp_br'= rsp_br;"
                 type: str
     packet_capture_template:
         description:
@@ -334,6 +334,10 @@ options:
             header_save_error:
                 description:
                 - "Field header_save_error"
+                type: str
+            rsp_br:
+                description:
+                - "Field rsp_br"
                 type: str
             name:
                 description:
@@ -492,7 +496,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match',
-                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'header_save_error'
+                    'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry', 'rsp_type_stream', 'header_save_error', 'rsp_br'
                     ]
                 }
             },
@@ -595,6 +599,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'header_save_error': {
+                'type': 'str',
+                },
+            'rsp_br': {
                 'type': 'str',
                 },
             'name': {

@@ -108,6 +108,16 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    cpu:
+        description:
+        - "Field cpu"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -149,6 +159,10 @@ options:
             custom_signals:
                 description:
                 - "Field custom_signals"
+                type: dict
+            cpu:
+                description:
+                - "Field cpu"
                 type: dict
     stats:
         description:
@@ -222,7 +236,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom_page", "custom_signals", "oper", "stats", "stats_list", "status", "uuid", ]
+AVAILABLE_PROPERTIES = ["cpu", "custom_page", "custom_signals", "oper", "stats", "stats_list", "status", "uuid", ]
 
 
 def get_default_argspec():
@@ -272,6 +286,12 @@ def get_argspec():
                 }
             },
         'custom_signals': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'cpu': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
@@ -362,6 +382,36 @@ def get_argspec():
                         'type': 'list',
                         'signal': {
                             'type': 'str',
+                            }
+                        }
+                    }
+                },
+            'cpu': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'number_of_cpus': {
+                        'type': 'int',
+                        },
+                    'cpu_info': {
+                        'type': 'list',
+                        'cpu_id': {
+                            'type': 'int',
+                            },
+                        '1_sec': {
+                            'type': 'int',
+                            },
+                        '5_sec': {
+                            'type': 'int',
+                            },
+                        '10_sec': {
+                            'type': 'int',
+                            },
+                        '30_sec': {
+                            'type': 'int',
+                            },
+                        '60_sec': {
+                            'type': 'int',
                             }
                         }
                     }

@@ -55,16 +55,25 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    sflow:
-        description:
-        - "Enable debugging logs of sFlow parser"
-        type: bool
-        required: False
     log:
         description:
         - "Enable Report module's normal logs"
         type: bool
         required: False
+    sflow:
+        description:
+        - "Field sflow"
+        type: dict
+        required: False
+        suboptions:
+            parser:
+                description:
+                - "Enable logs by parser"
+                type: bool
+            stats_oid:
+                description:
+                - "Specify stats-oid to dump raw packets, 0 to disable"
+                type: int
 
 '''
 
@@ -139,7 +148,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'sflow': {'type': 'bool', }, 'log': {'type': 'bool', }})
+    rv.update({'log': {'type': 'bool', }, 'sflow': {'type': 'dict', 'parser': {'type': 'bool', }, 'stats_oid': {'type': 'int', }}})
     return rv
 
 

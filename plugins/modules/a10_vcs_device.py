@@ -110,6 +110,11 @@ options:
         - "vrid-group"
         type: int
         required: False
+    ttl:
+        description:
+        - "TTL of the VCS packet"
+        type: int
+        required: False
     enable:
         description:
         - "Enable"
@@ -179,7 +184,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["affinity_vrrp_a_vrid", "device", "enable", "ethernet_cfg", "management", "priority", "trunk_cfg", "unicast_port", "user_tag", "uuid", "ve_cfg", ]
+AVAILABLE_PROPERTIES = ["affinity_vrrp_a_vrid", "device", "enable", "ethernet_cfg", "management", "priority", "trunk_cfg", "ttl", "unicast_port", "user_tag", "uuid", "ve_cfg", ]
 
 
 def get_default_argspec():
@@ -232,6 +237,9 @@ def get_argspec():
                 }
             },
         'affinity_vrrp_a_vrid': {
+            'type': 'int',
+            },
+        'ttl': {
             'type': 'int',
             },
         'enable': {

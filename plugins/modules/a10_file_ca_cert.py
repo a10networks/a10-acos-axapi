@@ -67,8 +67,7 @@ options:
         required: False
     action:
         description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        - "'create'= create; 'import'= import; 'export'= export; 'replace'= replace;"
         type: str
         required: False
     file_handle:
@@ -89,11 +88,6 @@ options:
     pfx_password_export:
         description:
         - "The password for exported certificate file (pfx type only)"
-        type: str
-        required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
         type: str
         required: False
     uuid:
@@ -169,7 +163,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "certificate_type", "dst_file", "file", "file_handle", "oper", "pfx_password", "pfx_password_export", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "certificate_type", "file", "file_handle", "oper", "pfx_password", "pfx_password_export", "uuid", ]
 
 
 def get_default_argspec():
@@ -198,7 +192,7 @@ def get_argspec():
             },
         'action': {
             'type': 'str',
-            'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']
+            'choices': ['create', 'import', 'export', 'replace']
             },
         'file_handle': {
             'type': 'str',
@@ -211,9 +205,6 @@ def get_argspec():
             'type': 'str',
             },
         'pfx_password_export': {
-            'type': 'str',
-            },
-        'dst_file': {
             'type': 'str',
             },
         'uuid': {

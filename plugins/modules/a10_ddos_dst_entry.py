@@ -141,6 +141,10 @@ options:
                 description:
                 - "Field polling"
                 type: dict
+            collector:
+                description:
+                - "Field collector"
+                type: list
     drop_on_no_src_dst_default:
         description:
         - "Drop if no match with src-based-policy class-list, and default is not
@@ -534,7 +538,13 @@ options:
           'prog_win_exceed_bl'= Time Window= Violation Exceed Blacklisted;
           'dst_exceed_action_drop'= Entry Exceed Action= Dropped; 'prog_conn_samples'=
           Sample Collected= Connection; 'prog_req_samples'= Sample Collected= Req-Resp;
-          'prog_win_samples'= Sample Collected= Time Window;"
+          'prog_win_samples'= Sample Collected= Time Window;
+          'prog_conn_samples_processed'= Sample Processed= Connnection;
+          'prog_req_samples_processed'= Sample Processed= Req-Resp;
+          'prog_win_samples_processed'= Sample Processed= Time Window; 'src_hw_drop'= Src
+          Hardware Packets Dropped; 'dst_tcp_auth_rst'= TCP Auth= Reset;
+          'dst_src_learn_overflow'= Src Dynamic Entry Count Overflow; 'tcp_fwd_sent'= TCP
+          Inbound Packets Forwarded; 'udp_fwd_sent'= UDP Inbound Packets Forwarded;"
                 type: str
     capture_config_list:
         description:
@@ -681,6 +691,10 @@ options:
                 description:
                 - "Set T2 counter value of current context to specified value"
                 type: int
+            ip_filtering_policy:
+                description:
+                - "Configure IP Filter"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -689,6 +703,10 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             port_ind:
                 description:
                 - "Field port_ind"
@@ -761,6 +779,10 @@ options:
                 description:
                 - "Set T2 counter value of current context to specified value"
                 type: int
+            ip_filtering_policy:
+                description:
+                - "Configure IP Filter"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -772,6 +794,10 @@ options:
             port_ind:
                 description:
                 - "Field port_ind"
+                type: dict
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
                 type: dict
             topk_sources:
                 description:
@@ -853,6 +879,10 @@ options:
                 description:
                 - "Set T2 counter value of current context to specified value"
                 type: int
+            ip_filtering_policy:
+                description:
+                - "Configure IP Filter"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -861,6 +891,10 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             port_ind:
                 description:
                 - "Field port_ind"
@@ -1000,6 +1034,10 @@ options:
                 description:
                 - "Set T2 counter value of current context to specified value"
                 type: int
+            ip_filtering_policy:
+                description:
+                - "Configure IP Filter"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -1008,6 +1046,10 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
     src_dst_pair:
         description:
         - "Field src_dst_pair"
@@ -2623,6 +2665,38 @@ options:
                 description:
                 - "Sample Collected= Time Window"
                 type: str
+            prog_conn_samples_processed:
+                description:
+                - "Sample Processed= Connnection"
+                type: str
+            prog_req_samples_processed:
+                description:
+                - "Sample Processed= Req-Resp"
+                type: str
+            prog_win_samples_processed:
+                description:
+                - "Sample Processed= Time Window"
+                type: str
+            src_hw_drop:
+                description:
+                - "Src Hardware Packets Dropped"
+                type: str
+            dst_tcp_auth_rst:
+                description:
+                - "TCP Auth= Reset"
+                type: str
+            dst_src_learn_overflow:
+                description:
+                - "Src Dynamic Entry Count Overflow"
+                type: str
+            tcp_fwd_sent:
+                description:
+                - "TCP Inbound Packets Forwarded"
+                type: str
+            udp_fwd_sent:
+                description:
+                - "UDP Inbound Packets Forwarded"
+                type: str
             dst_entry_name:
                 description:
                 - "Field dst_entry_name"
@@ -2783,6 +2857,12 @@ def get_argspec():
                 'sflow_undef_port_hit_stats_brief': {
                     'type': 'bool',
                     }
+                },
+            'collector': {
+                'type': 'list',
+                'sflow_name': {
+                    'type': 'str',
+                    }
                 }
             },
         'drop_on_no_src_dst_default': {
@@ -2918,7 +2998,7 @@ def get_argspec():
                 'choices': [
                     'dst_hw_drop_rule_insert', 'dst_hw_drop_rule_remove', 'src_hw_drop_rule_insert', 'src_hw_drop_rule_remove', 'prog_first_req_time_exceed', 'prog_req_resp_time_exceed', 'prog_request_len_exceed', 'prog_response_len_exceed', 'prog_resp_req_ratio_exceed', 'prog_resp_req_time_exceed', 'entry_sync_message_received',
                     'entry_sync_message_sent', 'prog_conn_sent_exceed', 'prog_conn_rcvd_exceed', 'prog_conn_time_exceed', 'prog_conn_rcvd_sent_ratio_exceed', 'prog_win_sent_exceed', 'prog_win_rcvd_exceed', 'prog_win_rcvd_sent_ratio_exceed', 'prog_exceed_drop', 'prog_exceed_bl', 'prog_conn_exceed_drop', 'prog_conn_exceed_bl', 'prog_win_exceed_drop',
-                    'prog_win_exceed_bl', 'dst_exceed_action_drop', 'prog_conn_samples', 'prog_req_samples', 'prog_win_samples'
+                    'prog_win_exceed_bl', 'dst_exceed_action_drop', 'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'src_hw_drop', 'dst_tcp_auth_rst', 'dst_src_learn_overflow', 'tcp_fwd_sent', 'udp_fwd_sent'
                     ]
                 }
             },
@@ -3067,11 +3147,20 @@ def get_argspec():
             'set_counter_base_val': {
                 'type': 'int',
                 },
+            'ip_filtering_policy': {
+                'type': 'str',
+                },
             'uuid': {
                 'type': 'str',
                 },
             'user_tag': {
                 'type': 'str',
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
             'port_ind': {
                 'type': 'dict',
@@ -3204,6 +3293,9 @@ def get_argspec():
             'set_counter_base_val': {
                 'type': 'int',
                 },
+            'ip_filtering_policy': {
+                'type': 'str',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3229,6 +3321,12 @@ def get_argspec():
                             'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max'
                             ]
                         }
+                    }
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
                     }
                 },
             'topk_sources': {
@@ -3385,11 +3483,20 @@ def get_argspec():
             'set_counter_base_val': {
                 'type': 'int',
                 },
+            'ip_filtering_policy': {
+                'type': 'str',
+                },
             'uuid': {
                 'type': 'str',
                 },
             'user_tag': {
                 'type': 'str',
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
             'port_ind': {
                 'type': 'dict',
@@ -3587,11 +3694,20 @@ def get_argspec():
             'set_counter_base_val': {
                 'type': 'int',
                 },
+            'ip_filtering_policy': {
+                'type': 'str',
+                },
             'uuid': {
                 'type': 'str',
                 },
             'user_tag': {
                 'type': 'str',
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'src_dst_pair': {
@@ -4583,12 +4699,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -4612,6 +4722,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',
@@ -4787,6 +4903,21 @@ def get_argspec():
                         'type': 'str',
                         }
                     },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'rule_list': {
+                            'type': 'list',
+                            'seq': {
+                                'type': 'int',
+                                },
+                            'hits': {
+                                'type': 'int',
+                                }
+                            }
+                        }
+                    },
                 'port_ind': {
                     'type': 'dict',
                     'oper': {
@@ -4845,12 +4976,6 @@ def get_argspec():
                                     }
                                 }
                             },
-                        'next_indicator': {
-                            'type': 'int',
-                            },
-                        'finished': {
-                            'type': 'int',
-                            },
                         'entry_list': {
                             'type': 'list',
                             'address_str': {
@@ -4874,6 +4999,12 @@ def get_argspec():
                                     'type': 'int',
                                     }
                                 }
+                            },
+                        'next_indicator': {
+                            'type': 'int',
+                            },
+                        'finished': {
+                            'type': 'int',
                             },
                         'details': {
                             'type': 'bool',
@@ -5129,6 +5260,21 @@ def get_argspec():
                             }
                         }
                     },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'rule_list': {
+                            'type': 'list',
+                            'seq': {
+                                'type': 'int',
+                                },
+                            'hits': {
+                                'type': 'int',
+                                }
+                            }
+                        }
+                    },
                 'topk_sources': {
                     'type': 'dict',
                     'oper': {
@@ -5150,12 +5296,6 @@ def get_argspec():
                                     'type': 'str',
                                     }
                                 }
-                            },
-                        'next_indicator': {
-                            'type': 'int',
-                            },
-                        'finished': {
-                            'type': 'int',
                             },
                         'entry_list': {
                             'type': 'list',
@@ -5180,6 +5320,12 @@ def get_argspec():
                                     'type': 'int',
                                     }
                                 }
+                            },
+                        'next_indicator': {
+                            'type': 'int',
+                            },
+                        'finished': {
+                            'type': 'int',
                             },
                         'details': {
                             'type': 'bool',
@@ -5502,6 +5648,21 @@ def get_argspec():
                         'type': 'str',
                         }
                     },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'rule_list': {
+                            'type': 'list',
+                            'seq': {
+                                'type': 'int',
+                                },
+                            'hits': {
+                                'type': 'int',
+                                }
+                            }
+                        }
+                    },
                 'port_ind': {
                     'type': 'dict',
                     'oper': {
@@ -5560,12 +5721,6 @@ def get_argspec():
                                     }
                                 }
                             },
-                        'next_indicator': {
-                            'type': 'int',
-                            },
-                        'finished': {
-                            'type': 'int',
-                            },
                         'entry_list': {
                             'type': 'list',
                             'address_str': {
@@ -5589,6 +5744,12 @@ def get_argspec():
                                     'type': 'int',
                                     }
                                 }
+                            },
+                        'next_indicator': {
+                            'type': 'int',
+                            },
+                        'finished': {
+                            'type': 'int',
                             },
                         'details': {
                             'type': 'bool',
@@ -6219,6 +6380,21 @@ def get_argspec():
                         },
                     'domain_name': {
                         'type': 'str',
+                        }
+                    },
+                'ip_filtering_policy_oper': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'rule_list': {
+                            'type': 'list',
+                            'seq': {
+                                'type': 'int',
+                                },
+                            'hits': {
+                                'type': 'int',
+                                }
+                            }
                         }
                     }
                 }
@@ -7069,6 +7245,30 @@ def get_argspec():
                 'type': 'str',
                 },
             'prog_win_samples': {
+                'type': 'str',
+                },
+            'prog_conn_samples_processed': {
+                'type': 'str',
+                },
+            'prog_req_samples_processed': {
+                'type': 'str',
+                },
+            'prog_win_samples_processed': {
+                'type': 'str',
+                },
+            'src_hw_drop': {
+                'type': 'str',
+                },
+            'dst_tcp_auth_rst': {
+                'type': 'str',
+                },
+            'dst_src_learn_overflow': {
+                'type': 'str',
+                },
+            'tcp_fwd_sent': {
+                'type': 'str',
+                },
+            'udp_fwd_sent': {
                 'type': 'str',
                 },
             'dst_entry_name': {

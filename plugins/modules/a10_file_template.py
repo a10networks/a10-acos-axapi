@@ -91,6 +91,24 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    app:
+        description:
+        - "Field app"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "Field action"
+                type: str
+            act_name:
+                description:
+                - "Field act_name"
+                type: str
+            version:
+                description:
+                - "Field version"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -159,7 +177,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["act_type", "action", "dst_file", "file", "file_handle", "oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["act_type", "action", "app", "dst_file", "file", "file_handle", "oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -201,6 +219,18 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'app': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                },
+            'act_name': {
+                'type': 'str',
+                },
+            'version': {
+                'type': 'str',
+                }
             },
         'oper': {
             'type': 'dict',

@@ -55,55 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    interval:
-        description:
-        - "'100'= 100 ms; '250'= 250 ms; '500'= 500 ms; '1000'= 1000 ms;"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        type: list
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'ratelimit_used_total_mem'= Total Memory Used For Rate-limiting
-          (bytes); 'ratelimit_used_spm_mem'= Total SPM Memory Used For Rate-limiting
-          Infra in Bytes; 'ratelimit_used_heap_mem'= Total Heap Memory Used For Rate-
-          limiting Infra in Bytes; 'ratelimit_entry_alloc_frm_spm_mem'= Total Number of
-          Rate-limit Entries created using SPM Memory;
-          'ratelimit_high_accurate_entry_alloc_fail'= Total Number of Failures to Create
-          Highly Accurate Rate-limit Entries Due to Memory Allocation Failures;
-          'ratelimit_high_perf_entry_alloc_fail'= Total Number of Failures to Create
-          High-Perf Rate-limit Entries Due to Memory Allocation Failures;
-          'ratelimit_high_perf_entry_secondary_alloc_fail'= Total Number of Failures to
-          Allocate Additional Memory to Existing High-Perf Rate-limit Entries;
-          'ratelimit_entry_alloc_fail_rate_too_high'= Total Number of Attempts to
-          Configure Too High Rate Limits;
-          'ratelimit_entry_alloc_fail_metric_count_gt_supported'= Total Number of
-          Failures to Create High-Perf Rate-limit Entries Because of Too Many Metrics;
-          'ratelimit_entry_count_t2_key'= Number of Total Rate-limit Entries;
-          'ratelimit_entry_count_fw_rule_uid'= Number of Rate-limit Entries with Scope
-          Aggregate; 'ratelimit_entry_count_ip_addr'= Number of Rate-limit Entries with
-          Scope IPv4 Address; 'ratelimit_entry_count_ip6_addr'= Number of Rate-limit
-          Entries with Scope IPv6 Address; 'ratelimit_entry_count_session_id'= Number of
-          Rate-limit Entries with Scope Session ID;
-          'ratelimit_entry_count_rule_ipv4_prefix'= Number of Rate-limit Entries with
-          Scope IPv4 Prefix; 'ratelimit_entry_count_rule_ipv6_prefix'= Number of Rate-
-          limit Entries with Scope IPv6 Prefix; 'ratelimit_entry_count_parent_uid'=
-          Number of Parent Rate-limit Entries with Scope Aggregate;
-          'ratelimit_entry_count_parent_ipv4_prefix'= Number of Parent Rate-limit Entries
-          with Scope IPv4 Prefix; 'ratelimit_entry_count_parent_ipv6_prefix'= Number of
-          Parent Rate-limit Entries with Scope IPv6 Prefix;
-          'ratelimit_infra_generic_errors'= Current Number of Generic Errors Encountered
-          in Ratelimit Infra;"
-                type: str
     summary:
         description:
         - "Field summary"
@@ -144,56 +100,6 @@ options:
                 description:
                 - "Field summary"
                 type: dict
-    stats:
-        description:
-        - "Field stats"
-        type: dict
-        required: False
-        suboptions:
-            ratelimit_used_total_mem:
-                description:
-                - "Total Memory Used For Rate-limiting (bytes)"
-                type: str
-            ratelimit_entry_count_t2_key:
-                description:
-                - "Number of Total Rate-limit Entries"
-                type: str
-            ratelimit_entry_count_fw_rule_uid:
-                description:
-                - "Number of Rate-limit Entries with Scope Aggregate"
-                type: str
-            ratelimit_entry_count_ip_addr:
-                description:
-                - "Number of Rate-limit Entries with Scope IPv4 Address"
-                type: str
-            ratelimit_entry_count_ip6_addr:
-                description:
-                - "Number of Rate-limit Entries with Scope IPv6 Address"
-                type: str
-            ratelimit_entry_count_session_id:
-                description:
-                - "Number of Rate-limit Entries with Scope Session ID"
-                type: str
-            ratelimit_entry_count_rule_ipv4_prefix:
-                description:
-                - "Number of Rate-limit Entries with Scope IPv4 Prefix"
-                type: str
-            ratelimit_entry_count_rule_ipv6_prefix:
-                description:
-                - "Number of Rate-limit Entries with Scope IPv6 Prefix"
-                type: str
-            ratelimit_entry_count_parent_uid:
-                description:
-                - "Number of Parent Rate-limit Entries with Scope Aggregate"
-                type: str
-            ratelimit_entry_count_parent_ipv4_prefix:
-                description:
-                - "Number of Parent Rate-limit Entries with Scope IPv4 Prefix"
-                type: str
-            ratelimit_entry_count_parent_ipv6_prefix:
-                description:
-                - "Number of Parent Rate-limit Entries with Scope IPv6 Prefix"
-                type: str
 
 '''
 
@@ -248,7 +154,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["interval", "oper", "sampling_enable", "stats", "summary", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "summary", "uuid", ]
 
 
 def get_default_argspec():
@@ -269,24 +175,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'interval': {
-            'type': 'str',
-            'choices': ['100', '250', '500', '1000']
-            },
         'uuid': {
             'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'ratelimit_used_total_mem', 'ratelimit_used_spm_mem', 'ratelimit_used_heap_mem', 'ratelimit_entry_alloc_frm_spm_mem', 'ratelimit_high_accurate_entry_alloc_fail', 'ratelimit_high_perf_entry_alloc_fail', 'ratelimit_high_perf_entry_secondary_alloc_fail', 'ratelimit_entry_alloc_fail_rate_too_high',
-                    'ratelimit_entry_alloc_fail_metric_count_gt_supported', 'ratelimit_entry_count_t2_key', 'ratelimit_entry_count_fw_rule_uid', 'ratelimit_entry_count_ip_addr', 'ratelimit_entry_count_ip6_addr', 'ratelimit_entry_count_session_id', 'ratelimit_entry_count_rule_ipv4_prefix', 'ratelimit_entry_count_rule_ipv6_prefix',
-                    'ratelimit_entry_count_parent_uid', 'ratelimit_entry_count_parent_ipv4_prefix', 'ratelimit_entry_count_parent_ipv6_prefix', 'ratelimit_infra_generic_errors'
-                    ]
-                }
             },
         'summary': {
             'type': 'dict',
@@ -388,42 +278,6 @@ def get_argspec():
                         'type': 'int',
                         }
                     }
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'ratelimit_used_total_mem': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_t2_key': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_fw_rule_uid': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_ip_addr': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_ip6_addr': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_session_id': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_rule_ipv4_prefix': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_rule_ipv6_prefix': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_parent_uid': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_parent_ipv4_prefix': {
-                'type': 'str',
-                },
-            'ratelimit_entry_count_parent_ipv6_prefix': {
-                'type': 'str',
                 }
             }
         })
@@ -591,11 +445,6 @@ def run_command(module):
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["rate-limit"]["oper"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_type_result)
-                info = get_type_result["response_body"]
-                result["acos_info"] = info["rate-limit"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

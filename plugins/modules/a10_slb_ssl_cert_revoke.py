@@ -91,6 +91,20 @@ options:
           'crl_cache_status_good'= CRL cache status good; 'crl_cache_status_revoked'= CRL
           cache status revoked; 'crl_other_error'= CRL other errors;"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            vserver:
+                description:
+                - "DELETE method filter= Virtual Server Name"
+                type: str
+            port:
+                description:
+                - "DELETE method filter= Virtual Port"
+                type: int
     stats:
         description:
         - "Field stats"
@@ -279,7 +293,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -313,6 +327,15 @@ def get_argspec():
                     'ocsp_response_status_unknown', 'ocsp_cache_status_good', 'ocsp_cache_status_revoked', 'ocsp_cache_miss', 'ocsp_cache_expired', 'ocsp_other_error', 'ocsp_response_no_nonce', 'ocsp_response_nonce_error', 'crl_request', 'crl_response', 'crl_connection_error', 'crl_uri_not_found', 'crl_uri_https', 'crl_uri_unsupported',
                     'crl_response_status_good', 'crl_response_status_revoked', 'crl_response_status_unknown', 'crl_cache_status_good', 'crl_cache_status_revoked', 'crl_other_error'
                     ]
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'vserver': {
+                'type': 'str',
+                },
+            'port': {
+                'type': 'int',
                 }
             },
         'stats': {
@@ -574,6 +597,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["ssl-cert-revoke-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["ssl-cert-revoke"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

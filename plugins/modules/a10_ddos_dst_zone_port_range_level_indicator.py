@@ -117,6 +117,11 @@ options:
         - "Indicator per-src threshold"
         type: int
         required: False
+    src_threshold_large_num:
+        description:
+        - "Indicator per-src threshold"
+        type: int
+        required: False
     src_threshold_str:
         description:
         - "Indicator per-src threshold (Non-zero floating point)"
@@ -128,6 +133,11 @@ options:
         type: str
         required: False
     zone_threshold_num:
+        description:
+        - "Threshold for the entire zone"
+        type: int
+        required: False
+    zone_threshold_large_num:
         description:
         - "Threshold for the entire zone"
         type: int
@@ -206,7 +216,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["data_packet_size", "score", "src_threshold_num", "src_threshold_str", "src_violation_actions", "tcp_window_size", "ntype", "user_tag", "uuid", "zone_threshold_num", "zone_threshold_str", "zone_violation_actions", ]
+AVAILABLE_PROPERTIES = ["data_packet_size", "score", "src_threshold_large_num", "src_threshold_num", "src_threshold_str", "src_violation_actions", "tcp_window_size", "ntype", "user_tag", "uuid", "zone_threshold_large_num", "zone_threshold_num", "zone_threshold_str", "zone_violation_actions", ]
 
 
 def get_default_argspec():
@@ -244,6 +254,9 @@ def get_argspec():
         'src_threshold_num': {
             'type': 'int',
             },
+        'src_threshold_large_num': {
+            'type': 'int',
+            },
         'src_threshold_str': {
             'type': 'str',
             },
@@ -251,6 +264,9 @@ def get_argspec():
             'type': 'str',
             },
         'zone_threshold_num': {
+            'type': 'int',
+            },
+        'zone_threshold_large_num': {
             'type': 'int',
             },
         'zone_threshold_str': {

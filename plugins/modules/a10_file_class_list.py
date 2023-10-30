@@ -213,6 +213,9 @@ def get_argspec():
                     },
                 'user_tag': {
                     'type': 'str',
+                    },
+                'size': {
+                    'type': 'str',
                     }
                 }
             }

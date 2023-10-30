@@ -90,6 +90,12 @@ options:
         - "'100ms'= 100ms; '1sec'= 1sec;"
         type: str
         required: False
+    filter_match_type:
+        description:
+        - "'default'= Stop matching on drop/blacklist action; 'stop-on-first-match'= Stop
+          matching on first match;"
+        type: str
+        required: False
     spoof_detect_retry_timeout:
         description:
         - "Timeout in seconds"
@@ -375,9 +381,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "filter_list", "known_resp_src_port_cfg", "max_payload_size_cfg", "min_payload_size_cfg", "name", "ntp_monlist_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "previous_salt_timeout", "public_ipv4_addr", "public_ipv6_addr", "spoof_detect_fail_action", "spoof_detect_fail_action_list_name", "spoof_detect_min_delay",
-    "spoof_detect_min_delay_interval", "spoof_detect_pass_action", "spoof_detect_pass_action_list_name", "spoof_detect_retry_timeout", "token_authentication", "token_authentication_formula", "token_authentication_hw_assist_disable", "token_authentication_public_address", "token_authentication_salt_prefix", "token_authentication_salt_prefix_curr",
-    "token_authentication_salt_prefix_prev", "user_tag", "uuid",
+    "age", "filter_list", "filter_match_type", "known_resp_src_port_cfg", "max_payload_size_cfg", "min_payload_size_cfg", "name", "ntp_monlist_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "previous_salt_timeout", "public_ipv4_addr", "public_ipv6_addr", "spoof_detect_fail_action", "spoof_detect_fail_action_list_name",
+    "spoof_detect_min_delay", "spoof_detect_min_delay_interval", "spoof_detect_pass_action", "spoof_detect_pass_action_list_name", "spoof_detect_retry_timeout", "token_authentication", "token_authentication_formula", "token_authentication_hw_assist_disable", "token_authentication_public_address", "token_authentication_salt_prefix",
+    "token_authentication_salt_prefix_curr", "token_authentication_salt_prefix_prev", "user_tag", "uuid",
     ]
 
 
@@ -422,6 +428,10 @@ def get_argspec():
         'per_conn_rate_interval': {
             'type': 'str',
             'choices': ['100ms', '1sec']
+            },
+        'filter_match_type': {
+            'type': 'str',
+            'choices': ['default', 'stop-on-first-match']
             },
         'spoof_detect_retry_timeout': {
             'type': 'int',

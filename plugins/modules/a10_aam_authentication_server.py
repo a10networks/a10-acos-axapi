@@ -166,6 +166,14 @@ options:
                 description:
                 - "Field ldap"
                 type: dict
+            ocsp:
+                description:
+                - "Field ocsp"
+                type: dict
+            windows:
+                description:
+                - "Field windows"
+                type: dict
 
 '''
 
@@ -737,6 +745,32 @@ def get_argspec():
                         'ldaps_inuse_conn_fd_list': {
                             'type': 'str',
                             }
+                        }
+                    }
+                },
+            'ocsp': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'stats_clear_type': {
+                        'type': 'str',
+                        'choices': ['ocsp', 'ocsp-stapling']
+                        },
+                    'name': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'windows': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'stats_clear_type': {
+                        'type': 'str',
+                        'choices': ['windows', 'kerberos', 'ntlm']
+                        },
+                    'name': {
+                        'type': 'str',
                         }
                     }
                 }

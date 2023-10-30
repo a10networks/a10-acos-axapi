@@ -88,13 +88,13 @@ options:
           'log_type_gtp_node_restart'= Log Event GTP SGW/PGW restarted;
           'log_type_gtp_seq_num_mismatch'= Log Event GTP Response Sequence number
           Mismatch; 'log_type_gtp_rate_limit_periodic'= Log Event GTP Rate Limit
-          Periodic; 'log_type_gtp_rate_limit_periodic'= Log Event GTP Invalid message
-          length across layers; 'log_type_gtp_rate_limit_periodic'= Log Event GTP
-          Protocol flag in header; 'log_type_gtp_rate_limit_periodic'= Log Event GTP
-          invalid spare bits in header; 'log_type_gtp_rate_limit_periodic'= Log Event GTP
-          invalid piggyback flag in header; 'log_type_gtp_rate_limit_periodic'= Log Event
-          invalid GTP version; 'log_type_gtp_rate_limit_periodic'= Log Event mismatch of
-          GTP message and ports;"
+          Periodic; 'log_type_gtp_invalid_message_length'= Log Event GTP Invalid message
+          length across layers; 'log_type_gtp_hdr_invalid_protocol_flag'= Log Event GTP
+          Protocol flag in header; 'log_type_gtp_hdr_invalid_spare_bits'= Log Event GTP
+          invalid spare bits in header; 'log_type_gtp_hdr_invalid_piggy_flag'= Log Event
+          GTP invalid piggyback flag in header; 'log_type_gtp_invalid_version'= Log Event
+          invalid GTP version; 'log_type_gtp_invalid_ports'= Log Event mismatch of GTP
+          message and ports;"
                 type: str
     stats:
         description:
@@ -179,6 +179,30 @@ options:
                 - "Log Event GTP Response Sequence number Mismatch"
                 type: str
             log_type_gtp_rate_limit_periodic:
+                description:
+                - "Log Event GTP Rate Limit Periodic"
+                type: str
+            log_type_gtp_invalid_message_length:
+                description:
+                - "Log Event GTP Invalid message length across layers"
+                type: str
+            log_type_gtp_hdr_invalid_protocol_flag:
+                description:
+                - "Log Event GTP Protocol flag in header"
+                type: str
+            log_type_gtp_hdr_invalid_spare_bits:
+                description:
+                - "Log Event GTP invalid spare bits in header"
+                type: str
+            log_type_gtp_hdr_invalid_piggy_flag:
+                description:
+                - "Log Event GTP invalid piggyback flag in header"
+                type: str
+            log_type_gtp_invalid_version:
+                description:
+                - "Log Event invalid GTP version"
+                type: str
+            log_type_gtp_invalid_ports:
                 description:
                 - "Log Event mismatch of GTP message and ports"
                 type: str
@@ -268,7 +292,7 @@ def get_argspec():
                 'choices': [
                     'all', 'log_type_gtp_invalid_teid', 'log_gtp_type_reserved_ie_present', 'log_type_gtp_mandatory_ie_missing', 'log_type_gtp_mandatory_ie_inside_grouped_ie_missing', 'log_type_gtp_msisdn_filtering', 'log_type_gtp_out_of_order_ie', 'log_type_gtp_out_of_state_ie', 'log_type_enduser_ip_spoofed', 'log_type_crosslayer_correlation',
                     'log_type_message_not_supported', 'log_type_out_of_state', 'log_type_max_msg_length', 'log_type_gtp_message_filtering', 'log_type_gtp_apn_filtering', 'log_type_gtp_rat_type_filtering', 'log_type_country_code_mismatch', 'log_type_gtp_in_gtp_filtering', 'log_type_gtp_node_restart', 'log_type_gtp_seq_num_mismatch',
-                    'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic'
+                    'log_type_gtp_rate_limit_periodic', 'log_type_gtp_invalid_message_length', 'log_type_gtp_hdr_invalid_protocol_flag', 'log_type_gtp_hdr_invalid_spare_bits', 'log_type_gtp_hdr_invalid_piggy_flag', 'log_type_gtp_invalid_version', 'log_type_gtp_invalid_ports'
                     ]
                 }
             },
@@ -332,6 +356,24 @@ def get_argspec():
                 'type': 'str',
                 },
             'log_type_gtp_rate_limit_periodic': {
+                'type': 'str',
+                },
+            'log_type_gtp_invalid_message_length': {
+                'type': 'str',
+                },
+            'log_type_gtp_hdr_invalid_protocol_flag': {
+                'type': 'str',
+                },
+            'log_type_gtp_hdr_invalid_spare_bits': {
+                'type': 'str',
+                },
+            'log_type_gtp_hdr_invalid_piggy_flag': {
+                'type': 'str',
+                },
+            'log_type_gtp_invalid_version': {
+                'type': 'str',
+                },
+            'log_type_gtp_invalid_ports': {
                 'type': 'str',
                 }
             }

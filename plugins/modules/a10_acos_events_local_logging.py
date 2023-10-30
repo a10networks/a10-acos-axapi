@@ -70,40 +70,9 @@ options:
         - "Configure Max disk space in MB to be used for storing the logs (Default= 100MB)"
         type: int
         required: False
-    debug_logs:
-        description:
-        - "Enable debug logs in var log"
-        type: bool
-        required: False
-    send_if_all_servers_up:
-        description:
-        - "Start sending the stored logs only when all log servers are up"
-        type: bool
-        required: False
-    max_memory:
-        description:
-        - "Configure Max memory in MB to be used for processing the logs (Default= 30MB)"
-        type: int
-        required: False
-    queue_limit:
-        description:
-        - "Configure Max number of blocks that can be busy being scheduled (Default= 10, 0
-          to disable)"
-        type: int
-        required: False
-    max_backlog_memory:
-        description:
-        - "Configure Max memory in MB to be used for processing backlogs (Default= 10MB)"
-        type: int
-        required: False
     delete_old_logs_in_disk:
         description:
         - "Operational command to delete the old logs stored in disk"
-        type: bool
-        required: False
-    string_decode_special_char:
-        description:
-        - "Enable processing special characters before storing"
         type: bool
         required: False
     uuid:
@@ -307,7 +276,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["debug_logs", "delete_old_logs_in_disk", "enable", "max_backlog_memory", "max_disk_space", "max_memory", "queue_limit", "rate_limit", "sampling_enable", "send_if_all_servers_up", "stats", "string_decode_special_char", "uuid", ]
+AVAILABLE_PROPERTIES = ["delete_old_logs_in_disk", "enable", "max_disk_space", "rate_limit", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -337,25 +306,7 @@ def get_argspec():
         'max_disk_space': {
             'type': 'int',
             },
-        'debug_logs': {
-            'type': 'bool',
-            },
-        'send_if_all_servers_up': {
-            'type': 'bool',
-            },
-        'max_memory': {
-            'type': 'int',
-            },
-        'queue_limit': {
-            'type': 'int',
-            },
-        'max_backlog_memory': {
-            'type': 'int',
-            },
         'delete_old_logs_in_disk': {
-            'type': 'bool',
-            },
-        'string_decode_special_char': {
             'type': 'bool',
             },
         'uuid': {

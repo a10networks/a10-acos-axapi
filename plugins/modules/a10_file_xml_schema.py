@@ -62,7 +62,7 @@ options:
         required: False
     file:
         description:
-        - "XML-Schema local file name"
+        - "XML-schema local file name"
         type: str
         required: False
     action:

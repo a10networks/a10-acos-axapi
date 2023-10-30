@@ -132,9 +132,10 @@ options:
         required: False
     syn_auth:
         description:
-        - "'send-rst'= Send RST to client upon client ACK; 'force-rst-by-ack'= Force
-          client RST via the use of ACK; 'force-rst-by-synack'= Force client RST via the
-          use of bad SYN|ACK; 'disable'= Disable TCP SYN Authentication;"
+        - "'send-rst'= Send RST to all client's concurrent auth attempts; 'force-rst-by-
+          ack'= Force client RST via the use of ACK; 'force-rst-by-synack'= Force client
+          RST via the use of bad SYN|ACK; 'disable'= Disable TCP SYN Authentication;
+          'send-rst-once'= Send RST to one client's concurrent auth attempts;"
         type: str
         required: False
     conn_rate_limit_on_syn_only:
@@ -194,6 +195,11 @@ options:
           Blacklist-src for zero-win rate exceed; 'ignore'= help Ignore zero-win rate
           exceed;"
         type: str
+        required: False
+    allow_ra:
+        description:
+        - "Allow RA packets to be used for auth"
+        type: bool
         required: False
     dst:
         description:
@@ -331,6 +337,10 @@ options:
             response_length_max:
                 description:
                 - "Set the maximum response length"
+                type: int
+            response_length_min:
+                description:
+                - "Set the minimum response length"
                 type: int
             request_length_min:
                 description:
@@ -485,7 +495,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ack_authentication_synack_reset", "action_cfg", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "action_syn_cfg", "age", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "black_list_out_of_seq", "black_list_retransmit", "black_list_zero_win", "conn_rate_limit_on_syn_only",
+    "ack_authentication_synack_reset", "action_cfg", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "action_syn_cfg", "age", "allow_ra", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "black_list_out_of_seq", "black_list_retransmit", "black_list_zero_win", "conn_rate_limit_on_syn_only",
     "create_conn_on_syn_only", "drop_known_resp_src_port_cfg", "dst", "filter_list", "name", "per_conn_out_of_seq_rate_action", "per_conn_out_of_seq_rate_limit", "per_conn_pkt_rate_action", "per_conn_pkt_rate_limit", "per_conn_rate_interval", "per_conn_retransmit_rate_action", "per_conn_retransmit_rate_limit", "per_conn_zero_win_rate_action",
     "per_conn_zero_win_rate_limit", "progression_tracking", "src", "syn_auth", "syn_cookie", "synack_rate_limit", "track_together_with_syn", "tunnel_encap", "user_tag", "uuid",
     ]
@@ -560,7 +570,7 @@ def get_argspec():
             },
         'syn_auth': {
             'type': 'str',
-            'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack', 'disable']
+            'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack', 'disable', 'send-rst-once']
             },
         'conn_rate_limit_on_syn_only': {
             'type': 'bool',
@@ -596,6 +606,9 @@ def get_argspec():
         'per_conn_zero_win_rate_action': {
             'type': 'str',
             'choices': ['drop', 'blacklist-src', 'ignore']
+            },
+        'allow_ra': {
+            'type': 'bool',
             },
         'dst': {
             'type': 'dict',
@@ -745,6 +758,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'response_length_max': {
+                'type': 'int',
+                },
+            'response_length_min': {
                 'type': 'int',
                 },
             'request_length_min': {

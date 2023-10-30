@@ -74,6 +74,10 @@ options:
                 description:
                 - "Field indicators"
                 type: list
+            entry_list:
+                description:
+                - "Field entry_list"
+                type: list
             next_indicator:
                 description:
                 - "Field next_indicator"
@@ -82,10 +86,6 @@ options:
                 description:
                 - "Field finished"
                 type: int
-            entry_list:
-                description:
-                - "Field entry_list"
-                type: list
             details:
                 description:
                 - "Field details"
@@ -192,12 +192,6 @@ def get_argspec():
                         }
                     }
                 },
-            'next_indicator': {
-                'type': 'int',
-                },
-            'finished': {
-                'type': 'int',
-                },
             'entry_list': {
                 'type': 'list',
                 'address_str': {
@@ -221,6 +215,12 @@ def get_argspec():
                         'type': 'int',
                         }
                     }
+                },
+            'next_indicator': {
+                'type': 'int',
+                },
+            'finished': {
+                'type': 'int',
                 },
             'details': {
                 'type': 'bool',

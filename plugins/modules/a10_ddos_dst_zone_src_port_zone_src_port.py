@@ -129,6 +129,38 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    port_ind:
+        description:
+        - "Field port_ind"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    level_list:
+        description:
+        - "Field level_list"
+        type: list
+        required: False
+        suboptions:
+            level_num:
+                description:
+                - "'0'= Default policy level; '1'= Policy level 1;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            indicator_list:
+                description:
+                - "Field indicator_list"
+                type: list
     oper:
         description:
         - "Field oper"
@@ -184,6 +216,10 @@ options:
                 - "'dns-udp'= DNS-UDP Port; 'dns-tcp'= DNS-TCP Port; 'udp'= UDP port; 'tcp'= TCP
           Port;"
                 type: str
+            port_ind:
+                description:
+                - "Field port_ind"
+                type: dict
 
 '''
 
@@ -238,7 +274,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["default_action_list", "deny", "glid_cfg", "oper", "outbound_src_tracking", "port_num", "protocol", "set_counter_base_val", "uuid", "zone_template", ]
+AVAILABLE_PROPERTIES = ["default_action_list", "deny", "glid_cfg", "level_list", "oper", "outbound_src_tracking", "port_ind", "port_num", "protocol", "set_counter_base_val", "uuid", "zone_template", ]
 
 
 def get_default_argspec():
@@ -305,6 +341,46 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'port_ind': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'level_list': {
+            'type': 'list',
+            'level_num': {
+                'type': 'str',
+                'required': True,
+                'choices': ['0', '1']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'indicator_list': {
+                'type': 'list',
+                'ntype': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['pkt-rate', 'bit-rate']
+                    },
+                'zone_threshold_num': {
+                    'type': 'int',
+                    },
+                'zone_threshold_large_num': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
+                }
             },
         'oper': {
             'type': 'dict',
@@ -493,6 +569,45 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['dns-udp', 'dns-tcp', 'udp', 'tcp']
+                },
+            'port_ind': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'indicators': {
+                        'type': 'list',
+                        'indicator_name': {
+                            'type': 'str',
+                            },
+                        'indicator_index': {
+                            'type': 'int',
+                            },
+                        'rate': {
+                            'type': 'str',
+                            },
+                        'indicator_cfg': {
+                            'type': 'list',
+                            'level': {
+                                'type': 'int',
+                                },
+                            'zone_threshold': {
+                                'type': 'str',
+                                },
+                            'source_threshold': {
+                                'type': 'str',
+                                }
+                            }
+                        },
+                    'detection_data_source': {
+                        'type': 'str',
+                        },
+                    'current_level': {
+                        'type': 'str',
+                        },
+                    'details': {
+                        'type': 'bool',
+                        }
+                    }
                 }
             }
         })

@@ -148,7 +148,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'system_log': {'type': 'list', 'log_data': {'type': 'str', }, 'log_data_search': {'type': 'str', }}, 'next_msg_idx': {'type': 'int', }}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'system_log': {'type': 'list', 'log_data': {'type': 'str', }, 'add_slot_info': {'type': 'int', }, 'log_data_search': {'type': 'str', }}, 'next_msg_idx': {'type': 'int', }}})
     return rv
 
 
