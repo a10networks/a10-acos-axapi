@@ -53,7 +53,7 @@ This code is now being generated using the SDK generator at https://github.com/a
 
 | ACOS Version | Ansible Version | GitHub Branch |
 | :--------: | :-------: | :-------:  |
-| `ACOS 6.0.2` | [6.0.2-103023](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.2-103023)  | [Acos 6.0.2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_602)  |
+| `ACOS 6.0.2` | [6.0.2-110123](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.2-110123)  | [Acos 6.0.2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_602)  |
 | `ACOS 6.0.1` | [6.0.1-71123](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.1-71123)  | [Acos 6.0.1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_601)  |
 | `ACOS 6.0.0-p2` | [6.0.0-p2-050523](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.0-p2-050523)  | [ACOS 6.0.0-p2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_600_p2)  |
 | `ACOS 6.0.0-p1` |  [6.0.0-p1-033023](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.0-p1-033023)  | [ACOS 6.0.0-p1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_600_p1) |
