@@ -55,11 +55,6 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    single_node_mode:
-        description:
-        - "Enable single node status trap"
-        type: bool
-        required: False
     election:
         description:
         - "Enable election status trap"
@@ -134,7 +129,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["election", "master_calling_re_election", "node_status", "single_node_mode", "uuid", ]
+AVAILABLE_PROPERTIES = ["election", "master_calling_re_election", "node_status", "uuid", ]
 
 
 def get_default_argspec():
@@ -154,7 +149,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'single_node_mode': {'type': 'bool', }, 'election': {'type': 'bool', }, 'master_calling_re_election': {'type': 'bool', }, 'node_status': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'election': {'type': 'bool', }, 'master_calling_re_election': {'type': 'bool', }, 'node_status': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

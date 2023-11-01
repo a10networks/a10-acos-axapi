@@ -326,6 +326,30 @@ options:
                 description:
                 - "Field power_unit4"
                 type: str
+            PU2_physical_temperature:
+                description:
+                - "Field PU2_physical_temperature"
+                type: str
+            PU2_physical_temperature2:
+                description:
+                - "Field PU2_physical_temperature2"
+                type: str
+            PU2_voltage_label_7:
+                description:
+                - "Field PU2_voltage_label_7"
+                type: str
+            PU2_voltage_label_8:
+                description:
+                - "Field PU2_voltage_label_8"
+                type: str
+            PU2_voltage_label_9:
+                description:
+                - "Field PU2_voltage_label_9"
+                type: str
+            PU2_voltage_label_10:
+                description:
+                - "Field PU2_voltage_label_10"
+                type: str
 
 '''
 
@@ -599,6 +623,24 @@ def get_argspec():
                 'type': 'str',
                 },
             'power_unit4': {
+                'type': 'str',
+                },
+            'PU2_physical_temperature': {
+                'type': 'str',
+                },
+            'PU2_physical_temperature2': {
+                'type': 'str',
+                },
+            'PU2_voltage_label_7': {
+                'type': 'str',
+                },
+            'PU2_voltage_label_8': {
+                'type': 'str',
+                },
+            'PU2_voltage_label_9': {
+                'type': 'str',
+                },
+            'PU2_voltage_label_10': {
                 'type': 'str',
                 }
             }

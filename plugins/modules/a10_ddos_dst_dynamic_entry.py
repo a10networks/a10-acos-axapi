@@ -60,6 +60,20 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    all_entries:
+        description:
+        - "Field all_entries"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     oper:
         description:
         - "Field oper"
@@ -240,7 +254,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["all_entries", "oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -263,6 +277,60 @@ def get_argspec():
     rv.update({
         'uuid': {
             'type': 'str',
+            },
+        'all_entries': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'dst_tcp_any_exceed', 'dst_tcp_pkt_rate_exceed', 'dst_tcp_conn_rate_exceed', 'dst_udp_any_exceed', 'dst_udp_pkt_rate_exceed', 'dst_udp_conn_limit_exceed', 'dst_udp_conn_rate_exceed', 'dst_icmp_pkt_rate_exceed', 'dst_other_pkt_rate_exceed', 'dst_other_frag_pkt_rate_exceed', 'dst_port_pkt_rate_exceed',
+                        'dst_port_conn_limit_exceed', 'dst_port_conn_rate_exceed', 'dst_pkt_sent', 'dst_udp_pkt_sent', 'dst_tcp_pkt_sent', 'dst_icmp_pkt_sent', 'dst_other_pkt_sent', 'dst_tcp_conn_limit_exceed', 'dst_tcp_pkt_rcvd', 'dst_udp_pkt_rcvd', 'dst_icmp_pkt_rcvd', 'dst_other_pkt_rcvd', 'dst_udp_filter_match', 'dst_udp_filter_not_match',
+                        'dst_udp_filter_action_blacklist', 'dst_udp_filter_action_drop', 'dst_tcp_syn', 'dst_tcp_syn_drop', 'dst_tcp_src_rate_drop', 'dst_udp_src_rate_drop', 'dst_icmp_src_rate_drop', 'dst_other_frag_src_rate_drop', 'dst_other_src_rate_drop', 'dst_tcp_drop', 'dst_udp_drop', 'dst_icmp_drop', 'dst_frag_drop', 'dst_other_drop',
+                        'dst_tcp_auth', 'dst_udp_filter_action_default_pass', 'dst_tcp_filter_match', 'dst_tcp_filter_not_match', 'dst_tcp_filter_action_blacklist', 'dst_tcp_filter_action_drop', 'dst_tcp_filter_action_default_pass', 'dst_udp_filter_action_whitelist', 'dst_over_limit_on', 'dst_over_limit_off', 'dst_port_over_limit_on',
+                        'dst_port_over_limit_off', 'dst_over_limit_action', 'dst_port_over_limit_action', 'scanning_detected_drop', 'scanning_detected_blacklist', 'dst_udp_kibit_rate_drop', 'dst_tcp_kibit_rate_drop', 'dst_icmp_kibit_rate_drop', 'dst_other_kibit_rate_drop', 'dst_port_undef_drop', 'dst_port_bl', 'dst_src_port_bl',
+                        'dst_port_kbit_rate_exceed', 'dst_tcp_src_drop', 'dst_udp_src_drop', 'dst_icmp_src_drop', 'dst_other_src_drop', 'tcp_syn_rcvd', 'tcp_syn_ack_rcvd', 'tcp_ack_rcvd', 'tcp_fin_rcvd', 'tcp_rst_rcvd', 'ingress_bytes', 'egress_bytes', 'ingress_packets', 'egress_packets', 'tcp_fwd_recv', 'udp_fwd_recv', 'icmp_fwd_recv',
+                        'tcp_syn_cookie_fail', 'dst_tcp_session_created', 'dst_udp_session_created', 'dst_tcp_filter_action_whitelist', 'dst_other_filter_match', 'dst_other_filter_not_match', 'dst_other_filter_action_blacklist', 'dst_other_filter_action_drop', 'dst_other_filter_action_whitelist', 'dst_other_filter_action_default_pass',
+                        'dst_blackhole_inject', 'dst_blackhole_withdraw', 'dst_tcp_out_of_seq_excd', 'dst_tcp_retransmit_excd', 'dst_tcp_zero_window_excd', 'dst_tcp_conn_prate_excd', 'dst_tcp_action_on_ack_init', 'dst_tcp_action_on_ack_gap_drop', 'dst_tcp_action_on_ack_fail', 'dst_tcp_action_on_ack_pass', 'dst_tcp_action_on_syn_init',
+                        'dst_tcp_action_on_syn_gap_drop', 'dst_tcp_action_on_syn_fail', 'dst_tcp_action_on_syn_pass', 'udp_payload_too_small', 'udp_payload_too_big', 'dst_udp_conn_prate_excd', 'dst_udp_ntp_monlist_req', 'dst_udp_ntp_monlist_resp', 'dst_udp_wellknown_sport_drop', 'dst_udp_retry_init', 'dst_udp_retry_pass', 'dst_tcp_bytes_drop',
+                        'dst_udp_bytes_drop', 'dst_icmp_bytes_drop', 'dst_other_bytes_drop', 'dst_out_no_route', 'outbound_bytes_sent', 'outbound_pkt_drop', 'outbound_bytes_drop', 'outbound_pkt_sent', 'inbound_bytes_sent', 'inbound_bytes_drop', 'dst_src_port_pkt_rate_exceed', 'dst_src_port_kbit_rate_exceed', 'dst_src_port_conn_limit_exceed',
+                        'dst_src_port_conn_rate_exceed', 'dst_ip_proto_pkt_rate_exceed', 'dst_ip_proto_kbit_rate_exceed', 'dst_tcp_port_any_exceed', 'dst_udp_port_any_exceed', 'dst_tcp_auth_pass', 'dst_tcp_rst_cookie_fail', 'dst_tcp_unauth_drop', 'src_tcp_syn_auth_fail', 'src_tcp_syn_cookie_sent', 'src_tcp_syn_cookie_fail',
+                        'src_tcp_rst_cookie_fail', 'src_tcp_unauth_drop', 'src_tcp_action_on_syn_init'
+                        ]
+                    },
+                'counters2': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'src_tcp_action_on_syn_gap_drop', 'src_tcp_action_on_syn_fail', 'src_tcp_action_on_ack_init', 'src_tcp_action_on_ack_gap_drop', 'src_tcp_action_on_ack_fail', 'src_tcp_out_of_seq_excd', 'src_tcp_retransmit_excd', 'src_tcp_zero_window_excd', 'src_tcp_conn_prate_excd', 'src_udp_min_payload', 'src_udp_max_payload',
+                        'src_udp_conn_prate_excd', 'src_udp_ntp_monlist_req', 'src_udp_ntp_monlist_resp', 'src_udp_wellknown_sport_drop', 'src_udp_retry_init', 'dst_udp_retry_gap_drop', 'dst_udp_retry_fail', 'dst_tcp_session_aged', 'dst_udp_session_aged', 'dst_tcp_conn_close', 'dst_tcp_conn_close_half_open', 'dst_l4_tcp_auth',
+                        'tcp_l4_syn_cookie_fail', 'tcp_l4_rst_cookie_fail', 'tcp_l4_unauth_drop', 'dst_drop_frag_pkt', 'src_tcp_filter_action_blacklist', 'src_tcp_filter_action_whitelist', 'src_tcp_filter_action_drop', 'src_tcp_filter_action_default_pass', 'src_udp_filter_action_blacklist', 'src_udp_filter_action_whitelist',
+                        'src_udp_filter_action_drop', 'src_udp_filter_action_default_pass', 'src_other_filter_action_blacklist', 'src_other_filter_action_whitelist', 'src_other_filter_action_drop', 'src_other_filter_action_default_pass', 'tcp_invalid_syn', 'dst_tcp_conn_close_w_rst', 'dst_tcp_conn_close_w_fin', 'dst_tcp_conn_close_w_idle',
+                        'dst_tcp_conn_create_from_syn', 'dst_tcp_conn_create_from_ack', 'src_frag_drop', 'dst_l4_tcp_blacklist_drop', 'dst_l4_udp_blacklist_drop', 'dst_l4_icmp_blacklist_drop', 'dst_l4_other_blacklist_drop', 'src_l4_tcp_blacklist_drop', 'src_l4_udp_blacklist_drop', 'src_l4_icmp_blacklist_drop', 'src_l4_other_blacklist_drop',
+                        'drop_frag_timeout_drop', 'dst_port_kbit_rate_exceed_pkt', 'dst_tcp_bytes_rcv', 'dst_udp_bytes_rcv', 'dst_icmp_bytes_rcv', 'dst_other_bytes_rcv', 'dst_tcp_bytes_sent', 'dst_udp_bytes_sent', 'dst_icmp_bytes_sent', 'dst_other_bytes_sent', 'dst_udp_auth_drop', 'dst_tcp_auth_drop', 'dst_tcp_auth_resp', 'inbound_pkt_drop',
+                        'dst_entry_pkt_rate_exceed', 'dst_entry_kbit_rate_exceed', 'dst_entry_conn_limit_exceed', 'dst_entry_conn_rate_exceed', 'dst_entry_frag_pkt_rate_exceed', 'dst_icmp_any_exceed', 'dst_other_any_exceed', 'src_dst_pair_entry_total', 'src_dst_pair_entry_udp', 'src_dst_pair_entry_tcp', 'src_dst_pair_entry_icmp',
+                        'src_dst_pair_entry_other', 'dst_clist_overflow_policy_at_learning', 'tcp_rexmit_syn_limit_drop', 'tcp_rexmit_syn_limit_bl', 'dst_tcp_wellknown_sport_drop', 'src_tcp_wellknown_sport_drop', 'dst_frag_rcvd', 'no_policy_class_list_match', 'src_udp_retry_gap_drop', 'dst_entry_kbit_rate_exceed_count', 'dst_port_undef_hit',
+                        'dst_tcp_action_on_ack_timeout', 'dst_tcp_action_on_ack_reset', 'dst_tcp_action_on_ack_blacklist', 'src_tcp_action_on_ack_timeout', 'src_tcp_action_on_ack_reset', 'src_tcp_action_on_ack_blacklist', 'dst_tcp_action_on_syn_timeout', 'dst_tcp_action_on_syn_reset', 'dst_tcp_action_on_syn_blacklist',
+                        'src_tcp_action_on_syn_timeout', 'src_tcp_action_on_syn_reset', 'src_tcp_action_on_syn_blacklist', 'dst_udp_frag_pkt_rate_exceed', 'dst_udp_frag_src_rate_drop', 'dst_tcp_frag_pkt_rate_exceed', 'dst_tcp_frag_src_rate_drop', 'dst_icmp_frag_pkt_rate_exceed', 'dst_icmp_frag_src_rate_drop', 'sflow_internal_samples_packed',
+                        'sflow_external_samples_packed', 'sflow_internal_packets_sent', 'sflow_external_packets_sent', 'dns_outbound_total_query', 'dns_outbound_query_malformed', 'dns_outbound_query_resp_chk_failed', 'dns_outbound_query_resp_chk_blacklisted', 'dns_outbound_query_resp_chk_refused_sent', 'dns_outbound_query_resp_chk_reset_sent',
+                        'dns_outbound_query_resp_chk_no_resp_sent', 'dns_outbound_query_resp_size_exceed', 'dns_outbound_query_sess_timed_out', 'dst_exceed_action_tunnel', 'src_udp_auth_timeout', 'src_udp_retry_pass'
+                        ]
+                    },
+                'counters3': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'dst_hw_drop_rule_insert', 'dst_hw_drop_rule_remove', 'src_hw_drop_rule_insert', 'src_hw_drop_rule_remove', 'prog_first_req_time_exceed', 'prog_req_resp_time_exceed', 'prog_request_len_exceed', 'prog_response_len_exceed', 'prog_resp_req_ratio_exceed', 'prog_resp_req_time_exceed', 'entry_sync_message_received',
+                        'entry_sync_message_sent', 'prog_conn_sent_exceed', 'prog_conn_rcvd_exceed', 'prog_conn_time_exceed', 'prog_conn_rcvd_sent_ratio_exceed', 'prog_win_sent_exceed', 'prog_win_rcvd_exceed', 'prog_win_rcvd_sent_ratio_exceed', 'prog_exceed_drop', 'prog_exceed_bl', 'prog_conn_exceed_drop', 'prog_conn_exceed_bl',
+                        'prog_win_exceed_drop', 'prog_win_exceed_bl', 'dst_exceed_action_drop', 'src_hw_drop', 'dst_tcp_auth_rst', 'dst_src_learn_overflow', 'tcp_fwd_sent', 'udp_fwd_sent'
+                        ]
+                    }
+                }
             },
         'oper': {
             'type': 'dict',
@@ -492,10 +560,23 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["dynamic-entry"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["dynamic-entry"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["dynamic-entry"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):

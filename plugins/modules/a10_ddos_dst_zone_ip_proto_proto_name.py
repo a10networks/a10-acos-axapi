@@ -182,11 +182,26 @@ options:
         - "De-escalate faster in standalone mode"
         type: bool
         required: False
+    ip_filtering_policy:
+        description:
+        - "Configure IP Filter"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    ip_filtering_policy_oper:
+        description:
+        - "Field ip_filtering_policy_oper"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     level_list:
         description:
         - "Field level_list"
@@ -467,6 +482,10 @@ options:
           other; 'gre'= ip-proto gre; 'ipv4-encap'= ip-proto IPv4 Encapsulation;
           'ipv6-encap'= ip-proto IPv6 Encapsulation;"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             port_ind:
                 description:
                 - "Field port_ind"
@@ -538,8 +557,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "apply_policy_on_overflow", "deny", "drop_frag_pkt", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "key_cfg", "level_list", "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "port_ind", "progression_tracking",
-    "protocol", "set_counter_base_val", "src_based_policy_list", "topk_destinations", "topk_dst_num_records", "topk_num_records", "topk_sources", "tunnel_decap", "tunnel_rate_limit", "unlimited_dynamic_entry_count", "uuid",
+    "age", "apply_policy_on_overflow", "deny", "drop_frag_pkt", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "key_cfg", "level_list", "manual_mode_enable", "manual_mode_list",
+    "max_dynamic_entry_count", "oper", "port_ind", "progression_tracking", "protocol", "set_counter_base_val", "src_based_policy_list", "topk_destinations", "topk_dst_num_records", "topk_num_records", "topk_sources", "tunnel_decap", "tunnel_rate_limit", "unlimited_dynamic_entry_count", "uuid",
     ]
 
 
@@ -636,8 +655,17 @@ def get_argspec():
         'faster_de_escalation': {
             'type': 'bool',
             },
+        'ip_filtering_policy': {
+            'type': 'str',
+            },
         'uuid': {
             'type': 'str',
+            },
+        'ip_filtering_policy_oper': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
             },
         'level_list': {
             'type': 'list',
@@ -702,6 +730,9 @@ def get_argspec():
                 'src_threshold_num': {
                     'type': 'int',
                     },
+                'src_threshold_large_num': {
+                    'type': 'int',
+                    },
                 'src_threshold_str': {
                     'type': 'str',
                     },
@@ -709,6 +740,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'zone_threshold_num': {
+                    'type': 'int',
+                    },
+                'zone_threshold_large_num': {
                     'type': 'int',
                     },
                 'zone_threshold_str': {
@@ -967,6 +1001,12 @@ def get_argspec():
                 'level': {
                     'type': 'int',
                     },
+                'bl_reasoning_rcode': {
+                    'type': 'str',
+                    },
+                'bl_reasoning_timestamp': {
+                    'type': 'str',
+                    },
                 'current_connections': {
                     'type': 'str',
                     },
@@ -1098,6 +1138,21 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['icmp-v4', 'icmp-v6', 'other', 'gre', 'ipv4-encap', 'ipv6-encap']
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'rule_list': {
+                        'type': 'list',
+                        'seq': {
+                            'type': 'int',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            }
+                        }
+                    }
                 },
             'port_ind': {
                 'type': 'dict',
@@ -1264,12 +1319,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -1293,6 +1342,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',
@@ -1366,12 +1421,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -1395,6 +1444,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',

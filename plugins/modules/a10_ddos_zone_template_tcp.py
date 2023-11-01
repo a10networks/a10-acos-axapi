@@ -80,6 +80,12 @@ options:
         - "Enable connection establishment on SYN only"
         type: bool
         required: False
+    filter_match_type:
+        description:
+        - "'default'= Stop matching on drop/blacklist action; 'stop-on-first-match'= Stop
+          matching on first match;"
+        type: str
+        required: False
     out_of_seq_cfg:
         description:
         - "Field out_of_seq_cfg"
@@ -336,9 +342,10 @@ options:
         suboptions:
             syn_auth_type:
                 description:
-                - "'send-rst'= Send reset to client after syn cookie check pass; 'force-rst-by-
-          ack'= Send client a bad ack after syn cookie check pass; 'force-rst-by-synack'=
-          Send client a bad synack after syn cookie check pass;"
+                - "'send-rst'= Send reset to all concurrent client auth attempts after syn cookie
+          check pass; 'force-rst-by-ack'= Send client a bad ack after syn cookie check
+          pass; 'force-rst-by-synack'= Send client a bad synack after syn cookie check
+          pass; 'send-rst-once'= Send RST to one client concurrent auth attempts;"
                 type: str
             syn_auth_timeout:
                 description:
@@ -370,6 +377,10 @@ options:
                 - "'drop'= Drop packets (Default); 'blacklist-src'= Blacklist-src; 'reset'= Send
           reset to client (Applicable to retransmit-check only);"
                 type: str
+            allow_ra:
+                description:
+                - "Allow RA packets to be used for auth"
+                type: bool
     ack_authentication:
         description:
         - "Field ack_authentication"
@@ -446,6 +457,10 @@ options:
             response_length_max:
                 description:
                 - "Set the maximum response length"
+                type: int
+            response_length_min:
+                description:
+                - "Set the minimum response length"
                 type: int
             request_length_min:
                 description:
@@ -607,9 +622,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ack_authentication", "ack_authentication_synack_reset", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "age", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "concurrent", "conn_rate_limit_on_syn_only", "create_conn_on_syn_only", "dst", "filter_list", "known_resp_src_port_cfg",
-    "max_rexmit_syn_per_flow_cfg", "name", "out_of_seq_cfg", "per_conn_out_of_seq_rate_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "per_conn_retransmit_rate_cfg", "per_conn_zero_win_rate_cfg", "progression_tracking", "retransmit_cfg", "src", "syn_authentication", "syn_cookie", "synack_rate_limit", "track_together_with_syn", "user_tag",
-    "uuid", "zero_win_cfg",
+    "ack_authentication", "ack_authentication_synack_reset", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "age", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "concurrent", "conn_rate_limit_on_syn_only", "create_conn_on_syn_only", "dst", "filter_list", "filter_match_type",
+    "known_resp_src_port_cfg", "max_rexmit_syn_per_flow_cfg", "name", "out_of_seq_cfg", "per_conn_out_of_seq_rate_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "per_conn_retransmit_rate_cfg", "per_conn_zero_win_rate_cfg", "progression_tracking", "retransmit_cfg", "src", "syn_authentication", "syn_cookie", "synack_rate_limit",
+    "track_together_with_syn", "user_tag", "uuid", "zero_win_cfg",
     ]
 
 
@@ -646,6 +661,10 @@ def get_argspec():
             },
         'create_conn_on_syn_only': {
             'type': 'bool',
+            },
+        'filter_match_type': {
+            'type': 'str',
+            'choices': ['default', 'stop-on-first-match']
             },
         'out_of_seq_cfg': {
             'type': 'dict',
@@ -837,7 +856,7 @@ def get_argspec():
             'type': 'dict',
             'syn_auth_type': {
                 'type': 'str',
-                'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack']
+                'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack', 'send-rst-once']
                 },
             'syn_auth_timeout': {
                 'type': 'int',
@@ -861,6 +880,9 @@ def get_argspec():
             'syn_auth_fail_action': {
                 'type': 'str',
                 'choices': ['drop', 'blacklist-src', 'reset']
+                },
+            'allow_ra': {
+                'type': 'bool',
                 }
             },
         'ack_authentication': {
@@ -915,6 +937,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'response_length_max': {
+                'type': 'int',
+                },
+            'response_length_min': {
                 'type': 'int',
                 },
             'request_length_min': {

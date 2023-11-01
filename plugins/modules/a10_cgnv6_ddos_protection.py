@@ -487,9 +487,6 @@ def get_argspec():
                     },
                 'remove_wait_timer': {
                     'type': 'int',
-                    },
-                'forward': {
-                    'type': 'bool',
                     }
                 },
             'tcp': {

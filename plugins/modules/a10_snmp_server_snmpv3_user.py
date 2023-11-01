@@ -74,7 +74,10 @@ options:
     auth_val:
         description:
         - "'md5'= Use HMAC MD5 algorithm for authentication; 'sha'= Use HMAC SHA algorithm
-          for authentication;"
+          for authentication; 'sha-512'= Use HMAC SHA-512 algorithm for authentication;
+          'sha-384'= Use HMAC SHA-384 algorithm for authentication; 'sha-256'= Use HMAC
+          SHA-256 algorithm for authentication; 'sha-224'= Use HMAC SHA-224 algorithm for
+          authentication;"
         type: str
         required: False
     passwd:
@@ -90,8 +93,9 @@ options:
         required: False
     priv:
         description:
-        - "'des'= DES encryption alogrithm; 'aes'= AES encryption alogrithm;  (Encryption
-          type)"
+        - "'des'= DES encryption alogrithm; 'aes'= AES encryption alogrithm; 'aes-192'=
+          AES-192 encryption alogrithm; 'aes-256'= AES-256 encryption alogrithm;
+          (Encryption type)"
         type: str
         required: False
     encpasswd:
@@ -198,7 +202,7 @@ def get_argspec():
             },
         'auth_val': {
             'type': 'str',
-            'choices': ['md5', 'sha']
+            'choices': ['md5', 'sha', 'sha-512', 'sha-384', 'sha-256', 'sha-224']
             },
         'passwd': {
             'type': 'str',
@@ -208,7 +212,7 @@ def get_argspec():
             },
         'priv': {
             'type': 'str',
-            'choices': ['des', 'aes']
+            'choices': ['des', 'aes', 'aes-192', 'aes-256']
             },
         'encpasswd': {
             'type': 'str',

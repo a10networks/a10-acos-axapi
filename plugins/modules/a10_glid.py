@@ -55,19 +55,30 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    num:
+    name:
         description:
-        - "Global Limit ID"
-        type: int
+        - "Global Limit ID Name (PBSLB allows number only)"
+        type: str
         required: True
+    description:
+        description:
+        - "Description for glid"
+        type: str
+        required: False
+    rate_unit:
+        description:
+        - "'1sec'= 1sec for internal glid rate unit; 'system-global-setting'= use global
+          rate interval;"
+        type: str
+        required: False
     conn_limit:
         description:
-        - "Connection Limit for the GLID"
+        - "Connection Limit for the GLID (PBSLB range 1-1048575)"
         type: int
         required: False
     conn_rate_limit:
         description:
-        - "Connection rate Limit for the GLID"
+        - "Connection rate limit per rate-interval (TPS range 1-16000000)"
         type: int
         required: False
     conn_rate_limit_interval:
@@ -88,34 +99,6 @@ options:
     request_rate_limit_interval:
         description:
         - "Number of 100ms"
-        type: int
-        required: False
-    over_limit_action:
-        description:
-        - "Action when exceeds limit"
-        type: bool
-        required: False
-    action_value:
-        description:
-        - "'drop'= Silently Drop the new connection / new packet when it exceeds limit;
-          'dns-cache-disable'= Disable dns cache when it exceeds limit; 'dns-cache-
-          enable'= Enable dns cache when it exceeds limit; 'forward'= Forward the traffic
-          even it exceeds limit; 'reset'= Reset the connection when it exceeds limit;"
-        type: str
-        required: False
-    lockout:
-        description:
-        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
-        type: int
-        required: False
-    log:
-        description:
-        - "Log a message"
-        type: bool
-        required: False
-    log_interval:
-        description:
-        - "Log interval (minute, by default system will log every over limit instance)"
         type: int
         required: False
     dns:
@@ -160,6 +143,65 @@ options:
           lid"
         type: str
         required: False
+    pkt_rate_limit:
+        description:
+        - "Packet rate limit per rate-interval"
+        type: int
+        required: False
+    bit_rate_limit:
+        description:
+        - "Kibit (kibibit / 1024-bit) rate limit per rate-interval"
+        type: int
+        required: False
+    frag_pkt_rate_limit:
+        description:
+        - "Fragmented packet rate limit per rate-interval"
+        type: int
+        required: False
+    syn_cookie_thr:
+        description:
+        - "Syn Cookie threshold for the GLID"
+        type: int
+        required: False
+    over_limit_cfg:
+        description:
+        - "Field over_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            over_limit_action:
+                description:
+                - "Action to take when limit(s) exceeds"
+                type: bool
+            action_type:
+                description:
+                - "'drop'= Silently Drop the new connection / new packet when it exceeds limit;
+          'blacklist-src'= Black List source entry for X minutes (only applied to src and
+          src-dst entries);"
+                type: str
+            blacklist_src_min:
+                description:
+                - "Black List source entry for X minutes"
+                type: int
+            action_value:
+                description:
+                - "'drop'= Silently Drop the new connection / new packet when it exceeds limit;
+          'dns-cache-disable'= Disable dns cache when it exceeds limit; 'dns-cache-
+          enable'= Enable dns cache when it exceeds limit; 'forward'= Forward the traffic
+          even it exceeds limit; 'reset'= Reset the connection when it exceeds limit;"
+                type: str
+            lockout:
+                description:
+                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+                type: int
+            log:
+                description:
+                - "Log a message"
+                type: bool
+            log_interval:
+                description:
+                - "Log interval (minute, by default system will log every over limit instance)"
+                type: int
     uuid:
         description:
         - "uuid of the object"
@@ -224,7 +266,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action_value", "conn_limit", "conn_rate_limit", "conn_rate_limit_interval", "dns", "dns64", "lockout", "log", "log_interval", "num", "over_limit_action", "request_limit", "request_rate_limit", "request_rate_limit_interval", "use_nat_pool", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["bit_rate_limit", "conn_limit", "conn_rate_limit", "conn_rate_limit_interval", "description", "dns", "dns64", "frag_pkt_rate_limit", "name", "over_limit_cfg", "pkt_rate_limit", "rate_unit", "request_limit", "request_rate_limit", "request_rate_limit_interval", "syn_cookie_thr", "use_nat_pool", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -245,9 +287,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'num': {
-            'type': 'int',
+        'name': {
+            'type': 'str',
             'required': True,
+            },
+        'description': {
+            'type': 'str',
+            },
+        'rate_unit': {
+            'type': 'str',
+            'choices': ['1sec', 'system-global-setting']
             },
         'conn_limit': {
             'type': 'int',
@@ -265,22 +314,6 @@ def get_argspec():
             'type': 'int',
             },
         'request_rate_limit_interval': {
-            'type': 'int',
-            },
-        'over_limit_action': {
-            'type': 'bool',
-            },
-        'action_value': {
-            'type': 'str',
-            'choices': ['drop', 'dns-cache-disable', 'dns-cache-enable', 'forward', 'reset']
-            },
-        'lockout': {
-            'type': 'int',
-            },
-        'log': {
-            'type': 'bool',
-            },
-        'log_interval': {
             'type': 'int',
             },
         'dns': {
@@ -311,6 +344,44 @@ def get_argspec():
         'use_nat_pool': {
             'type': 'str',
             },
+        'pkt_rate_limit': {
+            'type': 'int',
+            },
+        'bit_rate_limit': {
+            'type': 'int',
+            },
+        'frag_pkt_rate_limit': {
+            'type': 'int',
+            },
+        'syn_cookie_thr': {
+            'type': 'int',
+            },
+        'over_limit_cfg': {
+            'type': 'dict',
+            'over_limit_action': {
+                'type': 'bool',
+                },
+            'action_type': {
+                'type': 'str',
+                'choices': ['drop', 'blacklist-src']
+                },
+            'blacklist_src_min': {
+                'type': 'int',
+                },
+            'action_value': {
+                'type': 'str',
+                'choices': ['drop', 'dns-cache-disable', 'dns-cache-enable', 'forward', 'reset']
+                },
+            'lockout': {
+                'type': 'int',
+                },
+            'log': {
+                'type': 'bool',
+                },
+            'log_interval': {
+                'type': 'int',
+                }
+            },
         'uuid': {
             'type': 'str',
             },
@@ -324,13 +395,13 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/glid/{num}"
+    url_base = "/axapi/v3/glid/{name}"
 
     f_dict = {}
-    if '/' in str(module.params["num"]):
-        f_dict["num"] = module.params["num"].replace("/", "%2F")
+    if '/' in str(module.params["name"]):
+        f_dict["name"] = module.params["name"].replace("/", "%2F")
     else:
-        f_dict["num"] = module.params["num"]
+        f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
@@ -341,7 +412,7 @@ def new_url(module):
     url_base = "/axapi/v3/glid"
 
     f_dict = {}
-    f_dict["num"] = ""
+    f_dict["name"] = ""
 
     return url_base.format(**f_dict)
 

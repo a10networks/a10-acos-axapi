@@ -178,10 +178,35 @@ options:
         - "Send reset if session in delete queue receives a SYN packet"
         type: bool
         required: False
+    dns_negative_cache_enable:
+        description:
+        - "Enable DNS negative cache"
+        type: bool
+        required: False
     dns_cache_enable:
         description:
         - "Enable DNS cache"
         type: bool
+        required: False
+    dns_persistent_cache_enable:
+        description:
+        - "Enable persistent DNS cache"
+        type: bool
+        required: False
+    max_persistent_cache:
+        description:
+        - "Define maximum persistent cache (Maximum persistent cache entry)"
+        type: int
+        required: False
+    dns_persistent_cache_ttl_threshold:
+        description:
+        - "Only save DNS cache with longer TTL (0-10000000 seconds, default is 0 second)"
+        type: int
+        required: False
+    dns_persistent_cache_hit_threshold:
+        description:
+        - "Only save DNS cache with larger hit count (0-10000000, default is 0)"
+        type: int
         required: False
     dns_cache_ttl_adjustment_enable:
         description:
@@ -225,6 +250,21 @@ options:
         description:
         - "Set DNS cache entry size, default is 256 bytes (1-4096 bytes, default is 256
           bytes)"
+        type: int
+        required: False
+    dns_cache_sync:
+        description:
+        - "Enable DNS cache HA sync"
+        type: bool
+        required: False
+    dns_cache_sync_ttl_threshold:
+        description:
+        - "Only sync DNS cache with longer TTL (0-10000000 seconds, default is 0 second)"
+        type: int
+        required: False
+    dns_cache_sync_entry_size:
+        description:
+        - "Only sync DNS cache with smaller size (1-4096 bytes, default is 256 bytes)"
         type: int
         required: False
     dns_vip_stateless:
@@ -345,6 +385,11 @@ options:
     enable_l7_req_acct:
         description:
         - "Enable L7 request accounting"
+        type: bool
+        required: False
+    enable_ddos:
+        description:
+        - "Enable DDoS protection"
         type: bool
         required: False
     disable_adaptive_resource_check:
@@ -471,6 +516,31 @@ options:
         - "Enable SSLi SNI hash table"
         type: bool
         required: False
+    clientside_ip:
+        description:
+        - "Clientside IP address"
+        type: str
+        required: False
+    clientside_ipv6:
+        description:
+        - "Clientside IPv6 address"
+        type: str
+        required: False
+    serverside_ip:
+        description:
+        - "Serverside IP address"
+        type: str
+        required: False
+    serverside_ipv6:
+        description:
+        - "Serverside IPv6 address"
+        type: str
+        required: False
+    port:
+        description:
+        - "Serverside port number for SNI transmission"
+        type: int
+        required: False
     ssli_cert_not_ready_inspect_timeout:
         description:
         - "SSLI asynchronized connection timeout, default is 10 seconds (seconds, set to 0
@@ -482,6 +552,11 @@ options:
         - "SSLI asynchronized connection max number, default is 2000 (set to 0 for
           unlimited size)"
         type: int
+        required: False
+    ssli_silent_termination_enable:
+        description:
+        - "Terminate the SSLi sessions silently without sending RST/FIN packet"
+        type: bool
         required: False
     software:
         description:
@@ -508,6 +583,11 @@ options:
         - "HW assisted N5 SSL module with TLS 1.2 support using OpenSSL 0.9.7"
         type: bool
         required: False
+    software_tls13_offload:
+        description:
+        - "Software TLS1.3 with CPU Offload Support"
+        type: bool
+        required: False
     ssl_n5_delay_tx_enable:
         description:
         - "Enable delay transmission for N5-new"
@@ -531,6 +611,11 @@ options:
                 description:
                 - "Enabling Rateliming for TLS1.3 HW requests per chip in 1K - default 72"
                 type: int
+    ssl_module_usage_enable:
+        description:
+        - "Enable SSL module usage calculations for QAT"
+        type: bool
+        required: False
     substitute_source_mac:
         description:
         - "Substitute Source MAC Address to that of the outgoing interface"
@@ -556,6 +641,16 @@ options:
         - "'system-default'= Use system default ecmp hashing algorithm; 'connection-
           based'= Use connection information for hashing;"
         type: str
+        required: False
+    vport_global:
+        description:
+        - "Configure periodic showtech vport paging global limit"
+        type: int
+        required: False
+    vport_l3v:
+        description:
+        - "Configure periodic showtech vport paging l3v limit"
+        type: int
         required: False
     service_group_on_no_dest_nat_vports:
         description:
@@ -589,16 +684,115 @@ options:
         - "IPv4 Octet Offset for Hash"
         type: int
         required: False
+    ipv6_subnet:
+        description:
+        - "IPv6 Octet Valid Subnet Length for Hash"
+        type: int
+        required: False
     pbslb_entry_age:
         description:
-        - "Set global pbslb entry age (minute) (pbslb entry age (minute), default is 6)"
+        - "Set global pbslb entry age (minute)"
         type: int
+        required: False
+    pbslb_overflow_glid:
+        description:
+        - "Apply global limit id to overflow pbslb entry"
+        type: str
+        required: False
+    pre_process_enable:
+        description:
+        - "Enable NG-WAF pre-processing"
+        type: bool
+        required: False
+    cache_expire_time:
+        description:
+        - "Cache expiration time, default is 1 minute"
+        type: int
+        required: False
+    attack_resp_code:
+        description:
+        - "Custom response code"
+        type: int
+        required: False
+    monitor_mode_enable:
+        description:
+        - "Enable NG-WAF monitor mode"
+        type: bool
+        required: False
+    custom_signal_clist:
+        description:
+        - "Provide custom signal names"
+        type: str
+        required: False
+    custom_message:
+        description:
+        - "Block message"
+        type: str
+        required: False
+    custom_page:
+        description:
+        - "Specify the custom webpage name"
+        type: str
+        required: False
+    use_https_proxy:
+        description:
+        - "NG-WAF connects to Cloud through proxy server"
+        type: bool
+        required: False
+    ngwaf_proxy_ipv4:
+        description:
+        - "IPv4 address"
+        type: str
+        required: False
+    ngwaf_proxy_ipv6:
+        description:
+        - "IPv6 address"
+        type: str
+        required: False
+    ngwaf_proxy_port:
+        description:
+        - "Port"
+        type: int
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port to connect"
+        type: bool
+        required: False
+    multi_cpu:
+        description:
+        - "Specific NGWAF CPU"
+        type: int
+        required: False
+    enable_fast_path_rerouting:
+        description:
+        - "Enable Fast-Path Rerouting"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    cert_pinning:
+        description:
+        - "Field cert_pinning"
+        type: dict
+        required: False
+        suboptions:
+            ttl:
+                description:
+                - "The ttl of local cert pinning candidate list, multiple of 10 minutes, default
+          is 144 (1440 minutes)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            candidate_list_feedback_opt_in:
+                description:
+                - "Field candidate_list_feedback_opt_in"
+                type: dict
     aflex_table_entry_sync:
         description:
         - "Field aflex_table_entry_sync"
@@ -621,6 +815,48 @@ options:
                 description:
                 - "aflex table entry minimum lifetime to sync"
                 type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    quic:
+        description:
+        - "Field quic"
+        type: dict
+        required: False
+        suboptions:
+            cid_len:
+                description:
+                - "Length of CID"
+                type: int
+            signature:
+                description:
+                - "Set CID Signature"
+                type: str
+            signature_len:
+                description:
+                - "Offset for CID Signature"
+                type: int
+            signature_offset:
+                description:
+                - "Offset for CID Signature"
+                type: int
+            cpu_offset:
+                description:
+                - "Offset for Encoded CPU"
+                type: int
+            quic_lb_offset:
+                description:
+                - "Offset for QUIC-LB"
+                type: int
+            enable_hash:
+                description:
+                - "Enable CID Hashing"
+                type: bool
+            enable_signature:
+                description:
+                - "Enable CID Signature Validation"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -714,13 +950,16 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "compress_block_size", "conn_rate_limit", "ddos_pkt_count_thresh",
-    "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_ttl_adjustment_enable", "dns_response_rate_limiting",
-    "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable",
-    "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "N5_new", "N5_old", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper",
-    "override_port", "pbslb_entry_age", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port_scan_detection", "QAT", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out",
-    "scale_out_traffic_map", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "sort_res", "ssl_n5_delay_tx_enable", "ssl_ratelimit_cfg", "ssli_cert_not_ready_inspect_limit",
-    "ssli_cert_not_ready_inspect_timeout", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_mss_tab", "uuid",
+    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "attack_resp_code", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "cache_expire_time", "cert_pinning",
+    "clientside_ip", "clientside_ipv6", "compress_block_size", "conn_rate_limit", "custom_message", "custom_page", "custom_signal_clist", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age",
+    "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_sync", "dns_cache_sync_entry_size", "dns_cache_sync_ttl_threshold", "dns_cache_ttl_adjustment_enable", "dns_negative_cache_enable", "dns_persistent_cache_enable", "dns_persistent_cache_hit_threshold",
+    "dns_persistent_cache_ttl_threshold", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_ddos", "enable_fast_path_rerouting", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown",
+    "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "ipv6_subnet", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_persistent_cache",
+    "max_remote_rate", "monitor_mode_enable", "msl_time", "mss_table", "multi_cpu", "N5_new", "N5_old", "ngwaf_proxy_ipv4", "ngwaf_proxy_ipv6", "ngwaf_proxy_port", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "pbslb_overflow_glid", "per_thr_percent", "ping_sweep_detection",
+    "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port", "port_scan_detection", "pre_process_enable", "QAT", "quic", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "serverside_ip",
+    "serverside_ipv6", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "software_tls13_offload", "sort_res", "ssl_module_usage_enable", "ssl_n5_delay_tx_enable",
+    "ssl_ratelimit_cfg", "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_silent_termination_enable", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_https_proxy", "use_mgmt_port",
+    "use_mss_tab", "uuid", "vport_global", "vport_l3v",
     ]
 
 
@@ -818,8 +1057,23 @@ def get_argspec():
         'reset_stale_session': {
             'type': 'bool',
             },
+        'dns_negative_cache_enable': {
+            'type': 'bool',
+            },
         'dns_cache_enable': {
             'type': 'bool',
+            },
+        'dns_persistent_cache_enable': {
+            'type': 'bool',
+            },
+        'max_persistent_cache': {
+            'type': 'int',
+            },
+        'dns_persistent_cache_ttl_threshold': {
+            'type': 'int',
+            },
+        'dns_persistent_cache_hit_threshold': {
+            'type': 'int',
             },
         'dns_cache_ttl_adjustment_enable': {
             'type': 'bool',
@@ -844,6 +1098,15 @@ def get_argspec():
             'type': 'int',
             },
         'dns_cache_entry_size': {
+            'type': 'int',
+            },
+        'dns_cache_sync': {
+            'type': 'bool',
+            },
+        'dns_cache_sync_ttl_threshold': {
+            'type': 'int',
+            },
+        'dns_cache_sync_entry_size': {
             'type': 'int',
             },
         'dns_vip_stateless': {
@@ -914,6 +1177,9 @@ def get_argspec():
             'type': 'bool',
             },
         'enable_l7_req_acct': {
+            'type': 'bool',
+            },
+        'enable_ddos': {
             'type': 'bool',
             },
         'disable_adaptive_resource_check': {
@@ -1004,11 +1270,29 @@ def get_argspec():
         'ssli_sni_hash_enable': {
             'type': 'bool',
             },
+        'clientside_ip': {
+            'type': 'str',
+            },
+        'clientside_ipv6': {
+            'type': 'str',
+            },
+        'serverside_ip': {
+            'type': 'str',
+            },
+        'serverside_ipv6': {
+            'type': 'str',
+            },
+        'port': {
+            'type': 'int',
+            },
         'ssli_cert_not_ready_inspect_timeout': {
             'type': 'int',
             },
         'ssli_cert_not_ready_inspect_limit': {
             'type': 'int',
+            },
+        'ssli_silent_termination_enable': {
+            'type': 'bool',
             },
         'software': {
             'type': 'bool',
@@ -1023,6 +1307,9 @@ def get_argspec():
             'type': 'bool',
             },
         'N5_old': {
+            'type': 'bool',
+            },
+        'software_tls13_offload': {
             'type': 'bool',
             },
         'ssl_n5_delay_tx_enable': {
@@ -1040,6 +1327,9 @@ def get_argspec():
                 'type': 'int',
                 }
             },
+        'ssl_module_usage_enable': {
+            'type': 'bool',
+            },
         'substitute_source_mac': {
             'type': 'bool',
             },
@@ -1055,6 +1345,12 @@ def get_argspec():
         'ecmp_hash': {
             'type': 'str',
             'choices': ['system-default', 'connection-based']
+            },
+        'vport_global': {
+            'type': 'int',
+            },
+        'vport_l3v': {
+            'type': 'int',
             },
         'service_group_on_no_dest_nat_vports': {
             'type': 'str',
@@ -1081,11 +1377,99 @@ def get_argspec():
         'ipv4_offset': {
             'type': 'int',
             },
+        'ipv6_subnet': {
+            'type': 'int',
+            },
         'pbslb_entry_age': {
             'type': 'int',
             },
+        'pbslb_overflow_glid': {
+            'type': 'str',
+            },
+        'pre_process_enable': {
+            'type': 'bool',
+            },
+        'cache_expire_time': {
+            'type': 'int',
+            },
+        'attack_resp_code': {
+            'type': 'int',
+            },
+        'monitor_mode_enable': {
+            'type': 'bool',
+            },
+        'custom_signal_clist': {
+            'type': 'str',
+            },
+        'custom_message': {
+            'type': 'str',
+            },
+        'custom_page': {
+            'type': 'str',
+            },
+        'use_https_proxy': {
+            'type': 'bool',
+            },
+        'ngwaf_proxy_ipv4': {
+            'type': 'str',
+            },
+        'ngwaf_proxy_ipv6': {
+            'type': 'str',
+            },
+        'ngwaf_proxy_port': {
+            'type': 'int',
+            },
+        'use_mgmt_port': {
+            'type': 'bool',
+            },
+        'multi_cpu': {
+            'type': 'int',
+            },
+        'enable_fast_path_rerouting': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
+            },
+        'cert_pinning': {
+            'type': 'dict',
+            'ttl': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'candidate_list_feedback_opt_in': {
+                'type': 'dict',
+                'enable': {
+                    'type': 'bool',
+                    },
+                'schedule': {
+                    'type': 'bool',
+                    },
+                'weekly': {
+                    'type': 'bool',
+                    },
+                'week_day': {
+                    'type': 'str',
+                    'choices': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                    },
+                'week_time': {
+                    'type': 'str',
+                    },
+                'daily': {
+                    'type': 'bool',
+                    },
+                'day_time': {
+                    'type': 'str',
+                    },
+                'use_mgmt_port': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
             },
         'aflex_table_entry_sync': {
             'type': 'dict',
@@ -1100,6 +1484,36 @@ def get_argspec():
                 },
             'aflex_table_entry_sync_min_lifetime': {
                 'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'quic': {
+            'type': 'dict',
+            'cid_len': {
+                'type': 'int',
+                },
+            'signature': {
+                'type': 'str',
+                },
+            'signature_len': {
+                'type': 'int',
+                },
+            'signature_offset': {
+                'type': 'int',
+                },
+            'cpu_offset': {
+                'type': 'int',
+                },
+            'quic_lb_offset': {
+                'type': 'int',
+                },
+            'enable_hash': {
+                'type': 'bool',
+                },
+            'enable_signature': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

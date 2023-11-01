@@ -74,23 +74,26 @@ options:
           Monitored Entity telemetry Metric IN SMALL pkt; 'in_frag'= Monitored Entity
           telemetry Metric IN frag; 'out_small_pkt'= Monitored Entity telemetry Metric
           OUT SMALL pkt; 'out_frag'= Monitored Entity telemetry Metric OUT frag; 'new-
-          conn'= Monitored Entity telemetry Metric New Sessions; 'concurrent-conn'=
-          concurrent-conn; 'in_bytes_per_out_bytes'= Monitored Entity telemetry Metric IN
-          bytes per OUT bytes; 'drop_pkts_per_pkts'= Monitored Entity telemetry Metric
-          Drop pkts per pkts; 'tcp_in_syn'= Monitored Entity telemetry Metric TCP IN syn;
-          'tcp_out_syn'= Monitored Entity telemetry Metric TCP OUT syn; 'tcp_in_fin'=
-          Monitored Entity telemetry Metric TCP IN fin; 'tcp_out_fin'= Monitored Entity
-          telemetry Metric TCP OUT fin; 'tcp_in_payload'= Monitored Entity telemetry
-          Metric TCP IN payload; 'tcp_out_payload'= Monitored Entity telemetry Metric TCP
-          OUT payload; 'tcp_in_rexmit'= Monitored Entity telemetry Metric TCP IN rexmit;
-          'tcp_out_rexmit'= Monitored Entity telemetry Metric TCP OUT rexmit;
-          'tcp_in_rst'= Monitored Entity telemetry Metric TCP IN rst; 'tcp_out_rst'=
-          Monitored Entity telemetry Metric TCP OUT rst; 'tcp_in_empty_ack'= Monitored
-          Entity telemetry Metric TCP_IN EMPTY ack; 'tcp_out_empty_ack'= Monitored Entity
-          telemetry Metric TCP OUT EMPTY ack; 'tcp_in_zero_wnd'= Monitored Entity
-          telemetry Metric TCP IN ZERO wnd; 'tcp_out_zero_wnd'= Monitored Entity
-          telemetry Metric TCP OUT ZERO wnd; 'tcp_fwd_syn_per_fin'= Monitored Entity
-          telemetry Metric TCP FWD SYN per FIN;"
+          conn'= Monitored Entity telemetry Metric New Sessions; 'avg_data_cpu_util'=
+          Monitored Entity telemetry Metric Average data CPU utilization;
+          'outside_intf_util'= Monitored Entity telemetry Metric Outside interface
+          utilization; 'concurrent-conn'= concurrent-conn; 'in_bytes_per_out_bytes'=
+          Monitored Entity telemetry Metric IN bytes per OUT bytes; 'drop_pkts_per_pkts'=
+          Monitored Entity telemetry Metric Drop pkts per pkts; 'tcp_in_syn'= Monitored
+          Entity telemetry Metric TCP IN syn; 'tcp_out_syn'= Monitored Entity telemetry
+          Metric TCP OUT syn; 'tcp_in_fin'= Monitored Entity telemetry Metric TCP IN fin;
+          'tcp_out_fin'= Monitored Entity telemetry Metric TCP OUT fin; 'tcp_in_payload'=
+          Monitored Entity telemetry Metric TCP IN payload; 'tcp_out_payload'= Monitored
+          Entity telemetry Metric TCP OUT payload; 'tcp_in_rexmit'= Monitored Entity
+          telemetry Metric TCP IN rexmit; 'tcp_out_rexmit'= Monitored Entity telemetry
+          Metric TCP OUT rexmit; 'tcp_in_rst'= Monitored Entity telemetry Metric TCP IN
+          rst; 'tcp_out_rst'= Monitored Entity telemetry Metric TCP OUT rst;
+          'tcp_in_empty_ack'= Monitored Entity telemetry Metric TCP_IN EMPTY ack;
+          'tcp_out_empty_ack'= Monitored Entity telemetry Metric TCP OUT EMPTY ack;
+          'tcp_in_zero_wnd'= Monitored Entity telemetry Metric TCP IN ZERO wnd;
+          'tcp_out_zero_wnd'= Monitored Entity telemetry Metric TCP OUT ZERO wnd;
+          'tcp_conn_miss'= Monitored Entity telemetry Metric TCP connection miss;
+          'tcp_fwd_syn_per_fin'= Monitored Entity telemetry Metric TCP FWD SYN per FIN;"
                 type: str
     stats:
         description:
@@ -137,6 +140,14 @@ options:
             new_conn:
                 description:
                 - "Monitored Entity telemetry Metric New Sessions"
+                type: str
+            avg_data_cpu_util:
+                description:
+                - "Monitored Entity telemetry Metric Average data CPU utilization"
+                type: str
+            outside_intf_util:
+                description:
+                - "Monitored Entity telemetry Metric Outside interface utilization"
                 type: str
             concurrent_conn:
                 description:
@@ -205,6 +216,10 @@ options:
             tcp_out_zero_wnd:
                 description:
                 - "Monitored Entity telemetry Metric TCP OUT ZERO wnd"
+                type: str
+            tcp_conn_miss:
+                description:
+                - "Monitored Entity telemetry Metric TCP connection miss"
                 type: str
             tcp_fwd_syn_per_fin:
                 description:
@@ -294,8 +309,8 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload', 'tcp_out_payload', 'tcp_in_rexmit', 'tcp_out_rexmit',
-                    'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_fwd_syn_per_fin'
+                    'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'avg_data_cpu_util', 'outside_intf_util', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload',
+                    'tcp_out_payload', 'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_conn_miss', 'tcp_fwd_syn_per_fin'
                     ]
                 }
             },
@@ -329,6 +344,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'new_conn': {
+                'type': 'str',
+                },
+            'avg_data_cpu_util': {
+                'type': 'str',
+                },
+            'outside_intf_util': {
                 'type': 'str',
                 },
             'concurrent_conn': {
@@ -380,6 +401,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'tcp_out_zero_wnd': {
+                'type': 'str',
+                },
+            'tcp_conn_miss': {
                 'type': 'str',
                 },
             'tcp_fwd_syn_per_fin': {

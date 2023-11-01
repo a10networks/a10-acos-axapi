@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    enable_all_ports:
+        description:
+        - "Enable 802.1QinQ on all physical ports"
+        type: bool
+        required: False
     inner_tpid:
         description:
         - "TPID for inner VLAN (Inner TPID, 16 bit hex value, default is 8100)"
@@ -64,11 +69,6 @@ options:
         description:
         - "TPID for outer VLAN (Outer TPID, 16 bit hex value, default is 8100)"
         type: str
-        required: False
-    enable_all_ports:
-        description:
-        - "Enable 802.1QinQ on all physical ports"
-        type: bool
         required: False
     uuid:
         description:
@@ -149,7 +149,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'inner_tpid': {'type': 'str', }, 'outer_tpid': {'type': 'str', }, 'enable_all_ports': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'enable_all_ports': {'type': 'bool', }, 'inner_tpid': {'type': 'str', }, 'outer_tpid': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

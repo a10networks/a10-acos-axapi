@@ -183,7 +183,7 @@ def get_argspec():
                         },
                     'oper_status': {
                         'type': 'str',
-                        'choices': ['Blocked', 'Up', 'Dn']
+                        'choices': ['Blk', 'Up', 'Dn']
                         }
                     },
                 'ports_threshold': {

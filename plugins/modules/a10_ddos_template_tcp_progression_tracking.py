@@ -81,6 +81,11 @@ options:
         - "Set the maximum response length"
         type: int
         required: False
+    response_length_min:
+        description:
+        - "Set the minimum response length"
+        type: int
+        required: False
     request_length_min:
         description:
         - "Set the minimum request length"
@@ -314,7 +319,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "connection_tracking", "first_request_max_time", "profiling_connection_life_model", "profiling_request_response_model", "profiling_time_window_model", "progression_tracking_action", "progression_tracking_action_list_name", "progression_tracking_enabled", "request_length_max", "request_length_min", "request_response_model",
-    "request_to_response_max_time", "response_length_max", "response_request_max_ratio", "response_request_min_ratio", "response_to_request_max_time", "time_window_tracking", "uuid", "violation",
+    "request_to_response_max_time", "response_length_max", "response_length_min", "response_request_max_ratio", "response_request_min_ratio", "response_to_request_max_time", "time_window_tracking", "uuid", "violation",
     ]
 
 
@@ -349,6 +354,9 @@ def get_argspec():
             'type': 'int',
             },
         'response_length_max': {
+            'type': 'int',
+            },
+        'response_length_min': {
             'type': 'int',
             },
         'request_length_min': {

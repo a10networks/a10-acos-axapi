@@ -80,6 +80,16 @@ options:
         - "Wait for web category to be resolved before taking proxy decision"
         type: bool
         required: False
+    forward_http_connect_to_icap:
+        description:
+        - "Forward HTTP CONNECT request to ICAP server"
+        type: bool
+        required: False
+    reqmod_icap:
+        description:
+        - "ICAP reqmod template (Reqmod ICAP Template Name)"
+        type: str
+        required: False
     filtering:
         description:
         - "Field filtering"
@@ -109,6 +119,11 @@ options:
           by default); 'no-san-allow'= Allow connection if SAN filtering is enabled and
           SAN field is not present(Drop by default);"
                 type: str
+    enable_adv_match:
+        description:
+        - "Enable adv-match rules and deactive all the other kinds of destination rules"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -142,6 +157,10 @@ options:
                 description:
                 - "Source NAT pool or pool group"
                 type: str
+            forward_snat_pt_only:
+                description:
+                - "Source port translation only"
+                type: bool
             fall_back:
                 description:
                 - "Fallback service group for Internet"
@@ -150,6 +169,10 @@ options:
                 description:
                 - "Source NAT pool or pool group for fallback server"
                 type: str
+            fall_back_snat_pt_only:
+                description:
+                - "Source port translation only for fallback server"
+                type: bool
             proxy_chaining:
                 description:
                 - "Enable proxy chaining feature"
@@ -183,6 +206,56 @@ options:
                 description:
                 - "'301'= Moved permanently; '302'= Found;"
                 type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dual_stack_action_list:
+        description:
+        - "Field dual_stack_action_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Action name"
+                type: str
+            ipv4:
+                description:
+                - "IPv4 service group to forward"
+                type: str
+            ipv4_snat:
+                description:
+                - "IPv4 source NAT pool or pool group"
+                type: str
+            ipv6:
+                description:
+                - "IPv6 service group to forward"
+                type: str
+            ipv6_snat:
+                description:
+                - "IPv6 source NAT pool or pool group"
+                type: str
+            fall_back:
+                description:
+                - "Fallback service group"
+                type: str
+            fall_back_snat:
+                description:
+                - "Source NAT pool or pool group for fallback"
+                type: str
+            log:
+                description:
+                - "enable logging"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -291,7 +364,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acos_event_log", "action_list", "filtering", "local_logging", "no_client_conn_reuse", "require_web_category", "san_filtering", "source_list", "uuid", ]
+AVAILABLE_PROPERTIES = ["acos_event_log", "action_list", "dual_stack_action_list", "enable_adv_match", "filtering", "forward_http_connect_to_icap", "local_logging", "no_client_conn_reuse", "reqmod_icap", "require_web_category", "san_filtering", "source_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -324,6 +397,12 @@ def get_argspec():
         'require_web_category': {
             'type': 'bool',
             },
+        'forward_http_connect_to_icap': {
+            'type': 'bool',
+            },
+        'reqmod_icap': {
+            'type': 'str',
+            },
         'filtering': {
             'type': 'list',
             'ssli_url_filtering': {
@@ -337,6 +416,9 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['enable-san', 'bypassed-san-disable', 'intercepted-san-enable', 'no-san-allow']
                 }
+            },
+        'enable_adv_match': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',
@@ -360,11 +442,17 @@ def get_argspec():
             'forward_snat': {
                 'type': 'str',
                 },
+            'forward_snat_pt_only': {
+                'type': 'bool',
+                },
             'fall_back': {
                 'type': 'str',
                 },
             'fall_back_snat': {
                 'type': 'str',
+                },
+            'fall_back_snat_pt_only': {
+                'type': 'bool',
                 },
             'proxy_chaining': {
                 'type': 'bool',
@@ -390,6 +478,47 @@ def get_argspec():
             'http_status_code': {
                 'type': 'str',
                 'choices': ['301', '302']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'hits']
+                    }
+                }
+            },
+        'dual_stack_action_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'ipv4': {
+                'type': 'str',
+                },
+            'ipv4_snat': {
+                'type': 'str',
+                },
+            'ipv6': {
+                'type': 'str',
+                },
+            'ipv6_snat': {
+                'type': 'str',
+                },
+            'fall_back': {
+                'type': 'str',
+                },
+            'fall_back_snat': {
+                'type': 'str',
+                },
+            'log': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -438,6 +567,119 @@ def get_argspec():
                 },
             'destination': {
                 'type': 'dict',
+                'adv_match_list': {
+                    'type': 'list',
+                    'priority': {
+                        'type': 'int',
+                        'required': True,
+                        },
+                    'match_host': {
+                        'type': 'str',
+                        },
+                    'match_http_content_encoding': {
+                        'type': 'str',
+                        },
+                    'match_http_content_length_range_begin': {
+                        'type': 'int',
+                        },
+                    'match_http_content_length_range_end': {
+                        'type': 'int',
+                        },
+                    'match_http_content_type': {
+                        'type': 'str',
+                        },
+                    'match_http_header': {
+                        'type': 'str',
+                        },
+                    'match_http_method_connect': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_delete': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_get': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_head': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_options': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_patch': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_post': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_put': {
+                        'type': 'bool',
+                        },
+                    'match_http_method_trace': {
+                        'type': 'bool',
+                        },
+                    'match_http_request_file_extension': {
+                        'type': 'str',
+                        },
+                    'match_http_url_regex': {
+                        'type': 'str',
+                        },
+                    'match_http_url': {
+                        'type': 'str',
+                        },
+                    'match_http_user_agent': {
+                        'type': 'str',
+                        },
+                    'match_server_address': {
+                        'type': 'str',
+                        },
+                    'match_server_port': {
+                        'type': 'int',
+                        },
+                    'match_server_port_range_begin': {
+                        'type': 'int',
+                        },
+                    'match_server_port_range_end': {
+                        'type': 'int',
+                        },
+                    'match_time_range': {
+                        'type': 'str',
+                        },
+                    'match_web_category_list': {
+                        'type': 'str',
+                        },
+                    'match_web_reputation_scope': {
+                        'type': 'str',
+                        },
+                    'disable_reqmod_icap': {
+                        'type': 'bool',
+                        },
+                    'disable_respmod_icap': {
+                        'type': 'bool',
+                        },
+                    'notify_page': {
+                        'type': 'str',
+                        },
+                    'action': {
+                        'type': 'str',
+                        },
+                    'dual_stack_action': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'hits']
+                            }
+                        }
+                    },
                 'class_list_list': {
                     'type': 'list',
                     'dest_class_list': {
@@ -445,6 +687,9 @@ def get_argspec():
                         'required': True,
                         },
                     'action': {
+                        'type': 'str',
+                        },
+                    'dual_stack_action': {
                         'type': 'str',
                         },
                     'ntype': {
@@ -456,13 +701,6 @@ def get_argspec():
                         },
                     'uuid': {
                         'type': 'str',
-                        },
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'hits']
-                            }
                         }
                     },
                 'web_reputation_scope_list': {
@@ -474,6 +712,9 @@ def get_argspec():
                     'action': {
                         'type': 'str',
                         },
+                    'dual_stack_action': {
+                        'type': 'str',
+                        },
                     'ntype': {
                         'type': 'str',
                         'choices': ['host', 'url']
@@ -483,13 +724,6 @@ def get_argspec():
                         },
                     'uuid': {
                         'type': 'str',
-                        },
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'hits']
-                            }
                         }
                     },
                 'web_category_list_list': {
@@ -501,6 +735,9 @@ def get_argspec():
                     'action': {
                         'type': 'str',
                         },
+                    'dual_stack_action': {
+                        'type': 'str',
+                        },
                     'ntype': {
                         'type': 'str',
                         'choices': ['host', 'url']
@@ -510,18 +747,14 @@ def get_argspec():
                         },
                     'uuid': {
                         'type': 'str',
-                        },
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'hits']
-                            }
                         }
                     },
                 'any': {
                     'type': 'dict',
                     'action': {
+                        'type': 'str',
+                        },
+                    'dual_stack_action': {
                         'type': 'str',
                         },
                     'uuid': {

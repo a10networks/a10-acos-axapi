@@ -218,6 +218,11 @@ options:
         - "Set T2 counter value of current context to specified value"
         type: int
         required: False
+    ip_filtering_policy:
+        description:
+        - "Configure IP Filter"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -228,6 +233,16 @@ options:
         - "Customized tag"
         type: str
         required: False
+    ip_filtering_policy_oper:
+        description:
+        - "Field ip_filtering_policy_oper"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     port_ind:
         description:
         - "Field port_ind"
@@ -313,6 +328,10 @@ options:
                 - "'tcp'= L4-Type TCP; 'udp'= L4-Type UDP; 'icmp'= L4-Type ICMP; 'other'= L4-Type
           OTHER;"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             port_ind:
                 description:
                 - "Field port_ind"
@@ -380,8 +399,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "deny", "detection_enable", "disable_syn_auth", "drop_frag_pkt", "drop_on_no_port_match", "enable_top_k", "glid", "glid_exceed_action", "max_rexmit_syn_per_flow", "max_rexmit_syn_per_flow_exceed_action", "oper", "port_ind", "progression_tracking", "protocol", "set_counter_base_val", "stateful", "syn_auth", "syn_cookie", "tcp_reset_client",
-    "tcp_reset_server", "template", "topk_num_records", "topk_sources", "tunnel_decap", "tunnel_rate_limit", "undefined_port_hit_statistics", "user_tag", "uuid",
+    "deny", "detection_enable", "disable_syn_auth", "drop_frag_pkt", "drop_on_no_port_match", "enable_top_k", "glid", "glid_exceed_action", "ip_filtering_policy", "ip_filtering_policy_oper", "max_rexmit_syn_per_flow", "max_rexmit_syn_per_flow_exceed_action", "oper", "port_ind", "progression_tracking", "protocol", "set_counter_base_val", "stateful",
+    "syn_auth", "syn_cookie", "tcp_reset_client", "tcp_reset_server", "template", "topk_num_records", "topk_sources", "tunnel_decap", "tunnel_rate_limit", "undefined_port_hit_statistics", "user_tag", "uuid",
     ]
 
 
@@ -514,11 +533,20 @@ def get_argspec():
         'set_counter_base_val': {
             'type': 'int',
             },
+        'ip_filtering_policy': {
+            'type': 'str',
+            },
         'uuid': {
             'type': 'str',
             },
         'user_tag': {
             'type': 'str',
+            },
+        'ip_filtering_policy_oper': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
             },
         'port_ind': {
             'type': 'dict',
@@ -716,6 +744,21 @@ def get_argspec():
                 'required': True,
                 'choices': ['tcp', 'udp', 'icmp', 'other']
                 },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'rule_list': {
+                        'type': 'list',
+                        'seq': {
+                            'type': 'int',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            }
+                        }
+                    }
+                },
             'port_ind': {
                 'type': 'dict',
                 'oper': {
@@ -774,12 +817,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -803,6 +840,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',

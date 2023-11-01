@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_domain_list
 description:
-    - Configure domain list
+    - Configure Domain classification list
 author: A10 Networks
 options:
     state:
@@ -57,7 +57,7 @@ options:
         required: False
     name:
         description:
-        - "Name of the domain list"
+        - "Specify name of the domain list"
         type: str
         required: True
     domain_name_list:
@@ -74,6 +74,65 @@ options:
                 description:
                 - "DNS query interval (in minute, default is 10)"
                 type: int
+    file:
+        description:
+        - "Create/Edit a domain-list stored as a file"
+        type: bool
+        required: False
+    match_type_equals:
+        description:
+        - "Field match_type_equals"
+        type: list
+        required: False
+        suboptions:
+            equals:
+                description:
+                - "Specify exact match for the Domain Name"
+                type: str
+    match_type_suffix:
+        description:
+        - "Field match_type_suffix"
+        type: list
+        required: False
+        suboptions:
+            suffix:
+                description:
+                - "Specify suffix matching the Domain Name"
+                type: str
+    match_type_axfr:
+        description:
+        - "Field match_type_axfr"
+        type: list
+        required: False
+        suboptions:
+            axfr_domain:
+                description:
+                - "Import the list of domains via zone-transfer"
+                type: str
+            axfr_ip_address:
+                description:
+                - "IP address of the listening DNS server"
+                type: str
+            axfr_ipv6_address:
+                description:
+                - "IPv6 address of the listening DNS server"
+                type: str
+            ip_axfr_port_num:
+                description:
+                - "Port Number"
+                type: int
+            ipv6_axfr_port_num:
+                description:
+                - "Port Number"
+                type: int
+            ip_refresh_intvl:
+                description:
+                - "Poll every x minutes to check for an Updated axfr default"
+                type: int
+            ipv6_refresh_intvl:
+                description:
+                - "Poll every x minutes to check for an Updated axfr default"
+                type: int
     uuid:
         description:
         - "uuid of the object"
@@ -84,6 +143,16 @@ options:
         - "Customized tag"
         type: str
         required: False
+    oper:
+        description:
+        - "Field oper"
+        type: str
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -138,7 +207,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["domain_name_list", "name", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["domain_name_list", "file", "match_type_axfr", "match_type_equals", "match_type_suffix", "name", "oper", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -158,7 +227,73 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, }, 'domain_name_list': {'type': 'list', 'domain_name': {'type': 'str', }, 'interval': {'type': 'int', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'domain_name_list': {
+            'type': 'list',
+            'domain_name': {
+                'type': 'str',
+                },
+            'interval': {
+                'type': 'int',
+                }
+            },
+        'file': {
+            'type': 'bool',
+            },
+        'match_type_equals': {
+            'type': 'list',
+            'equals': {
+                'type': 'str',
+                }
+            },
+        'match_type_suffix': {
+            'type': 'list',
+            'suffix': {
+                'type': 'str',
+                }
+            },
+        'match_type_axfr': {
+            'type': 'list',
+            'axfr_domain': {
+                'type': 'str',
+                },
+            'axfr_ip_address': {
+                'type': 'str',
+                },
+            'axfr_ipv6_address': {
+                'type': 'str',
+                },
+            'ip_axfr_port_num': {
+                'type': 'int',
+                },
+            'ipv6_axfr_port_num': {
+                'type': 'int',
+                },
+            'ip_refresh_intvl': {
+                'type': 'int',
+                },
+            'ipv6_refresh_intvl': {
+                'type': 'int',
+                }
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'oper': {
+            'type': 'str',
+            'required': False,
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -323,6 +458,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["domain-list-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["domain-list"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

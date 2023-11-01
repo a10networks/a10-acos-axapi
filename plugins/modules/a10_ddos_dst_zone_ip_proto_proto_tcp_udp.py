@@ -103,11 +103,26 @@ options:
         - "Set T2 counter value of current context to specified value"
         type: int
         required: False
+    ip_filtering_policy:
+        description:
+        - "Configure IP Filter"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    ip_filtering_policy_oper:
+        description:
+        - "Field ip_filtering_policy_oper"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -206,6 +221,10 @@ options:
                 description:
                 - "'tcp'= ip-proto tcp; 'udp'= ip-proto udp;"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
 
 '''
 
@@ -260,7 +279,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["deny", "drop_frag_pkt", "glid_cfg", "oper", "protocol", "set_counter_base_val", "uuid", ]
+AVAILABLE_PROPERTIES = ["deny", "drop_frag_pkt", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "oper", "protocol", "set_counter_base_val", "uuid", ]
 
 
 def get_default_argspec():
@@ -311,8 +330,17 @@ def get_argspec():
         'set_counter_base_val': {
             'type': 'int',
             },
+        'ip_filtering_policy': {
+            'type': 'str',
+            },
         'uuid': {
             'type': 'str',
+            },
+        'ip_filtering_policy_oper': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
             },
         'oper': {
             'type': 'dict',
@@ -461,6 +489,21 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'rule_list': {
+                        'type': 'list',
+                        'seq': {
+                            'type': 'int',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            }
+                        }
+                    }
                 }
             }
         })

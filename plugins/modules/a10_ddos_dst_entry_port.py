@@ -173,6 +173,11 @@ options:
         - "Set T2 counter value of current context to specified value"
         type: int
         required: False
+    ip_filtering_policy:
+        description:
+        - "Configure IP Filter"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -197,6 +202,16 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    ip_filtering_policy_oper:
+        description:
+        - "Field ip_filtering_policy_oper"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     topk_sources:
         description:
         - "Field topk_sources"
@@ -368,6 +383,10 @@ options:
                 description:
                 - "Field port_ind"
                 type: dict
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             topk_sources:
                 description:
                 - "Field topk_sources"
@@ -439,8 +458,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "capture_config", "deny", "detection_enable", "dns_cache", "enable_top_k", "glid", "glid_exceed_action", "oper", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_num", "progression_tracking", "protocol", "set_counter_base_val", "sflow", "signature_extraction", "template", "topk_num_records", "topk_sources", "user_tag",
-    "uuid",
+    "capture_config", "deny", "detection_enable", "dns_cache", "enable_top_k", "glid", "glid_exceed_action", "ip_filtering_policy", "ip_filtering_policy_oper", "oper", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_num", "progression_tracking", "protocol", "set_counter_base_val", "sflow", "signature_extraction",
+    "template", "topk_num_records", "topk_sources", "user_tag", "uuid",
     ]
 
 
@@ -557,6 +576,9 @@ def get_argspec():
         'set_counter_base_val': {
             'type': 'int',
             },
+        'ip_filtering_policy': {
+            'type': 'str',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -582,6 +604,12 @@ def get_argspec():
                         'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max'
                         ]
                     }
+                }
+            },
+        'ip_filtering_policy_oper': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
                 }
             },
         'topk_sources': {
@@ -851,6 +879,21 @@ def get_argspec():
                         }
                     }
                 },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'rule_list': {
+                        'type': 'list',
+                        'seq': {
+                            'type': 'int',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            }
+                        }
+                    }
+                },
             'topk_sources': {
                 'type': 'dict',
                 'oper': {
@@ -872,12 +915,6 @@ def get_argspec():
                                 'type': 'str',
                                 }
                             }
-                        },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
                         },
                     'entry_list': {
                         'type': 'list',
@@ -902,6 +939,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',

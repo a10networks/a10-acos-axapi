@@ -198,11 +198,26 @@ options:
         - "De-escalate faster in standalone mode"
         type: bool
         required: False
+    ip_filtering_policy:
+        description:
+        - "Configure IP Filter"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    ip_filtering_policy_oper:
+        description:
+        - "Field ip_filtering_policy_oper"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     pattern_recognition:
         description:
         - "Field pattern_recognition"
@@ -563,6 +578,10 @@ options:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
                 type: str
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             pattern_recognition:
                 description:
                 - "Field pattern_recognition"
@@ -642,8 +661,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "apply_policy_on_overflow", "default_action_list", "deny", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "level_list", "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition",
-    "pattern_recognition_pu_details", "port_ind", "port_other", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_packets", "sflow_tcp", "src_based_policy_list", "stateful", "topk_destinations", "topk_dst_num_records", "topk_num_records", "topk_sources", "unlimited_dynamic_entry_count", "uuid",
+    "age", "apply_policy_on_overflow", "default_action_list", "deny", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "level_list", "manual_mode_enable", "manual_mode_list",
+    "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_other", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_packets", "sflow_tcp", "src_based_policy_list", "stateful", "topk_destinations", "topk_dst_num_records", "topk_num_records",
+    "topk_sources", "unlimited_dynamic_entry_count", "uuid",
     ]
 
 
@@ -754,8 +774,17 @@ def get_argspec():
         'faster_de_escalation': {
             'type': 'bool',
             },
+        'ip_filtering_policy': {
+            'type': 'str',
+            },
         'uuid': {
             'type': 'str',
+            },
+        'ip_filtering_policy_oper': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
             },
         'pattern_recognition': {
             'type': 'dict',
@@ -867,6 +896,9 @@ def get_argspec():
                 'src_threshold_num': {
                     'type': 'int',
                     },
+                'src_threshold_large_num': {
+                    'type': 'int',
+                    },
                 'src_threshold_str': {
                     'type': 'str',
                     },
@@ -874,6 +906,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'zone_threshold_num': {
+                    'type': 'int',
+                    },
+                'zone_threshold_large_num': {
                     'type': 'int',
                     },
                 'zone_threshold_str': {
@@ -1008,9 +1043,6 @@ def get_argspec():
                         'type': 'str',
                         },
                     'encap': {
-                        'type': 'str',
-                        },
-                    'ips': {
                         'type': 'str',
                         },
                     'logging': {
@@ -1155,6 +1187,12 @@ def get_argspec():
                     },
                 'level': {
                     'type': 'int',
+                    },
+                'bl_reasoning_rcode': {
+                    'type': 'str',
+                    },
+                'bl_reasoning_timestamp': {
+                    'type': 'str',
                     },
                 'current_connections': {
                     'type': 'str',
@@ -1367,6 +1405,21 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
+                },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'rule_list': {
+                        'type': 'list',
+                        'seq': {
+                            'type': 'int',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            }
+                        }
+                    }
                 },
             'pattern_recognition': {
                 'type': 'dict',
@@ -1632,12 +1685,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -1661,6 +1708,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',
@@ -1734,12 +1787,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -1763,6 +1810,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',

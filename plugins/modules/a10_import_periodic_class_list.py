@@ -65,6 +65,11 @@ options:
         - "Customized tag"
         type: str
         required: False
+    background:
+        description:
+        - "background mode for importing class-list"
+        type: bool
+        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -139,7 +144,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list", "period", "remote_file", "use_mgmt_port", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["background", "class_list", "period", "remote_file", "use_mgmt_port", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -159,7 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'class_list': {'type': 'str', 'required': True, }, 'user_tag': {'type': 'str', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'class_list': {'type': 'str', 'required': True, }, 'user_tag': {'type': 'str', }, 'background': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

@@ -781,6 +781,18 @@ def get_argspec():
                     },
                 'unauth_src_session_reset': {
                     'type': 'str',
+                    },
+                'src_hw_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_drop': {
+                    'type': 'str',
+                    },
+                'addr_filter_bl': {
+                    'type': 'str',
+                    },
+                'src_learn_overflow': {
+                    'type': 'str',
                     }
                 }
             }

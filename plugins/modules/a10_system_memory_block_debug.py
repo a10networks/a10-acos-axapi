@@ -94,6 +94,44 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            a10_mem_id_max:
+                description:
+                - "Field a10_mem_id_max"
+                type: int
+            block_debug_arr_zero:
+                description:
+                - "Field block_debug_arr_zero"
+                type: str
+            block_debug_arr_one:
+                description:
+                - "Field block_debug_arr_one"
+                type: str
+            block_debug_arr_two:
+                description:
+                - "Field block_debug_arr_two"
+                type: str
+            block_debug_arr_three:
+                description:
+                - "Field block_debug_arr_three"
+                type: str
+            all_everything:
+                description:
+                - "Field all_everything"
+                type: list
+            thread_id:
+                description:
+                - "Field thread_id"
+                type: int
+            a10_mem:
+                description:
+                - "Field a10_mem"
+                type: list
 
 '''
 
@@ -148,7 +186,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["assert_block", "first_blk", "fourth_blk", "pktdump_block", "second_blk", "third_blk", "uuid", ]
+AVAILABLE_PROPERTIES = ["assert_block", "first_blk", "fourth_blk", "oper", "pktdump_block", "second_blk", "third_blk", "uuid", ]
 
 
 def get_default_argspec():
@@ -168,7 +206,152 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'assert_block': {'type': 'int', }, 'pktdump_block': {'type': 'bool', }, 'first_blk': {'type': 'int', }, 'second_blk': {'type': 'int', }, 'third_blk': {'type': 'int', }, 'fourth_blk': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'assert_block': {
+            'type': 'int',
+            },
+        'pktdump_block': {
+            'type': 'bool',
+            },
+        'first_blk': {
+            'type': 'int',
+            },
+        'second_blk': {
+            'type': 'int',
+            },
+        'third_blk': {
+            'type': 'int',
+            },
+        'fourth_blk': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'oper': {
+            'type': 'dict',
+            'a10_mem_id_max': {
+                'type': 'int',
+                },
+            'block_debug_arr_zero': {
+                'type': 'str',
+                },
+            'block_debug_arr_one': {
+                'type': 'str',
+                },
+            'block_debug_arr_two': {
+                'type': 'str',
+                },
+            'block_debug_arr_three': {
+                'type': 'str',
+                },
+            'all_everything': {
+                'type': 'list',
+                'id': {
+                    'type': 'int',
+                    },
+                'module_name': {
+                    'type': 'str',
+                    },
+                'alloc_zero': {
+                    'type': 'int',
+                    },
+                'alloc_one': {
+                    'type': 'int',
+                    },
+                'alloc_two': {
+                    'type': 'int',
+                    },
+                'alloc_three': {
+                    'type': 'int',
+                    },
+                'free_four': {
+                    'type': 'int',
+                    },
+                'free_five': {
+                    'type': 'int',
+                    },
+                'free_six': {
+                    'type': 'int',
+                    },
+                'free_seven': {
+                    'type': 'int',
+                    },
+                'block_debug_alloc_over': {
+                    'type': 'int',
+                    },
+                'block_debug_free_over': {
+                    'type': 'int',
+                    },
+                'block_debug_alloc_max_over': {
+                    'type': 'int',
+                    },
+                'debug_decision_over_size': {
+                    'type': 'int',
+                    },
+                'debug_decision_alloc': {
+                    'type': 'int',
+                    },
+                'debug_decision_free': {
+                    'type': 'int',
+                    }
+                },
+            'thread_id': {
+                'type': 'int',
+                },
+            'a10_mem': {
+                'type': 'list',
+                't_id': {
+                    'type': 'int',
+                    },
+                't_module_name': {
+                    'type': 'str',
+                    },
+                't_alloc_zero': {
+                    'type': 'int',
+                    },
+                't_alloc_one': {
+                    'type': 'int',
+                    },
+                't_alloc_two': {
+                    'type': 'int',
+                    },
+                't_alloc_three': {
+                    'type': 'int',
+                    },
+                't_free_four': {
+                    'type': 'int',
+                    },
+                't_free_five': {
+                    'type': 'int',
+                    },
+                't_free_six': {
+                    'type': 'int',
+                    },
+                't_free_seven': {
+                    'type': 'int',
+                    },
+                't_block_debug_alloc_over': {
+                    'type': 'int',
+                    },
+                't_block_debug_free_over': {
+                    'type': 'int',
+                    },
+                't_block_debug_alloc_max_over': {
+                    'type': 'int',
+                    },
+                't_debug_decision_over_size': {
+                    'type': 'int',
+                    },
+                't_debug_decision_alloc': {
+                    'type': 'int',
+                    },
+                't_debug_decision_free': {
+                    'type': 'int',
+                    }
+                }
+            }
+        })
     return rv
 
 
@@ -328,6 +511,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["memory-block-debug-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["memory-block-debug"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

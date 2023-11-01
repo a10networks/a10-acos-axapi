@@ -241,8 +241,8 @@ options:
         required: False
     traffic_distribution_mode:
         description:
-        - "'sip'= sip; 'dip'= dip; 'l3-lookup'= l3-lookup; 'primary'= primary; 'blade'=
-          blade; 'l4-src-port'= l4-src-port; 'l4-dst-port'= l4-dst-port;"
+        - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'=
+          l4-src-port; 'l4-dst-port'= l4-dst-port;"
         type: str
         required: False
     virtual_wire:
@@ -280,6 +280,11 @@ options:
                 description:
                 - "Apply an access list (Named Access List)"
                 type: str
+    gaming_protocol_compliance:
+        description:
+        - "Enable Gaming Protocol Compliance Check"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -309,9 +314,8 @@ options:
           Output Giants; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'=
           Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec;
           'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval;
-          'transmit_drops'= Transmit Drops; 'receive_drops'= Receive Drops;
-          'input_utilization'= Input Utilization; 'output_utilization'= Output
-          Utilization;"
+          'drops'= Drops; 'input_utilization'= Input Utilization; 'output_utilization'=
+          Output Utilization;"
                 type: str
     packet_capture_template:
         description:
@@ -427,10 +431,6 @@ options:
             server:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
-                type: bool
-            dmz:
-                description:
-                - "DMZ network facing interface for IPv4/v6 traffic"
                 type: bool
             unnumbered:
                 description:
@@ -1052,13 +1052,9 @@ options:
                 description:
                 - "Load Interval"
                 type: str
-            transmit_drops:
+            drops:
                 description:
-                - "Transmit Drops"
-                type: str
-            receive_drops:
-                description:
-                - "Receive Drops"
+                - "Drops"
                 type: str
             input_utilization:
                 description:
@@ -1127,9 +1123,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "access_list", "action", "auto_neg_enable", "bfd", "cpu_process", "cpu_process_dir", "ddos", "duplexity", "fec_forced_off", "fec_forced_on", "flow_control", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipg_bit_time", "ipv6", "isis", "l3_vlan_fwd_disable", "lldp", "load_interval", "lw_4o6", "mac_learning", "map", "media_type_copper",
-    "monitor_list", "mtu", "name", "nptv6", "oper", "packet_capture_template", "ping_sweep_detection", "port_breakout", "port_scan_detection", "remove_vlan_tag", "sampling_enable", "spanning_tree", "speed", "speed_forced_10g", "speed_forced_1g", "speed_forced_40g", "stats", "traffic_distribution_mode", "trap_source", "trunk_group_list",
-    "update_l2_info", "user_tag", "uuid", "virtual_wire", "vlan_learning",
+    "access_list", "action", "auto_neg_enable", "bfd", "cpu_process", "cpu_process_dir", "ddos", "duplexity", "fec_forced_off", "fec_forced_on", "flow_control", "gaming_protocol_compliance", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipg_bit_time", "ipv6", "isis", "l3_vlan_fwd_disable", "lldp", "load_interval", "lw_4o6",
+    "mac_learning", "map", "media_type_copper", "monitor_list", "mtu", "name", "nptv6", "oper", "packet_capture_template", "ping_sweep_detection", "port_breakout", "port_scan_detection", "remove_vlan_tag", "sampling_enable", "spanning_tree", "speed", "speed_forced_10g", "speed_forced_1g", "speed_forced_40g", "stats", "traffic_distribution_mode",
+    "trap_source", "trunk_group_list", "update_l2_info", "user_tag", "uuid", "virtual_wire", "vlan_learning",
     ]
 
 
@@ -1270,7 +1266,7 @@ def get_argspec():
             },
         'traffic_distribution_mode': {
             'type': 'str',
-            'choices': ['sip', 'dip', 'l3-lookup', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
+            'choices': ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
             },
         'virtual_wire': {
             'type': 'bool',
@@ -1295,6 +1291,9 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'gaming_protocol_compliance': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -1308,7 +1307,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'runts', 'giants', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts', 'output_errors', 'collisions', 'giants_output',
-                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval', 'transmit_drops', 'receive_drops', 'input_utilization', 'output_utilization'
+                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd', 'rate_byte_rcvd', 'load_interval', 'drops', 'input_utilization', 'output_utilization'
                     ]
                 }
             },
@@ -1444,9 +1443,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
-                'type': 'bool',
-                },
-            'dmz': {
                 'type': 'bool',
                 },
             'unnumbered': {
@@ -2573,10 +2569,7 @@ def get_argspec():
             'load_interval': {
                 'type': 'str',
                 },
-            'transmit_drops': {
-                'type': 'str',
-                },
-            'receive_drops': {
+            'drops': {
                 'type': 'str',
                 },
             'input_utilization': {

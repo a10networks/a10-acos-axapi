@@ -126,6 +126,10 @@ options:
                 description:
                 - "Field icmp"
                 type: bool
+            icmpv6:
+                description:
+                - "Field icmpv6"
+                type: bool
             src_port:
                 description:
                 - "Field src_port"
@@ -267,6 +271,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'icmp': {
+                'type': 'bool',
+                },
+            'icmpv6': {
                 'type': 'bool',
                 },
             'src_port': {

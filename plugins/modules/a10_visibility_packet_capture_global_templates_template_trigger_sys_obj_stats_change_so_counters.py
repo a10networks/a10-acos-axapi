@@ -60,11 +60,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    dummy:
-        description:
-        - "dummy to make intermediate obj to single"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -137,10 +132,6 @@ options:
             so_pkts_l2redirect_port_retrieval_error:
                 description:
                 - "Enable automatic packet-capture for L2 redirect pkt port not retrieved"
-                type: bool
-            so_pkts_l2redirect_loop_detect_drop:
-                description:
-                - "Enable automatic packet-capture for L2 redirect pkt loop detected and dropped"
                 type: bool
             uuid:
                 description:
@@ -223,10 +214,6 @@ options:
                 description:
                 - "Enable automatic packet-capture for L2 redirect pkt port not retrieved"
                 type: bool
-            so_pkts_l2redirect_loop_detect_drop:
-                description:
-                - "Enable automatic packet-capture for L2 redirect pkt loop detected and dropped"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -285,7 +272,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -306,9 +293,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dummy': {
-            'type': 'bool',
-            },
         'uuid': {
             'type': 'str',
             },
@@ -354,9 +338,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'so_pkts_l2redirect_port_retrieval_error': {
-                'type': 'bool',
-                },
-            'so_pkts_l2redirect_loop_detect_drop': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -411,9 +392,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'so_pkts_l2redirect_port_retrieval_error': {
-                'type': 'bool',
-                },
-            'so_pkts_l2redirect_loop_detect_drop': {
                 'type': 'bool',
                 },
             'uuid': {

@@ -211,16 +211,6 @@ options:
         - "Set T2 counter value of current context to specified value"
         type: int
         required: False
-    zone_template:
-        description:
-        - "Field zone_template"
-        type: dict
-        required: False
-        suboptions:
-            ips:
-                description:
-                - "IPS template"
-                type: str
     outbound_only:
         description:
         - "Only allow outbound traffic"
@@ -230,6 +220,11 @@ options:
         description:
         - "De-escalate faster in standalone mode"
         type: bool
+        required: False
+    ip_filtering_policy:
+        description:
+        - "Configure IP Filter"
+        type: str
         required: False
     uuid:
         description:
@@ -301,6 +296,16 @@ options:
     pattern_recognition_pu_details:
         description:
         - "Field pattern_recognition_pu_details"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ip_filtering_policy_oper:
+        description:
+        - "Field ip_filtering_policy_oper"
         type: dict
         required: False
         suboptions:
@@ -646,6 +651,10 @@ options:
                 description:
                 - "Field pattern_recognition_pu_details"
                 type: dict
+            ip_filtering_policy_oper:
+                description:
+                - "Field ip_filtering_policy_oper"
+                type: dict
             ips:
                 description:
                 - "Field ips"
@@ -721,9 +730,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "apply_policy_on_overflow", "capture_config", "default_action_list", "deny", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ips", "level_list", "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "outbound_only",
-    "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_num", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_http", "sflow_packets", "sflow_tcp", "signature_extraction", "src_based_policy_list", "stateful", "topk_destinations", "topk_dst_num_records", "topk_num_records", "topk_sources",
-    "unlimited_dynamic_entry_count", "uuid", "zone_template",
+    "age", "apply_policy_on_overflow", "capture_config", "default_action_list", "deny", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "ips", "level_list", "manual_mode_enable", "manual_mode_list",
+    "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_num", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_http", "sflow_packets", "sflow_tcp", "signature_extraction", "src_based_policy_list", "stateful", "topk_destinations",
+    "topk_dst_num_records", "topk_num_records", "topk_sources", "unlimited_dynamic_entry_count", "uuid",
     ]
 
 
@@ -840,17 +849,14 @@ def get_argspec():
         'set_counter_base_val': {
             'type': 'int',
             },
-        'zone_template': {
-            'type': 'dict',
-            'ips': {
-                'type': 'str',
-                }
-            },
         'outbound_only': {
             'type': 'bool',
             },
         'faster_de_escalation': {
             'type': 'bool',
+            },
+        'ip_filtering_policy': {
+            'type': 'str',
             },
         'uuid': {
             'type': 'str',
@@ -904,6 +910,12 @@ def get_argspec():
                 }
             },
         'pattern_recognition_pu_details': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ip_filtering_policy_oper': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
@@ -999,11 +1011,17 @@ def get_argspec():
                 'src_threshold_num': {
                     'type': 'int',
                     },
+                'src_threshold_large_num': {
+                    'type': 'int',
+                    },
                 'src_threshold_str': {
                     'type': 'str',
                     },
                 'src_violation_actions': {
                     'type': 'str',
+                    },
+                'zone_threshold_large_num': {
+                    'type': 'int',
                     },
                 'zone_threshold_num': {
                     'type': 'int',
@@ -1195,9 +1213,6 @@ def get_argspec():
                     'encap': {
                         'type': 'str',
                         },
-                    'ips': {
-                        'type': 'str',
-                        },
                     'logging': {
                         'type': 'str',
                         }
@@ -1346,6 +1361,12 @@ def get_argspec():
                     },
                 'level': {
                     'type': 'int',
+                    },
+                'bl_reasoning_rcode': {
+                    'type': 'str',
+                    },
+                'bl_reasoning_timestamp': {
+                    'type': 'str',
                     },
                 'current_connections': {
                     'type': 'str',
@@ -1687,6 +1708,21 @@ def get_argspec():
                         }
                     }
                 },
+            'ip_filtering_policy_oper': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'rule_list': {
+                        'type': 'list',
+                        'seq': {
+                            'type': 'int',
+                            },
+                        'hits': {
+                            'type': 'int',
+                            }
+                        }
+                    }
+                },
             'ips': {
                 'type': 'dict',
                 'oper': {
@@ -1867,12 +1903,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -1896,6 +1926,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',
@@ -1969,12 +2005,6 @@ def get_argspec():
                                 }
                             }
                         },
-                    'next_indicator': {
-                        'type': 'int',
-                        },
-                    'finished': {
-                        'type': 'int',
-                        },
                     'entry_list': {
                         'type': 'list',
                         'address_str': {
@@ -1998,6 +2028,12 @@ def get_argspec():
                                 'type': 'int',
                                 }
                             }
+                        },
+                    'next_indicator': {
+                        'type': 'int',
+                        },
+                    'finished': {
+                        'type': 'int',
                         },
                     'details': {
                         'type': 'bool',

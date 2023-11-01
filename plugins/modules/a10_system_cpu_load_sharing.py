@@ -98,6 +98,11 @@ options:
         - "Disallow redistribution of new UDP sessions"
         type: bool
         required: False
+    others:
+        description:
+        - "Disallow redistribution of new non TCP/UDP IP sessions"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -157,7 +162,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cpu_usage", "disable", "packets_per_second", "tcp", "udp", "uuid", ]
+AVAILABLE_PROPERTIES = ["cpu_usage", "disable", "others", "packets_per_second", "tcp", "udp", "uuid", ]
 
 
 def get_default_argspec():
@@ -177,7 +182,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'disable': {'type': 'bool', }, 'packets_per_second': {'type': 'dict', 'min': {'type': 'int', }}, 'cpu_usage': {'type': 'dict', 'low': {'type': 'int', }, 'high': {'type': 'int', }}, 'tcp': {'type': 'bool', }, 'udp': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'disable': {'type': 'bool', }, 'packets_per_second': {'type': 'dict', 'min': {'type': 'int', }}, 'cpu_usage': {'type': 'dict', 'low': {'type': 'int', }, 'high': {'type': 'int', }}, 'tcp': {'type': 'bool', }, 'udp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

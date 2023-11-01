@@ -76,10 +76,6 @@ options:
         type: dict
         required: False
         suboptions:
-            single_node_mode:
-                description:
-                - "Enable single node status trap"
-                type: bool
             election:
                 description:
                 - "Enable election status trap"
@@ -222,9 +218,6 @@ def get_argspec():
             },
         'cluster': {
             'type': 'dict',
-            'single_node_mode': {
-                'type': 'bool',
-                },
             'election': {
                 'type': 'bool',
                 },

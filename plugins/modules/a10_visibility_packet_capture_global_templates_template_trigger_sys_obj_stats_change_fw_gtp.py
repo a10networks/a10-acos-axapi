@@ -60,11 +60,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    dummy:
-        description:
-        - "dummy to make intermediate obj to single"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -84,9 +79,9 @@ options:
                 description:
                 - "Enable automatic packet-capture for GTP SMP PATH check Failed"
                 type: bool
-            gtp_smp_c_check_failed:
+            gtp_smp_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP C-SMP check Failed"
+                - "Enable automatic packet-capture for GTP SMP check Failed"
                 type: bool
             gtp_smp_session_count_check_failed:
                 description:
@@ -99,7 +94,7 @@ options:
                 type: bool
             gtp_u_smp_in_rml_with_sess:
                 description:
-                - "Enable automatic packet-capture for GTP-U smp is linked when C-smp is in rml"
+                - "Enable automatic packet-capture for GTP-U smp is marked RML with U-session"
                 type: bool
             gtp_tunnel_rate_limit_entry_create_fail:
                 description:
@@ -122,26 +117,6 @@ options:
             gtp_smp_dec_sess_count_check_failed:
                 description:
                 - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
-                type: bool
-            gtp_u_smp_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP U-SMP check Failed"
-                type: bool
-            gtp_info_ext_not_found:
-                description:
-                - "Enable automatic packet-capture for GTP-Info ext not found while freeing C-smp"
-                type: bool
-            gtp_c_smp_unlink_from_hash_fail:
-                description:
-                - "Enable automatic packet-capture for GTP-C smp unlink from hash table failed"
-                type: bool
-            gtp_u_smp_unlink_from_hash_fail:
-                description:
-                - "Enable automatic packet-capture for GTP-U smp unlink from hash table failed"
-                type: bool
-            gtp_smp_link_to_hash_in_rml:
-                description:
-                - "Enable automatic packet-capture for GTP smp linked to hash table when in rml"
                 type: bool
             uuid:
                 description:
@@ -170,9 +145,9 @@ options:
                 description:
                 - "Enable automatic packet-capture for GTP SMP PATH check Failed"
                 type: bool
-            gtp_smp_c_check_failed:
+            gtp_smp_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP C-SMP check Failed"
+                - "Enable automatic packet-capture for GTP SMP check Failed"
                 type: bool
             gtp_smp_session_count_check_failed:
                 description:
@@ -185,7 +160,7 @@ options:
                 type: bool
             gtp_u_smp_in_rml_with_sess:
                 description:
-                - "Enable automatic packet-capture for GTP-U smp is linked when C-smp is in rml"
+                - "Enable automatic packet-capture for GTP-U smp is marked RML with U-session"
                 type: bool
             gtp_tunnel_rate_limit_entry_create_fail:
                 description:
@@ -208,26 +183,6 @@ options:
             gtp_smp_dec_sess_count_check_failed:
                 description:
                 - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
-                type: bool
-            gtp_u_smp_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP U-SMP check Failed"
-                type: bool
-            gtp_info_ext_not_found:
-                description:
-                - "Enable automatic packet-capture for GTP-Info ext not found while freeing C-smp"
-                type: bool
-            gtp_c_smp_unlink_from_hash_fail:
-                description:
-                - "Enable automatic packet-capture for GTP-C smp unlink from hash table failed"
-                type: bool
-            gtp_u_smp_unlink_from_hash_fail:
-                description:
-                - "Enable automatic packet-capture for GTP-U smp unlink from hash table failed"
-                type: bool
-            gtp_smp_link_to_hash_in_rml:
-                description:
-                - "Enable automatic packet-capture for GTP smp linked to hash table when in rml"
                 type: bool
             uuid:
                 description:
@@ -287,7 +242,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -308,9 +263,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dummy': {
-            'type': 'bool',
-            },
         'uuid': {
             'type': 'str',
             },
@@ -322,7 +274,7 @@ def get_argspec():
             'gtp_smp_path_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_smp_c_check_failed': {
+            'gtp_smp_check_failed': {
                 'type': 'bool',
                 },
             'gtp_smp_session_count_check_failed': {
@@ -347,21 +299,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'gtp_smp_dec_sess_count_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_info_ext_not_found': {
-                'type': 'bool',
-                },
-            'gtp_c_smp_unlink_from_hash_fail': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_unlink_from_hash_fail': {
-                'type': 'bool',
-                },
-            'gtp_smp_link_to_hash_in_rml': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -382,7 +319,7 @@ def get_argspec():
             'gtp_smp_path_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_smp_c_check_failed': {
+            'gtp_smp_check_failed': {
                 'type': 'bool',
                 },
             'gtp_smp_session_count_check_failed': {
@@ -407,21 +344,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'gtp_smp_dec_sess_count_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_info_ext_not_found': {
-                'type': 'bool',
-                },
-            'gtp_c_smp_unlink_from_hash_fail': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_unlink_from_hash_fail': {
-                'type': 'bool',
-                },
-            'gtp_smp_link_to_hash_in_rml': {
                 'type': 'bool',
                 },
             'uuid': {

@@ -55,11 +55,6 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    ca_str:
-        description:
-        - "CA Certificate Name"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -119,7 +114,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ca_str", "uuid", ]
+AVAILABLE_PROPERTIES = ["uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +134,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ca_str': {'type': 'str', }, 'uuid': {'type': 'str', }})
+    rv.update({'uuid': {'type': 'str', }})
     return rv
 
 
@@ -163,23 +158,10 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config, payload):
-    change_results = copy.deepcopy(result)
-    if not existing_config:
-        change_results["modified_values"].update(**payload)
-        return change_results
-
-    config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["syslog-over-tls"].items():
-        v = 1 if str(v).lower() == "true" else v
-        v = 0 if str(v).lower() == "false" else v
-
-        if config_changes["syslog-over-tls"].get(k) != v:
-            change_results["changed"] = True
-            config_changes["syslog-over-tls"][k] = v
-
-    change_results["modified_values"].update(**config_changes)
-    return change_results
+def report_changes(module, result, existing_config):
+    if existing_config:
+        result["changed"] = True
+    return result
 
 
 def create(module, result, payload={}):

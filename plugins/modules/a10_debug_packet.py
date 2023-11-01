@@ -101,11 +101,6 @@ options:
         - "ARP"
         type: bool
         required: False
-    all:
-        description:
-        - "All"
-        type: bool
-        required: False
     all_ipv4:
         description:
         - "All"
@@ -245,7 +240,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all", "all_ipv4", "all_ipv6", "all_sctp_ports", "all_tcp_ports", "all_udp_ports", "arp", "count", "detail", "ethernet", "icmp", "icmpv6", "interface", "ip", "ipv4ad", "ipv6", "ipv6ad", "l3_protocol", "l4_protocol", "neighbor", "port_range", "sctp", "tcp", "timestamp", "udp", "uuid", "ve", ]
+AVAILABLE_PROPERTIES = ["all_ipv4", "all_ipv6", "all_sctp_ports", "all_tcp_ports", "all_udp_ports", "arp", "count", "detail", "ethernet", "icmp", "icmpv6", "interface", "ip", "ipv4ad", "ipv6", "ipv6ad", "l3_protocol", "l4_protocol", "neighbor", "port_range", "sctp", "tcp", "timestamp", "udp", "uuid", "ve", ]
 
 
 def get_default_argspec():
@@ -291,9 +286,6 @@ def get_argspec():
             'type': 'int',
             },
         'arp': {
-            'type': 'bool',
-            },
-        'all': {
             'type': 'bool',
             },
         'all_ipv4': {

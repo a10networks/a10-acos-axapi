@@ -354,6 +354,9 @@ def get_argspec():
                 'threshold_num': {
                     'type': 'int',
                     },
+                'threshold_large_num': {
+                    'type': 'int',
+                    },
                 'threshold_str': {
                     'type': 'str',
                     },

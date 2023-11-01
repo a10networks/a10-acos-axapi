@@ -214,6 +214,82 @@ options:
                 description:
                 - "Dst IP Entry Aged"
                 type: str
+            n_subnet_learned:
+                description:
+                - "Subnet Entry of Network-object learned"
+                type: str
+            n_subnet_aged:
+                description:
+                - "Subnet Entry of Network-object Aged"
+                type: str
+            n_ip_learned:
+                description:
+                - "IP Entry of Network-object Learned"
+                type: str
+            n_ip_aged:
+                description:
+                - "IP Entry of Network-object Aged"
+                type: str
+            n_service_learned:
+                description:
+                - "Service Entry of Network-object Learned"
+                type: str
+            n_service_aged:
+                description:
+                - "Service Entry of Network-object Aged"
+                type: str
+            network_match_miss:
+                description:
+                - "Network-object Match Missed"
+                type: str
+            session_match_miss:
+                description:
+                - "Session Match Missed"
+                type: str
+            session_allocate_fail:
+                description:
+                - "Session Allocate Failed"
+                type: str
+            session_learned:
+                description:
+                - "Session Learned"
+                type: str
+            session_aged:
+                description:
+                - "Session Aged"
+                type: str
+            src_port_hit:
+                description:
+                - "Src Port Entry Hit"
+                type: str
+            src_port_miss:
+                description:
+                - "Src Port Entry Missed"
+                type: str
+            src_port_learn:
+                description:
+                - "Src Port Entry Learned"
+                type: str
+            src_port_age:
+                description:
+                - "Src Port Entry Aged"
+                type: str
+            n_service_not_found:
+                description:
+                - "Service Entry of Network-object Not Found"
+                type: str
+            n_subnet_create_fail:
+                description:
+                - "Subnet Entry of Network-object Create Failed"
+                type: str
+            n_ip_create_fail:
+                description:
+                - "IP Entry of Network-object Create Failed"
+                type: str
+            n_service_create_fail:
+                description:
+                - "Service Entry of Network-object Create Failed"
+                type: str
 
 '''
 
@@ -403,6 +479,63 @@ def get_argspec():
                 'type': 'str',
                 },
             'dst_ip_age': {
+                'type': 'str',
+                },
+            'n_subnet_learned': {
+                'type': 'str',
+                },
+            'n_subnet_aged': {
+                'type': 'str',
+                },
+            'n_ip_learned': {
+                'type': 'str',
+                },
+            'n_ip_aged': {
+                'type': 'str',
+                },
+            'n_service_learned': {
+                'type': 'str',
+                },
+            'n_service_aged': {
+                'type': 'str',
+                },
+            'network_match_miss': {
+                'type': 'str',
+                },
+            'session_match_miss': {
+                'type': 'str',
+                },
+            'session_allocate_fail': {
+                'type': 'str',
+                },
+            'session_learned': {
+                'type': 'str',
+                },
+            'session_aged': {
+                'type': 'str',
+                },
+            'src_port_hit': {
+                'type': 'str',
+                },
+            'src_port_miss': {
+                'type': 'str',
+                },
+            'src_port_learn': {
+                'type': 'str',
+                },
+            'src_port_age': {
+                'type': 'str',
+                },
+            'n_service_not_found': {
+                'type': 'str',
+                },
+            'n_subnet_create_fail': {
+                'type': 'str',
+                },
+            'n_ip_create_fail': {
+                'type': 'str',
+                },
+            'n_service_create_fail': {
                 'type': 'str',
                 }
             }

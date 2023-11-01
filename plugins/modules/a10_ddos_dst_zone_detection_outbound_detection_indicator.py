@@ -89,6 +89,11 @@ options:
         - "Threshold for each geo-location"
         type: int
         required: False
+    threshold_large_num:
+        description:
+        - "Threshold for each geo-location"
+        type: int
+        required: False
     threshold_str:
         description:
         - "Threshold for each geo-location (Non-zero floating point)"
@@ -158,7 +163,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["data_packet_size", "tcp_window_size", "threshold_num", "threshold_str", "ntype", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["data_packet_size", "tcp_window_size", "threshold_large_num", "threshold_num", "threshold_str", "ntype", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -191,6 +196,9 @@ def get_argspec():
             'type': 'int',
             },
         'threshold_num': {
+            'type': 'int',
+            },
+        'threshold_large_num': {
             'type': 'int',
             },
         'threshold_str': {

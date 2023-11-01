@@ -104,9 +104,7 @@ options:
           (ID= 33034); 'rule-set-name'= Rule-Set Name (ID= 33035); 'fw-source-zone'=
           Firewall Source Zone Name (ID= 33036); 'fw-dest-zone'= Firewall Dest Zone Name
           (ID= 33037); 'application-id'= Application ID (ID= 95); 'application-name'=
-          Application Name (ID= 96); 'application-category-name'= Application First Level
-          Category Name (ID= 372); 'application-subcategory-name'= Application Second
-          Level Category Name (ID= 373); 'imsi'= Subscriber Attribute IMSI (ID= 455);
+          Application Name (ID= 96); 'imsi'= Subscriber Attribute IMSI (ID= 455);
           'msisdn'= Subscriber Attribute MSISDN (ID= 456); 'imei'= Subscriber Attribute
           IMEI (ID= 33030); 'radius-custom1'= Radius Attribute Custom 1 (ID= 33031);
           'radius-custom2'= Radius Attribute Custom 2(ID= 33032); 'radius-custom3'=
@@ -253,10 +251,10 @@ def get_argspec():
                 'choices': [
                     'fwd-tuple-vnp-id', 'rev-tuple-vnp-id', 'source-ipv4-address', 'source-ipv4-prefix-len', 'dest-ipv4-address', 'dest-ipv4-prefix-len', 'source-ipv6-address', 'source-ipv6-prefix-len', 'dest-ipv6-address', 'dest-ipv6-prefix-len', 'post-nat-source-ipv4-address', 'post-nat-dest-ipv4-address', 'post-nat-source-ipv6-address',
                     'post-nat-dest-ipv6-address', 'source-port', 'dest-port', 'post-nat-source-port', 'post-nat-dest-port', 'fwd-tuple-type', 'rev-tuple-type', 'ip-proto', 'flow-direction', 'tcp-control-bits', 'fwd-bytes', 'fwd-packets', 'rev-bytes', 'rev-packets', 'in-port', 'out-port', 'in-interface', 'out-interface', 'port-range-start',
-                    'port-range-end', 'port-range-step-size', 'port-range-num-ports', 'rule-name', 'rule-set-name', 'fw-source-zone', 'fw-dest-zone', 'application-id', 'application-name', 'application-category-name', 'application-subcategory-name', 'imsi', 'msisdn', 'imei', 'radius-custom1', 'radius-custom2', 'radius-custom3', 'radius-custom4',
-                    'radius-custom5', 'radius-custom6', 'flow-start-msec', 'flow-duration-msec', 'flow-duration-msec-64', 'flow-end-msec', 'nat-event', 'fw-event', 'fw-deny-reset-event', 'cgn-flow-direction', 'fw-dest-fqdn', 'flow-end-reason', 'gtp-deny-reason', 'gtp-apn', 'gtp-steid', 'gtp-dteid', 'gtp-selection-mode', 'gtp-mcc', 'gtp-mnc',
-                    'gtp-rat-type', 'gtp-pdn-pdp-type', 'gtp-uli', 'gtp-enduser-v4-addr', 'gtp-enduser-v6-addr', 'gtp-bearer-id-or-nsapi', 'gtp-qci', 'gtp-info-event-ind', 'gtp-restarted-node-ipv4', 'gtp-restarted-node-ipv6', 'gtp-c-tunnels-removed-with-node-restart', 'radius-imsi', 'radius-msisdn', 'radius-imei', 'event-time-msec',
-                    'security-event-type', 'limit-exceeded-count', 'rate-limit-key', 'rate-limit-type', 'rate-limit-drop-count'
+                    'port-range-end', 'port-range-step-size', 'port-range-num-ports', 'rule-name', 'rule-set-name', 'fw-source-zone', 'fw-dest-zone', 'application-id', 'application-name', 'imsi', 'msisdn', 'imei', 'radius-custom1', 'radius-custom2', 'radius-custom3', 'radius-custom4', 'radius-custom5', 'radius-custom6', 'flow-start-msec',
+                    'flow-duration-msec', 'flow-duration-msec-64', 'flow-end-msec', 'nat-event', 'fw-event', 'fw-deny-reset-event', 'cgn-flow-direction', 'fw-dest-fqdn', 'flow-end-reason', 'gtp-deny-reason', 'gtp-apn', 'gtp-steid', 'gtp-dteid', 'gtp-selection-mode', 'gtp-mcc', 'gtp-mnc', 'gtp-rat-type', 'gtp-pdn-pdp-type', 'gtp-uli',
+                    'gtp-enduser-v4-addr', 'gtp-enduser-v6-addr', 'gtp-bearer-id-or-nsapi', 'gtp-qci', 'gtp-info-event-ind', 'gtp-restarted-node-ipv4', 'gtp-restarted-node-ipv6', 'gtp-c-tunnels-removed-with-node-restart', 'radius-imsi', 'radius-msisdn', 'radius-imei', 'event-time-msec', 'security-event-type', 'limit-exceeded-count',
+                    'rate-limit-key', 'rate-limit-type', 'rate-limit-drop-count'
                     ]
                 }
             },
