@@ -243,7 +243,16 @@ options:
           'dns_cache_sync_tx_frag_counter'= DNS Cache Sync Frag Sent counter;
           'dns_cache_sync_rx_frag_counter'= DNS Cache Sync Frag Received counter;
           'dns_cache_sync_tx_error_counter'= DNS Cache Sync Error Sent counter;
-          'dns_cache_sync_rx_error_counter'= DNS Cache Sync Error Received counter;"
+          'dns_cache_sync_rx_error_counter'= DNS Cache Sync Error Received counter;
+          'sync_rx_dcmsg_counter_inter_pu'= Conn Sync forward CPU with inter-pu comm;
+          'sync_rx_drop_sync_packets'= Conn Sync drop all packets;
+          'sync_pkt_rcv_dc_msg_dir'= Sync pkt recv with DCMSG dir;
+          'sync_tx_update_misc_bearer'= Conn Sync update misc bearer sent;
+          'sync_tx_create_counter_act'= Conn Sync Create Session Sent counter actual;
+          'sync_tx_del_counter_act'= Conn Sync Del Session Sent counter actual;
+          'sync_tx_update_age_counter_act'= Conn Sync Update Age Sent counter actual;
+          'sync_tx_update_misc_counter_act'= Conn Sync Update misc Sent counter actual;
+          'query_pkt_rx_error'= Conn Query recv error;"
                 type: str
     stats:
         description:
@@ -931,6 +940,26 @@ options:
                 description:
                 - "DNS Cache Sync Error Received counter"
                 type: str
+            sync_rx_dcmsg_counter_inter_pu:
+                description:
+                - "Conn Sync forward CPU with inter-pu comm"
+                type: str
+            sync_rx_drop_sync_packets:
+                description:
+                - "Conn Sync drop all packets"
+                type: str
+            sync_pkt_rcv_dc_msg_dir:
+                description:
+                - "Sync pkt recv with DCMSG dir"
+                type: str
+            sync_tx_update_misc_bearer:
+                description:
+                - "Conn Sync update misc bearer sent"
+                type: str
+            query_pkt_rx_error:
+                description:
+                - "Conn Query recv error"
+                type: str
 
 '''
 
@@ -1038,7 +1067,8 @@ def get_argspec():
                     'sync_tx_aflex_table_entry_incr_counter', 'sync_rx_aflex_table_entry_incr_counter', 'sync_tx_aflex_table_entry_lookup_counter', 'sync_rx_aflex_table_entry_lookup_counter', 'sync_tx_aflex_table_entry_lifetime_counter', 'sync_rx_aflex_table_entry_lifetime_counter', 'sync_tx_aflex_table_entry_replace_counter',
                     'sync_rx_aflex_table_entry_replace_counter', 'sync_tx_aflex_table_entry_set_counter', 'sync_rx_aflex_table_entry_set_counter', 'sync_tx_aflex_table_entry_timeout_counter', 'sync_rx_aflex_table_entry_timeout_counter', 'sync_tx_aflex_table_entry_fastsync_counter', 'sync_rx_aflex_table_entry_fastsync_counter',
                     'sync_tx_aflex_table_entry_error_counter', 'sync_tx_aflex_table_entry_not_eligible_counter', 'sync_rx_ext_fw_limit_entry', 'sync_tx_fw_set_dscp_counter', 'sync_rx_fw_set_dscp_counter', 'dns_cache_sync_tx_create_counter', 'dns_cache_sync_rx_create_counter', 'dns_cache_sync_tx_del_counter', 'dns_cache_sync_rx_del_counter',
-                    'dns_cache_sync_tx_frag_counter', 'dns_cache_sync_rx_frag_counter', 'dns_cache_sync_tx_error_counter', 'dns_cache_sync_rx_error_counter'
+                    'dns_cache_sync_tx_frag_counter', 'dns_cache_sync_rx_frag_counter', 'dns_cache_sync_tx_error_counter', 'dns_cache_sync_rx_error_counter', 'sync_rx_dcmsg_counter_inter_pu', 'sync_rx_drop_sync_packets', 'sync_pkt_rcv_dc_msg_dir', 'sync_tx_update_misc_bearer', 'sync_tx_create_counter_act', 'sync_tx_del_counter_act',
+                    'sync_tx_update_age_counter_act', 'sync_tx_update_misc_counter_act', 'query_pkt_rx_error'
                     ]
                 }
             },
@@ -1552,6 +1582,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'dns_cache_sync_rx_error_counter': {
+                'type': 'str',
+                },
+            'sync_rx_dcmsg_counter_inter_pu': {
+                'type': 'str',
+                },
+            'sync_rx_drop_sync_packets': {
+                'type': 'str',
+                },
+            'sync_pkt_rcv_dc_msg_dir': {
+                'type': 'str',
+                },
+            'sync_tx_update_misc_bearer': {
+                'type': 'str',
+                },
+            'query_pkt_rx_error': {
                 'type': 'str',
                 }
             }

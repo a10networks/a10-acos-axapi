@@ -90,6 +90,17 @@ options:
         - "Enable histogram statistics (Default= Disabled)"
         type: bool
         required: False
+    anomaly_detection_trigger:
+        description:
+        - "'all'= Use both learned and static thresholds (static thresholds take
+          precedence); 'static-threshold-only'= Use static thresholds only;"
+        type: str
+        required: False
+    service_discovery:
+        description:
+        - "'disable'= Disable service discovery for hosts (default= enabled);"
+        type: str
+        required: False
     relative_auto_break_down_threshold:
         description:
         - "Field relative_auto_break_down_threshold"
@@ -124,6 +135,34 @@ options:
                 description:
                 - "percentage of parent ip node"
                 type: int
+    host_anomaly_threshold:
+        description:
+        - "Field host_anomaly_threshold"
+        type: dict
+        required: False
+        suboptions:
+            host_pkt_rate:
+                description:
+                - "Packet rate of per host"
+                type: int
+            host_bit_rate:
+                description:
+                - "Bit rate of per host"
+                type: int
+    network_object_anomaly_threshold:
+        description:
+        - "Field network_object_anomaly_threshold"
+        type: dict
+        required: False
+        suboptions:
+            network_object_pkt_rate:
+                description:
+                - "Packet rate of the network-object"
+                type: int
+            network_object_bit_rate:
+                description:
+                - "Bit rate of the network-object"
+                type: int
     uuid:
         description:
         - "uuid of the object"
@@ -143,8 +182,10 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'subnet_learned'= Subnet Entry Learned; 'subnet_aged'= Subnet Entry
-          Aged; 'ip_learned'= IP Entry Learned; 'ip_aged'= IP Entry Aged;
-          'service_learned'= Service Entry Learned; 'service_aged'= Service Entry Aged;"
+          Aged; 'subnet_create_fail'= Subnet Entry Create Failures; 'ip_learned'= IP
+          Entry Learned; 'ip_aged'= IP Entry Aged; 'ip_create_fail'= IP Entry Create
+          Failures; 'service_learned'= Service Entry Learned; 'service_aged'= Service
+          Entry Aged; 'service_create_fail'= Service Entry Create Failures;"
                 type: str
     notification:
         description:
@@ -163,6 +204,32 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    sub_network_list:
+        description:
+        - "Field sub_network_list"
+        type: list
+        required: False
+        suboptions:
+            subnet_ip_addr:
+                description:
+                - "IPv4 Subnet/host, supported prefix range is from 24 to 32"
+                type: str
+            host_anomaly_threshold:
+                description:
+                - "Field host_anomaly_threshold"
+                type: dict
+            sub_network_anomaly_threshold:
+                description:
+                - "Field sub_network_anomaly_threshold"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
                 type: str
     oper:
         description:
@@ -201,10 +268,6 @@ options:
             ipv4:
                 description:
                 - "Field ipv4"
-                type: str
-            ipv6:
-                description:
-                - "Field ipv6"
                 type: str
             discovered_ip_list:
                 description:
@@ -248,6 +311,10 @@ options:
                 description:
                 - "Subnet Entry Aged"
                 type: str
+            subnet_create_fail:
+                description:
+                - "Subnet Entry Create Failures"
+                type: str
             ip_learned:
                 description:
                 - "IP Entry Learned"
@@ -256,6 +323,10 @@ options:
                 description:
                 - "IP Entry Aged"
                 type: str
+            ip_create_fail:
+                description:
+                - "IP Entry Create Failures"
+                type: str
             service_learned:
                 description:
                 - "Service Entry Learned"
@@ -263,6 +334,10 @@ options:
             service_aged:
                 description:
                 - "Service Entry Aged"
+                type: str
+            service_create_fail:
+                description:
+                - "Service Entry Create Failures"
                 type: str
             object_name:
                 description:
@@ -322,7 +397,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["histogram_enable", "ip", "ipv6", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold", "sampling_enable", "service_break_down_threshold_local", "static_auto_break_down_threshold", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "anomaly_detection_trigger", "histogram_enable", "host_anomaly_threshold", "ip", "ipv6", "network_object_anomaly_threshold", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold", "sampling_enable", "service_break_down_threshold_local", "service_discovery", "static_auto_break_down_threshold", "stats",
+    "sub_network_list", "user_tag", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -366,6 +444,14 @@ def get_argspec():
         'histogram_enable': {
             'type': 'bool',
             },
+        'anomaly_detection_trigger': {
+            'type': 'str',
+            'choices': ['all', 'static-threshold-only']
+            },
+        'service_discovery': {
+            'type': 'str',
+            'choices': ['disable']
+            },
         'relative_auto_break_down_threshold': {
             'type': 'dict',
             'network_percentage': {
@@ -387,6 +473,24 @@ def get_argspec():
                 'type': 'int',
                 }
             },
+        'host_anomaly_threshold': {
+            'type': 'dict',
+            'host_pkt_rate': {
+                'type': 'int',
+                },
+            'host_bit_rate': {
+                'type': 'int',
+                }
+            },
+        'network_object_anomaly_threshold': {
+            'type': 'dict',
+            'network_object_pkt_rate': {
+                'type': 'int',
+                },
+            'network_object_bit_rate': {
+                'type': 'int',
+                }
+            },
         'uuid': {
             'type': 'str',
             },
@@ -397,7 +501,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'subnet_learned', 'subnet_aged', 'ip_learned', 'ip_aged', 'service_learned', 'service_aged']
+                'choices': ['all', 'subnet_learned', 'subnet_aged', 'subnet_create_fail', 'ip_learned', 'ip_aged', 'ip_create_fail', 'service_learned', 'service_aged', 'service_create_fail']
                 }
             },
         'notification': {
@@ -413,6 +517,37 @@ def get_argspec():
                     }
                 },
             'uuid': {
+                'type': 'str',
+                }
+            },
+        'sub_network_list': {
+            'type': 'list',
+            'subnet_ip_addr': {
+                'type': 'str',
+                'required': True,
+                },
+            'host_anomaly_threshold': {
+                'type': 'dict',
+                'static_pkt_rate_threshold': {
+                    'type': 'int',
+                    },
+                'static_bit_rate_threshold': {
+                    'type': 'int',
+                    }
+                },
+            'sub_network_anomaly_threshold': {
+                'type': 'dict',
+                'static_sub_network_pkt_rate': {
+                    'type': 'int',
+                    },
+                'static_sub_network_bit_rate': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
                 'type': 'str',
                 }
             },
@@ -452,6 +587,9 @@ def get_argspec():
                             'type': 'str',
                             },
                         'threshold': {
+                            'type': 'str',
+                            },
+                        'max': {
                             'type': 'str',
                             }
                         },
@@ -499,9 +637,6 @@ def get_argspec():
             'ipv4': {
                 'type': 'str',
                 },
-            'ipv6': {
-                'type': 'str',
-                },
             'discovered_ip_list': {
                 'type': 'bool',
                 },
@@ -533,16 +668,25 @@ def get_argspec():
             'subnet_aged': {
                 'type': 'str',
                 },
+            'subnet_create_fail': {
+                'type': 'str',
+                },
             'ip_learned': {
                 'type': 'str',
                 },
             'ip_aged': {
                 'type': 'str',
                 },
+            'ip_create_fail': {
+                'type': 'str',
+                },
             'service_learned': {
                 'type': 'str',
                 },
             'service_aged': {
+                'type': 'str',
+                },
+            'service_create_fail': {
                 'type': 'str',
                 },
             'object_name': {

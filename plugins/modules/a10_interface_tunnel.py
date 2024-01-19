@@ -85,11 +85,6 @@ options:
         - "Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)"
         type: int
         required: False
-    security_level:
-        description:
-        - "Configure security level for interface. 100 - Most Secure"
-        type: int
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -414,7 +409,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "ifnum", "ip", "ipv6", "load_interval", "lw_4o6", "map", "mtu", "name", "oper", "packet_capture_template", "sampling_enable", "security_level", "speed", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "ifnum", "ip", "ipv6", "load_interval", "lw_4o6", "map", "mtu", "name", "oper", "packet_capture_template", "sampling_enable", "speed", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -453,9 +448,6 @@ def get_argspec():
             'type': 'int',
             },
         'load_interval': {
-            'type': 'int',
-            },
-        'security_level': {
             'type': 'int',
             },
         'uuid': {

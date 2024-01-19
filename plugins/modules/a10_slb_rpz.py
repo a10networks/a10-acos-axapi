@@ -98,6 +98,66 @@ options:
                 description:
                 - "Field rpz_count"
                 type: int
+            class_list:
+                description:
+                - "Field class_list"
+                type: str
+            ntype:
+                description:
+                - "Field type"
+                type: str
+            file_or_string:
+                description:
+                - "Field file_or_string"
+                type: str
+            user_tag:
+                description:
+                - "Field user_tag"
+                type: str
+            ipv4_total_single_ip:
+                description:
+                - "Field ipv4_total_single_ip"
+                type: int
+            ipv4_total_subnet:
+                description:
+                - "Field ipv4_total_subnet"
+                type: int
+            ipv6_total_single_ip:
+                description:
+                - "Field ipv6_total_single_ip"
+                type: int
+            ipv6_total_subnet:
+                description:
+                - "Field ipv6_total_subnet"
+                type: int
+            dns_total_entries:
+                description:
+                - "Field dns_total_entries"
+                type: int
+            string_total_entries:
+                description:
+                - "Field string_total_entries"
+                type: int
+            ac_total_entries:
+                description:
+                - "Field ac_total_entries"
+                type: int
+            geo_location_total_entries:
+                description:
+                - "Field geo_location_total_entries"
+                type: int
+            ipv4_entries:
+                description:
+                - "Field ipv4_entries"
+                type: list
+            ipv6_entries:
+                description:
+                - "Field ipv6_entries"
+                type: list
+            dns_entries:
+                description:
+                - "Field dns_entries"
+                type: list
     stats:
         description:
         - "Field stats"
@@ -219,6 +279,126 @@ def get_argspec():
                 },
             'rpz_count': {
                 'type': 'int',
+                },
+            'class_list': {
+                'type': 'str',
+                },
+            'ntype': {
+                'type': 'str',
+                'choices': ['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive', '[ipv4]', '[ipv6]', '[dns]', '[dns, ipv4]', '[dns, ipv6]']
+                },
+            'file_or_string': {
+                'type': 'str',
+                'choices': ['file', 'config']
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'ipv4_total_single_ip': {
+                'type': 'int',
+                },
+            'ipv4_total_subnet': {
+                'type': 'int',
+                },
+            'ipv6_total_single_ip': {
+                'type': 'int',
+                },
+            'ipv6_total_subnet': {
+                'type': 'int',
+                },
+            'dns_total_entries': {
+                'type': 'int',
+                },
+            'string_total_entries': {
+                'type': 'int',
+                },
+            'ac_total_entries': {
+                'type': 'int',
+                },
+            'geo_location_total_entries': {
+                'type': 'int',
+                },
+            'ipv4_entries': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                    },
+                'ipv4_lid': {
+                    'type': 'int',
+                    },
+                'ipv4_glid': {
+                    'type': 'int',
+                    },
+                'ipv4_lsn_lid': {
+                    'type': 'int',
+                    },
+                'ipv4_lsn_radius_profile': {
+                    'type': 'int',
+                    },
+                'ipv4_gtp_policy': {
+                    'type': 'str',
+                    },
+                'ipv4_hit_count': {
+                    'type': 'int',
+                    },
+                'ipv4_age': {
+                    'type': 'int',
+                    },
+                'ipv4_rpz_type': {
+                    'type': 'int',
+                    }
+                },
+            'ipv6_entries': {
+                'type': 'list',
+                'ipv6addr': {
+                    'type': 'str',
+                    },
+                'ipv6_lid': {
+                    'type': 'int',
+                    },
+                'ipv6_glid': {
+                    'type': 'int',
+                    },
+                'ipv6_lsn_lid': {
+                    'type': 'int',
+                    },
+                'ipv6_lsn_radius_profile': {
+                    'type': 'int',
+                    },
+                'ipv6_gtp_policy': {
+                    'type': 'str',
+                    },
+                'ipv6_hit_count': {
+                    'type': 'int',
+                    },
+                'ipv6_age': {
+                    'type': 'int',
+                    },
+                'ipv6_rpz_type': {
+                    'type': 'int',
+                    }
+                },
+            'dns_entries': {
+                'type': 'list',
+                'dns_match_type': {
+                    'type': 'str',
+                    'choices': ['contains', 'ends-with', 'starts-with']
+                    },
+                'dns_match_string': {
+                    'type': 'str',
+                    },
+                'dns_lid': {
+                    'type': 'int',
+                    },
+                'dns_glid': {
+                    'type': 'int',
+                    },
+                'dns_hit_count': {
+                    'type': 'int',
+                    },
+                'dns_rpz_type': {
+                    'type': 'int',
+                    }
                 }
             },
         'stats': {

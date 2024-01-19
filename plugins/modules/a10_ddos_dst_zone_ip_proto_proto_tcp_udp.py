@@ -358,6 +358,12 @@ def get_argspec():
                 'level': {
                     'type': 'int',
                     },
+                'bl_reasoning_rcode': {
+                    'type': 'str',
+                    },
+                'bl_reasoning_timestamp': {
+                    'type': 'str',
+                    },
                 'current_connections': {
                     'type': 'str',
                     },

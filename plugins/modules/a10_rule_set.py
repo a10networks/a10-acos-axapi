@@ -1110,6 +1110,9 @@ def get_argspec():
                 'permit_limit_policy': {
                     'type': 'int',
                     },
+                'deny_reset_limit_policy': {
+                    'type': 'int',
+                    },
                 'permit_respond_to_user_mac': {
                     'type': 'bool',
                     },

@@ -82,6 +82,14 @@ options:
                 description:
                 - "Field rate_limit_drp"
                 type: list
+            app_buff_drop:
+                description:
+                - "Field app_buff_drop"
+                type: int
+            app_buff_drop_total:
+                description:
+                - "Field app_buff_drop_total"
+                type: int
 
 '''
 
@@ -188,6 +196,12 @@ def get_argspec():
                 'rate_limit_drop': {
                     'type': 'str',
                     }
+                },
+            'app_buff_drop': {
+                'type': 'int',
+                },
+            'app_buff_drop_total': {
+                'type': 'int',
                 }
             }
         })

@@ -769,6 +769,11 @@ options:
         - "Enable Fast-Path Rerouting"
         type: bool
         required: False
+    cancel_stream_loop_limit:
+        description:
+        - "Set global cancel stream loop limit (cancel stream loop limit, default is 5)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -950,9 +955,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "attack_resp_code", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "cache_expire_time", "cert_pinning",
-    "clientside_ip", "clientside_ipv6", "compress_block_size", "conn_rate_limit", "custom_message", "custom_page", "custom_signal_clist", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age",
-    "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_sync", "dns_cache_sync_entry_size", "dns_cache_sync_ttl_threshold", "dns_cache_ttl_adjustment_enable", "dns_negative_cache_enable", "dns_persistent_cache_enable", "dns_persistent_cache_hit_threshold",
+    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "attack_resp_code", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "cache_expire_time", "cancel_stream_loop_limit",
+    "cert_pinning", "clientside_ip", "clientside_ipv6", "compress_block_size", "conn_rate_limit", "custom_message", "custom_page", "custom_signal_clist", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect",
+    "dns_cache_age", "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_sync", "dns_cache_sync_entry_size", "dns_cache_sync_ttl_threshold", "dns_cache_ttl_adjustment_enable", "dns_negative_cache_enable", "dns_persistent_cache_enable", "dns_persistent_cache_hit_threshold",
     "dns_persistent_cache_ttl_threshold", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_ddos", "enable_fast_path_rerouting", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown",
     "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "ipv6_subnet", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_persistent_cache",
     "max_remote_rate", "monitor_mode_enable", "msl_time", "mss_table", "multi_cpu", "N5_new", "N5_old", "ngwaf_proxy_ipv4", "ngwaf_proxy_ipv6", "ngwaf_proxy_port", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "pbslb_overflow_glid", "per_thr_percent", "ping_sweep_detection",
@@ -1427,6 +1432,9 @@ def get_argspec():
             },
         'enable_fast_path_rerouting': {
             'type': 'bool',
+            },
+        'cancel_stream_loop_limit': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',

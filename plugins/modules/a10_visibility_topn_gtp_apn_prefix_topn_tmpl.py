@@ -103,6 +103,22 @@ options:
                 description:
                 - "Track Top-N entities for Downlink Packets"
                 type: bool
+            u_uplink_bytes:
+                description:
+                - "Track Top-N entities for Uplink Bytes"
+                type: bool
+            u_downlink_bytes:
+                description:
+                - "Track Top-N entities for Downlink Bytes"
+                type: bool
+            u_uplink_pkts:
+                description:
+                - "Track Top-N entities for Uplink Packets"
+                type: bool
+            u_downlink_pkts:
+                description:
+                - "Track Top-N entities for GTP-U Downlink Packets"
+                type: bool
             gtp_v0_c_tunnel_created:
                 description:
                 - "Track Top-N entities for GTPv0-C Tunnel Created"
@@ -531,6 +547,18 @@ def get_argspec():
                 'type': 'bool',
                 },
             'downlink_pkts': {
+                'type': 'bool',
+                },
+            'u_uplink_bytes': {
+                'type': 'bool',
+                },
+            'u_downlink_bytes': {
+                'type': 'bool',
+                },
+            'u_uplink_pkts': {
+                'type': 'bool',
+                },
+            'u_downlink_pkts': {
                 'type': 'bool',
                 },
             'gtp_v0_c_tunnel_created': {

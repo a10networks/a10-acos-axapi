@@ -151,6 +151,17 @@ options:
         - "(http2 only) Max concurrent streams, default 50"
         type: int
         required: False
+    stream_cancellation_limit:
+        description:
+        - "cancellation limit, default 0 (accumulated cancellation limit value, default is
+          0)"
+        type: int
+        required: False
+    stream_cancellation_rate:
+        description:
+        - "cancellation rate, default 10 (cancellation rate value, default is 10)"
+        type: int
+        required: False
     frame_limit:
         description:
         - "Limit the number of CONTINUATION, PING, PRIORITY, RESET, SETTINGS and empty
@@ -649,7 +660,8 @@ AVAILABLE_PROPERTIES = [
     "compression_exclude_content_type", "compression_exclude_uri", "compression_keep_accept_encoding", "compression_keep_accept_encoding_enable", "compression_level", "compression_method_order", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "disallowed_methods", "disallowed_methods_action",
     "failover_url", "frame_limit", "host_switching", "http_protocol_check", "http2_client_no_snat", "insert_client_ip", "insert_client_ip_header_name", "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code",
     "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val", "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx",
-    "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only", "server_support_http2_only_value", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid",
+    "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "server_support_http2_only", "server_support_http2_only_value", "stream_cancellation_limit", "stream_cancellation_rate", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist",
+    "url_switching", "use_server_status", "user_tag", "uuid",
     ]
 
 
@@ -725,6 +737,12 @@ def get_argspec():
             'choices': ['iso-8859-1', 'utf-8', 'us-ascii']
             },
         'max_concurrent_streams': {
+            'type': 'int',
+            },
+        'stream_cancellation_limit': {
+            'type': 'int',
+            },
+        'stream_cancellation_rate': {
             'type': 'int',
             },
         'frame_limit': {

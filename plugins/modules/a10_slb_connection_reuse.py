@@ -74,7 +74,10 @@ options:
           'delay_unbind'= Delayed unbind; 'long_resp'= Long resp; 'miss_resp'= Missed
           resp; 'unbound_data_rcv'= Unbound data rcvd; 'pause_conn'= Pause request;
           'pause_conn_fail'= Pause request fail; 'resume_conn'= Resume request;
-          'not_remove_from_rport'= Not remove from list;"
+          'not_remove_from_rport'= Not remove from list; 'zero_pconn_value'= Zero current
+          pconn counter value; 'zero_pconn_bind_value'= Zero current pconn bind counter
+          value; 'current_http1_conn_in_the_pool'= Current http1 conn in the pool;
+          'current_http2_conn_in_the_pool'= Current http2 conn in the pool;"
                 type: str
     oper:
         description:
@@ -155,6 +158,22 @@ options:
             not_remove_from_rport:
                 description:
                 - "Not remove from list"
+                type: str
+            zero_pconn_value:
+                description:
+                - "Zero current pconn counter value"
+                type: str
+            zero_pconn_bind_value:
+                description:
+                - "Zero current pconn bind counter value"
+                type: str
+            current_http1_conn_in_the_pool:
+                description:
+                - "Current http1 conn in the pool"
+                type: str
+            current_http2_conn_in_the_pool:
+                description:
+                - "Current http2 conn in the pool"
                 type: str
 
 '''
@@ -237,8 +256,12 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type': 'str',
-                'choices': ['all', 'current_open', 'current_active', 'nbind', 'nunbind', 'nestab', 'ntermi', 'ntermi_err', 'delay_unbind', 'long_resp', 'miss_resp', 'unbound_data_rcv', 'pause_conn', 'pause_conn_fail', 'resume_conn', 'not_remove_from_rport']
+                'type':
+                'str',
+                'choices': [
+                    'all', 'current_open', 'current_active', 'nbind', 'nunbind', 'nestab', 'ntermi', 'ntermi_err', 'delay_unbind', 'long_resp', 'miss_resp', 'unbound_data_rcv', 'pause_conn', 'pause_conn_fail', 'resume_conn', 'not_remove_from_rport', 'zero_pconn_value', 'zero_pconn_bind_value', 'current_http1_conn_in_the_pool',
+                    'current_http2_conn_in_the_pool'
+                    ]
                 }
             },
         'oper': {
@@ -288,6 +311,18 @@ def get_argspec():
                     'type': 'int',
                     },
                 'not_remove_from_rport': {
+                    'type': 'int',
+                    },
+                'zero_pconn_value': {
+                    'type': 'int',
+                    },
+                'zero_pconn_bind_value': {
+                    'type': 'int',
+                    },
+                'current_http1_conn_in_the_pool': {
+                    'type': 'int',
+                    },
+                'current_http2_conn_in_the_pool': {
                     'type': 'int',
                     }
                 },
@@ -340,6 +375,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'not_remove_from_rport': {
+                'type': 'str',
+                },
+            'zero_pconn_value': {
+                'type': 'str',
+                },
+            'zero_pconn_bind_value': {
+                'type': 'str',
+                },
+            'current_http1_conn_in_the_pool': {
+                'type': 'str',
+                },
+            'current_http2_conn_in_the_pool': {
                 'type': 'str',
                 }
             }

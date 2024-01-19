@@ -266,7 +266,8 @@ options:
           'header_filter_rule_hit'= Hit header filter rule; 'http1_client_idle_timeout'=
           HTTP1 client idle timeout; 'http2_client_idle_timeout'= HTTP2 client idle
           timeout; 'http_disallowed_methods'= HTTP disallowed methods;
-          'http_allowed_methods'= HTTP allowed methods; 'req_http11_new_proxy'= Request
+          'http_allowed_methods'= HTTP allowed methods; 'upgrade_to_new_proxy'= H2C
+          upgrade; 'del_h2c_header'= H2C header deletion; 'req_http11_new_proxy'= Request
           1.1 (new proxy);"
                 type: str
     oper:
@@ -1276,7 +1277,7 @@ def get_argspec():
                     'doh_dns_malformed_query', 'doh_dns_resp_rcode_err_format', 'doh_dns_resp_rcode_err_server', 'doh_dns_resp_rcode_err_name', 'doh_dns_resp_rcode_err_type', 'doh_dns_resp_rcode_refuse', 'doh_dns_resp_rcode_yxdomain', 'doh_dns_resp_rcode_yxrrset', 'doh_dns_resp_rcode_nxrrset', 'doh_dns_resp_rcode_notauth',
                     'doh_dns_resp_rcode_notzone', 'doh_dns_resp_rcode_other', 'compression_before_br', 'compression_after_br', 'compression_before_total', 'compression_after_total', 'decompression_before_br', 'decompression_after_br', 'decompression_before_total', 'decompression_after_total', 'compress_rsp_br', 'compress_rsp_total',
                     'h2up_content_length_alias', 'malformed_h2up_header_value', 'malformed_h2up_scheme_value', 'h2up_with_transfer_encoding', 'multiple_content_length', 'multiple_transfer_encoding', 'transfer_encoding_and_content_length', 'get_and_payload', 'h2up_with_host_and_auth', 'req_http3', 'response_http3', 'header_filter_rule_hit',
-                    'http1_client_idle_timeout', 'http2_client_idle_timeout', 'http_disallowed_methods', 'http_allowed_methods', 'req_http11_new_proxy'
+                    'http1_client_idle_timeout', 'http2_client_idle_timeout', 'http_disallowed_methods', 'http_allowed_methods', 'upgrade_to_new_proxy', 'del_h2c_header', 'req_http11_new_proxy'
                     ]
                 }
             },
@@ -2278,6 +2279,12 @@ def get_argspec():
                     'type': 'int',
                     },
                 'http_allowed_methods': {
+                    'type': 'int',
+                    },
+                'upgrade_to_new_proxy': {
+                    'type': 'int',
+                    },
+                'del_h2c_header': {
                     'type': 'int',
                     },
                 'req_http11_new_proxy': {

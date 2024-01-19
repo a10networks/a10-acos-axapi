@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_scaleout_distributed_forwarding_cgn
 description:
-    - Enable Scaleout distributed-forwarding for cgn
+    - Enable Scaleout distributed-forwarding for cgn sessions
 author: A10 Networks
 options:
     state:
@@ -55,10 +55,10 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    cgn_value:
+    enable:
         description:
-        - "'enable'= Enable CGN; 'disable'= Disable CGN;"
-        type: str
+        - "Enable distributed-forwarding for CGN"
+        type: bool
         required: False
     uuid:
         description:
@@ -119,7 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cgn_value", "uuid", ]
+AVAILABLE_PROPERTIES = ["enable", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +139,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'cgn_value': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
+    rv.update({'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

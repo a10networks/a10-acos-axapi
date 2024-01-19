@@ -149,6 +149,18 @@ options:
                 description:
                 - "This interface connects to spoofing cache"
                 type: bool
+            client:
+                description:
+                - "Client facing interface for IPv4/v6 traffic"
+                type: bool
+            server:
+                description:
+                - "Server facing interface for IPv4/v6 traffic"
+                type: bool
+            dmz:
+                description:
+                - "DMZ network facing interface for IPv4/v6 traffic"
+                type: bool
             inside:
                 description:
                 - "Configure interface as inside"
@@ -642,6 +654,15 @@ def get_argspec():
                 'type': 'bool',
                 },
             'cache_spoofing_port': {
+                'type': 'bool',
+                },
+            'client': {
+                'type': 'bool',
+                },
+            'server': {
+                'type': 'bool',
+                },
+            'dmz': {
                 'type': 'bool',
                 },
             'inside': {

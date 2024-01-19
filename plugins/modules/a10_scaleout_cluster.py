@@ -419,6 +419,19 @@ def get_argspec():
                     'uuid': {
                         'type': 'str',
                         }
+                    },
+                'encap': {
+                    'type': 'dict',
+                    'ntype': {
+                        'type': 'str',
+                        'choices': ['vxlan']
+                        },
+                    'use_v4_vxlan': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     }
                 },
             'session_sync': {

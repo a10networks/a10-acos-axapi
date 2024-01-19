@@ -74,10 +74,26 @@ options:
                 description:
                 - "Sequence number (Specify the port physical port number)"
                 type: int
+            clear_all_partition:
+                description:
+                - "Partition name to clear"
+                type: str
+            clear_all_partition_all:
+                description:
+                - "Clear all partitions"
+                type: bool
             clear_sequence:
                 description:
                 - "Specify the port physical port number"
                 type: int
+            clear_partition:
+                description:
+                - "Partition name to clear"
+                type: str
+            clear_partition_all:
+                description:
+                - "Clear all partitions"
+                type: bool
     link_disable_cfg:
         description:
         - "Field link_disable_cfg"
@@ -271,8 +287,20 @@ def get_argspec():
             'clear_all_sequence': {
                 'type': 'int',
                 },
+            'clear_all_partition': {
+                'type': 'str',
+                },
+            'clear_all_partition_all': {
+                'type': 'bool',
+                },
             'clear_sequence': {
                 'type': 'int',
+                },
+            'clear_partition': {
+                'type': 'str',
+                },
+            'clear_partition_all': {
+                'type': 'bool',
                 }
             },
         'link_disable_cfg': {

@@ -115,7 +115,8 @@ options:
         suboptions:
             ec:
                 description:
-                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; 'secp521r1'= secp521r1;
+          'x25519'= x25519;"
                 type: str
     local_logging:
         description:
@@ -1015,660 +1016,120 @@ options:
         type: dict
         required: False
         suboptions:
-            uncategorized:
-                description:
-                - "Uncategorized URLs"
-                type: bool
-            real_estate:
-                description:
-                - "Category Real Estate"
-                type: bool
-            computer_and_internet_security:
-                description:
-                - "Category Computer and Internet Security"
-                type: bool
-            financial_services:
-                description:
-                - "Category Financial Services"
-                type: bool
-            business_and_economy:
-                description:
-                - "Category Business and Economy"
-                type: bool
-            computer_and_internet_info:
-                description:
-                - "Category Computer and Internet Info"
-                type: bool
-            auctions:
-                description:
-                - "Category Auctions"
-                type: bool
-            shopping:
-                description:
-                - "Category Shopping"
-                type: bool
-            cult_and_occult:
-                description:
-                - "Category Cult and Occult"
-                type: bool
-            travel:
-                description:
-                - "Category Travel"
-                type: bool
-            drugs:
-                description:
-                - "Category Abused Drugs"
-                type: bool
-            adult_and_pornography:
-                description:
-                - "Category Adult and Pornography"
-                type: bool
-            home_and_garden:
-                description:
-                - "Category Home and Garden"
-                type: bool
-            military:
-                description:
-                - "Category Military"
-                type: bool
-            social_network:
-                description:
-                - "Category Social Network"
-                type: bool
-            dead_sites:
-                description:
-                - "Category Dead Sites (db Ops only)"
-                type: bool
-            stock_advice_and_tools:
-                description:
-                - "Category Stock Advice and Tools"
-                type: bool
-            training_and_tools:
-                description:
-                - "Category Training and Tools"
-                type: bool
-            dating:
-                description:
-                - "Category Dating"
-                type: bool
-            sex_education:
-                description:
-                - "Category Sex Education"
-                type: bool
-            religion:
-                description:
-                - "Category Religion"
-                type: bool
-            entertainment_and_arts:
-                description:
-                - "Category Entertainment and Arts"
-                type: bool
-            personal_sites_and_blogs:
-                description:
-                - "Category Personal sites and Blogs"
-                type: bool
-            legal:
-                description:
-                - "Category Legal"
-                type: bool
-            local_information:
-                description:
-                - "Category Local Information"
-                type: bool
-            streaming_media:
-                description:
-                - "Category Streaming Media"
-                type: bool
-            job_search:
-                description:
-                - "Category Job Search"
-                type: bool
-            gambling:
-                description:
-                - "Category Gambling"
-                type: bool
-            translation:
-                description:
-                - "Category Translation"
-                type: bool
-            reference_and_research:
-                description:
-                - "Category Reference and Research"
-                type: bool
-            shareware_and_freeware:
-                description:
-                - "Category Shareware and Freeware"
-                type: bool
-            peer_to_peer:
-                description:
-                - "Category Peer to Peer"
-                type: bool
-            marijuana:
-                description:
-                - "Category Marijuana"
-                type: bool
-            hacking:
-                description:
-                - "Category Hacking"
-                type: bool
-            games:
-                description:
-                - "Category Games"
-                type: bool
-            philosophy_and_politics:
-                description:
-                - "Category Philosophy and Political Advocacy"
-                type: bool
-            weapons:
-                description:
-                - "Category Weapons"
-                type: bool
-            pay_to_surf:
-                description:
-                - "Category Pay to Surf"
-                type: bool
-            hunting_and_fishing:
-                description:
-                - "Category Hunting and Fishing"
-                type: bool
-            society:
-                description:
-                - "Category Society"
-                type: bool
-            educational_institutions:
-                description:
-                - "Category Educational Institutions"
-                type: bool
-            online_greeting_cards:
-                description:
-                - "Category Online Greeting cards"
-                type: bool
-            sports:
-                description:
-                - "Category Sports"
-                type: bool
-            swimsuits_and_intimate_apparel:
-                description:
-                - "Category Swimsuits and Intimate Apparel"
-                type: bool
-            questionable:
-                description:
-                - "Category Questionable"
-                type: bool
-            kids:
-                description:
-                - "Category Kids"
-                type: bool
-            hate_and_racism:
-                description:
-                - "Category Hate and Racism"
-                type: bool
-            personal_storage:
-                description:
-                - "Category Personal Storage"
-                type: bool
-            violence:
-                description:
-                - "Category Violence"
-                type: bool
-            keyloggers_and_monitoring:
-                description:
-                - "Category Keyloggers and Monitoring"
-                type: bool
-            search_engines:
-                description:
-                - "Category Search Engines"
-                type: bool
-            internet_portals:
-                description:
-                - "Category Internet Portals"
-                type: bool
-            web_advertisements:
-                description:
-                - "Category Web Advertisements"
-                type: bool
-            cheating:
-                description:
-                - "Category Cheating"
-                type: bool
-            gross:
-                description:
-                - "Category Gross"
-                type: bool
-            web_based_email:
-                description:
-                - "Category Web based email"
-                type: bool
-            malware_sites:
-                description:
-                - "Category Malware Sites"
-                type: bool
-            phishing_and_other_fraud:
-                description:
-                - "Category Phishing and Other Frauds"
-                type: bool
-            proxy_avoid_and_anonymizers:
-                description:
-                - "Category Proxy Avoid and Anonymizers"
-                type: bool
-            spyware_and_adware:
-                description:
-                - "Category Spyware and Adware"
-                type: bool
-            music:
-                description:
-                - "Category Music"
-                type: bool
-            government:
-                description:
-                - "Category Government"
-                type: bool
-            nudity:
-                description:
-                - "Category Nudity"
-                type: bool
-            news_and_media:
-                description:
-                - "Category News and Media"
-                type: bool
-            illegal:
-                description:
-                - "Category Illegal"
-                type: bool
-            cdns:
-                description:
-                - "Category CDNs"
-                type: bool
-            internet_communications:
-                description:
-                - "Category Internet Communications"
-                type: bool
-            bot_nets:
-                description:
-                - "Category Bot Nets"
-                type: bool
-            abortion:
-                description:
-                - "Category Abortion"
-                type: bool
-            health_and_medicine:
-                description:
-                - "Category Health and Medicine"
-                type: bool
-            spam_urls:
-                description:
-                - "Category SPAM URLs"
-                type: bool
-            dynamically_generated_content:
-                description:
-                - "Dynamically Generated Content"
-                type: bool
-            parked_domains:
-                description:
-                - "Category Parked Domains"
-                type: bool
-            alcohol_and_tobacco:
-                description:
-                - "Category Alcohol and Tobacco"
-                type: bool
-            image_and_video_search:
-                description:
-                - "Category Image and Video Search"
-                type: bool
-            fashion_and_beauty:
-                description:
-                - "Category Fashion and Beauty"
-                type: bool
-            recreation_and_hobbies:
-                description:
-                - "Category Recreation and Hobbies"
-                type: bool
-            motor_vehicles:
-                description:
-                - "Category Motor Vehicles"
-                type: bool
-            web_hosting_sites:
-                description:
-                - "Category Web Hosting Sites"
-                type: bool
-            nudity_artistic:
-                description:
-                - "Category Nudity join Entertainment and Arts"
-                type: bool
-            illegal_pornography:
-                description:
-                - "Category Illegal join Adult and Pornography"
-                type: bool
+            bypassed_category:
+                description:
+                - "'uncategorized'= Uncategorized URLs; 'real-estate'= Category Real Estate;
+          'computer-and-internet-security'= Category Computer and Internet Security;
+          'financial-services'= Category Financial Services; 'business-and-economy'=
+          Category Business and Economy; 'computer-and-internet-info'= Category Computer
+          and Internet Info; 'auctions'= Category Auctions; 'shopping'= Category
+          Shopping; 'cult-and-occult'= Category Cult and Occult; 'travel'= Category
+          Travel; 'drugs'= Category Abused Drugs; 'adult-and-pornography'= Category Adult
+          and Pornography; 'home-and-garden'= Category Home and Garden; 'military'=
+          Category Military; 'social-network'= Category Social Network; 'dead-sites'=
+          Category Dead Sites (db Ops only); 'stock-advice-and-tools'= Category Stock
+          Advice and Tools; 'training-and-tools'= Category Training and Tools; 'dating'=
+          Category Dating; 'sex-education'= Category Sex Education; 'religion'= Category
+          Religion; 'entertainment-and-arts'= Category Entertainment and Arts; 'personal-
+          sites-and-blogs'= Category Personal sites and Blogs; 'legal'= Category Legal;
+          'local-information'= Category Local Information; 'streaming-media'= Category
+          Streaming Media; 'job-search'= Category Job Search; 'gambling'= Category
+          Gambling; 'translation'= Category Translation; 'reference-and-research'=
+          Category Reference and Research; 'shareware-and-freeware'= Category Shareware
+          and Freeware; 'peer-to-peer'= Category Peer to Peer; 'marijuana'= Category
+          Marijuana; 'hacking'= Category Hacking; 'games'= Category Games; 'philosophy-
+          and-politics'= Category Philosophy and Political Advocacy; 'weapons'= Category
+          Weapons; 'pay-to-surf'= Category Pay to Surf; 'hunting-and-fishing'= Category
+          Hunting and Fishing; 'society'= Category Society; 'educational-institutions'=
+          Category Educational Institutions; 'online-greeting-cards'= Category Online
+          Greeting cards; 'sports'= Category Sports; 'swimsuits-and-intimate-apparel'=
+          Category Swimsuits and Intimate Apparel; 'questionable'= Category Questionable;
+          'kids'= Category Kids; 'hate-and-racism'= Category Hate and Racism; 'personal-
+          storage'= Category Personal Storage; 'violence'= Category Violence;
+          'keyloggers-and-monitoring'= Category Keyloggers and Monitoring; 'search-
+          engines'= Category Search Engines; 'internet-portals'= Category Internet
+          Portals; 'web-advertisements'= Category Web Advertisements; 'cheating'=
+          Category Cheating; 'gross'= Category Gross; 'web-based-email'= Category Web
+          based email; 'malware-sites'= Category Malware Sites; 'phishing-and-other-
+          fraud'= Category Phishing and Other Frauds; 'proxy-avoid-and-anonymizers'=
+          Category Proxy Avoid and Anonymizers; 'spyware-and-adware'= Category Spyware
+          and Adware; 'music'= Category Music; 'government'= Category Government;
+          'nudity'= Category Nudity; 'news-and-media'= Category News and Media;
+          'illegal'= Category Illegal; 'cdns'= Category CDNs; 'internet-communications'=
+          Category Internet Communications; 'bot-nets'= Category Bot Nets; 'abortion'=
+          Category Abortion; 'health-and-medicine'= Category Health and Medicine; 'spam-
+          urls'= Category SPAM URLs; 'dynamically-generated-content'= Category
+          Dynamically Generated Content; 'parked-domains'= Category Parked Domains;
+          'alcohol-and-tobacco'= Category Alcohol and Tobacco; 'image-and-video-search'=
+          Category Image and Video Search; 'fashion-and-beauty'= Category Fashion and
+          Beauty; 'recreation-and-hobbies'= Category Recreation and Hobbies; 'motor-
+          vehicles'= Category Motor Vehicles; 'web-hosting-sites'= Category Web Hosting
+          Sites; 'self-harm'= Category Self Harm; 'dns-over-https'= Category DNS over
+          HTTPs; 'low-thc-cannabis-products'= Category Low-THC Cannabis Products;
+          'generative-ai'= Category Generative AI; 'nudity-artistic'= Category Artistic
+          Nudity; 'illegal-pornography'= Category Illegal Pornography eg. Child Sexual
+          Abuse;"
+                type: str
     exception_web_category:
         description:
         - "Field exception_web_category"
         type: dict
         required: False
         suboptions:
-            exception_uncategorized:
-                description:
-                - "Uncategorized URLs"
-                type: bool
-            exception_real_estate:
-                description:
-                - "Category Real Estate"
-                type: bool
-            exception_computer_and_internet_security:
-                description:
-                - "Category Computer and Internet Security"
-                type: bool
-            exception_financial_services:
-                description:
-                - "Category Financial Services"
-                type: bool
-            exception_business_and_economy:
-                description:
-                - "Category Business and Economy"
-                type: bool
-            exception_computer_and_internet_info:
-                description:
-                - "Category Computer and Internet Info"
-                type: bool
-            exception_auctions:
-                description:
-                - "Category Auctions"
-                type: bool
-            exception_shopping:
-                description:
-                - "Category Shopping"
-                type: bool
-            exception_cult_and_occult:
-                description:
-                - "Category Cult and Occult"
-                type: bool
-            exception_travel:
-                description:
-                - "Category Travel"
-                type: bool
-            exception_drugs:
-                description:
-                - "Category Abused Drugs"
-                type: bool
-            exception_adult_and_pornography:
-                description:
-                - "Category Adult and Pornography"
-                type: bool
-            exception_home_and_garden:
-                description:
-                - "Category Home and Garden"
-                type: bool
-            exception_military:
-                description:
-                - "Category Military"
-                type: bool
-            exception_social_network:
-                description:
-                - "Category Social Network"
-                type: bool
-            exception_dead_sites:
-                description:
-                - "Category Dead Sites (db Ops only)"
-                type: bool
-            exception_stock_advice_and_tools:
-                description:
-                - "Category Stock Advice and Tools"
-                type: bool
-            exception_training_and_tools:
-                description:
-                - "Category Training and Tools"
-                type: bool
-            exception_dating:
-                description:
-                - "Category Dating"
-                type: bool
-            exception_sex_education:
-                description:
-                - "Category Sex Education"
-                type: bool
-            exception_religion:
-                description:
-                - "Category Religion"
-                type: bool
-            exception_entertainment_and_arts:
-                description:
-                - "Category Entertainment and Arts"
-                type: bool
-            exception_personal_sites_and_blogs:
-                description:
-                - "Category Personal sites and Blogs"
-                type: bool
-            exception_legal:
-                description:
-                - "Category Legal"
-                type: bool
-            exception_local_information:
-                description:
-                - "Category Local Information"
-                type: bool
-            exception_streaming_media:
-                description:
-                - "Category Streaming Media"
-                type: bool
-            exception_job_search:
-                description:
-                - "Category Job Search"
-                type: bool
-            exception_gambling:
-                description:
-                - "Category Gambling"
-                type: bool
-            exception_translation:
-                description:
-                - "Category Translation"
-                type: bool
-            exception_reference_and_research:
-                description:
-                - "Category Reference and Research"
-                type: bool
-            exception_shareware_and_freeware:
-                description:
-                - "Category Shareware and Freeware"
-                type: bool
-            exception_peer_to_peer:
-                description:
-                - "Category Peer to Peer"
-                type: bool
-            exception_marijuana:
-                description:
-                - "Category Marijuana"
-                type: bool
-            exception_hacking:
-                description:
-                - "Category Hacking"
-                type: bool
-            exception_games:
-                description:
-                - "Category Games"
-                type: bool
-            exception_philosophy_and_politics:
-                description:
-                - "Category Philosophy and Political Advocacy"
-                type: bool
-            exception_weapons:
-                description:
-                - "Category Weapons"
-                type: bool
-            exception_pay_to_surf:
-                description:
-                - "Category Pay to Surf"
-                type: bool
-            exception_hunting_and_fishing:
-                description:
-                - "Category Hunting and Fishing"
-                type: bool
-            exception_society:
-                description:
-                - "Category Society"
-                type: bool
-            exception_educational_institutions:
-                description:
-                - "Category Educational Institutions"
-                type: bool
-            exception_online_greeting_cards:
-                description:
-                - "Category Online Greeting cards"
-                type: bool
-            exception_sports:
-                description:
-                - "Category Sports"
-                type: bool
-            exception_swimsuits_and_intimate_apparel:
-                description:
-                - "Category Swimsuits and Intimate Apparel"
-                type: bool
-            exception_questionable:
-                description:
-                - "Category Questionable"
-                type: bool
-            exception_kids:
-                description:
-                - "Category Kids"
-                type: bool
-            exception_hate_and_racism:
-                description:
-                - "Category Hate and Racism"
-                type: bool
-            exception_personal_storage:
-                description:
-                - "Category Personal Storage"
-                type: bool
-            exception_violence:
-                description:
-                - "Category Violence"
-                type: bool
-            exception_keyloggers_and_monitoring:
-                description:
-                - "Category Keyloggers and Monitoring"
-                type: bool
-            exception_search_engines:
-                description:
-                - "Category Search Engines"
-                type: bool
-            exception_internet_portals:
-                description:
-                - "Category Internet Portals"
-                type: bool
-            exception_web_advertisements:
-                description:
-                - "Category Web Advertisements"
-                type: bool
-            exception_cheating:
-                description:
-                - "Category Cheating"
-                type: bool
-            exception_gross:
-                description:
-                - "Category Gross"
-                type: bool
-            exception_web_based_email:
-                description:
-                - "Category Web based email"
-                type: bool
-            exception_malware_sites:
-                description:
-                - "Category Malware Sites"
-                type: bool
-            exception_phishing_and_other_fraud:
-                description:
-                - "Category Phishing and Other Frauds"
-                type: bool
-            exception_proxy_avoid_and_anonymizers:
-                description:
-                - "Category Proxy Avoid and Anonymizers"
-                type: bool
-            exception_spyware_and_adware:
-                description:
-                - "Category Spyware and Adware"
-                type: bool
-            exception_music:
-                description:
-                - "Category Music"
-                type: bool
-            exception_government:
-                description:
-                - "Category Government"
-                type: bool
-            exception_nudity:
-                description:
-                - "Category Nudity"
-                type: bool
-            exception_news_and_media:
-                description:
-                - "Category News and Media"
-                type: bool
-            exception_illegal:
-                description:
-                - "Category Illegal"
-                type: bool
-            exception_cdns:
-                description:
-                - "Category CDNs"
-                type: bool
-            exception_internet_communications:
-                description:
-                - "Category Internet Communications"
-                type: bool
-            exception_bot_nets:
-                description:
-                - "Category Bot Nets"
-                type: bool
-            exception_abortion:
-                description:
-                - "Category Abortion"
-                type: bool
-            exception_health_and_medicine:
-                description:
-                - "Category Health and Medicine"
-                type: bool
-            exception_spam_urls:
-                description:
-                - "Category SPAM URLs"
-                type: bool
-            exception_dynamically_generated_content:
-                description:
-                - "Dynamically Generated Content"
-                type: bool
-            exception_parked_domains:
-                description:
-                - "Category Parked Domains"
-                type: bool
-            exception_alcohol_and_tobacco:
-                description:
-                - "Category Alcohol and Tobacco"
-                type: bool
-            exception_image_and_video_search:
-                description:
-                - "Category Image and Video Search"
-                type: bool
-            exception_fashion_and_beauty:
-                description:
-                - "Category Fashion and Beauty"
-                type: bool
-            exception_recreation_and_hobbies:
-                description:
-                - "Category Recreation and Hobbies"
-                type: bool
-            exception_motor_vehicles:
-                description:
-                - "Category Motor Vehicles"
-                type: bool
-            exception_web_hosting_sites:
-                description:
-                - "Category Web Hosting Sites"
-                type: bool
-            exception_nudity_artistic:
-                description:
-                - "Category Nudity join Entertainment and Arts"
-                type: bool
-            exception_illegal_pornography:
-                description:
-                - "Category Illegal join Adult and Pornography"
-                type: bool
+            exception_category:
+                description:
+                - "'uncategorized'= Uncategorized URLs; 'real-estate'= Category Real Estate;
+          'computer-and-internet-security'= Category Computer and Internet Security;
+          'financial-services'= Category Financial Services; 'business-and-economy'=
+          Category Business and Economy; 'computer-and-internet-info'= Category Computer
+          and Internet Info; 'auctions'= Category Auctions; 'shopping'= Category
+          Shopping; 'cult-and-occult'= Category Cult and Occult; 'travel'= Category
+          Travel; 'drugs'= Category Abused Drugs; 'adult-and-pornography'= Category Adult
+          and Pornography; 'home-and-garden'= Category Home and Garden; 'military'=
+          Category Military; 'social-network'= Category Social Network; 'dead-sites'=
+          Category Dead Sites (db Ops only); 'stock-advice-and-tools'= Category Stock
+          Advice and Tools; 'training-and-tools'= Category Training and Tools; 'dating'=
+          Category Dating; 'sex-education'= Category Sex Education; 'religion'= Category
+          Religion; 'entertainment-and-arts'= Category Entertainment and Arts; 'personal-
+          sites-and-blogs'= Category Personal sites and Blogs; 'legal'= Category Legal;
+          'local-information'= Category Local Information; 'streaming-media'= Category
+          Streaming Media; 'job-search'= Category Job Search; 'gambling'= Category
+          Gambling; 'translation'= Category Translation; 'reference-and-research'=
+          Category Reference and Research; 'shareware-and-freeware'= Category Shareware
+          and Freeware; 'peer-to-peer'= Category Peer to Peer; 'marijuana'= Category
+          Marijuana; 'hacking'= Category Hacking; 'games'= Category Games; 'philosophy-
+          and-politics'= Category Philosophy and Political Advocacy; 'weapons'= Category
+          Weapons; 'pay-to-surf'= Category Pay to Surf; 'hunting-and-fishing'= Category
+          Hunting and Fishing; 'society'= Category Society; 'educational-institutions'=
+          Category Educational Institutions; 'online-greeting-cards'= Category Online
+          Greeting cards; 'sports'= Category Sports; 'swimsuits-and-intimate-apparel'=
+          Category Swimsuits and Intimate Apparel; 'questionable'= Category Questionable;
+          'kids'= Category Kids; 'hate-and-racism'= Category Hate and Racism; 'personal-
+          storage'= Category Personal Storage; 'violence'= Category Violence;
+          'keyloggers-and-monitoring'= Category Keyloggers and Monitoring; 'search-
+          engines'= Category Search Engines; 'internet-portals'= Category Internet
+          Portals; 'web-advertisements'= Category Web Advertisements; 'cheating'=
+          Category Cheating; 'gross'= Category Gross; 'web-based-email'= Category Web
+          based email; 'malware-sites'= Category Malware Sites; 'phishing-and-other-
+          fraud'= Category Phishing and Other Frauds; 'proxy-avoid-and-anonymizers'=
+          Category Proxy Avoid and Anonymizers; 'spyware-and-adware'= Category Spyware
+          and Adware; 'music'= Category Music; 'government'= Category Government;
+          'nudity'= Category Nudity; 'news-and-media'= Category News and Media;
+          'illegal'= Category Illegal; 'cdns'= Category CDNs; 'internet-communications'=
+          Category Internet Communications; 'bot-nets'= Category Bot Nets; 'abortion'=
+          Category Abortion; 'health-and-medicine'= Category Health and Medicine; 'spam-
+          urls'= Category SPAM URLs; 'dynamically-generated-content'= Category
+          Dynamically Generated Content; 'parked-domains'= Category Parked Domains;
+          'alcohol-and-tobacco'= Category Alcohol and Tobacco; 'image-and-video-search'=
+          Category Image and Video Search; 'fashion-and-beauty'= Category Fashion and
+          Beauty; 'recreation-and-hobbies'= Category Recreation and Hobbies; 'motor-
+          vehicles'= Category Motor Vehicles; 'web-hosting-sites'= Category Web Hosting
+          Sites; 'self-harm'= Category Self Harm; 'dns-over-https'= Category DNS over
+          HTTPs; 'low-thc-cannabis-products'= Category Low-THC Cannabis Products;
+          'generative-ai'= Category Generative AI; 'nudity-artistic'= Category Artistic
+          Nudity; 'illegal-pornography'= Category Illegal Pornography eg. Child Sexual
+          Abuse;"
+                type: str
     require_web_category:
         description:
         - "Wait for web category to be resolved before taking bypass decision"
@@ -2144,6 +1605,72 @@ options:
         - "Customized tag"
         type: str
         required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'real-estate'= real estate category; 'computer-and-internet-
+          security'= computer and internet security category; 'financial-services'=
+          financial services category; 'business-and-economy'= business and economy
+          category; 'computer-and-internet-info'= computer and internet info category;
+          'auctions'= auctions category; 'shopping'= shopping category; 'cult-and-
+          occult'= cult and occult category; 'travel'= travel category; 'drugs'= drugs
+          category; 'adult-and-pornography'= adult and pornography category; 'home-and-
+          garden'= home and garden category; 'military'= military category; 'social-
+          network'= social network category; 'dead-sites'= dead sites category; 'stock-
+          advice-and-tools'= stock advice and tools category; 'training-and-tools'=
+          training and tools category; 'dating'= dating category; 'sex-education'= sex
+          education category; 'religion'= religion category; 'entertainment-and-arts'=
+          entertainment and arts category; 'personal-sites-and-blogs'= personal sites and
+          blogs category; 'legal'= legal category; 'local-information'= local information
+          category; 'streaming-media'= streaming media category; 'job-search'= job search
+          category; 'gambling'= gambling category; 'translation'= translation category;
+          'reference-and-research'= reference and research category; 'shareware-and-
+          freeware'= shareware and freeware category; 'peer-to-peer'= peer to peer
+          category; 'marijuana'= marijuana category; 'hacking'= hacking category;
+          'games'= games category; 'philosophy-and-politics'= philosophy and politics
+          category; 'weapons'= weapons category; 'pay-to-surf'= pay to surf category;
+          'hunting-and-fishing'= hunting and fishing category; 'society'= society
+          category; 'educational-institutions'= educational institutions category;
+          'online-greeting-cards'= online greeting cards category; 'sports'= sports
+          category; 'swimsuits-and-intimate-apparel'= swimsuits and intimate apparel
+          category; 'questionable'= questionable category; 'kids'= kids category; 'hate-
+          and-racism'= hate and racism category; 'personal-storage'= personal storage
+          category; 'violence'= violence category; 'keyloggers-and-monitoring'=
+          keyloggers and monitoring category; 'search-engines'= search engines category;
+          'internet-portals'= internet portals category; 'web-advertisements'= web
+          advertisements category; 'cheating'= cheating category; 'gross'= gross
+          category; 'web-based-email'= web based email category; 'malware-sites'= malware
+          sites category; 'phishing-and-other-fraud'= phishing and other fraud category;
+          'proxy-avoid-and-anonymizers'= proxy avoid and anonymizers category; 'spyware-
+          and-adware'= spyware and adware category; 'music'= music category;
+          'government'= government category; 'nudity'= nudity category; 'news-and-media'=
+          news and media category; 'illegal'= illegal category; 'CDNs'= content delivery
+          networks category; 'internet-communications'= internet communications category;
+          'bot-nets'= bot nets category; 'abortion'= abortion category; 'health-and-
+          medicine'= health and medicine category; 'confirmed-SPAM-sources'= confirmed
+          SPAM sources category; 'SPAM-URLs'= SPAM URLs category; 'unconfirmed-SPAM-
+          sources'= unconfirmed SPAM sources category; 'open-HTTP-proxies'= open HTTP
+          proxies category; 'dynamically-generated-content'= dynamically generated
+          content category; 'parked-domains'= parked domains category; 'alcohol-and-
+          tobacco'= alcohol and tobacco category; 'private-IP-addresses'= private IP
+          addresses category; 'image-and-video-search'= image and video search category;
+          'fashion-and-beauty'= fashion and beauty category; 'recreation-and-hobbies'=
+          recreation and hobbies category; 'motor-vehicles'= motor vehicles category;
+          'web-hosting-sites'= web hosting sites category; 'food-and-dining'= food and
+          dining category; 'dummy-item'= dummy item category; 'self-harm'= self harm
+          category; 'dns-over-https'= dns over https category; 'low-thc-cannabis-
+          products'= low-thc cannabis products; 'generative-ai'= generative ai category;
+          'nudity-artistic'= artistic nudity; 'illegal-pornography'= illegal pornography
+          eg. child sexual abuse; 'uncategorised'= uncategorised; 'other-category'= other
+          category; 'trustworthy'= Trustworthy level(81-100); 'low-risk'= Low-risk
+          level(61-80); 'moderate-risk'= Moderate-risk level(41-60); 'suspicious'=
+          Suspicious level(21-40); 'malicious'= Malicious level(1-20);"
+                type: str
     certificate_list:
         description:
         - "Field certificate_list"
@@ -2531,13 +2058,29 @@ options:
                 description:
                 - "food and dining category"
                 type: str
+            self_harm:
+                description:
+                - "self harm category"
+                type: str
+            dns_over_https:
+                description:
+                - "dns over https category"
+                type: str
+            low_thc_cannabis_products:
+                description:
+                - "low-thc cannabis products"
+                type: str
+            generative_ai:
+                description:
+                - "generative ai category"
+                type: str
             nudity_artistic:
                 description:
-                - "nudity join Entertainment and Arts"
+                - "artistic nudity"
                 type: str
             illegal_pornography:
                 description:
-                - "illegal join Adult and Pornography"
+                - "illegal pornography eg. child sexual abuse"
                 type: str
             uncategorised:
                 description:
@@ -2638,9 +2181,9 @@ AVAILABLE_PROPERTIES = [
     "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name", "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type",
     "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ja3_enable", "ja3_insert_http_header", "ja3_reject_class_list", "ja3_reject_max_number_per_host", "ja3_ttl", "ldap_base_dn_from_cert", "ldap_search_filter", "local_cert_pin_list", "local_logging",
     "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth", "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days",
-    "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list", "session_cache_size",
-    "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable", "ssli_logging", "sslilogging",
-    "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation",
+    "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "sampling_enable", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list",
+    "session_cache_size", "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable",
+    "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation",
     ]
 
 
@@ -2701,7 +2244,7 @@ def get_argspec():
             'type': 'list',
             'ec': {
                 'type': 'str',
-                'choices': ['secp256r1', 'secp384r1']
+                'choices': ['secp256r1', 'secp384r1', 'secp521r1', 'x25519']
                 }
             },
         'local_logging': {
@@ -3245,494 +2788,30 @@ def get_argspec():
             },
         'web_category': {
             'type': 'dict',
-            'uncategorized': {
-                'type': 'bool',
-                },
-            'real_estate': {
-                'type': 'bool',
-                },
-            'computer_and_internet_security': {
-                'type': 'bool',
-                },
-            'financial_services': {
-                'type': 'bool',
-                },
-            'business_and_economy': {
-                'type': 'bool',
-                },
-            'computer_and_internet_info': {
-                'type': 'bool',
-                },
-            'auctions': {
-                'type': 'bool',
-                },
-            'shopping': {
-                'type': 'bool',
-                },
-            'cult_and_occult': {
-                'type': 'bool',
-                },
-            'travel': {
-                'type': 'bool',
-                },
-            'drugs': {
-                'type': 'bool',
-                },
-            'adult_and_pornography': {
-                'type': 'bool',
-                },
-            'home_and_garden': {
-                'type': 'bool',
-                },
-            'military': {
-                'type': 'bool',
-                },
-            'social_network': {
-                'type': 'bool',
-                },
-            'dead_sites': {
-                'type': 'bool',
-                },
-            'stock_advice_and_tools': {
-                'type': 'bool',
-                },
-            'training_and_tools': {
-                'type': 'bool',
-                },
-            'dating': {
-                'type': 'bool',
-                },
-            'sex_education': {
-                'type': 'bool',
-                },
-            'religion': {
-                'type': 'bool',
-                },
-            'entertainment_and_arts': {
-                'type': 'bool',
-                },
-            'personal_sites_and_blogs': {
-                'type': 'bool',
-                },
-            'legal': {
-                'type': 'bool',
-                },
-            'local_information': {
-                'type': 'bool',
-                },
-            'streaming_media': {
-                'type': 'bool',
-                },
-            'job_search': {
-                'type': 'bool',
-                },
-            'gambling': {
-                'type': 'bool',
-                },
-            'translation': {
-                'type': 'bool',
-                },
-            'reference_and_research': {
-                'type': 'bool',
-                },
-            'shareware_and_freeware': {
-                'type': 'bool',
-                },
-            'peer_to_peer': {
-                'type': 'bool',
-                },
-            'marijuana': {
-                'type': 'bool',
-                },
-            'hacking': {
-                'type': 'bool',
-                },
-            'games': {
-                'type': 'bool',
-                },
-            'philosophy_and_politics': {
-                'type': 'bool',
-                },
-            'weapons': {
-                'type': 'bool',
-                },
-            'pay_to_surf': {
-                'type': 'bool',
-                },
-            'hunting_and_fishing': {
-                'type': 'bool',
-                },
-            'society': {
-                'type': 'bool',
-                },
-            'educational_institutions': {
-                'type': 'bool',
-                },
-            'online_greeting_cards': {
-                'type': 'bool',
-                },
-            'sports': {
-                'type': 'bool',
-                },
-            'swimsuits_and_intimate_apparel': {
-                'type': 'bool',
-                },
-            'questionable': {
-                'type': 'bool',
-                },
-            'kids': {
-                'type': 'bool',
-                },
-            'hate_and_racism': {
-                'type': 'bool',
-                },
-            'personal_storage': {
-                'type': 'bool',
-                },
-            'violence': {
-                'type': 'bool',
-                },
-            'keyloggers_and_monitoring': {
-                'type': 'bool',
-                },
-            'search_engines': {
-                'type': 'bool',
-                },
-            'internet_portals': {
-                'type': 'bool',
-                },
-            'web_advertisements': {
-                'type': 'bool',
-                },
-            'cheating': {
-                'type': 'bool',
-                },
-            'gross': {
-                'type': 'bool',
-                },
-            'web_based_email': {
-                'type': 'bool',
-                },
-            'malware_sites': {
-                'type': 'bool',
-                },
-            'phishing_and_other_fraud': {
-                'type': 'bool',
-                },
-            'proxy_avoid_and_anonymizers': {
-                'type': 'bool',
-                },
-            'spyware_and_adware': {
-                'type': 'bool',
-                },
-            'music': {
-                'type': 'bool',
-                },
-            'government': {
-                'type': 'bool',
-                },
-            'nudity': {
-                'type': 'bool',
-                },
-            'news_and_media': {
-                'type': 'bool',
-                },
-            'illegal': {
-                'type': 'bool',
-                },
-            'cdns': {
-                'type': 'bool',
-                },
-            'internet_communications': {
-                'type': 'bool',
-                },
-            'bot_nets': {
-                'type': 'bool',
-                },
-            'abortion': {
-                'type': 'bool',
-                },
-            'health_and_medicine': {
-                'type': 'bool',
-                },
-            'spam_urls': {
-                'type': 'bool',
-                },
-            'dynamically_generated_content': {
-                'type': 'bool',
-                },
-            'parked_domains': {
-                'type': 'bool',
-                },
-            'alcohol_and_tobacco': {
-                'type': 'bool',
-                },
-            'image_and_video_search': {
-                'type': 'bool',
-                },
-            'fashion_and_beauty': {
-                'type': 'bool',
-                },
-            'recreation_and_hobbies': {
-                'type': 'bool',
-                },
-            'motor_vehicles': {
-                'type': 'bool',
-                },
-            'web_hosting_sites': {
-                'type': 'bool',
-                },
-            'nudity_artistic': {
-                'type': 'bool',
-                },
-            'illegal_pornography': {
-                'type': 'bool',
+            'bypassed_category': {
+                'type':
+                'str',
+                'choices': [
+                    'uncategorized', 'real-estate', 'computer-and-internet-security', 'financial-services', 'business-and-economy', 'computer-and-internet-info', 'auctions', 'shopping', 'cult-and-occult', 'travel', 'drugs', 'adult-and-pornography', 'home-and-garden', 'military', 'social-network', 'dead-sites', 'stock-advice-and-tools',
+                    'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games',
+                    'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals',
+                    'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'cdns', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'spam-urls',
+                    'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'self-harm', 'dns-over-https', 'low-thc-cannabis-products', 'generative-ai', 'nudity-artistic', 'illegal-pornography'
+                    ]
                 }
             },
         'exception_web_category': {
             'type': 'dict',
-            'exception_uncategorized': {
-                'type': 'bool',
-                },
-            'exception_real_estate': {
-                'type': 'bool',
-                },
-            'exception_computer_and_internet_security': {
-                'type': 'bool',
-                },
-            'exception_financial_services': {
-                'type': 'bool',
-                },
-            'exception_business_and_economy': {
-                'type': 'bool',
-                },
-            'exception_computer_and_internet_info': {
-                'type': 'bool',
-                },
-            'exception_auctions': {
-                'type': 'bool',
-                },
-            'exception_shopping': {
-                'type': 'bool',
-                },
-            'exception_cult_and_occult': {
-                'type': 'bool',
-                },
-            'exception_travel': {
-                'type': 'bool',
-                },
-            'exception_drugs': {
-                'type': 'bool',
-                },
-            'exception_adult_and_pornography': {
-                'type': 'bool',
-                },
-            'exception_home_and_garden': {
-                'type': 'bool',
-                },
-            'exception_military': {
-                'type': 'bool',
-                },
-            'exception_social_network': {
-                'type': 'bool',
-                },
-            'exception_dead_sites': {
-                'type': 'bool',
-                },
-            'exception_stock_advice_and_tools': {
-                'type': 'bool',
-                },
-            'exception_training_and_tools': {
-                'type': 'bool',
-                },
-            'exception_dating': {
-                'type': 'bool',
-                },
-            'exception_sex_education': {
-                'type': 'bool',
-                },
-            'exception_religion': {
-                'type': 'bool',
-                },
-            'exception_entertainment_and_arts': {
-                'type': 'bool',
-                },
-            'exception_personal_sites_and_blogs': {
-                'type': 'bool',
-                },
-            'exception_legal': {
-                'type': 'bool',
-                },
-            'exception_local_information': {
-                'type': 'bool',
-                },
-            'exception_streaming_media': {
-                'type': 'bool',
-                },
-            'exception_job_search': {
-                'type': 'bool',
-                },
-            'exception_gambling': {
-                'type': 'bool',
-                },
-            'exception_translation': {
-                'type': 'bool',
-                },
-            'exception_reference_and_research': {
-                'type': 'bool',
-                },
-            'exception_shareware_and_freeware': {
-                'type': 'bool',
-                },
-            'exception_peer_to_peer': {
-                'type': 'bool',
-                },
-            'exception_marijuana': {
-                'type': 'bool',
-                },
-            'exception_hacking': {
-                'type': 'bool',
-                },
-            'exception_games': {
-                'type': 'bool',
-                },
-            'exception_philosophy_and_politics': {
-                'type': 'bool',
-                },
-            'exception_weapons': {
-                'type': 'bool',
-                },
-            'exception_pay_to_surf': {
-                'type': 'bool',
-                },
-            'exception_hunting_and_fishing': {
-                'type': 'bool',
-                },
-            'exception_society': {
-                'type': 'bool',
-                },
-            'exception_educational_institutions': {
-                'type': 'bool',
-                },
-            'exception_online_greeting_cards': {
-                'type': 'bool',
-                },
-            'exception_sports': {
-                'type': 'bool',
-                },
-            'exception_swimsuits_and_intimate_apparel': {
-                'type': 'bool',
-                },
-            'exception_questionable': {
-                'type': 'bool',
-                },
-            'exception_kids': {
-                'type': 'bool',
-                },
-            'exception_hate_and_racism': {
-                'type': 'bool',
-                },
-            'exception_personal_storage': {
-                'type': 'bool',
-                },
-            'exception_violence': {
-                'type': 'bool',
-                },
-            'exception_keyloggers_and_monitoring': {
-                'type': 'bool',
-                },
-            'exception_search_engines': {
-                'type': 'bool',
-                },
-            'exception_internet_portals': {
-                'type': 'bool',
-                },
-            'exception_web_advertisements': {
-                'type': 'bool',
-                },
-            'exception_cheating': {
-                'type': 'bool',
-                },
-            'exception_gross': {
-                'type': 'bool',
-                },
-            'exception_web_based_email': {
-                'type': 'bool',
-                },
-            'exception_malware_sites': {
-                'type': 'bool',
-                },
-            'exception_phishing_and_other_fraud': {
-                'type': 'bool',
-                },
-            'exception_proxy_avoid_and_anonymizers': {
-                'type': 'bool',
-                },
-            'exception_spyware_and_adware': {
-                'type': 'bool',
-                },
-            'exception_music': {
-                'type': 'bool',
-                },
-            'exception_government': {
-                'type': 'bool',
-                },
-            'exception_nudity': {
-                'type': 'bool',
-                },
-            'exception_news_and_media': {
-                'type': 'bool',
-                },
-            'exception_illegal': {
-                'type': 'bool',
-                },
-            'exception_cdns': {
-                'type': 'bool',
-                },
-            'exception_internet_communications': {
-                'type': 'bool',
-                },
-            'exception_bot_nets': {
-                'type': 'bool',
-                },
-            'exception_abortion': {
-                'type': 'bool',
-                },
-            'exception_health_and_medicine': {
-                'type': 'bool',
-                },
-            'exception_spam_urls': {
-                'type': 'bool',
-                },
-            'exception_dynamically_generated_content': {
-                'type': 'bool',
-                },
-            'exception_parked_domains': {
-                'type': 'bool',
-                },
-            'exception_alcohol_and_tobacco': {
-                'type': 'bool',
-                },
-            'exception_image_and_video_search': {
-                'type': 'bool',
-                },
-            'exception_fashion_and_beauty': {
-                'type': 'bool',
-                },
-            'exception_recreation_and_hobbies': {
-                'type': 'bool',
-                },
-            'exception_motor_vehicles': {
-                'type': 'bool',
-                },
-            'exception_web_hosting_sites': {
-                'type': 'bool',
-                },
-            'exception_nudity_artistic': {
-                'type': 'bool',
-                },
-            'exception_illegal_pornography': {
-                'type': 'bool',
+            'exception_category': {
+                'type':
+                'str',
+                'choices': [
+                    'uncategorized', 'real-estate', 'computer-and-internet-security', 'financial-services', 'business-and-economy', 'computer-and-internet-info', 'auctions', 'shopping', 'cult-and-occult', 'travel', 'drugs', 'adult-and-pornography', 'home-and-garden', 'military', 'social-network', 'dead-sites', 'stock-advice-and-tools',
+                    'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games',
+                    'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals',
+                    'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'cdns', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'spam-urls',
+                    'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'self-harm', 'dns-over-https', 'low-thc-cannabis-products', 'generative-ai', 'nudity-artistic', 'illegal-pornography'
+                    ]
                 }
             },
         'require_web_category': {
@@ -4013,6 +3092,21 @@ def get_argspec():
             },
         'user_tag': {
             'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'real-estate', 'computer-and-internet-security', 'financial-services', 'business-and-economy', 'computer-and-internet-info', 'auctions', 'shopping', 'cult-and-occult', 'travel', 'drugs', 'adult-and-pornography', 'home-and-garden', 'military', 'social-network', 'dead-sites', 'stock-advice-and-tools', 'training-and-tools',
+                    'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games', 'philosophy-and-politics', 'weapons',
+                    'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals', 'web-advertisements', 'cheating', 'gross',
+                    'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'confirmed-SPAM-sources', 'SPAM-URLs', 'unconfirmed-SPAM-sources',
+                    'open-HTTP-proxies', 'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'dummy-item', 'self-harm', 'dns-over-https', 'low-thc-cannabis-products',
+                    'generative-ai', 'nudity-artistic', 'illegal-pornography', 'uncategorised', 'other-category', 'trustworthy', 'low-risk', 'moderate-risk', 'suspicious', 'malicious'
+                    ]
+                }
             },
         'certificate_list': {
             'type': 'list',
@@ -4313,6 +3407,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'food_and_dining': {
+                'type': 'str',
+                },
+            'self_harm': {
+                'type': 'str',
+                },
+            'dns_over_https': {
+                'type': 'str',
+                },
+            'low_thc_cannabis_products': {
+                'type': 'str',
+                },
+            'generative_ai': {
                 'type': 'str',
                 },
             'nudity_artistic': {

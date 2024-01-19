@@ -105,6 +105,11 @@ options:
           connection, default 6"
         type: int
         required: False
+    parallel_queries:
+        description:
+        - "Number of parallel queries to send to servers"
+        type: int
+        required: False
     full_response:
         description:
         - "Serve all records (authority and additional) when applicable"
@@ -306,8 +311,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "csubnet_retry", "default_recursive", "dnssec_validation", "fast_ns_selection", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_trials", "ns_cache_lookup", "oper", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval",
-    "udp_retry_interval", "use_client_qid", "use_service_group_response", "uuid",
+    "csubnet_retry", "default_recursive", "dnssec_validation", "fast_ns_selection", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_trials", "ns_cache_lookup", "oper", "parallel_queries", "request_for_pending_resolution", "retries_per_level",
+    "udp_initial_interval", "udp_retry_interval", "use_client_qid", "use_service_group_response", "uuid",
     ]
 
 
@@ -353,6 +358,9 @@ def get_argspec():
             'type': 'str',
             },
         'retries_per_level': {
+            'type': 'int',
+            },
+        'parallel_queries': {
             'type': 'int',
             },
         'full_response': {

@@ -763,6 +763,10 @@ options:
                 description:
                 - "Limit policy Template"
                 type: int
+            deny_reset_limit_policy:
+                description:
+                - "Limit policy Template (only works for inbound rule)"
+                type: int
             permit_respond_to_user_mac:
                 description:
                 - "Use the user's source MAC for the next hop rather than the routing table
@@ -1518,6 +1522,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'permit_limit_policy': {
+                'type': 'int',
+                },
+            'deny_reset_limit_policy': {
                 'type': 'int',
                 },
             'permit_respond_to_user_mac': {

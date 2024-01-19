@@ -106,8 +106,8 @@ options:
         suboptions:
             action_type:
                 description:
-                - "'drop'= Log, and drop all packets (default); 'redistribute-route'= Log, Drop,
-          and Notify upstream router to reroute the packets;"
+                - "'drop'= Log, and drop all packets (default); 'redistribute-route'= Log, Notify
+          upstream router to reroute the packets. Drop all packets by default.;"
                 type: str
             route_map:
                 description:
@@ -133,6 +133,10 @@ options:
                 - "Max time to wait before removing IP from blackhole (Max value in seconds
           (default 300))"
                 type: int
+            forward:
+                description:
+                - "Forward traffic with rate-limiting"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
@@ -341,6 +345,9 @@ def get_argspec():
                 },
             'remove_wait_timer': {
                 'type': 'int',
+                },
+            'forward': {
+                'type': 'bool',
                 }
             },
         'uuid': {

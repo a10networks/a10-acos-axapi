@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_global_trigger_stats_rate
+module: a10_overlay_tunnel_vtep_local_ipv6_address_vni
 description:
-    - Configure stats to trigger packet capture on increment rate
+    - IP Address of the local tunnel end point
 author: A10 Networks
 options:
     state:
@@ -55,31 +55,31 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    template_name:
+    vtep_id:
         description:
         - Key to identify parent object
         type: str
         required: True
-    threshold_exceeded_by:
+    segment:
         description:
-        - "Set the threshold to the number of times greater than the previous duration to
-          start the capture, default is 5"
+        - "Id of the segment that is being extended"
         type: int
-        required: False
-    duration:
+        required: True
+    partition:
         description:
-        - "Time in seconds to look for the anomaly, default is 60"
-        type: int
+        - "Name of the Partition with the L2 segment being extended (Name of the User
+          Partition with the L2 segment being extended)"
+        type: str
         required: False
-    udp_total_ports_allocated:
+    gateway:
         description:
-        - "Enable automatic packet-capture for Total UDP ports allocated"
+        - "This is a Gateway segment id"
         type: bool
         required: False
-    icmp_total_ports_allocated:
+    lif:
         description:
-        - "Enable automatic packet-capture for Total ICMP ports allocated"
-        type: bool
+        - "Logical interface (logical interface name)"
+        type: str
         required: False
     uuid:
         description:
@@ -140,7 +140,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["duration", "icmp_total_ports_allocated", "threshold_exceeded_by", "udp_total_ports_allocated", "uuid", ]
+AVAILABLE_PROPERTIES = ["gateway", "lif", "partition", "segment", "uuid", ]
 
 
 def get_default_argspec():
@@ -160,22 +160,26 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'udp_total_ports_allocated': {'type': 'bool', }, 'icmp_total_ports_allocated': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'segment': {'type': 'int', 'required': True, }, 'partition': {'type': 'str', }, 'gateway': {'type': 'bool', }, 'lif': {'type': 'str', }, 'uuid': {'type': 'str', }})
     # Parent keys
-    rv.update(dict(template_name=dict(type='str', required=True), ))
+    rv.update(dict(vtep_id=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/cgnv6-global/trigger-stats-rate"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/local-ipv6-address/vni/{segment}"
 
     f_dict = {}
-    if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
+    if '/' in str(module.params["segment"]):
+        f_dict["segment"] = module.params["segment"].replace("/", "%2F")
     else:
-        f_dict["template_name"] = module.params["template_name"]
+        f_dict["segment"] = module.params["segment"]
+    if '/' in module.params["vtep_id"]:
+        f_dict["vtep_id"] = module.params["vtep_id"].replace("/", "%2F")
+    else:
+        f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)
 
@@ -183,10 +187,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/cgnv6-global/trigger-stats-rate"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/local-ipv6-address/vni"
 
     f_dict = {}
-    f_dict["template_name"] = module.params["template_name"]
+    f_dict["segment"] = ""
+    f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)
 
@@ -198,13 +203,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["trigger-stats-rate"].items():
+    for k, v in payload["vni"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["trigger-stats-rate"].get(k) != v:
+        if config_changes["vni"].get(k) != v:
             change_results["changed"] = True
-            config_changes["trigger-stats-rate"][k] = v
+            config_changes["vni"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -230,7 +235,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-rate", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("vni", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -320,13 +325,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-rate"] if info != "NotFound" else info
+                result["acos_info"] = info["vni"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-rate-list"] if info != "NotFound" else info
+                result["acos_info"] = info["vni-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

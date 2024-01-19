@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_global_trigger_stats_inc
+module: a10_slb_template_dns_category_lookup
 description:
-    - Configure stats to trigger packet capture on increment
+    - Configure web-category list for DNS domains matching (Up to 8 lists)
 author: A10 Networks
 options:
     state:
@@ -55,20 +55,50 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    template_name:
+    dns_name:
         description:
         - Key to identify parent object
         type: str
         required: True
-    udp_total_ports_allocated:
+    category_name:
         description:
-        - "Enable automatic packet-capture for Total UDP ports allocated"
+        - "category-list name"
+        type: str
+        required: True
+    permit:
+        description:
+        - "Permit matching DNS domains"
         type: bool
         required: False
-    icmp_total_ports_allocated:
+    drop:
         description:
-        - "Enable automatic packet-capture for Total ICMP ports allocated"
+        - "Deny matching DNS domains"
         type: bool
+        required: False
+    respond:
+        description:
+        - "Respond to matching DNS domains"
+        type: bool
+        required: False
+    respond_nxdomain:
+        description:
+        - "Respond with NXDOMAIN"
+        type: bool
+        required: False
+    respond_ip_addr:
+        description:
+        - "Type A record to respond (IPv4 address)"
+        type: str
+        required: False
+    respond_ipv6_addr:
+        description:
+        - "TYPE AAAA record to respond (IPv6 address)"
+        type: str
+        required: False
+    respond_cname_str:
+        description:
+        - "CNAME to respond (Canonical name)"
+        type: str
         required: False
     uuid:
         description:
@@ -129,7 +159,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["icmp_total_ports_allocated", "udp_total_ports_allocated", "uuid", ]
+AVAILABLE_PROPERTIES = ["category_name", "drop", "permit", "respond", "respond_cname_str", "respond_ip_addr", "respond_ipv6_addr", "respond_nxdomain", "uuid", ]
 
 
 def get_default_argspec():
@@ -149,22 +179,26 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'udp_total_ports_allocated': {'type': 'bool', }, 'icmp_total_ports_allocated': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'category_name': {'type': 'str', 'required': True, }, 'permit': {'type': 'bool', }, 'drop': {'type': 'bool', }, 'respond': {'type': 'bool', }, 'respond_nxdomain': {'type': 'bool', }, 'respond_ip_addr': {'type': 'str', }, 'respond_ipv6_addr': {'type': 'str', }, 'respond_cname_str': {'type': 'str', }, 'uuid': {'type': 'str', }})
     # Parent keys
-    rv.update(dict(template_name=dict(type='str', required=True), ))
+    rv.update(dict(dns_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/cgnv6-global/trigger-stats-inc"
+    url_base = "/axapi/v3/slb/template/dns/{dns_name}/category-lookup/{category_name}"
 
     f_dict = {}
-    if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
+    if '/' in str(module.params["category_name"]):
+        f_dict["category_name"] = module.params["category_name"].replace("/", "%2F")
     else:
-        f_dict["template_name"] = module.params["template_name"]
+        f_dict["category_name"] = module.params["category_name"]
+    if '/' in module.params["dns_name"]:
+        f_dict["dns_name"] = module.params["dns_name"].replace("/", "%2F")
+    else:
+        f_dict["dns_name"] = module.params["dns_name"]
 
     return url_base.format(**f_dict)
 
@@ -172,10 +206,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/cgnv6-global/trigger-stats-inc"
+    url_base = "/axapi/v3/slb/template/dns/{dns_name}/category-lookup"
 
     f_dict = {}
-    f_dict["template_name"] = module.params["template_name"]
+    f_dict["category_name"] = ""
+    f_dict["dns_name"] = module.params["dns_name"]
 
     return url_base.format(**f_dict)
 
@@ -187,13 +222,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["trigger-stats-inc"].items():
+    for k, v in payload["category-lookup"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["trigger-stats-inc"].get(k) != v:
+        if config_changes["category-lookup"].get(k) != v:
             change_results["changed"] = True
-            config_changes["trigger-stats-inc"][k] = v
+            config_changes["category-lookup"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -219,7 +254,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("category-lookup", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -309,13 +344,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info["category-lookup"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info["category-lookup-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

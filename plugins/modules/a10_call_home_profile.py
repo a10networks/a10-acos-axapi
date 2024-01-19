@@ -87,12 +87,6 @@ options:
           config and solution data;"
         type: str
         required: False
-    time:
-        description:
-        - "Set export time of the data in minutes. default 0 (12 AM). exported between
-          12-01 AM"
-        type: int
-        required: False
     action:
         description:
         - "'register'= Register the device to the portal; 'deregister'= Deregister the
@@ -158,7 +152,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "export_policy", "ipv4", "ipv6", "name", "port", "time", "use_mgmt_port", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "export_policy", "ipv4", "ipv6", "name", "port", "use_mgmt_port", "uuid", ]
 
 
 def get_default_argspec():
@@ -178,37 +172,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            },
-        'ipv4': {
-            'type': 'str',
-            },
-        'ipv6': {
-            'type': 'str',
-            },
-        'port': {
-            'type': 'int',
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'export_policy': {
-            'type': 'str',
-            'choices': ['restrictive', 'permissive']
-            },
-        'time': {
-            'type': 'int',
-            },
-        'action': {
-            'type': 'str',
-            'choices': ['register', 'deregister']
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'name': {'type': 'str', }, 'ipv4': {'type': 'str', }, 'ipv6': {'type': 'str', }, 'port': {'type': 'int', }, 'use_mgmt_port': {'type': 'bool', }, 'export_policy': {'type': 'str', 'choices': ['restrictive', 'permissive']}, 'action': {'type': 'str', 'choices': ['register', 'deregister']}, 'uuid': {'type': 'str', }})
     return rv
 
 

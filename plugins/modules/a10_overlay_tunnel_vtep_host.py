@@ -65,6 +65,11 @@ options:
         - "IPv4 address of the overlay host"
         type: str
         required: True
+    ipv6_addr:
+        description:
+        - "IPv6 address of the overlay host"
+        type: str
+        required: False
     overlay_mac_addr:
         description:
         - "MAC Address of the overlay host"
@@ -78,6 +83,11 @@ options:
     remote_vtep:
         description:
         - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
+        type: str
+        required: True
+    remote_ipv6_vtep:
+        description:
+        - "Configure the VTEP IPv6 address (IPv6 address of the VTEP for the remote host)"
         type: str
         required: True
     uuid:
@@ -139,7 +149,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ip_addr", "overlay_mac_addr", "remote_vtep", "uuid", "vni", ]
+AVAILABLE_PROPERTIES = ["ip_addr", "ipv6_addr", "overlay_mac_addr", "remote_ipv6_vtep", "remote_vtep", "uuid", "vni", ]
 
 
 def get_default_argspec():
@@ -159,7 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ip_addr': {'type': 'str', 'required': True, }, 'overlay_mac_addr': {'type': 'str', 'required': True, }, 'vni': {'type': 'int', 'required': True, }, 'remote_vtep': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }})
+    rv.update({'ip_addr': {'type': 'str', 'required': True, }, 'ipv6_addr': {'type': 'str', }, 'overlay_mac_addr': {'type': 'str', 'required': True, }, 'vni': {'type': 'int', 'required': True, }, 'remote_vtep': {'type': 'str', 'required': True, }, 'remote_ipv6_vtep': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(vtep_id=dict(type='str', required=True), ))
     return rv
@@ -168,7 +178,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/{ip_addr}+{overlay_mac_addr}+{vni}+{remote_vtep}"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/{ip_addr}+{overlay_mac_addr}+{vni}+{remote_vtep}+{remote_ipv6_vtep}"
 
     f_dict = {}
     if '/' in str(module.params["ip_addr"]):
@@ -187,6 +197,10 @@ def existing_url(module):
         f_dict["remote_vtep"] = module.params["remote_vtep"].replace("/", "%2F")
     else:
         f_dict["remote_vtep"] = module.params["remote_vtep"]
+    if '/' in str(module.params["remote_ipv6_vtep"]):
+        f_dict["remote_ipv6_vtep"] = module.params["remote_ipv6_vtep"].replace("/", "%2F")
+    else:
+        f_dict["remote_ipv6_vtep"] = module.params["remote_ipv6_vtep"]
     if '/' in module.params["vtep_id"]:
         f_dict["vtep_id"] = module.params["vtep_id"].replace("/", "%2F")
     else:
@@ -198,13 +212,14 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/++"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/host/+++"
 
     f_dict = {}
     f_dict["ip_addr"] = ""
     f_dict["overlay_mac_addr"] = ""
     f_dict["vni"] = ""
     f_dict["remote_vtep"] = ""
+    f_dict["remote_ipv6_vtep"] = ""
     f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)
