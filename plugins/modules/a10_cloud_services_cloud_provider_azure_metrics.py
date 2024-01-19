@@ -149,6 +149,33 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    ddos:
+        description:
+        - "Field ddos"
+        type: dict
+        required: False
+        suboptions:
+            tcp:
+                description:
+                - "'enable'= Enable All TCP Metrics; 'disable'= Disable All TCP Metrics;"
+                type: str
+            udp:
+                description:
+                - "'enable'= Enable All UDP Metrics; 'disable'= Disable All UDP Metrics;"
+                type: str
+            port:
+                description:
+                - "'enable'= Enable All Port Metrics; 'disable'= Disable All Port Metrics;"
+                type: str
+            entry_zone:
+                description:
+                - "'enable'= Enable All Stats for All DDoS Entries and Zones; 'disable'= Disable
+          All Stats for All DDoS Entries and Zones;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -203,7 +230,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "active_partitions", "cps", "cpu", "disk", "interfaces", "memory", "packet_drop", "packet_rate", "resource_id", "server_down_count", "server_down_percentage", "server_error", "sessions", "ssl_cert", "throughput", "tps", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "active_partitions", "cps", "cpu", "ddos", "disk", "interfaces", "memory", "packet_drop", "packet_rate", "resource_id", "server_down_count", "server_down_percentage", "server_error", "sessions", "ssl_cert", "throughput", "tps", "uuid", ]
 
 
 def get_default_argspec():
@@ -292,6 +319,28 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'ddos': {
+            'type': 'dict',
+            'tcp': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'udp': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'port': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'entry_zone': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
+                }
             }
         })
     return rv

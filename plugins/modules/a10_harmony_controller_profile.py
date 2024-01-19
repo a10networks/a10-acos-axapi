@@ -159,6 +159,16 @@ options:
                 description:
                 - "re-sync analtyics bus connections"
                 type: bool
+    force:
+        description:
+        - "Field force"
+        type: dict
+        required: False
+        suboptions:
+            deregister:
+                description:
+                - "forcefully deregister thunder from harmony controller"
+                type: bool
     thunder_mgmt_ip:
         description:
         - "Field thunder_mgmt_ip"
@@ -327,7 +337,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "analytics", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "host", "host_ipv6", "interval", "oper", "password_encrypted", "port", "provider", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "analytics", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "force", "host", "host_ipv6", "interval", "oper", "password_encrypted", "port", "provider", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid", ]
 
 
 def get_default_argspec():
@@ -408,6 +418,12 @@ def get_argspec():
                 'type': 'bool',
                 },
             'analytics_bus': {
+                'type': 'bool',
+                }
+            },
+        'force': {
+            'type': 'dict',
+            'deregister': {
                 'type': 'bool',
                 }
             },

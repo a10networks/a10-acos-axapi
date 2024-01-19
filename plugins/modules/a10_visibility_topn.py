@@ -452,6 +452,18 @@ def get_argspec():
                 'downlink_pkts': {
                     'type': 'bool',
                     },
+                'u_uplink_bytes': {
+                    'type': 'bool',
+                    },
+                'u_downlink_bytes': {
+                    'type': 'bool',
+                    },
+                'u_uplink_pkts': {
+                    'type': 'bool',
+                    },
+                'u_downlink_pkts': {
+                    'type': 'bool',
+                    },
                 'gtp_v0_c_tunnel_created': {
                     'type': 'bool',
                     },
@@ -731,6 +743,18 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'downlink_pkts': {
+                    'type': 'bool',
+                    },
+                'u_uplink_bytes': {
+                    'type': 'bool',
+                    },
+                'u_downlink_bytes': {
+                    'type': 'bool',
+                    },
+                'u_uplink_pkts': {
+                    'type': 'bool',
+                    },
+                'u_downlink_pkts': {
                     'type': 'bool',
                     },
                 'gtp_v0_c_tunnel_created': {

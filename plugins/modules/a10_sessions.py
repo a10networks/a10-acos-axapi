@@ -112,6 +112,10 @@ options:
                 description:
                 - "Field filter_type"
                 type: str
+            filter_debug:
+                description:
+                - "Field filter_debug"
+                type: str
             src_ipv4_addr:
                 description:
                 - "Field src_ipv4_addr"
@@ -549,6 +553,9 @@ def get_argspec():
                     },
                 'dns_id': {
                     'type': 'int',
+                    },
+                'radius_id': {
+                    'type': 'int',
                     }
                 },
             'total_sessions': {
@@ -561,9 +568,13 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'debug', 'application',
-                    'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp', 'extended_filter', 'hm'
+                    'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'application', 'ipsec',
+                    'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6', 'gtp', 'extended_filter', 'hm'
                     ]
+                },
+            'filter_debug': {
+                'type': 'str',
+                'choices': ['debug']
                 },
             'src_ipv4_addr': {
                 'type': 'str',

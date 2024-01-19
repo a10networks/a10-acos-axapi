@@ -138,8 +138,8 @@ options:
         required: False
     traffic_distribution_mode:
         description:
-        - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'=
-          l4-src-port; 'l4-dst-port'= l4-dst-port;"
+        - "'sip'= sip; 'dip'= dip; 'l3-lookup'= l3-lookup; 'primary'= primary; 'blade'=
+          blade; 'l4-src-port'= l4-src-port; 'l4-dst-port'= l4-dst-port;"
         type: str
         required: False
     uuid:
@@ -370,7 +370,7 @@ def get_argspec():
             },
         'traffic_distribution_mode': {
             'type': 'str',
-            'choices': ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
+            'choices': ['sip', 'dip', 'l3-lookup', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
             },
         'uuid': {
             'type': 'str',

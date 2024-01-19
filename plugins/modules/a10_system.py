@@ -106,9 +106,20 @@ options:
         - "Enable system hardware blocking (default disabled)"
         type: bool
         required: False
+    rfc_ipfix_ie_spec:
+        description:
+        - "'enable'= Use RFC-defined IPFIX information element lengths; 'disable'= Use
+          non-standard IPFIX information element lengths;"
+        type: str
+        required: False
     src_ip_hash_enable:
         description:
         - "Enable source ip hash"
+        type: bool
+        required: False
+    even_port_hash_enable:
+        description:
+        - "Enable even src/dest port number hash"
         type: bool
         required: False
     class_list_hitcount_enable:
@@ -680,6 +691,10 @@ options:
             auth_session_count:
                 description:
                 - "Total auth sessions in the system"
+                type: int
+            ngwaf_cache_entry:
+                description:
+                - "Specify the maximum cache entries for NGWAF"
                 type: int
             uuid:
                 description:
@@ -2410,12 +2425,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "control_cpu", "core", "cosq_show", "cosq_stats",
     "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn",
-    "dynamic_service_dns_socket_pool", "enable_password", "environment", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate", "health_check_list",
-    "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro", "management_interface_mode",
-    "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype", "port_count", "port_info", "port_list",
-    "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec", "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown",
-    "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp", "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template",
-    "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
+    "dynamic_service_dns_socket_pool", "enable_password", "environment", "even_port_hash_enable", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate",
+    "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro",
+    "management_interface_mode", "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype",
+    "port_count", "port_info", "port_list", "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec",
+    "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp",
+    "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
     ]
 
 
@@ -2468,7 +2483,14 @@ def get_argspec():
         'hw_blocking_enable': {
             'type': 'bool',
             },
+        'rfc_ipfix_ie_spec': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
         'src_ip_hash_enable': {
+            'type': 'bool',
+            },
+        'even_port_hash_enable': {
             'type': 'bool',
             },
         'class_list_hitcount_enable': {
@@ -2791,8 +2813,20 @@ def get_argspec():
                     'clear_all_sequence': {
                         'type': 'int',
                         },
+                    'clear_all_partition': {
+                        'type': 'str',
+                        },
+                    'clear_all_partition_all': {
+                        'type': 'bool',
+                        },
                     'clear_sequence': {
                         'type': 'int',
+                        },
+                    'clear_partition': {
+                        'type': 'str',
+                        },
+                    'clear_partition_all': {
+                        'type': 'bool',
                         }
                     },
                 'link_disable_cfg': {
@@ -2949,6 +2983,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'auth_session_count': {
+                'type': 'int',
+                },
+            'ngwaf_cache_entry': {
                 'type': 'int',
                 },
             'uuid': {

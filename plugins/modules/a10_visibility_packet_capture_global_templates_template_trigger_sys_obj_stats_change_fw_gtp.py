@@ -73,32 +73,36 @@ options:
         suboptions:
             out_of_session_memory:
                 description:
-                - "Enable automatic packet-capture for Out of Tunnel Memory"
+                - "Enable automatic packet-capture for Out of Tunnel Memory for GTP-C"
+                type: bool
+            blade_out_of_session_memory:
+                description:
+                - "Enable automatic packet-capture for Out of Tunnel Memory on PU2"
                 type: bool
             gtp_smp_path_check_failed:
                 description:
                 - "Enable automatic packet-capture for GTP SMP PATH check Failed"
                 type: bool
-            gtp_smp_check_failed:
+            gtp_smp_c_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP SMP check Failed"
+                - "Enable automatic packet-capture for GTP-C SMP check Failed"
                 type: bool
-            gtp_smp_session_count_check_failed:
+            blade_gtp_smp_path_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP-U session count is not in range of 0-11
-          in GTP-C SMP"
+                - "Enable automatic packet-capture for GTP SMP PATH check Failed on PU2"
                 type: bool
-            gtp_c_ref_count_smp_exceeded:
+            blade_gtp_smp_c_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP-C session count on C-smp exceeded 2"
-                type: bool
-            gtp_u_smp_in_rml_with_sess:
-                description:
-                - "Enable automatic packet-capture for GTP-U smp is marked RML with U-session"
+                - "Enable automatic packet-capture for GTP-C SMP check Failed on PU2"
                 type: bool
             gtp_tunnel_rate_limit_entry_create_fail:
                 description:
                 - "Enable automatic packet-capture for GTP Tunnel Level Rate Limit Entry Create
+          Failure"
+                type: bool
+            gtp_u_tunnel_rate_limit_entry_create_fa:
+                description:
+                - "Enable automatic packet-capture for GTP-U Tunnel Level Rate Limit Entry Create
           Failure"
                 type: bool
             gtp_rate_limit_smp_create_failure:
@@ -114,9 +118,73 @@ options:
                 description:
                 - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure"
                 type: bool
+            blade_gtp_rate_limit_smp_create_failure:
+                description:
+                - "Enable automatic packet-capture for GTP Rate Limit SMP Create Failure on PU2"
+                type: bool
+            blade_gtp_rate_limit_t3_ctr_create_fail:
+                description:
+                - "Enable automatic packet-capture for GTP Rate Limit Dynamic Counters Create
+          Failure on PU2"
+                type: bool
+            blade_gtp_rate_limit_entry_create_failu:
+                description:
+                - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure on PU2"
+                type: bool
             gtp_smp_dec_sess_count_check_failed:
                 description:
                 - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
+                type: bool
+            gtp_u_smp_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP U-SMP check Failed"
+                type: bool
+            gtp_info_ext_not_found:
+                description:
+                - "Enable automatic packet-capture for GTP-Info ext not found while freeing C-smp"
+                type: bool
+            blade_gtp_smp_dec_sess_count_check_fail:
+                description:
+                - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP on
+          PU2"
+                type: bool
+            blade_gtp_u_smp_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP U-SMP check Failed on PU2"
+                type: bool
+            blade_gtp_info_ext_not_found:
+                description:
+                - "Enable automatic packet-capture for GTP-Info ext not found while freeing C-smp
+          on PU2"
+                type: bool
+            blade_gtp_smp_session_count_check_faile:
+                description:
+                - "Enable automatic packet-capture for GTP-U session count is not in range of 0-11
+          in GTP-C SMP on PU2"
+                type: bool
+            gtp_c_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-C SMP signature check Failed"
+                type: bool
+            blade_gtp_c_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-C SMP signature check Failed on PU2"
+                type: bool
+            gtp_u_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP SMP signature check Failed"
+                type: bool
+            blade_gtp_u_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-U SMP signature check Failed on PU2"
+                type: bool
+            gtp_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP SMP signature check Failed"
+                type: bool
+            blade_gtp_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP SMP signature check Failed on PU2"
                 type: bool
             uuid:
                 description:
@@ -139,32 +207,36 @@ options:
                 type: int
             out_of_session_memory:
                 description:
-                - "Enable automatic packet-capture for Out of Tunnel Memory"
+                - "Enable automatic packet-capture for Out of Tunnel Memory for GTP-C"
+                type: bool
+            blade_out_of_session_memory:
+                description:
+                - "Enable automatic packet-capture for Out of Tunnel Memory on PU2"
                 type: bool
             gtp_smp_path_check_failed:
                 description:
                 - "Enable automatic packet-capture for GTP SMP PATH check Failed"
                 type: bool
-            gtp_smp_check_failed:
+            gtp_smp_c_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP SMP check Failed"
+                - "Enable automatic packet-capture for GTP-C SMP check Failed"
                 type: bool
-            gtp_smp_session_count_check_failed:
+            blade_gtp_smp_path_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP-U session count is not in range of 0-11
-          in GTP-C SMP"
+                - "Enable automatic packet-capture for GTP SMP PATH check Failed on PU2"
                 type: bool
-            gtp_c_ref_count_smp_exceeded:
+            blade_gtp_smp_c_check_failed:
                 description:
-                - "Enable automatic packet-capture for GTP-C session count on C-smp exceeded 2"
-                type: bool
-            gtp_u_smp_in_rml_with_sess:
-                description:
-                - "Enable automatic packet-capture for GTP-U smp is marked RML with U-session"
+                - "Enable automatic packet-capture for GTP-C SMP check Failed on PU2"
                 type: bool
             gtp_tunnel_rate_limit_entry_create_fail:
                 description:
                 - "Enable automatic packet-capture for GTP Tunnel Level Rate Limit Entry Create
+          Failure"
+                type: bool
+            gtp_u_tunnel_rate_limit_entry_create_fa:
+                description:
+                - "Enable automatic packet-capture for GTP-U Tunnel Level Rate Limit Entry Create
           Failure"
                 type: bool
             gtp_rate_limit_smp_create_failure:
@@ -180,9 +252,73 @@ options:
                 description:
                 - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure"
                 type: bool
+            blade_gtp_rate_limit_smp_create_failure:
+                description:
+                - "Enable automatic packet-capture for GTP Rate Limit SMP Create Failure on PU2"
+                type: bool
+            blade_gtp_rate_limit_t3_ctr_create_fail:
+                description:
+                - "Enable automatic packet-capture for GTP Rate Limit Dynamic Counters Create
+          Failure on PU2"
+                type: bool
+            blade_gtp_rate_limit_entry_create_failu:
+                description:
+                - "Enable automatic packet-capture for GTP Rate Limit Entry Create Failure on PU2"
+                type: bool
             gtp_smp_dec_sess_count_check_failed:
                 description:
                 - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP"
+                type: bool
+            gtp_u_smp_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP U-SMP check Failed"
+                type: bool
+            gtp_info_ext_not_found:
+                description:
+                - "Enable automatic packet-capture for GTP-Info ext not found while freeing C-smp"
+                type: bool
+            blade_gtp_smp_dec_sess_count_check_fail:
+                description:
+                - "Enable automatic packet-capture for GTP-U session count is 0 in GTP-C SMP on
+          PU2"
+                type: bool
+            blade_gtp_u_smp_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP U-SMP check Failed on PU2"
+                type: bool
+            blade_gtp_info_ext_not_found:
+                description:
+                - "Enable automatic packet-capture for GTP-Info ext not found while freeing C-smp
+          on PU2"
+                type: bool
+            blade_gtp_smp_session_count_check_faile:
+                description:
+                - "Enable automatic packet-capture for GTP-U session count is not in range of 0-11
+          in GTP-C SMP on PU2"
+                type: bool
+            gtp_c_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-C SMP signature check Failed"
+                type: bool
+            blade_gtp_c_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-C SMP signature check Failed on PU2"
+                type: bool
+            gtp_u_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP SMP signature check Failed"
+                type: bool
+            blade_gtp_u_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP-U SMP signature check Failed on PU2"
+                type: bool
+            gtp_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP SMP signature check Failed"
+                type: bool
+            blade_gtp_smp_sig_check_failed:
+                description:
+                - "Enable automatic packet-capture for GTP SMP signature check Failed on PU2"
                 type: bool
             uuid:
                 description:
@@ -271,22 +407,25 @@ def get_argspec():
             'out_of_session_memory': {
                 'type': 'bool',
                 },
+            'blade_out_of_session_memory': {
+                'type': 'bool',
+                },
             'gtp_smp_path_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_smp_check_failed': {
+            'gtp_smp_c_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_smp_session_count_check_failed': {
+            'blade_gtp_smp_path_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_c_ref_count_smp_exceeded': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_in_rml_with_sess': {
+            'blade_gtp_smp_c_check_failed': {
                 'type': 'bool',
                 },
             'gtp_tunnel_rate_limit_entry_create_fail': {
+                'type': 'bool',
+                },
+            'gtp_u_tunnel_rate_limit_entry_create_fa': {
                 'type': 'bool',
                 },
             'gtp_rate_limit_smp_create_failure': {
@@ -298,7 +437,52 @@ def get_argspec():
             'gtp_rate_limit_entry_create_failure': {
                 'type': 'bool',
                 },
+            'blade_gtp_rate_limit_smp_create_failure': {
+                'type': 'bool',
+                },
+            'blade_gtp_rate_limit_t3_ctr_create_fail': {
+                'type': 'bool',
+                },
+            'blade_gtp_rate_limit_entry_create_failu': {
+                'type': 'bool',
+                },
             'gtp_smp_dec_sess_count_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_u_smp_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_info_ext_not_found': {
+                'type': 'bool',
+                },
+            'blade_gtp_smp_dec_sess_count_check_fail': {
+                'type': 'bool',
+                },
+            'blade_gtp_u_smp_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_info_ext_not_found': {
+                'type': 'bool',
+                },
+            'blade_gtp_smp_session_count_check_faile': {
+                'type': 'bool',
+                },
+            'gtp_c_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_c_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_u_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_u_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_smp_sig_check_failed': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -316,22 +500,25 @@ def get_argspec():
             'out_of_session_memory': {
                 'type': 'bool',
                 },
+            'blade_out_of_session_memory': {
+                'type': 'bool',
+                },
             'gtp_smp_path_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_smp_check_failed': {
+            'gtp_smp_c_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_smp_session_count_check_failed': {
+            'blade_gtp_smp_path_check_failed': {
                 'type': 'bool',
                 },
-            'gtp_c_ref_count_smp_exceeded': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_in_rml_with_sess': {
+            'blade_gtp_smp_c_check_failed': {
                 'type': 'bool',
                 },
             'gtp_tunnel_rate_limit_entry_create_fail': {
+                'type': 'bool',
+                },
+            'gtp_u_tunnel_rate_limit_entry_create_fa': {
                 'type': 'bool',
                 },
             'gtp_rate_limit_smp_create_failure': {
@@ -343,7 +530,52 @@ def get_argspec():
             'gtp_rate_limit_entry_create_failure': {
                 'type': 'bool',
                 },
+            'blade_gtp_rate_limit_smp_create_failure': {
+                'type': 'bool',
+                },
+            'blade_gtp_rate_limit_t3_ctr_create_fail': {
+                'type': 'bool',
+                },
+            'blade_gtp_rate_limit_entry_create_failu': {
+                'type': 'bool',
+                },
             'gtp_smp_dec_sess_count_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_u_smp_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_info_ext_not_found': {
+                'type': 'bool',
+                },
+            'blade_gtp_smp_dec_sess_count_check_fail': {
+                'type': 'bool',
+                },
+            'blade_gtp_u_smp_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_info_ext_not_found': {
+                'type': 'bool',
+                },
+            'blade_gtp_smp_session_count_check_faile': {
+                'type': 'bool',
+                },
+            'gtp_c_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_c_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_u_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_u_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'gtp_smp_sig_check_failed': {
+                'type': 'bool',
+                },
+            'blade_gtp_smp_sig_check_failed': {
                 'type': 'bool',
                 },
             'uuid': {

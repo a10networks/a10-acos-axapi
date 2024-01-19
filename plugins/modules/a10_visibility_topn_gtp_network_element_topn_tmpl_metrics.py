@@ -80,6 +80,26 @@ options:
         - "Track Top-N entities for Downlink Packets"
         type: bool
         required: False
+    u_uplink_bytes:
+        description:
+        - "Track Top-N entities for Uplink Bytes"
+        type: bool
+        required: False
+    u_downlink_bytes:
+        description:
+        - "Track Top-N entities for Downlink Bytes"
+        type: bool
+        required: False
+    u_uplink_pkts:
+        description:
+        - "Track Top-N entities for Uplink Packets"
+        type: bool
+        required: False
+    u_downlink_pkts:
+        description:
+        - "Track Top-N entities for GTP-U Downlink Packets"
+        type: bool
+        required: False
     gtp_v0_c_tunnel_created:
         description:
         - "Track Top-N entities for GTPv0-C Tunnel Created"
@@ -561,7 +581,7 @@ AVAILABLE_PROPERTIES = [
     "gtp_u_tunnel_deleted", "gtp_v0_c_create_pdp_resp_unsuccess", "gtp_v0_c_half_open_tunnel_closed", "gtp_v0_c_reserved_message_allow", "gtp_v0_c_tunnel_closed", "gtp_v0_c_tunnel_created", "gtp_v0_c_tunnel_deleted", "gtp_v0_c_tunnel_deleted_restart", "gtp_v0_c_tunnel_half_closed", "gtp_v0_c_tunnel_half_open", "gtp_v0_c_update_pdp_resp_unsuccess",
     "gtp_v1_c_create_pdp_resp_unsuccess", "gtp_v1_c_half_open_tunnel_closed", "gtp_v1_c_reserved_message_allow", "gtp_v1_c_tunnel_closed", "gtp_v1_c_tunnel_created", "gtp_v1_c_tunnel_deleted", "gtp_v1_c_tunnel_deleted_restart", "gtp_v1_c_tunnel_half_closed", "gtp_v1_c_tunnel_half_open", "gtp_v1_c_update_pdp_resp_unsuccess",
     "gtp_v2_c_create_sess_resp_unsuccess", "gtp_v2_c_half_open_tunnel_closed", "gtp_v2_c_mod_bearer_resp_unsuccess", "gtp_v2_c_piggyback_message", "gtp_v2_c_reserved_message_allow", "gtp_v2_c_tunnel_closed", "gtp_v2_c_tunnel_created", "gtp_v2_c_tunnel_deleted", "gtp_v2_c_tunnel_deleted_restart", "gtp_v2_c_tunnel_half_closed",
-    "gtp_v2_c_tunnel_half_open", "uplink_bytes", "uplink_pkts", "uuid",
+    "gtp_v2_c_tunnel_half_open", "u_downlink_bytes", "u_downlink_pkts", "u_uplink_bytes", "u_uplink_pkts", "uplink_bytes", "uplink_pkts", "uuid",
     ]
 
 
@@ -593,6 +613,18 @@ def get_argspec():
             'type': 'bool',
             },
         'downlink_pkts': {
+            'type': 'bool',
+            },
+        'u_uplink_bytes': {
+            'type': 'bool',
+            },
+        'u_downlink_bytes': {
+            'type': 'bool',
+            },
+        'u_uplink_pkts': {
+            'type': 'bool',
+            },
+        'u_downlink_pkts': {
             'type': 'bool',
             },
         'gtp_v0_c_tunnel_created': {

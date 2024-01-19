@@ -151,6 +151,16 @@ options:
                 description:
                 - "'enable'= Enable detection notification debug log (default= disabled);"
                 type: str
+            network_object_window_size:
+                description:
+                - "'5'= 5 seconds; '10'= 10 seconds; '15'= 15 seconds; '30'= 30 seconds;  (DDoS
+          detection window size in seconds(default= 30))"
+                type: str
+            network_object_flooding_multiple:
+                description:
+                - "multiplier for flooding detection threshold in network objects (default 2x
+          threshold)"
+                type: int
             de_escalation_quiet_time:
                 description:
                 - "Configure de-escalation needed time in minutes from level 1 to 0.(default 1
@@ -160,6 +170,10 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+            entry_saving:
+                description:
+                - "Field entry_saving"
+                type: dict
             standalone_settings:
                 description:
                 - "Field standalone_settings"
@@ -365,11 +379,33 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['enable']
                 },
+            'network_object_window_size': {
+                'type': 'str',
+                'choices': ['5', '10', '15', '30']
+                },
+            'network_object_flooding_multiple': {
+                'type': 'int',
+                },
             'de_escalation_quiet_time': {
                 'type': 'int',
                 },
             'uuid': {
                 'type': 'str',
+                },
+            'entry_saving': {
+                'type': 'dict',
+                'interval': {
+                    'type': 'int',
+                    },
+                'manual_save': {
+                    'type': 'bool',
+                    },
+                'manual_restore': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
             'standalone_settings': {
                 'type': 'dict',

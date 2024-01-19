@@ -190,6 +190,11 @@ options:
         - "Limit policy Template"
         type: int
         required: False
+    deny_reset_limit_policy:
+        description:
+        - "Limit policy Template (only works for inbound rule)"
+        type: int
+        required: False
     permit_respond_to_user_mac:
         description:
         - "Use the user's source MAC for the next hop rather than the routing table
@@ -283,8 +288,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "dscp_number", "dscp_value", "forward", "inspect_payload", "ipsec", "ipsec_group", "listen_on_port", "logging_template_list", "permit_limit_policy", "permit_log", "permit_respond_to_user_mac", "reset_fw_log",
-    "reset_log", "reset_log_template_type", "reset_respond_to_user_mac", "set_dscp", "ntype", "uuid", "vpn_ipsec_group_name", "vpn_ipsec_name",
+    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "deny_reset_limit_policy", "dscp_number", "dscp_value", "forward", "inspect_payload", "ipsec", "ipsec_group", "listen_on_port", "logging_template_list", "permit_limit_policy", "permit_log",
+    "permit_respond_to_user_mac", "reset_fw_log", "reset_log", "reset_log_template_type", "reset_respond_to_user_mac", "set_dscp", "ntype", "uuid", "vpn_ipsec_group_name", "vpn_ipsec_name",
     ]
 
 
@@ -388,6 +393,9 @@ def get_argspec():
             'type': 'bool',
             },
         'permit_limit_policy': {
+            'type': 'int',
+            },
+        'deny_reset_limit_policy': {
             'type': 'int',
             },
         'permit_respond_to_user_mac': {

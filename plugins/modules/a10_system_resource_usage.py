@@ -142,6 +142,11 @@ options:
         - "Total auth sessions in the system"
         type: int
         required: False
+    ngwaf_cache_entry:
+        description:
+        - "Specify the maximum cache entries for NGWAF"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -439,6 +444,22 @@ options:
                 description:
                 - "Field class_list_entry_default"
                 type: int
+            ngwaf_cache_entry_cur:
+                description:
+                - "Field ngwaf_cache_entry_cur"
+                type: int
+            ngwaf_cache_entry_min:
+                description:
+                - "Field ngwaf_cache_entry_min"
+                type: int
+            ngwaf_cache_entry_max:
+                description:
+                - "Field ngwaf_cache_entry_max"
+                type: int
+            ngwaf_cache_entry_default:
+                description:
+                - "Field ngwaf_cache_entry_default"
+                type: int
 
 '''
 
@@ -495,7 +516,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "aflex_table_entry_count", "auth_portal_html_file_size", "auth_portal_image_file_size", "auth_session_count", "authz_policy_number", "class_list_ac_entry_count", "class_list_entry_count", "class_list_ipv6_addr_count", "ipsec_sa_number", "l4_session_count", "max_aflex_authz_collection_number", "max_aflex_file_size", "nat_pool_addr_count",
-    "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility",
+    "ngwaf_cache_entry", "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility",
     ]
 
 
@@ -566,6 +587,9 @@ def get_argspec():
             'type': 'int',
             },
         'auth_session_count': {
+            'type': 'int',
+            },
+        'ngwaf_cache_entry': {
             'type': 'int',
             },
         'uuid': {
@@ -784,6 +808,18 @@ def get_argspec():
                 'type': 'int',
                 },
             'class_list_entry_default': {
+                'type': 'int',
+                },
+            'ngwaf_cache_entry_cur': {
+                'type': 'int',
+                },
+            'ngwaf_cache_entry_min': {
+                'type': 'int',
+                },
+            'ngwaf_cache_entry_max': {
+                'type': 'int',
+                },
+            'ngwaf_cache_entry_default': {
                 'type': 'int',
                 }
             }

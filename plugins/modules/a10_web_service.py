@@ -71,6 +71,11 @@ options:
         - "Set the max allowed aXAPI sessions (Session limit (default 30))"
         type: int
         required: False
+    axapi_token_sharing:
+        description:
+        - "Enable axapi token sharing within multiple hosts"
+        type: bool
+        required: False
     gui_idle:
         description:
         - "Idle timeout of a connection in minutes (Connection idle timeout value in
@@ -238,7 +243,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auto_redirt_disable", "axapi_idle", "axapi_session_limit", "gui_idle", "gui_session_limit", "keep_alive_timeout", "login_message", "max_keep_alive_requests", "mpm_max_conn", "mpm_max_conn_per_child", "mpm_min_spare_conn", "port", "pre_login_message", "public_apis", "secure", "secure_port", "secure_server_disable", "server_disable", "uuid",
+    "auto_redirt_disable", "axapi_idle", "axapi_session_limit", "axapi_token_sharing", "gui_idle", "gui_session_limit", "keep_alive_timeout", "login_message", "max_keep_alive_requests", "mpm_max_conn", "mpm_max_conn_per_child", "mpm_min_spare_conn", "port", "pre_login_message", "public_apis", "secure", "secure_port", "secure_server_disable",
+    "server_disable", "uuid",
     ]
 
 
@@ -268,6 +274,9 @@ def get_argspec():
             },
         'axapi_session_limit': {
             'type': 'int',
+            },
+        'axapi_token_sharing': {
+            'type': 'bool',
             },
         'gui_idle': {
             'type': 'int',

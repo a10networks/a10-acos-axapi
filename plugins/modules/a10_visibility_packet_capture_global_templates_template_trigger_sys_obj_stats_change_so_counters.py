@@ -133,6 +133,10 @@ options:
                 description:
                 - "Enable automatic packet-capture for L2 redirect pkt port not retrieved"
                 type: bool
+            so_pkts_l2redirect_loop_detect_drop:
+                description:
+                - "Enable automatic packet-capture for L2 redirect pkt loop detected and dropped"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -213,6 +217,10 @@ options:
             so_pkts_l2redirect_port_retrieval_error:
                 description:
                 - "Enable automatic packet-capture for L2 redirect pkt port not retrieved"
+                type: bool
+            so_pkts_l2redirect_loop_detect_drop:
+                description:
+                - "Enable automatic packet-capture for L2 redirect pkt loop detected and dropped"
                 type: bool
             uuid:
                 description:
@@ -340,6 +348,9 @@ def get_argspec():
             'so_pkts_l2redirect_port_retrieval_error': {
                 'type': 'bool',
                 },
+            'so_pkts_l2redirect_loop_detect_drop': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -392,6 +403,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'so_pkts_l2redirect_port_retrieval_error': {
+                'type': 'bool',
+                },
+            'so_pkts_l2redirect_loop_detect_drop': {
                 'type': 'bool',
                 },
             'uuid': {

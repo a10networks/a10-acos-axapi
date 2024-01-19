@@ -618,7 +618,12 @@ options:
           'prog_req_samples_processed'= Sample Processed= Req-Resp;
           'prog_win_samples_processed'= Sample Processed= Time Window;
           'dst_src_learn_overflow'= Src Dynamic Entry Count Overflow; 'dst_tcp_auth_rst'=
-          TCP Auth= Reset;"
+          TCP Auth= Reset; 'token_auth_mismatched_packets'= Token Authentication
+          Mismatched Packets; 'token_auth_invalid_packets'= Token Authentication Invalid
+          Packets; 'token_auth_current_salt_matched'= Token Authentication Current Salt
+          Matched; 'token_auth_previous_salt_matched'= Token Authentication Previous Salt
+          Matched; 'token_auth_session_created'= Token Authentication Session Created;
+          'token_auth_session_created_fail'= Token Authentication Session Created Fail;"
                 type: str
     detection:
         description:
@@ -2430,6 +2435,30 @@ options:
                 description:
                 - "TCP Auth= Reset"
                 type: str
+            token_auth_mismatched_packets:
+                description:
+                - "Token Authentication Mismatched Packets"
+                type: str
+            token_auth_invalid_packets:
+                description:
+                - "Token Authentication Invalid Packets"
+                type: str
+            token_auth_current_salt_matched:
+                description:
+                - "Token Authentication Current Salt Matched"
+                type: str
+            token_auth_previous_salt_matched:
+                description:
+                - "Token Authentication Previous Salt Matched"
+                type: str
+            token_auth_session_created:
+                description:
+                - "Token Authentication Session Created"
+                type: str
+            token_auth_session_created_fail:
+                description:
+                - "Token Authentication Session Created Fail"
+                type: str
             zone_name:
                 description:
                 - "Field zone_name"
@@ -2729,7 +2758,8 @@ def get_argspec():
                     'prog_response_len_exceed', 'prog_resp_req_ratio_exceed', 'prog_resp_req_time_exceed', 'entry_sync_message_received', 'entry_sync_message_sent', 'prog_conn_sent_exceed', 'prog_conn_rcvd_exceed', 'prog_conn_time_exceed', 'prog_conn_rcvd_sent_ratio_exceed', 'prog_win_sent_exceed', 'prog_win_rcvd_exceed',
                     'prog_win_rcvd_sent_ratio_exceed', 'prog_exceed_drop', 'prog_exceed_bl', 'prog_conn_exceed_drop', 'prog_conn_exceed_bl', 'prog_win_exceed_drop', 'prog_win_exceed_bl', 'east_west_inbound_rcv_pkt', 'east_west_inbound_drop_pkt', 'east_west_inbound_fwd_pkt', 'east_west_inbound_rcv_byte', 'east_west_inbound_drop_byte',
                     'east_west_inbound_fwd_byte', 'east_west_outbound_rcv_pkt', 'east_west_outbound_drop_pkt', 'east_west_outbound_fwd_pkt', 'east_west_outbound_rcv_byte', 'east_west_outbound_drop_byte', 'east_west_outbound_fwd_byte', 'dst_exceed_action_drop', 'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'victim_ip_learned',
-                    'victim_ip_aged', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'dst_src_learn_overflow', 'dst_tcp_auth_rst'
+                    'victim_ip_aged', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'dst_src_learn_overflow', 'dst_tcp_auth_rst', 'token_auth_mismatched_packets', 'token_auth_invalid_packets', 'token_auth_current_salt_matched', 'token_auth_previous_salt_matched', 'token_auth_session_created',
+                    'token_auth_session_created_fail'
                     ]
                 }
             },
@@ -7688,6 +7718,12 @@ def get_argspec():
                             'level': {
                                 'type': 'int',
                                 },
+                            'bl_reasoning_rcode': {
+                                'type': 'str',
+                                },
+                            'bl_reasoning_timestamp': {
+                                'type': 'str',
+                                },
                             'current_connections': {
                                 'type': 'str',
                                 },
@@ -11317,6 +11353,24 @@ def get_argspec():
                 'type': 'str',
                 },
             'dst_tcp_auth_rst': {
+                'type': 'str',
+                },
+            'token_auth_mismatched_packets': {
+                'type': 'str',
+                },
+            'token_auth_invalid_packets': {
+                'type': 'str',
+                },
+            'token_auth_current_salt_matched': {
+                'type': 'str',
+                },
+            'token_auth_previous_salt_matched': {
+                'type': 'str',
+                },
+            'token_auth_session_created': {
+                'type': 'str',
+                },
+            'token_auth_session_created_fail': {
                 'type': 'str',
                 },
             'zone_name': {

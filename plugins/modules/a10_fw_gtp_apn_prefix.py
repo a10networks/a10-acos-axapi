@@ -86,6 +86,22 @@ options:
                 description:
                 - "Downlink Packets"
                 type: str
+            u_uplink_bytes:
+                description:
+                - "Uplink Bytes"
+                type: str
+            u_downlink_bytes:
+                description:
+                - "Downlink Bytes"
+                type: str
+            u_uplink_pkts:
+                description:
+                - "Uplink Packets"
+                type: str
+            u_downlink_pkts:
+                description:
+                - "GTP-U Downlink Packets"
+                type: str
             gtp_v0_c_tunnel_created:
                 description:
                 - "GTPv0-C Tunnel Created"
@@ -627,6 +643,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'downlink_pkts': {
+                'type': 'str',
+                },
+            'u_uplink_bytes': {
+                'type': 'str',
+                },
+            'u_downlink_bytes': {
+                'type': 'str',
+                },
+            'u_uplink_pkts': {
+                'type': 'str',
+                },
+            'u_downlink_pkts': {
                 'type': 'str',
                 },
             'gtp_v0_c_tunnel_created': {

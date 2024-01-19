@@ -68,11 +68,17 @@ options:
         suboptions:
             domain_name:
                 description:
-                - "Domain name to be added to this domain list"
+                - "Specify the domain name to be added in the domain list."
                 type: str
             interval:
                 description:
-                - "DNS query interval (in minute, default is 10)"
+                - "Set up the query interval in minute for the DNS resolution. (default is
+          10-minute)"
+                type: int
+            fail_interval:
+                description:
+                - "Set up the failure interval in second for the DNS resolution. (default is
+          30-second)"
                 type: int
     file:
         description:
@@ -238,6 +244,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'interval': {
+                'type': 'int',
+                },
+            'fail_interval': {
                 'type': 'int',
                 }
             },

@@ -162,6 +162,10 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+            vni_list:
+                description:
+                - "Field vni_list"
+                type: list
     remote_ip_address_list:
         description:
         - "Field remote_ip_address_list"
@@ -171,6 +175,10 @@ options:
             ip_address:
                 description:
                 - "IP Address of the remote VTEP"
+                type: str
+            class_list:
+                description:
+                - "Name of the class-list"
                 type: str
             encap:
                 description:
@@ -211,6 +219,14 @@ options:
                 description:
                 - "IPv6 Address of the remote VTEP"
                 type: str
+            class_list:
+                description:
+                - "Name of the class-list"
+                type: str
+            encap:
+                description:
+                - "'vxlan'= Tunnel Encapsulation Type is VXLAN;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -223,6 +239,18 @@ options:
                 description:
                 - "Field use_lif"
                 type: dict
+            gre_keepalive:
+                description:
+                - "Field gre_keepalive"
+                type: dict
+            use_gre_key:
+                description:
+                - "Field use_gre_key"
+                type: dict
+            vni_list:
+                description:
+                - "Field vni_list"
+                type: list
     host_list:
         description:
         - "Field host_list"
@@ -232,6 +260,10 @@ options:
             ip_addr:
                 description:
                 - "IPv4 address of the overlay host"
+                type: str
+            ipv6_addr:
+                description:
+                - "IPv6 address of the overlay host"
                 type: str
             overlay_mac_addr:
                 description:
@@ -244,6 +276,10 @@ options:
             remote_vtep:
                 description:
                 - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
+                type: str
+            remote_ipv6_vtep:
+                description:
+                - "Configure the VTEP IPv6 address (IPv6 address of the VTEP for the remote host)"
                 type: str
             uuid:
                 description:
@@ -558,6 +594,25 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
+                },
+            'vni_list': {
+                'type': 'list',
+                'segment': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'partition': {
+                    'type': 'str',
+                    },
+                'gateway': {
+                    'type': 'bool',
+                    },
+                'lif': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'remote_ip_address_list': {
@@ -565,6 +620,9 @@ def get_argspec():
             'ip_address': {
                 'type': 'str',
                 'required': True,
+                },
+            'class_list': {
+                'type': 'str',
                 },
             'encap': {
                 'type': 'str',
@@ -626,6 +684,13 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 },
+            'class_list': {
+                'type': 'str',
+                },
+            'encap': {
+                'type': 'str',
+                'choices': ['vxlan']
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -643,6 +708,37 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                },
+            'gre_keepalive': {
+                'type': 'dict',
+                'retry_time': {
+                    'type': 'int',
+                    },
+                'retry_count': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'use_gre_key': {
+                'type': 'dict',
+                'gre_key': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'vni_list': {
+                'type': 'list',
+                'segment': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'host_list': {
@@ -650,6 +746,9 @@ def get_argspec():
             'ip_addr': {
                 'type': 'str',
                 'required': True,
+                },
+            'ipv6_addr': {
+                'type': 'str',
                 },
             'overlay_mac_addr': {
                 'type': 'str',
@@ -660,6 +759,10 @@ def get_argspec():
                 'required': True,
                 },
             'remote_vtep': {
+                'type': 'str',
+                'required': True,
+                },
+            'remote_ipv6_vtep': {
                 'type': 'str',
                 'required': True,
                 },

@@ -160,7 +160,8 @@ options:
         suboptions:
             ec:
                 description:
-                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; 'secp521r1'= secp521r1;
+          'x25519'= x25519;"
                 type: str
     enable_tls_alert_logging:
         description:
@@ -447,7 +448,7 @@ def get_argspec():
             'type': 'list',
             'ec': {
                 'type': 'str',
-                'choices': ['secp256r1', 'secp384r1']
+                'choices': ['secp256r1', 'secp384r1', 'secp521r1', 'x25519']
                 }
             },
         'enable_tls_alert_logging': {

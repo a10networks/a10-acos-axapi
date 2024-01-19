@@ -936,9 +936,6 @@ def get_argspec():
                 'headers_after_continuation': {
                     'type': 'int',
                     },
-                'push_promise_frame_sent': {
-                    'type': 'int',
-                    },
                 'invalid_push_promise': {
                     'type': 'int',
                     },
@@ -1069,6 +1066,12 @@ def get_argspec():
                     'type': 'int',
                     },
                 'total_bytes_sent': {
+                    'type': 'int',
+                    },
+                'push_promise_frame_sent': {
+                    'type': 'int',
+                    },
+                'http2_rejected': {
                     'type': 'int',
                     },
                 'current_stream': {

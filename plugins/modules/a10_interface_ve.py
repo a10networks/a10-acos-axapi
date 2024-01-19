@@ -210,6 +210,10 @@ options:
                 description:
                 - "Server facing interface for IPv4/v6 traffic"
                 type: bool
+            dmz:
+                description:
+                - "DMZ network facing interface for IPv4/v6 traffic"
+                type: bool
             helper_address_list:
                 description:
                 - "Field helper_address_list"
@@ -856,6 +860,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'server': {
+                'type': 'bool',
+                },
+            'dmz': {
                 'type': 'bool',
                 },
             'helper_address_list': {

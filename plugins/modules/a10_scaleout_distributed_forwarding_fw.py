@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_scaleout_distributed_forwarding_fw
 description:
-    - Enable Scaleout distributed-forwarding for fw
+    - Enable Scaleout distributed-forwarding for firewall sessions
 author: A10 Networks
 options:
     state:
@@ -55,10 +55,10 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    fw_value:
+    enable:
         description:
-        - "'enable'= Enable FW; 'disable'= Disable FW;"
-        type: str
+        - "Enable distributed-forwarding for Firewall"
+        type: bool
         required: False
     session_offload_direction:
         description:
@@ -141,7 +141,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fw_value", "session_offload_direction", "threshold", "uuid", ]
+AVAILABLE_PROPERTIES = ["enable", "session_offload_direction", "threshold", "uuid", ]
 
 
 def get_default_argspec():
@@ -161,7 +161,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'fw_value': {'type': 'str', 'choices': ['enable', 'disable']}, 'session_offload_direction': {'type': 'str', 'choices': ['uplink', 'downlink', 'both']}, 'threshold': {'type': 'list', 'threshold_value': {'type': 'int', }, 'protocol_value': {'type': 'str', 'choices': ['UDP', 'TCP']}}, 'uuid': {'type': 'str', }})
+    rv.update({'enable': {'type': 'bool', }, 'session_offload_direction': {'type': 'str', 'choices': ['uplink', 'downlink', 'both']}, 'threshold': {'type': 'list', 'threshold_value': {'type': 'int', }, 'protocol_value': {'type': 'str', 'choices': ['UDP', 'TCP']}}, 'uuid': {'type': 'str', }})
     return rv
 
 

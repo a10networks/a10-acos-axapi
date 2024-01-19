@@ -465,6 +465,10 @@ options:
                 - "Number of DNS query retries at each server level before closing client
           connection, default 6"
                 type: int
+            parallel_queries:
+                description:
+                - "Number of parallel queries to send to servers"
+                type: int
             full_response:
                 description:
                 - "Serve all records (authority and additional) when applicable"
@@ -522,6 +526,48 @@ options:
                 description:
                 - "Field gateway_health_check"
                 type: dict
+    category_lookup_list:
+        description:
+        - "Field category_lookup_list"
+        type: list
+        required: False
+        suboptions:
+            category_name:
+                description:
+                - "category-list name"
+                type: str
+            permit:
+                description:
+                - "Permit matching DNS domains"
+                type: bool
+            drop:
+                description:
+                - "Deny matching DNS domains"
+                type: bool
+            respond:
+                description:
+                - "Respond to matching DNS domains"
+                type: bool
+            respond_nxdomain:
+                description:
+                - "Respond with NXDOMAIN"
+                type: bool
+            respond_ip_addr:
+                description:
+                - "Type A record to respond (IPv4 address)"
+                type: str
+            respond_ipv6_addr:
+                description:
+                - "TYPE AAAA record to respond (IPv6 address)"
+                type: str
+            respond_cname_str:
+                description:
+                - "CNAME to respond (Canonical name)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -577,9 +623,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_padding_to_client", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dns64", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6", "local_dns_resolution",
-    "max_cache_entry_size", "max_cache_size", "max_query_length", "name", "negative_dns_cache", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_csubnet", "remove_padding_to_server", "response_rate_limiting", "rpz_list", "udp_retransmit",
-    "user_tag", "uuid",
+    "add_padding_to_client", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "category_lookup_list", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dns64", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6",
+    "local_dns_resolution", "max_cache_entry_size", "max_cache_size", "max_query_length", "name", "negative_dns_cache", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_csubnet", "remove_padding_to_server", "response_rate_limiting", "rpz_list",
+    "udp_retransmit", "user_tag", "uuid",
     ]
 
 
@@ -1006,6 +1052,9 @@ def get_argspec():
             'retries_per_level': {
                 'type': 'int',
                 },
+            'parallel_queries': {
+                'type': 'int',
+                },
             'full_response': {
                 'type': 'bool',
                 },
@@ -1097,6 +1146,37 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'category_lookup_list': {
+            'type': 'list',
+            'category_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'permit': {
+                'type': 'bool',
+                },
+            'drop': {
+                'type': 'bool',
+                },
+            'respond': {
+                'type': 'bool',
+                },
+            'respond_nxdomain': {
+                'type': 'bool',
+                },
+            'respond_ip_addr': {
+                'type': 'str',
+                },
+            'respond_ipv6_addr': {
+                'type': 'str',
+                },
+            'respond_cname_str': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             }
         })

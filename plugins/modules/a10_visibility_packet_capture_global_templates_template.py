@@ -211,10 +211,6 @@ options:
                 description:
                 - "Field vpn_error"
                 type: dict
-            cgnv6_global:
-                description:
-                - "Field cgnv6_global"
-                type: dict
             cgnv6_ddos_proc:
                 description:
                 - "Field cgnv6_ddos_proc"
@@ -4352,42 +4348,6 @@ def get_argspec():
                         }
                     }
                 },
-            'cgnv6_global': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                    },
-                'trigger_stats_inc': {
-                    'type': 'dict',
-                    'udp_total_ports_allocated': {
-                        'type': 'bool',
-                        },
-                    'icmp_total_ports_allocated': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    },
-                'trigger_stats_rate': {
-                    'type': 'dict',
-                    'threshold_exceeded_by': {
-                        'type': 'int',
-                        },
-                    'duration': {
-                        'type': 'int',
-                        },
-                    'udp_total_ports_allocated': {
-                        'type': 'bool',
-                        },
-                    'icmp_total_ports_allocated': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    }
-                },
             'cgnv6_ddos_proc': {
                 'type': 'dict',
                 'uuid': {
@@ -6126,22 +6086,25 @@ def get_argspec():
                     'out_of_session_memory': {
                         'type': 'bool',
                         },
+                    'blade_out_of_session_memory': {
+                        'type': 'bool',
+                        },
                     'gtp_smp_path_check_failed': {
                         'type': 'bool',
                         },
-                    'gtp_smp_check_failed': {
+                    'gtp_smp_c_check_failed': {
                         'type': 'bool',
                         },
-                    'gtp_smp_session_count_check_failed': {
+                    'blade_gtp_smp_path_check_failed': {
                         'type': 'bool',
                         },
-                    'gtp_c_ref_count_smp_exceeded': {
-                        'type': 'bool',
-                        },
-                    'gtp_u_smp_in_rml_with_sess': {
+                    'blade_gtp_smp_c_check_failed': {
                         'type': 'bool',
                         },
                     'gtp_tunnel_rate_limit_entry_create_fail': {
+                        'type': 'bool',
+                        },
+                    'gtp_u_tunnel_rate_limit_entry_create_fa': {
                         'type': 'bool',
                         },
                     'gtp_rate_limit_smp_create_failure': {
@@ -6153,7 +6116,52 @@ def get_argspec():
                     'gtp_rate_limit_entry_create_failure': {
                         'type': 'bool',
                         },
+                    'blade_gtp_rate_limit_smp_create_failure': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_rate_limit_t3_ctr_create_fail': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_rate_limit_entry_create_failu': {
+                        'type': 'bool',
+                        },
                     'gtp_smp_dec_sess_count_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_u_smp_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_info_ext_not_found': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_smp_dec_sess_count_check_fail': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_u_smp_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_info_ext_not_found': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_smp_session_count_check_faile': {
+                        'type': 'bool',
+                        },
+                    'gtp_c_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_c_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_u_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_u_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_smp_sig_check_failed': {
                         'type': 'bool',
                         },
                     'uuid': {
@@ -6171,22 +6179,25 @@ def get_argspec():
                     'out_of_session_memory': {
                         'type': 'bool',
                         },
+                    'blade_out_of_session_memory': {
+                        'type': 'bool',
+                        },
                     'gtp_smp_path_check_failed': {
                         'type': 'bool',
                         },
-                    'gtp_smp_check_failed': {
+                    'gtp_smp_c_check_failed': {
                         'type': 'bool',
                         },
-                    'gtp_smp_session_count_check_failed': {
+                    'blade_gtp_smp_path_check_failed': {
                         'type': 'bool',
                         },
-                    'gtp_c_ref_count_smp_exceeded': {
-                        'type': 'bool',
-                        },
-                    'gtp_u_smp_in_rml_with_sess': {
+                    'blade_gtp_smp_c_check_failed': {
                         'type': 'bool',
                         },
                     'gtp_tunnel_rate_limit_entry_create_fail': {
+                        'type': 'bool',
+                        },
+                    'gtp_u_tunnel_rate_limit_entry_create_fa': {
                         'type': 'bool',
                         },
                     'gtp_rate_limit_smp_create_failure': {
@@ -6198,7 +6209,52 @@ def get_argspec():
                     'gtp_rate_limit_entry_create_failure': {
                         'type': 'bool',
                         },
+                    'blade_gtp_rate_limit_smp_create_failure': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_rate_limit_t3_ctr_create_fail': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_rate_limit_entry_create_failu': {
+                        'type': 'bool',
+                        },
                     'gtp_smp_dec_sess_count_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_u_smp_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_info_ext_not_found': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_smp_dec_sess_count_check_fail': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_u_smp_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_info_ext_not_found': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_smp_session_count_check_faile': {
+                        'type': 'bool',
+                        },
+                    'gtp_c_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_c_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_u_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_u_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'gtp_smp_sig_check_failed': {
+                        'type': 'bool',
+                        },
+                    'blade_gtp_smp_sig_check_failed': {
                         'type': 'bool',
                         },
                     'uuid': {
@@ -8823,6 +8879,9 @@ def get_argspec():
                     'so_pkts_l2redirect_port_retrieval_error': {
                         'type': 'bool',
                         },
+                    'so_pkts_l2redirect_loop_detect_drop': {
+                        'type': 'bool',
+                        },
                     'uuid': {
                         'type': 'str',
                         }
@@ -8875,6 +8934,9 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'so_pkts_l2redirect_port_retrieval_error': {
+                        'type': 'bool',
+                        },
+                    'so_pkts_l2redirect_loop_detect_drop': {
                         'type': 'bool',
                         },
                     'uuid': {

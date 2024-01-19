@@ -290,6 +290,90 @@ options:
                 description:
                 - "Service Entry of Network-object Create Failed"
                 type: str
+            db_unexpected_error:
+                description:
+                - "Database Unexpected Error"
+                type: str
+            db_oper_failure:
+                description:
+                - "Database Operation Failure"
+                type: str
+            db_open_failure:
+                description:
+                - "Database Open Failure"
+                type: str
+            db_n_subnet_table_create_failure:
+                description:
+                - "Database Network Subnet Entry Table Creation Failure"
+                type: str
+            db_n_ip_table_create_failure:
+                description:
+                - "Database Network IP Entry Table Creation Failure"
+                type: str
+            db_n_svc_table_create_failure:
+                description:
+                - "Database Network Service Entry Table Creation Failure"
+                type: str
+            db_n_subnet_save_attempt:
+                description:
+                - "Database Network Subnet Entry Saving Attempt"
+                type: str
+            db_n_subnet_save_failure:
+                description:
+                - "Database Network Subnet Entry Saving Failure"
+                type: str
+            db_n_subnet_restore_attempt:
+                description:
+                - "Database Network Subnet Entry Restoring Attempt"
+                type: str
+            db_n_ip_save_attempt:
+                description:
+                - "Database Network IP Entry Saving Attempt"
+                type: str
+            db_n_ip_save_failure:
+                description:
+                - "Database Network IP Entry Saving Failure"
+                type: str
+            db_n_ip_restore_attempt:
+                description:
+                - "Database Network IP Entry Restoring Attempt"
+                type: str
+            db_n_svc_save_attempt:
+                description:
+                - "Database Network Service Entry Saving Attempt"
+                type: str
+            db_n_svc_save_failure:
+                description:
+                - "Database Network Service Entry Saving Failure"
+                type: str
+            db_n_svc_restore_attempt:
+                description:
+                - "Database Network Service Entry Restoring Attempt"
+                type: str
+            db_n_static_subnet_not_found:
+                description:
+                - "Database Network Static Subnet Entry Not Found"
+                type: str
+            db_n_parent_entry_not_found:
+                description:
+                - "Database Network Parent Entry Not Found"
+                type: str
+            db_worker_enq_failure:
+                description:
+                - "Database Worker Enqueue Failure"
+                type: str
+            db_n_subnet_table_purge_failure:
+                description:
+                - "Database Network Subnet Entry Table Purge Entries Failure"
+                type: str
+            db_n_ip_table_purge_failure:
+                description:
+                - "Database Network IP Entry Table Purge Entries Failure"
+                type: str
+            db_n_svc_table_purge_failure:
+                description:
+                - "Database Network Service Entry Table Purge Entries Failure"
+                type: str
 
 '''
 
@@ -536,6 +620,69 @@ def get_argspec():
                 'type': 'str',
                 },
             'n_service_create_fail': {
+                'type': 'str',
+                },
+            'db_unexpected_error': {
+                'type': 'str',
+                },
+            'db_oper_failure': {
+                'type': 'str',
+                },
+            'db_open_failure': {
+                'type': 'str',
+                },
+            'db_n_subnet_table_create_failure': {
+                'type': 'str',
+                },
+            'db_n_ip_table_create_failure': {
+                'type': 'str',
+                },
+            'db_n_svc_table_create_failure': {
+                'type': 'str',
+                },
+            'db_n_subnet_save_attempt': {
+                'type': 'str',
+                },
+            'db_n_subnet_save_failure': {
+                'type': 'str',
+                },
+            'db_n_subnet_restore_attempt': {
+                'type': 'str',
+                },
+            'db_n_ip_save_attempt': {
+                'type': 'str',
+                },
+            'db_n_ip_save_failure': {
+                'type': 'str',
+                },
+            'db_n_ip_restore_attempt': {
+                'type': 'str',
+                },
+            'db_n_svc_save_attempt': {
+                'type': 'str',
+                },
+            'db_n_svc_save_failure': {
+                'type': 'str',
+                },
+            'db_n_svc_restore_attempt': {
+                'type': 'str',
+                },
+            'db_n_static_subnet_not_found': {
+                'type': 'str',
+                },
+            'db_n_parent_entry_not_found': {
+                'type': 'str',
+                },
+            'db_worker_enq_failure': {
+                'type': 'str',
+                },
+            'db_n_subnet_table_purge_failure': {
+                'type': 'str',
+                },
+            'db_n_ip_table_purge_failure': {
+                'type': 'str',
+                },
+            'db_n_svc_table_purge_failure': {
                 'type': 'str',
                 }
             }

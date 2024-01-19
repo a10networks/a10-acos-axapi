@@ -455,14 +455,34 @@ options:
         - "Category Web Hosting Sites"
         type: bool
         required: False
+    self_harm:
+        description:
+        - "Category Self Harm"
+        type: bool
+        required: False
+    dns_over_https:
+        description:
+        - "Category DNS over HTTPs"
+        type: bool
+        required: False
+    low_thc_cannabis_products:
+        description:
+        - "Category Low-THC Cannabis Products"
+        type: bool
+        required: False
+    generative_ai:
+        description:
+        - "Category Generative AI"
+        type: bool
+        required: False
     nudity_artistic:
         description:
-        - "Category Nudity join Entertainment and Arts"
+        - "Category Artistic Nudity"
         type: bool
         required: False
     illegal_pornography:
         description:
-        - "Category Illegal join Adult and Pornography"
+        - "Category Illegal Pornography eg. Child Sexual Abuse"
         type: bool
         required: False
     uuid:
@@ -532,9 +552,11 @@ options:
           video search category; 'fashion-and-beauty'= fashion and beauty category;
           'recreation-and-hobbies'= recreation and hobbies category; 'motor-vehicles'=
           motor vehicles category; 'web-hosting-sites'= web hosting sites category;
-          'food-and-dining'= food and dining category; 'nudity-artistic'= nudity join
-          entertainment and arts; 'illegal-pornography'= illegal join adult and
-          pornography;"
+          'food-and-dining'= food and dining category; 'dummy-item'= dummy item category;
+          'self-harm'= self harm category; 'dns-over-https'= dns over https category;
+          'low-thc-cannabis-products'= low-thc cannabis products category; 'generative-
+          ai'= generative ai; 'nudity-artistic'= artistic nudity; 'illegal-pornography'=
+          illegal pornography eg. child sexual abuse;"
                 type: str
     stats:
         description:
@@ -878,13 +900,29 @@ options:
                 description:
                 - "food and dining category"
                 type: str
+            self_harm:
+                description:
+                - "self harm category"
+                type: str
+            dns_over_https:
+                description:
+                - "dns over https category"
+                type: str
+            low_thc_cannabis_products:
+                description:
+                - "low-thc cannabis products category"
+                type: str
+            generative_ai:
+                description:
+                - "generative ai"
+                type: str
             nudity_artistic:
                 description:
-                - "nudity join entertainment and arts"
+                - "artistic nudity"
                 type: str
             illegal_pornography:
                 description:
-                - "illegal join adult and pornography"
+                - "illegal pornography eg. child sexual abuse"
                 type: str
             name:
                 description:
@@ -945,11 +983,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "abortion", "adult_and_pornography", "alcohol_and_tobacco", "auctions", "bot_nets", "business_and_economy", "cdns", "cheating", "computer_and_internet_info", "computer_and_internet_security", "cult_and_occult", "dating", "dead_sites", "drugs", "dynamically_generated_content", "educational_institutions", "entertainment_and_arts",
-    "fashion_and_beauty", "financial_services", "gambling", "games", "government", "gross", "hacking", "hate_and_racism", "health_and_medicine", "home_and_garden", "hunting_and_fishing", "illegal", "illegal_pornography", "image_and_video_search", "internet_communications", "internet_portals", "job_search", "keyloggers_and_monitoring", "kids",
-    "legal", "local_information", "malware_sites", "marijuana", "military", "motor_vehicles", "music", "name", "news_and_media", "nudity", "nudity_artistic", "online_greeting_cards", "parked_domains", "pay_to_surf", "peer_to_peer", "personal_sites_and_blogs", "personal_storage", "philosophy_and_politics", "phishing_and_other_fraud",
-    "proxy_avoid_and_anonymizers", "questionable", "real_estate", "recreation_and_hobbies", "reference_and_research", "religion", "sampling_enable", "search_engines", "sex_education", "shareware_and_freeware", "shopping", "social_network", "society", "spam_urls", "sports", "spyware_and_adware", "stats", "stock_advice_and_tools", "streaming_media",
-    "swimsuits_and_intimate_apparel", "training_and_tools", "translation", "travel", "uncategorized", "user_tag", "uuid", "violence", "weapons", "web_advertisements", "web_based_email", "web_hosting_sites",
+    "abortion", "adult_and_pornography", "alcohol_and_tobacco", "auctions", "bot_nets", "business_and_economy", "cdns", "cheating", "computer_and_internet_info", "computer_and_internet_security", "cult_and_occult", "dating", "dead_sites", "dns_over_https", "drugs", "dynamically_generated_content", "educational_institutions",
+    "entertainment_and_arts", "fashion_and_beauty", "financial_services", "gambling", "games", "generative_ai", "government", "gross", "hacking", "hate_and_racism", "health_and_medicine", "home_and_garden", "hunting_and_fishing", "illegal", "illegal_pornography", "image_and_video_search", "internet_communications", "internet_portals", "job_search",
+    "keyloggers_and_monitoring", "kids", "legal", "local_information", "low_thc_cannabis_products", "malware_sites", "marijuana", "military", "motor_vehicles", "music", "name", "news_and_media", "nudity", "nudity_artistic", "online_greeting_cards", "parked_domains", "pay_to_surf", "peer_to_peer", "personal_sites_and_blogs", "personal_storage",
+    "philosophy_and_politics", "phishing_and_other_fraud", "proxy_avoid_and_anonymizers", "questionable", "real_estate", "recreation_and_hobbies", "reference_and_research", "religion", "sampling_enable", "search_engines", "self_harm", "sex_education", "shareware_and_freeware", "shopping", "social_network", "society", "spam_urls", "sports",
+    "spyware_and_adware", "stats", "stock_advice_and_tools", "streaming_media", "swimsuits_and_intimate_apparel", "training_and_tools", "translation", "travel", "uncategorized", "user_tag", "uuid", "violence", "weapons", "web_advertisements", "web_based_email", "web_hosting_sites",
     ]
 
 
@@ -1212,6 +1250,18 @@ def get_argspec():
         'web_hosting_sites': {
             'type': 'bool',
             },
+        'self_harm': {
+            'type': 'bool',
+            },
+        'dns_over_https': {
+            'type': 'bool',
+            },
+        'low_thc_cannabis_products': {
+            'type': 'bool',
+            },
+        'generative_ai': {
+            'type': 'bool',
+            },
         'nudity_artistic': {
             'type': 'bool',
             },
@@ -1234,8 +1284,8 @@ def get_argspec():
                     'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games',
                     'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals',
                     'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'confirmed-SPAM-sources',
-                    'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'nudity-artistic',
-                    'illegal-pornography'
+                    'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'dummy-item', 'self-harm',
+                    'dns-over-https', 'low-thc-cannabis-products', 'generative-ai', 'nudity-artistic', 'illegal-pornography'
                     ]
                 }
             },
@@ -1491,6 +1541,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'food_and_dining': {
+                'type': 'str',
+                },
+            'self_harm': {
+                'type': 'str',
+                },
+            'dns_over_https': {
+                'type': 'str',
+                },
+            'low_thc_cannabis_products': {
+                'type': 'str',
+                },
+            'generative_ai': {
                 'type': 'str',
                 },
             'nudity_artistic': {

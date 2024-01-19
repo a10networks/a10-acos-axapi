@@ -780,6 +780,39 @@ def get_argspec():
                     },
                 'dns_rr_dnssec_val_rrset_size_exceed_limit': {
                     'type': 'str',
+                    },
+                'dns_recursive_resolution_late_ans': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_udp_conn': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_tcp_conn': {
+                    'type': 'str',
+                    },
+                'dns_category_action_drop': {
+                    'type': 'str',
+                    },
+                'dns_category_action_respond': {
+                    'type': 'str',
+                    },
+                'dns_category_action_permit': {
+                    'type': 'str',
+                    },
+                'dns_category_resp_nxdomain': {
+                    'type': 'str',
+                    },
+                'dns_category_resp_noanswer': {
+                    'type': 'str',
+                    },
+                'dns_category_resp_a': {
+                    'type': 'str',
+                    },
+                'dns_category_resp_aaaa': {
+                    'type': 'str',
+                    },
+                'dns_category_resp_cname': {
+                    'type': 'str',
                     }
                 }
             }

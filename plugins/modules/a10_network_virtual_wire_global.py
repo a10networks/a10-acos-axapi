@@ -83,7 +83,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'vlan-update'= VLAN update; 'mac-update'= MAC update;"
+                - "'all'= all; 'vlan-update'= VLAN update; 'mac-update'= MAC update; 'vlan-pair-
+          update'= VLAN pair update; 'hc-pkt-drop'= Packet drop due to health check;"
                 type: str
     oper:
         description:
@@ -94,6 +95,10 @@ options:
             vlan_group:
                 description:
                 - "Field vlan_group"
+                type: list
+            vlan_set:
+                description:
+                - "Field vlan_set"
                 type: list
     stats:
         description:
@@ -108,6 +113,14 @@ options:
             mac_update:
                 description:
                 - "MAC update"
+                type: str
+            vlan_pair_update:
+                description:
+                - "VLAN pair update"
+                type: str
+            hc_pkt_drop:
+                description:
+                - "Packet drop due to health check"
                 type: str
 
 '''
@@ -201,7 +214,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'vlan-update', 'mac-update']
+                'choices': ['all', 'vlan-update', 'mac-update', 'vlan-pair-update', 'hc-pkt-drop']
                 }
             },
         'oper': {
@@ -214,6 +227,15 @@ def get_argspec():
                 'active_member': {
                     'type': 'int',
                     }
+                },
+            'vlan_set': {
+                'type': 'list',
+                'set_id': {
+                    'type': 'int',
+                    },
+                'active_pair': {
+                    'type': 'int',
+                    }
                 }
             },
         'stats': {
@@ -222,6 +244,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'mac_update': {
+                'type': 'str',
+                },
+            'vlan_pair_update': {
+                'type': 'str',
+                },
+            'hc_pkt_drop': {
                 'type': 'str',
                 }
             }

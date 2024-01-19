@@ -219,6 +219,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            move_rule:
+                description:
+                - "Field move_rule"
+                type: dict
             action_group:
                 description:
                 - "Field action_group"
@@ -602,6 +606,16 @@ def get_argspec():
                 'counters1': {
                     'type': 'str',
                     'choices': ['all', 'hit-count']
+                    }
+                },
+            'move_rule': {
+                'type': 'dict',
+                'location': {
+                    'type': 'str',
+                    'choices': ['top', 'before', 'after', 'bottom']
+                    },
+                'target_rule': {
+                    'type': 'str',
                     }
                 },
             'action_group': {

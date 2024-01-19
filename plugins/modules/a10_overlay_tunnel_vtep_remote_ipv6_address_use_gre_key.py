@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_cgnv6_global
+module: a10_overlay_tunnel_vtep_remote_ipv6_address_use_gre_key
 description:
-    - Configure triggers for cgnv6.global object
+    - Specify the gre key
 author: A10 Networks
 options:
     state:
@@ -55,61 +55,26 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    template_name:
+    remote_ipv6_address_ipv6_address:
         description:
         - Key to identify parent object
         type: str
         required: True
+    vtep_id:
+        description:
+        - Key to identify parent object
+        type: str
+        required: True
+    gre_key:
+        description:
+        - "key"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    trigger_stats_inc:
-        description:
-        - "Field trigger_stats_inc"
-        type: dict
-        required: False
-        suboptions:
-            udp_total_ports_allocated:
-                description:
-                - "Enable automatic packet-capture for Total UDP ports allocated"
-                type: bool
-            icmp_total_ports_allocated:
-                description:
-                - "Enable automatic packet-capture for Total ICMP ports allocated"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    trigger_stats_rate:
-        description:
-        - "Field trigger_stats_rate"
-        type: dict
-        required: False
-        suboptions:
-            threshold_exceeded_by:
-                description:
-                - "Set the threshold to the number of times greater than the previous duration to
-          start the capture, default is 5"
-                type: int
-            duration:
-                description:
-                - "Time in seconds to look for the anomaly, default is 60"
-                type: int
-            udp_total_ports_allocated:
-                description:
-                - "Enable automatic packet-capture for Total UDP ports allocated"
-                type: bool
-            icmp_total_ports_allocated:
-                description:
-                - "Enable automatic packet-capture for Total ICMP ports allocated"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
 
 '''
 
@@ -164,7 +129,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["gre_key", "uuid", ]
 
 
 def get_default_argspec():
@@ -184,56 +149,26 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'trigger_stats_inc': {
-            'type': 'dict',
-            'udp_total_ports_allocated': {
-                'type': 'bool',
-                },
-            'icmp_total_ports_allocated': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'trigger_stats_rate': {
-            'type': 'dict',
-            'threshold_exceeded_by': {
-                'type': 'int',
-                },
-            'duration': {
-                'type': 'int',
-                },
-            'udp_total_ports_allocated': {
-                'type': 'bool',
-                },
-            'icmp_total_ports_allocated': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'gre_key': {'type': 'int', }, 'uuid': {'type': 'str', }})
     # Parent keys
-    rv.update(dict(template_name=dict(type='str', required=True), ))
+    rv.update(dict(remote_ipv6_address_ipv6_address=dict(type='str', required=True), vtep_id=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/cgnv6-global"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/remote-ipv6-address/{remote_ipv6_address_ipv6_address}/use-gre-key"
 
     f_dict = {}
-    if '/' in module.params["template_name"]:
-        f_dict["template_name"] = module.params["template_name"].replace("/", "%2F")
+    if '/' in module.params["remote_ipv6_address_ipv6_address"]:
+        f_dict["remote_ipv6_address_ipv6_address"] = module.params["remote_ipv6_address_ipv6_address"].replace("/", "%2F")
     else:
-        f_dict["template_name"] = module.params["template_name"]
+        f_dict["remote_ipv6_address_ipv6_address"] = module.params["remote_ipv6_address_ipv6_address"]
+    if '/' in module.params["vtep_id"]:
+        f_dict["vtep_id"] = module.params["vtep_id"].replace("/", "%2F")
+    else:
+        f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)
 
@@ -241,10 +176,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/visibility/packet-capture/global-templates/template/{template_name}/trigger-sys-obj-stats-change/cgnv6-global"
+    url_base = "/axapi/v3/overlay-tunnel/vtep/{vtep_id}/remote-ipv6-address/{remote_ipv6_address_ipv6_address}/use-gre-key"
 
     f_dict = {}
-    f_dict["template_name"] = module.params["template_name"]
+    f_dict["remote_ipv6_address_ipv6_address"] = module.params["remote_ipv6_address_ipv6_address"]
+    f_dict["vtep_id"] = module.params["vtep_id"]
 
     return url_base.format(**f_dict)
 
@@ -256,13 +192,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["cgnv6-global"].items():
+    for k, v in payload["use-gre-key"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["cgnv6-global"].get(k) != v:
+        if config_changes["use-gre-key"].get(k) != v:
             change_results["changed"] = True
-            config_changes["cgnv6-global"][k] = v
+            config_changes["use-gre-key"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -288,7 +224,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("cgnv6-global", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("use-gre-key", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -378,13 +314,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["cgnv6-global"] if info != "NotFound" else info
+                result["acos_info"] = info["use-gre-key"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["cgnv6-global-list"] if info != "NotFound" else info
+                result["acos_info"] = info["use-gre-key-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

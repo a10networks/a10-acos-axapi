@@ -132,6 +132,18 @@ options:
         - "'enable'= Enable detection notification debug log (default= disabled);"
         type: str
         required: False
+    network_object_window_size:
+        description:
+        - "'5'= 5 seconds; '10'= 10 seconds; '15'= 15 seconds; '30'= 30 seconds;  (DDoS
+          detection window size in seconds(default= 30))"
+        type: str
+        required: False
+    network_object_flooding_multiple:
+        description:
+        - "multiplier for flooding detection threshold in network objects (default 2x
+          threshold)"
+        type: int
+        required: False
     de_escalation_quiet_time:
         description:
         - "Configure de-escalation needed time in minutes from level 1 to 0.(default 1
@@ -143,6 +155,28 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    entry_saving:
+        description:
+        - "Field entry_saving"
+        type: dict
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Configure periodical auto-saving interval in minutes"
+                type: int
+            manual_save:
+                description:
+                - "Manually save network-object-based detection entries and learned indicators"
+                type: bool
+            manual_restore:
+                description:
+                - "Manually restore network-object-based detection entries and learned indicators"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     standalone_settings:
         description:
         - "Field standalone_settings"
@@ -225,7 +259,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "notification_debug_log", "pkt_sampling", "standalone_settings", "top_k_reset_interval", "uuid",
+    "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "entry_saving", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "network_object_flooding_multiple", "network_object_window_size",
+    "notification_debug_log", "pkt_sampling", "standalone_settings", "top_k_reset_interval", "uuid",
     ]
 
 
@@ -294,11 +329,33 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable']
             },
+        'network_object_window_size': {
+            'type': 'str',
+            'choices': ['5', '10', '15', '30']
+            },
+        'network_object_flooding_multiple': {
+            'type': 'int',
+            },
         'de_escalation_quiet_time': {
             'type': 'int',
             },
         'uuid': {
             'type': 'str',
+            },
+        'entry_saving': {
+            'type': 'dict',
+            'interval': {
+                'type': 'int',
+                },
+            'manual_save': {
+                'type': 'bool',
+                },
+            'manual_restore': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             },
         'standalone_settings': {
             'type': 'dict',
