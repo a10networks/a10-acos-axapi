@@ -86,6 +86,10 @@ options:
                 description:
                 - "Field g_scaleout"
                 type: int
+            so_single_node_mode:
+                description:
+                - "Field so_single_node_mode"
+                type: int
             min_node_num:
                 description:
                 - "Field min_node_num"
@@ -93,6 +97,14 @@ options:
             cluster_disc_timer_running:
                 description:
                 - "Field cluster_disc_timer_running"
+                type: int
+            so_single_node_disabled:
+                description:
+                - "Field so_single_node_disabled"
+                type: int
+            so_single_node_admin_down:
+                description:
+                - "Field so_single_node_admin_down"
                 type: int
             explicitly_stop_service:
                 description:
@@ -233,10 +245,19 @@ def get_argspec():
             'g_scaleout': {
                 'type': 'int',
                 },
+            'so_single_node_mode': {
+                'type': 'int',
+                },
             'min_node_num': {
                 'type': 'int',
                 },
             'cluster_disc_timer_running': {
+                'type': 'int',
+                },
+            'so_single_node_disabled': {
+                'type': 'int',
+                },
+            'so_single_node_admin_down': {
                 'type': 'int',
                 },
             'explicitly_stop_service': {
@@ -287,9 +308,6 @@ def get_argspec():
                     'type': 'int',
                     },
                 'members': {
-                    'type': 'int',
-                    },
-                'members_low64': {
                     'type': 'int',
                     }
                 }

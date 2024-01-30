@@ -139,19 +139,9 @@ options:
         - "Apply IPsec encapsulation"
         type: bool
         required: False
-    ipsec_group:
-        description:
-        - "Apply IPsec Group encapsulation"
-        type: bool
-        required: False
     vpn_ipsec_name:
         description:
         - "VPN IPsec name"
-        type: str
-        required: False
-    vpn_ipsec_group_name:
-        description:
-        - "VPN IPsec Group name"
         type: str
         required: False
     cgnv6:
@@ -206,27 +196,6 @@ options:
         - "Use the user's source MAC for the next hop rather than the routing table
           (default=off)"
         type: bool
-        required: False
-    set_dscp:
-        description:
-        - "DSCP setting"
-        type: bool
-        required: False
-    dscp_value:
-        description:
-        - "'default'= Default dscp (000000); 'af11'= AF11 (001010); 'af12'= AF12 (001100);
-          'af13'= AF13 (001110); 'af21'= AF21 (010010); 'af22'= AF22 (010100); 'af23'=
-          AF23 (010110); 'af31'= AF31 (011010); 'af32'= AF32 (011100); 'af33'= AF33
-          (011110); 'af41'= AF41 (100010); 'af42'= AF42 (100100); 'af43'= AF43 (100110);
-          'cs1'= CS1 (001000); 'cs2'= CS2 (010000); 'cs3'= CS3 (011000); 'cs4'= CS4
-          (100000); 'cs5'= CS5 (101000); 'cs6'= CS6 (110000); 'cs7'= CS7 (111000); 'ef'=
-          EF (101110);"
-        type: str
-        required: False
-    dscp_number:
-        description:
-        - "DSCP Number"
-        type: int
         required: False
     uuid:
         description:
@@ -288,8 +257,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "deny_reset_limit_policy", "dscp_number", "dscp_value", "forward", "inspect_payload", "ipsec", "ipsec_group", "listen_on_port", "logging_template_list", "permit_limit_policy", "permit_log",
-    "permit_respond_to_user_mac", "reset_fw_log", "reset_log", "reset_log_template_type", "reset_respond_to_user_mac", "set_dscp", "ntype", "uuid", "vpn_ipsec_group_name", "vpn_ipsec_name",
+    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "deny_reset_limit_policy", "forward", "inspect_payload", "ipsec", "listen_on_port", "logging_template_list", "permit_limit_policy", "permit_log", "permit_respond_to_user_mac", "reset_fw_log", "reset_log",
+    "reset_log_template_type", "reset_respond_to_user_mac", "ntype", "uuid", "vpn_ipsec_name",
     ]
 
 
@@ -363,13 +332,7 @@ def get_argspec():
         'ipsec': {
             'type': 'bool',
             },
-        'ipsec_group': {
-            'type': 'bool',
-            },
         'vpn_ipsec_name': {
-            'type': 'str',
-            },
-        'vpn_ipsec_group_name': {
             'type': 'str',
             },
         'cgnv6': {
@@ -403,16 +366,6 @@ def get_argspec():
             },
         'reset_respond_to_user_mac': {
             'type': 'bool',
-            },
-        'set_dscp': {
-            'type': 'bool',
-            },
-        'dscp_value': {
-            'type': 'str',
-            'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']
-            },
-        'dscp_number': {
-            'type': 'int',
             },
         'uuid': {
             'type': 'str',

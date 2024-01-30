@@ -123,7 +123,7 @@ options:
           No Status Code Err Stats; 'http_resp_line_read_err'= HTTP Response Line Read
           Err Stats; 'http_resp_line_parse_err'= HTTP Response Line Parse Err Stats;
           'http_resp_hdr_err'= HTTP Resp Hdr Err Stats; 'recv_option_resp'= Send Option
-          Req Stats; 'http_connect_reqmod_request'= HTTP CONNECT Reqmod Request Stats;"
+          Req Stats;"
                 type: str
     oper:
         description:
@@ -561,10 +561,6 @@ options:
                 description:
                 - "Send Option Req Stats"
                 type: str
-            http_connect_reqmod_request:
-                description:
-                - "HTTP CONNECT Reqmod Request Stats"
-                type: str
 
 '''
 
@@ -654,7 +650,7 @@ def get_argspec():
                     'status_400', 'status_401', 'status_402', 'status_403', 'status_404', 'status_405', 'status_406', 'status_407', 'status_408', 'status_409', 'status_410', 'status_411', 'status_412', 'status_413', 'status_414', 'status_415', 'status_416', 'status_417', 'status_418', 'status_419', 'status_420', 'status_422', 'status_423',
                     'status_424', 'status_425', 'status_426', 'status_449', 'status_450', 'status_5xx', 'status_500', 'status_501', 'status_502', 'status_503', 'status_504', 'status_505', 'status_506', 'status_507', 'status_508', 'status_509', 'status_510', 'status_6xx', 'status_unknown', 'send_option_req', 'app_serv_conn_no_pcb_err',
                     'app_serv_conn_err', 'chunk1_hdr_err', 'chunk2_hdr_err', 'chunk_bad_trail_err', 'no_payload_next_buff_err', 'no_payload_buff_err', 'resp_hdr_incomplete_err', 'serv_sel_fail_err', 'start_icap_conn_fail_err', 'prep_req_fail_err', 'icap_ver_err', 'icap_line_err', 'encap_hdr_incomplete_err', 'no_icap_resp_err', 'resp_line_read_err',
-                    'resp_line_parse_err', 'resp_hdr_err', 'req_hdr_incomplete_err', 'no_status_code_err', 'http_resp_line_read_err', 'http_resp_line_parse_err', 'http_resp_hdr_err', 'recv_option_resp', 'http_connect_reqmod_request'
+                    'resp_line_parse_err', 'resp_hdr_err', 'req_hdr_incomplete_err', 'no_status_code_err', 'http_resp_line_read_err', 'http_resp_line_parse_err', 'http_resp_hdr_err', 'recv_option_resp'
                     ]
                 }
             },
@@ -972,9 +968,6 @@ def get_argspec():
                     'type': 'int',
                     },
                 'recv_option_resp': {
-                    'type': 'int',
-                    },
-                'http_connect_reqmod_request': {
                     'type': 'int',
                     }
                 },
@@ -1294,9 +1287,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'recv_option_resp': {
-                'type': 'str',
-                },
-            'http_connect_reqmod_request': {
                 'type': 'str',
                 }
             }

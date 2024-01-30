@@ -234,9 +234,6 @@ def get_argspec():
                     },
                 'ssl_status': {
                     'type': 'str',
-                    },
-                'reason': {
-                    'type': 'str',
                     }
                 }
             }

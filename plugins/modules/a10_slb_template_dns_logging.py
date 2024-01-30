@@ -65,29 +65,21 @@ options:
         - "Disable DNS Logging template"
         type: bool
         required: False
+    dns_logging_type:
+        description:
+        - "'query'= DNS Query Logging;"
+        type: str
+        required: False
     dns_logging_protocol:
         description:
         - "'both'= Log DNS over tcp and udp; 'tcp'= Log DNS over tcp; 'udp'= Log DNS over
           udp;"
         type: str
         required: False
-    dns_logging_type:
-        description:
-        - "'query'= DNS Query Logging; 'response'= DNS Response Logging; 'both'= DNS Query
-          and Response Logging;"
-        type: str
-        required: False
     dns_logging_request_section:
         description:
         - "'all'= Log DNS header and question section; 'header'= Log DNS header
           information; 'question'= Log DNS question section;"
-        type: str
-        required: False
-    dns_logging_response_section:
-        description:
-        - "'all'= Log DNS header information, answer, authority, additional section
-          content; 'header'= Log DNS header information; 'answer'= Log DNS header
-          information and answer section content;"
         type: str
         required: False
     uuid:
@@ -100,24 +92,6 @@ options:
         - "Customized tag"
         type: str
         required: False
-    response_type:
-        description:
-        - "Field response_type"
-        type: dict
-        required: False
-        suboptions:
-            config:
-                description:
-                - "start config the response type detail"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            type_list:
-                description:
-                - "Field type_list"
-                type: list
 
 '''
 
@@ -172,7 +146,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_type", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_type", "name", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -200,125 +174,23 @@ def get_argspec():
         'disable': {
             'type': 'bool',
             },
+        'dns_logging_type': {
+            'type': 'str',
+            'choices': ['query']
+            },
         'dns_logging_protocol': {
             'type': 'str',
             'choices': ['both', 'tcp', 'udp']
             },
-        'dns_logging_type': {
-            'type': 'str',
-            'choices': ['query', 'response', 'both']
-            },
         'dns_logging_request_section': {
             'type': 'str',
             'choices': ['all', 'header', 'question']
-            },
-        'dns_logging_response_section': {
-            'type': 'str',
-            'choices': ['all', 'header', 'answer']
             },
         'uuid': {
             'type': 'str',
             },
         'user_tag': {
             'type': 'str',
-            },
-        'response_type': {
-            'type': 'dict',
-            'config': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                },
-            'type_list': {
-                'type': 'list',
-                'response_type_name': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['TXT', 'RRSIG', 'TSIG', 'DNSKEY', 'DS', 'CAA', 'NAPTR', 'OPT']
-                    },
-                'length_limit_flag': {
-                    'type': 'bool',
-                    },
-                'txt_data': {
-                    'type': 'bool',
-                    },
-                'txt_type_limit_num': {
-                    'type': 'int',
-                    },
-                'txt_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'signature': {
-                    'type': 'bool',
-                    },
-                'rrsig_type_limit_num': {
-                    'type': 'int',
-                    },
-                'rrsig_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'other_data': {
-                    'type': 'bool',
-                    },
-                'tsig_type_limit_num': {
-                    'type': 'int',
-                    },
-                'tsig_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'public_key': {
-                    'type': 'bool',
-                    },
-                'dnskey_type_limit_num': {
-                    'type': 'int',
-                    },
-                'dnskey_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'digest': {
-                    'type': 'bool',
-                    },
-                'ds_type_limit_num': {
-                    'type': 'int',
-                    },
-                'ds_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'value_field': {
-                    'type': 'bool',
-                    },
-                'caa_type_limit_num': {
-                    'type': 'int',
-                    },
-                'caa_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'service_field': {
-                    'type': 'bool',
-                    },
-                'naptr_type_limit_num': {
-                    'type': 'int',
-                    },
-                'naptr_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'rdata_field': {
-                    'type': 'bool',
-                    },
-                'opt_type_limit_num': {
-                    'type': 'int',
-                    },
-                'opt_type_no_limit': {
-                    'type': 'bool',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    },
-                'user_tag': {
-                    'type': 'str',
-                    }
-                }
             }
         })
     return rv

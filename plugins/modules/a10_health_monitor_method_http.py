@@ -70,11 +70,6 @@ options:
         - "Specify HTTP Port (Specify port number (default 80))"
         type: int
         required: False
-    version2:
-        description:
-        - "Specify HTTP version2 (Specify http version 2)"
-        type: bool
-        required: False
     http_expect:
         description:
         - "Specify what you expect from the response message"
@@ -277,7 +272,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "http", "http_encrypted", "http_expect", "http_host", "http_kerberos_auth", "http_kerberos_kdc", "http_kerberos_realm", "http_maintenance_code", "http_password", "http_password_string", "http_port", "http_postdata", "http_postfile", "http_response_code", "http_text", "http_url", "http_username", "maintenance", "maintenance_text",
-    "maintenance_text_regex", "post_path", "post_type", "response_code_regex", "text_regex", "url_path", "url_type", "uuid", "version2",
+    "maintenance_text_regex", "post_path", "post_type", "response_code_regex", "text_regex", "url_path", "url_type", "uuid",
     ]
 
 
@@ -304,9 +299,6 @@ def get_argspec():
             },
         'http_port': {
             'type': 'int',
-            },
-        'version2': {
-            'type': 'bool',
             },
         'http_expect': {
             'type': 'bool',

@@ -109,17 +109,6 @@ options:
         - "VCS retry forever if fails to join the chassis"
         type: bool
         required: False
-    dead_interval_mseconds:
-        description:
-        - "The node will be considered dead as lack of hearbeats after this time
-          (milisecond) (in unit of msecond, default is 0)"
-        type: int
-        required: False
-    time_interval_mseconds:
-        description:
-        - "how long between heartbeats (mseconds) (in unit of milisecond, default is 0)"
-        type: int
-        required: False
     dead_interval:
         description:
         - "The node will be considered dead as lack of hearbeats after this time (in unit
@@ -165,26 +154,6 @@ options:
         description:
         - "The node will wait the specified time interval before it start aVCS (in unit of
           second (default is 5))"
-        type: int
-        required: False
-    slog_level:
-        description:
-        - "Set the level of slog for aVCS"
-        type: int
-        required: False
-    slog_method:
-        description:
-        - "Set the print method of slog for aVCS"
-        type: int
-        required: False
-    transmit_fragment_size:
-        description:
-        - "Set the fragment size (KByte) of the aVCS transmit"
-        type: int
-        required: False
-    memory_stat_interval:
-        description:
-        - "Interval of aVCS memory statistics record (minutes)"
         type: int
         required: False
     uuid:
@@ -246,10 +215,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "chassis_id", "config_info", "config_seq", "dead_interval", "dead_interval_mseconds", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "memory_stat_interval", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "slog_level", "slog_method", "speed_limit", "ssl_enable",
-    "tcp_channel_monitor", "time_interval", "time_interval_mseconds", "transmit_fragment_size", "uuid",
-    ]
+AVAILABLE_PROPERTIES = ["chassis_id", "config_info", "config_seq", "dead_interval", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "speed_limit", "ssl_enable", "tcp_channel_monitor", "time_interval", "uuid", ]
 
 
 def get_default_argspec():
@@ -303,12 +269,6 @@ def get_argspec():
         'forever': {
             'type': 'bool',
             },
-        'dead_interval_mseconds': {
-            'type': 'int',
-            },
-        'time_interval_mseconds': {
-            'type': 'int',
-            },
         'dead_interval': {
             'type': 'int',
             },
@@ -334,18 +294,6 @@ def get_argspec():
             'type': 'int',
             },
         'force_wait_interval': {
-            'type': 'int',
-            },
-        'slog_level': {
-            'type': 'int',
-            },
-        'slog_method': {
-            'type': 'int',
-            },
-        'transmit_fragment_size': {
-            'type': 'int',
-            },
-        'memory_stat_interval': {
             'type': 'int',
             },
         'uuid': {

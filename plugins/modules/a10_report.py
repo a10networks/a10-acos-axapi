@@ -61,14 +61,14 @@ options:
         type: dict
         required: False
         suboptions:
+            sflow:
+                description:
+                - "Enable debugging logs of sFlow parser"
+                type: bool
             log:
                 description:
                 - "Enable Report module's normal logs"
                 type: bool
-            sflow:
-                description:
-                - "Field sflow"
-                type: dict
 
 '''
 
@@ -143,7 +143,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'debug': {'type': 'dict', 'log': {'type': 'bool', }, 'sflow': {'type': 'dict', 'parser': {'type': 'bool', }, 'stats_oid': {'type': 'int', }}}})
+    rv.update({'debug': {'type': 'dict', 'sflow': {'type': 'bool', }, 'log': {'type': 'bool', }}})
     return rv
 
 

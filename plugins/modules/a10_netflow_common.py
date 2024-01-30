@@ -77,28 +77,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    selector_algorithm_list:
-        description:
-        - "Field selector_algorithm_list"
-        type: list
-        required: False
-        suboptions:
-            algorithm_name:
-                description:
-                - "'random'= random;"
-                type: str
-            sampling_population:
-                description:
-                - "Configure sampling population for random algorithm"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            user_tag:
-                description:
-                - "Customized tag"
-                type: str
 
 '''
 
@@ -153,7 +131,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["max_packet_queue_time", "nat44_tpl_1001", "reset_time_on_flow_record", "selector_algorithm_list", "uuid", ]
+AVAILABLE_PROPERTIES = ["max_packet_queue_time", "nat44_tpl_1001", "reset_time_on_flow_record", "uuid", ]
 
 
 def get_default_argspec():
@@ -173,37 +151,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'max_packet_queue_time': {
-            'type': 'int',
-            },
-        'reset_time_on_flow_record': {
-            'type': 'bool',
-            },
-        'nat44_tpl_1001': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'selector_algorithm_list': {
-            'type': 'list',
-            'algorithm_name': {
-                'type': 'str',
-                'required': True,
-                'choices': ['random']
-                },
-            'sampling_population': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                },
-            'user_tag': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'max_packet_queue_time': {'type': 'int', }, 'reset_time_on_flow_record': {'type': 'bool', }, 'nat44_tpl_1001': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

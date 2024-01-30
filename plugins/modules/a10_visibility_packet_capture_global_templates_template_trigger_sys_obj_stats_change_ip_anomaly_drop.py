@@ -60,6 +60,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    dummy:
+        description:
+        - "dummy to make intermediate obj to single"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -222,46 +227,6 @@ options:
             gre_pptp_err:
                 description:
                 - "Enable automatic packet-capture for GRE PPTP Error Drop"
-                type: bool
-            ipv6_eh_hbh:
-                description:
-                - "Enable automatic packet-capture for IPv6 Hop by Hop Header Drop"
-                type: bool
-            ipv6_eh_dest:
-                description:
-                - "Enable automatic packet-capture for IPv6 Destination Header Drop"
-                type: bool
-            ipv6_eh_routing:
-                description:
-                - "Enable automatic packet-capture for IPv6 Routing Header Drop"
-                type: bool
-            ipv6_eh_frag:
-                description:
-                - "Enable automatic packet-capture for IPv6 Fragmentation Header Drop"
-                type: bool
-            ipv6_eh_ah:
-                description:
-                - "Enable automatic packet-capture for IPv6 Authentication Header Drop"
-                type: bool
-            ipv6_eh_esp:
-                description:
-                - "Enable automatic packet-capture for IPv6 ESP Header Drop"
-                type: bool
-            ipv6_eh_mobility:
-                description:
-                - "Enable automatic packet-capture for IPv6 Mobility Header Drop"
-                type: bool
-            ipv6_eh_none:
-                description:
-                - "Enable automatic packet-capture for IPv6 No Next Header Drop"
-                type: bool
-            ipv6_eh_other:
-                description:
-                - "Enable automatic packet-capture for IPv6 Unknown Extension Header Drop"
-                type: bool
-            ipv6_eh_malformed:
-                description:
-                - "Enable automatic packet-capture for IPv6 Malformed Extension Header Drop"
                 type: bool
             uuid:
                 description:
@@ -434,46 +399,6 @@ options:
                 description:
                 - "Enable automatic packet-capture for GRE PPTP Error Drop"
                 type: bool
-            ipv6_eh_hbh:
-                description:
-                - "Enable automatic packet-capture for IPv6 Hop by Hop Header Drop"
-                type: bool
-            ipv6_eh_dest:
-                description:
-                - "Enable automatic packet-capture for IPv6 Destination Header Drop"
-                type: bool
-            ipv6_eh_routing:
-                description:
-                - "Enable automatic packet-capture for IPv6 Routing Header Drop"
-                type: bool
-            ipv6_eh_frag:
-                description:
-                - "Enable automatic packet-capture for IPv6 Fragmentation Header Drop"
-                type: bool
-            ipv6_eh_ah:
-                description:
-                - "Enable automatic packet-capture for IPv6 Authentication Header Drop"
-                type: bool
-            ipv6_eh_esp:
-                description:
-                - "Enable automatic packet-capture for IPv6 ESP Header Drop"
-                type: bool
-            ipv6_eh_mobility:
-                description:
-                - "Enable automatic packet-capture for IPv6 Mobility Header Drop"
-                type: bool
-            ipv6_eh_none:
-                description:
-                - "Enable automatic packet-capture for IPv6 No Next Header Drop"
-                type: bool
-            ipv6_eh_other:
-                description:
-                - "Enable automatic packet-capture for IPv6 Unknown Extension Header Drop"
-                type: bool
-            ipv6_eh_malformed:
-                description:
-                - "Enable automatic packet-capture for IPv6 Malformed Extension Header Drop"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -532,7 +457,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -553,6 +478,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'dummy': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -670,36 +598,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'gre_pptp_err': {
-                'type': 'bool',
-                },
-            'ipv6_eh_hbh': {
-                'type': 'bool',
-                },
-            'ipv6_eh_dest': {
-                'type': 'bool',
-                },
-            'ipv6_eh_routing': {
-                'type': 'bool',
-                },
-            'ipv6_eh_frag': {
-                'type': 'bool',
-                },
-            'ipv6_eh_ah': {
-                'type': 'bool',
-                },
-            'ipv6_eh_esp': {
-                'type': 'bool',
-                },
-            'ipv6_eh_mobility': {
-                'type': 'bool',
-                },
-            'ipv6_eh_none': {
-                'type': 'bool',
-                },
-            'ipv6_eh_other': {
-                'type': 'bool',
-                },
-            'ipv6_eh_malformed': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -826,36 +724,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'gre_pptp_err': {
-                'type': 'bool',
-                },
-            'ipv6_eh_hbh': {
-                'type': 'bool',
-                },
-            'ipv6_eh_dest': {
-                'type': 'bool',
-                },
-            'ipv6_eh_routing': {
-                'type': 'bool',
-                },
-            'ipv6_eh_frag': {
-                'type': 'bool',
-                },
-            'ipv6_eh_ah': {
-                'type': 'bool',
-                },
-            'ipv6_eh_esp': {
-                'type': 'bool',
-                },
-            'ipv6_eh_mobility': {
-                'type': 'bool',
-                },
-            'ipv6_eh_none': {
-                'type': 'bool',
-                },
-            'ipv6_eh_other': {
-                'type': 'bool',
-                },
-            'ipv6_eh_malformed': {
                 'type': 'bool',
                 },
             'uuid': {

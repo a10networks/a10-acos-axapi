@@ -94,10 +94,6 @@ options:
                 description:
                 - "Field vmaster_maintenance_left"
                 type: int
-            vcs_handshake_completed_list:
-                description:
-                - "Field vcs_handshake_completed_list"
-                type: list
             floating_ipv4_list:
                 description:
                 - "Field floating_ipv4_list"
@@ -210,15 +206,6 @@ def get_argspec():
                 },
             'vmaster_maintenance_left': {
                 'type': 'int',
-                },
-            'vcs_handshake_completed_list': {
-                'type': 'list',
-                'vcs_handshake_completed_id': {
-                    'type': 'int',
-                    },
-                'vcs_handshake_completed': {
-                    'type': 'int',
-                    }
                 },
             'floating_ipv4_list': {
                 'type': 'list',

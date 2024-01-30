@@ -114,10 +114,7 @@ options:
           'so_pkts_l2redirect_port_retrieval_error'= L2 redirect pkt port not retrieved;
           'so_pkts_l2redirect_loop_detect_drop'= L2 redirect pkt loop detected and
           dropped; 'so_pkts_l2redirect_same_pkt_multiple_times'= L2 redirect same pkt
-          multiple times; 'so_slb_shadow_session_created'= SLB Shadow Session created;
-          'so_sync_slb_shadow_session_create'= Sent Sync message for SLB Shadow session
-          creation; 'so_sync_slb_shadow_session_delete'= Sent Sync message for SLB Shadow
-          session deletion;"
+          multiple times;"
                 type: str
     stats:
         description:
@@ -257,10 +254,6 @@ options:
                 description:
                 - "L2 redirect same pkt multiple times"
                 type: str
-            so_slb_shadow_session_created:
-                description:
-                - "SLB Shadow Session created"
-                type: str
 
 '''
 
@@ -349,8 +342,7 @@ def get_argspec():
                     'so_pkts_dest_mac_mismatch_drop', 'so_pkts_l2redirect_dest_mac_zero_drop', 'so_pkts_l2redirect_interface_not_up', 'so_pkts_l2redirect_invalid_redirect_info_error', 'so_pkts_l3_redirect_encap_error_drop', 'so_pkts_l3_redirect_inner_mac_zero_drop', 'so_pkts_l3_redirect_decap_vlan_sanity_drop',
                     'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop', 'so_pkts_l3_redirect_decap_rx_encap_params_drop', 'so_pkts_l3_redirect_table_error', 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop', 'so_pkts_l3_redirect_fragmentation_error', 'so_pkts_l3_redirect_table_no_entry_found', 'so_pkts_l3_redirect_invalid_dev_dir',
                     'so_pkts_l3_redirect_chassis_dest_mac_error', 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop', 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop', 'so_pkts_l3_redirect_too_large_pkts_in_drop', 'so_pkts_l3_redirect_encap_mtu_error_drop', 'so_sync_fw_shadow_session_create', 'so_sync_fw_shadow_session_delete',
-                    'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active', 'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error', 'so_pkts_l2redirect_port_retrieval_error', 'so_pkts_l2redirect_loop_detect_drop', 'so_pkts_l2redirect_same_pkt_multiple_times',
-                    'so_slb_shadow_session_created', 'so_sync_slb_shadow_session_create', 'so_sync_slb_shadow_session_delete'
+                    'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active', 'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error', 'so_pkts_l2redirect_port_retrieval_error', 'so_pkts_l2redirect_loop_detect_drop', 'so_pkts_l2redirect_same_pkt_multiple_times'
                     ]
                 }
             },
@@ -453,9 +445,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'so_pkts_l2redirect_same_pkt_multiple_times': {
-                'type': 'str',
-                },
-            'so_slb_shadow_session_created': {
                 'type': 'str',
                 }
             }

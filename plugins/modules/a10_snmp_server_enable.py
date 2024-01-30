@@ -308,9 +308,6 @@ def get_argspec():
                     'isisVersionSkew': {
                         'type': 'bool',
                         },
-                    'isisLSPErrorDetected': {
-                        'type': 'bool',
-                        },
                     'uuid': {
                         'type': 'str',
                         }
@@ -496,6 +493,9 @@ def get_argspec():
                         },
                     'cluster': {
                         'type': 'dict',
+                        'single_node_mode': {
+                            'type': 'bool',
+                            },
                         'election': {
                             'type': 'bool',
                             },

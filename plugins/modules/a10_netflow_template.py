@@ -149,7 +149,7 @@ options:
           'limit-exceeded-count'= Limit exceeded count for FW concurrent session(ID=
           33062); 'rate-limit-key'= Rate Limit Key(ID= 33064); 'rate-limit-type'= Rate
           Limit Type(ID= 33065); 'rate-limit-drop-count'= Rate Limit Drop Count(ID=
-          33066); 'rfc-flow-end-reason'= RFC flow end reason(ID= 136);"
+          33066);"
                 type: str
     ipfix_template_id:
         description:
@@ -256,7 +256,7 @@ def get_argspec():
                     'port-range-end', 'port-range-step-size', 'port-range-num-ports', 'rule-name', 'rule-set-name', 'fw-source-zone', 'fw-dest-zone', 'application-id', 'application-name', 'application-category-name', 'application-subcategory-name', 'imsi', 'msisdn', 'imei', 'radius-custom1', 'radius-custom2', 'radius-custom3', 'radius-custom4',
                     'radius-custom5', 'radius-custom6', 'flow-start-msec', 'flow-duration-msec', 'flow-duration-msec-64', 'flow-end-msec', 'nat-event', 'fw-event', 'fw-deny-reset-event', 'cgn-flow-direction', 'fw-dest-fqdn', 'flow-end-reason', 'gtp-deny-reason', 'gtp-apn', 'gtp-steid', 'gtp-dteid', 'gtp-selection-mode', 'gtp-mcc', 'gtp-mnc',
                     'gtp-rat-type', 'gtp-pdn-pdp-type', 'gtp-uli', 'gtp-enduser-v4-addr', 'gtp-enduser-v6-addr', 'gtp-bearer-id-or-nsapi', 'gtp-qci', 'gtp-info-event-ind', 'gtp-restarted-node-ipv4', 'gtp-restarted-node-ipv6', 'gtp-c-tunnels-removed-with-node-restart', 'radius-imsi', 'radius-msisdn', 'radius-imei', 'event-time-msec',
-                    'security-event-type', 'limit-exceeded-count', 'rate-limit-key', 'rate-limit-type', 'rate-limit-drop-count', 'rfc-flow-end-reason'
+                    'security-event-type', 'limit-exceeded-count', 'rate-limit-key', 'rate-limit-type', 'rate-limit-drop-count'
                     ]
                 }
             },

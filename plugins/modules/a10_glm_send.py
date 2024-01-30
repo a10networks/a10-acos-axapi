@@ -60,11 +60,6 @@ options:
         - "Immediately send a single GLM license request"
         type: bool
         required: False
-    ha_status:
-        description:
-        - "Send a ELM HA status request"
-        type: bool
-        required: False
 
 '''
 
@@ -119,7 +114,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ha_status", "license_request", ]
+AVAILABLE_PROPERTIES = ["license_request", ]
 
 
 def get_default_argspec():
@@ -139,7 +134,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'license_request': {'type': 'bool', }, 'ha_status': {'type': 'bool', }})
+    rv.update({'license_request': {'type': 'bool', }})
     return rv
 
 

@@ -58,8 +58,7 @@ options:
     feature_name:
         description:
         - "'app-fw'= Application Firewall Configuration; 'ca-bundle'= CA Certificate
-          Bundle; 'a10-threat-intel'= A10 Threat intel class list; 'central-cert-pin-
-          list'= Central updated cert pinning list;"
+          Bundle; 'a10-threat-intel'= A10 Threat intel class list;"
         type: str
         required: True
     debug:
@@ -186,7 +185,7 @@ def get_argspec():
         'feature_name': {
             'type': 'str',
             'required': True,
-            'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel', 'central-cert-pin-list']
+            'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']
             },
         'debug': {
             'type': 'bool',

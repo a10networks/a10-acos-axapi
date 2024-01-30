@@ -60,6 +60,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    dummy:
+        description:
+        - "dummy to make intermediate obj to single"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -161,30 +166,6 @@ options:
                 description:
                 - "Enable automatic packet-capture for GTP-U session count is not in range of 0-11
           in GTP-C SMP on PU2"
-                type: bool
-            gtp_c_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP-C SMP signature check Failed"
-                type: bool
-            blade_gtp_c_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP-C SMP signature check Failed on PU2"
-                type: bool
-            gtp_u_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP SMP signature check Failed"
-                type: bool
-            blade_gtp_u_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP-U SMP signature check Failed on PU2"
-                type: bool
-            gtp_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP SMP signature check Failed"
-                type: bool
-            blade_gtp_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP SMP signature check Failed on PU2"
                 type: bool
             uuid:
                 description:
@@ -296,30 +277,6 @@ options:
                 - "Enable automatic packet-capture for GTP-U session count is not in range of 0-11
           in GTP-C SMP on PU2"
                 type: bool
-            gtp_c_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP-C SMP signature check Failed"
-                type: bool
-            blade_gtp_c_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP-C SMP signature check Failed on PU2"
-                type: bool
-            gtp_u_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP SMP signature check Failed"
-                type: bool
-            blade_gtp_u_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP-U SMP signature check Failed on PU2"
-                type: bool
-            gtp_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP SMP signature check Failed"
-                type: bool
-            blade_gtp_smp_sig_check_failed:
-                description:
-                - "Enable automatic packet-capture for GTP SMP signature check Failed on PU2"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -378,7 +335,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["trigger_stats_inc", "trigger_stats_rate", "uuid", ]
+AVAILABLE_PROPERTIES = ["dummy", "trigger_stats_inc", "trigger_stats_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -399,6 +356,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'dummy': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -465,24 +425,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'blade_gtp_smp_session_count_check_faile': {
-                'type': 'bool',
-                },
-            'gtp_c_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'blade_gtp_c_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'blade_gtp_u_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'blade_gtp_smp_sig_check_failed': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -558,24 +500,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'blade_gtp_smp_session_count_check_faile': {
-                'type': 'bool',
-                },
-            'gtp_c_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'blade_gtp_c_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_u_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'blade_gtp_u_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'gtp_smp_sig_check_failed': {
-                'type': 'bool',
-                },
-            'blade_gtp_smp_sig_check_failed': {
                 'type': 'bool',
                 },
             'uuid': {

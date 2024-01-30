@@ -172,36 +172,6 @@ options:
           in GTP-C SMP on PU2"
         type: bool
         required: False
-    gtp_c_smp_sig_check_failed:
-        description:
-        - "Enable automatic packet-capture for GTP-C SMP signature check Failed"
-        type: bool
-        required: False
-    blade_gtp_c_smp_sig_check_failed:
-        description:
-        - "Enable automatic packet-capture for GTP-C SMP signature check Failed on PU2"
-        type: bool
-        required: False
-    gtp_u_smp_sig_check_failed:
-        description:
-        - "Enable automatic packet-capture for GTP SMP signature check Failed"
-        type: bool
-        required: False
-    blade_gtp_u_smp_sig_check_failed:
-        description:
-        - "Enable automatic packet-capture for GTP-U SMP signature check Failed on PU2"
-        type: bool
-        required: False
-    gtp_smp_sig_check_failed:
-        description:
-        - "Enable automatic packet-capture for GTP SMP signature check Failed"
-        type: bool
-        required: False
-    blade_gtp_smp_sig_check_failed:
-        description:
-        - "Enable automatic packet-capture for GTP SMP signature check Failed on PU2"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -262,9 +232,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "blade_gtp_c_smp_sig_check_failed", "blade_gtp_info_ext_not_found", "blade_gtp_rate_limit_entry_create_failu", "blade_gtp_rate_limit_smp_create_failure", "blade_gtp_rate_limit_t3_ctr_create_fail", "blade_gtp_smp_c_check_failed", "blade_gtp_smp_dec_sess_count_check_fail", "blade_gtp_smp_path_check_failed",
-    "blade_gtp_smp_session_count_check_faile", "blade_gtp_smp_sig_check_failed", "blade_gtp_u_smp_check_failed", "blade_gtp_u_smp_sig_check_failed", "blade_out_of_session_memory", "gtp_c_smp_sig_check_failed", "gtp_info_ext_not_found", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure",
-    "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_c_check_failed", "gtp_smp_dec_sess_count_check_failed", "gtp_smp_path_check_failed", "gtp_smp_sig_check_failed", "gtp_tunnel_rate_limit_entry_create_fail", "gtp_u_smp_check_failed", "gtp_u_smp_sig_check_failed", "gtp_u_tunnel_rate_limit_entry_create_fa", "out_of_session_memory", "uuid",
+    "blade_gtp_info_ext_not_found", "blade_gtp_rate_limit_entry_create_failu", "blade_gtp_rate_limit_smp_create_failure", "blade_gtp_rate_limit_t3_ctr_create_fail", "blade_gtp_smp_c_check_failed", "blade_gtp_smp_dec_sess_count_check_fail", "blade_gtp_smp_path_check_failed", "blade_gtp_smp_session_count_check_faile", "blade_gtp_u_smp_check_failed",
+    "blade_out_of_session_memory", "gtp_info_ext_not_found", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure", "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_c_check_failed", "gtp_smp_dec_sess_count_check_failed", "gtp_smp_path_check_failed", "gtp_tunnel_rate_limit_entry_create_fail", "gtp_u_smp_check_failed",
+    "gtp_u_tunnel_rate_limit_entry_create_fa", "out_of_session_memory", "uuid",
     ]
 
 
@@ -347,24 +317,6 @@ def get_argspec():
             'type': 'bool',
             },
         'blade_gtp_smp_session_count_check_faile': {
-            'type': 'bool',
-            },
-        'gtp_c_smp_sig_check_failed': {
-            'type': 'bool',
-            },
-        'blade_gtp_c_smp_sig_check_failed': {
-            'type': 'bool',
-            },
-        'gtp_u_smp_sig_check_failed': {
-            'type': 'bool',
-            },
-        'blade_gtp_u_smp_sig_check_failed': {
-            'type': 'bool',
-            },
-        'gtp_smp_sig_check_failed': {
-            'type': 'bool',
-            },
-        'blade_gtp_smp_sig_check_failed': {
             'type': 'bool',
             },
         'uuid': {

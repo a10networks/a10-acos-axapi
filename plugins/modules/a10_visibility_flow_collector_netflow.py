@@ -74,7 +74,7 @@ options:
           deleted'= Total v10(IPFIX) templates deleted; 'template-drop-exceeded'= Total
           templates dropped because of maximum limit; 'template-drop-out-of-memory'=
           Total templates dropped becuase of out of memory; 'frag-dropped'= Total nflow
-          fragment packets dropped; 'agent-not-found'= nflow pkts from not configured
+          fragment packets droppped; 'agent-not-found'= nflow pkts from not configured
           agents; 'version-not-supported'= nflow version not supported; 'unknown-dir'=
           nflow sample direction is unknown;"
                 type: str
@@ -132,7 +132,7 @@ options:
                 type: str
             frag_dropped:
                 description:
-                - "Total nflow fragment packets dropped"
+                - "Total nflow fragment packets droppped"
                 type: str
             agent_not_found:
                 description:

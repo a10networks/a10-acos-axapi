@@ -84,29 +84,6 @@ options:
           ports-allocated'= Total UDP ports allocated; 'icmp-total-ports-allocated'=
           Total ICMP ports allocated;"
                 type: str
-    domain_list:
-        description:
-        - "Field domain_list"
-        type: dict
-        required: False
-        suboptions:
-            interval:
-                description:
-                - "Set up the global query interval in minute for the DNS resolution."
-                type: int
-            fail_interval:
-                description:
-                - "Set up the global failure interval in second for the DNS resolution."
-                type: int
-            aaaa_query:
-                description:
-                - "'enable'= Enable the DNS AAAA query for each domain in the domain list.;
-          'disable'= Disable the DNS AAAA query for each domain in the domain list.;"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     stats:
         description:
         - "Field stats"
@@ -179,7 +156,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["domain_list", "ping_sweep_detection", "port_scan_detection", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["ping_sweep_detection", "port_scan_detection", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -216,22 +193,6 @@ def get_argspec():
             'counters1': {
                 'type': 'str',
                 'choices': ['all', 'tcp-total-ports-allocated', 'udp-total-ports-allocated', 'icmp-total-ports-allocated']
-                }
-            },
-        'domain_list': {
-            'type': 'dict',
-            'interval': {
-                'type': 'int',
-                },
-            'fail_interval': {
-                'type': 'int',
-                },
-            'aaaa_query': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-                },
-            'uuid': {
-                'type': 'str',
                 }
             },
         'stats': {

@@ -70,29 +70,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    port_number:
-        description:
-        - "Port"
-        type: int
-        required: True
-    protocol:
-        description:
-        - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do
-          IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
-          'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
-          'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'imap'= imap proxy port; 'mlb'= Message based load
-          balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
-          'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
-          Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
-          'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
-          protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'mqtt'= MQTT Port; 'mqtts'= MQTTS Port;
-          'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-
-          proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; 'http-
-          over-quic'= HTTP3-over-quic port;"
-        type: str
-        required: True
     stats:
         description:
         - "Field stats"
@@ -157,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["port_number", "protocol", "stats", ]
+AVAILABLE_PROPERTIES = ["stats", ]
 
 
 def get_default_argspec():
@@ -178,20 +155,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'port_number': {
-            'type': 'int',
-            'required': True,
-            },
-        'protocol': {
-            'type':
-            'str',
-            'required':
-            True,
-            'choices': [
-                'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'mqtt', 'mqtts', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix',
-                'http-over-quic'
-                ]
-            },
         'stats': {
             'type': 'dict',
             'smtp_vport': {
@@ -479,174 +442,6 @@ def get_argspec():
                     'type': 'str',
                     },
                 'client_ehlo_saved': {
-                    'type': 'str',
-                    },
-                'request': {
-                    'type': 'str',
-                    },
-                'request_success': {
-                    'type': 'str',
-                    },
-                'no_proxy': {
-                    'type': 'str',
-                    },
-                'client_reset': {
-                    'type': 'str',
-                    },
-                'server_reset': {
-                    'type': 'str',
-                    },
-                'no_tuple': {
-                    'type': 'str',
-                    },
-                'parse_req_fail': {
-                    'type': 'str',
-                    },
-                'server_select_fail': {
-                    'type': 'str',
-                    },
-                'forward_req_fail': {
-                    'type': 'str',
-                    },
-                'forward_req_data_fail': {
-                    'type': 'str',
-                    },
-                'req_retran': {
-                    'type': 'str',
-                    },
-                'req_ofo': {
-                    'type': 'str',
-                    },
-                'server_reselect': {
-                    'type': 'str',
-                    },
-                'server_prem_close': {
-                    'type': 'str',
-                    },
-                'new_server_conn': {
-                    'type': 'str',
-                    },
-                'snat_fail': {
-                    'type': 'str',
-                    },
-                'tcp_out_reset': {
-                    'type': 'str',
-                    },
-                'send_client_service_ready': {
-                    'type': 'str',
-                    },
-                'send_client_service_not_ready': {
-                    'type': 'str',
-                    },
-                'send_client_close_connection': {
-                    'type': 'str',
-                    },
-                'send_client_go_ahead': {
-                    'type': 'str',
-                    },
-                'send_client_start_TLS_first': {
-                    'type': 'str',
-                    },
-                'send_client_TLS_not_available': {
-                    'type': 'str',
-                    },
-                'send_client_no_command': {
-                    'type': 'str',
-                    },
-                'send_server_cmd_reset': {
-                    'type': 'str',
-                    },
-                'TLS_established': {
-                    'type': 'str',
-                    },
-                'L4_switch': {
-                    'type': 'str',
-                    },
-                'recv_server_service_not_ready': {
-                    'type': 'str',
-                    },
-                'recv_server_unknow_reply_code': {
-                    'type': 'str',
-                    },
-                'client_domain_switch': {
-                    'type': 'str',
-                    },
-                'client_domain_switch_ok': {
-                    'type': 'str',
-                    },
-                'LB_switch': {
-                    'type': 'str',
-                    },
-                'LB_switch_ok': {
-                    'type': 'str',
-                    },
-                'read_request_line_fail': {
-                    'type': 'str',
-                    },
-                'get_all_headers_fail': {
-                    'type': 'str',
-                    },
-                'too_many_headers': {
-                    'type': 'str',
-                    },
-                'line_too_long': {
-                    'type': 'str',
-                    },
-                'line_across_packet': {
-                    'type': 'str',
-                    },
-                'line_extend': {
-                    'type': 'str',
-                    },
-                'line_extend_fail': {
-                    'type': 'str',
-                    },
-                'line_table_extend': {
-                    'type': 'str',
-                    },
-                'line_table_extend_fail': {
-                    'type': 'str',
-                    },
-                'parse_request_line_fail': {
-                    'type': 'str',
-                    },
-                'insert_resonse_line_fail': {
-                    'type': 'str',
-                    },
-                'remove_resonse_line_fail': {
-                    'type': 'str',
-                    },
-                'parse_resonse_line_fail': {
-                    'type': 'str',
-                    },
-                'Aflex_lb_reselect': {
-                    'type': 'str',
-                    },
-                'Aflex_lb_reselect_ok': {
-                    'type': 'str',
-                    },
-                'server_STARTTLS_init': {
-                    'type': 'str',
-                    },
-                'server_STARTTLS_fail': {
-                    'type': 'str',
-                    },
-                'rserver_STARTTLS_disable': {
-                    'type': 'str',
-                    },
-                'recv_client_command_TURN': {
-                    'type': 'str',
-                    },
-                'recv_client_command_ETRN': {
-                    'type': 'str',
-                    },
-                'recv_client_command_others': {
-                    'type': 'str',
-                    },
-                'recv_client_command_STARTTLS': {
-                    'type': 'str',
-                    },
-                'recv_client_command_RCPT': {
                     'type': 'str',
                     }
                 }

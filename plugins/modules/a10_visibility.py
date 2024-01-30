@@ -205,7 +205,7 @@ options:
         suboptions:
             primary_monitor:
                 description:
-                - "'traffic'= Mointor traffic; 'xflow'= Monitor xflow samples;"
+                - "'traffic'= Mointor traffic;"
                 type: str
             monitor_key:
                 description:
@@ -215,11 +215,11 @@ options:
                 type: str
             mon_entity_topk:
                 description:
-                - "Enable topk for primary entities"
+                - "Enable monitoring entity topk for primary entities"
                 type: bool
             source_entity_topk:
                 description:
-                - "Enable topk for sources to primary-entities"
+                - "Enable monitoring entity topk for sources to primary-entities"
                 type: bool
             index_sessions:
                 description:
@@ -544,6 +544,14 @@ options:
                 description:
                 - "Field reporting"
                 type: dict
+            monitor:
+                description:
+                - "Field monitor"
+                type: dict
+            flow_collector:
+                description:
+                - "Field flow_collector"
+                type: dict
             topn:
                 description:
                 - "Field topn"
@@ -664,8 +672,8 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'avg_data_cpu_util', 'outside_intf_util', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload',
-                        'tcp_out_payload', 'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_conn_miss', 'tcp_fwd_syn_per_fin'
+                        'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes', 'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt', 'out_frag', 'new-conn', 'concurrent-conn', 'in_bytes_per_out_bytes', 'drop_pkts_per_pkts', 'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin', 'tcp_out_fin', 'tcp_in_payload', 'tcp_out_payload', 'tcp_in_rexmit',
+                        'tcp_out_rexmit', 'tcp_in_rst', 'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack', 'tcp_in_zero_wnd', 'tcp_out_zero_wnd', 'tcp_fwd_syn_per_fin'
                         ]
                     }
                 }
@@ -876,7 +884,7 @@ def get_argspec():
             'type': 'dict',
             'primary_monitor': {
                 'type': 'str',
-                'choices': ['traffic', 'xflow']
+                'choices': ['traffic']
                 },
             'monitor_key': {
                 'type': 'str',
@@ -1933,6 +1941,9 @@ def get_argspec():
                 },
             'global_templates': {
                 'type': 'dict',
+                'dummy': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     },
@@ -1983,11 +1994,17 @@ def get_argspec():
                         },
                     'trigger_sys_obj_stats_change': {
                         'type': 'dict',
+                        'dummy': {
+                            'type': 'bool',
+                            },
                         'uuid': {
                             'type': 'str',
                             },
                         'system_ctr_lib_acct': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2022,8 +2039,11 @@ def get_argspec():
                                     }
                                 }
                             },
-                        'system_hardware_accelerate': {
+                        'system_hardware_forward': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2090,6 +2110,9 @@ def get_argspec():
                             },
                         'system_radius_server': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2168,6 +2191,9 @@ def get_argspec():
                             },
                         'system_ip_threat_list': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2204,6 +2230,9 @@ def get_argspec():
                             },
                         'system_fpga_drop': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2450,6 +2479,9 @@ def get_argspec():
                             },
                         'system_dpdk_stats': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2636,6 +2668,9 @@ def get_argspec():
                             },
                         'ip_anomaly_drop': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -2753,36 +2788,6 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'gre_pptp_err': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_hbh': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_dest': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_routing': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_frag': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_ah': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_esp': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_mobility': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_none': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_other': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_malformed': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -2909,36 +2914,6 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'gre_pptp_err': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_hbh': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_dest': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_routing': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_frag': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_ah': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_esp': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_mobility': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_none': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_other': {
-                                    'type': 'bool',
-                                    },
-                                'ipv6_eh_malformed': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -2948,6 +2923,9 @@ def get_argspec():
                             },
                         'aam_authentication_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3017,54 +2995,6 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'dns_resolve_failed': {
-                                    'type': 'bool',
-                                    },
-                                'uuid': {
-                                    'type': 'str',
-                                    }
-                                }
-                            },
-                        'aam_rdns': {
-                            'type': 'dict',
-                            'uuid': {
-                                'type': 'str',
-                                },
-                            'trigger_stats_inc': {
-                                'type': 'dict',
-                                'request_dropped': {
-                                    'type': 'bool',
-                                    },
-                                'response_failure': {
-                                    'type': 'bool',
-                                    },
-                                'response_error': {
-                                    'type': 'bool',
-                                    },
-                                'response_timeout': {
-                                    'type': 'bool',
-                                    },
-                                'uuid': {
-                                    'type': 'str',
-                                    }
-                                },
-                            'trigger_stats_rate': {
-                                'type': 'dict',
-                                'threshold_exceeded_by': {
-                                    'type': 'int',
-                                    },
-                                'duration': {
-                                    'type': 'int',
-                                    },
-                                'request_dropped': {
-                                    'type': 'bool',
-                                    },
-                                'response_failure': {
-                                    'type': 'bool',
-                                    },
-                                'response_error': {
-                                    'type': 'bool',
-                                    },
-                                'response_timeout': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -3074,6 +3004,9 @@ def get_argspec():
                             },
                         'aam_auth_server_ldap': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3182,6 +3115,9 @@ def get_argspec():
                             },
                         'aam_auth_server_ocsp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3266,6 +3202,9 @@ def get_argspec():
                             },
                         'aam_auth_server_radius': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3356,6 +3295,9 @@ def get_argspec():
                             },
                         'aam_auth_server_win': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3530,6 +3472,9 @@ def get_argspec():
                             },
                         'aam_auth_account': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3584,6 +3529,9 @@ def get_argspec():
                             },
                         'aam_auth_saml_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3620,6 +3568,9 @@ def get_argspec():
                             },
                         'aam_auth_relay_kerberos': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3692,6 +3643,9 @@ def get_argspec():
                             },
                         'aam_auth_captcha': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -3776,6 +3730,9 @@ def get_argspec():
                             },
                         'slb_ssl_error': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -5270,6 +5227,9 @@ def get_argspec():
                             },
                         'slb_ssl_cert_revoke': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -5420,6 +5380,9 @@ def get_argspec():
                             },
                         'slb_ssl_forward_proxy': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -5498,6 +5461,9 @@ def get_argspec():
                             },
                         'vpn_error': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -5750,6 +5716,9 @@ def get_argspec():
                             },
                         'cgnv6_ddos_proc': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -5858,6 +5827,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6044,6 +6016,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_alg_esp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6074,6 +6049,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_alg_pptp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6116,6 +6094,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_alg_rtsp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6164,6 +6145,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_alg_sip': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6206,6 +6190,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_alg_mgcp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6242,6 +6229,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_alg_h323': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6278,6 +6268,9 @@ def get_argspec():
                             },
                         'cgnv6_lsn_radius': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6356,6 +6349,9 @@ def get_argspec():
                             },
                         'cgnv6_nat64_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6470,6 +6466,9 @@ def get_argspec():
                             },
                         'cgnv6_ds_lite_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6524,6 +6523,9 @@ def get_argspec():
                             },
                         'cgnv6_fixed_nat_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6668,6 +6670,9 @@ def get_argspec():
                             },
                         'cgnv6_fixed_nat_alg_pptp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6704,6 +6709,9 @@ def get_argspec():
                             },
                         'cgnv6_fixed_nat_alg_rtsp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6746,6 +6754,9 @@ def get_argspec():
                             },
                         'cgnv6_fixed_nat_alg_sip': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6776,6 +6787,9 @@ def get_argspec():
                             },
                         'cgnv6_pcp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6908,6 +6922,9 @@ def get_argspec():
                             },
                         'cgnv6_logging': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6944,6 +6961,9 @@ def get_argspec():
                             },
                         'cgnv6_l4': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -6980,6 +7000,9 @@ def get_argspec():
                             },
                         'cgnv6_icmp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7028,6 +7051,9 @@ def get_argspec():
                             },
                         'cgnv6_http_alg': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7094,6 +7120,9 @@ def get_argspec():
                             },
                         'cgnv6_dns64': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7142,6 +7171,9 @@ def get_argspec():
                             },
                         'cgnv6_dhcpv6': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7184,6 +7216,9 @@ def get_argspec():
                             },
                         'fw_logging': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7226,6 +7261,9 @@ def get_argspec():
                             },
                         'fw_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7256,6 +7294,9 @@ def get_argspec():
                             },
                         'fw_alg_rtsp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7286,6 +7327,9 @@ def get_argspec():
                             },
                         'fw_alg_pptp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7322,6 +7366,9 @@ def get_argspec():
                             },
                         'fw_rad_server': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7400,6 +7447,9 @@ def get_argspec():
                             },
                         'fw_tcp_syn_cookie': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7430,6 +7480,9 @@ def get_argspec():
                             },
                         'fw_ddos_protection': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7478,6 +7531,9 @@ def get_argspec():
                             },
                         'fw_gtp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7544,24 +7600,6 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'blade_gtp_smp_session_count_check_faile': {
-                                    'type': 'bool',
-                                    },
-                                'gtp_c_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'blade_gtp_c_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'gtp_u_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'blade_gtp_u_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'gtp_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'blade_gtp_smp_sig_check_failed': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -7639,24 +7677,6 @@ def get_argspec():
                                 'blade_gtp_smp_session_count_check_faile': {
                                     'type': 'bool',
                                     },
-                                'gtp_c_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'blade_gtp_c_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'gtp_u_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'blade_gtp_u_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'gtp_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
-                                'blade_gtp_smp_sig_check_failed': {
-                                    'type': 'bool',
-                                    },
                                 'uuid': {
                                     'type': 'str',
                                     }
@@ -7664,6 +7684,9 @@ def get_argspec():
                             },
                         'system_tcp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7700,6 +7723,9 @@ def get_argspec():
                             },
                         'slb_conn_reuse': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7736,6 +7762,9 @@ def get_argspec():
                             },
                         'slb_aflow': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7772,6 +7801,9 @@ def get_argspec():
                             },
                         'slb_fix': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7826,6 +7858,9 @@ def get_argspec():
                             },
                         'slb_spdy_proxy': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -7964,6 +7999,9 @@ def get_argspec():
                             },
                         'slb_http2': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8390,6 +8428,9 @@ def get_argspec():
                             },
                         'slb_l7session': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8462,6 +8503,9 @@ def get_argspec():
                             },
                         'slb_smpp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8516,6 +8560,9 @@ def get_argspec():
                             },
                         'slb_smtp': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8654,6 +8701,9 @@ def get_argspec():
                             },
                         'slb_mqtt': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8738,6 +8788,9 @@ def get_argspec():
                             },
                         'slb_icap': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8900,6 +8953,9 @@ def get_argspec():
                             },
                         'slb_sip': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8942,6 +8998,9 @@ def get_argspec():
                             },
                         'slb_hw_compress': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -8996,6 +9055,9 @@ def get_argspec():
                             },
                         'slb_mysql': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9026,6 +9088,9 @@ def get_argspec():
                             },
                         'slb_mssql': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9062,6 +9127,9 @@ def get_argspec():
                             },
                         'slb_crl_srcip': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9104,6 +9172,9 @@ def get_argspec():
                             },
                         'slb_generic': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9230,6 +9301,9 @@ def get_argspec():
                             },
                         'slb_persist': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9392,6 +9466,9 @@ def get_argspec():
                             },
                         'slb_http_proxy': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9458,6 +9535,9 @@ def get_argspec():
                             },
                         'slb_l4': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9620,6 +9700,9 @@ def get_argspec():
                             },
                         'slb_fast_http': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9692,6 +9775,9 @@ def get_argspec():
                             },
                         'slb_ftp_proxy': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -9878,6 +9964,9 @@ def get_argspec():
                             },
                         'slb_imap_proxy': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10034,6 +10123,9 @@ def get_argspec():
                             },
                         'slb_pop3_proxy': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10142,6 +10234,9 @@ def get_argspec():
                             },
                         'slb_switch': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10184,6 +10279,9 @@ def get_argspec():
                             },
                         'slb_rc_cache': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10232,6 +10330,9 @@ def get_argspec():
                             },
                         'so_counters': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10346,6 +10447,9 @@ def get_argspec():
                             },
                         'slb_plyr_id_gbl': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10376,6 +10480,9 @@ def get_argspec():
                             },
                         'slb_sport_rate': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10406,6 +10513,9 @@ def get_argspec():
                             },
                         'logging_local_log_global': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10442,6 +10552,9 @@ def get_argspec():
                             },
                         'slb_mlb': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10472,6 +10585,9 @@ def get_argspec():
                             },
                         'slb_link_probe': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10562,6 +10678,9 @@ def get_argspec():
                             },
                         'slb_rpz': {
                             'type': 'dict',
+                            'dummy': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 },
@@ -10610,10 +10729,13 @@ def get_argspec():
                 },
             'object_templates': {
                 'type': 'dict',
+                'dummy': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     },
-                'templ_gtp_plcy_tmpl_list': {
+                'tmpl_gtp_plcy_tmpl_list': {
                     'type': 'list',
                     'name': {
                         'type': 'str',
@@ -12471,7 +12593,7 @@ def get_argspec():
                             }
                         }
                     },
-                'slb_templ_cache_tmpl_list': {
+                'slb_tmpl_cache_tmpl_list': {
                     'type': 'list',
                     'name': {
                         'type': 'str',
@@ -14112,528 +14234,6 @@ def get_argspec():
                             'type': 'str',
                             }
                         }
-                    },
-                'smtp_vport_tmpl_list': {
-                    'type': 'list',
-                    'name': {
-                        'type': 'str',
-                        'required': True,
-                        },
-                    'capture_config': {
-                        'type': 'str',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        },
-                    'user_tag': {
-                        'type': 'str',
-                        },
-                    'trigger_stats_severity': {
-                        'type': 'dict',
-                        'error': {
-                            'type': 'bool',
-                            },
-                        'error_alert': {
-                            'type': 'bool',
-                            },
-                        'error_warning': {
-                            'type': 'bool',
-                            },
-                        'error_critical': {
-                            'type': 'bool',
-                            },
-                        'drop': {
-                            'type': 'bool',
-                            },
-                        'drop_alert': {
-                            'type': 'bool',
-                            },
-                        'drop_warning': {
-                            'type': 'bool',
-                            },
-                        'drop_critical': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'trigger_stats_inc': {
-                        'type': 'dict',
-                        'no_proxy': {
-                            'type': 'bool',
-                            },
-                        'parse_req_fail': {
-                            'type': 'bool',
-                            },
-                        'server_select_fail': {
-                            'type': 'bool',
-                            },
-                        'forward_req_fail': {
-                            'type': 'bool',
-                            },
-                        'forward_req_data_fail': {
-                            'type': 'bool',
-                            },
-                        'snat_fail': {
-                            'type': 'bool',
-                            },
-                        'send_client_service_not_ready': {
-                            'type': 'bool',
-                            },
-                        'recv_server_unknow_reply_code': {
-                            'type': 'bool',
-                            },
-                        'read_request_line_fail': {
-                            'type': 'bool',
-                            },
-                        'get_all_headers_fail': {
-                            'type': 'bool',
-                            },
-                        'too_many_headers': {
-                            'type': 'bool',
-                            },
-                        'line_too_long': {
-                            'type': 'bool',
-                            },
-                        'line_extend_fail': {
-                            'type': 'bool',
-                            },
-                        'line_table_extend_fail': {
-                            'type': 'bool',
-                            },
-                        'parse_request_line_fail': {
-                            'type': 'bool',
-                            },
-                        'insert_resonse_line_fail': {
-                            'type': 'bool',
-                            },
-                        'remove_resonse_line_fail': {
-                            'type': 'bool',
-                            },
-                        'parse_resonse_line_fail': {
-                            'type': 'bool',
-                            },
-                        'server_STARTTLS_fail': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'trigger_stats_rate': {
-                        'type': 'dict',
-                        'threshold_exceeded_by': {
-                            'type': 'int',
-                            },
-                        'duration': {
-                            'type': 'int',
-                            },
-                        'no_proxy': {
-                            'type': 'bool',
-                            },
-                        'parse_req_fail': {
-                            'type': 'bool',
-                            },
-                        'server_select_fail': {
-                            'type': 'bool',
-                            },
-                        'forward_req_fail': {
-                            'type': 'bool',
-                            },
-                        'forward_req_data_fail': {
-                            'type': 'bool',
-                            },
-                        'snat_fail': {
-                            'type': 'bool',
-                            },
-                        'send_client_service_not_ready': {
-                            'type': 'bool',
-                            },
-                        'recv_server_unknow_reply_code': {
-                            'type': 'bool',
-                            },
-                        'read_request_line_fail': {
-                            'type': 'bool',
-                            },
-                        'get_all_headers_fail': {
-                            'type': 'bool',
-                            },
-                        'too_many_headers': {
-                            'type': 'bool',
-                            },
-                        'line_too_long': {
-                            'type': 'bool',
-                            },
-                        'line_extend_fail': {
-                            'type': 'bool',
-                            },
-                        'line_table_extend_fail': {
-                            'type': 'bool',
-                            },
-                        'parse_request_line_fail': {
-                            'type': 'bool',
-                            },
-                        'insert_resonse_line_fail': {
-                            'type': 'bool',
-                            },
-                        'remove_resonse_line_fail': {
-                            'type': 'bool',
-                            },
-                        'parse_resonse_line_fail': {
-                            'type': 'bool',
-                            },
-                        'server_STARTTLS_fail': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        }
-                    },
-                'pop3_vport_tmpl_list': {
-                    'type': 'list',
-                    'name': {
-                        'type': 'str',
-                        'required': True,
-                        },
-                    'capture_config': {
-                        'type': 'str',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        },
-                    'user_tag': {
-                        'type': 'str',
-                        },
-                    'trigger_stats_severity': {
-                        'type': 'dict',
-                        'error': {
-                            'type': 'bool',
-                            },
-                        'error_alert': {
-                            'type': 'bool',
-                            },
-                        'error_warning': {
-                            'type': 'bool',
-                            },
-                        'error_critical': {
-                            'type': 'bool',
-                            },
-                        'drop': {
-                            'type': 'bool',
-                            },
-                        'drop_alert': {
-                            'type': 'bool',
-                            },
-                        'drop_warning': {
-                            'type': 'bool',
-                            },
-                        'drop_critical': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'trigger_stats_inc': {
-                        'type': 'dict',
-                        'svrsel_fail': {
-                            'type': 'bool',
-                            },
-                        'no_route': {
-                            'type': 'bool',
-                            },
-                        'snat_fail': {
-                            'type': 'bool',
-                            },
-                        'line_too_long': {
-                            'type': 'bool',
-                            },
-                        'invalid_start_line': {
-                            'type': 'bool',
-                            },
-                        'unsupported_command': {
-                            'type': 'bool',
-                            },
-                        'bad_sequence': {
-                            'type': 'bool',
-                            },
-                        'rsv_persist_conn_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v6_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v4_fail': {
-                            'type': 'bool',
-                            },
-                        'insert_tuple_fail': {
-                            'type': 'bool',
-                            },
-                        'cl_est_err': {
-                            'type': 'bool',
-                            },
-                        'ser_connecting_err': {
-                            'type': 'bool',
-                            },
-                        'server_response_err': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'trigger_stats_rate': {
-                        'type': 'dict',
-                        'threshold_exceeded_by': {
-                            'type': 'int',
-                            },
-                        'duration': {
-                            'type': 'int',
-                            },
-                        'svrsel_fail': {
-                            'type': 'bool',
-                            },
-                        'no_route': {
-                            'type': 'bool',
-                            },
-                        'snat_fail': {
-                            'type': 'bool',
-                            },
-                        'line_too_long': {
-                            'type': 'bool',
-                            },
-                        'invalid_start_line': {
-                            'type': 'bool',
-                            },
-                        'unsupported_command': {
-                            'type': 'bool',
-                            },
-                        'bad_sequence': {
-                            'type': 'bool',
-                            },
-                        'rsv_persist_conn_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v6_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v4_fail': {
-                            'type': 'bool',
-                            },
-                        'insert_tuple_fail': {
-                            'type': 'bool',
-                            },
-                        'cl_est_err': {
-                            'type': 'bool',
-                            },
-                        'ser_connecting_err': {
-                            'type': 'bool',
-                            },
-                        'server_response_err': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        }
-                    },
-                'imap_vport_tmpl_list': {
-                    'type': 'list',
-                    'name': {
-                        'type': 'str',
-                        'required': True,
-                        },
-                    'capture_config': {
-                        'type': 'str',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        },
-                    'user_tag': {
-                        'type': 'str',
-                        },
-                    'trigger_stats_severity': {
-                        'type': 'dict',
-                        'error': {
-                            'type': 'bool',
-                            },
-                        'error_alert': {
-                            'type': 'bool',
-                            },
-                        'error_warning': {
-                            'type': 'bool',
-                            },
-                        'error_critical': {
-                            'type': 'bool',
-                            },
-                        'drop': {
-                            'type': 'bool',
-                            },
-                        'drop_alert': {
-                            'type': 'bool',
-                            },
-                        'drop_warning': {
-                            'type': 'bool',
-                            },
-                        'drop_critical': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'trigger_stats_inc': {
-                        'type': 'dict',
-                        'svrsel_fail': {
-                            'type': 'bool',
-                            },
-                        'no_route': {
-                            'type': 'bool',
-                            },
-                        'snat_fail': {
-                            'type': 'bool',
-                            },
-                        'line_too_long': {
-                            'type': 'bool',
-                            },
-                        'invalid_start_line': {
-                            'type': 'bool',
-                            },
-                        'cant_find_pasv': {
-                            'type': 'bool',
-                            },
-                        'smp_create_fail': {
-                            'type': 'bool',
-                            },
-                        'data_server_conn_fail': {
-                            'type': 'bool',
-                            },
-                        'data_send_fail': {
-                            'type': 'bool',
-                            },
-                        'cant_find_epsv': {
-                            'type': 'bool',
-                            },
-                        'auth_unsupported': {
-                            'type': 'bool',
-                            },
-                        'unsupported_pbsz_value': {
-                            'type': 'bool',
-                            },
-                        'unsupported_prot_value': {
-                            'type': 'bool',
-                            },
-                        'bad_sequence': {
-                            'type': 'bool',
-                            },
-                        'rsv_persist_conn_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v6_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v4_fail': {
-                            'type': 'bool',
-                            },
-                        'insert_tuple_fail': {
-                            'type': 'bool',
-                            },
-                        'cl_est_err': {
-                            'type': 'bool',
-                            },
-                        'ser_connecting_err': {
-                            'type': 'bool',
-                            },
-                        'server_response_err': {
-                            'type': 'bool',
-                            },
-                        'cl_request_err': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        },
-                    'trigger_stats_rate': {
-                        'type': 'dict',
-                        'threshold_exceeded_by': {
-                            'type': 'int',
-                            },
-                        'duration': {
-                            'type': 'int',
-                            },
-                        'svrsel_fail': {
-                            'type': 'bool',
-                            },
-                        'no_route': {
-                            'type': 'bool',
-                            },
-                        'snat_fail': {
-                            'type': 'bool',
-                            },
-                        'line_too_long': {
-                            'type': 'bool',
-                            },
-                        'invalid_start_line': {
-                            'type': 'bool',
-                            },
-                        'cant_find_pasv': {
-                            'type': 'bool',
-                            },
-                        'smp_create_fail': {
-                            'type': 'bool',
-                            },
-                        'data_server_conn_fail': {
-                            'type': 'bool',
-                            },
-                        'data_send_fail': {
-                            'type': 'bool',
-                            },
-                        'cant_find_epsv': {
-                            'type': 'bool',
-                            },
-                        'auth_unsupported': {
-                            'type': 'bool',
-                            },
-                        'unsupported_pbsz_value': {
-                            'type': 'bool',
-                            },
-                        'unsupported_prot_value': {
-                            'type': 'bool',
-                            },
-                        'bad_sequence': {
-                            'type': 'bool',
-                            },
-                        'rsv_persist_conn_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v6_fail': {
-                            'type': 'bool',
-                            },
-                        'smp_v4_fail': {
-                            'type': 'bool',
-                            },
-                        'insert_tuple_fail': {
-                            'type': 'bool',
-                            },
-                        'cl_est_err': {
-                            'type': 'bool',
-                            },
-                        'ser_connecting_err': {
-                            'type': 'bool',
-                            },
-                        'server_response_err': {
-                            'type': 'bool',
-                            },
-                        'cl_request_err': {
-                            'type': 'bool',
-                            },
-                        'uuid': {
-                            'type': 'str',
-                            }
-                        }
                     }
                 },
             'automated_captures': {
@@ -14736,12 +14336,6 @@ def get_argspec():
                     'new_conn': {
                         'type': 'str',
                         },
-                    'avg_data_cpu_util': {
-                        'type': 'str',
-                        },
-                    'outside_intf_util': {
-                        'type': 'str',
-                        },
                     'concurrent_conn': {
                         'type': 'str',
                         },
@@ -14793,9 +14387,6 @@ def get_argspec():
                     'tcp_out_zero_wnd': {
                         'type': 'str',
                         },
-                    'tcp_conn_miss': {
-                        'type': 'str',
-                        },
                     'tcp_fwd_syn_per_fin': {
                         'type': 'str',
                         }
@@ -14823,7 +14414,16 @@ def get_argspec():
                     'dequeued': {
                         'type': 'str',
                         }
+                    },
+                'template': {
+                    'type': 'dict',
                     }
+                },
+            'monitor': {
+                'type': 'dict',
+                },
+            'flow_collector': {
+                'type': 'dict',
                 },
             'topn': {
                 'type': 'dict',

@@ -70,24 +70,9 @@ options:
         - "Ethernet interface"
         type: str
         required: False
-    nexthop_ip:
+    ipv4_addr:
         description:
-        - "Nexthop address"
-        type: str
-        required: False
-    nexthop_mac:
-        description:
-        - "Nexthop mac address"
-        type: str
-        required: False
-    source_ip:
-        description:
-        - "source ip for ping method"
-        type: str
-        required: False
-    source_mac:
-        description:
-        - "source mac for ping method"
+        - "IP address"
         type: str
         required: False
     interval:
@@ -240,7 +225,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["active_threshold", "enable", "ethernet", "garp_interval", "interval", "l3_packet", "method", "nexthop_ip", "nexthop_mac", "oper", "partition_health_check", "sampling_enable", "sby_ethernet", "source_ip", "source_mac", "stats", "user_tag", "uuid", "vlan", ]
+AVAILABLE_PROPERTIES = ["active_threshold", "enable", "ethernet", "garp_interval", "interval", "ipv4_addr", "l3_packet", "method", "oper", "partition_health_check", "sampling_enable", "sby_ethernet", "stats", "user_tag", "uuid", "vlan", ]
 
 
 def get_default_argspec():
@@ -272,16 +257,7 @@ def get_argspec():
         'ethernet': {
             'type': 'str',
             },
-        'nexthop_ip': {
-            'type': 'str',
-            },
-        'nexthop_mac': {
-            'type': 'str',
-            },
-        'source_ip': {
-            'type': 'str',
-            },
-        'source_mac': {
+        'ipv4_addr': {
             'type': 'str',
             },
         'interval': {
