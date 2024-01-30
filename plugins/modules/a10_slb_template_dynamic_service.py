@@ -84,32 +84,6 @@ options:
         - "Customized tag"
         type: str
         required: False
-    class_list_list:
-        description:
-        - "Field class_list_list"
-        type: list
-        required: False
-        suboptions:
-            dns_class_list:
-                description:
-                - "Name of Aho-Corasick class-list"
-                type: str
-            priority:
-                description:
-                - "Priority of the class-list(the larger number, the higher priority)"
-                type: int
-            dns_server:
-                description:
-                - "Field dns_server"
-                type: list
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            user_tag:
-                description:
-                - "Customized tag"
-                type: str
 
 '''
 
@@ -164,7 +138,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list_list", "dns_server", "name", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["dns_server", "name", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -184,52 +158,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'dns_server': {
-            'type': 'list',
-            'ipv4_dns_server': {
-                'type': 'str',
-                },
-            'ipv6_dns_server': {
-                'type': 'str',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            },
-        'class_list_list': {
-            'type': 'list',
-            'dns_class_list': {
-                'type': 'str',
-                'required': True,
-                },
-            'priority': {
-                'type': 'int',
-                },
-            'dns_server': {
-                'type': 'list',
-                'ipv4_dns_server': {
-                    'type': 'str',
-                    },
-                'ipv6_dns_server': {
-                    'type': 'str',
-                    }
-                },
-            'uuid': {
-                'type': 'str',
-                },
-            'user_tag': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'dns_server': {'type': 'list', 'ipv4_dns_server': {'type': 'str', }, 'ipv6_dns_server': {'type': 'str', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

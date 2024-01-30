@@ -83,7 +83,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'Failed'= Failed;"
+                - "'all'= all; 'Failed'= some-help-string;"
                 type: str
     member_list:
         description:
@@ -107,7 +107,7 @@ options:
         suboptions:
             Failed:
                 description:
-                - "Field Failed"
+                - "some-help-string"
                 type: str
             pool_group_name:
                 description:

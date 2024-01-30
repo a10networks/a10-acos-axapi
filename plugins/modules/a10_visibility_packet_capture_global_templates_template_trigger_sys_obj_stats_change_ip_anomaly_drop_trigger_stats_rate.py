@@ -261,56 +261,6 @@ options:
         - "Enable automatic packet-capture for GRE PPTP Error Drop"
         type: bool
         required: False
-    ipv6_eh_hbh:
-        description:
-        - "Enable automatic packet-capture for IPv6 Hop by Hop Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_dest:
-        description:
-        - "Enable automatic packet-capture for IPv6 Destination Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_routing:
-        description:
-        - "Enable automatic packet-capture for IPv6 Routing Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_frag:
-        description:
-        - "Enable automatic packet-capture for IPv6 Fragmentation Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_ah:
-        description:
-        - "Enable automatic packet-capture for IPv6 Authentication Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_esp:
-        description:
-        - "Enable automatic packet-capture for IPv6 ESP Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_mobility:
-        description:
-        - "Enable automatic packet-capture for IPv6 Mobility Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_none:
-        description:
-        - "Enable automatic packet-capture for IPv6 No Next Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_other:
-        description:
-        - "Enable automatic packet-capture for IPv6 Unknown Extension Header Drop"
-        type: bool
-        required: False
-    ipv6_eh_malformed:
-        description:
-        - "Enable automatic packet-capture for IPv6 Malformed Extension Header Drop"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -371,9 +321,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bad_ip_flg", "bad_ip_frg_offset", "bad_ip_hdrlen", "bad_ip_payload_len", "bad_ip_ttl", "bad_tcp_urg_offset", "csum", "duration", "emp_frg", "emp_mic_frg", "frg", "gre_pptp_err", "ipip_tnl_err", "ipip_tnl_msmtch", "ipv6_eh_ah", "ipv6_eh_dest", "ipv6_eh_esp", "ipv6_eh_frag", "ipv6_eh_hbh", "ipv6_eh_malformed", "ipv6_eh_mobility", "ipv6_eh_none",
-    "ipv6_eh_other", "ipv6_eh_routing", "land", "no_ip_payload", "nvgre_err", "opt", "over_ip_payload", "pod", "runt_ip_hdr", "runt_tcp_udp_hdr", "tcp_bad_csum", "tcp_bad_iplen", "tcp_frg_hdr", "tcp_null_frg", "tcp_null_scan", "tcp_opt_err", "tcp_sht_hdr", "tcp_syn_fin", "tcp_syn_frg", "tcp_xmas", "tcp_xmas_scan", "threshold_exceeded_by",
-    "udp_bad_csum", "udp_bad_len", "udp_kerb_frg", "udp_port_lb", "udp_srt_hdr", "uuid", "vxlan_err",
+    "bad_ip_flg", "bad_ip_frg_offset", "bad_ip_hdrlen", "bad_ip_payload_len", "bad_ip_ttl", "bad_tcp_urg_offset", "csum", "duration", "emp_frg", "emp_mic_frg", "frg", "gre_pptp_err", "ipip_tnl_err", "ipip_tnl_msmtch", "land", "no_ip_payload", "nvgre_err", "opt", "over_ip_payload", "pod", "runt_ip_hdr", "runt_tcp_udp_hdr", "tcp_bad_csum",
+    "tcp_bad_iplen", "tcp_frg_hdr", "tcp_null_frg", "tcp_null_scan", "tcp_opt_err", "tcp_sht_hdr", "tcp_syn_fin", "tcp_syn_frg", "tcp_xmas", "tcp_xmas_scan", "threshold_exceeded_by", "udp_bad_csum", "udp_bad_len", "udp_kerb_frg", "udp_port_lb", "udp_srt_hdr", "uuid", "vxlan_err",
     ]
 
 
@@ -513,36 +462,6 @@ def get_argspec():
             'type': 'bool',
             },
         'gre_pptp_err': {
-            'type': 'bool',
-            },
-        'ipv6_eh_hbh': {
-            'type': 'bool',
-            },
-        'ipv6_eh_dest': {
-            'type': 'bool',
-            },
-        'ipv6_eh_routing': {
-            'type': 'bool',
-            },
-        'ipv6_eh_frag': {
-            'type': 'bool',
-            },
-        'ipv6_eh_ah': {
-            'type': 'bool',
-            },
-        'ipv6_eh_esp': {
-            'type': 'bool',
-            },
-        'ipv6_eh_mobility': {
-            'type': 'bool',
-            },
-        'ipv6_eh_none': {
-            'type': 'bool',
-            },
-        'ipv6_eh_other': {
-            'type': 'bool',
-            },
-        'ipv6_eh_malformed': {
             'type': 'bool',
             },
         'uuid': {

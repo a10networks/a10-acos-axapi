@@ -256,16 +256,6 @@ options:
                 description:
                 - "IPv6 address"
                 type: str
-            domain:
-                description:
-                - "Device hostname"
-                type: str
-            dev_resolve_as:
-                description:
-                - "'resolve-to-ipv4'= Use A Query only to resolve FQDN (Default Query type);
-          'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-
-          ipv6'= Use A as well as AAAA Query to resolve FQDN;"
-                type: str
             admin_preference:
                 description:
                 - "Specify administrative preference (Specify admin-preference value,default is
@@ -396,6 +386,10 @@ options:
             ip_server_list:
                 description:
                 - "Field ip_server_list"
+                type: list
+            slb_dev_list:
+                description:
+                - "Field slb_dev_list"
                 type: list
 
 '''
@@ -606,13 +600,6 @@ def get_argspec():
             'ipv6_address': {
                 'type': 'str',
                 },
-            'domain': {
-                'type': 'str',
-                },
-            'dev_resolve_as': {
-                'type': 'str',
-                'choices': ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
-                },
             'admin_preference': {
                 'type': 'int',
                 },
@@ -685,7 +672,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
+                            'choices': ['all', 'dev_vip_hits']
                             }
                         }
                     },
@@ -702,7 +689,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
+                            'choices': ['all', 'dev_vip_hits']
                             }
                         }
                     },
@@ -719,7 +706,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
+                            'choices': ['all', 'dev_vip_hits']
                             }
                         }
                     }
@@ -798,33 +785,6 @@ def get_argspec():
                         },
                     'state': {
                         'type': 'str',
-                        },
-                    'service_ip': {
-                        'type': 'str',
-                        },
-                    'port_count': {
-                        'type': 'int',
-                        },
-                    'virtual_server': {
-                        'type': 'int',
-                        },
-                    'disabled': {
-                        'type': 'int',
-                        },
-                    'gslb_protocol': {
-                        'type': 'int',
-                        },
-                    'local_protocol': {
-                        'type': 'int',
-                        },
-                    'manually_health_check': {
-                        'type': 'int',
-                        },
-                    'use_gslb_state': {
-                        'type': 'int',
-                        },
-                    'dynamic': {
-                        'type': 'int',
                         },
                     'ip_server_port': {
                         'type': 'list',
@@ -928,42 +888,6 @@ def get_argspec():
                             'dev_vip_state': {
                                 'type': 'str',
                                 },
-                            'node_name': {
-                                'type': 'str',
-                                },
-                            'service_ip': {
-                                'type': 'str',
-                                },
-                            'port_count': {
-                                'type': 'int',
-                                },
-                            'virtual_server': {
-                                'type': 'int',
-                                },
-                            'disabled': {
-                                'type': 'int',
-                                },
-                            'gslb_protocol': {
-                                'type': 'int',
-                                },
-                            'local_protocol': {
-                                'type': 'int',
-                                },
-                            'manually_health_check': {
-                                'type': 'int',
-                                },
-                            'use_gslb_state': {
-                                'type': 'int',
-                                },
-                            'dynamic': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                },
-                            'recent': {
-                                'type': 'int',
-                                },
                             'dev_vip_port_list': {
                                 'type': 'list',
                                 'dev_vip_port_num': {
@@ -989,42 +913,6 @@ def get_argspec():
                             'dev_vip_state': {
                                 'type': 'str',
                                 },
-                            'node_name': {
-                                'type': 'str',
-                                },
-                            'service_ip': {
-                                'type': 'str',
-                                },
-                            'port_count': {
-                                'type': 'int',
-                                },
-                            'virtual_server': {
-                                'type': 'int',
-                                },
-                            'disabled': {
-                                'type': 'int',
-                                },
-                            'gslb_protocol': {
-                                'type': 'int',
-                                },
-                            'local_protocol': {
-                                'type': 'int',
-                                },
-                            'manually_health_check': {
-                                'type': 'int',
-                                },
-                            'use_gslb_state': {
-                                'type': 'int',
-                                },
-                            'dynamic': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                },
-                            'recent': {
-                                'type': 'int',
-                                },
                             'dev_vip_port_list': {
                                 'type': 'list',
                                 'dev_vip_port_num': {
@@ -1049,42 +937,6 @@ def get_argspec():
                                 },
                             'dev_vip_state': {
                                 'type': 'str',
-                                },
-                            'node_name': {
-                                'type': 'str',
-                                },
-                            'service_ip': {
-                                'type': 'str',
-                                },
-                            'port_count': {
-                                'type': 'int',
-                                },
-                            'virtual_server': {
-                                'type': 'int',
-                                },
-                            'disabled': {
-                                'type': 'int',
-                                },
-                            'gslb_protocol': {
-                                'type': 'int',
-                                },
-                            'local_protocol': {
-                                'type': 'int',
-                                },
-                            'manually_health_check': {
-                                'type': 'int',
-                                },
-                            'use_gslb_state': {
-                                'type': 'int',
-                                },
-                            'dynamic': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                },
-                            'recent': {
-                                'type': 'int',
                                 },
                             'dev_vip_port_list': {
                                 'type': 'list',
@@ -1119,11 +971,11 @@ def get_argspec():
                     'type': 'dict',
                     'hits': {
                         'type': 'str',
-                        },
-                    'recent': {
-                        'type': 'str',
                         }
                     }
+                },
+            'slb_dev_list': {
+                'type': 'list',
                 }
             }
         })

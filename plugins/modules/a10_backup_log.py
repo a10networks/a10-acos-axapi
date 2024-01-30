@@ -95,21 +95,6 @@ options:
         - "Backup web statistical data"
         type: bool
         required: False
-    core:
-        description:
-        - "Backup core files only"
-        type: bool
-        required: False
-    showtech:
-        description:
-        - "Backup showtech files only"
-        type: bool
-        required: False
-    messages:
-        description:
-        - "Backup messages file only"
-        type: bool
-        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -184,7 +169,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all", "core", "date", "day", "expedite", "messages", "month", "password", "period", "remote_file", "showtech", "stats_data", "store_name", "use_mgmt_port", "week", ]
+AVAILABLE_PROPERTIES = ["all", "date", "day", "expedite", "month", "password", "period", "remote_file", "stats_data", "store_name", "use_mgmt_port", "week", ]
 
 
 def get_default_argspec():
@@ -227,15 +212,6 @@ def get_argspec():
             'type': 'bool',
             },
         'stats_data': {
-            'type': 'bool',
-            },
-        'core': {
-            'type': 'bool',
-            },
-        'showtech': {
-            'type': 'bool',
-            },
-        'messages': {
             'type': 'bool',
             },
         'use_mgmt_port': {

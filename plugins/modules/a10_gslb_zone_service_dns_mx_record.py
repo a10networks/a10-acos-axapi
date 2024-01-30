@@ -110,14 +110,6 @@ options:
                 description:
                 - "Field last_server"
                 type: str
-            hits:
-                description:
-                - "Field hits"
-                type: int
-            priority:
-                description:
-                - "Field priority"
-                type: int
             mx_name:
                 description:
                 - "Specify Domain Name"
@@ -235,12 +227,6 @@ def get_argspec():
             'type': 'dict',
             'last_server': {
                 'type': 'str',
-                },
-            'hits': {
-                'type': 'int',
-                },
-            'priority': {
-                'type': 'int',
                 },
             'mx_name': {
                 'type': 'str',

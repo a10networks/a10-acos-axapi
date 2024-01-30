@@ -70,11 +70,6 @@ options:
         - "Name of the class-list"
         type: str
         required: False
-    encap:
-        description:
-        - "'vxlan'= Tunnel Encapsulation Type is VXLAN;"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -100,38 +95,6 @@ options:
                 description:
                 - "Logical interface (logical interface name)"
                 type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    gre_keepalive:
-        description:
-        - "Field gre_keepalive"
-        type: dict
-        required: False
-        suboptions:
-            retry_time:
-                description:
-                - "Keepalive retry interval in seconds"
-                type: int
-            retry_count:
-                description:
-                - "Keepalive multiplier"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    use_gre_key:
-        description:
-        - "Field use_gre_key"
-        type: dict
-        required: False
-        suboptions:
-            gre_key:
-                description:
-                - "key"
-                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -204,7 +167,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list", "encap", "gre_keepalive", "ipv6_address", "use_gre_key", "use_lif", "user_tag", "uuid", "vni_list", ]
+AVAILABLE_PROPERTIES = ["class_list", "ipv6_address", "use_lif", "user_tag", "uuid", "vni_list", ]
 
 
 def get_default_argspec():
@@ -232,10 +195,6 @@ def get_argspec():
         'class_list': {
             'type': 'str',
             },
-        'encap': {
-            'type': 'str',
-            'choices': ['vxlan']
-            },
         'uuid': {
             'type': 'str',
             },
@@ -249,27 +208,6 @@ def get_argspec():
                 },
             'lif': {
                 'type': 'str',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'gre_keepalive': {
-            'type': 'dict',
-            'retry_time': {
-                'type': 'int',
-                },
-            'retry_count': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'use_gre_key': {
-            'type': 'dict',
-            'gre_key': {
-                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',

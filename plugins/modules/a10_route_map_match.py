@@ -100,16 +100,6 @@ options:
                 description:
                 - "Field extcommunity_l_name"
                 type: dict
-    large_community:
-        description:
-        - "Field large_community"
-        type: dict
-        required: False
-        suboptions:
-            l_name_cfg:
-                description:
-                - "Field l_name_cfg"
-                type: dict
     group:
         description:
         - "Field group"
@@ -326,7 +316,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["as_path", "community", "extcommunity", "group", "interface", "ip", "ipv6", "large_community", "local_preference", "metric", "origin", "route_type", "scaleout", "tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["as_path", "community", "extcommunity", "group", "interface", "ip", "ipv6", "local_preference", "metric", "origin", "route_type", "scaleout", "tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -368,18 +358,6 @@ def get_argspec():
         'extcommunity': {
             'type': 'dict',
             'extcommunity_l_name': {
-                'type': 'dict',
-                'name': {
-                    'type': 'str',
-                    },
-                'exact_match': {
-                    'type': 'bool',
-                    }
-                }
-            },
-        'large_community': {
-            'type': 'dict',
-            'l_name_cfg': {
                 'type': 'dict',
                 'name': {
                     'type': 'str',

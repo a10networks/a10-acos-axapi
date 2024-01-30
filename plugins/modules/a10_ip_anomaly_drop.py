@@ -138,64 +138,6 @@ options:
         - "zero window size threshold (threshold value)"
         type: int
         required: False
-    ipv6_ext_header:
-        description:
-        - "Field ipv6_ext_header"
-        type: dict
-        required: False
-        suboptions:
-            ipv6_eh_frag:
-                description:
-                - "Filter fragmentation extension header"
-                type: bool
-            ipv6_eh_auth:
-                description:
-                - "Filter authentication extension header"
-                type: bool
-            ipv6_eh_esp:
-                description:
-                - "Filter ESP extension header"
-                type: bool
-            ipv6_eh_mobility:
-                description:
-                - "Filter mobility extension header"
-                type: bool
-            ipv6_eh_nonext:
-                description:
-                - "Filter no-next-header extension header"
-                type: bool
-            ipv6_eh_malformed:
-                description:
-                - "Filter malformed extension headers (check for order and occurrences)"
-                type: bool
-            ipv6_eh_hbh:
-                description:
-                - "Filter hop by hop extension header"
-                type: bool
-            ipv6_eh_dest:
-                description:
-                - "Filter destination extension header"
-                type: bool
-            ipv6_eh_routing:
-                description:
-                - "Filter routing extension header"
-                type: bool
-            hbh_option_list:
-                description:
-                - "Field hbh_option_list"
-                type: list
-            dst_option_list:
-                description:
-                - "Field dst_option_list"
-                type: list
-            routing_option_list:
-                description:
-                - "Field routing_option_list"
-                type: list
-            unknown_ext_header_list:
-                description:
-                - "Field unknown_ext_header_list"
-                type: list
     uuid:
         description:
         - "uuid of the object"
@@ -228,13 +170,7 @@ options:
           'ipip_tnl_msmtch'= IP-over-IP Tunnel Mismatch Drop; 'tcp_opt_err'= TCP Option
           Error Drop; 'ipip_tnl_err'= IP-over-IP Tunnel Error Drop; 'vxlan_err'= VXLAN
           Tunnel Error Drop; 'nvgre_err'= GRE Tunnel Error Drop; 'gre_pptp_err'= GRE PPTP
-          Error Drop; 'ipv6_eh_hbh'= IPv6 Hop by Hop Header Drop; 'ipv6_eh_dest'= IPv6
-          Destination Header Drop; 'ipv6_eh_routing'= IPv6 Routing Header Drop;
-          'ipv6_eh_frag'= IPv6 Fragmentation Header Drop; 'ipv6_eh_ah'= IPv6
-          Authentication Header Drop; 'ipv6_eh_esp'= IPv6 ESP Header Drop;
-          'ipv6_eh_mobility'= IPv6 Mobility Header Drop; 'ipv6_eh_none'= IPv6 No Next
-          Header Drop; 'ipv6_eh_other'= IPv6 Unknown Extension Header Drop;
-          'ipv6_eh_malformed'= IPv6 Malformed Extension Header Drop;"
+          Error Drop;"
                 type: str
     stats:
         description:
@@ -394,46 +330,6 @@ options:
                 description:
                 - "GRE PPTP Error Drop"
                 type: str
-            ipv6_eh_hbh:
-                description:
-                - "IPv6 Hop by Hop Header Drop"
-                type: str
-            ipv6_eh_dest:
-                description:
-                - "IPv6 Destination Header Drop"
-                type: str
-            ipv6_eh_routing:
-                description:
-                - "IPv6 Routing Header Drop"
-                type: str
-            ipv6_eh_frag:
-                description:
-                - "IPv6 Fragmentation Header Drop"
-                type: str
-            ipv6_eh_ah:
-                description:
-                - "IPv6 Authentication Header Drop"
-                type: str
-            ipv6_eh_esp:
-                description:
-                - "IPv6 ESP Header Drop"
-                type: str
-            ipv6_eh_mobility:
-                description:
-                - "IPv6 Mobility Header Drop"
-                type: str
-            ipv6_eh_none:
-                description:
-                - "IPv6 No Next Header Drop"
-                type: str
-            ipv6_eh_other:
-                description:
-                - "IPv6 Unknown Extension Header Drop"
-                type: str
-            ipv6_eh_malformed:
-                description:
-                - "IPv6 Malformed Extension Header Drop"
-                type: str
 
 '''
 
@@ -488,7 +384,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bad_content", "drop_all", "frag", "ip_option", "ipv6_ext_header", "land_attack", "out_of_sequence", "packet_deformity", "ping_of_death", "sampling_enable", "security_attack", "stats", "tcp_no_flag", "tcp_syn_fin", "tcp_syn_frag", "uuid", "zero_window", ]
+AVAILABLE_PROPERTIES = ["bad_content", "drop_all", "frag", "ip_option", "land_attack", "out_of_sequence", "packet_deformity", "ping_of_death", "sampling_enable", "security_attack", "stats", "tcp_no_flag", "tcp_syn_fin", "tcp_syn_frag", "uuid", "zero_window", ]
 
 
 def get_default_argspec():
@@ -560,72 +456,6 @@ def get_argspec():
         'zero_window': {
             'type': 'int',
             },
-        'ipv6_ext_header': {
-            'type': 'dict',
-            'ipv6_eh_frag': {
-                'type': 'bool',
-                },
-            'ipv6_eh_auth': {
-                'type': 'bool',
-                },
-            'ipv6_eh_esp': {
-                'type': 'bool',
-                },
-            'ipv6_eh_mobility': {
-                'type': 'bool',
-                },
-            'ipv6_eh_nonext': {
-                'type': 'bool',
-                },
-            'ipv6_eh_malformed': {
-                'type': 'bool',
-                },
-            'ipv6_eh_hbh': {
-                'type': 'bool',
-                },
-            'ipv6_eh_dest': {
-                'type': 'bool',
-                },
-            'ipv6_eh_routing': {
-                'type': 'bool',
-                },
-            'hbh_option_list': {
-                'type': 'list',
-                'hbh_otype_from': {
-                    'type': 'int',
-                    },
-                'hbh_otype_to': {
-                    'type': 'int',
-                    }
-                },
-            'dst_option_list': {
-                'type': 'list',
-                'dst_otype_from': {
-                    'type': 'int',
-                    },
-                'dst_otype_to': {
-                    'type': 'int',
-                    }
-                },
-            'routing_option_list': {
-                'type': 'list',
-                'routing_otype_from': {
-                    'type': 'int',
-                    },
-                'routing_otype_to': {
-                    'type': 'int',
-                    }
-                },
-            'unknown_ext_header_list': {
-                'type': 'list',
-                'eh_type_from': {
-                    'type': 'int',
-                    },
-                'eh_type_to': {
-                    'type': 'int',
-                    }
-                }
-            },
         'uuid': {
             'type': 'str',
             },
@@ -636,8 +466,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'land', 'emp_frg', 'emp_mic_frg', 'opt', 'frg', 'bad_ip_hdrlen', 'bad_ip_flg', 'bad_ip_ttl', 'no_ip_payload', 'over_ip_payload', 'bad_ip_payload_len', 'bad_ip_frg_offset', 'csum', 'pod', 'bad_tcp_urg_offset', 'tcp_sht_hdr', 'tcp_bad_iplen', 'tcp_null_frg', 'tcp_null_scan', 'tcp_syn_fin', 'tcp_xmas', 'tcp_xmas_scan',
-                    'tcp_syn_frg', 'tcp_frg_hdr', 'tcp_bad_csum', 'udp_srt_hdr', 'udp_bad_len', 'udp_kerb_frg', 'udp_port_lb', 'udp_bad_csum', 'runt_ip_hdr', 'runt_tcp_udp_hdr', 'ipip_tnl_msmtch', 'tcp_opt_err', 'ipip_tnl_err', 'vxlan_err', 'nvgre_err', 'gre_pptp_err', 'ipv6_eh_hbh', 'ipv6_eh_dest', 'ipv6_eh_routing', 'ipv6_eh_frag', 'ipv6_eh_ah',
-                    'ipv6_eh_esp', 'ipv6_eh_mobility', 'ipv6_eh_none', 'ipv6_eh_other', 'ipv6_eh_malformed'
+                    'tcp_syn_frg', 'tcp_frg_hdr', 'tcp_bad_csum', 'udp_srt_hdr', 'udp_bad_len', 'udp_kerb_frg', 'udp_port_lb', 'udp_bad_csum', 'runt_ip_hdr', 'runt_tcp_udp_hdr', 'ipip_tnl_msmtch', 'tcp_opt_err', 'ipip_tnl_err', 'vxlan_err', 'nvgre_err', 'gre_pptp_err'
                     ]
                 }
             },
@@ -755,36 +584,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'gre_pptp_err': {
-                'type': 'str',
-                },
-            'ipv6_eh_hbh': {
-                'type': 'str',
-                },
-            'ipv6_eh_dest': {
-                'type': 'str',
-                },
-            'ipv6_eh_routing': {
-                'type': 'str',
-                },
-            'ipv6_eh_frag': {
-                'type': 'str',
-                },
-            'ipv6_eh_ah': {
-                'type': 'str',
-                },
-            'ipv6_eh_esp': {
-                'type': 'str',
-                },
-            'ipv6_eh_mobility': {
-                'type': 'str',
-                },
-            'ipv6_eh_none': {
-                'type': 'str',
-                },
-            'ipv6_eh_other': {
-                'type': 'str',
-                },
-            'ipv6_eh_malformed': {
                 'type': 'str',
                 }
             }

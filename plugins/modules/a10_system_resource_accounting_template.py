@@ -176,10 +176,6 @@ options:
                 description:
                 - "Field link_cost_template_cfg"
                 type: dict
-            pbslb_entry_cfg:
-                description:
-                - "Field pbslb_entry_cfg"
-                type: dict
             persist_cookie_template_cfg:
                 description:
                 - "Field persist_cookie_template_cfg"
@@ -617,15 +613,6 @@ def get_argspec():
                     'type': 'int',
                     },
                 'link_cost_template_min_guarantee': {
-                    'type': 'int',
-                    }
-                },
-            'pbslb_entry_cfg': {
-                'type': 'dict',
-                'pbslb_entry_max': {
-                    'type': 'int',
-                    },
-                'pbslb_entry_min_guarantee': {
                     'type': 'int',
                     }
                 },

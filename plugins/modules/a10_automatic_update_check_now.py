@@ -58,8 +58,7 @@ options:
     feature_name:
         description:
         - "'app-fw'= Application Firewall; 'ca-bundle'= CA Certificate Bundle;
-          'a10-threat-intel'= A10 Threat intel class list; 'central-cert-pin-list'=
-          Central updated cert pinning list;"
+          'a10-threat-intel'= A10 Threat intel class list;"
         type: str
         required: False
     prod_ver:
@@ -152,7 +151,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'feature_name': {'type': 'str', 'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel', 'central-cert-pin-list']}, 'prod_ver': {'type': 'str', }, 'from_staging_server': {'type': 'bool', }, 'stage_ver': {'type': 'str', }})
+    rv.update({'feature_name': {'type': 'str', 'choices': ['app-fw', 'ca-bundle', 'a10-threat-intel']}, 'prod_ver': {'type': 'str', }, 'from_staging_server': {'type': 'bool', }, 'stage_ver': {'type': 'str', }})
     return rv
 
 

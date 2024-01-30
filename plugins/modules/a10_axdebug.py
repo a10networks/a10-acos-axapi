@@ -366,6 +366,10 @@ options:
                 description:
                 - "WORD max value"
                 type: str
+            exit:
+                description:
+                - "Exit from axdebug mode"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -686,6 +690,9 @@ def get_argspec():
                 },
             'WORD2': {
                 'type': 'str',
+                },
+            'exit': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

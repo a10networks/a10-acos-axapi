@@ -91,10 +91,6 @@ options:
                 description:
                 - "Field log_route"
                 type: dict
-            rate_limit:
-                description:
-                - "Field rate_limit"
-                type: dict
 
 '''
 
@@ -202,16 +198,6 @@ def get_argspec():
                 'log_route_val': {
                     'type': 'str',
                     'choices': ['local-only', 'remote-only', 'local-and-remote']
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'rate_limit': {
-                'type': 'dict',
-                'rate_limit_val': {
-                    'type': 'str',
-                    'choices': ['enable', 'disable']
                     },
                 'uuid': {
                     'type': 'str',

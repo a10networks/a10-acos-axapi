@@ -333,7 +333,7 @@ def get_argspec():
                     'choices': [
                         'all', 'log_type_gtp_invalid_teid', 'log_gtp_type_reserved_ie_present', 'log_type_gtp_mandatory_ie_missing', 'log_type_gtp_mandatory_ie_inside_grouped_ie_missing', 'log_type_gtp_msisdn_filtering', 'log_type_gtp_out_of_order_ie', 'log_type_gtp_out_of_state_ie', 'log_type_enduser_ip_spoofed', 'log_type_crosslayer_correlation',
                         'log_type_message_not_supported', 'log_type_out_of_state', 'log_type_max_msg_length', 'log_type_gtp_message_filtering', 'log_type_gtp_apn_filtering', 'log_type_gtp_rat_type_filtering', 'log_type_country_code_mismatch', 'log_type_gtp_in_gtp_filtering', 'log_type_gtp_node_restart', 'log_type_gtp_seq_num_mismatch',
-                        'log_type_gtp_rate_limit_periodic', 'log_type_gtp_invalid_message_length', 'log_type_gtp_hdr_invalid_protocol_flag', 'log_type_gtp_hdr_invalid_spare_bits', 'log_type_gtp_hdr_invalid_piggy_flag', 'log_type_gtp_invalid_version', 'log_type_gtp_invalid_ports'
+                        'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic', 'log_type_gtp_rate_limit_periodic'
                         ]
                     }
                 }
@@ -477,24 +477,6 @@ def get_argspec():
                         'type': 'str',
                         },
                     'log_type_gtp_rate_limit_periodic': {
-                        'type': 'str',
-                        },
-                    'log_type_gtp_invalid_message_length': {
-                        'type': 'str',
-                        },
-                    'log_type_gtp_hdr_invalid_protocol_flag': {
-                        'type': 'str',
-                        },
-                    'log_type_gtp_hdr_invalid_spare_bits': {
-                        'type': 'str',
-                        },
-                    'log_type_gtp_hdr_invalid_piggy_flag': {
-                        'type': 'str',
-                        },
-                    'log_type_gtp_invalid_version': {
-                        'type': 'str',
-                        },
-                    'log_type_gtp_invalid_ports': {
                         'type': 'str',
                         }
                     }

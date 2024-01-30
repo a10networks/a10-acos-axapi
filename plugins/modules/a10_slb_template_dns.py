@@ -133,20 +133,10 @@ options:
           Length Padding;"
         type: str
         required: False
-    remove_csubnet:
+    remove_edns_csubnet_to_server:
         description:
         - "Remove EDNS(0) client subnet from client queries"
         type: bool
-        required: False
-    insert_ipv4:
-        description:
-        - "prefix-length to insert for IPv4"
-        type: int
-        required: False
-    insert_ipv6:
-        description:
-        - "prefix-length to insert for IPv6"
-        type: int
         required: False
     redirect_to_tcp_port:
         description:
@@ -188,67 +178,6 @@ options:
         - "Customized tag"
         type: str
         required: False
-    dns64:
-        description:
-        - "Field dns64"
-        type: dict
-        required: False
-        suboptions:
-            enable:
-                description:
-                - "Enable DNS64"
-                type: bool
-            cache:
-                description:
-                - "Use a cached A-query response to provide AAAA query responses for the same
-          hostname"
-                type: bool
-            change_query:
-                description:
-                - "Always change incoming AAAA DNS Query to A"
-                type: bool
-            parallel_query:
-                description:
-                - "Forward AAAA Query & generate A Query in parallel"
-                type: bool
-            retry:
-                description:
-                - "Retry count, default is 3 (Retry Number)"
-                type: int
-            single_response_disable:
-                description:
-                - "Disable Single Response which is used to avoid ambiguity"
-                type: bool
-            timeout:
-                description:
-                - "Timeout to send additional Queries, unit= second, default is 1"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    negative_dns_cache:
-        description:
-        - "Field negative_dns_cache"
-        type: dict
-        required: False
-        suboptions:
-            enable_negative_dns_cache:
-                description:
-                - "Enable DNS negative cache (Need to turn-on the dns-cache for this feature)"
-                type: bool
-            bypass_query_threshold:
-                description:
-                - "the threshold bypass the query, default is 100"
-                type: int
-            max_negative_cache_ttl:
-                description:
-                - "Max negative cache ttl, default is 2 hours"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     udp_retransmit:
         description:
         - "Field udp_retransmit"
@@ -437,11 +366,6 @@ options:
                 description:
                 - "Field host_list_cfg"
                 type: list
-            csubnet_retry:
-                description:
-                - "retry when server REFUSED AX inserted EDNS(0) subnet, works only when insert-
-          client-subnet is configured"
-                type: bool
             ns_cache_lookup:
                 description:
                 - "'disabled'= Disable NS Cache Lookup; 'enabled'= Enable NS Cache Lookup;"
@@ -464,10 +388,6 @@ options:
                 description:
                 - "Number of DNS query retries at each server level before closing client
           connection, default 6"
-                type: int
-            parallel_queries:
-                description:
-                - "Number of parallel queries to send to servers"
                 type: int
             full_response:
                 description:
@@ -505,64 +425,6 @@ options:
                 description:
                 - "'enabled'= Force CNAME resolution always; 'disabled'= Use answer record in
           CNAME response if it exists, else resolve;"
-                type: str
-            fast_ns_selection:
-                description:
-                - "'enabled'= Enable fast NS selection; 'disabled'= Disable fast NS selection;"
-                type: str
-            dnssec_validation:
-                description:
-                - "'enabled'= Enable DNSSEC validation; 'disabled'= Disable DNSSEC validation;"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            lookup_order:
-                description:
-                - "Field lookup_order"
-                type: dict
-            gateway_health_check:
-                description:
-                - "Field gateway_health_check"
-                type: dict
-    category_lookup_list:
-        description:
-        - "Field category_lookup_list"
-        type: list
-        required: False
-        suboptions:
-            category_name:
-                description:
-                - "category-list name"
-                type: str
-            permit:
-                description:
-                - "Permit matching DNS domains"
-                type: bool
-            drop:
-                description:
-                - "Deny matching DNS domains"
-                type: bool
-            respond:
-                description:
-                - "Respond to matching DNS domains"
-                type: bool
-            respond_nxdomain:
-                description:
-                - "Respond with NXDOMAIN"
-                type: bool
-            respond_ip_addr:
-                description:
-                - "Type A record to respond (IPv4 address)"
-                type: str
-            respond_ipv6_addr:
-                description:
-                - "TYPE AAAA record to respond (IPv6 address)"
-                type: str
-            respond_cname_str:
-                description:
-                - "CNAME to respond (Canonical name)"
                 type: str
             uuid:
                 description:
@@ -623,9 +485,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_padding_to_client", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "category_lookup_list", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dns64", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6",
-    "local_dns_resolution", "max_cache_entry_size", "max_cache_size", "max_query_length", "name", "negative_dns_cache", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_csubnet", "remove_padding_to_server", "response_rate_limiting", "rpz_list",
-    "udp_retransmit", "user_tag", "uuid",
+    "add_padding_to_client", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "local_dns_resolution", "max_cache_entry_size", "max_cache_size",
+    "max_query_length", "name", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_edns_csubnet_to_server", "remove_padding_to_server", "response_rate_limiting", "rpz_list", "udp_retransmit", "user_tag", "uuid",
     ]
 
 
@@ -696,14 +557,8 @@ def get_argspec():
             'type': 'str',
             'choices': ['block-length', 'random-block-length']
             },
-        'remove_csubnet': {
+        'remove_edns_csubnet_to_server': {
             'type': 'bool',
-            },
-        'insert_ipv4': {
-            'type': 'int',
-            },
-        'insert_ipv6': {
-            'type': 'int',
             },
         'redirect_to_tcp_port': {
             'type': 'bool',
@@ -728,48 +583,6 @@ def get_argspec():
             },
         'user_tag': {
             'type': 'str',
-            },
-        'dns64': {
-            'type': 'dict',
-            'enable': {
-                'type': 'bool',
-                },
-            'cache': {
-                'type': 'bool',
-                },
-            'change_query': {
-                'type': 'bool',
-                },
-            'parallel_query': {
-                'type': 'bool',
-                },
-            'retry': {
-                'type': 'int',
-                },
-            'single_response_disable': {
-                'type': 'bool',
-                },
-            'timeout': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'negative_dns_cache': {
-            'type': 'dict',
-            'enable_negative_dns_cache': {
-                'type': 'bool',
-                },
-            'bypass_query_threshold': {
-                'type': 'int',
-                },
-            'max_negative_cache_ttl': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
             },
         'udp_retransmit': {
             'type': 'dict',
@@ -1032,9 +845,6 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
-            'csubnet_retry': {
-                'type': 'bool',
-                },
             'ns_cache_lookup': {
                 'type': 'str',
                 'choices': ['disabled', 'enabled']
@@ -1050,9 +860,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'retries_per_level': {
-                'type': 'int',
-                },
-            'parallel_queries': {
                 'type': 'int',
                 },
             'full_response': {
@@ -1080,100 +887,6 @@ def get_argspec():
             'force_cname_resolution': {
                 'type': 'str',
                 'choices': ['enabled', 'disabled']
-                },
-            'fast_ns_selection': {
-                'type': 'str',
-                'choices': ['enabled', 'disabled']
-                },
-            'dnssec_validation': {
-                'type': 'str',
-                'choices': ['enabled', 'disabled']
-                },
-            'uuid': {
-                'type': 'str',
-                },
-            'lookup_order': {
-                'type': 'dict',
-                'query_type': {
-                    'type': 'list',
-                    'str_query_type': {
-                        'type': 'str',
-                        'choices': ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA', 'TXT', 'ANY']
-                        },
-                    'num_query_type': {
-                        'type': 'int',
-                        },
-                    'order': {
-                        'type': 'str',
-                        'choices': ['ipv4-precede-ipv6', 'ipv6-precede-ipv4']
-                        }
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'gateway_health_check': {
-                'type': 'dict',
-                'query_name': {
-                    'type': 'str',
-                    },
-                'retry': {
-                    'type': 'int',
-                    },
-                'timeout': {
-                    'type': 'int',
-                    },
-                'interval': {
-                    'type': 'int',
-                    },
-                'up_retry': {
-                    'type': 'int',
-                    },
-                'retry_multi': {
-                    'type': 'int',
-                    },
-                'gwhc_ns_cache_lookup': {
-                    'type': 'str',
-                    'choices': ['disabled', 'enabled']
-                    },
-                'str_query_type': {
-                    'type': 'str',
-                    'choices': ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'SRV', 'PTR', 'SOA', 'TXT']
-                    },
-                'num_query_type': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                }
-            },
-        'category_lookup_list': {
-            'type': 'list',
-            'category_name': {
-                'type': 'str',
-                'required': True,
-                },
-            'permit': {
-                'type': 'bool',
-                },
-            'drop': {
-                'type': 'bool',
-                },
-            'respond': {
-                'type': 'bool',
-                },
-            'respond_nxdomain': {
-                'type': 'bool',
-                },
-            'respond_ip_addr': {
-                'type': 'str',
-                },
-            'respond_ipv6_addr': {
-                'type': 'str',
-                },
-            'respond_cname_str': {
-                'type': 'str',
                 },
             'uuid': {
                 'type': 'str',

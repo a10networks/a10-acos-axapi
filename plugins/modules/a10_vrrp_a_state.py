@@ -234,16 +234,6 @@ options:
           packet with aflex table entry;
           'sync_tx_aflex_table_entry_not_eligible_counter'= send of aflex table entry not
           eligible; 'sync_rx_ext_fw_limit_entry'= Sync FW Limit Entry Info Failure;
-          'sync_tx_fw_set_dscp_counter'= Conn Sync send fw set dscp counter;
-          'sync_rx_fw_set_dscp_counter'= Conn Sync receive fw set dscp counter;
-          'dns_cache_sync_tx_create_counter'= DNS Cache Sync Create Sent counter;
-          'dns_cache_sync_rx_create_counter'= DNS Cache Sync Create Received counter;
-          'dns_cache_sync_tx_del_counter'= DNS Cache Sync Del Sent counter;
-          'dns_cache_sync_rx_del_counter'= DNS Cache Sync Del Received counter;
-          'dns_cache_sync_tx_frag_counter'= DNS Cache Sync Frag Sent counter;
-          'dns_cache_sync_rx_frag_counter'= DNS Cache Sync Frag Received counter;
-          'dns_cache_sync_tx_error_counter'= DNS Cache Sync Error Sent counter;
-          'dns_cache_sync_rx_error_counter'= DNS Cache Sync Error Received counter;
           'sync_rx_dcmsg_counter_inter_pu'= Conn Sync forward CPU with inter-pu comm;
           'sync_rx_drop_sync_packets'= Conn Sync drop all packets;
           'sync_pkt_rcv_dc_msg_dir'= Sync pkt recv with DCMSG dir;
@@ -900,46 +890,6 @@ options:
                 description:
                 - "Sync FW Limit Entry Info Failure"
                 type: str
-            sync_tx_fw_set_dscp_counter:
-                description:
-                - "Conn Sync send fw set dscp counter"
-                type: str
-            sync_rx_fw_set_dscp_counter:
-                description:
-                - "Conn Sync receive fw set dscp counter"
-                type: str
-            dns_cache_sync_tx_create_counter:
-                description:
-                - "DNS Cache Sync Create Sent counter"
-                type: str
-            dns_cache_sync_rx_create_counter:
-                description:
-                - "DNS Cache Sync Create Received counter"
-                type: str
-            dns_cache_sync_tx_del_counter:
-                description:
-                - "DNS Cache Sync Del Sent counter"
-                type: str
-            dns_cache_sync_rx_del_counter:
-                description:
-                - "DNS Cache Sync Del Received counter"
-                type: str
-            dns_cache_sync_tx_frag_counter:
-                description:
-                - "DNS Cache Sync Frag Sent counter"
-                type: str
-            dns_cache_sync_rx_frag_counter:
-                description:
-                - "DNS Cache Sync Frag Received counter"
-                type: str
-            dns_cache_sync_tx_error_counter:
-                description:
-                - "DNS Cache Sync Error Sent counter"
-                type: str
-            dns_cache_sync_rx_error_counter:
-                description:
-                - "DNS Cache Sync Error Received counter"
-                type: str
             sync_rx_dcmsg_counter_inter_pu:
                 description:
                 - "Conn Sync forward CPU with inter-pu comm"
@@ -1066,8 +1016,7 @@ def get_argspec():
                     'sync_tx_smp_clear_counter', 'sync_rx_ext_fw_so_shadow_ext_info', 'sync_tx_aflex_table_entry_add_counter', 'sync_rx_aflex_table_entry_add_counter', 'sync_tx_aflex_table_entry_append_counter', 'sync_rx_aflex_table_entry_append_counter', 'sync_tx_aflex_table_entry_delete_counter', 'sync_rx_aflex_table_entry_delete_counter',
                     'sync_tx_aflex_table_entry_incr_counter', 'sync_rx_aflex_table_entry_incr_counter', 'sync_tx_aflex_table_entry_lookup_counter', 'sync_rx_aflex_table_entry_lookup_counter', 'sync_tx_aflex_table_entry_lifetime_counter', 'sync_rx_aflex_table_entry_lifetime_counter', 'sync_tx_aflex_table_entry_replace_counter',
                     'sync_rx_aflex_table_entry_replace_counter', 'sync_tx_aflex_table_entry_set_counter', 'sync_rx_aflex_table_entry_set_counter', 'sync_tx_aflex_table_entry_timeout_counter', 'sync_rx_aflex_table_entry_timeout_counter', 'sync_tx_aflex_table_entry_fastsync_counter', 'sync_rx_aflex_table_entry_fastsync_counter',
-                    'sync_tx_aflex_table_entry_error_counter', 'sync_tx_aflex_table_entry_not_eligible_counter', 'sync_rx_ext_fw_limit_entry', 'sync_tx_fw_set_dscp_counter', 'sync_rx_fw_set_dscp_counter', 'dns_cache_sync_tx_create_counter', 'dns_cache_sync_rx_create_counter', 'dns_cache_sync_tx_del_counter', 'dns_cache_sync_rx_del_counter',
-                    'dns_cache_sync_tx_frag_counter', 'dns_cache_sync_rx_frag_counter', 'dns_cache_sync_tx_error_counter', 'dns_cache_sync_rx_error_counter', 'sync_rx_dcmsg_counter_inter_pu', 'sync_rx_drop_sync_packets', 'sync_pkt_rcv_dc_msg_dir', 'sync_tx_update_misc_bearer', 'sync_tx_create_counter_act', 'sync_tx_del_counter_act',
+                    'sync_tx_aflex_table_entry_error_counter', 'sync_tx_aflex_table_entry_not_eligible_counter', 'sync_rx_ext_fw_limit_entry', 'sync_rx_dcmsg_counter_inter_pu', 'sync_rx_drop_sync_packets', 'sync_pkt_rcv_dc_msg_dir', 'sync_tx_update_misc_bearer', 'sync_tx_create_counter_act', 'sync_tx_del_counter_act',
                     'sync_tx_update_age_counter_act', 'sync_tx_update_misc_counter_act', 'query_pkt_rx_error'
                     ]
                 }
@@ -1552,36 +1501,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'sync_rx_ext_fw_limit_entry': {
-                'type': 'str',
-                },
-            'sync_tx_fw_set_dscp_counter': {
-                'type': 'str',
-                },
-            'sync_rx_fw_set_dscp_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_tx_create_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_rx_create_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_tx_del_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_rx_del_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_tx_frag_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_rx_frag_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_tx_error_counter': {
-                'type': 'str',
-                },
-            'dns_cache_sync_rx_error_counter': {
                 'type': 'str',
                 },
             'sync_rx_dcmsg_counter_inter_pu': {

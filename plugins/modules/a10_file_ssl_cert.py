@@ -67,7 +67,8 @@ options:
         required: False
     action:
         description:
-        - "'create'= create; 'import'= import; 'export'= export; 'replace'= replace;"
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
+          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
         type: str
         required: False
     file_handle:
@@ -197,7 +198,7 @@ def get_argspec():
             },
         'action': {
             'type': 'str',
-            'choices': ['create', 'import', 'export', 'replace']
+            'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']
             },
         'file_handle': {
             'type': 'str',
