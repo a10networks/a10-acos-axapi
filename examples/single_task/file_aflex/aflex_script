@@ -1,0 +1,18 @@
+# This aFleX example illustrates the use of Tcl associative arrays to implement
+# host switching
+when RULE_INIT {
+  array set ::SG_ARRAY [list "youtube.com" "sg1"  "zynga.com" "sg2"]
+}
+
+when HTTP_REQUEST {
+  set host [HTTP::host]
+  if { [info exists ::SG_ARRAY($host)] } {
+    log "host $host -> pool $::SG_ARRAY($host)"
+    pool $::SG_ARRAY($host)
+  }
+else if { [info exists ::SG_ARRAY($host)] } {
+    log "host $host -> pool $::SG_ARRAY($host)"
+    pool $::SG_ARRAY($host)
+  }
+}
+

@@ -338,9 +338,12 @@ def present(module, result, existing_config):
     return result
 
 
-def delete(module, result):
+def delete(module, result, payload):
     try:
-        call_result = api_client.delete(module.client, existing_url(module))
+        if module.params["action"] == "delete":
+            call_result = api_client.post(module.client, existing_url(module), payload)
+        else:
+            call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
@@ -349,6 +352,7 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    payload = utils.build_json("aflex", module.params, AVAILABLE_PROPERTIES)
     if not existing_config:
         result["changed"] = False
         return result
@@ -357,7 +361,7 @@ def absent(module, result, existing_config):
         result["changed"] = True
         return result
 
-    return delete(module, result)
+    return delete(module, result, payload)
 
 
 def run_command(module):

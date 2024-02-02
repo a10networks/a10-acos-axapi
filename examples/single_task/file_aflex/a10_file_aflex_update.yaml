@@ -1,0 +1,12 @@
+- name: Update file_aflex example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Update a10.acos_axapi.a10_gslb_policy instance
+    - name: Create a10.acos_axapi.a10_file_aflex instance
+    a10.acos_axapi.a10_file_aflex:
+      state: present
+      file:  aflex_script
+      file_path: /examples/single_task/file_aflex/aflex_script
+      file_handle: aflex_script
+      action: 'import'

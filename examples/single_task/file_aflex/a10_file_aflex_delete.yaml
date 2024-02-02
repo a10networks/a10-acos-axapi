@@ -1,0 +1,9 @@
+- name: Delete file_aflex example playbook
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  tasks:
+  - name: Delete a10.acos_axapi.a10_file_aflex instance
+    a10.acos_axapi.a10_file_aflex:
+      state: absent
+      file:  aflex_script
+      action: 'delete'
