@@ -512,25 +512,9 @@ options:
                 description:
                 - "Category Health and Medicine"
                 type: bool
-            confirmed_spam_sources:
-                description:
-                - "Category Confirmed SPAM Sources"
-                type: bool
             spam_urls:
                 description:
                 - "Category SPAM URLs"
-                type: bool
-            unconfirmed_spam_sources:
-                description:
-                - "Category Unconfirmed SPAM Sources"
-                type: bool
-            open_http_proxies:
-                description:
-                - "Category Open HTTP Proxies"
-                type: bool
-            dynamic_comment:
-                description:
-                - "Category Dynamic Comment"
                 type: bool
             dynamically_generated_content:
                 description:
@@ -543,10 +527,6 @@ options:
             alcohol_and_tobacco:
                 description:
                 - "Category Alcohol and Tobacco"
-                type: bool
-            private_ip_addresses:
-                description:
-                - "Category Private IP Addresses"
                 type: bool
             image_and_video_search:
                 description:
@@ -568,17 +548,29 @@ options:
                 description:
                 - "Category Web Hosting Sites"
                 type: bool
-            food_and_dining:
+            self_harm:
                 description:
-                - "Category Food and Dining"
+                - "Category Self Harm"
+                type: bool
+            dns_over_https:
+                description:
+                - "Category DNS over HTTPs"
+                type: bool
+            low_thc_cannabis_products:
+                description:
+                - "Category Low-THC Cannabis Products"
+                type: bool
+            generative_ai:
+                description:
+                - "Category Generative AI"
                 type: bool
             nudity_artistic:
                 description:
-                - "Category Nudity join Entertainment and Arts"
+                - "Category Artistic Nudity"
                 type: bool
             illegal_pornography:
                 description:
-                - "Category Illegal join Adult and Pornography"
+                - "Category Illegal Pornography eg. Child Sexual Abuse"
                 type: bool
             uuid:
                 description:
@@ -1128,19 +1120,7 @@ def get_argspec():
             'health_and_medicine': {
                 'type': 'bool',
                 },
-            'confirmed_spam_sources': {
-                'type': 'bool',
-                },
             'spam_urls': {
-                'type': 'bool',
-                },
-            'unconfirmed_spam_sources': {
-                'type': 'bool',
-                },
-            'open_http_proxies': {
-                'type': 'bool',
-                },
-            'dynamic_comment': {
                 'type': 'bool',
                 },
             'dynamically_generated_content': {
@@ -1150,9 +1130,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'alcohol_and_tobacco': {
-                'type': 'bool',
-                },
-            'private_ip_addresses': {
                 'type': 'bool',
                 },
             'image_and_video_search': {
@@ -1170,7 +1147,16 @@ def get_argspec():
             'web_hosting_sites': {
                 'type': 'bool',
                 },
-            'food_and_dining': {
+            'self_harm': {
+                'type': 'bool',
+                },
+            'dns_over_https': {
+                'type': 'bool',
+                },
+            'low_thc_cannabis_products': {
+                'type': 'bool',
+                },
+            'generative_ai': {
                 'type': 'bool',
                 },
             'nudity_artistic': {
@@ -1196,7 +1182,7 @@ def get_argspec():
                         'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals',
                         'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine',
                         'confirmed-SPAM-sources', 'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamically-generated-content', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining',
-                        'nudity-artistic', 'illegal-pornography'
+                        'dummy-item', 'self-harm', 'dns-over-https', 'low-thc-cannabis-products', 'generative-ai', 'nudity-artistic', 'illegal-pornography'
                         ]
                     }
                 }
@@ -1460,6 +1446,9 @@ def get_argspec():
                         },
                     'total_req_lookup_processed': {
                         'type': 'int',
+                        },
+                    'clear_cache': {
+                        'type': 'str',
                         }
                     }
                 },

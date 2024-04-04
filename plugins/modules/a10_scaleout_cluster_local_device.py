@@ -473,6 +473,10 @@ def get_argspec():
                     'action': {
                         'type': 'str',
                         'choices': ['down', 'exit-cluster']
+                        },
+                    'ip_version': {
+                        'type': 'str',
+                        'choices': ['ipv4', 'ipv6']
                         }
                     },
                 'uuid': {
@@ -503,6 +507,11 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     'choices': ['down', 'exit-cluster']
+                    },
+                'ip_version': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['ipv4', 'ipv6']
                     },
                 'uuid': {
                     'type': 'str',

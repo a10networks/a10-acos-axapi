@@ -86,6 +86,11 @@ options:
         - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
         type: bool
         required: False
+    disable_new_gslb_sync:
+        description:
+        - "Disable new gslb config sync"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -219,7 +224,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auto_detect", "enable_list", "limit", "msg_format_acos_2x", "oper", "ping_site", "secure", "status_interval", "use_mgmt_port", "use_mgmt_port_for_all_partitions", "uuid", ]
+AVAILABLE_PROPERTIES = ["auto_detect", "disable_new_gslb_sync", "enable_list", "limit", "msg_format_acos_2x", "oper", "ping_site", "secure", "status_interval", "use_mgmt_port", "use_mgmt_port_for_all_partitions", "uuid", ]
 
 
 def get_default_argspec():
@@ -256,6 +261,9 @@ def get_argspec():
             'type': 'str',
             },
         'msg_format_acos_2x': {
+            'type': 'bool',
+            },
+        'disable_new_gslb_sync': {
             'type': 'bool',
             },
         'uuid': {

@@ -117,6 +117,16 @@ options:
           dropped_dis_tx_pkts; 'dropped_tx_pkts'= dropped_tx_pkts;
           'dropped_rx_pkts_gre_key'= dropped_rx_pkts_gre_key;"
                 type: str
+    encapsulation:
+        description:
+        - "Field encapsulation"
+        type: dict
+        required: False
+        suboptions:
+            dot1q:
+                description:
+                - "Field dot1q"
+                type: dict
     ip:
         description:
         - "Field ip"
@@ -414,6 +424,10 @@ options:
                 description:
                 - "Field ipv6_link_local_scope"
                 type: str
+            mtu:
+                description:
+                - "Field mtu"
+                type: str
             ip_unnumbered_enabled:
                 description:
                 - "Field ip_unnumbered_enabled"
@@ -546,7 +560,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list", "action", "bfd", "ifname", "ip", "ipv6", "isis", "mtu", "name", "oper", "sampling_enable", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["access_list", "action", "bfd", "encapsulation", "ifname", "ip", "ipv6", "isis", "mtu", "name", "oper", "sampling_enable", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -602,6 +616,24 @@ def get_argspec():
                 'type': 'str',
                 'choices':
                 ['all', 'num_pkts', 'num_total_bytes', 'num_unicast_pkts', 'num_broadcast_pkts', 'num_multicast_pkts', 'num_tx_pkts', 'num_total_tx_bytes', 'num_unicast_tx_pkts', 'num_broadcast_tx_pkts', 'num_multicast_tx_pkts', 'dropped_dis_rx_pkts', 'dropped_rx_pkts', 'dropped_dis_tx_pkts', 'dropped_tx_pkts', 'dropped_rx_pkts_gre_key']
+                }
+            },
+        'encapsulation': {
+            'type': 'dict',
+            'dot1q': {
+                'type': 'dict',
+                'tag': {
+                    'type': 'int',
+                    },
+                'ethernet': {
+                    'type': 'str',
+                    },
+                'trunk': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'ip': {
@@ -1338,6 +1370,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'ipv6_link_local_scope': {
+                'type': 'str',
+                },
+            'mtu': {
                 'type': 'str',
                 },
             'ip_unnumbered_enabled': {

@@ -67,6 +67,11 @@ options:
           Encapsulation Type is VXLAN;"
         type: str
         required: False
+    dest_port:
+        description:
+        - "Layer-4 Destination Port (Port Number)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -106,6 +111,24 @@ options:
           'bad_inner_ipv4_len_rx'= bad inner ipv4 packet len; 'bad_inner_ipv6_len_rx'=
           Bad inner ipv6 packet len; 'frag_drop_pkts_tx'= Frag dropped packets out;
           'lif_un_init_rx'= Lif uninitialized packets in;"
+                type: str
+    src_port_range:
+        description:
+        - "Field src_port_range"
+        type: dict
+        required: False
+        suboptions:
+            min_port:
+                description:
+                - "Minimum Port Number"
+                type: int
+            max_port:
+                description:
+                - "Maximum Port Number"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
                 type: str
     local_ip_address:
         description:
@@ -200,6 +223,10 @@ options:
                 description:
                 - "Name of the class-list"
                 type: str
+            encap:
+                description:
+                - "'vxlan'= Tunnel Encapsulation Type is VXLAN;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -211,6 +238,14 @@ options:
             use_lif:
                 description:
                 - "Field use_lif"
+                type: dict
+            gre_keepalive:
+                description:
+                - "Field gre_keepalive"
+                type: dict
+            use_gre_key:
+                description:
+                - "Field use_gre_key"
                 type: dict
             vni_list:
                 description:
@@ -462,7 +497,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encap", "host_list", "id", "local_ip_address", "local_ipv6_address", "remote_ip_address_list", "remote_ipv6_address_list", "sampling_enable", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["dest_port", "encap", "host_list", "id", "local_ip_address", "local_ipv6_address", "remote_ip_address_list", "remote_ipv6_address_list", "sampling_enable", "src_port_range", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -491,6 +526,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['ip-encap', 'gre', 'nvgre', 'vxlan']
             },
+        'dest_port': {
+            'type': 'int',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -507,6 +545,18 @@ def get_argspec():
                     'unicast_pkt_rx', 'bcast_pkt_rx', 'mcast_pkt_rx', 'dropped_pkt_rx', 'encap_miss_pkts_rx', 'bad_chksum_pks_rx', 'requeue_pkts_in', 'pkts_out', 'total_bytes_tx', 'unicast_pkt_tx', 'bcast_pkt_tx', 'mcast_pkt_tx', 'dropped_pkts_tx', 'large_pkts_rx', 'dot1q_pkts_rx', 'frag_pkts_tx', 'reassembled_pkts_rx', 'bad_inner_ipv4_len_rx',
                     'bad_inner_ipv6_len_rx', 'frag_drop_pkts_tx', 'lif_un_init_rx'
                     ]
+                }
+            },
+        'src_port_range': {
+            'type': 'dict',
+            'min_port': {
+                'type': 'int',
+                },
+            'max_port': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'local_ip_address': {
@@ -637,6 +687,10 @@ def get_argspec():
             'class_list': {
                 'type': 'str',
                 },
+            'encap': {
+                'type': 'str',
+                'choices': ['vxlan']
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -650,6 +704,27 @@ def get_argspec():
                     },
                 'lif': {
                     'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'gre_keepalive': {
+                'type': 'dict',
+                'retry_time': {
+                    'type': 'int',
+                    },
+                'retry_count': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'use_gre_key': {
+                'type': 'dict',
+                'gre_key': {
+                    'type': 'int',
                     },
                 'uuid': {
                     'type': 'str',

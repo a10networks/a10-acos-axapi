@@ -60,10 +60,10 @@ options:
         - "Scaleout cluster-id"
         type: int
         required: True
-    follow_vcs:
+    slog_level:
         description:
-        - "Field follow_vcs"
-        type: bool
+        - "Set the level of slog for Scaleout"
+        type: int
         required: False
     uuid:
         description:
@@ -181,6 +181,10 @@ options:
         type: dict
         required: False
         suboptions:
+            default_user_group_count:
+                description:
+                - "Number of default traffic buckets"
+                type: int
             enable:
                 description:
                 - "Field enable"
@@ -302,7 +306,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cluster_devices", "cluster_id", "db_config", "device_groups", "follow_vcs", "local_device", "service_config", "tracking_template", "uuid", ]
+AVAILABLE_PROPERTIES = ["cluster_devices", "cluster_id", "db_config", "device_groups", "local_device", "service_config", "slog_level", "tracking_template", "uuid", ]
 
 
 def get_default_argspec():
@@ -327,8 +331,8 @@ def get_argspec():
             'type': 'int',
             'required': True,
             },
-        'follow_vcs': {
-            'type': 'bool',
+        'slog_level': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -528,6 +532,10 @@ def get_argspec():
                         'action': {
                             'type': 'str',
                             'choices': ['down', 'exit-cluster']
+                            },
+                        'ip_version': {
+                            'type': 'str',
+                            'choices': ['ipv4', 'ipv6']
                             }
                         },
                     'uuid': {
@@ -559,6 +567,11 @@ def get_argspec():
                         'type': 'str',
                         'choices': ['down', 'exit-cluster']
                         },
+                    'ip_version': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['ipv4', 'ipv6']
+                        },
                     'uuid': {
                         'type': 'str',
                         },
@@ -587,19 +600,12 @@ def get_argspec():
                 },
             'cluster_discovery_timeout': {
                 'type': 'dict',
-                'timer_val': {
-                    'type': 'int',
-                    },
                 'uuid': {
                     'type': 'str',
                     }
                 },
             'device_id_list': {
                 'type': 'list',
-                'device_id': {
-                    'type': 'int',
-                    'required': True,
-                    },
                 'ip': {
                     'type': 'str',
                     },
@@ -608,9 +614,6 @@ def get_argspec():
                     'choices': ['enable', 'disable']
                     },
                 'uuid': {
-                    'type': 'str',
-                    },
-                'user_tag': {
                     'type': 'str',
                     }
                 }
@@ -674,6 +677,9 @@ def get_argspec():
             },
         'service_config': {
             'type': 'dict',
+            'default_user_group_count': {
+                'type': 'int',
+                },
             'enable': {
                 'type': 'bool',
                 },
@@ -686,10 +692,7 @@ def get_argspec():
                     'type': 'str',
                     'required': True,
                     },
-                'bucket_count': {
-                    'type': 'int',
-                    },
-                'device_group': {
+                'user_group_count': {
                     'type': 'int',
                     },
                 'uuid': {

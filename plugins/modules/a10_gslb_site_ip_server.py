@@ -88,6 +88,42 @@ options:
                 description:
                 - "Field state"
                 type: str
+            service_ip:
+                description:
+                - "Field service_ip"
+                type: str
+            port_count:
+                description:
+                - "Field port_count"
+                type: int
+            virtual_server:
+                description:
+                - "Field virtual_server"
+                type: int
+            disabled:
+                description:
+                - "Field disabled"
+                type: int
+            gslb_protocol:
+                description:
+                - "Field gslb_protocol"
+                type: int
+            local_protocol:
+                description:
+                - "Field local_protocol"
+                type: int
+            manually_health_check:
+                description:
+                - "Field manually_health_check"
+                type: int
+            use_gslb_state:
+                description:
+                - "Field use_gslb_state"
+                type: int
+            dynamic:
+                description:
+                - "Field dynamic"
+                type: int
             ip_server_port:
                 description:
                 - "Field ip_server_port"
@@ -105,6 +141,10 @@ options:
             hits:
                 description:
                 - "Number of times the IP was selected"
+                type: str
+            recent:
+                description:
+                - "Recent hits"
                 type: str
             ip_server_name:
                 description:
@@ -203,6 +243,33 @@ def get_argspec():
             'state': {
                 'type': 'str',
                 },
+            'service_ip': {
+                'type': 'str',
+                },
+            'port_count': {
+                'type': 'int',
+                },
+            'virtual_server': {
+                'type': 'int',
+                },
+            'disabled': {
+                'type': 'int',
+                },
+            'gslb_protocol': {
+                'type': 'int',
+                },
+            'local_protocol': {
+                'type': 'int',
+                },
+            'manually_health_check': {
+                'type': 'int',
+                },
+            'use_gslb_state': {
+                'type': 'int',
+                },
+            'dynamic': {
+                'type': 'int',
+                },
             'ip_server_port': {
                 'type': 'list',
                 'vport': {
@@ -220,6 +287,9 @@ def get_argspec():
         'stats': {
             'type': 'dict',
             'hits': {
+                'type': 'str',
+                },
+            'recent': {
                 'type': 'str',
                 },
             'ip_server_name': {

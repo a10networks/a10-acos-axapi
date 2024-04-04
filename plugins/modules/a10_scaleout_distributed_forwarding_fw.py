@@ -70,18 +70,18 @@ options:
     threshold:
         description:
         - "Field threshold"
-        type: list
+        type: dict
         required: False
         suboptions:
-            threshold_value:
+            protocol_threshold:
                 description:
-                - "configure packet threshold value to offload sessions(default 5)"
+                - "Field protocol_threshold"
+                type: list
+            global_threshold:
+                description:
+                - "configure packet threshold value to offload sessions of any(TCP and UDP)
+          protocol(default 5)"
                 type: int
-            protocol_value:
-                description:
-                - "'UDP'= configure threshold for udp session offload; 'TCP'= configure threshold
-          for tcp session offload;"
-                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -161,7 +161,34 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'enable': {'type': 'bool', }, 'session_offload_direction': {'type': 'str', 'choices': ['uplink', 'downlink', 'both']}, 'threshold': {'type': 'list', 'threshold_value': {'type': 'int', }, 'protocol_value': {'type': 'str', 'choices': ['UDP', 'TCP']}}, 'uuid': {'type': 'str', }})
+    rv.update({
+        'enable': {
+            'type': 'bool',
+            },
+        'session_offload_direction': {
+            'type': 'str',
+            'choices': ['uplink', 'downlink', 'both']
+            },
+        'threshold': {
+            'type': 'dict',
+            'protocol_threshold': {
+                'type': 'list',
+                'protocol_value': {
+                    'type': 'str',
+                    'choices': ['UDP', 'TCP']
+                    },
+                'threshold_value': {
+                    'type': 'int',
+                    }
+                },
+            'global_threshold': {
+                'type': 'int',
+                }
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 

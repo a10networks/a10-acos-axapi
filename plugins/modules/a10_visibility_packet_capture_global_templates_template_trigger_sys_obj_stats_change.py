@@ -60,11 +60,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    dummy:
-        description:
-        - "dummy to make intermediate obj to single"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -76,10 +71,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -92,16 +83,12 @@ options:
                 description:
                 - "Field trigger_stats_rate"
                 type: dict
-    system_hardware_forward:
+    system_hardware_accelerate:
         description:
-        - "Field system_hardware_forward"
+        - "Field system_hardware_accelerate"
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -120,10 +107,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -142,10 +125,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -164,10 +143,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -186,10 +161,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -208,10 +179,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -230,10 +197,24 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
+            uuid:
                 description:
-                - "dummy to make intermediate obj to single"
-                type: bool
+                - "uuid of the object"
+                type: str
+            trigger_stats_inc:
+                description:
+                - "Field trigger_stats_inc"
+                type: dict
+            trigger_stats_rate:
+                description:
+                - "Field trigger_stats_rate"
+                type: dict
+    aam_rdns:
+        description:
+        - "Field aam_rdns"
+        type: dict
+        required: False
+        suboptions:
             uuid:
                 description:
                 - "uuid of the object"
@@ -252,10 +233,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -274,10 +251,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -296,10 +269,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -318,10 +287,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -340,10 +305,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -362,10 +323,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -384,10 +341,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -406,10 +359,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -428,10 +377,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -450,10 +395,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -472,10 +413,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -494,10 +431,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -516,10 +449,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -538,10 +467,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -560,10 +485,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -582,10 +503,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -604,10 +521,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -626,10 +539,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -648,10 +557,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -670,10 +575,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -692,10 +593,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -714,10 +611,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -736,10 +629,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -758,10 +647,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -780,10 +665,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -802,10 +683,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -824,10 +701,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -846,10 +719,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -868,10 +737,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -890,10 +755,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -912,10 +773,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -934,10 +791,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -956,10 +809,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -978,10 +827,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1000,10 +845,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1022,10 +863,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1044,10 +881,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1066,10 +899,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1088,10 +917,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1110,10 +935,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1132,10 +953,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1154,10 +971,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1176,10 +989,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1198,10 +1007,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1220,10 +1025,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1242,10 +1043,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1264,10 +1061,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1286,10 +1079,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1308,10 +1097,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1330,10 +1115,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1352,10 +1133,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1374,10 +1151,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1396,10 +1169,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1418,10 +1187,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1440,10 +1205,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1462,10 +1223,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1484,10 +1241,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1506,10 +1259,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1528,10 +1277,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1550,10 +1295,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1572,10 +1313,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1594,10 +1331,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1616,10 +1349,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1638,10 +1367,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1660,10 +1385,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1682,10 +1403,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1704,10 +1421,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1726,10 +1439,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1748,10 +1457,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1770,10 +1475,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1792,10 +1493,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1814,10 +1511,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1836,10 +1529,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1858,10 +1547,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1880,10 +1565,6 @@ options:
         type: dict
         required: False
         suboptions:
-            dummy:
-                description:
-                - "dummy to make intermediate obj to single"
-                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -1951,11 +1632,11 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aam_auth_account", "aam_auth_captcha", "aam_auth_relay_kerberos", "aam_auth_saml_global", "aam_auth_server_ldap", "aam_auth_server_ocsp", "aam_auth_server_radius", "aam_auth_server_win", "aam_authentication_global", "cgnv6_ddos_proc", "cgnv6_dhcpv6", "cgnv6_dns64", "cgnv6_ds_lite_global", "cgnv6_fixed_nat_alg_pptp", "cgnv6_fixed_nat_alg_rtsp",
-    "cgnv6_fixed_nat_alg_sip", "cgnv6_fixed_nat_global", "cgnv6_http_alg", "cgnv6_icmp", "cgnv6_l4", "cgnv6_logging", "cgnv6_lsn", "cgnv6_lsn_alg_esp", "cgnv6_lsn_alg_h323", "cgnv6_lsn_alg_mgcp", "cgnv6_lsn_alg_pptp", "cgnv6_lsn_alg_rtsp", "cgnv6_lsn_alg_sip", "cgnv6_lsn_radius", "cgnv6_nat64_global", "cgnv6_pcp", "dummy", "fw_alg_pptp",
-    "fw_alg_rtsp", "fw_ddos_protection", "fw_global", "fw_gtp", "fw_logging", "fw_rad_server", "fw_tcp_syn_cookie", "ip_anomaly_drop", "logging_local_log_global", "slb_aflow", "slb_conn_reuse", "slb_crl_srcip", "slb_fast_http", "slb_fix", "slb_ftp_proxy", "slb_generic", "slb_http_proxy", "slb_http2", "slb_hw_compress", "slb_icap", "slb_imap_proxy",
-    "slb_l4", "slb_l7session", "slb_link_probe", "slb_mlb", "slb_mqtt", "slb_mssql", "slb_mysql", "slb_persist", "slb_plyr_id_gbl", "slb_pop3_proxy", "slb_rc_cache", "slb_rpz", "slb_sip", "slb_smpp", "slb_smtp", "slb_spdy_proxy", "slb_sport_rate", "slb_ssl_cert_revoke", "slb_ssl_error", "slb_ssl_forward_proxy", "slb_switch", "so_counters",
-    "system_ctr_lib_acct", "system_dpdk_stats", "system_fpga_drop", "system_hardware_forward", "system_ip_threat_list", "system_radius_server", "system_tcp", "uuid", "vpn_error",
+    "aam_auth_account", "aam_auth_captcha", "aam_auth_relay_kerberos", "aam_auth_saml_global", "aam_auth_server_ldap", "aam_auth_server_ocsp", "aam_auth_server_radius", "aam_auth_server_win", "aam_authentication_global", "aam_rdns", "cgnv6_ddos_proc", "cgnv6_dhcpv6", "cgnv6_dns64", "cgnv6_ds_lite_global", "cgnv6_fixed_nat_alg_pptp",
+    "cgnv6_fixed_nat_alg_rtsp", "cgnv6_fixed_nat_alg_sip", "cgnv6_fixed_nat_global", "cgnv6_http_alg", "cgnv6_icmp", "cgnv6_l4", "cgnv6_logging", "cgnv6_lsn", "cgnv6_lsn_alg_esp", "cgnv6_lsn_alg_h323", "cgnv6_lsn_alg_mgcp", "cgnv6_lsn_alg_pptp", "cgnv6_lsn_alg_rtsp", "cgnv6_lsn_alg_sip", "cgnv6_lsn_radius", "cgnv6_nat64_global", "cgnv6_pcp",
+    "fw_alg_pptp", "fw_alg_rtsp", "fw_ddos_protection", "fw_global", "fw_gtp", "fw_logging", "fw_rad_server", "fw_tcp_syn_cookie", "ip_anomaly_drop", "logging_local_log_global", "slb_aflow", "slb_conn_reuse", "slb_crl_srcip", "slb_fast_http", "slb_fix", "slb_ftp_proxy", "slb_generic", "slb_http_proxy", "slb_http2", "slb_hw_compress", "slb_icap",
+    "slb_imap_proxy", "slb_l4", "slb_l7session", "slb_link_probe", "slb_mlb", "slb_mqtt", "slb_mssql", "slb_mysql", "slb_persist", "slb_plyr_id_gbl", "slb_pop3_proxy", "slb_rc_cache", "slb_rpz", "slb_sip", "slb_smpp", "slb_smtp", "slb_spdy_proxy", "slb_sport_rate", "slb_ssl_cert_revoke", "slb_ssl_error", "slb_ssl_forward_proxy", "slb_switch",
+    "so_counters", "system_ctr_lib_acct", "system_dpdk_stats", "system_fpga_drop", "system_hardware_accelerate", "system_ip_threat_list", "system_radius_server", "system_tcp", "uuid", "vpn_error",
     ]
 
 
@@ -1977,17 +1658,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dummy': {
-            'type': 'bool',
-            },
         'uuid': {
             'type': 'str',
             },
         'system_ctr_lib_acct': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2022,11 +1697,8 @@ def get_argspec():
                     }
                 }
             },
-        'system_hardware_forward': {
+        'system_hardware_accelerate': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2093,9 +1765,6 @@ def get_argspec():
             },
         'system_radius_server': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2174,9 +1843,6 @@ def get_argspec():
             },
         'system_ip_threat_list': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2213,9 +1879,6 @@ def get_argspec():
             },
         'system_fpga_drop': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2462,9 +2125,6 @@ def get_argspec():
             },
         'system_dpdk_stats': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2651,9 +2311,6 @@ def get_argspec():
             },
         'ip_anomaly_drop': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2771,6 +2428,36 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'gre_pptp_err': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_hbh': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_dest': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_routing': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_frag': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_ah': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_esp': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_mobility': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_none': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_other': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_malformed': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -2897,6 +2584,36 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'gre_pptp_err': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_hbh': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_dest': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_routing': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_frag': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_ah': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_esp': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_mobility': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_none': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_other': {
+                    'type': 'bool',
+                    },
+                'ipv6_eh_malformed': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -2906,9 +2623,6 @@ def get_argspec():
             },
         'aam_authentication_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -2985,11 +2699,56 @@ def get_argspec():
                     }
                 }
             },
+        'aam_rdns': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                },
+            'trigger_stats_inc': {
+                'type': 'dict',
+                'request_dropped': {
+                    'type': 'bool',
+                    },
+                'response_failure': {
+                    'type': 'bool',
+                    },
+                'response_error': {
+                    'type': 'bool',
+                    },
+                'response_timeout': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_rate': {
+                'type': 'dict',
+                'threshold_exceeded_by': {
+                    'type': 'int',
+                    },
+                'duration': {
+                    'type': 'int',
+                    },
+                'request_dropped': {
+                    'type': 'bool',
+                    },
+                'response_failure': {
+                    'type': 'bool',
+                    },
+                'response_error': {
+                    'type': 'bool',
+                    },
+                'response_timeout': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
         'aam_auth_server_ldap': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3098,9 +2857,6 @@ def get_argspec():
             },
         'aam_auth_server_ocsp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3185,9 +2941,6 @@ def get_argspec():
             },
         'aam_auth_server_radius': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3278,9 +3031,6 @@ def get_argspec():
             },
         'aam_auth_server_win': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3455,9 +3205,6 @@ def get_argspec():
             },
         'aam_auth_account': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3512,9 +3259,6 @@ def get_argspec():
             },
         'aam_auth_saml_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3551,9 +3295,6 @@ def get_argspec():
             },
         'aam_auth_relay_kerberos': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3626,9 +3367,6 @@ def get_argspec():
             },
         'aam_auth_captcha': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3713,9 +3451,6 @@ def get_argspec():
             },
         'slb_ssl_error': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5210,9 +4945,6 @@ def get_argspec():
             },
         'slb_ssl_cert_revoke': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5363,9 +5095,6 @@ def get_argspec():
             },
         'slb_ssl_forward_proxy': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5444,9 +5173,6 @@ def get_argspec():
             },
         'vpn_error': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5699,9 +5425,6 @@ def get_argspec():
             },
         'cgnv6_ddos_proc': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5810,9 +5533,6 @@ def get_argspec():
             },
         'cgnv6_lsn': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5999,9 +5719,6 @@ def get_argspec():
             },
         'cgnv6_lsn_alg_esp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6032,9 +5749,6 @@ def get_argspec():
             },
         'cgnv6_lsn_alg_pptp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6077,9 +5791,6 @@ def get_argspec():
             },
         'cgnv6_lsn_alg_rtsp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6128,9 +5839,6 @@ def get_argspec():
             },
         'cgnv6_lsn_alg_sip': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6173,9 +5881,6 @@ def get_argspec():
             },
         'cgnv6_lsn_alg_mgcp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6212,9 +5917,6 @@ def get_argspec():
             },
         'cgnv6_lsn_alg_h323': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6251,9 +5953,6 @@ def get_argspec():
             },
         'cgnv6_lsn_radius': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6332,9 +6031,6 @@ def get_argspec():
             },
         'cgnv6_nat64_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6449,9 +6145,6 @@ def get_argspec():
             },
         'cgnv6_ds_lite_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6506,9 +6199,6 @@ def get_argspec():
             },
         'cgnv6_fixed_nat_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6653,9 +6343,6 @@ def get_argspec():
             },
         'cgnv6_fixed_nat_alg_pptp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6692,9 +6379,6 @@ def get_argspec():
             },
         'cgnv6_fixed_nat_alg_rtsp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6737,9 +6421,6 @@ def get_argspec():
             },
         'cgnv6_fixed_nat_alg_sip': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6770,9 +6451,6 @@ def get_argspec():
             },
         'cgnv6_pcp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6905,9 +6583,6 @@ def get_argspec():
             },
         'cgnv6_logging': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6944,9 +6619,6 @@ def get_argspec():
             },
         'cgnv6_l4': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -6983,9 +6655,6 @@ def get_argspec():
             },
         'cgnv6_icmp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7034,9 +6703,6 @@ def get_argspec():
             },
         'cgnv6_http_alg': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7103,9 +6769,6 @@ def get_argspec():
             },
         'cgnv6_dns64': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7154,9 +6817,6 @@ def get_argspec():
             },
         'cgnv6_dhcpv6': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7199,9 +6859,6 @@ def get_argspec():
             },
         'fw_logging': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7244,9 +6901,6 @@ def get_argspec():
             },
         'fw_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7277,9 +6931,6 @@ def get_argspec():
             },
         'fw_alg_rtsp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7310,9 +6961,6 @@ def get_argspec():
             },
         'fw_alg_pptp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7349,9 +6997,6 @@ def get_argspec():
             },
         'fw_rad_server': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7430,9 +7075,6 @@ def get_argspec():
             },
         'fw_tcp_syn_cookie': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7463,9 +7105,6 @@ def get_argspec():
             },
         'fw_ddos_protection': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7514,9 +7153,6 @@ def get_argspec():
             },
         'fw_gtp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7583,6 +7219,24 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'blade_gtp_smp_session_count_check_faile': {
+                    'type': 'bool',
+                    },
+                'gtp_c_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'blade_gtp_c_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'gtp_u_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'blade_gtp_u_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'gtp_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'blade_gtp_smp_sig_check_failed': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -7660,6 +7314,24 @@ def get_argspec():
                 'blade_gtp_smp_session_count_check_faile': {
                     'type': 'bool',
                     },
+                'gtp_c_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'blade_gtp_c_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'gtp_u_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'blade_gtp_u_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'gtp_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
+                'blade_gtp_smp_sig_check_failed': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -7667,9 +7339,6 @@ def get_argspec():
             },
         'system_tcp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7706,9 +7375,6 @@ def get_argspec():
             },
         'slb_conn_reuse': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7745,9 +7411,6 @@ def get_argspec():
             },
         'slb_aflow': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7784,9 +7447,6 @@ def get_argspec():
             },
         'slb_fix': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7841,9 +7501,6 @@ def get_argspec():
             },
         'slb_spdy_proxy': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -7982,9 +7639,6 @@ def get_argspec():
             },
         'slb_http2': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8411,9 +8065,6 @@ def get_argspec():
             },
         'slb_l7session': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8486,9 +8137,6 @@ def get_argspec():
             },
         'slb_smpp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8543,9 +8191,6 @@ def get_argspec():
             },
         'slb_smtp': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8684,9 +8329,6 @@ def get_argspec():
             },
         'slb_mqtt': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8771,9 +8413,6 @@ def get_argspec():
             },
         'slb_icap': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8936,9 +8575,6 @@ def get_argspec():
             },
         'slb_sip': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -8981,9 +8617,6 @@ def get_argspec():
             },
         'slb_hw_compress': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9038,9 +8671,6 @@ def get_argspec():
             },
         'slb_mysql': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9071,9 +8701,6 @@ def get_argspec():
             },
         'slb_mssql': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9110,9 +8737,6 @@ def get_argspec():
             },
         'slb_crl_srcip': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9155,9 +8779,6 @@ def get_argspec():
             },
         'slb_generic': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9284,9 +8905,6 @@ def get_argspec():
             },
         'slb_persist': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9449,9 +9067,6 @@ def get_argspec():
             },
         'slb_http_proxy': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9518,9 +9133,6 @@ def get_argspec():
             },
         'slb_l4': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9683,9 +9295,6 @@ def get_argspec():
             },
         'slb_fast_http': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9758,9 +9367,6 @@ def get_argspec():
             },
         'slb_ftp_proxy': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -9947,9 +9553,6 @@ def get_argspec():
             },
         'slb_imap_proxy': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10106,9 +9709,6 @@ def get_argspec():
             },
         'slb_pop3_proxy': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10217,9 +9817,6 @@ def get_argspec():
             },
         'slb_switch': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10262,9 +9859,6 @@ def get_argspec():
             },
         'slb_rc_cache': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10313,9 +9907,6 @@ def get_argspec():
             },
         'so_counters': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10430,9 +10021,6 @@ def get_argspec():
             },
         'slb_plyr_id_gbl': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10463,9 +10051,6 @@ def get_argspec():
             },
         'slb_sport_rate': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10496,9 +10081,6 @@ def get_argspec():
             },
         'logging_local_log_global': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10535,9 +10117,6 @@ def get_argspec():
             },
         'slb_mlb': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10568,9 +10147,6 @@ def get_argspec():
             },
         'slb_link_probe': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -10661,9 +10237,6 @@ def get_argspec():
             },
         'slb_rpz': {
             'type': 'dict',
-            'dummy': {
-                'type': 'bool',
-                },
             'uuid': {
                 'type': 'str',
                 },

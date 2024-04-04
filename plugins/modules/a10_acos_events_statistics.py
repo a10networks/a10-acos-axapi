@@ -147,10 +147,6 @@ options:
                 description:
                 - "Messages Dropped, local log ratelimited"
                 type: str
-            msg_dropped_remote_log_ratelimit:
-                description:
-                - "Messages Dropped, remote log ratelimited"
-                type: str
             msg_dropped_send_failed:
                 description:
                 - "Messages Dropped, send failed"
@@ -297,9 +293,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'msg_dropped_local_log_ratelimit': {
-                'type': 'str',
-                },
-            'msg_dropped_remote_log_ratelimit': {
                 'type': 'str',
                 },
             'msg_dropped_send_failed': {

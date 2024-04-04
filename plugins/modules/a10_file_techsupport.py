@@ -67,9 +67,43 @@ options:
         required: False
     action:
         description:
-        - "'create'= create; 'check'= check; 'delete'= delete;"
+        - "'create'= create; 'check'= check; 'delete'= delete; 'export'= export;"
         type: str
         required: False
+    slot:
+        description:
+        - "specify slot id in chassis"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    status:
+        description:
+        - "Field status"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            file_list:
+                description:
+                - "Field file_list"
+                type: list
+            status:
+                description:
+                - "Field status"
+                type: dict
 
 '''
 
@@ -124,7 +158,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "file", ]
+AVAILABLE_PROPERTIES = ["action", "file", "oper", "slot", "status", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,7 +178,54 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'file_path': {'type': 'str', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['create', 'check', 'delete']}})
+    rv.update({
+        'file_path': {
+            'type': 'str',
+            },
+        'file': {
+            'type': 'str',
+            },
+        'action': {
+            'type': 'str',
+            'choices': ['create', 'check', 'delete', 'export']
+            },
+        'slot': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'status': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'file_list': {
+                'type': 'list',
+                'file': {
+                    'type': 'str',
+                    },
+                'update_time': {
+                    'type': 'str',
+                    },
+                'size': {
+                    'type': 'int',
+                    }
+                },
+            'status': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'message': {
+                        'type': 'str',
+                        }
+                    }
+                }
+            }
+        })
     return rv
 
 
@@ -318,6 +399,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["techsupport-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["techsupport"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

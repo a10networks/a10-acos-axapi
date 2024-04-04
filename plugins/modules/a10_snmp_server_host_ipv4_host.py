@@ -64,7 +64,7 @@ options:
         description:
         - "'v1'= Use SNMPv1; 'v2c'= Use SNMPv2c; 'v3'= User SNMPv3;"
         type: str
-        required: True
+        required: False
     user:
         description:
         - "SNMPv3 user to send traps (User Name)"
@@ -159,7 +159,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ipv4_addr': {'type': 'str', 'required': True, }, 'version': {'type': 'str', 'required': True, 'choices': ['v1', 'v2c', 'v3']}, 'user': {'type': 'str', }, 'v1_v2c_comm': {'type': 'str', }, 'udp_port': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'ipv4_addr': {'type': 'str', 'required': True, }, 'version': {'type': 'str', 'choices': ['v1', 'v2c', 'v3']}, 'user': {'type': 'str', }, 'v1_v2c_comm': {'type': 'str', }, 'udp_port': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

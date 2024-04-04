@@ -86,7 +86,7 @@ options:
         suboptions:
             san_type:
                 description:
-                - "'email'= Enter e-mail address of the subject; 'dns'= Enter hostname of the
+                - "'email'= Enter e-mail address of the subject; 'dn'= Enter hostname of the
           subject; 'ip'= Enter IP address of the subject;"
                 type: str
             san_value:
@@ -311,7 +311,7 @@ def get_argspec():
             'type': 'dict',
             'san_type': {
                 'type': 'str',
-                'choices': ['email', 'dns', 'ip']
+                'choices': ['email', 'dn', 'ip']
                 },
             'san_value': {
                 'type': 'str',

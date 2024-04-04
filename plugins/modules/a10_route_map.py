@@ -99,6 +99,10 @@ options:
                 description:
                 - "Field extcommunity"
                 type: dict
+            large_community:
+                description:
+                - "Field large_community"
+                type: dict
             group:
                 description:
                 - "Field group"
@@ -221,6 +225,14 @@ options:
                 description:
                 - "Field origin"
                 type: dict
+            large_comm_list:
+                description:
+                - "Field large_comm_list"
+                type: dict
+            large_community:
+                description:
+                - "BGP large community attribute"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -351,6 +363,18 @@ def get_argspec():
                         }
                     }
                 },
+            'large_community': {
+                'type': 'dict',
+                'l_name_cfg': {
+                    'type': 'dict',
+                    'name': {
+                        'type': 'str',
+                        },
+                    'exact_match': {
+                        'type': 'bool',
+                        }
+                    }
+                },
             'group': {
                 'type': 'dict',
                 'group_id': {
@@ -367,6 +391,14 @@ def get_argspec():
                     'type': 'int',
                     },
                 'operational_state': {
+                    'type': 'str',
+                    'choices': ['up', 'down']
+                    },
+                'ipv4': {
+                    'type': 'str',
+                    'choices': ['up', 'down']
+                    },
+                'ipv6': {
                     'type': 'str',
                     'choices': ['up', 'down']
                     }
@@ -629,10 +661,10 @@ def get_argspec():
                     'type': 'str',
                     },
                 'num': {
-                    'type': 'int',
+                    'type': 'str',
                     },
                 'num2': {
-                    'type': 'int',
+                    'type': 'str',
                     }
                 },
             'atomic_aggregate': {
@@ -727,6 +759,30 @@ def get_argspec():
                 'incomplete': {
                     'type': 'bool',
                     }
+                },
+            'large_comm_list': {
+                'type': 'dict',
+                'l_v_std': {
+                    'type': 'int',
+                    },
+                'l_v_std_delete': {
+                    'type': 'bool',
+                    },
+                'l_v_exp': {
+                    'type': 'int',
+                    },
+                'l_v_exp_delete': {
+                    'type': 'bool',
+                    },
+                'l_name': {
+                    'type': 'str',
+                    },
+                'large_name_delete': {
+                    'type': 'bool',
+                    }
+                },
+            'large_community': {
+                'type': 'str',
                 },
             'uuid': {
                 'type': 'str',

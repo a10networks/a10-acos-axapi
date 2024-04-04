@@ -80,6 +80,11 @@ options:
                 - "'down'= node stops processing user traffic; 'exit-cluster'= node exits scaleout
           cluster;"
                 type: str
+            ip_version:
+                description:
+                - "'ipv4'= take action for IPv4 traffic-only; 'ipv6'= take action for IPv6
+          traffic-only;"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -164,7 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'template': {'type': 'str', 'required': True, }, 'threshold_cfg': {'type': 'list', 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({'template': {'type': 'str', 'required': True, }, 'threshold_cfg': {'type': 'list', 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}, 'ip_version': {'type': 'str', 'choices': ['ipv4', 'ipv6']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv
@@ -173,13 +178,17 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/template/{template}"
+    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/template/{template}+{ip_version}"
 
     f_dict = {}
     if '/' in str(module.params["template"]):
         f_dict["template"] = module.params["template"].replace("/", "%2F")
     else:
         f_dict["template"] = module.params["template"]
+    if '/' in str(module.params["ip_version"]):
+        f_dict["ip_version"] = module.params["ip_version"].replace("/", "%2F")
+    else:
+        f_dict["ip_version"] = module.params["ip_version"]
     if '/' in module.params["cluster_id"]:
         f_dict["cluster_id"] = module.params["cluster_id"].replace("/", "%2F")
     else:
@@ -191,10 +200,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/template"
+    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/template/"
 
     f_dict = {}
     f_dict["template"] = ""
+    f_dict["ip_version"] = ""
     f_dict["cluster_id"] = module.params["cluster_id"]
 
     return url_base.format(**f_dict)

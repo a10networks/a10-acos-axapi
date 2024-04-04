@@ -128,6 +128,11 @@ options:
         - "force the speed to be 40G on 100G link"
         type: bool
         required: False
+    dac_link_training_enable:
+        description:
+        - "turn on the DAC-IEEE-LINK-TRAINING"
+        type: bool
+        required: False
     ipg_bit_time:
         description:
         - "Set Inter-packet-gap interval in bit timing, default is 96"
@@ -280,6 +285,11 @@ options:
                 description:
                 - "Apply an access list (Named Access List)"
                 type: str
+    gaming_protocol_compliance:
+        description:
+        - "Enable Gaming Protocol Compliance Check"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -1127,9 +1137,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "access_list", "action", "auto_neg_enable", "bfd", "cpu_process", "cpu_process_dir", "ddos", "duplexity", "fec_forced_off", "fec_forced_on", "flow_control", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipg_bit_time", "ipv6", "isis", "l3_vlan_fwd_disable", "lldp", "load_interval", "lw_4o6", "mac_learning", "map", "media_type_copper",
-    "monitor_list", "mtu", "name", "nptv6", "oper", "packet_capture_template", "ping_sweep_detection", "port_breakout", "port_scan_detection", "remove_vlan_tag", "sampling_enable", "spanning_tree", "speed", "speed_forced_10g", "speed_forced_1g", "speed_forced_40g", "stats", "traffic_distribution_mode", "trap_source", "trunk_group_list",
-    "update_l2_info", "user_tag", "uuid", "virtual_wire", "vlan_learning",
+    "access_list", "action", "auto_neg_enable", "bfd", "cpu_process", "cpu_process_dir", "dac_link_training_enable", "ddos", "duplexity", "fec_forced_off", "fec_forced_on", "flow_control", "gaming_protocol_compliance", "icmp_rate_limit", "icmpv6_rate_limit", "ifnum", "ip", "ipg_bit_time", "ipv6", "isis", "l3_vlan_fwd_disable", "lldp",
+    "load_interval", "lw_4o6", "mac_learning", "map", "media_type_copper", "monitor_list", "mtu", "name", "nptv6", "oper", "packet_capture_template", "ping_sweep_detection", "port_breakout", "port_scan_detection", "remove_vlan_tag", "sampling_enable", "spanning_tree", "speed", "speed_forced_10g", "speed_forced_1g", "speed_forced_40g", "stats",
+    "traffic_distribution_mode", "trap_source", "trunk_group_list", "update_l2_info", "user_tag", "uuid", "virtual_wire", "vlan_learning",
     ]
 
 
@@ -1195,6 +1205,9 @@ def get_argspec():
             'type': 'bool',
             },
         'speed_forced_40g': {
+            'type': 'bool',
+            },
+        'dac_link_training_enable': {
             'type': 'bool',
             },
         'ipg_bit_time': {
@@ -1294,6 +1307,9 @@ def get_argspec():
             'acl_name': {
                 'type': 'str',
                 }
+            },
+        'gaming_protocol_compliance': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

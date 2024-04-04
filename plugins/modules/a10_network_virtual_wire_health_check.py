@@ -57,7 +57,7 @@ options:
         required: False
     vlan:
         description:
-        - "VLAN id, specify 1 for untagged traffic"
+        - "VLAN ID, specify 1 for untagged traffic"
         type: int
         required: True
     method:
@@ -70,9 +70,29 @@ options:
         - "Ethernet interface"
         type: str
         required: False
-    ipv4_addr:
+    trunk:
         description:
-        - "IP address"
+        - "Trunk interface"
+        type: int
+        required: False
+    nexthop_ip:
+        description:
+        - "Nexthop address"
+        type: str
+        required: False
+    nexthop_mac:
+        description:
+        - "Nexthop mac address"
+        type: str
+        required: False
+    source_ip:
+        description:
+        - "source ip for ping method"
+        type: str
+        required: False
+    source_mac:
+        description:
+        - "source mac for ping method"
         type: str
         required: False
     interval:
@@ -90,6 +110,11 @@ options:
         - "Ethernet interface"
         type: str
         required: False
+    sby_trunk:
+        description:
+        - "Trunk interface"
+        type: int
+        required: False
     active_threshold:
         description:
         - "Threshold(Packet Per Second) for entering active mode"
@@ -99,6 +124,16 @@ options:
         description:
         - "Only count L3 packets"
         type: bool
+        required: False
+    inner_vlan:
+        description:
+        - "inner VLAN for 802.1QinQ"
+        type: int
+        required: False
+    inner_vlan_packet_count:
+        description:
+        - "Only count packets with configured inner VLAN ID"
+        type: int
         required: False
     partition_health_check:
         description:
@@ -147,7 +182,7 @@ options:
                 type: str
             vlan:
                 description:
-                - "VLAN id, specify 1 for untagged traffic"
+                - "VLAN ID, specify 1 for untagged traffic"
                 type: int
     stats:
         description:
@@ -169,7 +204,7 @@ options:
                 type: str
             vlan:
                 description:
-                - "VLAN id, specify 1 for untagged traffic"
+                - "VLAN ID, specify 1 for untagged traffic"
                 type: int
 
 '''
@@ -225,7 +260,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["active_threshold", "enable", "ethernet", "garp_interval", "interval", "ipv4_addr", "l3_packet", "method", "oper", "partition_health_check", "sampling_enable", "sby_ethernet", "stats", "user_tag", "uuid", "vlan", ]
+AVAILABLE_PROPERTIES = ["active_threshold", "enable", "ethernet", "garp_interval", "inner_vlan", "inner_vlan_packet_count", "interval", "l3_packet", "method", "nexthop_ip", "nexthop_mac", "oper", "partition_health_check", "sampling_enable", "sby_ethernet", "sby_trunk", "source_ip", "source_mac", "stats", "trunk", "user_tag", "uuid", "vlan", ]
 
 
 def get_default_argspec():
@@ -257,7 +292,19 @@ def get_argspec():
         'ethernet': {
             'type': 'str',
             },
-        'ipv4_addr': {
+        'trunk': {
+            'type': 'int',
+            },
+        'nexthop_ip': {
+            'type': 'str',
+            },
+        'nexthop_mac': {
+            'type': 'str',
+            },
+        'source_ip': {
+            'type': 'str',
+            },
+        'source_mac': {
             'type': 'str',
             },
         'interval': {
@@ -269,11 +316,20 @@ def get_argspec():
         'sby_ethernet': {
             'type': 'str',
             },
+        'sby_trunk': {
+            'type': 'int',
+            },
         'active_threshold': {
             'type': 'int',
             },
         'l3_packet': {
             'type': 'bool',
+            },
+        'inner_vlan': {
+            'type': 'int',
+            },
+        'inner_vlan_packet_count': {
+            'type': 'int',
             },
         'partition_health_check': {
             'type': 'bool',
