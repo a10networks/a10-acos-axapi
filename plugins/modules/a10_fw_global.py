@@ -324,7 +324,8 @@ options:
           untagged; 'fw-inside-cl-entry-update'= fw inside CL entry update is called;
           'no_fw_class_list_match'= No FW inside Class-List Match; 'fw-inside-cl-type-
           mismatch'= fw inside CL TYPE mismatch; 'fw-inside-cl-id-mismatch'= fw inside CL
-          ID mismatch; 'fwd_ingress_packets_tcp'= Forward Ingress Packets TCP;
+          ID mismatch; 'limit-entry-already-added-to-del-queue'= Limit Entry Added twice
+          to delete queue; 'fwd_ingress_packets_tcp'= Forward Ingress Packets TCP;
           'fwd_egress_packets_tcp'= Forward Egress Packets TCP;
           'rev_ingress_packets_tcp'= Reverse Ingress Packets TCP;
           'rev_egress_packets_tcp'= Reverse Egress Packets TCP; 'fwd_ingress_bytes_tcp'=
@@ -344,12 +345,12 @@ options:
           Forward Egress Bytes ICMP; 'rev_ingress_bytes_icmp'= Reverse Ingress Bytes
           ICMP; 'rev_egress_bytes_icmp'= Reverse Egress Bytes ICMP;
           'fwd_ingress_packets_others'= Forward Ingress Packets OTHERS;
-          'fwd_egress_packets_others'= Forward Egress Packets OTHERS;
-          'rev_ingress_packets_others'= Reverse Ingress Packets OTHERS;"
+          'fwd_egress_packets_others'= Forward Egress Packets OTHERS;"
                 type: str
             counters2:
                 description:
-                - "'rev_egress_packets_others'= Reverse Egress Packets OTHERS;
+                - "'rev_ingress_packets_others'= Reverse Ingress Packets OTHERS;
+          'rev_egress_packets_others'= Reverse Egress Packets OTHERS;
           'fwd_ingress_bytes_others'= Forward Ingress Bytes OTHERS;
           'fwd_egress_bytes_others'= Forward Egress Bytes OTHERS;
           'rev_ingress_bytes_others'= Reverse Ingress Bytes OTHERS;
@@ -445,6 +446,10 @@ options:
             non_syn_pkt_fwd_allowed:
                 description:
                 - "Non-SYN pkt forward allowed"
+                type: str
+            limit_entry_already_added_to_del_queue:
+                description:
+                - "Limit Entry Added twice to delete queue"
                 type: str
             fwd_ingress_packets_tcp:
                 description:
@@ -798,17 +803,19 @@ def get_argspec():
                     'limit-exceeded', 'limit-entry-per-cpu-mem-allocated', 'limit-entry-per-cpu-mem-allocation-failed', 'limit-entry-per-cpu-mem-freed', 'alg_default_port_disable', 'no_fwd_route', 'no_rev_route', 'no_fwd_l2_dst', 'no_rev_l2_dst', 'l2_dst_in_out_same', 'l2_vlan_changed', 'urpf_pkt_drop', 'fw-inside-single-v4-entries-added',
                     'fw-inside-subnet-v4-entries-added', 'fw-inside-single-v6-entries-added', 'fw-inside-subnet-v6-entries-added', 'fw-inside-single-v4-entries-deleted', 'fw-inside-subnet-v4-entries-deleted', 'fw-inside-single-v6-entries-deleted', 'fw-inside-subnet-v6-entries-deleted', 'fw-inside-subnet-entry-creation-error',
                     'fw-inside-subnet-entry-del-error', 'fw-inside-cl-bound', 'fw-inside-cl-unbound', 'fw-inside-populate-v4-entry', 'fw-inside-populate-v6-entry', 'fw-inside-update-v4-entry', 'fw-inside-update-v6-entry', 'fw-inside-remove-v4-entry', 'fw-inside-remove-v6-entry', 'fw-inside-cl-reset-idx', 'fw-inside-cl-load',
-                    'fw-inside-entries-not-added-no-dmz-intf', 'fw-inside-entrie-add-cl-bound-first', 'fw-inside-entries-removed-dmz-untaged-first', 'fw-inside-cl-entry-update', 'no_fw_class_list_match', 'fw-inside-cl-type-mismatch', 'fw-inside-cl-id-mismatch', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp',
-                    'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp',
-                    'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others'
+                    'fw-inside-entries-not-added-no-dmz-intf', 'fw-inside-entrie-add-cl-bound-first', 'fw-inside-entries-removed-dmz-untaged-first', 'fw-inside-cl-entry-update', 'no_fw_class_list_match', 'fw-inside-cl-type-mismatch', 'fw-inside-cl-id-mismatch', 'limit-entry-already-added-to-del-queue', 'fwd_ingress_packets_tcp',
+                    'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp',
+                    'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others',
+                    'fwd_egress_packets_others'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
-                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
+                    'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1',
+                    'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3',
+                    'rev_egress_pkt_size_range4'
                     ]
                 }
             },
@@ -863,6 +870,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'non_syn_pkt_fwd_allowed': {
+                'type': 'str',
+                },
+            'limit_entry_already_added_to_del_queue': {
                 'type': 'str',
                 },
             'fwd_ingress_packets_tcp': {

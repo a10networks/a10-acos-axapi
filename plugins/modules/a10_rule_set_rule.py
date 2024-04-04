@@ -103,12 +103,17 @@ options:
     policy:
         description:
         - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet; 'ipsec'= Apply IPsec
-          encapsulation;"
+          encapsulation; 'ipsec-group'= Apply IPsec encapsulation from a group;"
         type: str
         required: False
     vpn_ipsec_name:
         description:
         - "VPN IPsec name"
+        type: str
+        required: False
+    vpn_ipsec_group_name:
+        description:
+        - "VPN IPsec Group name"
         type: str
         required: False
     forward_listen_on_port:
@@ -717,9 +722,17 @@ options:
                 description:
                 - "Apply IPsec encapsulation"
                 type: bool
+            ipsec_group:
+                description:
+                - "Apply IPsec Group encapsulation"
+                type: bool
             vpn_ipsec_name:
                 description:
                 - "VPN IPsec name"
+                type: str
+            vpn_ipsec_group_name:
+                description:
+                - "VPN IPsec Group name"
                 type: str
             cgnv6:
                 description:
@@ -764,6 +777,24 @@ options:
                 - "Use the user's source MAC for the next hop rather than the routing table
           (default=off)"
                 type: bool
+            set_dscp:
+                description:
+                - "DSCP setting"
+                type: bool
+            dscp_value:
+                description:
+                - "'default'= Default dscp (000000); 'af11'= AF11 (001010); 'af12'= AF12 (001100);
+          'af13'= AF13 (001110); 'af21'= AF21 (010010); 'af22'= AF22 (010100); 'af23'=
+          AF23 (010110); 'af31'= AF31 (011010); 'af32'= AF32 (011100); 'af33'= AF33
+          (011110); 'af41'= AF41 (100010); 'af42'= AF42 (100100); 'af43'= AF43 (100110);
+          'cs1'= CS1 (001000); 'cs2'= CS2 (010000); 'cs3'= CS3 (011000); 'cs4'= CS4
+          (100000); 'cs5'= CS5 (101000); 'cs6'= CS6 (110000); 'cs7'= CS7 (111000); 'ef'=
+          EF (101110);"
+                type: str
+            dscp_number:
+                description:
+                - "DSCP Number"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -1035,7 +1066,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "action", "action_group", "app_list", "application_any", "cgnv6_ds_lite", "cgnv6_ds_lite_log", "cgnv6_ds_lite_lsn_lid", "cgnv6_fixed_nat_log", "cgnv6_log", "cgnv6_lsn_lid", "cgnv6_lsn_log", "cgnv6_policy", "dest_list", "dscp_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name",
     "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "forward_listen_on_port", "forward_log", "fw_log", "fwlog", "gtp_template", "idle_timeout", "inspect_payload", "ip_version", "lid", "lidlog", "listen_on_port", "listen_on_port_lid", "listen_on_port_lidlog", "log", "move_rule", "name", "oper", "policy", "remark",
-    "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application", "user_tag", "uuid", "vpn_ipsec_name",
+    "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application", "user_tag", "uuid", "vpn_ipsec_group_name",
+    "vpn_ipsec_name",
     ]
 
 
@@ -1087,9 +1119,12 @@ def get_argspec():
             },
         'policy': {
             'type': 'str',
-            'choices': ['cgnv6', 'forward', 'ipsec']
+            'choices': ['cgnv6', 'forward', 'ipsec', 'ipsec-group']
             },
         'vpn_ipsec_name': {
+            'type': 'str',
+            },
+        'vpn_ipsec_group_name': {
             'type': 'str',
             },
         'forward_listen_on_port': {
@@ -1457,7 +1492,13 @@ def get_argspec():
             'ipsec': {
                 'type': 'bool',
                 },
+            'ipsec_group': {
+                'type': 'bool',
+                },
             'vpn_ipsec_name': {
+                'type': 'str',
+                },
+            'vpn_ipsec_group_name': {
                 'type': 'str',
                 },
             'cgnv6': {
@@ -1491,6 +1532,16 @@ def get_argspec():
                 },
             'reset_respond_to_user_mac': {
                 'type': 'bool',
+                },
+            'set_dscp': {
+                'type': 'bool',
+                },
+            'dscp_value': {
+                'type': 'str',
+                'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']
+                },
+            'dscp_number': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',

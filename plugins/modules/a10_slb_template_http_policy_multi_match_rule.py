@@ -396,11 +396,6 @@ options:
         - "Service Group to be used (Service Group Name)"
         type: str
         required: False
-    template_waf:
-        description:
-        - "Waf Template to be used (Waf Template Name)"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -471,8 +466,7 @@ AVAILABLE_PROPERTIES = [
     "header_name_starts_with_string", "header_name_starts_with_type", "header_value_contains_string", "header_value_contains_type", "header_value_ends_with_string", "header_value_ends_with_type", "header_value_equals_string", "header_value_equals_type", "header_value_starts_with_string", "header_value_starts_with_type", "host_contains_string",
     "host_contains_type", "host_ends_with_string", "host_ends_with_type", "host_equals_string", "host_equals_type", "host_starts_with_string", "host_starts_with_type", "multi_match", "query_param_name_contains_string", "query_param_name_contains_type", "query_param_name_ends_with_string", "query_param_name_ends_with_type",
     "query_param_name_equals_string", "query_param_name_equals_type", "query_param_name_starts_with_string", "query_param_name_starts_with_type", "query_param_value_contains_string", "query_param_value_contains_type", "query_param_value_ends_with_string", "query_param_value_ends_with_type", "query_param_value_equals_string",
-    "query_param_value_equals_type", "query_param_value_starts_with_string", "query_param_value_starts_with_type", "seq_num", "service_group", "template_waf", "url_contains_string", "url_contains_type", "url_ends_with_string", "url_ends_with_type", "url_equals_string", "url_equals_type", "url_starts_with_string", "url_starts_with_type", "user_tag",
-    "uuid",
+    "query_param_value_equals_type", "query_param_value_starts_with_string", "query_param_value_starts_with_type", "seq_num", "service_group", "url_contains_string", "url_contains_type", "url_ends_with_string", "url_ends_with_type", "url_equals_string", "url_equals_type", "url_starts_with_string", "url_starts_with_type", "user_tag", "uuid",
     ]
 
 
@@ -726,9 +720,6 @@ def get_argspec():
             'type': 'str',
             },
         'service_group': {
-            'type': 'str',
-            },
-        'template_waf': {
             'type': 'str',
             },
         'uuid': {

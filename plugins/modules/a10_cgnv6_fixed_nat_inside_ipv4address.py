@@ -152,6 +152,12 @@ options:
         - "Configure per user quota on sessions"
         type: int
         required: False
+    service_config_template:
+        description:
+        - "Scaleout service-config template to bind (Scaleout service-config template
+          name)"
+        type: str
+        required: False
     usable_nat_ports:
         description:
         - "Field usable_nat_ports"
@@ -226,7 +232,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "dest_rule_list", "dynamic_pool_size", "inside_end_address", "inside_netmask", "inside_start_address", "method", "nat_end_address", "nat_ip_list", "nat_netmask", "nat_start_address", "offset", "partition", "ports_per_user", "respond_to_user_mac", "session_quota", "skip_ports_on_rollover", "usable_nat_ports", "uuid", "vrid",
+    "dest_rule_list", "dynamic_pool_size", "inside_end_address", "inside_netmask", "inside_start_address", "method", "nat_end_address", "nat_ip_list", "nat_netmask", "nat_start_address", "offset", "partition", "ports_per_user", "respond_to_user_mac", "service_config_template", "session_quota", "skip_ports_on_rollover", "usable_nat_ports", "uuid",
+    "vrid",
     ]
 
 
@@ -309,6 +316,9 @@ def get_argspec():
             },
         'session_quota': {
             'type': 'int',
+            },
+        'service_config_template': {
+            'type': 'str',
             },
         'usable_nat_ports': {
             'type': 'dict',

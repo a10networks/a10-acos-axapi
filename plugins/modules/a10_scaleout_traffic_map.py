@@ -82,6 +82,18 @@ options:
                 description:
                 - "Field src_ipv6"
                 type: str
+            service_config_template:
+                description:
+                - "Field service_config_template"
+                type: str
+            ipv4:
+                description:
+                - "Field ipv4"
+                type: bool
+            ipv6:
+                description:
+                - "Field ipv6"
+                type: bool
             map_entries_list_head:
                 description:
                 - "Field map_entries_list_head"
@@ -182,6 +194,15 @@ def get_argspec():
             'src_ipv6': {
                 'type': 'str',
                 },
+            'service_config_template': {
+                'type': 'str',
+                },
+            'ipv4': {
+                'type': 'bool',
+                },
+            'ipv6': {
+                'type': 'bool',
+                },
             'map_entries_list_head': {
                 'type': 'list',
                 'service_type': {
@@ -189,6 +210,12 @@ def get_argspec():
                     },
                 'service_name': {
                     'type': 'str',
+                    },
+                'user_grp_num': {
+                    'type': 'int',
+                    },
+                'running_device_num': {
+                    'type': 'int',
                     },
                 'map_entries_list': {
                     'type': 'list',

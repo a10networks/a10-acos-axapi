@@ -72,17 +72,13 @@ options:
         required: False
     action:
         description:
-        - "'import'= import; 'export'= export; 'check'= check; 'delete'= delete;"
+        - "'import'= import; 'export'= export; 'check'= check; 'delete'= delete;
+          'replace'= replace;"
         type: str
         required: False
     file_handle:
         description:
         - "full path of the uploaded file"
-        type: str
-        required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
         type: str
         required: False
     uuid:
@@ -144,7 +140,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "device", "dst_file", "file", "file_handle", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "device", "file", "file_handle", "uuid", ]
 
 
 def get_default_argspec():
@@ -164,7 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'file_path': {'type': 'str', }, 'device': {'type': 'int', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['import', 'export', 'check', 'delete']}, 'file_handle': {'type': 'str', }, 'dst_file': {'type': 'str', }, 'uuid': {'type': 'str', }})
+    rv.update({'file_path': {'type': 'str', }, 'device': {'type': 'int', }, 'file': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['import', 'export', 'check', 'delete', 'replace']}, 'file_handle': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

@@ -137,6 +137,14 @@ options:
                 description:
                 - "Max Response Time (Default is 100)"
                 type: int
+            inside:
+                description:
+                - "Configure interface as inside"
+                type: bool
+            outside:
+                description:
+                - "Configure interface as outside"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -163,6 +171,14 @@ options:
                 description:
                 - "Enable IPv6 processing"
                 type: bool
+            inside:
+                description:
+                - "Configure interface as inside"
+                type: bool
+            outside:
+                description:
+                - "Configure interface as outside"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -175,6 +191,50 @@ options:
                 description:
                 - "Field ospf"
                 type: dict
+    map:
+        description:
+        - "Field map"
+        type: dict
+        required: False
+        suboptions:
+            inside:
+                description:
+                - "Configure MAP inside interface (connected to MAP domains)"
+                type: bool
+            outside:
+                description:
+                - "Configure MAP outside interface"
+                type: bool
+            map_t_inside:
+                description:
+                - "Configure MAP inside interface (connected to MAP domains)"
+                type: bool
+            map_t_outside:
+                description:
+                - "Configure MAP outside interface"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    lw_4o6:
+        description:
+        - "Field lw_4o6"
+        type: dict
+        required: False
+        suboptions:
+            outside:
+                description:
+                - "Configure LW-4over6 inside interface"
+                type: bool
+            inside:
+                description:
+                - "Configure LW-4over6 outside interface"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -349,7 +409,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "ifnum", "ip", "ipv6", "load_interval", "mtu", "name", "oper", "packet_capture_template", "sampling_enable", "speed", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "ifnum", "ip", "ipv6", "load_interval", "lw_4o6", "map", "mtu", "name", "oper", "packet_capture_template", "sampling_enable", "speed", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -431,6 +491,12 @@ def get_argspec():
                 },
             'max_resp_time': {
                 'type': 'int',
+                },
+            'inside': {
+                'type': 'bool',
+                },
+            'outside': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -674,6 +740,12 @@ def get_argspec():
             'ipv6_enable': {
                 'type': 'bool',
                 },
+            'inside': {
+                'type': 'bool',
+                },
+            'outside': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -815,6 +887,36 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'map': {
+            'type': 'dict',
+            'inside': {
+                'type': 'bool',
+                },
+            'outside': {
+                'type': 'bool',
+                },
+            'map_t_inside': {
+                'type': 'bool',
+                },
+            'map_t_outside': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'lw_4o6': {
+            'type': 'dict',
+            'outside': {
+                'type': 'bool',
+                },
+            'inside': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'oper': {

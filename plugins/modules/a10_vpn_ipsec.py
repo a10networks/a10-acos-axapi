@@ -149,7 +149,8 @@ options:
         description:
         - "'0'= Disable Anti-Replay Window Check; '32'= Window size of 32; '64'= Window
           size of 64; '128'= Window size of 128; '256'= Window size of 256; '512'= Window
-          size of 512; '1024'= Window size of 1024;"
+          size of 512; '1024'= Window size of 1024; '2048'= Window size of 2048; '3072'=
+          Window size of 3072; '4096'= Window size of 4096; '8192'= Window size of 8192;"
         type: str
         required: False
     up:
@@ -553,7 +554,7 @@ def get_argspec():
             },
         'anti_replay_window': {
             'type': 'str',
-            'choices': ['0', '32', '64', '128', '256', '512', '1024']
+            'choices': ['0', '32', '64', '128', '256', '512', '1024', '2048', '3072', '4096', '8192']
             },
         'up': {
             'type': 'bool',

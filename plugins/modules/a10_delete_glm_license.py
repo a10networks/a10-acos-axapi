@@ -90,6 +90,11 @@ options:
         - "only remove Secure gaming license"
         type: bool
         required: False
+    ngwaf:
+        description:
+        - "only remove NGWAF license"
+        type: bool
+        required: False
 
 '''
 
@@ -144,7 +149,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["a10_ti", "ipsec_vpn", "qosmos", "secure_gaming", "threatstop", "webroot", "webroot_ti", ]
+AVAILABLE_PROPERTIES = ["a10_ti", "ipsec_vpn", "ngwaf", "qosmos", "secure_gaming", "threatstop", "webroot", "webroot_ti", ]
 
 
 def get_default_argspec():
@@ -164,7 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'threatstop': {'type': 'bool', }, 'qosmos': {'type': 'bool', }, 'webroot_ti': {'type': 'bool', }, 'ipsec_vpn': {'type': 'bool', }, 'webroot': {'type': 'bool', }, 'a10_ti': {'type': 'bool', }, 'secure_gaming': {'type': 'bool', }})
+    rv.update({'threatstop': {'type': 'bool', }, 'qosmos': {'type': 'bool', }, 'webroot_ti': {'type': 'bool', }, 'ipsec_vpn': {'type': 'bool', }, 'webroot': {'type': 'bool', }, 'a10_ti': {'type': 'bool', }, 'secure_gaming': {'type': 'bool', }, 'ngwaf': {'type': 'bool', }})
     return rv
 
 

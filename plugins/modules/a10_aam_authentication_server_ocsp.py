@@ -148,6 +148,20 @@ options:
                 description:
                 - "Name of the packet capture template to be bind with this object"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            stats_clear_type:
+                description:
+                - "Field stats_clear_type"
+                type: str
+            name:
+                description:
+                - "Field name"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -288,7 +302,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["instance_list", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["instance_list", "oper", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -371,6 +385,16 @@ def get_argspec():
                     }
                 },
             'packet_capture_template': {
+                'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'stats_clear_type': {
+                'type': 'str',
+                'choices': ['ocsp', 'ocsp-stapling']
+                },
+            'name': {
                 'type': 'str',
                 }
             },
@@ -640,6 +664,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["ocsp-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["ocsp"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

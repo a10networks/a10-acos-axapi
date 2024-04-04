@@ -59,6 +59,11 @@ options:
         - Key to identify parent object
         type: str
         required: True
+    default_user_group_count:
+        description:
+        - "Number of default traffic buckets"
+        type: int
+        required: False
     enable:
         description:
         - "Field enable"
@@ -79,13 +84,9 @@ options:
                 description:
                 - "Scaleout template Name"
                 type: str
-            bucket_count:
+            user_group_count:
                 description:
                 - "Number of traffic buckets"
-                type: int
-            device_group:
-                description:
-                - "Device group id"
                 type: int
             uuid:
                 description:
@@ -149,7 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable", "template_list", "uuid", ]
+AVAILABLE_PROPERTIES = ["default_user_group_count", "enable", "template_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -169,7 +170,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'template_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'bucket_count': {'type': 'int', }, 'device_group': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}})
+    rv.update({'default_user_group_count': {'type': 'int', }, 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'template_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'user_group_count': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv

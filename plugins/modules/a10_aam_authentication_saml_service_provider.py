@@ -214,6 +214,11 @@ options:
           location URI"
         type: bool
         required: False
+    username_attribute:
+        description:
+        - "Specify the assertion attribute which value is username"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -378,7 +383,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "acs_uri_bypass", "adfs_ws_federation", "artifact_resolution_service", "assertion_consuming_service", "bad_request_redirect_url", "certificate", "entity_id", "metadata_export_service", "name", "packet_capture_template", "require_assertion_signed", "saml_request_signed", "sampling_enable", "service_url", "signature_algorithm",
-    "single_logout_service", "soap_tls_certificate_validate", "SP_initiated_single_logout_service", "stats", "user_tag", "uuid",
+    "single_logout_service", "soap_tls_certificate_validate", "SP_initiated_single_logout_service", "stats", "user_tag", "username_attribute", "uuid",
     ]
 
 
@@ -500,6 +505,9 @@ def get_argspec():
             },
         'acs_uri_bypass': {
             'type': 'bool',
+            },
+        'username_attribute': {
+            'type': 'str',
             },
         'uuid': {
             'type': 'str',

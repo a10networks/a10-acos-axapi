@@ -83,7 +83,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'dev_vip_hits'= Number of times the service-ip was selected;"
+                - "'all'= all; 'dev_vip_hits'= Number of times the service-ip was selected;
+          'dev_vip_recent'= Recent hits;"
                 type: str
     oper:
         description:
@@ -99,6 +100,54 @@ options:
                 description:
                 - "Field dev_vip_state"
                 type: str
+            node_name:
+                description:
+                - "Field node_name"
+                type: str
+            service_ip:
+                description:
+                - "Field service_ip"
+                type: str
+            port_count:
+                description:
+                - "Field port_count"
+                type: int
+            virtual_server:
+                description:
+                - "Field virtual_server"
+                type: int
+            disabled:
+                description:
+                - "Field disabled"
+                type: int
+            gslb_protocol:
+                description:
+                - "Field gslb_protocol"
+                type: int
+            local_protocol:
+                description:
+                - "Field local_protocol"
+                type: int
+            manually_health_check:
+                description:
+                - "Field manually_health_check"
+                type: int
+            use_gslb_state:
+                description:
+                - "Field use_gslb_state"
+                type: int
+            dynamic:
+                description:
+                - "Field dynamic"
+                type: int
+            hits:
+                description:
+                - "Field hits"
+                type: int
+            recent:
+                description:
+                - "Field recent"
+                type: int
             dev_vip_port_list:
                 description:
                 - "Field dev_vip_port_list"
@@ -116,6 +165,10 @@ options:
             dev_vip_hits:
                 description:
                 - "Number of times the service-ip was selected"
+                type: str
+            dev_vip_recent:
+                description:
+                - "Recent hits"
                 type: str
             ipv4:
                 description:
@@ -207,7 +260,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'dev_vip_hits']
+                'choices': ['all', 'dev_vip_hits', 'dev_vip_recent']
                 }
             },
         'oper': {
@@ -217,6 +270,42 @@ def get_argspec():
                 },
             'dev_vip_state': {
                 'type': 'str',
+                },
+            'node_name': {
+                'type': 'str',
+                },
+            'service_ip': {
+                'type': 'str',
+                },
+            'port_count': {
+                'type': 'int',
+                },
+            'virtual_server': {
+                'type': 'int',
+                },
+            'disabled': {
+                'type': 'int',
+                },
+            'gslb_protocol': {
+                'type': 'int',
+                },
+            'local_protocol': {
+                'type': 'int',
+                },
+            'manually_health_check': {
+                'type': 'int',
+                },
+            'use_gslb_state': {
+                'type': 'int',
+                },
+            'dynamic': {
+                'type': 'int',
+                },
+            'hits': {
+                'type': 'int',
+                },
+            'recent': {
+                'type': 'int',
                 },
             'dev_vip_port_list': {
                 'type': 'list',
@@ -235,6 +324,9 @@ def get_argspec():
         'stats': {
             'type': 'dict',
             'dev_vip_hits': {
+                'type': 'str',
+                },
+            'dev_vip_recent': {
                 'type': 'str',
                 },
             'ipv4': {

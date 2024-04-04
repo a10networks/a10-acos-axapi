@@ -105,6 +105,10 @@ options:
                 description:
                 - "Field host"
                 type: list
+            domain_whitelist:
+                description:
+                - "Specify the AC type class-list for the domain-whitelist"
+                type: str
             port:
                 description:
                 - "Specify port number for aaa-rule, default is 0 for all port numbers"
@@ -321,6 +325,9 @@ def get_argspec():
                 'host_str': {
                     'type': 'str',
                     }
+                },
+            'domain_whitelist': {
+                'type': 'str',
                 },
             'port': {
                 'type': 'int',

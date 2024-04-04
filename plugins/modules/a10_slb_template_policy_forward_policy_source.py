@@ -113,6 +113,10 @@ options:
         type: dict
         required: False
         suboptions:
+            adv_match_list:
+                description:
+                - "Field adv_match_list"
+                type: list
             class_list_list:
                 description:
                 - "Field class_list_list"
@@ -151,10 +155,6 @@ options:
                 description:
                 - "source destination match rule name"
                 type: str
-            destination:
-                description:
-                - "Field destination"
-                type: dict
 
 '''
 
@@ -261,6 +261,119 @@ def get_argspec():
             },
         'destination': {
             'type': 'dict',
+            'adv_match_list': {
+                'type': 'list',
+                'priority': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'match_host': {
+                    'type': 'str',
+                    },
+                'match_http_content_encoding': {
+                    'type': 'str',
+                    },
+                'match_http_content_length_range_begin': {
+                    'type': 'int',
+                    },
+                'match_http_content_length_range_end': {
+                    'type': 'int',
+                    },
+                'match_http_content_type': {
+                    'type': 'str',
+                    },
+                'match_http_header': {
+                    'type': 'str',
+                    },
+                'match_http_method_connect': {
+                    'type': 'bool',
+                    },
+                'match_http_method_delete': {
+                    'type': 'bool',
+                    },
+                'match_http_method_get': {
+                    'type': 'bool',
+                    },
+                'match_http_method_head': {
+                    'type': 'bool',
+                    },
+                'match_http_method_options': {
+                    'type': 'bool',
+                    },
+                'match_http_method_patch': {
+                    'type': 'bool',
+                    },
+                'match_http_method_post': {
+                    'type': 'bool',
+                    },
+                'match_http_method_put': {
+                    'type': 'bool',
+                    },
+                'match_http_method_trace': {
+                    'type': 'bool',
+                    },
+                'match_http_request_file_extension': {
+                    'type': 'str',
+                    },
+                'match_http_url_regex': {
+                    'type': 'str',
+                    },
+                'match_http_url': {
+                    'type': 'str',
+                    },
+                'match_http_user_agent': {
+                    'type': 'str',
+                    },
+                'match_server_address': {
+                    'type': 'str',
+                    },
+                'match_server_port': {
+                    'type': 'int',
+                    },
+                'match_server_port_range_begin': {
+                    'type': 'int',
+                    },
+                'match_server_port_range_end': {
+                    'type': 'int',
+                    },
+                'match_time_range': {
+                    'type': 'str',
+                    },
+                'match_web_category_list': {
+                    'type': 'str',
+                    },
+                'match_web_reputation_scope': {
+                    'type': 'str',
+                    },
+                'disable_reqmod_icap': {
+                    'type': 'bool',
+                    },
+                'disable_respmod_icap': {
+                    'type': 'bool',
+                    },
+                'notify_page': {
+                    'type': 'str',
+                    },
+                'action': {
+                    'type': 'str',
+                    },
+                'dual_stack_action': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                        }
+                    }
+                },
             'class_list_list': {
                 'type': 'list',
                 'dest_class_list': {
@@ -268,6 +381,9 @@ def get_argspec():
                     'required': True,
                     },
                 'action': {
+                    'type': 'str',
+                    },
+                'dual_stack_action': {
                     'type': 'str',
                     },
                 'ntype': {
@@ -279,13 +395,6 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
-                    },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                        }
                     }
                 },
             'web_reputation_scope_list': {
@@ -297,6 +406,9 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     },
+                'dual_stack_action': {
+                    'type': 'str',
+                    },
                 'ntype': {
                     'type': 'str',
                     'choices': ['host', 'url']
@@ -306,13 +418,6 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
-                    },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                        }
                     }
                 },
             'web_category_list_list': {
@@ -324,6 +429,9 @@ def get_argspec():
                 'action': {
                     'type': 'str',
                     },
+                'dual_stack_action': {
+                    'type': 'str',
+                    },
                 'ntype': {
                     'type': 'str',
                     'choices': ['host', 'url']
@@ -333,18 +441,14 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
-                    },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                        }
                     }
                 },
             'any': {
                 'type': 'dict',
                 'action': {
+                    'type': 'str',
+                    },
+                'dual_stack_action': {
                     'type': 'str',
                     },
                 'uuid': {
@@ -373,9 +477,6 @@ def get_argspec():
             'name': {
                 'type': 'str',
                 'required': True,
-                },
-            'destination': {
-                'type': 'dict',
                 }
             }
         })

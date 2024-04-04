@@ -164,6 +164,10 @@ options:
                 description:
                 - "Field synchronization"
                 type: dict
+            monitor:
+                description:
+                - "Field monitor"
+                type: dict
             ipv6_network_list:
                 description:
                 - "Field ipv6_network_list"
@@ -409,6 +413,18 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'monitor': {
+                'type': 'dict',
+                'default': {
+                    'type': 'dict',
+                    'network_monitor_default': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
             'ipv6_network_list': {
                 'type': 'list',
                 'network_ipv6': {
@@ -425,6 +441,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'comm_value': {
+                    'type': 'str',
+                    },
+                'lcomm_value': {
                     'type': 'str',
                     },
                 'uuid': {
@@ -449,36 +468,6 @@ def get_argspec():
                 'allowas_in_count': {
                     'type': 'int',
                     },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                    },
-                'default_originate': {
-                    'type': 'bool',
-                    },
-                'route_map': {
-                    'type': 'str',
-                    },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list': {
-                        'type': 'str',
-                        },
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                        }
-                    },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                        },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                        }
-                    },
                 'maximum_prefix': {
                     'type': 'int',
                     },
@@ -487,16 +476,6 @@ def get_argspec():
                     },
                 'next_hop_self': {
                     'type': 'bool',
-                    },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                        },
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                        }
                     },
                 'remove_private_as': {
                     'type': 'bool',
@@ -511,15 +490,8 @@ def get_argspec():
                         'choices': ['in', 'out']
                         }
                     },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                    },
                 'inbound': {
                     'type': 'bool',
-                    },
-                'unsuppress_map': {
-                    'type': 'str',
                     },
                 'weight': {
                     'type': 'int',
@@ -616,7 +588,7 @@ def get_argspec():
                     },
                 'send_community_val': {
                     'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
+                    'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
                     },
                 'inbound': {
                     'type': 'bool',
@@ -719,7 +691,7 @@ def get_argspec():
                     },
                 'send_community_val': {
                     'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
+                    'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
                     },
                 'inbound': {
                     'type': 'bool',

@@ -68,7 +68,7 @@ options:
     nbr_remote_as:
         description:
         - "Specify AS number of BGP neighbor"
-        type: int
+        type: str
         required: False
     peer_group_name:
         description:
@@ -163,6 +163,11 @@ options:
     acos_application_only:
         description:
         - "Send BGP update to ACOS application"
+        type: bool
+        required: False
+    telemetry:
+        description:
+        - "Send BGP update to telemetry db"
         type: bool
         required: False
     dont_capability_negotiate:
@@ -308,9 +313,10 @@ options:
                 type: str
     send_community_val:
         description:
-        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
-          Sending Community attributes; 'standard'= Send Standard Community attributes;
-          'extended'= Send Extended Community attributes;"
+        - "'all'= Send Standard, Extended, and Large Community attributes; 'both'= Send
+          Standard and Extended Community attributes; 'none'= Disable Sending Community
+          attributes; 'standard'= Send Standard Community attributes; 'extended'= Send
+          Extended Community attributes; 'large'= Send Large Community attributes;"
         type: str
         required: False
     inbound:
@@ -455,8 +461,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "acos_application_only", "activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "bfd", "bfd_encrypted", "bfd_value", "collide_established", "connect", "default_originate", "description", "disallow_infinite_holdtime", "distribute_lists", "dont_capability_negotiate", "dynamic", "ebgp_multihop",
     "ebgp_multihop_hop_count", "enforce_multihop", "ethernet", "graceful_restart", "inbound", "key_id", "key_type", "lif", "loopback", "maximum_prefix", "maximum_prefix_thres", "multihop", "nbr_remote_as", "neighbor_filter_lists", "neighbor_ipv4", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "override_capability",
-    "pass_encrypted", "pass_value", "passive", "peer_group_name", "prefix_list_direction", "remove_private_as", "restart_min", "route_map", "route_refresh", "send_community_val", "shutdown", "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk", "tunnel", "unsuppress_map", "update_source_ip", "update_source_ipv6", "uuid", "ve",
-    "weight",
+    "pass_encrypted", "pass_value", "passive", "peer_group_name", "prefix_list_direction", "remove_private_as", "restart_min", "route_map", "route_refresh", "send_community_val", "shutdown", "strict_capability_match", "telemetry", "timers_holdtime", "timers_keepalive", "trunk", "tunnel", "unsuppress_map", "update_source_ip", "update_source_ipv6",
+    "uuid", "ve", "weight",
     ]
 
 
@@ -483,7 +489,7 @@ def get_argspec():
             'required': True,
             },
         'nbr_remote_as': {
-            'type': 'int',
+            'type': 'str',
             },
         'peer_group_name': {
             'type': 'str',
@@ -542,6 +548,9 @@ def get_argspec():
                 }
             },
         'acos_application_only': {
+            'type': 'bool',
+            },
+        'telemetry': {
             'type': 'bool',
             },
         'dont_capability_negotiate': {
@@ -634,7 +643,7 @@ def get_argspec():
             },
         'send_community_val': {
             'type': 'str',
-            'choices': ['both', 'none', 'standard', 'extended']
+            'choices': ['all', 'both', 'none', 'standard', 'extended', 'large']
             },
         'inbound': {
             'type': 'bool',

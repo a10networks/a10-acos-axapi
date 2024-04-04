@@ -62,7 +62,7 @@ options:
         required: False
     provider:
         description:
-        - "'aws'= AWS user-data services; 'openstack'= OpenStack user-data services;"
+        - "'openstack'= OpenStack user-data services;"
         type: str
         required: False
     prevent_autofill:
@@ -191,7 +191,7 @@ def get_argspec():
             },
         'provider': {
             'type': 'str',
-            'choices': ['aws', 'openstack']
+            'choices': ['openstack']
             },
         'prevent_autofill': {
             'type': 'bool',

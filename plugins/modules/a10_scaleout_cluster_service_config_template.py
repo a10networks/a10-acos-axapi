@@ -65,14 +65,9 @@ options:
         - "Scaleout template Name"
         type: str
         required: True
-    bucket_count:
+    user_group_count:
         description:
         - "Number of traffic buckets"
-        type: int
-        required: False
-    device_group:
-        description:
-        - "Device group id"
         type: int
         required: False
     uuid:
@@ -139,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bucket_count", "device_group", "name", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["name", "user_group_count", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -159,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, }, 'bucket_count': {'type': 'int', }, 'device_group': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({'name': {'type': 'str', 'required': True, }, 'user_group_count': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv

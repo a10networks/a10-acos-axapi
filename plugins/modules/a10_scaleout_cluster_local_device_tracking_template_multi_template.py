@@ -90,6 +90,12 @@ options:
           cluster;"
         type: str
         required: False
+    ip_version:
+        description:
+        - "'ipv4'= take action for IPv4 traffic-only; 'ipv6'= take action for IPv6
+          traffic-only;"
+        type: str
+        required: True
     uuid:
         description:
         - "uuid of the object"
@@ -154,7 +160,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "multi_template", "template", "threshold", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "ip_version", "multi_template", "template", "threshold", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -174,7 +180,39 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'multi_template': {'type': 'str', 'required': True, }, 'template': {'type': 'list', 'template_name': {'type': 'str', }, 'partition_name': {'type': 'str', }}, 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({
+        'multi_template': {
+            'type': 'str',
+            'required': True,
+            },
+        'template': {
+            'type': 'list',
+            'template_name': {
+                'type': 'str',
+                },
+            'partition_name': {
+                'type': 'str',
+                }
+            },
+        'threshold': {
+            'type': 'int',
+            },
+        'action': {
+            'type': 'str',
+            'choices': ['down', 'exit-cluster']
+            },
+        'ip_version': {
+            'type': 'str',
+            'required': True,
+            'choices': ['ipv4', 'ipv6']
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            }
+        })
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv
@@ -183,13 +221,17 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/multi_template/{multi-template}"
+    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/multi_template/{multi-template}+{ip_version}"
 
     f_dict = {}
     if '/' in str(module.params["multi_template"]):
         f_dict["multi_template"] = module.params["multi_template"].replace("/", "%2F")
     else:
         f_dict["multi_template"] = module.params["multi_template"]
+    if '/' in str(module.params["ip_version"]):
+        f_dict["ip_version"] = module.params["ip_version"].replace("/", "%2F")
+    else:
+        f_dict["ip_version"] = module.params["ip_version"]
     if '/' in module.params["cluster_id"]:
         f_dict["cluster_id"] = module.params["cluster_id"].replace("/", "%2F")
     else:
@@ -201,10 +243,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/multi-template"
+    url_base = "/axapi/v3/scaleout/cluster/{cluster_id}/local-device/tracking-template/multi-template/"
 
     f_dict = {}
     f_dict["multi_template"] = ""
+    f_dict["ip_version"] = ""
     f_dict["cluster_id"] = module.params["cluster_id"]
 
     return url_base.format(**f_dict)

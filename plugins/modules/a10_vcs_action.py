@@ -54,9 +54,15 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    database_distribution:
+        description:
+        - "'enable'= enable database cluster distribution; 'disable'= disable database
+          cluster distribution;"
+        type: str
+        required: False
     action:
         description:
-        - "'disable'= disable VCS; 'enable'= enable VCS;"
+        - "'enable'= enable VCS; 'disable'= disable VCS;"
         type: str
         required: False
     uuid:
@@ -118,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "database_distribution", "uuid", ]
 
 
 def get_default_argspec():
@@ -138,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'action': {'type': 'str', 'choices': ['disable', 'enable']}, 'uuid': {'type': 'str', }})
+    rv.update({'database_distribution': {'type': 'str', 'choices': ['enable', 'disable']}, 'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
     return rv
 
 
