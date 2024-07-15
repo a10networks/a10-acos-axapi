@@ -78,7 +78,7 @@
   tasks:
   - name: Delete a10.acos_axapi.a10_slb_template_client_ssl instance
     a10.acos_axapi.a10_slb_template_client_ssl:
-      state: abset
+      state: absent
       name: my_client-ssl
       certificate_list:
         - cert: "{{ cert_name }}"
