@@ -9,6 +9,6 @@
     ansible_port: "{{ ansible_port }}"
     ansible_password: "{{ ansible_password }}"
     ansible_username: "{{ ansible_username }}"
-    monitor_name: monitor_name
+    monitor_name: my_tcp_monitor
     method_tcp: true
     tcp_port: " {{ tcp_monitor_port }}"
