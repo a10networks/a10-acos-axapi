@@ -9,13 +9,13 @@
     ansible_port: "{{ ansible_port }}"
     ansible_password: "{{ ansible_password }}"
     ansible_username: "{{ ansible_username }}"
-    monitor_name: "{{ hc_method }}-{{ hc_port }}"
+    monitor_name: monitor_name
     https: true
     disable_sslv2hello: true
-    https_host: "{{ hc_host }}"
-    web_port: "{{ hc_port }}"
-    https_expect: "{{ expect }}"
-    https_response_code: "{{ expect_response_code }}"
+    https_host: "{{ https_host }}"
+    web_port: "{{ https_port }}"
+    https_expect: "{{ https_expect }}"
+    https_response_code: "{{ htps_expect_response_code }}"
     https_url: "{{ specific_url }}"
     url_path: "{{ url_path }}"
     url_type: "{{ url_type }}"
