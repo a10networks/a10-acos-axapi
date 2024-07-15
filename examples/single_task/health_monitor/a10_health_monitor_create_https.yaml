@@ -9,7 +9,7 @@
     ansible_port: "{{ ansible_port }}"
     ansible_password: "{{ ansible_password }}"
     ansible_username: "{{ ansible_username }}"
-    monitor_name: monitor_name
+    monitor_name: my_https_monitor
     https: true
     disable_sslv2hello: true
     https_host: "{{ https_host }}"
