@@ -9,3 +9,5 @@
     overwrite: true
     use_mgmt_port: true
     remote_file: "hxxps://metadata.location/path/to/data"
+
+## Will fail if metadata is already assigned to an IdP and the IdP is in an Auth Tempalte/Policy
