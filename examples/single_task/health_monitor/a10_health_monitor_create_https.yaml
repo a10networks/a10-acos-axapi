@@ -1,0 +1,24 @@
+- name: "Update HTTPS Health Check"
+  collections:
+    a10.acos_axapi
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  a10.acos_axapi.a10_health_monitor_method_https:
+    state: present
+    ansible_host: "{{ ansible_host }}"
+    ansible_port: "{{ ansible_port }}"
+    ansible_password: "{{ ansible_password }}"
+    ansible_username: "{{ ansible_username }}"
+    monitor_name: "{{ hc_method }}-{{ hc_port }}"
+    https: true
+    disable_sslv2hello: true
+    https_host: "{{ hc_host }}"
+    web_port: "{{ hc_port }}"
+    https_expect: "{{ expect }}"
+    https_response_code: "{{ expect_response_code }}"
+    https_url: "{{ specific_url }}"
+    url_path: "{{ url_path }}"
+    url_type: "{{ url_type }}"
+    cert: "{{ https_cert }}"
+    key: "{{ https_key }}"
+    sni: "{{ https_sni }}"
