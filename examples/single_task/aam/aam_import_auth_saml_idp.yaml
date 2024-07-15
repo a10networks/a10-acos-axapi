@@ -1,0 +1,11 @@
+- name: "Create metadata"
+  connection: local
+  collections:
+    a10.acos_axapi
+  hosts: "{{desired_inventory_group}}"
+  a10_import_auth_saml_idp:
+    state: present
+    saml_idp_name: my_saml_idp_name
+    overwrite: true
+    use_mgmt_port: true
+    remote_file: "hxxps://metadata.location/path/to/data"
