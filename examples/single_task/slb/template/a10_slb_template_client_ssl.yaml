@@ -7,7 +7,17 @@
   - name: Create a10.acos_axapi.a10_slb_template_client_ssl instance
     a10.acos_axapi.a10_slb_template_client_ssl:
       name: my_client-ssl
+      certificate_list:
+        - cert: "{{ cert_name }}"
+          key: "{{ key_name }}"
+          passphrase: '{{ passphrase }}'
+          chain_cert: '{{ chain_cert }}'
+      ec_list:
+        - ec: secp384r1
+        - ec: secp256r1
       ocspst_srvr_hours: 1
+      diable_sslv3: 1
+      template_cipher: my_cipher_template_name
       ocspst_srvr_timeout: 1
       ocspst_sg_hours: 1
       ocspst_sg_timeout: 1
@@ -31,9 +41,18 @@
   tasks:
   - name: Update a10.acos_axapi.a10_slb_template_client_ssl instance
     a10.acos_axapi.a10_slb_template_client_ssl:
-      state: present
       name: my_client-ssl
+      certificate_list:
+        - cert: "{{ cert_name }}"
+          key: "{{ key_name }}"
+          passphrase: '{{ passphrase }}'
+          chain_cert: '{{ chain_cert }}'
+      ec_list:
+        - ec: secp384r1
+        - ec: secp256r1
       ocspst_srvr_hours: 1
+      diable_sslv3: 1
+      template_cipher: my_cipher_template_name
       ocspst_srvr_timeout: 1
       ocspst_sg_hours: 1
       ocspst_sg_timeout: 1
@@ -57,9 +76,18 @@
   tasks:
   - name: Delete a10.acos_axapi.a10_slb_template_client_ssl instance
     a10.acos_axapi.a10_slb_template_client_ssl:
-      state: absent
       name: my_client-ssl
+      certificate_list:
+        - cert: "{{ cert_name }}"
+          key: "{{ key_name }}"
+          passphrase: '{{ passphrase }}'
+          chain_cert: '{{ chain_cert }}'
+      ec_list:
+        - ec: secp384r1
+        - ec: secp256r1
       ocspst_srvr_hours: 1
+      diable_sslv3: 1
+      template_cipher: my_cipher_template_name
       ocspst_srvr_timeout: 1
       ocspst_sg_hours: 1
       ocspst_sg_timeout: 1
