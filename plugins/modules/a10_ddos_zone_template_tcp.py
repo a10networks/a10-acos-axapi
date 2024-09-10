@@ -65,6 +65,26 @@ options:
         - "Session age in minutes"
         type: int
         required: False
+    age_second:
+        description:
+        - "Session age in seconds"
+        type: int
+        required: False
+    age_out_reset_server:
+        description:
+        - "Send TCP reset to server if aging time has passed"
+        type: bool
+        required: False
+    tcp_half_open_timeout:
+        description:
+        - "TCP half-open session age in seconds"
+        type: int
+        required: False
+    tcp_half_open_timeout_reset_server:
+        description:
+        - "Send TCP reset to server if TCP half-open session timeout"
+        type: bool
+        required: False
     concurrent:
         description:
         - "Enable concurrent port access for non-matching ports (DST support only)"
@@ -345,7 +365,8 @@ options:
                 - "'send-rst'= Send reset to all concurrent client auth attempts after syn cookie
           check pass; 'force-rst-by-ack'= Send client a bad ack after syn cookie check
           pass; 'force-rst-by-synack'= Send client a bad synack after syn cookie check
-          pass; 'send-rst-once'= Send RST to one client concurrent auth attempts;"
+          pass; 'send-rst-once'= Send RST to one client concurrent auth attempts;
+          'hybrid'= Combining force-rst-by-synack and send-rst together;"
                 type: str
             syn_auth_timeout:
                 description:
@@ -377,10 +398,6 @@ options:
                 - "'drop'= Drop packets (Default); 'blacklist-src'= Blacklist-src; 'reset'= Send
           reset to client (Applicable to retransmit-check only);"
                 type: str
-            allow_ra:
-                description:
-                - "Allow RA packets to be used for auth"
-                type: bool
     ack_authentication:
         description:
         - "Field ack_authentication"
@@ -441,88 +458,21 @@ options:
                 description:
                 - "'enable-check'= Enable Progression Tracking Check;"
                 type: str
-            request_response_model:
-                description:
-                - "'enable'= Enable Request Response Model; 'disable'= Disable Request Response
-          Model;"
-                type: str
-            violation:
-                description:
-                - "Set the violation threshold"
-                type: int
             ignore_TLS_handshake:
                 description:
-                - "Ignore TLS handshake"
+                - "Ignore TLS handshake, support SSL-L4 port only"
                 type: bool
-            response_length_max:
-                description:
-                - "Set the maximum response length"
-                type: int
-            response_length_min:
-                description:
-                - "Set the minimum response length"
-                type: int
-            request_length_min:
-                description:
-                - "Set the minimum request length"
-                type: int
-            request_length_max:
-                description:
-                - "Set the maximum request length"
-                type: int
-            response_request_min_ratio:
-                description:
-                - "Set the minimum response to request ratio (in unit of 0.1% [1=1000])"
-                type: int
-            response_request_max_ratio:
-                description:
-                - "Set the maximum response to request ratio (in unit of 0.1% [1=1000])"
-                type: int
-            first_request_max_time:
-                description:
-                - "Set the maximum wait time from connection creation until the first data is
-          transmitted over the connection (100 ms)"
-                type: int
-            request_to_response_max_time:
-                description:
-                - "Set the maximum request to response time (100 ms)"
-                type: int
-            response_to_request_max_time:
-                description:
-                - "Set the maximum response to request time (100 ms)"
-                type: int
-            profiling_request_response_model:
-                description:
-                - "Enable auto-config progression tracking learning for Request Response model"
-                type: bool
-            profiling_connection_life_model:
-                description:
-                - "Enable auto-config progression tracking learning for connection model"
-                type: bool
-            profiling_time_window_model:
-                description:
-                - "Enable auto-config progression tracking learning for time window model"
-                type: bool
-            progression_tracking_action_list_name:
-                description:
-                - "Configure action-list to take when progression tracking violation exceed"
-                type: str
-            progression_tracking_action:
-                description:
-                - "'drop'= Drop packets for progression tracking violation exceed (Default);
-          'blacklist-src'= Blacklist-src for progression tracking violation exceed;"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
                 type: str
-            connection_tracking:
+            mitigation:
                 description:
-                - "Field connection_tracking"
+                - "Field mitigation"
                 type: dict
-            time_window_tracking:
+            profiling:
                 description:
-                - "Field time_window_tracking"
+                - "Field profiling"
                 type: dict
     filter_list:
         description:
@@ -622,9 +572,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ack_authentication", "ack_authentication_synack_reset", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "age", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "concurrent", "conn_rate_limit_on_syn_only", "create_conn_on_syn_only", "dst", "filter_list", "filter_match_type",
-    "known_resp_src_port_cfg", "max_rexmit_syn_per_flow_cfg", "name", "out_of_seq_cfg", "per_conn_out_of_seq_rate_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "per_conn_retransmit_rate_cfg", "per_conn_zero_win_rate_cfg", "progression_tracking", "retransmit_cfg", "src", "syn_authentication", "syn_cookie", "synack_rate_limit",
-    "track_together_with_syn", "user_tag", "uuid", "zero_win_cfg",
+    "ack_authentication", "ack_authentication_synack_reset", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "age", "age_out_reset_server", "age_second", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "concurrent", "conn_rate_limit_on_syn_only", "create_conn_on_syn_only", "dst", "filter_list",
+    "filter_match_type", "known_resp_src_port_cfg", "max_rexmit_syn_per_flow_cfg", "name", "out_of_seq_cfg", "per_conn_out_of_seq_rate_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "per_conn_retransmit_rate_cfg", "per_conn_zero_win_rate_cfg", "progression_tracking", "retransmit_cfg", "src", "syn_authentication", "syn_cookie",
+    "synack_rate_limit", "tcp_half_open_timeout", "tcp_half_open_timeout_reset_server", "track_together_with_syn", "user_tag", "uuid", "zero_win_cfg",
     ]
 
 
@@ -652,6 +602,18 @@ def get_argspec():
             },
         'age': {
             'type': 'int',
+            },
+        'age_second': {
+            'type': 'int',
+            },
+        'age_out_reset_server': {
+            'type': 'bool',
+            },
+        'tcp_half_open_timeout': {
+            'type': 'int',
+            },
+        'tcp_half_open_timeout_reset_server': {
+            'type': 'bool',
             },
         'concurrent': {
             'type': 'bool',
@@ -856,7 +818,7 @@ def get_argspec():
             'type': 'dict',
             'syn_auth_type': {
                 'type': 'str',
-                'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack', 'send-rst-once']
+                'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack', 'send-rst-once', 'hybrid']
                 },
             'syn_auth_timeout': {
                 'type': 'int',
@@ -880,9 +842,6 @@ def get_argspec():
             'syn_auth_fail_action': {
                 'type': 'str',
                 'choices': ['drop', 'blacklist-src', 'reset']
-                },
-            'allow_ra': {
-                'type': 'bool',
                 }
             },
         'ack_authentication': {
@@ -926,139 +885,174 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['enable-check']
                 },
-            'request_response_model': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-                },
-            'violation': {
-                'type': 'int',
-                },
             'ignore_TLS_handshake': {
                 'type': 'bool',
-                },
-            'response_length_max': {
-                'type': 'int',
-                },
-            'response_length_min': {
-                'type': 'int',
-                },
-            'request_length_min': {
-                'type': 'int',
-                },
-            'request_length_max': {
-                'type': 'int',
-                },
-            'response_request_min_ratio': {
-                'type': 'int',
-                },
-            'response_request_max_ratio': {
-                'type': 'int',
-                },
-            'first_request_max_time': {
-                'type': 'int',
-                },
-            'request_to_response_max_time': {
-                'type': 'int',
-                },
-            'response_to_request_max_time': {
-                'type': 'int',
-                },
-            'profiling_request_response_model': {
-                'type': 'bool',
-                },
-            'profiling_connection_life_model': {
-                'type': 'bool',
-                },
-            'profiling_time_window_model': {
-                'type': 'bool',
-                },
-            'progression_tracking_action_list_name': {
-                'type': 'str',
-                },
-            'progression_tracking_action': {
-                'type': 'str',
-                'choices': ['drop', 'blacklist-src']
                 },
             'uuid': {
                 'type': 'str',
                 },
-            'connection_tracking': {
+            'mitigation': {
                 'type': 'dict',
-                'progression_tracking_conn_enabled': {
-                    'type': 'str',
-                    'choices': ['enable-check']
+                'request_tracking': {
+                    'type': 'dict',
+                    'progression_tracking_req_enabled': {
+                        'type': 'str',
+                        'choices': ['enable-check']
+                        },
+                    'request_response_model': {
+                        'type': 'str',
+                        'choices': ['enable', 'disable']
+                        },
+                    'response_length_max': {
+                        'type': 'int',
+                        },
+                    'response_length_min': {
+                        'type': 'int',
+                        },
+                    'request_length_min': {
+                        'type': 'int',
+                        },
+                    'request_length_max': {
+                        'type': 'int',
+                        },
+                    'request_to_response_max_time': {
+                        'type': 'int',
+                        },
+                    'response_to_request_max_time': {
+                        'type': 'int',
+                        },
+                    'first_request_max_time': {
+                        'type': 'int',
+                        },
+                    'progression_tracking_req_action_list_name': {
+                        'type': 'str',
+                        },
+                    'violation': {
+                        'type': 'int',
+                        },
+                    'progression_tracking_req_action': {
+                        'type': 'str',
+                        'choices': ['drop', 'blacklist-src']
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     },
-                'conn_sent_max': {
-                    'type': 'int',
+                'connection_tracking': {
+                    'type': 'dict',
+                    'progression_tracking_conn_enabled': {
+                        'type': 'str',
+                        'choices': ['enable-check']
+                        },
+                    'conn_sent_max': {
+                        'type': 'int',
+                        },
+                    'conn_sent_min': {
+                        'type': 'int',
+                        },
+                    'conn_rcvd_max': {
+                        'type': 'int',
+                        },
+                    'conn_rcvd_min': {
+                        'type': 'int',
+                        },
+                    'conn_rcvd_sent_ratio_min': {
+                        'type': 'int',
+                        },
+                    'conn_rcvd_sent_ratio_max': {
+                        'type': 'int',
+                        },
+                    'conn_duration_max': {
+                        'type': 'int',
+                        },
+                    'conn_duration_min': {
+                        'type': 'int',
+                        },
+                    'conn_violation': {
+                        'type': 'int',
+                        },
+                    'progression_tracking_conn_action_list_name': {
+                        'type': 'str',
+                        },
+                    'progression_tracking_conn_action': {
+                        'type': 'str',
+                        'choices': ['drop', 'blacklist-src']
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     },
-                'conn_sent_min': {
-                    'type': 'int',
+                'time_window_tracking': {
+                    'type': 'dict',
+                    'progression_tracking_win_enabled': {
+                        'type': 'str',
+                        'choices': ['enable-check']
+                        },
+                    'window_sent_max': {
+                        'type': 'int',
+                        },
+                    'window_sent_min': {
+                        'type': 'int',
+                        },
+                    'window_rcvd_max': {
+                        'type': 'int',
+                        },
+                    'window_rcvd_min': {
+                        'type': 'int',
+                        },
+                    'window_rcvd_sent_ratio_min': {
+                        'type': 'int',
+                        },
+                    'window_rcvd_sent_ratio_max': {
+                        'type': 'int',
+                        },
+                    'window_violation': {
+                        'type': 'int',
+                        },
+                    'progression_tracking_windows_action_list_name': {
+                        'type': 'str',
+                        },
+                    'progression_tracking_windows_action': {
+                        'type': 'str',
+                        'choices': ['drop', 'blacklist-src']
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     },
-                'conn_rcvd_max': {
-                    'type': 'int',
-                    },
-                'conn_rcvd_min': {
-                    'type': 'int',
-                    },
-                'conn_rcvd_sent_ratio_min': {
-                    'type': 'int',
-                    },
-                'conn_rcvd_sent_ratio_max': {
-                    'type': 'int',
-                    },
-                'conn_duration_max': {
-                    'type': 'int',
-                    },
-                'conn_duration_min': {
-                    'type': 'int',
-                    },
-                'conn_violation': {
-                    'type': 'int',
-                    },
-                'progression_tracking_conn_action_list_name': {
-                    'type': 'str',
-                    },
-                'progression_tracking_conn_action': {
-                    'type': 'str',
-                    'choices': ['drop', 'blacklist-src']
-                    },
-                'uuid': {
-                    'type': 'str',
+                'slow_attack': {
+                    'type': 'dict',
+                    'response_pkt_rate_max': {
+                        'type': 'int',
+                        },
+                    'init_response_max_time': {
+                        'type': 'int',
+                        },
+                    'init_request_max_time': {
+                        'type': 'int',
+                        },
+                    'progression_tracking_slow_action_list_name': {
+                        'type': 'str',
+                        },
+                    'progression_tracking_slow_action': {
+                        'type': 'str',
+                        'choices': ['drop', 'reset', 'blacklist-src']
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     }
                 },
-            'time_window_tracking': {
+            'profiling': {
                 'type': 'dict',
-                'progression_tracking_win_enabled': {
-                    'type': 'str',
-                    'choices': ['enable-check']
+                'profiling_request_response_model': {
+                    'type': 'bool',
                     },
-                'window_sent_max': {
-                    'type': 'int',
+                'profiling_connection_life_model': {
+                    'type': 'bool',
                     },
-                'window_sent_min': {
-                    'type': 'int',
-                    },
-                'window_rcvd_max': {
-                    'type': 'int',
-                    },
-                'window_rcvd_min': {
-                    'type': 'int',
-                    },
-                'window_rcvd_sent_ratio_min': {
-                    'type': 'int',
-                    },
-                'window_rcvd_sent_ratio_max': {
-                    'type': 'int',
-                    },
-                'window_violation': {
-                    'type': 'int',
-                    },
-                'progression_tracking_windows_action_list_name': {
-                    'type': 'str',
-                    },
-                'progression_tracking_windows_action': {
-                    'type': 'str',
-                    'choices': ['drop', 'blacklist-src']
+                'profiling_time_window_model': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -1237,13 +1231,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1251,7 +1245,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1273,8 +1267,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

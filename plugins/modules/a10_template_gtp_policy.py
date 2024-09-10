@@ -200,26 +200,35 @@ options:
           gtp-v0-c-message-length-mismatch'= GTPv0-C Message Length Mismatch Across
           Layers; 'drop-vld-gtp-v1-c-message-length-mismatch'= GTPv1-C Message Length
           Mismatch Across Layers; 'drop-vld-gtp-v2-c-message-length-mismatch'= GTPv2-C
-          Message Length Mismatch Across Layers; 'drop-vld-gtp-v0-c-message-skipped-apn-
-          filtering-no-apn'= Validation Drop= GTPv0-C APN/IMSI Filtering Dropped (No
-          APN); 'drop-vld-gtp-v1-c-message-skipped-apn-filtering-no-apn'= Validation
-          Drop= GTPv1-C APN/IMSI Filtering Dropped (No APN); 'drop-vld-gtp-v2-c-message-
-          skipped-apn-filtering-no-apn'= Validation Drop= GTPv2-C APN/IMSI Filtering
-          Dropped (No APN);"
+          Message Length Mismatch Across Layers; 'vld-message-monitor'= GTP Message
+          forwarded via monitor mode at validation policy; 'gen-message-length-monitor'=
+          GTP Message forwarded via monitor mode at validation policy; 'drop-vld-
+          gtp-v0-c-message-skipped-apn-filtering-no-apn'= Validation Drop= GTPv0-C
+          APN/IMSI Filtering Dropped (No APN); 'drop-vld-gtp-v1-c-message-skipped-apn-
+          filtering-no-apn'= Validation Drop= GTPv1-C APN/IMSI Filtering Dropped (No
+          APN);"
                 type: str
             counters2:
                 description:
-                - "'drop-flt-message-filtering'= Filtering Drop= Message Type Not Permitted on
-          Interface; 'drop-flt-apn-filtering'= Filtering Drop= APN IMSI Filtering; 'drop-
-          flt-msisdn-filtering'= Filtering Drop= MSISDN Filtering; 'drop-flt-rat-type-
-          filtering'= Filtering Drop= RAT Type Filtering; 'drop-flt-gtp-in-gtp'=
-          Filtering Drop= GTP in GTP Tunnel Present; 'drop-rl-gtp-v0-c-agg'= Rate-limit
-          Drop= Maximum GTPv0-C Message rate; 'drop-rl-gtp-v1-c-agg'= Rate-limit Drop=
-          Maximum GTPv1-C Message rate; 'drop-rl-gtp-v2-c-agg'= Rate-limit Drop= Maximum
-          GTPv2-C Message rate; 'drop-rl-gtp-v1-c-create-pdp-request'= Rate-limit Drop=
-          GTPv1-C Create PDP Request rate; 'drop-rl-gtp-v2-c-create-session-request'=
-          Rate-limit Drop= GTPv2-C Create Session Request rate; 'drop-rl-gtp-v1-c-update-
-          pdp-request'= Rate-limit Drop= GTPv1-C Update PDP Request rate; 'drop-rl-
+                - "'drop-vld-gtp-v2-c-message-skipped-apn-filtering-no-apn'= Validation Drop=
+          GTPv2-C APN/IMSI Filtering Dropped (No APN); 'drop-flt-message-filtering'=
+          Filtering Drop= Message Type Not Permitted on Interface; 'drop-flt-apn-
+          filtering'= Filtering Drop= APN IMSI Filtering; 'drop-flt-msisdn-filtering'=
+          Filtering Drop= MSISDN Filtering; 'drop-flt-rat-type-filtering'= Filtering
+          Drop= RAT Type Filtering; 'drop-flt-gtp-in-gtp'= Filtering Drop= GTP in GTP
+          Tunnel Present; 'flt-message-monitor'= GTP-C Message forwarded via monitor mode
+          at message filtering policy; 'rat-flt-message-monitor'= GTP-C Message forwarded
+          via monitor mode at rat filtering policy; 'apn-imsi-flt-message-monitor'= GTP-C
+          Message forwarded via monitor mode at APN-IMSI filtering policy; 'msisdn-flt-
+          message-monitor'= GTP-C Message forwarded via monitor mode at Msisdn filtering
+          policy; 'gtp-in-gtp-flt-message-monitor'= GTP-C Message forwarded via monitor
+          mode at GTP-IN_GTP filtering policy; 'drop-rl-gtp-v0-c-agg'= Rate-limit Drop=
+          Maximum GTPv0-C Message rate; 'drop-rl-gtp-v1-c-agg'= Rate-limit Drop= Maximum
+          GTPv1-C Message rate; 'drop-rl-gtp-v2-c-agg'= Rate-limit Drop= Maximum GTPv2-C
+          Message rate; 'drop-rl-gtp-v1-c-create-pdp-request'= Rate-limit Drop= GTPv1-C
+          Create PDP Request rate; 'drop-rl-gtp-v2-c-create-session-request'= Rate-limit
+          Drop= GTPv2-C Create Session Request rate; 'drop-rl-gtp-v1-c-update-pdp-
+          request'= Rate-limit Drop= GTPv1-C Update PDP Request rate; 'drop-rl-
           gtp-v2-c-modify-bearer-request'= Rate-limit Drop= GTPv2-C Modify Bearer Request
           rate; 'drop-rl-gtp-u-tunnel-create'= Rate-limit Drop= GTP-U Tunnel Creation
           rate; 'drop-rl-gtp-u-uplink-byte'= Rate-limit Drop= GTP-U Uplink byte rate;
@@ -228,7 +237,8 @@ options:
           'drop-rl-gtp-u-downlink-packet'= Rate-limit Drop= GTP-U Downlink packet rate;
           'drop-rl-gtp-u-total-byte'= Rate-limit Drop= GTP-U Total byte rate; 'drop-rl-
           gtp-u-total-packet'= Rate-limit Drop= GTP-U Total packet rate; 'drop-rl-gtp-u-
-          max-concurrent-tunnels'= Rate-limit Drop= GTP-U Concurrent Tunnels;"
+          max-concurrent-tunnels'= Rate-limit Drop= GTP-U Concurrent Tunnels; 'rl-
+          message-monitor'= GTP Message forwarded via monitor mode at rate-limit policy;"
                 type: str
     packet_capture_template:
         description:
@@ -605,6 +615,14 @@ options:
                 description:
                 - "GTPv2-C Message Length Mismatch Across Layers"
                 type: str
+            vld_message_monitor:
+                description:
+                - "GTP Message forwarded via monitor mode at validation policy"
+                type: str
+            gen_message_length_monitor:
+                description:
+                - "GTP Message forwarded via monitor mode at validation policy"
+                type: str
             drop_vld_gtp_v0_c_message_skipped_apn_filtering_no_apn:
                 description:
                 - "Validation Drop= GTPv0-C APN/IMSI Filtering Dropped (No APN)"
@@ -636,6 +654,26 @@ options:
             drop_flt_gtp_in_gtp:
                 description:
                 - "Filtering Drop= GTP in GTP Tunnel Present"
+                type: str
+            flt_message_monitor:
+                description:
+                - "GTP-C Message forwarded via monitor mode at message filtering policy"
+                type: str
+            rat_flt_message_monitor:
+                description:
+                - "GTP-C Message forwarded via monitor mode at rat filtering policy"
+                type: str
+            apn_imsi_flt_message_monitor:
+                description:
+                - "GTP-C Message forwarded via monitor mode at APN-IMSI filtering policy"
+                type: str
+            msisdn_flt_message_monitor:
+                description:
+                - "GTP-C Message forwarded via monitor mode at Msisdn filtering policy"
+                type: str
+            gtp_in_gtp_flt_message_monitor:
+                description:
+                - "GTP-C Message forwarded via monitor mode at GTP-IN_GTP filtering policy"
                 type: str
             drop_rl_gtp_v0_c_agg:
                 description:
@@ -696,6 +734,10 @@ options:
             drop_rl_gtp_u_max_concurrent_tunnels:
                 description:
                 - "Rate-limit Drop= GTP-U Concurrent Tunnels"
+                type: str
+            rl_message_monitor:
+                description:
+                - "GTP Message forwarded via monitor mode at rate-limit policy"
                 type: str
             name:
                 description:
@@ -817,17 +859,17 @@ def get_argspec():
                     'drop-vld-reserved-information-element', 'drop-vld-version-not-supported', 'drop-vld-message-length', 'drop-vld-cross-layer-correlation', 'drop-vld-country-code-mismatch', 'drop-vld-gtp-u-spoofed-source-address', 'drop-vld-gtp-bearer-count-exceed', 'drop-vld-gtp-v2-wrong-lbi-create-bearer-req',
                     'gtp-c-handover-in-progress-with-conn', 'drop-vld-v0-reserved-message-drop', 'drop-vld-v1-reserved-message-drop', 'drop-vld-v2-reserved-message-drop', 'drop-vld-invalid-pkt-len-piggyback', 'drop-vld-sanity-failed-piggyback', 'drop-vld-sequence-num-correlation', 'drop-vld-gtpv0-seqnum-buffer-full',
                     'drop-vld-gtpv1-seqnum-buffer-full', 'drop-vld-gtpv2-seqnum-buffer-full', 'drop-vld-gtp-invalid-imsi-len-drop', 'drop-vld-gtp-invalid-apn-len-drop', 'drop-vld-protocol-flag-unset', 'drop-vld-gtpv0-subscriber-attr-miss', 'drop-vld-gtpv1-subscriber-attr-miss', 'drop-vld-gtpv2-subscriber-attr-miss',
-                    'drop-vld-gtp-v0-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v1-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v2-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v0-c-message-length-mismatch', 'drop-vld-gtp-v1-c-message-length-mismatch', 'drop-vld-gtp-v2-c-message-length-mismatch', 'drop-vld-gtp-v0-c-message-skipped-apn-filtering-no-apn',
-                    'drop-vld-gtp-v1-c-message-skipped-apn-filtering-no-apn', 'drop-vld-gtp-v2-c-message-skipped-apn-filtering-no-apn'
+                    'drop-vld-gtp-v0-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v1-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v2-c-ie-len-exceed-msg-len', 'drop-vld-gtp-v0-c-message-length-mismatch', 'drop-vld-gtp-v1-c-message-length-mismatch', 'drop-vld-gtp-v2-c-message-length-mismatch', 'vld-message-monitor', 'gen-message-length-monitor',
+                    'drop-vld-gtp-v0-c-message-skipped-apn-filtering-no-apn', 'drop-vld-gtp-v1-c-message-skipped-apn-filtering-no-apn'
                     ]
                 },
             'counters2': {
                 'type':
                 'str',
                 'choices': [
-                    'drop-flt-message-filtering', 'drop-flt-apn-filtering', 'drop-flt-msisdn-filtering', 'drop-flt-rat-type-filtering', 'drop-flt-gtp-in-gtp', 'drop-rl-gtp-v0-c-agg', 'drop-rl-gtp-v1-c-agg', 'drop-rl-gtp-v2-c-agg', 'drop-rl-gtp-v1-c-create-pdp-request', 'drop-rl-gtp-v2-c-create-session-request',
-                    'drop-rl-gtp-v1-c-update-pdp-request', 'drop-rl-gtp-v2-c-modify-bearer-request', 'drop-rl-gtp-u-tunnel-create', 'drop-rl-gtp-u-uplink-byte', 'drop-rl-gtp-u-uplink-packet', 'drop-rl-gtp-u-downlink-byte', 'drop-rl-gtp-u-downlink-packet', 'drop-rl-gtp-u-total-byte', 'drop-rl-gtp-u-total-packet',
-                    'drop-rl-gtp-u-max-concurrent-tunnels'
+                    'drop-vld-gtp-v2-c-message-skipped-apn-filtering-no-apn', 'drop-flt-message-filtering', 'drop-flt-apn-filtering', 'drop-flt-msisdn-filtering', 'drop-flt-rat-type-filtering', 'drop-flt-gtp-in-gtp', 'flt-message-monitor', 'rat-flt-message-monitor', 'apn-imsi-flt-message-monitor', 'msisdn-flt-message-monitor',
+                    'gtp-in-gtp-flt-message-monitor', 'drop-rl-gtp-v0-c-agg', 'drop-rl-gtp-v1-c-agg', 'drop-rl-gtp-v2-c-agg', 'drop-rl-gtp-v1-c-create-pdp-request', 'drop-rl-gtp-v2-c-create-session-request', 'drop-rl-gtp-v1-c-update-pdp-request', 'drop-rl-gtp-v2-c-modify-bearer-request', 'drop-rl-gtp-u-tunnel-create', 'drop-rl-gtp-u-uplink-byte',
+                    'drop-rl-gtp-u-uplink-packet', 'drop-rl-gtp-u-downlink-byte', 'drop-rl-gtp-u-downlink-packet', 'drop-rl-gtp-u-total-byte', 'drop-rl-gtp-u-total-packet', 'drop-rl-gtp-u-max-concurrent-tunnels', 'rl-message-monitor'
                     ]
                 }
             },
@@ -1109,6 +1151,12 @@ def get_argspec():
             'drop_vld_gtp_v2_c_message_length_mismatch': {
                 'type': 'str',
                 },
+            'vld_message_monitor': {
+                'type': 'str',
+                },
+            'gen_message_length_monitor': {
+                'type': 'str',
+                },
             'drop_vld_gtp_v0_c_message_skipped_apn_filtering_no_apn': {
                 'type': 'str',
                 },
@@ -1131,6 +1179,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'drop_flt_gtp_in_gtp': {
+                'type': 'str',
+                },
+            'flt_message_monitor': {
+                'type': 'str',
+                },
+            'rat_flt_message_monitor': {
+                'type': 'str',
+                },
+            'apn_imsi_flt_message_monitor': {
+                'type': 'str',
+                },
+            'msisdn_flt_message_monitor': {
+                'type': 'str',
+                },
+            'gtp_in_gtp_flt_message_monitor': {
                 'type': 'str',
                 },
             'drop_rl_gtp_v0_c_agg': {
@@ -1176,6 +1239,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'drop_rl_gtp_u_max_concurrent_tunnels': {
+                'type': 'str',
+                },
+            'rl_message_monitor': {
                 'type': 'str',
                 },
             'name': {
@@ -1323,13 +1389,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1337,7 +1403,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1364,8 +1430,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

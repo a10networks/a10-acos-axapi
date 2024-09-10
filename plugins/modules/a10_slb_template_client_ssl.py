@@ -1595,6 +1595,32 @@ options:
         - "seconds to keep each JA3 record"
         type: int
         required: False
+    ja4_enable:
+        description:
+        - "Enable JA4 features"
+        type: bool
+        required: False
+    ja4_insert_http_header:
+        description:
+        - "Insert the JA4 hash into this request as a HTTP header (HTTP Header Name)"
+        type: str
+        required: False
+    ja4_reject_class_list:
+        description:
+        - "Drop request if the JA4 hash matches this class-list (type string-case-
+          insensitive) (Class-List Name)"
+        type: str
+        required: False
+    ja4_reject_max_number_per_host:
+        description:
+        - "Drop request if numbers of JA4 of this client address exceeded"
+        type: int
+        required: False
+    ja4_ttl:
+        description:
+        - "seconds to keep each JA4 record"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -2179,11 +2205,12 @@ AVAILABLE_PROPERTIES = [
     "forward_proxy_enable", "forward_proxy_esni_action", "forward_proxy_failsafe_disable", "forward_proxy_hash_persistence_interval", "forward_proxy_log_disable", "forward_proxy_no_shared_cipher_action", "forward_proxy_no_sni_action", "forward_proxy_ocsp_disable", "forward_proxy_require_sni_cert_matched", "forward_proxy_selfsign_redir",
     "forward_proxy_ssl_version", "forward_proxy_trusted_ca_lists", "forward_proxy_verify_cert_fail_action", "fp_alt_cert", "fp_alt_chain_cert", "fp_alt_encrypted", "fp_alt_key", "fp_alt_passphrase", "fp_alt_shared", "fp_ca_certificate", "fp_ca_certificate_shared", "fp_ca_chain_cert", "fp_ca_key", "fp_ca_key_encrypted", "fp_ca_key_passphrase",
     "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name", "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type",
-    "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ja3_enable", "ja3_insert_http_header", "ja3_reject_class_list", "ja3_reject_max_number_per_host", "ja3_ttl", "ldap_base_dn_from_cert", "ldap_search_filter", "local_cert_pin_list", "local_logging",
-    "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth", "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days",
-    "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category", "sampling_enable", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list",
-    "session_cache_size", "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable",
-    "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category", "web_reputation",
+    "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ja3_enable", "ja3_insert_http_header", "ja3_reject_class_list", "ja3_reject_max_number_per_host", "ja3_ttl", "ja4_enable", "ja4_insert_http_header", "ja4_reject_class_list", "ja4_reject_max_number_per_host",
+    "ja4_ttl", "ldap_base_dn_from_cert", "ldap_search_filter", "local_cert_pin_list", "local_logging", "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth",
+    "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days", "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category",
+    "sampling_enable", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert", "sni_bypass_explicit_list",
+    "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action", "version", "web_category",
+    "web_reputation",
     ]
 
 
@@ -3087,6 +3114,21 @@ def get_argspec():
         'ja3_ttl': {
             'type': 'int',
             },
+        'ja4_enable': {
+            'type': 'bool',
+            },
+        'ja4_insert_http_header': {
+            'type': 'str',
+            },
+        'ja4_reject_class_list': {
+            'type': 'str',
+            },
+        'ja4_reject_max_number_per_host': {
+            'type': 'int',
+            },
+        'ja4_ttl': {
+            'type': 'int',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -3593,13 +3635,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -3607,7 +3649,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -3639,8 +3681,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

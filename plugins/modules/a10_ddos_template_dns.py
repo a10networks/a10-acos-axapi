@@ -273,6 +273,16 @@ options:
           queries under the rate threshold would be forward"
         type: int
         required: False
+    alias_rate_threshold:
+        description:
+        - "ALIAS(Record Type 65300) Query Forwarding Rate Limit (Only for DNS Cache Mode)"
+        type: int
+        required: False
+    dnssec_wildcard_rate_threshold:
+        description:
+        - "DNSSEC Wildcard Query Forwarding Rate Limit (only for DNS Cache Mode)"
+        type: int
+        required: False
     allow_query_class:
         description:
         - "Field allow_query_class"
@@ -427,8 +437,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "allow_query_class", "allow_record_type", "dns_any_check", "dns_auth_cfg", "dns_request_rate_limit", "domain_group_name", "domain_group_rate_exceed_action", "domain_group_rate_per_service", "encap_template", "fqdn_cfg", "fqdn_label_count", "fqdn_label_len_cfg", "malformed_query_check", "multi_pu_threshold_distribution", "name",
-    "nxdomain_cfg", "on_no_match", "query_rate_threshold_for_cache_serving", "symtimeout_cfg", "user_tag", "uuid",
+    "action", "alias_rate_threshold", "allow_query_class", "allow_record_type", "dns_any_check", "dns_auth_cfg", "dns_request_rate_limit", "dnssec_wildcard_rate_threshold", "domain_group_name", "domain_group_rate_exceed_action", "domain_group_rate_per_service", "encap_template", "fqdn_cfg", "fqdn_label_count", "fqdn_label_len_cfg",
+    "malformed_query_check", "multi_pu_threshold_distribution", "name", "nxdomain_cfg", "on_no_match", "query_rate_threshold_for_cache_serving", "symtimeout_cfg", "user_tag", "uuid",
     ]
 
 
@@ -661,6 +671,12 @@ def get_argspec():
         'query_rate_threshold_for_cache_serving': {
             'type': 'int',
             },
+        'alias_rate_threshold': {
+            'type': 'int',
+            },
+        'dnssec_wildcard_rate_threshold': {
+            'type': 'int',
+            },
         'allow_query_class': {
             'type': 'dict',
             'allow_internet_query_class': {
@@ -872,13 +888,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -886,7 +902,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -908,8 +924,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

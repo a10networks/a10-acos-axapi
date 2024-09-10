@@ -142,7 +142,11 @@ options:
           Rate Max; 'ddet_ind_frag_rate_adaptive_threshold'= Frag Pkt Rate Adaptive
           Threshold; 'ddet_ind_bit_rate_current'= Bit Rate Current;
           'ddet_ind_bit_rate_min'= Bit Rate Min; 'ddet_ind_bit_rate_max'= Bit Rate Max;
-          'ddet_ind_bit_rate_adaptive_threshold'= Bit Rate Adaptive Threshold;"
+          'ddet_ind_bit_rate_adaptive_threshold'= Bit Rate Adaptive Threshold;
+          'ddet_ind_total_szp_current'= Total Learnt Sources Current;
+          'ddet_ind_total_szp_min'= Total Learnt Sources Min; 'ddet_ind_total_szp_max'=
+          Total Learnt Sources Max; 'ddet_ind_total_szp_adaptive_threshold'= Total Learnt
+          Sources Adaptive Threshold;"
                 type: str
     oper:
         description:
@@ -488,6 +492,22 @@ options:
                 description:
                 - "Bit Rate Adaptive Threshold"
                 type: str
+            ddet_ind_total_szp_current:
+                description:
+                - "Total Learnt Sources Current"
+                type: str
+            ddet_ind_total_szp_min:
+                description:
+                - "Total Learnt Sources Min"
+                type: str
+            ddet_ind_total_szp_max:
+                description:
+                - "Total Learnt Sources Max"
+                type: str
+            ddet_ind_total_szp_adaptive_threshold:
+                description:
+                - "Total Learnt Sources Adaptive Threshold"
+                type: str
 
 '''
 
@@ -579,7 +599,7 @@ def get_argspec():
                     'ddet_ind_inb_per_outb_current', 'ddet_ind_inb_per_outb_min', 'ddet_ind_inb_per_outb_max', 'ddet_ind_inb_per_outb_adaptive_threshold', 'ddet_ind_syn_per_fin_rate_current', 'ddet_ind_syn_per_fin_rate_min', 'ddet_ind_syn_per_fin_rate_max', 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current',
                     'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max', 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min',
                     'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max', 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max',
-                    'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold'
+                    'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
                     ]
                 }
             },
@@ -931,6 +951,18 @@ def get_argspec():
                 },
             'ddet_ind_bit_rate_adaptive_threshold': {
                 'type': 'str',
+                },
+            'ddet_ind_total_szp_current': {
+                'type': 'str',
+                },
+            'ddet_ind_total_szp_min': {
+                'type': 'str',
+                },
+            'ddet_ind_total_szp_max': {
+                'type': 'str',
+                },
+            'ddet_ind_total_szp_adaptive_threshold': {
+                'type': 'str',
                 }
             }
         })
@@ -1063,18 +1095,18 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1106,8 +1138,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

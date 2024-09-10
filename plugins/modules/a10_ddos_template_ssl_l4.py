@@ -200,6 +200,45 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    ssl_handshake_policy:
+        description:
+        - "Field ssl_handshake_policy"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'drop'= Drop packets (Default); 'reset'= Reset client connection; 'blacklist-
+          src'= Blacklist source IP;"
+                type: str
+            ssl_handshake_policy_action_list_name:
+                description:
+                - "Configure action-list to take"
+                type: str
+            cipher_suites_limit:
+                description:
+                - "Set cipher suites limit"
+                type: int
+            client_extensions_limit:
+                description:
+                - "Set client extensions limit"
+                type: int
+            src_handshaking_conn_limit:
+                description:
+                - "Set handshaking connection limit"
+                type: int
+            clienthello_to_appdata_timeout:
+                description:
+                - "Set maximum timeout seconds from ClientHello to Application-Data"
+                type: int
+            finished_to_appdata_timeout:
+                description:
+                - "Set maximum timeout seconds from Handshake finished to Application-Data"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -254,7 +293,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "allow_non_tls", "auth_config_cfg", "cert_cfg", "disable", "multi_pu_threshold_distribution", "renegotiation", "request_rate_limit", "server_name_list", "ssl_l4_tmpl_name", "ssl_traffic_check", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "allow_non_tls", "auth_config_cfg", "cert_cfg", "disable", "multi_pu_threshold_distribution", "renegotiation", "request_rate_limit", "server_name_list", "ssl_handshake_policy", "ssl_l4_tmpl_name", "ssl_traffic_check", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -368,6 +407,34 @@ def get_argspec():
                 },
             'check_resumed_connection': {
                 'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ssl_handshake_policy': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                'choices': ['drop', 'reset', 'blacklist-src']
+                },
+            'ssl_handshake_policy_action_list_name': {
+                'type': 'str',
+                },
+            'cipher_suites_limit': {
+                'type': 'int',
+                },
+            'client_extensions_limit': {
+                'type': 'int',
+                },
+            'src_handshaking_conn_limit': {
+                'type': 'int',
+                },
+            'clienthello_to_appdata_timeout': {
+                'type': 'int',
+                },
+            'finished_to_appdata_timeout': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',
@@ -513,13 +580,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -527,7 +594,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -549,8 +616,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

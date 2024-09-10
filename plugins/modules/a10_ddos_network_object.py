@@ -65,30 +65,16 @@ options:
         - "'monitor'= Monitor mode; 'learning'= Learning mode;"
         type: str
         required: False
-    ip:
+    threshold_sensitivity:
         description:
-        - "Field ip"
-        type: list
+        - "'LOW'= LOW; 'MEDIUM'= MEDIUM; 'HIGH'= HIGH; 'OFF'= OFF;"
+        type: str
         required: False
-        suboptions:
-            subnet_ip_addr:
-                description:
-                - "IP Subnet, supported prefix range is from 8 to 31"
-                type: str
-    ipv6:
+    histogram_mode:
         description:
-        - "Field ipv6"
-        type: list
-        required: False
-        suboptions:
-            subnet_ipv6_addr:
-                description:
-                - "IPV6 Subnet, supported prefix range is from 40 to 63"
-                type: str
-    histogram_enable:
-        description:
-        - "Enable histogram statistics (Default= Disabled)"
-        type: bool
+        - "'off'= histogram feature disabled; 'monitor'= histogram feature enabled with
+          anomaly escalation; 'observe'= histogram feature enabled and observe only;"
+        type: str
         required: False
     anomaly_detection_trigger:
         description:
@@ -100,6 +86,22 @@ options:
         description:
         - "'disable'= Disable service discovery for hosts (default= enabled);"
         type: str
+        required: False
+    sport_discovery:
+        description:
+        - "'disable'= Disable source port discovery (default= enabled);"
+        type: str
+        required: False
+    sport_anomaly_detection:
+        description:
+        - "'disable'= Disable source port anomaly detection (default= enabled);"
+        type: str
+        required: False
+    flooding_multiplier:
+        description:
+        - "multiplier for flooding detection threshold in network objects (default 2x
+          threshold)"
+        type: int
         required: False
     relative_auto_break_down_threshold:
         description:
@@ -143,11 +145,73 @@ options:
         suboptions:
             host_pkt_rate:
                 description:
-                - "Packet rate of per host"
+                - "Forward packet rate of per host"
                 type: int
             host_bit_rate:
                 description:
-                - "Bit rate of per host"
+                - "Forward bit rate of per host"
+                type: int
+            host_rev_pkt_rate:
+                description:
+                - "Reverse packet rate of per host"
+                type: int
+            host_rev_bit_rate:
+                description:
+                - "Reverse bit rate of per host"
+                type: int
+            host_undiscovered_pkt_rate:
+                description:
+                - "Undiscovered forward packet rate of per host"
+                type: int
+            host_flow_count:
+                description:
+                - "Flow count of per host"
+                type: int
+            host_syn_rate:
+                description:
+                - "SYN packet rate of per host"
+                type: int
+            host_fin_rate:
+                description:
+                - "FIN packet rate of per host"
+                type: int
+            host_rst_rate:
+                description:
+                - "RST packet rate of per host"
+                type: int
+            host_tcp_pkt_rate:
+                description:
+                - "Tcp packet rate of per host"
+                type: int
+            host_udp_pkt_rate:
+                description:
+                - "Udp packet rate of per host"
+                type: int
+            host_icmp_pkt_rate:
+                description:
+                - "ICMP packet rate of per host"
+                type: int
+            host_undiscovered_host_pkt_rate:
+                description:
+                - "forward packet rate of per undiscovered host"
+                type: int
+            host_undiscovered_host_bit_rate:
+                description:
+                - "Forward bit rate of per undiscovered host"
+                type: int
+    sport_discovery_threshold:
+        description:
+        - "Field sport_discovery_threshold"
+        type: dict
+        required: False
+        suboptions:
+            sport_heavy_hitter_percentage:
+                description:
+                - "Percentage of the bit rate of undiscovered source ports (default= 50)"
+                type: int
+            sport_discovery_bit_rate_percentage:
+                description:
+                - "Percentage of the bit rate of source port's parent entry (default= 5)"
                 type: int
     network_object_anomaly_threshold:
         description:
@@ -163,6 +227,24 @@ options:
                 description:
                 - "Bit rate of the network-object"
                 type: int
+    enable_top_k:
+        description:
+        - "Field enable_top_k"
+        type: list
+        required: False
+        suboptions:
+            topk_type:
+                description:
+                - "'destination'= Topk destination IP;"
+                type: str
+            topk_dst_num_records:
+                description:
+                - "Maximum number of records to show in topk"
+                type: int
+            topk_sort_key:
+                description:
+                - "'average'= window average; 'max-peak'= max peak;"
+                type: str
     uuid:
         description:
         - "uuid of the object"
@@ -185,8 +267,63 @@ options:
           Aged; 'subnet_create_fail'= Subnet Entry Create Failures; 'ip_learned'= IP
           Entry Learned; 'ip_aged'= IP Entry Aged; 'ip_create_fail'= IP Entry Create
           Failures; 'service_learned'= Service Entry Learned; 'service_aged'= Service
-          Entry Aged; 'service_create_fail'= Service Entry Create Failures;"
+          Entry Aged; 'service_create_fail'= Service Entry Create Failures;
+          'packet_rate'= PPS; 'bit_rate'= B(bits)PS; 'topk_allocate_fail'= Topk Allocate
+          Failures; 'sport_learned'= Source Port Entry Learned; 'sport_aged'= Source Port
+          Entry Aged; 'sport_create_fail'= Source Port Entry Create Failures;"
                 type: str
+    ip_list:
+        description:
+        - "Field ip_list"
+        type: list
+        required: False
+        suboptions:
+            subnet_ip_addr:
+                description:
+                - "IP Subnet, supported prefix range is from 8 to 31"
+                type: str
+            prefix_anomaly_threshold:
+                description:
+                - "Field prefix_anomaly_threshold"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    ipv6_list:
+        description:
+        - "Field ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            subnet_ipv6_addr:
+                description:
+                - "IPV6 Subnet, supported prefix range is from 40 to 63"
+                type: str
+            prefix_anomaly_threshold:
+                description:
+                - "Field prefix_anomaly_threshold"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     notification:
         description:
         - "Field notification"
@@ -205,31 +342,81 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    sub_network_list:
+    sub_network:
         description:
-        - "Field sub_network_list"
-        type: list
+        - "Field sub_network"
+        type: dict
         required: False
         suboptions:
-            subnet_ip_addr:
+            sub_network_v4_list:
                 description:
-                - "IPv4 Subnet/host, supported prefix range is from 24 to 32"
-                type: str
-            host_anomaly_threshold:
+                - "Field sub_network_v4_list"
+                type: list
+            sub_network_v6_list:
                 description:
-                - "Field host_anomaly_threshold"
-                type: dict
-            sub_network_anomaly_threshold:
-                description:
-                - "Field sub_network_anomaly_threshold"
-                type: dict
+                - "Field sub_network_v6_list"
+                type: list
+    topk_destinations:
+        description:
+        - "Field topk_destinations"
+        type: dict
+        required: False
+        suboptions:
             uuid:
                 description:
                 - "uuid of the object"
                 type: str
-            user_tag:
+    sport_anomaly_threshold:
+        description:
+        - "Field sport_anomaly_threshold"
+        type: dict
+        required: False
+        suboptions:
+            sport_pkt_rate:
                 description:
-                - "Customized tag"
+                - "Packet rate of a source port entry"
+                type: int
+            sport_pkt_rate_percentage:
+                description:
+                - "Percentage of source port entry's parent entry"
+                type: int
+            sport_bit_rate:
+                description:
+                - "Bit rate of a source port entry"
+                type: int
+            sport_bit_rate_percentage:
+                description:
+                - "Percentage of source port entry's parent entry"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
+            sport_list:
+                description:
+                - "Field sport_list"
+                type: list
+    sport_list:
+        description:
+        - "Field sport_list"
+        type: list
+        required: False
+        suboptions:
+            port_num:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'udp'= UDP port; 'tcp'= TCP Port;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
                 type: str
     oper:
         description:
@@ -257,6 +444,10 @@ options:
                 description:
                 - "Field discovered_list"
                 type: bool
+            sport_list:
+                description:
+                - "Field sport_list"
+                type: bool
             subnet_ip_addr:
                 description:
                 - "Field subnet_ip_addr"
@@ -276,6 +467,10 @@ options:
             anomaly_ip_list:
                 description:
                 - "Field anomaly_ip_list"
+                type: bool
+            sport:
+                description:
+                - "Field sport"
                 type: bool
             port_start:
                 description:
@@ -297,6 +492,10 @@ options:
                 description:
                 - "Field object_name"
                 type: str
+            topk_destinations:
+                description:
+                - "Field topk_destinations"
+                type: dict
     stats:
         description:
         - "Field stats"
@@ -339,10 +538,42 @@ options:
                 description:
                 - "Service Entry Create Failures"
                 type: str
+            packet_rate:
+                description:
+                - "PPS"
+                type: str
+            bit_rate:
+                description:
+                - "B(bits)PS"
+                type: str
+            topk_allocate_fail:
+                description:
+                - "Topk Allocate Failures"
+                type: str
+            sport_learned:
+                description:
+                - "Source Port Entry Learned"
+                type: str
+            sport_aged:
+                description:
+                - "Source Port Entry Aged"
+                type: str
+            sport_create_fail:
+                description:
+                - "Source Port Entry Create Failures"
+                type: str
             object_name:
                 description:
                 - "Field object_name"
                 type: str
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
+                type: list
 
 '''
 
@@ -398,8 +629,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "anomaly_detection_trigger", "histogram_enable", "host_anomaly_threshold", "ip", "ipv6", "network_object_anomaly_threshold", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold", "sampling_enable", "service_break_down_threshold_local", "service_discovery", "static_auto_break_down_threshold", "stats",
-    "sub_network_list", "user_tag", "uuid",
+    "anomaly_detection_trigger", "enable_top_k", "flooding_multiplier", "histogram_mode", "host_anomaly_threshold", "ip_list", "ipv6_list", "network_object_anomaly_threshold", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold", "sampling_enable", "service_break_down_threshold_local", "service_discovery",
+    "sport_anomaly_detection", "sport_anomaly_threshold", "sport_discovery", "sport_discovery_threshold", "sport_list", "static_auto_break_down_threshold", "stats", "sub_network", "threshold_sensitivity", "topk_destinations", "user_tag", "uuid",
     ]
 
 
@@ -429,20 +660,13 @@ def get_argspec():
             'type': 'str',
             'choices': ['monitor', 'learning']
             },
-        'ip': {
-            'type': 'list',
-            'subnet_ip_addr': {
-                'type': 'str',
-                }
+        'threshold_sensitivity': {
+            'type': 'str',
+            'choices': ['LOW', 'MEDIUM', 'HIGH', 'OFF']
             },
-        'ipv6': {
-            'type': 'list',
-            'subnet_ipv6_addr': {
-                'type': 'str',
-                }
-            },
-        'histogram_enable': {
-            'type': 'bool',
+        'histogram_mode': {
+            'type': 'str',
+            'choices': ['off', 'monitor', 'observe']
             },
         'anomaly_detection_trigger': {
             'type': 'str',
@@ -451,6 +675,17 @@ def get_argspec():
         'service_discovery': {
             'type': 'str',
             'choices': ['disable']
+            },
+        'sport_discovery': {
+            'type': 'str',
+            'choices': ['disable']
+            },
+        'sport_anomaly_detection': {
+            'type': 'str',
+            'choices': ['disable']
+            },
+        'flooding_multiplier': {
+            'type': 'int',
             },
         'relative_auto_break_down_threshold': {
             'type': 'dict',
@@ -480,6 +715,51 @@ def get_argspec():
                 },
             'host_bit_rate': {
                 'type': 'int',
+                },
+            'host_rev_pkt_rate': {
+                'type': 'int',
+                },
+            'host_rev_bit_rate': {
+                'type': 'int',
+                },
+            'host_undiscovered_pkt_rate': {
+                'type': 'int',
+                },
+            'host_flow_count': {
+                'type': 'int',
+                },
+            'host_syn_rate': {
+                'type': 'int',
+                },
+            'host_fin_rate': {
+                'type': 'int',
+                },
+            'host_rst_rate': {
+                'type': 'int',
+                },
+            'host_tcp_pkt_rate': {
+                'type': 'int',
+                },
+            'host_udp_pkt_rate': {
+                'type': 'int',
+                },
+            'host_icmp_pkt_rate': {
+                'type': 'int',
+                },
+            'host_undiscovered_host_pkt_rate': {
+                'type': 'int',
+                },
+            'host_undiscovered_host_bit_rate': {
+                'type': 'int',
+                }
+            },
+        'sport_discovery_threshold': {
+            'type': 'dict',
+            'sport_heavy_hitter_percentage': {
+                'type': 'int',
+                },
+            'sport_discovery_bit_rate_percentage': {
+                'type': 'int',
                 }
             },
         'network_object_anomaly_threshold': {
@@ -489,6 +769,20 @@ def get_argspec():
                 },
             'network_object_bit_rate': {
                 'type': 'int',
+                }
+            },
+        'enable_top_k': {
+            'type': 'list',
+            'topk_type': {
+                'type': 'str',
+                'choices': ['destination']
+                },
+            'topk_dst_num_records': {
+                'type': 'int',
+                },
+            'topk_sort_key': {
+                'type': 'str',
+                'choices': ['average', 'max-peak']
                 }
             },
         'uuid': {
@@ -501,7 +795,65 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'subnet_learned', 'subnet_aged', 'subnet_create_fail', 'ip_learned', 'ip_aged', 'ip_create_fail', 'service_learned', 'service_aged', 'service_create_fail']
+                'choices': ['all', 'subnet_learned', 'subnet_aged', 'subnet_create_fail', 'ip_learned', 'ip_aged', 'ip_create_fail', 'service_learned', 'service_aged', 'service_create_fail', 'packet_rate', 'bit_rate', 'topk_allocate_fail', 'sport_learned', 'sport_aged', 'sport_create_fail']
+                }
+            },
+        'ip_list': {
+            'type': 'list',
+            'subnet_ip_addr': {
+                'type': 'str',
+                'required': True,
+                },
+            'prefix_anomaly_threshold': {
+                'type': 'dict',
+                'prefix_pkt_rate': {
+                    'type': 'int',
+                    },
+                'prefix_bit_rate': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'packet_rate', 'bit_rate']
+                    }
+                }
+            },
+        'ipv6_list': {
+            'type': 'list',
+            'subnet_ipv6_addr': {
+                'type': 'str',
+                'required': True,
+                },
+            'prefix_anomaly_threshold': {
+                'type': 'dict',
+                'prefix_pkt_rate': {
+                    'type': 'int',
+                    },
+                'prefix_bit_rate': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'packet_rate', 'bit_rate']
+                    }
                 }
             },
         'notification': {
@@ -520,34 +872,272 @@ def get_argspec():
                 'type': 'str',
                 }
             },
-        'sub_network_list': {
-            'type': 'list',
-            'subnet_ip_addr': {
+        'sub_network': {
+            'type': 'dict',
+            'sub_network_v4_list': {
+                'type': 'list',
+                'subnet_ip_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'host_anomaly_threshold': {
+                    'type': 'dict',
+                    'static_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_rev_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_bit_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_rev_bit_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_undiscovered_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_flow_count_threshold': {
+                        'type': 'int',
+                        },
+                    'static_syn_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_fin_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_rst_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_tcp_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_udp_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_icmp_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_undiscovered_host_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_undiscovered_host_bit_rate_threshold': {
+                        'type': 'int',
+                        }
+                    },
+                'sub_network_anomaly_threshold': {
+                    'type': 'dict',
+                    'static_sub_network_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'static_sub_network_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'subnet_breakdown': {
+                    'type': 'int',
+                    },
+                'breakdown_subnet_threshold': {
+                    'type': 'dict',
+                    'breakdown_subnet_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'breakdown_subnet_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'packet_rate', 'bit_rate']
+                        }
+                    }
+                },
+            'sub_network_v6_list': {
+                'type': 'list',
+                'subnet_ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'host_anomaly_threshold': {
+                    'type': 'dict',
+                    'static_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_rev_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_bit_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_rev_bit_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_undiscovered_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_flow_count_threshold': {
+                        'type': 'int',
+                        },
+                    'static_syn_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_fin_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_rst_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_tcp_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_udp_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_icmp_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_undiscovered_host_pkt_rate_threshold': {
+                        'type': 'int',
+                        },
+                    'static_undiscovered_host_bit_rate_threshold': {
+                        'type': 'int',
+                        }
+                    },
+                'sub_network_anomaly_threshold': {
+                    'type': 'dict',
+                    'static_sub_network_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'static_sub_network_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'subnet_breakdown': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'packet_rate', 'bit_rate']
+                        }
+                    }
+                }
+            },
+        'topk_destinations': {
+            'type': 'dict',
+            'uuid': {
                 'type': 'str',
-                'required': True,
+                }
+            },
+        'sport_anomaly_threshold': {
+            'type': 'dict',
+            'sport_pkt_rate': {
+                'type': 'int',
                 },
-            'host_anomaly_threshold': {
-                'type': 'dict',
-                'static_pkt_rate_threshold': {
-                    'type': 'int',
-                    },
-                'static_bit_rate_threshold': {
-                    'type': 'int',
-                    }
+            'sport_pkt_rate_percentage': {
+                'type': 'int',
                 },
-            'sub_network_anomaly_threshold': {
-                'type': 'dict',
-                'static_sub_network_pkt_rate': {
-                    'type': 'int',
-                    },
-                'static_sub_network_bit_rate': {
-                    'type': 'int',
-                    }
+            'sport_bit_rate': {
+                'type': 'int',
+                },
+            'sport_bit_rate_percentage': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',
                 },
-            'user_tag': {
+            'ip_list': {
+                'type': 'list',
+                'ipv4': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'per_ip_sport_pkt_rate_percentage': {
+                    'type': 'int',
+                    },
+                'per_ip_sport_pkt_rate': {
+                    'type': 'int',
+                    },
+                'per_ip_sport_bit_rate_percentage': {
+                    'type': 'int',
+                    },
+                'per_ip_sport_bit_rate': {
+                    'type': 'int',
+                    },
+                'sport_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['udp', 'tcp']
+                    },
+                'per_sport_per_ip_sport_pkt_rate_percentage': {
+                    'type': 'int',
+                    },
+                'per_sport_per_ip_sport_pkt_rate': {
+                    'type': 'int',
+                    },
+                'per_sport_per_ip_sport_bit_rate_percentage': {
+                    'type': 'int',
+                    },
+                'per_sport_per_ip_sport_bit_rate': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'sport_list': {
+                'type': 'list',
+                'sport_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['udp', 'tcp']
+                    },
+                'per_sport_pkt_rate_percentage': {
+                    'type': 'int',
+                    },
+                'per_sport_pkt_rate': {
+                    'type': 'int',
+                    },
+                'per_sport_bit_rate_percentage': {
+                    'type': 'int',
+                    },
+                'per_sport_bit_rate': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'sport_list': {
+            'type': 'list',
+            'port_num': {
+                'type': 'int',
+                'required': True,
+                },
+            'protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['udp', 'tcp']
+                },
+            'uuid': {
                 'type': 'str',
                 }
             },
@@ -609,6 +1199,9 @@ def get_argspec():
                 'operational_mode': {
                     'type': 'int',
                     },
+                'histogram_mode': {
+                    'type': 'int',
+                    },
                 'es_timestamp': {
                     'type': 'str',
                     },
@@ -628,6 +1221,9 @@ def get_argspec():
             'discovered_list': {
                 'type': 'bool',
                 },
+            'sport_list': {
+                'type': 'bool',
+                },
             'subnet_ip_addr': {
                 'type': 'str',
                 },
@@ -641,6 +1237,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'anomaly_ip_list': {
+                'type': 'bool',
+                },
+            'sport': {
                 'type': 'bool',
                 },
             'port_start': {
@@ -658,6 +1257,36 @@ def get_argspec():
             'object_name': {
                 'type': 'str',
                 'required': True,
+                },
+            'topk_destinations': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'indicators': {
+                        'type': 'list',
+                        'indicator_name': {
+                            'type': 'str',
+                            },
+                        'indicator_index': {
+                            'type': 'int',
+                            },
+                        'destinations': {
+                            'type': 'list',
+                            'address': {
+                                'type': 'str',
+                                },
+                            'rate': {
+                                'type': 'str',
+                                }
+                            }
+                        },
+                    'topk_type': {
+                        'type': 'int',
+                        },
+                    'reset_time': {
+                        'type': 'int',
+                        }
+                    }
                 }
             },
         'stats': {
@@ -689,9 +1318,59 @@ def get_argspec():
             'service_create_fail': {
                 'type': 'str',
                 },
+            'packet_rate': {
+                'type': 'str',
+                },
+            'bit_rate': {
+                'type': 'str',
+                },
+            'topk_allocate_fail': {
+                'type': 'str',
+                },
+            'sport_learned': {
+                'type': 'str',
+                },
+            'sport_aged': {
+                'type': 'str',
+                },
+            'sport_create_fail': {
+                'type': 'str',
+                },
             'object_name': {
                 'type': 'str',
                 'required': True,
+                },
+            'ip_list': {
+                'type': 'list',
+                'subnet_ip_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'stats': {
+                    'type': 'dict',
+                    'packet_rate': {
+                        'type': 'str',
+                        },
+                    'bit_rate': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'ipv6_list': {
+                'type': 'list',
+                'subnet_ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'stats': {
+                    'type': 'dict',
+                    'packet_rate': {
+                        'type': 'str',
+                        },
+                    'bit_rate': {
+                        'type': 'str',
+                        }
+                    }
                 }
             }
         })
@@ -834,13 +1513,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -848,7 +1527,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -880,8 +1559,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

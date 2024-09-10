@@ -113,9 +113,9 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    ip_filtering_policy_oper:
+    ip_filtering_policy_statistics:
         description:
-        - "Field ip_filtering_policy_oper"
+        - "Field ip_filtering_policy_statistics"
         type: dict
         required: False
         suboptions:
@@ -221,9 +221,9 @@ options:
                 description:
                 - "'tcp'= ip-proto tcp; 'udp'= ip-proto udp;"
                 type: str
-            ip_filtering_policy_oper:
+            ip_filtering_policy_statistics:
                 description:
-                - "Field ip_filtering_policy_oper"
+                - "Field ip_filtering_policy_statistics"
                 type: dict
 
 '''
@@ -279,7 +279,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["deny", "drop_frag_pkt", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "oper", "protocol", "set_counter_base_val", "uuid", ]
+AVAILABLE_PROPERTIES = ["deny", "drop_frag_pkt", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "oper", "protocol", "set_counter_base_val", "uuid", ]
 
 
 def get_default_argspec():
@@ -336,7 +336,7 @@ def get_argspec():
         'uuid': {
             'type': 'str',
             },
-        'ip_filtering_policy_oper': {
+        'ip_filtering_policy_statistics': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
@@ -421,6 +421,9 @@ def get_argspec():
                 'dynamic_entry_limit': {
                     'type': 'str',
                     },
+                'dynamic_entry_warn_state': {
+                    'type': 'str',
+                    },
                 'sflow_source_id': {
                     'type': 'int',
                     },
@@ -496,7 +499,7 @@ def get_argspec():
                 'required': True,
                 'choices': ['tcp', 'udp']
                 },
-            'ip_filtering_policy_oper': {
+            'ip_filtering_policy_statistics': {
                 'type': 'dict',
                 'oper': {
                     'type': 'dict',
@@ -506,6 +509,9 @@ def get_argspec():
                             'type': 'int',
                             },
                         'hits': {
+                            'type': 'int',
+                            },
+                        'blacklisted_src_count': {
                             'type': 'int',
                             }
                         }
@@ -659,13 +665,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -673,7 +679,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -700,8 +706,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

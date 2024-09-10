@@ -388,12 +388,16 @@ options:
           check Failed on PU2; 'gtp-u-smp-sig-check-failed'= GTP SMP signature check
           Failed; 'blade-gtp-u-smp-sig-check-failed'= GTP-U SMP signature check Failed on
           PU2; 'gtp-smp-sig-check-failed'= GTP SMP signature check Failed; 'blade-gtp-
-          smp-sig-check-failed'= GTP SMP signature check Failed on PU2; 'gtp-v0-c-uplink-
-          ingress-packets'= GTPv0-C Uplink Ingress Packets; 'gtp-v0-c-uplink-egress-
-          packets'= GTPv0-C Uplink Egress Packets; 'gtp-v0-c-downlink-ingress-packets'=
-          GTPv0-C Downlink Ingress Packets; 'gtp-v0-c-downlink-egress-packets'= GTPv0-C
-          Downlink Egress Packets; 'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink
-          Ingress Bytes; 'gtp-v0-c-uplink-egress-bytes'= GTPv0-C Uplink Egress Bytes;
+          smp-sig-check-failed'= GTP SMP signature check Failed on PU2; 'gtp-c-fail-conn-
+          create-slow'= GTP-C packet failed creating L4-session in slowpath; 'gtp-u-fail-
+          conn-create-slow'= GTP-U packet failed while creating L4-session in slowpath;
+          'gtp-pathm-fail-conn-create-slow'= GTP path packet failed while creating
+          L4-session in slowpath; 'gtp-v0-c-uplink-ingress-packets'= GTPv0-C Uplink
+          Ingress Packets; 'gtp-v0-c-uplink-egress-packets'= GTPv0-C Uplink Egress
+          Packets; 'gtp-v0-c-downlink-ingress-packets'= GTPv0-C Downlink Ingress Packets;
+          'gtp-v0-c-downlink-egress-packets'= GTPv0-C Downlink Egress Packets;
+          'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink Ingress Bytes;
+          'gtp-v0-c-uplink-egress-bytes'= GTPv0-C Uplink Egress Bytes;
           'gtp-v0-c-downlink-ingress-bytes'= GTPv0-C Downlink Ingress Bytes;
           'gtp-v0-c-downlink-egress-bytes'= GTPv0-C Downlink Egress Bytes;
           'gtp-v1-c-uplink-ingress-packets'= GTPv1-C Uplink Ingress Packets;
@@ -422,15 +426,15 @@ options:
           'gtp-v1-c-create-synced'= GTPv1-C Tunnel Create Synced; 'gtp-v2-c-create-
           synced'= GTPv2-C Tunnel Create Synced; 'gtp-v0-c-delete-synced'= GTPv0-C Tunnel
           Delete Synced; 'gtp-v1-c-delete-synced'= GTPv1-C Tunnel Delete Synced;
-          'gtp-v2-c-delete-synced'= GTPv2-C Tunnel Delete Synced; 'gtp-v0-c-create-sync-
-          rx'= GTPv0-C Tunnel Create Sync Received on Standby; 'gtp-v1-c-create-sync-rx'=
-          GTPv1-C Tunnel Create Sync Received on Standby; 'gtp-v2-c-create-sync-rx'=
-          GTPv2-C Tunnel Create Sync Received on Standby; 'gtp-v0-c-delete-sync-rx'=
-          GTPv0-C Tunnel Delete Sync Received on Standby;"
+          'gtp-v2-c-delete-synced'= GTPv2-C Tunnel Delete Synced;"
                 type: str
             counters4:
                 description:
-                - "'gtp-v1-c-delete-sync-rx'= GTPv1-C Tunnel Delete Sync Received on Standby;
+                - "'gtp-v0-c-create-sync-rx'= GTPv0-C Tunnel Create Sync Received on Standby;
+          'gtp-v1-c-create-sync-rx'= GTPv1-C Tunnel Create Sync Received on Standby;
+          'gtp-v2-c-create-sync-rx'= GTPv2-C Tunnel Create Sync Received on Standby;
+          'gtp-v0-c-delete-sync-rx'= GTPv0-C Tunnel Delete Sync Received on Standby;
+          'gtp-v1-c-delete-sync-rx'= GTPv1-C Tunnel Delete Sync Received on Standby;
           'gtp-v2-c-delete-sync-rx'= GTPv2-C Tunnel Delete Sync Received on Standby;
           'gtp-handover-synced'= GTP Handover Synced; 'gtp-handover-sync-rx'= GTP
           Handover Sync Received on Standby; 'gtp-smp-add-bearer-synced'= GTP SMP Add
@@ -722,6 +726,18 @@ options:
             blade_gtp_smp_sig_check_failed:
                 description:
                 - "GTP SMP signature check Failed on PU2"
+                type: str
+            gtp_c_fail_conn_create_slow:
+                description:
+                - "GTP-C packet failed creating L4-session in slowpath"
+                type: str
+            gtp_u_fail_conn_create_slow:
+                description:
+                - "GTP-U packet failed while creating L4-session in slowpath"
+                type: str
+            gtp_pathm_fail_conn_create_slow:
+                description:
+                - "GTP path packet failed while creating L4-session in slowpath"
                 type: str
             gtp_v0_c_uplink_ingress_packets:
                 description:
@@ -1050,22 +1066,22 @@ def get_argspec():
                     'gtp-sync-tx-inter-pu-no-gtp-u-ext', 'gtp-sync-tx-inter-pu-no-ug-error', 'gtp-sync-tx-inter-pu-no-msg-hdr-error', 'gtp-sync-tx-inter-pu-no-data-error', 'gtp-sync-tx-fw-drop-session-create', 'gtp-query-pkt-rx-counter-gtp-c', 'gtp-query-pkt-rx-counter-gtp-u', 'gtp-query-pkt-rx-counter-gtp-echo', 'gtp-sync-rx-del-c-counter',
                     'gtp-sync-rx-del-u-counter', 'gtp-sync-rx-del-echo-counter', 'gtp-sync-rx-create-c-counter', 'gtp-sync-rx-create-u-counter', 'gtp-sync-rx-create-echo-counter', 'gtp-sync-tx-create-c-counter', 'gtp-sync-tx-create-u-counter', 'gtp-sync-tx-create-echo-counter', 'gtp-sync-tx-delete-c-counter', 'gtp-sync-tx-delete-u-counter',
                     'gtp-sync-tx-delete-echo-counter', 'gtp-sync-rx-del-no-such-c-session', 'gtp-sync-rx-del-no-such-u-session', 'gtp-sync-rx-del-no-such-echo-session', 'gtp-c-match-c-smp-with-del-flag', 'gtp-c-match-c-smp-with-ho-flag', 'gtp-c-smp-sig-check-failed', 'blade-gtp-c-smp-sig-check-failed', 'gtp-u-smp-sig-check-failed',
-                    'blade-gtp-u-smp-sig-check-failed', 'gtp-smp-sig-check-failed', 'blade-gtp-smp-sig-check-failed', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes',
-                    'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes', 'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets', 'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes',
-                    'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets', 'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes',
-                    'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced',
-                    'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx', 'gtp-v0-c-delete-sync-rx'
+                    'blade-gtp-u-smp-sig-check-failed', 'gtp-smp-sig-check-failed', 'blade-gtp-smp-sig-check-failed', 'gtp-c-fail-conn-create-slow', 'gtp-u-fail-conn-create-slow', 'gtp-pathm-fail-conn-create-slow', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets',
+                    'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes', 'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets', 'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets',
+                    'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets', 'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes',
+                    'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes',
+                    'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced'
                     ]
                 },
             'counters4': {
                 'type':
                 'str',
                 'choices': [
-                    'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced', 'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx',
-                    'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced', 'gtp-v1-c-echo-create-synced', 'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx',
-                    'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx', 'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced',
-                    'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch', 'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward',
-                    'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length'
+                    'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx', 'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced',
+                    'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx', 'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced', 'gtp-v1-c-echo-create-synced',
+                    'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx', 'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx',
+                    'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced', 'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch',
+                    'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward', 'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length'
                     ]
                 }
             },
@@ -1249,6 +1265,15 @@ def get_argspec():
                 'type': 'str',
                 },
             'blade_gtp_smp_sig_check_failed': {
+                'type': 'str',
+                },
+            'gtp_c_fail_conn_create_slow': {
+                'type': 'str',
+                },
+            'gtp_u_fail_conn_create_slow': {
+                'type': 'str',
+                },
+            'gtp_pathm_fail_conn_create_slow': {
                 'type': 'str',
                 },
             'gtp_v0_c_uplink_ingress_packets': {
@@ -1669,6 +1694,12 @@ def get_argspec():
                     'drop_vld_gtp_v2_c_message_length_mismatch': {
                         'type': 'str',
                         },
+                    'vld_message_monitor': {
+                        'type': 'str',
+                        },
+                    'gen_message_length_monitor': {
+                        'type': 'str',
+                        },
                     'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {
                         'type': 'str',
                         },
@@ -1691,6 +1722,21 @@ def get_argspec():
                         'type': 'str',
                         },
                     'drop_flt_gtp_in_gtp': {
+                        'type': 'str',
+                        },
+                    'flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'rat_flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'apn_imsi_flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'msisdn_flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'gtp_in_gtp_flt_message_monitor': {
                         'type': 'str',
                         },
                     'drop_rl_gtp_v0_c_agg': {
@@ -1736,6 +1782,9 @@ def get_argspec():
                         'type': 'str',
                         },
                     'drop_rl_gtp_u_max_concurrent_tunnels': {
+                        'type': 'str',
+                        },
+                    'rl_message_monitor': {
                         'type': 'str',
                         }
                     }
@@ -1981,6 +2030,12 @@ def get_argspec():
                     'gtp_c_handover_in_progress_with_conn': {
                         'type': 'str',
                         },
+                    'vld_message_monitor': {
+                        'type': 'str',
+                        },
+                    'gen_message_length_monitor': {
+                        'type': 'str',
+                        },
                     'drop_vld_v0_reserved_message_drop': {
                         'type': 'str',
                         },
@@ -2068,6 +2123,21 @@ def get_argspec():
                     'drop_flt_gtp_in_gtp': {
                         'type': 'str',
                         },
+                    'flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'rat_flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'apn_imsi_flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'msisdn_flt_message_monitor': {
+                        'type': 'str',
+                        },
+                    'gtp_in_gtp_flt_message_monitor': {
+                        'type': 'str',
+                        },
                     'drop_rl_gtp_v0_c_agg': {
                         'type': 'str',
                         },
@@ -2111,6 +2181,9 @@ def get_argspec():
                         'type': 'str',
                         },
                     'drop_rl_gtp_u_max_concurrent_tunnels': {
+                        'type': 'str',
+                        },
+                    'rl_message_monitor': {
                         'type': 'str',
                         }
                     }
@@ -2251,13 +2324,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -2265,7 +2338,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -2292,8 +2365,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

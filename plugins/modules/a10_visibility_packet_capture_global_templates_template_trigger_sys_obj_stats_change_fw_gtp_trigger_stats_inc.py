@@ -202,6 +202,24 @@ options:
         - "Enable automatic packet-capture for GTP SMP signature check Failed on PU2"
         type: bool
         required: False
+    gtp_c_fail_conn_create_slow:
+        description:
+        - "Enable automatic packet-capture for GTP-C packet failed creating L4-session in
+          slowpath"
+        type: bool
+        required: False
+    gtp_u_fail_conn_create_slow:
+        description:
+        - "Enable automatic packet-capture for GTP-U packet failed while creating
+          L4-session in slowpath"
+        type: bool
+        required: False
+    gtp_pathm_fail_conn_create_slow:
+        description:
+        - "Enable automatic packet-capture for GTP path packet failed while creating
+          L4-session in slowpath"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -263,8 +281,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "blade_gtp_c_smp_sig_check_failed", "blade_gtp_info_ext_not_found", "blade_gtp_rate_limit_entry_create_failu", "blade_gtp_rate_limit_smp_create_failure", "blade_gtp_rate_limit_t3_ctr_create_fail", "blade_gtp_smp_c_check_failed", "blade_gtp_smp_dec_sess_count_check_fail", "blade_gtp_smp_path_check_failed",
-    "blade_gtp_smp_session_count_check_faile", "blade_gtp_smp_sig_check_failed", "blade_gtp_u_smp_check_failed", "blade_gtp_u_smp_sig_check_failed", "blade_out_of_session_memory", "gtp_c_smp_sig_check_failed", "gtp_info_ext_not_found", "gtp_rate_limit_entry_create_failure", "gtp_rate_limit_smp_create_failure",
-    "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_c_check_failed", "gtp_smp_dec_sess_count_check_failed", "gtp_smp_path_check_failed", "gtp_smp_sig_check_failed", "gtp_tunnel_rate_limit_entry_create_fail", "gtp_u_smp_check_failed", "gtp_u_smp_sig_check_failed", "gtp_u_tunnel_rate_limit_entry_create_fa", "out_of_session_memory", "uuid",
+    "blade_gtp_smp_session_count_check_faile", "blade_gtp_smp_sig_check_failed", "blade_gtp_u_smp_check_failed", "blade_gtp_u_smp_sig_check_failed", "blade_out_of_session_memory", "gtp_c_fail_conn_create_slow", "gtp_c_smp_sig_check_failed", "gtp_info_ext_not_found", "gtp_pathm_fail_conn_create_slow", "gtp_rate_limit_entry_create_failure",
+    "gtp_rate_limit_smp_create_failure", "gtp_rate_limit_t3_ctr_create_failure", "gtp_smp_c_check_failed", "gtp_smp_dec_sess_count_check_failed", "gtp_smp_path_check_failed", "gtp_smp_sig_check_failed", "gtp_tunnel_rate_limit_entry_create_fail", "gtp_u_fail_conn_create_slow", "gtp_u_smp_check_failed", "gtp_u_smp_sig_check_failed",
+    "gtp_u_tunnel_rate_limit_entry_create_fa", "out_of_session_memory", "uuid",
     ]
 
 
@@ -365,6 +384,15 @@ def get_argspec():
             'type': 'bool',
             },
         'blade_gtp_smp_sig_check_failed': {
+            'type': 'bool',
+            },
+        'gtp_c_fail_conn_create_slow': {
+            'type': 'bool',
+            },
+        'gtp_u_fail_conn_create_slow': {
+            'type': 'bool',
+            },
+        'gtp_pathm_fail_conn_create_slow': {
             'type': 'bool',
             },
         'uuid': {
@@ -512,13 +540,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -526,7 +554,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -548,8 +576,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
