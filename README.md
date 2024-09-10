@@ -232,6 +232,7 @@ tasks:
         <b>state: noop</b>
         <b>get_type: list</b>
 </pre>
+***NOTE*** - *When the ``` state ``` is noop and the ``` get_type ``` value is not specified, the playbook will automatically retrieve information for a single object, assuming ``` get_type ``` as ``` single ```. Please provide the required parameters to obtain details for a single object.*
 
 ### Getting operational information
 <pre>
@@ -518,3 +519,4 @@ Please raise issue in github repository. Please include the Ansible playbook or 
 
 ## Support
 For all issues, please send an email to support@a10networks.com
+
