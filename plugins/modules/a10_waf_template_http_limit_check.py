@@ -315,6 +315,12 @@ options:
         - "Max length of url (default 4096) (Maximum length of url allowed (default 4096))"
         type: int
         required: False
+    internal_violation_action:
+        description:
+        - "'allow'= Allow the transaction and skip WAF checks; 'deny'= Deny the
+          transaction;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -375,10 +381,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "disable", "max_content_length", "max_content_length_value", "max_cookie_header_length", "max_cookie_header_length_value", "max_cookie_name_length", "max_cookie_name_length_value", "max_cookie_value_length", "max_cookie_value_length_value", "max_cookies", "max_cookies_length", "max_cookies_length_value", "max_cookies_value", "max_data_parse",
-    "max_data_parse_value", "max_entities", "max_entities_value", "max_header_length", "max_header_length_value", "max_header_name_length", "max_header_name_length_value", "max_header_value_length", "max_header_value_length_value", "max_headers", "max_headers_length", "max_headers_length_value", "max_headers_value", "max_param_name_length",
-    "max_param_name_length_value", "max_param_value_length", "max_param_value_length_value", "max_params", "max_params_length", "max_params_length_value", "max_params_value", "max_post_length", "max_post_length_value", "max_query_length", "max_query_length_value", "max_request_length", "max_request_length_value", "max_request_line_length",
-    "max_request_line_length_value", "max_url_length", "max_url_length_value", "uuid",
+    "disable", "internal_violation_action", "max_content_length", "max_content_length_value", "max_cookie_header_length", "max_cookie_header_length_value", "max_cookie_name_length", "max_cookie_name_length_value", "max_cookie_value_length", "max_cookie_value_length_value", "max_cookies", "max_cookies_length", "max_cookies_length_value",
+    "max_cookies_value", "max_data_parse", "max_data_parse_value", "max_entities", "max_entities_value", "max_header_length", "max_header_length_value", "max_header_name_length", "max_header_name_length_value", "max_header_value_length", "max_header_value_length_value", "max_headers", "max_headers_length", "max_headers_length_value",
+    "max_headers_value", "max_param_name_length", "max_param_name_length_value", "max_param_value_length", "max_param_value_length_value", "max_params", "max_params_length", "max_params_length_value", "max_params_value", "max_post_length", "max_post_length_value", "max_query_length", "max_query_length_value", "max_request_length",
+    "max_request_length_value", "max_request_line_length", "max_request_line_length_value", "max_url_length", "max_url_length_value", "uuid",
     ]
 
 
@@ -535,6 +541,10 @@ def get_argspec():
         'max_url_length_value': {
             'type': 'int',
             },
+        'internal_violation_action': {
+            'type': 'str',
+            'choices': ['allow', 'deny']
+            },
         'uuid': {
             'type': 'str',
             }
@@ -680,13 +690,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -694,7 +704,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -716,8 +726,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

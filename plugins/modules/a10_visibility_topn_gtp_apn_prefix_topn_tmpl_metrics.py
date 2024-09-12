@@ -498,6 +498,12 @@ options:
         - "Track Top-N entities for Rate-limit Drop= GTP-U Concurrent Tunnels"
         type: bool
         required: False
+    rl_message_monitor:
+        description:
+        - "Track Top-N entities for GTP Message forwarded via monitor mode at rate-limit
+          policy"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -565,8 +571,8 @@ AVAILABLE_PROPERTIES = [
     "drop_vld_reserved_information_element", "drop_vld_sanity_failed_piggyback", "drop_vld_sequence_num_correlation", "drop_vld_tunnel_id_flag", "drop_vld_unsupported_message_type", "drop_vld_version_not_supported", "gtp_c_handover_in_progress_with_conn", "gtp_path_management_message", "gtp_u_tunnel_created", "gtp_u_tunnel_deleted",
     "gtp_v0_c_create_pdp_resp_unsuccess", "gtp_v0_c_half_open_tunnel_closed", "gtp_v0_c_tunnel_closed", "gtp_v0_c_tunnel_created", "gtp_v0_c_tunnel_deleted", "gtp_v0_c_tunnel_deleted_restart", "gtp_v0_c_tunnel_half_closed", "gtp_v0_c_tunnel_half_open", "gtp_v0_c_update_pdp_resp_unsuccess", "gtp_v1_c_create_pdp_resp_unsuccess",
     "gtp_v1_c_half_open_tunnel_closed", "gtp_v1_c_tunnel_closed", "gtp_v1_c_tunnel_created", "gtp_v1_c_tunnel_deleted", "gtp_v1_c_tunnel_deleted_restart", "gtp_v1_c_tunnel_half_closed", "gtp_v1_c_tunnel_half_open", "gtp_v1_c_update_pdp_resp_unsuccess", "gtp_v2_c_create_sess_resp_unsuccess", "gtp_v2_c_half_open_tunnel_closed",
-    "gtp_v2_c_mod_bearer_resp_unsuccess", "gtp_v2_c_piggyback_message", "gtp_v2_c_tunnel_closed", "gtp_v2_c_tunnel_created", "gtp_v2_c_tunnel_deleted", "gtp_v2_c_tunnel_deleted_restart", "gtp_v2_c_tunnel_half_closed", "gtp_v2_c_tunnel_half_open", "u_downlink_bytes", "u_downlink_pkts", "u_uplink_bytes", "u_uplink_pkts", "uplink_bytes",
-    "uplink_pkts", "uuid",
+    "gtp_v2_c_mod_bearer_resp_unsuccess", "gtp_v2_c_piggyback_message", "gtp_v2_c_tunnel_closed", "gtp_v2_c_tunnel_created", "gtp_v2_c_tunnel_deleted", "gtp_v2_c_tunnel_deleted_restart", "gtp_v2_c_tunnel_half_closed", "gtp_v2_c_tunnel_half_open", "rl_message_monitor", "u_downlink_bytes", "u_downlink_pkts", "u_uplink_bytes", "u_uplink_pkts",
+    "uplink_bytes", "uplink_pkts", "uuid",
     ]
 
 
@@ -846,6 +852,9 @@ def get_argspec():
         'drop_rl_gtp_u_max_concurrent_tunnels': {
             'type': 'bool',
             },
+        'rl_message_monitor': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             }
@@ -991,13 +1000,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1005,7 +1014,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1027,8 +1036,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

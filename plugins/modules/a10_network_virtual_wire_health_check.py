@@ -70,9 +70,24 @@ options:
         - "Ethernet interface"
         type: str
         required: False
-    ipv4_addr:
+    nexthop_ip:
         description:
-        - "IP address"
+        - "Nexthop address"
+        type: str
+        required: False
+    nexthop_mac:
+        description:
+        - "Nexthop mac address"
+        type: str
+        required: False
+    source_ip:
+        description:
+        - "source ip for ping method"
+        type: str
+        required: False
+    source_mac:
+        description:
+        - "source mac for ping method"
         type: str
         required: False
     interval:
@@ -225,7 +240,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["active_threshold", "enable", "ethernet", "garp_interval", "interval", "ipv4_addr", "l3_packet", "method", "oper", "partition_health_check", "sampling_enable", "sby_ethernet", "stats", "user_tag", "uuid", "vlan", ]
+AVAILABLE_PROPERTIES = ["active_threshold", "enable", "ethernet", "garp_interval", "interval", "l3_packet", "method", "nexthop_ip", "nexthop_mac", "oper", "partition_health_check", "sampling_enable", "sby_ethernet", "source_ip", "source_mac", "stats", "user_tag", "uuid", "vlan", ]
 
 
 def get_default_argspec():
@@ -257,7 +272,16 @@ def get_argspec():
         'ethernet': {
             'type': 'str',
             },
-        'ipv4_addr': {
+        'nexthop_ip': {
+            'type': 'str',
+            },
+        'nexthop_mac': {
+            'type': 'str',
+            },
+        'source_ip': {
+            'type': 'str',
+            },
+        'source_mac': {
             'type': 'str',
             },
         'interval': {
@@ -463,13 +487,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -477,7 +501,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -509,8 +533,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
