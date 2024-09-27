@@ -180,7 +180,11 @@ options:
           (This statistic applies only if th; 'sticky-mode-response'= Total Number of DNS
           replies sent to clients by the ACOS device to keep the clients on the same
           site. (This statistic applies on; 'backup-mode-response'= Total Number of DNS
-          replies sent to clients by the ACOS device in backup mode;"
+          replies sent to clients by the ACOS device in backup mode; 'smrule-redir-from-
+          svc-hit'= Total Number of DNS queries redirected to the service by service-
+          matching rule and the query originally hits a service; 'smrule-redir-from-svc-
+          miss'= Total Number of DNS queries redirected to the service by service-
+          matching rule and the query originally doesn't hit a service;"
                 type: str
     dns_mx_record_list:
         description:
@@ -370,6 +374,10 @@ options:
                 description:
                 - "Field dns_soa_record_list"
                 type: list
+            smrule:
+                description:
+                - "Field smrule"
+                type: bool
             name:
                 description:
                 - "Specify the name for the DNS zone"
@@ -427,6 +435,16 @@ options:
             backup_mode_response:
                 description:
                 - "Total Number of DNS replies sent to clients by the ACOS device in backup mode"
+                type: str
+            smrule_redir_from_svc_hit:
+                description:
+                - "Total Number of DNS queries redirected to the service by service-matching rule
+          and the query originally hits a service"
+                type: str
+            smrule_redir_from_svc_miss:
+                description:
+                - "Total Number of DNS queries redirected to the service by service-matching rule
+          and the query originally doesn't hit a service"
                 type: str
             name:
                 description:
@@ -600,7 +618,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'received-query', 'sent-response', 'proxy-mode-response', 'cache-mode-response', 'server-mode-response', 'sticky-mode-response', 'backup-mode-response']
+                'choices': ['all', 'received-query', 'sent-response', 'proxy-mode-response', 'cache-mode-response', 'server-mode-response', 'sticky-mode-response', 'backup-mode-response', 'smrule-redir-from-svc-hit', 'smrule-redir-from-svc-miss']
                 }
             },
         'dns_mx_record_list': {
@@ -718,7 +736,7 @@ def get_argspec():
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
-                    'choices': ['all', 'received-query', 'sent-response', 'proxy-mode-response', 'cache-mode-response', 'server-mode-response', 'sticky-mode-response', 'backup-mode-response']
+                    'choices': ['all', 'received-query', 'sent-response', 'proxy-mode-response', 'cache-mode-response', 'server-mode-response', 'sticky-mode-response', 'backup-mode-response', 'smrule-redir-from-svc-hit', 'smrule-redir-from-svc-miss']
                     }
                 },
             'dns_a_record': {
@@ -746,6 +764,9 @@ def get_argspec():
                         },
                     'disable': {
                         'type': 'bool',
+                        },
+                    'service_name': {
+                        'type': 'str',
                         },
                     'static': {
                         'type': 'bool',
@@ -1112,6 +1133,9 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'smrule': {
+                'type': 'bool',
+                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -1317,6 +1341,12 @@ def get_argspec():
             'backup_mode_response': {
                 'type': 'str',
                 },
+            'smrule_redir_from_svc_hit': {
+                'type': 'str',
+                },
+            'smrule_redir_from_svc_miss': {
+                'type': 'str',
+                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -1399,6 +1429,12 @@ def get_argspec():
                         'type': 'str',
                         },
                     'backup_mode_response': {
+                        'type': 'str',
+                        },
+                    'smrule_redir_from_svc_hit': {
+                        'type': 'str',
+                        },
+                    'smrule_redir_from_svc_miss': {
                         'type': 'str',
                         }
                     },
@@ -1668,13 +1704,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1682,7 +1718,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1714,8 +1750,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

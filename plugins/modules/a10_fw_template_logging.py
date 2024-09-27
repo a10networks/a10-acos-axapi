@@ -181,7 +181,7 @@ options:
     format:
         description:
         - "'ascii'= A10 Text logging format (ASCII); 'cef'= Common Event Format for
-          logging (default);"
+          logging (default); 'custom'= custom format;"
         type: str
         required: False
     service_group:
@@ -189,6 +189,16 @@ options:
         - "Bind a Service Group to the logging template (Service Group Name)"
         type: str
         required: False
+    custom:
+        description:
+        - "Field custom"
+        type: dict
+        required: False
+        suboptions:
+            custom_message:
+                description:
+                - "Field custom_message"
+                type: dict
     uuid:
         description:
         - "uuid of the object"
@@ -285,7 +295,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "include_year", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["custom", "facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "include_year", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -428,10 +438,22 @@ def get_argspec():
             },
         'format': {
             'type': 'str',
-            'choices': ['ascii', 'cef']
+            'choices': ['ascii', 'cef', 'custom']
             },
         'service_group': {
             'type': 'str',
+            },
+        'custom': {
+            'type': 'dict',
+            'custom_message': {
+                'type': 'dict',
+                'custom_session_created': {
+                    'type': 'str',
+                    },
+                'custom_session_deleted': {
+                    'type': 'str',
+                    }
+                }
             },
         'uuid': {
             'type': 'str',
@@ -600,13 +622,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -614,7 +636,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -636,8 +658,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

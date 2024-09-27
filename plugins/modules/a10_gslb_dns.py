@@ -109,7 +109,7 @@ options:
           Quality Hit; 'metric_bandwidth_cost'= Metric Bandwidth Cost Hit; 'metric_user'=
           Metric User Hit; 'metric_least_reponse'= Metric Least Reponse Hit;
           'metric_admin_ip'= Metric Admin IP Hit; 'metric_round_robin'= Metric Round
-          Robin Hit;"
+          Robin Hit; 'metric_site_connection_count'= Metric Connection Count by Site Hit;"
                 type: str
     stats:
         description:
@@ -249,6 +249,10 @@ options:
                 description:
                 - "Metric Round Robin Hit"
                 type: str
+            metric_site_connection_count:
+                description:
+                - "Metric Connection Count by Site Hit"
+                type: str
 
 '''
 
@@ -346,7 +350,7 @@ def get_argspec():
                 'choices': [
                     'all', 'total-query', 'total-response', 'bad-packet-query', 'bad-packet-response', 'bad-header-query', 'bad-header-response', 'bad-format-query', 'bad-format-response', 'bad-service-query', 'bad-service-response', 'bad-class-query', 'bad-class-response', 'bad-type-query', 'bad-type-response', 'no_answer', 'metric_health_check',
                     'metric_weighted_ip', 'metric_weighted_site', 'metric_capacity', 'metric_active_server', 'metric_easy_rdt', 'metric_active_rdt', 'metric_geographic', 'metric_connection_load', 'metric_number_of_sessions', 'metric_active_weight', 'metric_admin_preference', 'metric_bandwidth_quality', 'metric_bandwidth_cost', 'metric_user',
-                    'metric_least_reponse', 'metric_admin_ip', 'metric_round_robin'
+                    'metric_least_reponse', 'metric_admin_ip', 'metric_round_robin', 'metric_site_connection_count'
                     ]
                 }
             },
@@ -449,6 +453,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'metric_round_robin': {
+                'type': 'str',
+                },
+            'metric_site_connection_count': {
                 'type': 'str',
                 }
             }
@@ -587,13 +594,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -601,7 +608,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -628,8 +635,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -80,11 +80,6 @@ options:
         - "Anomaly log rate-limit per second, default 32"
         type: int
         required: False
-    sockstress_disable:
-        description:
-        - "Disable sockstress protection"
-        type: bool
-        required: False
     promiscuous_mode:
         description:
         - "Run in promiscous mode settings"
@@ -187,11 +182,11 @@ options:
                 type: int
             http:
                 description:
-                - "set timeout to stop http transfer in seconds, 0 is no limit"
+                - "set timeout to stop http transfer in seconds"
                 type: int
             https:
                 description:
-                - "set timeout to stop https transfer in seconds, 0 is no limit"
+                - "set timeout to stop https transfer in seconds"
                 type: int
             uuid:
                 description:
@@ -203,6 +198,14 @@ options:
         type: dict
         required: False
         suboptions:
+            warning_threshold:
+                description:
+                - "Adjust bandwidth warning threshold"
+                type: int
+            critical_threshold:
+                description:
+                - "Adjust bandwidth critical threshold"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -2364,6 +2367,10 @@ options:
         type: dict
         required: False
         suboptions:
+            sockstress_disable:
+                description:
+                - "Disable sockstress protection"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -2433,8 +2440,8 @@ AVAILABLE_PROPERTIES = [
     "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro",
     "management_interface_mode", "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype",
     "port_count", "port_info", "port_list", "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec",
-    "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "sockstress_disable", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp",
-    "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
+    "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp", "tcp_stats",
+    "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
     ]
 
 
@@ -2470,9 +2477,6 @@ def get_argspec():
             },
         'anomaly_log_rate_limit': {
             'type': 'int',
-            },
-        'sockstress_disable': {
-            'type': 'bool',
             },
         'promiscuous_mode': {
             'type': 'bool',
@@ -2548,6 +2552,12 @@ def get_argspec():
             },
         'bandwidth': {
             'type': 'dict',
+            'warning_threshold': {
+                'type': 'int',
+                },
+            'critical_threshold': {
+                'type': 'int',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5047,7 +5057,7 @@ def get_argspec():
                         'ssl_forward_proxy_no_sni_bypass_total', 'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter', 'client_ssl_session_ticket_reuse_total', 'server_ssl_session_ticket_reuse_total',
                         'total_clientside_early_data_connections', 'total_serverside_early_data_connections', 'total_clientside_failed_early_data-connections', 'total_serverside_failed_early_data-connections', 'ssl_forward_proxy_esni_bypass_total', 'ssl_forward_proxy_esni_reset_total', 'total_logging_conn', 'gtp_c_est_counter',
                         'gtp_c_half_open_counter', 'gtp_u_counter', 'gtp_c_echo_counter', 'gtp_u_echo_counter', 'gtp_curr_free_conn', 'gtp_cum_conn_counter', 'gtp_cum_conn_freed_counter', 'fw_blacklist_sess', 'fw_blacklist_sess_created', 'fw_blacklist_sess_freed', 'server_tcp_est_counter', 'server_tcp_half_open_counter',
-                        'sched_conn_with_wrong_next_idx_to_rml', 'free_conn_not_in_sp'
+                        'sched_conn_with_wrong_next_idx_to_rml', 'free_conn_not_in_sp', 'total_system_sessions'
                         ]
                     }
                 }
@@ -5120,6 +5130,9 @@ def get_argspec():
             },
         'pbslb': {
             'type': 'dict',
+            'sockstress_disable': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -5270,13 +5283,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -5284,7 +5297,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -5306,8 +5319,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

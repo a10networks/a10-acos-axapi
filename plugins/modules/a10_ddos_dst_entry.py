@@ -262,6 +262,10 @@ options:
                 description:
                 - "Maximum number of records to show in topk"
                 type: int
+            topk_sort_key:
+                description:
+                - "'avg'= window average; 'max-peak'= max peak;"
+                type: str
     traffic_distribution_mode:
         description:
         - "'default'= Distribute traffic to one slot using default distribution mechanism;
@@ -521,7 +525,7 @@ options:
           'prog_req_resp_time_exceed'= Req-Resp= Request to Response Time Exceed;
           'prog_request_len_exceed'= Req-Resp= Request Length Exceed;
           'prog_response_len_exceed'= Req-Resp= Response Length Exceed;
-          'prog_resp_req_ratio_exceed'= Req-Resp= Response to Request Ratio Exceed;
+          'prog_resp_pkt_rate_exceed'= Req-Resp= Response Packet Rate Exceed;
           'prog_resp_req_time_exceed'= Req-Resp= Response to Request Time Exceed;
           'entry_sync_message_received'= Entry Sync Message Received;
           'entry_sync_message_sent'= Entry Sync Message Sent; 'prog_conn_sent_exceed'=
@@ -536,15 +540,17 @@ options:
           'prog_conn_exceed_bl'= Connection= Violation Exceed Blacklisted;
           'prog_win_exceed_drop'= Time Window= Violation Exceed Dropped;
           'prog_win_exceed_bl'= Time Window= Violation Exceed Blacklisted;
-          'dst_exceed_action_drop'= Entry Exceed Action= Dropped; 'prog_conn_samples'=
-          Sample Collected= Connection; 'prog_req_samples'= Sample Collected= Req-Resp;
-          'prog_win_samples'= Sample Collected= Time Window;
-          'prog_conn_samples_processed'= Sample Processed= Connnection;
-          'prog_req_samples_processed'= Sample Processed= Req-Resp;
-          'prog_win_samples_processed'= Sample Processed= Time Window; 'src_hw_drop'= Src
+          'dst_exceed_action_drop'= Entry Exceed Action= Dropped; 'src_hw_drop'= Src
           Hardware Packets Dropped; 'dst_tcp_auth_rst'= TCP Auth= Reset;
           'dst_src_learn_overflow'= Src Dynamic Entry Count Overflow; 'tcp_fwd_sent'= TCP
-          Inbound Packets Forwarded; 'udp_fwd_sent'= UDP Inbound Packets Forwarded;"
+          Inbound Packets Forwarded; 'udp_fwd_sent'= UDP Inbound Packets Forwarded;
+          'prog_query_exceed'= Req-Resp= Client Query Time Exceed; 'prog_think_exceed'=
+          Req-Resp= Server Think Time Exceed; 'prog_conn_samples'= Sample Collected=
+          Connection; 'prog_req_samples'= Sample Collected= Req-Resp; 'prog_win_samples'=
+          Sample Collected= Time Window; 'prog_conn_samples_processed'= Sample Processed=
+          Connnection; 'prog_req_samples_processed'= Sample Processed= Req-Resp;
+          'prog_win_samples_processed'= Sample Processed= Time Window;
+          'tcp_invalid_synack'= TCP Invalid SYNACK Received;"
                 type: str
     capture_config_list:
         description:
@@ -687,14 +693,14 @@ options:
                 description:
                 - "Maximum number of records to show in topk"
                 type: int
+            topk_sort_key:
+                description:
+                - "'avg'= window average; 'max-peak'= max peak;"
+                type: str
             set_counter_base_val:
                 description:
                 - "Set T2 counter value of current context to specified value"
                 type: int
-            ip_filtering_policy:
-                description:
-                - "Configure IP Filter"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -703,10 +709,6 @@ options:
                 description:
                 - "Customized tag"
                 type: str
-            ip_filtering_policy_oper:
-                description:
-                - "Field ip_filtering_policy_oper"
-                type: dict
             port_ind:
                 description:
                 - "Field port_ind"
@@ -747,6 +749,10 @@ options:
                 description:
                 - "Maximum number of records to show in topk"
                 type: int
+            topk_sort_key:
+                description:
+                - "'avg'= window average; 'max-peak'= max peak;"
+                type: str
             deny:
                 description:
                 - "Blacklist and Drop all incoming packets for protocol"
@@ -779,10 +785,6 @@ options:
                 description:
                 - "Set T2 counter value of current context to specified value"
                 type: int
-            ip_filtering_policy:
-                description:
-                - "Configure IP Filter"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -794,10 +796,6 @@ options:
             port_ind:
                 description:
                 - "Field port_ind"
-                type: dict
-            ip_filtering_policy_oper:
-                description:
-                - "Field ip_filtering_policy_oper"
                 type: dict
             topk_sources:
                 description:
@@ -855,6 +853,10 @@ options:
                 description:
                 - "Maximum number of records to show in topk"
                 type: int
+            topk_sort_key:
+                description:
+                - "'avg'= window average; 'max-peak'= max peak;"
+                type: str
             glid:
                 description:
                 - "Global limit ID"
@@ -891,10 +893,6 @@ options:
                 description:
                 - "Customized tag"
                 type: str
-            ip_filtering_policy_oper:
-                description:
-                - "Field ip_filtering_policy_oper"
-                type: dict
             port_ind:
                 description:
                 - "Field port_ind"
@@ -1046,10 +1044,6 @@ options:
                 description:
                 - "Customized tag"
                 type: str
-            ip_filtering_policy_oper:
-                description:
-                - "Field ip_filtering_policy_oper"
-                type: dict
     src_dst_pair:
         description:
         - "Field src_dst_pair"
@@ -2581,9 +2575,9 @@ options:
                 description:
                 - "Req-Resp= Response Length Exceed"
                 type: str
-            prog_resp_req_ratio_exceed:
+            prog_resp_pkt_rate_exceed:
                 description:
-                - "Req-Resp= Response to Request Ratio Exceed"
+                - "Req-Resp= Response Packet Rate Exceed"
                 type: str
             prog_resp_req_time_exceed:
                 description:
@@ -2653,6 +2647,34 @@ options:
                 description:
                 - "Entry Exceed Action= Dropped"
                 type: str
+            src_hw_drop:
+                description:
+                - "Src Hardware Packets Dropped"
+                type: str
+            dst_tcp_auth_rst:
+                description:
+                - "TCP Auth= Reset"
+                type: str
+            dst_src_learn_overflow:
+                description:
+                - "Src Dynamic Entry Count Overflow"
+                type: str
+            tcp_fwd_sent:
+                description:
+                - "TCP Inbound Packets Forwarded"
+                type: str
+            udp_fwd_sent:
+                description:
+                - "UDP Inbound Packets Forwarded"
+                type: str
+            prog_query_exceed:
+                description:
+                - "Req-Resp= Client Query Time Exceed"
+                type: str
+            prog_think_exceed:
+                description:
+                - "Req-Resp= Server Think Time Exceed"
+                type: str
             prog_conn_samples:
                 description:
                 - "Sample Collected= Connection"
@@ -2677,25 +2699,9 @@ options:
                 description:
                 - "Sample Processed= Time Window"
                 type: str
-            src_hw_drop:
+            tcp_invalid_synack:
                 description:
-                - "Src Hardware Packets Dropped"
-                type: str
-            dst_tcp_auth_rst:
-                description:
-                - "TCP Auth= Reset"
-                type: str
-            dst_src_learn_overflow:
-                description:
-                - "Src Dynamic Entry Count Overflow"
-                type: str
-            tcp_fwd_sent:
-                description:
-                - "TCP Inbound Packets Forwarded"
-                type: str
-            udp_fwd_sent:
-                description:
-                - "UDP Inbound Packets Forwarded"
+                - "TCP Invalid SYNACK Received"
                 type: str
             dst_entry_name:
                 description:
@@ -2942,6 +2948,10 @@ def get_argspec():
                 },
             'topk_num_records': {
                 'type': 'int',
+                },
+            'topk_sort_key': {
+                'type': 'str',
+                'choices': ['avg', 'max-peak']
                 }
             },
         'traffic_distribution_mode': {
@@ -2996,9 +3006,10 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'dst_hw_drop_rule_insert', 'dst_hw_drop_rule_remove', 'src_hw_drop_rule_insert', 'src_hw_drop_rule_remove', 'prog_first_req_time_exceed', 'prog_req_resp_time_exceed', 'prog_request_len_exceed', 'prog_response_len_exceed', 'prog_resp_req_ratio_exceed', 'prog_resp_req_time_exceed', 'entry_sync_message_received',
+                    'dst_hw_drop_rule_insert', 'dst_hw_drop_rule_remove', 'src_hw_drop_rule_insert', 'src_hw_drop_rule_remove', 'prog_first_req_time_exceed', 'prog_req_resp_time_exceed', 'prog_request_len_exceed', 'prog_response_len_exceed', 'prog_resp_pkt_rate_exceed', 'prog_resp_req_time_exceed', 'entry_sync_message_received',
                     'entry_sync_message_sent', 'prog_conn_sent_exceed', 'prog_conn_rcvd_exceed', 'prog_conn_time_exceed', 'prog_conn_rcvd_sent_ratio_exceed', 'prog_win_sent_exceed', 'prog_win_rcvd_exceed', 'prog_win_rcvd_sent_ratio_exceed', 'prog_exceed_drop', 'prog_exceed_bl', 'prog_conn_exceed_drop', 'prog_conn_exceed_bl', 'prog_win_exceed_drop',
-                    'prog_win_exceed_bl', 'dst_exceed_action_drop', 'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'src_hw_drop', 'dst_tcp_auth_rst', 'dst_src_learn_overflow', 'tcp_fwd_sent', 'udp_fwd_sent'
+                    'prog_win_exceed_bl', 'dst_exceed_action_drop', 'src_hw_drop', 'dst_tcp_auth_rst', 'dst_src_learn_overflow', 'tcp_fwd_sent', 'udp_fwd_sent', 'prog_query_exceed', 'prog_think_exceed', 'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'prog_conn_samples_processed', 'prog_req_samples_processed',
+                    'prog_win_samples_processed', 'tcp_invalid_synack'
                     ]
                 }
             },
@@ -3144,23 +3155,18 @@ def get_argspec():
             'topk_num_records': {
                 'type': 'int',
                 },
+            'topk_sort_key': {
+                'type': 'str',
+                'choices': ['avg', 'max-peak']
+                },
             'set_counter_base_val': {
                 'type': 'int',
-                },
-            'ip_filtering_policy': {
-                'type': 'str',
                 },
             'uuid': {
                 'type': 'str',
                 },
             'user_tag': {
                 'type': 'str',
-                },
-            'ip_filtering_policy_oper': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                    }
                 },
             'port_ind': {
                 'type': 'dict',
@@ -3215,6 +3221,10 @@ def get_argspec():
                 },
             'topk_num_records': {
                 'type': 'int',
+                },
+            'topk_sort_key': {
+                'type': 'str',
+                'choices': ['avg', 'max-peak']
                 },
             'deny': {
                 'type': 'bool',
@@ -3293,9 +3303,6 @@ def get_argspec():
             'set_counter_base_val': {
                 'type': 'int',
                 },
-            'ip_filtering_policy': {
-                'type': 'str',
-                },
             'uuid': {
                 'type': 'str',
                 },
@@ -3321,12 +3328,6 @@ def get_argspec():
                             'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max'
                             ]
                         }
-                    }
-                },
-            'ip_filtering_policy_oper': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
                     }
                 },
             'topk_sources': {
@@ -3412,6 +3413,10 @@ def get_argspec():
             'topk_num_records': {
                 'type': 'int',
                 },
+            'topk_sort_key': {
+                'type': 'str',
+                'choices': ['avg', 'max-peak']
+                },
             'glid': {
                 'type': 'str',
                 },
@@ -3491,12 +3496,6 @@ def get_argspec():
                 },
             'user_tag': {
                 'type': 'str',
-                },
-            'ip_filtering_policy_oper': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                    }
                 },
             'port_ind': {
                 'type': 'dict',
@@ -3702,12 +3701,6 @@ def get_argspec():
                 },
             'user_tag': {
                 'type': 'str',
-                },
-            'ip_filtering_policy_oper': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                    }
                 }
             },
         'src_dst_pair': {
@@ -4474,6 +4467,9 @@ def get_argspec():
                 'dynamic_entry_limit': {
                     'type': 'str',
                     },
+                'dynamic_entry_warn_state': {
+                    'type': 'str',
+                    },
                 'sflow_source_id': {
                     'type': 'str',
                     },
@@ -4853,6 +4849,9 @@ def get_argspec():
                         'dynamic_entry_limit': {
                             'type': 'str',
                             },
+                        'dynamic_entry_warn_state': {
+                            'type': 'str',
+                            },
                         'sflow_source_id': {
                             'type': 'str',
                             },
@@ -4901,21 +4900,6 @@ def get_argspec():
                         },
                     'hw_blacklisted': {
                         'type': 'str',
-                        }
-                    },
-                'ip_filtering_policy_oper': {
-                    'type': 'dict',
-                    'oper': {
-                        'type': 'dict',
-                        'rule_list': {
-                            'type': 'list',
-                            'seq': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                }
-                            }
                         }
                     },
                 'port_ind': {
@@ -5165,6 +5149,9 @@ def get_argspec():
                         'dynamic_entry_limit': {
                             'type': 'str',
                             },
+                        'dynamic_entry_warn_state': {
+                            'type': 'str',
+                            },
                         'sflow_source_id': {
                             'type': 'str',
                             },
@@ -5257,21 +5244,6 @@ def get_argspec():
                             },
                         'detection_data_source': {
                             'type': 'str',
-                            }
-                        }
-                    },
-                'ip_filtering_policy_oper': {
-                    'type': 'dict',
-                    'oper': {
-                        'type': 'dict',
-                        'rule_list': {
-                            'type': 'list',
-                            'seq': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                }
                             }
                         }
                     },
@@ -5589,6 +5561,9 @@ def get_argspec():
                         'dynamic_entry_limit': {
                             'type': 'str',
                             },
+                        'dynamic_entry_warn_state': {
+                            'type': 'str',
+                            },
                         'sflow_source_id': {
                             'type': 'str',
                             },
@@ -5646,21 +5621,6 @@ def get_argspec():
                         },
                     'domain_name': {
                         'type': 'str',
-                        }
-                    },
-                'ip_filtering_policy_oper': {
-                    'type': 'dict',
-                    'oper': {
-                        'type': 'dict',
-                        'rule_list': {
-                            'type': 'list',
-                            'seq': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                }
-                            }
                         }
                     },
                 'port_ind': {
@@ -6009,6 +5969,9 @@ def get_argspec():
                         'dynamic_entry_limit': {
                             'type': 'str',
                             },
+                        'dynamic_entry_warn_state': {
+                            'type': 'str',
+                            },
                         'sflow_source_id': {
                             'type': 'str',
                             },
@@ -6178,6 +6141,9 @@ def get_argspec():
                         'dynamic_entry_limit': {
                             'type': 'str',
                             },
+                        'dynamic_entry_warn_state': {
+                            'type': 'str',
+                            },
                         'sflow_source_id': {
                             'type': 'str',
                             },
@@ -6338,6 +6304,9 @@ def get_argspec():
                         'dynamic_entry_limit': {
                             'type': 'str',
                             },
+                        'dynamic_entry_warn_state': {
+                            'type': 'str',
+                            },
                         'sflow_source_id': {
                             'type': 'str',
                             },
@@ -6380,21 +6349,6 @@ def get_argspec():
                         },
                     'domain_name': {
                         'type': 'str',
-                        }
-                    },
-                'ip_filtering_policy_oper': {
-                    'type': 'dict',
-                    'oper': {
-                        'type': 'dict',
-                        'rule_list': {
-                            'type': 'list',
-                            'seq': {
-                                'type': 'int',
-                                },
-                            'hits': {
-                                'type': 'int',
-                                }
-                            }
                         }
                     }
                 }
@@ -7184,7 +7138,7 @@ def get_argspec():
             'prog_response_len_exceed': {
                 'type': 'str',
                 },
-            'prog_resp_req_ratio_exceed': {
+            'prog_resp_pkt_rate_exceed': {
                 'type': 'str',
                 },
             'prog_resp_req_time_exceed': {
@@ -7238,6 +7192,27 @@ def get_argspec():
             'dst_exceed_action_drop': {
                 'type': 'str',
                 },
+            'src_hw_drop': {
+                'type': 'str',
+                },
+            'dst_tcp_auth_rst': {
+                'type': 'str',
+                },
+            'dst_src_learn_overflow': {
+                'type': 'str',
+                },
+            'tcp_fwd_sent': {
+                'type': 'str',
+                },
+            'udp_fwd_sent': {
+                'type': 'str',
+                },
+            'prog_query_exceed': {
+                'type': 'str',
+                },
+            'prog_think_exceed': {
+                'type': 'str',
+                },
             'prog_conn_samples': {
                 'type': 'str',
                 },
@@ -7256,19 +7231,7 @@ def get_argspec():
             'prog_win_samples_processed': {
                 'type': 'str',
                 },
-            'src_hw_drop': {
-                'type': 'str',
-                },
-            'dst_tcp_auth_rst': {
-                'type': 'str',
-                },
-            'dst_src_learn_overflow': {
-                'type': 'str',
-                },
-            'tcp_fwd_sent': {
-                'type': 'str',
-                },
-            'udp_fwd_sent': {
+            'tcp_invalid_synack': {
                 'type': 'str',
                 },
             'dst_entry_name': {
@@ -7416,13 +7379,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -7430,7 +7393,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -7462,8 +7425,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

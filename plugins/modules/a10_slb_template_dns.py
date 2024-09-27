@@ -81,6 +81,12 @@ options:
           record order; 'round-robin'= Round-robin;"
         type: str
         required: False
+    dns_cookie_cache_policy:
+        description:
+        - "'served-by-cache'= Answer from cache for requests with cookie; 'served-by-
+          backend'= Answer from server for requests with cookie;"
+        type: str
+        required: False
     remove_aa_flag:
         description:
         - "Make answers created from cache non-authoritative"
@@ -188,6 +194,36 @@ options:
         - "dns logging template (DNS Logging template name)"
         type: str
         required: False
+    tld_filter_white_list:
+        description:
+        - "white-list class-list name (string-insensitive type)"
+        type: str
+        required: False
+    tld_filter_log_enable:
+        description:
+        - "Enable dns tld filter logging"
+        type: bool
+        required: False
+    qps_log_high:
+        description:
+        - "high threshold for QPS logging (queries per second)"
+        type: int
+        required: False
+    qps_log_low:
+        description:
+        - "low threshold for QPS logging (queries per second)"
+        type: int
+        required: False
+    qps_threshold_log:
+        description:
+        - "enable threshold log for DNS QPS"
+        type: bool
+        required: False
+    cache_hitcount_enable:
+        description:
+        - "Enable DNS cache entry hit count"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -198,6 +234,54 @@ options:
         - "Customized tag"
         type: str
         required: False
+    label_length_filter:
+        description:
+        - "Field label_length_filter"
+        type: dict
+        required: False
+        suboptions:
+            drop_log_enable:
+                description:
+                - "enable the log when hit the rule"
+                type: bool
+            label_length_filter_action:
+                description:
+                - "'drop'= drop; 'ignore'= ignore;"
+                type: str
+            fqdn_label_length:
+                description:
+                - "Field fqdn_label_length"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    label_count_filter:
+        description:
+        - "Field label_count_filter"
+        type: dict
+        required: False
+        suboptions:
+            drop_log_enable:
+                description:
+                - "enable the log when hit the rule"
+                type: bool
+            label_count_filter_action:
+                description:
+                - "'drop'= drop; 'ignore'= ignore;"
+                type: str
+            min_fqdn_label_count:
+                description:
+                - "Minimum number of FQDN labels per FQDN"
+                type: int
+            max_fqdn_label_count:
+                description:
+                - "Maximum number of FQDN labels per FQDN"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     dns64:
         description:
         - "Field dns64"
@@ -456,6 +540,11 @@ options:
                 description:
                 - "'disabled'= Disable NS Cache Lookup; 'enabled'= Enable NS Cache Lookup;"
                 type: str
+            ns_longest_match:
+                description:
+                - "'disabled'= Look up NS of top level label, do a nearly-full resolution;
+          'enabled'= Enable NS cache longest match;"
+                type: str
             use_service_group_response:
                 description:
                 - "'disabled'= Start Recursive Resolver if Server response doesnt have final
@@ -633,9 +722,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_padding_to_client", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "category_lookup_bypass", "category_lookup_list", "category_lookup_online_lookup", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_logging", "dns64", "dnssec_service_group", "drop",
-    "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6", "local_dns_resolution", "max_cache_entry_size", "max_cache_size", "max_query_length", "name", "negative_dns_cache", "period", "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_csubnet",
-    "remove_padding_to_server", "response_rate_limiting", "rpz_list", "udp_retransmit", "user_tag", "uuid",
+    "add_padding_to_client", "cache_hitcount_enable", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "category_lookup_bypass", "category_lookup_list", "category_lookup_online_lookup", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_cookie_cache_policy", "dns_logging",
+    "dns64", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6", "label_count_filter", "label_length_filter", "local_dns_resolution", "max_cache_entry_size", "max_cache_size", "max_query_length", "name", "negative_dns_cache", "period", "qps_log_high", "qps_log_low", "qps_threshold_log",
+    "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_csubnet", "remove_padding_to_server", "response_rate_limiting", "rpz_list", "tld_filter_log_enable", "tld_filter_white_list", "udp_retransmit", "user_tag", "uuid",
     ]
 
 
@@ -674,6 +763,10 @@ def get_argspec():
         'cache_record_serving_policy': {
             'type': 'str',
             'choices': ['global', 'no-change', 'round-robin']
+            },
+        'dns_cookie_cache_policy': {
+            'type': 'str',
+            'choices': ['served-by-cache', 'served-by-backend']
             },
         'remove_aa_flag': {
             'type': 'bool',
@@ -739,11 +832,70 @@ def get_argspec():
         'dns_logging': {
             'type': 'str',
             },
+        'tld_filter_white_list': {
+            'type': 'str',
+            },
+        'tld_filter_log_enable': {
+            'type': 'bool',
+            },
+        'qps_log_high': {
+            'type': 'int',
+            },
+        'qps_log_low': {
+            'type': 'int',
+            },
+        'qps_threshold_log': {
+            'type': 'bool',
+            },
+        'cache_hitcount_enable': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
         'user_tag': {
             'type': 'str',
+            },
+        'label_length_filter': {
+            'type': 'dict',
+            'drop_log_enable': {
+                'type': 'bool',
+                },
+            'label_length_filter_action': {
+                'type': 'str',
+                'choices': ['drop', 'ignore']
+                },
+            'fqdn_label_length': {
+                'type': 'list',
+                'length': {
+                    'type': 'int',
+                    },
+                'suffix': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'label_count_filter': {
+            'type': 'dict',
+            'drop_log_enable': {
+                'type': 'bool',
+                },
+            'label_count_filter_action': {
+                'type': 'str',
+                'choices': ['drop', 'ignore']
+                },
+            'min_fqdn_label_count': {
+                'type': 'int',
+                },
+            'max_fqdn_label_count': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             },
         'dns64': {
             'type': 'dict',
@@ -1055,6 +1207,10 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['disabled', 'enabled']
                 },
+            'ns_longest_match': {
+                'type': 'str',
+                'choices': ['disabled', 'enabled']
+                },
             'use_service_group_response': {
                 'type': 'str',
                 'choices': ['disabled', 'enabled']
@@ -1335,13 +1491,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1349,7 +1505,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1371,8 +1527,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

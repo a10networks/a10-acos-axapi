@@ -65,205 +65,56 @@ options:
         - "'enable-check'= Enable Progression Tracking Check;"
         type: str
         required: True
-    request_response_model:
-        description:
-        - "'enable'= Enable Request Response Model; 'disable'= Disable Request Response
-          Model;"
-        type: str
-        required: False
-    violation:
-        description:
-        - "Set the violation threshold"
-        type: int
-        required: False
     ignore_TLS_handshake:
         description:
-        - "Ignore TLS handshake"
+        - "Ignore TLS handshake, support SSL-L4 port only"
         type: bool
-        required: False
-    response_length_max:
-        description:
-        - "Set the maximum response length"
-        type: int
-        required: False
-    response_length_min:
-        description:
-        - "Set the minimum response length"
-        type: int
-        required: False
-    request_length_min:
-        description:
-        - "Set the minimum request length"
-        type: int
-        required: False
-    request_length_max:
-        description:
-        - "Set the maximum request length"
-        type: int
-        required: False
-    response_request_min_ratio:
-        description:
-        - "Set the minimum response to request ratio (in unit of 0.1% [1=1000])"
-        type: int
-        required: False
-    response_request_max_ratio:
-        description:
-        - "Set the maximum response to request ratio (in unit of 0.1% [1=1000])"
-        type: int
-        required: False
-    first_request_max_time:
-        description:
-        - "Set the maximum wait time from connection creation until the first data is
-          transmitted over the connection (100 ms)"
-        type: int
-        required: False
-    request_to_response_max_time:
-        description:
-        - "Set the maximum request to response time (100 ms)"
-        type: int
-        required: False
-    response_to_request_max_time:
-        description:
-        - "Set the maximum response to request time (100 ms)"
-        type: int
-        required: False
-    profiling_request_response_model:
-        description:
-        - "Enable auto-config progression tracking learning for Request Response model"
-        type: bool
-        required: False
-    profiling_connection_life_model:
-        description:
-        - "Enable auto-config progression tracking learning for connection model"
-        type: bool
-        required: False
-    profiling_time_window_model:
-        description:
-        - "Enable auto-config progression tracking learning for time window model"
-        type: bool
-        required: False
-    progression_tracking_action_list_name:
-        description:
-        - "Configure action-list to take when progression tracking violation exceed"
-        type: str
-        required: False
-    progression_tracking_action:
-        description:
-        - "'drop'= Drop packets for progression tracking violation exceed (Default);
-          'blacklist-src'= Blacklist-src for progression tracking violation exceed;"
-        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    connection_tracking:
+    mitigation:
         description:
-        - "Field connection_tracking"
+        - "Field mitigation"
         type: dict
         required: False
         suboptions:
-            progression_tracking_conn_enabled:
+            request_tracking:
                 description:
-                - "'enable-check'= Enable General Progression Tracking per Connection;"
-                type: str
-            conn_sent_max:
+                - "Field request_tracking"
+                type: dict
+            connection_tracking:
                 description:
-                - "Set the maximum total sent byte"
-                type: int
-            conn_sent_min:
+                - "Field connection_tracking"
+                type: dict
+            time_window_tracking:
                 description:
-                - "Set the minimum total sent byte"
-                type: int
-            conn_rcvd_max:
+                - "Field time_window_tracking"
+                type: dict
+            slow_attack:
                 description:
-                - "Set the maximum total received byte"
-                type: int
-            conn_rcvd_min:
-                description:
-                - "Set the minimum total received byte"
-                type: int
-            conn_rcvd_sent_ratio_min:
-                description:
-                - "Set the minimum received to sent ratio (in unit of milli-, 0.001)"
-                type: int
-            conn_rcvd_sent_ratio_max:
-                description:
-                - "Set the maximum received to sent ratio (in unit of milli-, 0.001)"
-                type: int
-            conn_duration_max:
-                description:
-                - "Set the maximum duration time (in unit of 100ms, up to 24 hours)"
-                type: int
-            conn_duration_min:
-                description:
-                - "Set the minimum duration time (in unit of 100ms, up to 24 hours)"
-                type: int
-            conn_violation:
-                description:
-                - "Set the violation threshold"
-                type: int
-            progression_tracking_conn_action_list_name:
-                description:
-                - "Configure action-list to take when progression tracking violation exceed"
-                type: str
-            progression_tracking_conn_action:
-                description:
-                - "'drop'= Drop packets for progression tracking violation exceed (Default);
-          'blacklist-src'= Blacklist-src for progression tracking violation exceed;"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    time_window_tracking:
+                - "Field slow_attack"
+                type: dict
+    profiling:
         description:
-        - "Field time_window_tracking"
+        - "Field profiling"
         type: dict
         required: False
         suboptions:
-            progression_tracking_win_enabled:
+            profiling_request_response_model:
                 description:
-                - "'enable-check'= Enable Progression Tracking per Time Window;"
-                type: str
-            window_sent_max:
+                - "Enable auto-config progression tracking learning for request response model"
+                type: bool
+            profiling_connection_life_model:
                 description:
-                - "Set the maximum total sent byte"
-                type: int
-            window_sent_min:
+                - "Enable auto-config progression tracking learning for connection model"
+                type: bool
+            profiling_time_window_model:
                 description:
-                - "Set the minimum total sent byte"
-                type: int
-            window_rcvd_max:
-                description:
-                - "Set the maximum total received byte"
-                type: int
-            window_rcvd_min:
-                description:
-                - "Set the minimum total received byte"
-                type: int
-            window_rcvd_sent_ratio_min:
-                description:
-                - "Set the minimum received to sent ratio (in unit of 0.1% [1=1000])"
-                type: int
-            window_rcvd_sent_ratio_max:
-                description:
-                - "Set the maximum received to sent ratio (in unit of 0.1% [1=1000])"
-                type: int
-            window_violation:
-                description:
-                - "Set the violation threshold"
-                type: int
-            progression_tracking_windows_action_list_name:
-                description:
-                - "Configure action-list to take when progression tracking violation exceed"
-                type: str
-            progression_tracking_windows_action:
-                description:
-                - "'drop'= Drop packets for progression tracking violation exceed (Default);
-          'blacklist-src'= Blacklist-src for progression tracking violation exceed;"
-                type: str
+                - "Enable auto-config progression tracking learning for time window model"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -322,10 +173,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "connection_tracking", "first_request_max_time", "ignore_TLS_handshake", "profiling_connection_life_model", "profiling_request_response_model", "profiling_time_window_model", "progression_tracking_action", "progression_tracking_action_list_name", "progression_tracking_enabled", "request_length_max", "request_length_min",
-    "request_response_model", "request_to_response_max_time", "response_length_max", "response_length_min", "response_request_max_ratio", "response_request_min_ratio", "response_to_request_max_time", "time_window_tracking", "uuid", "violation",
-    ]
+AVAILABLE_PROPERTIES = ["ignore_TLS_handshake", "mitigation", "profiling", "progression_tracking_enabled", "uuid", ]
 
 
 def get_default_argspec():
@@ -351,139 +199,174 @@ def get_argspec():
             'required': True,
             'choices': ['enable-check']
             },
-        'request_response_model': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        'violation': {
-            'type': 'int',
-            },
         'ignore_TLS_handshake': {
             'type': 'bool',
-            },
-        'response_length_max': {
-            'type': 'int',
-            },
-        'response_length_min': {
-            'type': 'int',
-            },
-        'request_length_min': {
-            'type': 'int',
-            },
-        'request_length_max': {
-            'type': 'int',
-            },
-        'response_request_min_ratio': {
-            'type': 'int',
-            },
-        'response_request_max_ratio': {
-            'type': 'int',
-            },
-        'first_request_max_time': {
-            'type': 'int',
-            },
-        'request_to_response_max_time': {
-            'type': 'int',
-            },
-        'response_to_request_max_time': {
-            'type': 'int',
-            },
-        'profiling_request_response_model': {
-            'type': 'bool',
-            },
-        'profiling_connection_life_model': {
-            'type': 'bool',
-            },
-        'profiling_time_window_model': {
-            'type': 'bool',
-            },
-        'progression_tracking_action_list_name': {
-            'type': 'str',
-            },
-        'progression_tracking_action': {
-            'type': 'str',
-            'choices': ['drop', 'blacklist-src']
             },
         'uuid': {
             'type': 'str',
             },
-        'connection_tracking': {
+        'mitigation': {
             'type': 'dict',
-            'progression_tracking_conn_enabled': {
-                'type': 'str',
-                'choices': ['enable-check']
+            'request_tracking': {
+                'type': 'dict',
+                'progression_tracking_req_enabled': {
+                    'type': 'str',
+                    'choices': ['enable-check']
+                    },
+                'request_response_model': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'response_length_max': {
+                    'type': 'int',
+                    },
+                'response_length_min': {
+                    'type': 'int',
+                    },
+                'request_length_min': {
+                    'type': 'int',
+                    },
+                'request_length_max': {
+                    'type': 'int',
+                    },
+                'request_to_response_max_time': {
+                    'type': 'int',
+                    },
+                'response_to_request_max_time': {
+                    'type': 'int',
+                    },
+                'first_request_max_time': {
+                    'type': 'int',
+                    },
+                'progression_tracking_req_action_list_name': {
+                    'type': 'str',
+                    },
+                'violation': {
+                    'type': 'int',
+                    },
+                'progression_tracking_req_action': {
+                    'type': 'str',
+                    'choices': ['drop', 'blacklist-src']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
-            'conn_sent_max': {
-                'type': 'int',
+            'connection_tracking': {
+                'type': 'dict',
+                'progression_tracking_conn_enabled': {
+                    'type': 'str',
+                    'choices': ['enable-check']
+                    },
+                'conn_sent_max': {
+                    'type': 'int',
+                    },
+                'conn_sent_min': {
+                    'type': 'int',
+                    },
+                'conn_rcvd_max': {
+                    'type': 'int',
+                    },
+                'conn_rcvd_min': {
+                    'type': 'int',
+                    },
+                'conn_rcvd_sent_ratio_min': {
+                    'type': 'int',
+                    },
+                'conn_rcvd_sent_ratio_max': {
+                    'type': 'int',
+                    },
+                'conn_duration_max': {
+                    'type': 'int',
+                    },
+                'conn_duration_min': {
+                    'type': 'int',
+                    },
+                'conn_violation': {
+                    'type': 'int',
+                    },
+                'progression_tracking_conn_action_list_name': {
+                    'type': 'str',
+                    },
+                'progression_tracking_conn_action': {
+                    'type': 'str',
+                    'choices': ['drop', 'blacklist-src']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
-            'conn_sent_min': {
-                'type': 'int',
+            'time_window_tracking': {
+                'type': 'dict',
+                'progression_tracking_win_enabled': {
+                    'type': 'str',
+                    'choices': ['enable-check']
+                    },
+                'window_sent_max': {
+                    'type': 'int',
+                    },
+                'window_sent_min': {
+                    'type': 'int',
+                    },
+                'window_rcvd_max': {
+                    'type': 'int',
+                    },
+                'window_rcvd_min': {
+                    'type': 'int',
+                    },
+                'window_rcvd_sent_ratio_min': {
+                    'type': 'int',
+                    },
+                'window_rcvd_sent_ratio_max': {
+                    'type': 'int',
+                    },
+                'window_violation': {
+                    'type': 'int',
+                    },
+                'progression_tracking_windows_action_list_name': {
+                    'type': 'str',
+                    },
+                'progression_tracking_windows_action': {
+                    'type': 'str',
+                    'choices': ['drop', 'blacklist-src']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
-            'conn_rcvd_max': {
-                'type': 'int',
-                },
-            'conn_rcvd_min': {
-                'type': 'int',
-                },
-            'conn_rcvd_sent_ratio_min': {
-                'type': 'int',
-                },
-            'conn_rcvd_sent_ratio_max': {
-                'type': 'int',
-                },
-            'conn_duration_max': {
-                'type': 'int',
-                },
-            'conn_duration_min': {
-                'type': 'int',
-                },
-            'conn_violation': {
-                'type': 'int',
-                },
-            'progression_tracking_conn_action_list_name': {
-                'type': 'str',
-                },
-            'progression_tracking_conn_action': {
-                'type': 'str',
-                'choices': ['drop', 'blacklist-src']
-                },
-            'uuid': {
-                'type': 'str',
+            'slow_attack': {
+                'type': 'dict',
+                'response_pkt_rate_max': {
+                    'type': 'int',
+                    },
+                'init_response_max_time': {
+                    'type': 'int',
+                    },
+                'init_request_max_time': {
+                    'type': 'int',
+                    },
+                'progression_tracking_slow_action_list_name': {
+                    'type': 'str',
+                    },
+                'progression_tracking_slow_action': {
+                    'type': 'str',
+                    'choices': ['drop', 'reset', 'blacklist-src']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
-        'time_window_tracking': {
+        'profiling': {
             'type': 'dict',
-            'progression_tracking_win_enabled': {
-                'type': 'str',
-                'choices': ['enable-check']
+            'profiling_request_response_model': {
+                'type': 'bool',
                 },
-            'window_sent_max': {
-                'type': 'int',
+            'profiling_connection_life_model': {
+                'type': 'bool',
                 },
-            'window_sent_min': {
-                'type': 'int',
-                },
-            'window_rcvd_max': {
-                'type': 'int',
-                },
-            'window_rcvd_min': {
-                'type': 'int',
-                },
-            'window_rcvd_sent_ratio_min': {
-                'type': 'int',
-                },
-            'window_rcvd_sent_ratio_max': {
-                'type': 'int',
-                },
-            'window_violation': {
-                'type': 'int',
-                },
-            'progression_tracking_windows_action_list_name': {
-                'type': 'str',
-                },
-            'progression_tracking_windows_action': {
-                'type': 'str',
-                'choices': ['drop', 'blacklist-src']
+            'profiling_time_window_model': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -631,13 +514,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -645,7 +528,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -667,8 +550,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

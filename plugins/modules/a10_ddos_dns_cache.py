@@ -88,6 +88,16 @@ options:
         - "Negative cached response queries counted toward query-rate-threshold"
         type: bool
         required: False
+    dns_logging:
+        description:
+        - "DNS logging template"
+        type: str
+        required: False
+    respond_servfail:
+        description:
+        - "Respond with SERVFAIL for expired zones and zones failing to cache"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -109,13 +119,20 @@ options:
                 - "'all'= all; 'total-cached-fqdn'= total-cached-fqdn; 'total-cached-records'=
           total-cached-records; 'fqdn-a'= fqdn-a; 'fqdn-aaaa'= fqdn-aaaa; 'fqdn-cname'=
           fqdn-cname; 'fqdn-ns'= fqdn-ns; 'fqdn-mx'= fqdn-mx; 'fqdn-soa'= fqdn-soa;
-          'fqdn-srv'= fqdn-srv; 'fqdn-txt'= fqdn-txt; 'fqdn-ptr'= fqdn-ptr; 'fqdn-other'=
+          'fqdn-srv'= fqdn-srv; 'fqdn-txt'= fqdn-txt; 'fqdn-ptr'= fqdn-ptr; 'fqdn-ta'=
+          fqdn-ta; 'fqdn-ds'= fqdn-ds; 'fqdn-rrsig'= fqdn-rrsig; 'fqdn-nsec'= fqdn-nsec;
+          'fqdn-dnskey'= fqdn-dnskey; 'fqdn-nsec3'= fqdn-nsec3; 'fqdn-nsec3param'= fqdn-
+          nsec3param; 'fqdn-cds'= fqdn-cds; 'fqdn-cdnskey'= fqdn-cdnskey; 'fqdn-other'=
           fqdn-other; 'fqdn-wildcard'= fqdn-wildcard; 'fqdn-delegation'= fqdn-delegation;
           'shard-size'= shard-size; 'resp-ext-size'= resp-ext-size; 'a-record'= a-record;
           'aaaa-record'= aaaa-record; 'cname-record'= cname-record; 'ns-record'= ns-
           record; 'mx-record'= mx-record; 'soa-record'= soa-record; 'srv-record'= srv-
-          record; 'txt-record'= txt-record; 'ptr-record'= ptr-record; 'other-record'=
-          other-record; 'fqdn-in-shard-filter'= fqdn-in-shard-filter;"
+          record; 'txt-record'= txt-record; 'ptr-record'= ptr-record; 'ta-record'= ta-
+          record; 'ds-record'= ds-record; 'rrsig-record'= rrsig-record; 'nsec-record'=
+          nsec-record; 'dnskey-record'= dnskey-record; 'nsec3-record'= nsec3-record;
+          'nsec3param-record'= nsec3param-record; 'cds-record'= cds-record; 'cdnskey-
+          record'= cdnskey-record; 'other-record'= other-record; 'fqdn-in-shard-filter'=
+          fqdn-in-shard-filter; 'alias-record'= alias-record; 'fqdn-alias'= fqdn-alias;"
                 type: str
     zone_transfer:
         description:
@@ -334,6 +351,42 @@ options:
                 description:
                 - "Field fqdn_ptr"
                 type: str
+            fqdn_ta:
+                description:
+                - "Field fqdn_ta"
+                type: str
+            fqdn_ds:
+                description:
+                - "Field fqdn_ds"
+                type: str
+            fqdn_rrsig:
+                description:
+                - "Field fqdn_rrsig"
+                type: str
+            fqdn_nsec:
+                description:
+                - "Field fqdn_nsec"
+                type: str
+            fqdn_dnskey:
+                description:
+                - "Field fqdn_dnskey"
+                type: str
+            fqdn_nsec3:
+                description:
+                - "Field fqdn_nsec3"
+                type: str
+            fqdn_nsec3param:
+                description:
+                - "Field fqdn_nsec3param"
+                type: str
+            fqdn_cds:
+                description:
+                - "Field fqdn_cds"
+                type: str
+            fqdn_cdnskey:
+                description:
+                - "Field fqdn_cdnskey"
+                type: str
             fqdn_other:
                 description:
                 - "Field fqdn_other"
@@ -390,6 +443,42 @@ options:
                 description:
                 - "Field ptr_record"
                 type: str
+            ta_record:
+                description:
+                - "Field ta_record"
+                type: str
+            ds_record:
+                description:
+                - "Field ds_record"
+                type: str
+            rrsig_record:
+                description:
+                - "Field rrsig_record"
+                type: str
+            nsec_record:
+                description:
+                - "Field nsec_record"
+                type: str
+            dnskey_record:
+                description:
+                - "Field dnskey_record"
+                type: str
+            nsec3_record:
+                description:
+                - "Field nsec3_record"
+                type: str
+            nsec3param_record:
+                description:
+                - "Field nsec3param_record"
+                type: str
+            cds_record:
+                description:
+                - "Field cds_record"
+                type: str
+            cdnskey_record:
+                description:
+                - "Field cdnskey_record"
+                type: str
             other_record:
                 description:
                 - "Field other_record"
@@ -397,6 +486,14 @@ options:
             fqdn_in_shard_filter:
                 description:
                 - "Field fqdn_in_shard_filter"
+                type: str
+            alias_record:
+                description:
+                - "Field alias_record"
+                type: str
+            fqdn_alias:
+                description:
+                - "Field fqdn_alias"
                 type: str
             name:
                 description:
@@ -457,8 +554,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "any_query_action_str", "default_serving_action", "domain_group", "fqdn_manual_override_action_list", "name", "neg_cache_action_follow_q_rate", "non_authoritative_zone_query_action_str", "oper", "sampling_enable", "sharded_domain_group_list", "stats", "user_tag", "uuid", "zone_domain_lookup_miss_action", "zone_manual_override_action_list",
-    "zone_transfer",
+    "any_query_action_str", "default_serving_action", "dns_logging", "domain_group", "fqdn_manual_override_action_list", "name", "neg_cache_action_follow_q_rate", "non_authoritative_zone_query_action_str", "oper", "respond_servfail", "sampling_enable", "sharded_domain_group_list", "stats", "user_tag", "uuid", "zone_domain_lookup_miss_action",
+    "zone_manual_override_action_list", "zone_transfer",
     ]
 
 
@@ -503,6 +600,12 @@ def get_argspec():
         'neg_cache_action_follow_q_rate': {
             'type': 'bool',
             },
+        'dns_logging': {
+            'type': 'str',
+            },
+        'respond_servfail': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -515,8 +618,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'total-cached-fqdn', 'total-cached-records', 'fqdn-a', 'fqdn-aaaa', 'fqdn-cname', 'fqdn-ns', 'fqdn-mx', 'fqdn-soa', 'fqdn-srv', 'fqdn-txt', 'fqdn-ptr', 'fqdn-other', 'fqdn-wildcard', 'fqdn-delegation', 'shard-size', 'resp-ext-size', 'a-record', 'aaaa-record', 'cname-record', 'ns-record', 'mx-record', 'soa-record',
-                    'srv-record', 'txt-record', 'ptr-record', 'other-record', 'fqdn-in-shard-filter'
+                    'all', 'total-cached-fqdn', 'total-cached-records', 'fqdn-a', 'fqdn-aaaa', 'fqdn-cname', 'fqdn-ns', 'fqdn-mx', 'fqdn-soa', 'fqdn-srv', 'fqdn-txt', 'fqdn-ptr', 'fqdn-ta', 'fqdn-ds', 'fqdn-rrsig', 'fqdn-nsec', 'fqdn-dnskey', 'fqdn-nsec3', 'fqdn-nsec3param', 'fqdn-cds', 'fqdn-cdnskey', 'fqdn-other', 'fqdn-wildcard',
+                    'fqdn-delegation', 'shard-size', 'resp-ext-size', 'a-record', 'aaaa-record', 'cname-record', 'ns-record', 'mx-record', 'soa-record', 'srv-record', 'txt-record', 'ptr-record', 'ta-record', 'ds-record', 'rrsig-record', 'nsec-record', 'dnskey-record', 'nsec3-record', 'nsec3param-record', 'cds-record', 'cdnskey-record',
+                    'other-record', 'fqdn-in-shard-filter', 'alias-record', 'fqdn-alias'
                     ]
                 }
             },
@@ -549,6 +653,9 @@ def get_argspec():
                 'client_ipv4': {
                     'type': 'str',
                     },
+                'dns_notify_enable_ipv4': {
+                    'type': 'bool',
+                    },
                 'server_ipv6': {
                     'type': 'str',
                     },
@@ -557,6 +664,9 @@ def get_argspec():
                     },
                 'client_ipv6': {
                     'type': 'str',
+                    },
+                'dns_notify_enable_ipv6': {
+                    'type': 'bool',
                     },
                 'refresh_interval_hours': {
                     'type': 'int',
@@ -581,6 +691,9 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'cache_all_records': {
+                    'type': 'bool',
+                    },
+                'cache_dnssec_records': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -644,6 +757,9 @@ def get_argspec():
                 'client_ipv4': {
                     'type': 'str',
                     },
+                'dns_notify_enable_ipv4': {
+                    'type': 'bool',
+                    },
                 'server_ipv6': {
                     'type': 'str',
                     },
@@ -652,6 +768,9 @@ def get_argspec():
                     },
                 'client_ipv6': {
                     'type': 'str',
+                    },
+                'dns_notify_enable_ipv6': {
+                    'type': 'bool',
                     },
                 'refresh_interval_hours': {
                     'type': 'int',
@@ -854,6 +973,9 @@ def get_argspec():
                             },
                         'estimated_next_update': {
                             'type': 'str',
+                            },
+                        'remain_expiration_time': {
+                            'type': 'str',
                             }
                         },
                     'zone_name': {
@@ -869,6 +991,9 @@ def get_argspec():
                         'type': 'str',
                         },
                     'estimated_next_update': {
+                        'type': 'str',
+                        },
+                    'remain_expiration_time': {
                         'type': 'str',
                         },
                     'zone_transfer_history_list': {
@@ -905,6 +1030,15 @@ def get_argspec():
                             },
                         'total_failure': {
                             'type': 'str',
+                            },
+                        'cached_fqdn': {
+                            'type': 'int',
+                            },
+                        'cached_fqdn_second_pass': {
+                            'type': 'int',
+                            },
+                        'total_node_in_table': {
+                            'type': 'int',
                             }
                         },
                     'zone_transfer_statistics': {
@@ -917,6 +1051,9 @@ def get_argspec():
                             }
                         },
                     'zts_sflow_source_id': {
+                        'type': 'str',
+                        },
+                    'total_fqdn_in_table': {
                         'type': 'str',
                         },
                     'status': {
@@ -973,6 +1110,33 @@ def get_argspec():
             'fqdn_ptr': {
                 'type': 'str',
                 },
+            'fqdn_ta': {
+                'type': 'str',
+                },
+            'fqdn_ds': {
+                'type': 'str',
+                },
+            'fqdn_rrsig': {
+                'type': 'str',
+                },
+            'fqdn_nsec': {
+                'type': 'str',
+                },
+            'fqdn_dnskey': {
+                'type': 'str',
+                },
+            'fqdn_nsec3': {
+                'type': 'str',
+                },
+            'fqdn_nsec3param': {
+                'type': 'str',
+                },
+            'fqdn_cds': {
+                'type': 'str',
+                },
+            'fqdn_cdnskey': {
+                'type': 'str',
+                },
             'fqdn_other': {
                 'type': 'str',
                 },
@@ -1015,10 +1179,43 @@ def get_argspec():
             'ptr_record': {
                 'type': 'str',
                 },
+            'ta_record': {
+                'type': 'str',
+                },
+            'ds_record': {
+                'type': 'str',
+                },
+            'rrsig_record': {
+                'type': 'str',
+                },
+            'nsec_record': {
+                'type': 'str',
+                },
+            'dnskey_record': {
+                'type': 'str',
+                },
+            'nsec3_record': {
+                'type': 'str',
+                },
+            'nsec3param_record': {
+                'type': 'str',
+                },
+            'cds_record': {
+                'type': 'str',
+                },
+            'cdnskey_record': {
+                'type': 'str',
+                },
             'other_record': {
                 'type': 'str',
                 },
             'fqdn_in_shard_filter': {
+                'type': 'str',
+                },
+            'alias_record': {
+                'type': 'str',
+                },
+            'fqdn_alias': {
                 'type': 'str',
                 },
             'name': {
@@ -1166,13 +1363,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1180,7 +1377,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1212,8 +1409,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
