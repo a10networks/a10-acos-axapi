@@ -408,6 +408,14 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            templ_gtp_plcy_topn_tmpl_list:
+                description:
+                - "Field templ_gtp_plcy_topn_tmpl_list"
+                type: list
+            templ_gtp_plcy_topn_node:
+                description:
+                - "Field templ_gtp_plcy_topn_node"
+                type: dict
             cgnv6_nat_pool_topn_tmpl_list:
                 description:
                 - "Field cgnv6_nat_pool_topn_tmpl_list"
@@ -1222,6 +1230,44 @@ def get_argspec():
                         ]
                     }
                 },
+            'templ_gtp_plcy_topn_tmpl_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'topn_size': {
+                    'type': 'int',
+                    },
+                'interval': {
+                    'type': 'str',
+                    'choices': ['5', '15', '30', '60', 'all-time']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    },
+                'metrics': {
+                    'type': 'dict',
+                    'rl_message_monitor': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'templ_gtp_plcy_topn_node': {
+                'type': 'dict',
+                'activate': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
             'cgnv6_nat_pool_topn_tmpl_list': {
                 'type': 'list',
                 'name': {
@@ -1542,6 +1588,9 @@ def get_argspec():
                     'drop_rl_gtp_u_max_concurrent_tunnels': {
                         'type': 'bool',
                         },
+                    'rl_message_monitor': {
+                        'type': 'bool',
+                        },
                     'uuid': {
                         'type': 'str',
                         }
@@ -1842,6 +1891,9 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'drop_rl_gtp_u_max_concurrent_tunnels': {
+                        'type': 'bool',
+                        },
+                    'rl_message_monitor': {
                         'type': 'bool',
                         },
                     'uuid': {
@@ -7564,6 +7616,15 @@ def get_argspec():
                                 'blade_gtp_smp_sig_check_failed': {
                                     'type': 'bool',
                                     },
+                                'gtp_c_fail_conn_create_slow': {
+                                    'type': 'bool',
+                                    },
+                                'gtp_u_fail_conn_create_slow': {
+                                    'type': 'bool',
+                                    },
+                                'gtp_pathm_fail_conn_create_slow': {
+                                    'type': 'bool',
+                                    },
                                 'uuid': {
                                     'type': 'str',
                                     }
@@ -7655,6 +7716,15 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'blade_gtp_smp_sig_check_failed': {
+                                    'type': 'bool',
+                                    },
+                                'gtp_c_fail_conn_create_slow': {
+                                    'type': 'bool',
+                                    },
+                                'gtp_u_fail_conn_create_slow': {
+                                    'type': 'bool',
+                                    },
+                                'gtp_pathm_fail_conn_create_slow': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -10282,6 +10352,12 @@ def get_argspec():
                                 'so_pkts_l2redirect_loop_detect_drop': {
                                     'type': 'bool',
                                     },
+                                'so_pkts_l2redirect_frag_vlan_retrieval_': {
+                                    'type': 'bool',
+                                    },
+                                'so_pkts_l2redirect_tx_frag_vlan_add_fai': {
+                                    'type': 'bool',
+                                    },
                                 'uuid': {
                                     'type': 'str',
                                     }
@@ -10337,6 +10413,12 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'so_pkts_l2redirect_loop_detect_drop': {
+                                    'type': 'bool',
+                                    },
+                                'so_pkts_l2redirect_frag_vlan_retrieval_': {
+                                    'type': 'bool',
+                                    },
+                                'so_pkts_l2redirect_tx_frag_vlan_add_fai': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -14012,6 +14094,9 @@ def get_argspec():
                         'dnsrrl_bad_fqdn': {
                             'type': 'bool',
                             },
+                        'dns_filter_tld_drop': {
+                            'type': 'bool',
+                            },
                         'uuid': {
                             'type': 'str',
                             }
@@ -14106,6 +14191,9 @@ def get_argspec():
                             'type': 'bool',
                             },
                         'dnsrrl_bad_fqdn': {
+                            'type': 'bool',
+                            },
+                        'dns_filter_tld_drop': {
                             'type': 'bool',
                             },
                         'uuid': {
@@ -15454,13 +15542,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -15468,7 +15556,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -15495,8 +15583,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

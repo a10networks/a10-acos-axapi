@@ -267,6 +267,20 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    connection_count_by_site:
+        description:
+        - "Field connection_count_by_site"
+        type: dict
+        required: False
+        suboptions:
+            connection_count_enable:
+                description:
+                - "Enable connection-count-by-site"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     dns:
         description:
         - "Field dns"
@@ -572,6 +586,14 @@ options:
                 description:
                 - "Single Shot RDT"
                 type: bool
+            prefer_dns_sticky:
+                description:
+                - "Use dns sticky if available"
+                type: bool
+            sticky_difference:
+                description:
+                - "The difference between the round-delay-time of sticky entry"
+                type: int
             timeout:
                 description:
                 - "Specify timeout if round-delay-time samples are not ready (Specify timeout,
@@ -732,9 +754,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "active_rdt", "active_servers_enable", "active_servers_fail_break", "admin_ip_enable", "admin_ip_top_only", "admin_preference", "alias_admin_preference", "amount_first", "auto_map", "bw_cost_enable", "bw_cost_fail_break", "capacity", "connection_load", "dns", "edns", "geo_location_list", "geo_location_match", "geographic", "health_check",
-    "health_check_preference_enable", "health_preference_top", "ip_list", "least_response", "metric_fail_break", "metric_force_check", "metric_order", "metric_type", "name", "num_session_enable", "num_session_tolerance", "oper", "ordered_ip_top_only", "round_robin", "user_tag", "uuid", "weighted_alias", "weighted_ip_enable",
-    "weighted_ip_total_hits", "weighted_site_enable", "weighted_site_total_hits",
+    "active_rdt", "active_servers_enable", "active_servers_fail_break", "admin_ip_enable", "admin_ip_top_only", "admin_preference", "alias_admin_preference", "amount_first", "auto_map", "bw_cost_enable", "bw_cost_fail_break", "capacity", "connection_count_by_site", "connection_load", "dns", "edns", "geo_location_list", "geo_location_match",
+    "geographic", "health_check", "health_check_preference_enable", "health_preference_top", "ip_list", "least_response", "metric_fail_break", "metric_force_check", "metric_order", "metric_type", "name", "num_session_enable", "num_session_tolerance", "oper", "ordered_ip_top_only", "round_robin", "user_tag", "uuid", "weighted_alias",
+    "weighted_ip_enable", "weighted_ip_total_hits", "weighted_site_enable", "weighted_site_total_hits",
     ]
 
 
@@ -843,7 +865,7 @@ def get_argspec():
             },
         'metric_type': {
             'type': 'str',
-            'choices': ['health-check', 'weighted-ip', 'weighted-site', 'capacity', 'active-servers', 'active-rdt', 'geographic', 'connection-load', 'num-session', 'admin-preference', 'bw-cost', 'least-response', 'admin-ip']
+            'choices': ['health-check', 'weighted-ip', 'weighted-site', 'capacity', 'active-servers', 'active-rdt', 'geographic', 'connection-load', 'connection-count-by-site', 'num-session', 'admin-preference', 'bw-cost', 'least-response', 'admin-ip']
             },
         'uuid': {
             'type': 'str',
@@ -885,6 +907,15 @@ def get_argspec():
                 },
             'connection_load_limit': {
                 'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'connection_count_by_site': {
+            'type': 'dict',
+            'connection_count_enable': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -1150,6 +1181,12 @@ def get_argspec():
             'single_shot': {
                 'type': 'bool',
                 },
+            'prefer_dns_sticky': {
+                'type': 'bool',
+                },
+            'sticky_difference': {
+                'type': 'int',
+                },
             'timeout': {
                 'type': 'int',
                 },
@@ -1371,13 +1408,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1385,7 +1422,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1412,8 +1449,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

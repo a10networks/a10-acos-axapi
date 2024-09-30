@@ -134,6 +134,12 @@ options:
         - "Maximum count for dynamic source zone service entry"
         type: int
         required: False
+    dynamic_entry_count_warn_threshold:
+        description:
+        - "Set threshold percentage of 'max-src-dst-entry' for generating warning logs.
+          Including start and end."
+        type: int
+        required: False
     apply_policy_on_overflow:
         description:
         - "Enable this flag to apply overflow policy when dynamic entry count overflows"
@@ -149,6 +155,11 @@ options:
         - "Maximum number of records to show in topk"
         type: int
         required: False
+    topk_sort_key:
+        description:
+        - "'avg'= window average; 'max-peak'= max peak;"
+        type: str
+        required: False
     enable_top_k_destination:
         description:
         - "Enable ddos top-k destination IP detection"
@@ -158,6 +169,11 @@ options:
         description:
         - "Maximum number of records to show in topk"
         type: int
+        required: False
+    topk_dst_sort_key:
+        description:
+        - "'avg'= window average; 'max-peak'= max peak;"
+        type: str
         required: False
     set_counter_base_val:
         description:
@@ -190,9 +206,9 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    ip_filtering_policy_oper:
+    ip_filtering_policy_statistics:
         description:
-        - "Field ip_filtering_policy_oper"
+        - "Field ip_filtering_policy_statistics"
         type: dict
         required: False
         suboptions:
@@ -478,9 +494,9 @@ options:
                 description:
                 - "Protocol Number"
                 type: int
-            ip_filtering_policy_oper:
+            ip_filtering_policy_statistics:
                 description:
-                - "Field ip_filtering_policy_oper"
+                - "Field ip_filtering_policy_statistics"
                 type: dict
             port_ind:
                 description:
@@ -553,8 +569,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "apply_policy_on_overflow", "deny", "drop_frag_pkt", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "esp_inspect", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "level_list", "manual_mode_enable", "manual_mode_list",
-    "max_dynamic_entry_count", "oper", "port_ind", "progression_tracking", "protocol_num", "set_counter_base_val", "src_based_policy_list", "topk_destinations", "topk_dst_num_records", "topk_num_records", "topk_sources", "unlimited_dynamic_entry_count", "uuid",
+    "age", "apply_policy_on_overflow", "deny", "drop_frag_pkt", "dynamic_entry_count_warn_threshold", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "esp_inspect", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "level_list",
+    "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "port_ind", "progression_tracking", "protocol_num", "set_counter_base_val", "src_based_policy_list", "topk_destinations", "topk_dst_num_records", "topk_dst_sort_key", "topk_num_records", "topk_sort_key", "topk_sources", "unlimited_dynamic_entry_count", "uuid",
     ]
 
 
@@ -626,6 +642,9 @@ def get_argspec():
         'max_dynamic_entry_count': {
             'type': 'int',
             },
+        'dynamic_entry_count_warn_threshold': {
+            'type': 'int',
+            },
         'apply_policy_on_overflow': {
             'type': 'bool',
             },
@@ -635,11 +654,19 @@ def get_argspec():
         'topk_num_records': {
             'type': 'int',
             },
+        'topk_sort_key': {
+            'type': 'str',
+            'choices': ['avg', 'max-peak']
+            },
         'enable_top_k_destination': {
             'type': 'bool',
             },
         'topk_dst_num_records': {
             'type': 'int',
+            },
+        'topk_dst_sort_key': {
+            'type': 'str',
+            'choices': ['avg', 'max-peak']
             },
         'set_counter_base_val': {
             'type': 'int',
@@ -659,7 +686,7 @@ def get_argspec():
         'uuid': {
             'type': 'str',
             },
-        'ip_filtering_policy_oper': {
+        'ip_filtering_policy_statistics': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
@@ -701,6 +728,9 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'max_dynamic_entry_count': {
+                    'type': 'int',
+                    },
+                'dynamic_entry_count_warn_threshold': {
                     'type': 'int',
                     },
                 'zone_template': {
@@ -833,7 +863,7 @@ def get_argspec():
                 'ntype': {
                     'type': 'str',
                     'required': True,
-                    'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'frag-rate', 'cpu-utilization', 'interface-utilization']
+                    'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'frag-rate', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
                     },
                 'data_packet_size': {
                     'type': 'int',
@@ -921,7 +951,8 @@ def get_argspec():
                         'ddet_ind_pkt_drop_ratio_adaptive_threshold', 'ddet_ind_inb_per_outb_current', 'ddet_ind_inb_per_outb_min', 'ddet_ind_inb_per_outb_max', 'ddet_ind_inb_per_outb_adaptive_threshold', 'ddet_ind_syn_per_fin_rate_current', 'ddet_ind_syn_per_fin_rate_min', 'ddet_ind_syn_per_fin_rate_max',
                         'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                         'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
-                        'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold'
+                        'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current',
+                        'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
                         ]
                     }
                 }
@@ -1023,6 +1054,9 @@ def get_argspec():
                 'dynamic_entry_limit': {
                     'type': 'str',
                     },
+                'dynamic_entry_warn_state': {
+                    'type': 'str',
+                    },
                 'sflow_source_id': {
                     'type': 'int',
                     },
@@ -1097,7 +1131,7 @@ def get_argspec():
                 'type': 'int',
                 'required': True,
                 },
-            'ip_filtering_policy_oper': {
+            'ip_filtering_policy_statistics': {
                 'type': 'dict',
                 'oper': {
                     'type': 'dict',
@@ -1107,6 +1141,9 @@ def get_argspec():
                             'type': 'int',
                             },
                         'hits': {
+                            'type': 'int',
+                            },
+                        'blacklisted_src_count': {
                             'type': 'int',
                             }
                         }
@@ -1565,13 +1602,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1579,7 +1616,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1606,8 +1643,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

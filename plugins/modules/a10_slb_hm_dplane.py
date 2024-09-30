@@ -79,12 +79,12 @@ options:
           'err_l4_sess_alloc'= Error allocating L4 session for HM;
           'err_hm_tcp_conn_sent'= Error in initiating TCP connection for HM;
           'hm_tcp_conn_sent'= Total TCP connections sent for HM; 'entry_deleted'= Entry
-          deleted; 'err_entry_create_vip_failed'= Error in creating HM internal VIP;
-          'total_match_resp_code'= Total HTTP received response with match response code;
-          'total_match_default_resp_code'= Total HTTP received response with match 200
-          response code; 'total_maintenance_received'= Total maintenace response
-          received; 'total_wrong_status_received'= Total HTTP received response with
-          wrong response code; 'err_no_hm_entry'= Error no HM entry found;
+          deleted; 'err_entry_create_slb_failed'= Error in creating HM internal SLB
+          Resource; 'total_match_resp_code'= Total HTTP received response with match
+          response code; 'total_match_default_resp_code'= Total HTTP received response
+          with match 200 response code; 'total_maintenance_received'= Total maintenace
+          response received; 'total_wrong_status_received'= Total HTTP received response
+          with wrong response code; 'err_no_hm_entry'= Error no HM entry found;
           'err_ssl_cert_name_mismatch'= Error SSL cert name mismatch;
           'err_server_syn_timeout'= Error SSL server SYN timeout; 'err_http2_callback'=
           Error HTTP2 callback; 'err_l7_sess_process_tcp_estab_failed'= L7 session
@@ -96,7 +96,10 @@ options:
           'smart_nat_release_failed'= Total smart-nat release failed;
           'total_server_quic_conn'= Total start server QUIC connections;
           'total_server_quic_conn_err'= Total start server QUIC connections error;
-          'total_start_server_conn_err'= Total start server connections error;"
+          'total_start_server_conn_err'= Total start server connections error;
+          'err_missing_server_ssl_template'= Missing Server-SSL Template;
+          'err_create_ssl_ctx_fail'= Error in creating SSL CTX;
+          'err_entry_missing_vport'= Entry missing Virtual-Port;"
                 type: str
     stats:
         description:
@@ -164,9 +167,9 @@ options:
                 description:
                 - "Entry deleted"
                 type: str
-            err_entry_create_vip_failed:
+            err_entry_create_slb_failed:
                 description:
-                - "Error in creating HM internal VIP"
+                - "Error in creating HM internal SLB Resource"
                 type: str
             total_match_resp_code:
                 description:
@@ -239,6 +242,18 @@ options:
             total_start_server_conn_err:
                 description:
                 - "Total start server connections error"
+                type: str
+            err_missing_server_ssl_template:
+                description:
+                - "Missing Server-SSL Template"
+                type: str
+            err_create_ssl_ctx_fail:
+                description:
+                - "Error in creating SSL CTX"
+                type: str
+            err_entry_missing_vport:
+                description:
+                - "Entry missing Virtual-Port"
                 type: str
 
 '''
@@ -325,8 +340,8 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'curr_entries', 'total_created', 'total_inserted', 'total_ready_to_free', 'total_freed', 'err_entry_create_failed', 'err_entry_create_oom', 'err_entry_insert_failed', 'total_tcp_err', 'err_smart_nat_alloc', 'err_smart_nat_port_alloc', 'err_l4_sess_alloc', 'err_hm_tcp_conn_sent', 'hm_tcp_conn_sent', 'entry_deleted',
-                    'err_entry_create_vip_failed', 'total_match_resp_code', 'total_match_default_resp_code', 'total_maintenance_received', 'total_wrong_status_received', 'err_no_hm_entry', 'err_ssl_cert_name_mismatch', 'err_server_syn_timeout', 'err_http2_callback', 'err_l7_sess_process_tcp_estab_failed', 'err_l7_sess_process_tcp_data_failed',
-                    'err_http2_ver_mismatch', 'smart_nat_alloc', 'smart_nat_release', 'smart_nat_alloc_failed', 'smart_nat_release_failed', 'total_server_quic_conn', 'total_server_quic_conn_err', 'total_start_server_conn_err'
+                    'err_entry_create_slb_failed', 'total_match_resp_code', 'total_match_default_resp_code', 'total_maintenance_received', 'total_wrong_status_received', 'err_no_hm_entry', 'err_ssl_cert_name_mismatch', 'err_server_syn_timeout', 'err_http2_callback', 'err_l7_sess_process_tcp_estab_failed', 'err_l7_sess_process_tcp_data_failed',
+                    'err_http2_ver_mismatch', 'smart_nat_alloc', 'smart_nat_release', 'smart_nat_alloc_failed', 'smart_nat_release_failed', 'total_server_quic_conn', 'total_server_quic_conn_err', 'total_start_server_conn_err', 'err_missing_server_ssl_template', 'err_create_ssl_ctx_fail', 'err_entry_missing_vport'
                     ]
                 }
             },
@@ -377,7 +392,7 @@ def get_argspec():
             'entry_deleted': {
                 'type': 'str',
                 },
-            'err_entry_create_vip_failed': {
+            'err_entry_create_slb_failed': {
                 'type': 'str',
                 },
             'total_match_resp_code': {
@@ -432,6 +447,15 @@ def get_argspec():
                 'type': 'str',
                 },
             'total_start_server_conn_err': {
+                'type': 'str',
+                },
+            'err_missing_server_ssl_template': {
+                'type': 'str',
+                },
+            'err_create_ssl_ctx_fail': {
+                'type': 'str',
+                },
+            'err_entry_missing_vport': {
                 'type': 'str',
                 }
             }
@@ -570,13 +594,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -584,7 +608,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -611,8 +635,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

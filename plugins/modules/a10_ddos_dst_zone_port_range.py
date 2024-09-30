@@ -159,6 +159,12 @@ options:
         - "Maximum count for dynamic source zone service entry"
         type: int
         required: False
+    dynamic_entry_count_warn_threshold:
+        description:
+        - "Set threshold percentage of 'max-src-dst-entry' for generating warning logs.
+          Including start and end."
+        type: int
+        required: False
     apply_policy_on_overflow:
         description:
         - "Enable this flag to apply overflow policy when dynamic entry count overflows"
@@ -180,6 +186,11 @@ options:
         - "Maximum number of records to show in topk"
         type: int
         required: False
+    topk_sort_key:
+        description:
+        - "'avg'= window average; 'max-peak'= max peak;"
+        type: str
+        required: False
     enable_top_k_destination:
         description:
         - "Enable ddos top-k destination IP detection"
@@ -189,6 +200,11 @@ options:
         description:
         - "Maximum number of records to show in topk"
         type: int
+        required: False
+    topk_dst_sort_key:
+        description:
+        - "'avg'= window average; 'max-peak'= max peak;"
+        type: str
         required: False
     set_counter_base_val:
         description:
@@ -210,6 +226,22 @@ options:
         - "De-escalate faster in standalone mode"
         type: bool
         required: False
+    capture_config:
+        description:
+        - "Field capture_config"
+        type: dict
+        required: False
+        suboptions:
+            capture_config_name:
+                description:
+                - "Capture-config name"
+                type: str
+            capture_config_mode:
+                description:
+                - "'drop'= Apply capture-config to dropped packets; 'forward'= Apply capture-
+          config to forwarded packets; 'all'= Apply capture-config to both dropped and
+          forwarded packets;"
+                type: str
     ip_filtering_policy:
         description:
         - "Configure IP Filter"
@@ -225,9 +257,9 @@ options:
         - "Customized tag"
         type: str
         required: False
-    ip_filtering_policy_oper:
+    ip_filtering_policy_statistics:
         description:
-        - "Field ip_filtering_policy_oper"
+        - "Field ip_filtering_policy_statistics"
         type: dict
         required: False
         suboptions:
@@ -333,6 +365,14 @@ options:
                 description:
                 - "Close session for unauthenticated sources"
                 type: bool
+            close_sessions_for_all_sources:
+                description:
+                - "Close session for all sources"
+                type: bool
+            clear_sources_upon_deescalation:
+                description:
+                - "Clear sources upon de-escalation from level 1 to 0 or manual to 0"
+                type: bool
             start_pattern_recognition:
                 description:
                 - "Start pattern recognition from this level"
@@ -380,6 +420,10 @@ options:
                 description:
                 - "Close session for unauthenticated sources"
                 type: bool
+            close_sessions_for_all_sources:
+                description:
+                - "Close session for all sources"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -388,20 +432,6 @@ options:
                 description:
                 - "Customized tag"
                 type: str
-    ips:
-        description:
-        - "Field ips"
-        type: dict
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-                type: list
     port_ind:
         description:
         - "Field port_ind"
@@ -507,6 +537,28 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+    virtualhosts:
+        description:
+        - "Field virtualhosts"
+        type: dict
+        required: False
+        suboptions:
+            vhosts_config:
+                description:
+                - "'configuration'= configure virtualhost based mitigation for ssl services;"
+                type: str
+            source_tracking_all:
+                description:
+                - "enables creation of source entries for all virtualhosts"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            virtualhost_list:
+                description:
+                - "Field virtualhost_list"
+                type: list
     oper:
         description:
         - "Field oper"
@@ -619,9 +671,9 @@ options:
           Port; 'udp'= UDP Port; 'ssl-l4'= SSL-L4 Port; 'sip-udp'= SIP-UDP Port; 'sip-
           tcp'= SIP-TCP Port; 'quic'= QUIC Port;"
                 type: str
-            ip_filtering_policy_oper:
+            ip_filtering_policy_statistics:
                 description:
-                - "Field ip_filtering_policy_oper"
+                - "Field ip_filtering_policy_statistics"
                 type: dict
             pattern_recognition:
                 description:
@@ -630,10 +682,6 @@ options:
             pattern_recognition_pu_details:
                 description:
                 - "Field pattern_recognition_pu_details"
-                type: dict
-            ips:
-                description:
-                - "Field ips"
                 type: dict
             port_ind:
                 description:
@@ -650,6 +698,10 @@ options:
             progression_tracking:
                 description:
                 - "Field progression_tracking"
+                type: dict
+            virtualhosts:
+                description:
+                - "Field virtualhosts"
                 type: dict
 
 '''
@@ -706,9 +758,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "apply_policy_on_overflow", "default_action_list", "deny", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_oper", "ips", "level_list", "manual_mode_enable", "manual_mode_list",
-    "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_range_end", "port_range_start", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_http", "sflow_packets", "sflow_tcp", "src_based_policy_list", "stateful", "topk_destinations",
-    "topk_dst_num_records", "topk_num_records", "topk_sources", "unlimited_dynamic_entry_count", "user_tag", "uuid",
+    "age", "apply_policy_on_overflow", "capture_config", "default_action_list", "deny", "dynamic_entry_count_warn_threshold", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "level_list",
+    "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_range_end", "port_range_start", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_http", "sflow_packets", "sflow_tcp", "src_based_policy_list",
+    "stateful", "topk_destinations", "topk_dst_num_records", "topk_dst_sort_key", "topk_num_records", "topk_sort_key", "topk_sources", "unlimited_dynamic_entry_count", "user_tag", "uuid", "virtualhosts",
     ]
 
 
@@ -795,6 +847,9 @@ def get_argspec():
         'max_dynamic_entry_count': {
             'type': 'int',
             },
+        'dynamic_entry_count_warn_threshold': {
+            'type': 'int',
+            },
         'apply_policy_on_overflow': {
             'type': 'bool',
             },
@@ -807,11 +862,19 @@ def get_argspec():
         'topk_num_records': {
             'type': 'int',
             },
+        'topk_sort_key': {
+            'type': 'str',
+            'choices': ['avg', 'max-peak']
+            },
         'enable_top_k_destination': {
             'type': 'bool',
             },
         'topk_dst_num_records': {
             'type': 'int',
+            },
+        'topk_dst_sort_key': {
+            'type': 'str',
+            'choices': ['avg', 'max-peak']
             },
         'set_counter_base_val': {
             'type': 'int',
@@ -825,6 +888,16 @@ def get_argspec():
         'faster_de_escalation': {
             'type': 'bool',
             },
+        'capture_config': {
+            'type': 'dict',
+            'capture_config_name': {
+                'type': 'str',
+                },
+            'capture_config_mode': {
+                'type': 'str',
+                'choices': ['drop', 'forward', 'all']
+                }
+            },
         'ip_filtering_policy': {
             'type': 'str',
             },
@@ -834,7 +907,7 @@ def get_argspec():
         'user_tag': {
             'type': 'str',
             },
-        'ip_filtering_policy_oper': {
+        'ip_filtering_policy_statistics': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
@@ -937,6 +1010,12 @@ def get_argspec():
             'close_sessions_for_unauth_sources': {
                 'type': 'bool',
                 },
+            'close_sessions_for_all_sources': {
+                'type': 'bool',
+                },
+            'clear_sources_upon_deescalation': {
+                'type': 'bool',
+                },
             'start_pattern_recognition': {
                 'type': 'bool',
                 },
@@ -954,7 +1033,7 @@ def get_argspec():
                 'ntype': {
                     'type': 'str',
                     'required': True,
-                    'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization']
+                    'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
                     },
                 'tcp_window_size': {
                     'type': 'int',
@@ -1041,28 +1120,14 @@ def get_argspec():
             'close_sessions_for_unauth_sources': {
                 'type': 'bool',
                 },
+            'close_sessions_for_all_sources': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 },
             'user_tag': {
                 'type': 'str',
-                }
-            },
-        'ips': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-                },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'ips_matched_total', 'ips_matched_action_pass', 'ips_matched_action_drop', 'ips_matched_action_blacklist', 'ips_matched_severity_high', 'ips_matched_severity_medium', 'ips_matched_severity_low', 'src_ips_matched_action_pass', 'src_ips_matched_action_drop', 'src_ips_matched_action_blacklist',
-                        'src_ips_matched_severity_high', 'src_ips_matched_severity_medium', 'src_ips_matched_severity_low'
-                        ]
-                    }
                 }
             },
         'port_ind': {
@@ -1083,7 +1148,8 @@ def get_argspec():
                         'ddet_ind_pkt_drop_ratio_adaptive_threshold', 'ddet_ind_inb_per_outb_current', 'ddet_ind_inb_per_outb_min', 'ddet_ind_inb_per_outb_max', 'ddet_ind_inb_per_outb_adaptive_threshold', 'ddet_ind_syn_per_fin_rate_current', 'ddet_ind_syn_per_fin_rate_min', 'ddet_ind_syn_per_fin_rate_max',
                         'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                         'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
-                        'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold'
+                        'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current',
+                        'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
                         ]
                     }
                 }
@@ -1136,6 +1202,9 @@ def get_argspec():
                     'choices': ['bypass', 'deny']
                     },
                 'max_dynamic_entry_count': {
+                    'type': 'int',
+                    },
+                'dynamic_entry_count_warn_threshold': {
                     'type': 'int',
                     },
                 'zone_template': {
@@ -1297,6 +1366,92 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'virtualhosts': {
+            'type': 'dict',
+            'vhosts_config': {
+                'type': 'str',
+                'choices': ['configuration']
+                },
+            'source_tracking_all': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'virtualhost_list': {
+                'type': 'list',
+                'vhost': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'servername': {
+                    'type': 'list',
+                    'match_type': {
+                        'type': 'str',
+                        'choices': ['contains', 'ends-with', 'equals', 'starts-with']
+                        },
+                    'host_match_string': {
+                        'type': 'str',
+                        }
+                    },
+                'servername_list': {
+                    'type': 'str',
+                    },
+                'servername_match_any': {
+                    'type': 'bool',
+                    },
+                'source_tracking': {
+                    'type': 'str',
+                    'choices': ['follow', 'enable', 'disable']
+                    },
+                'glid_cfg': {
+                    'type': 'dict',
+                    'glid': {
+                        'type': 'str',
+                        },
+                    'glid_action': {
+                        'type': 'str',
+                        'choices': ['drop', 'ignore']
+                        }
+                    },
+                'deny': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    },
+                'level_list': {
+                    'type': 'list',
+                    'level_num': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['0']
+                        },
+                    'src_default_glid': {
+                        'type': 'str',
+                        },
+                    'glid_action': {
+                        'type': 'str',
+                        'choices': ['drop', 'blacklist-src', 'ignore']
+                        },
+                    'zone_template': {
+                        'type': 'dict',
+                        'tcp': {
+                            'type': 'str',
+                            }
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        }
+                    }
+                }
+            },
         'oper': {
             'type': 'dict',
             'ddos_entry_list': {
@@ -1448,11 +1603,11 @@ def get_argspec():
                 'dynamic_entry_limit': {
                     'type': 'str',
                     },
+                'dynamic_entry_warn_state': {
+                    'type': 'str',
+                    },
                 'sflow_source_id': {
                     'type': 'int',
-                    },
-                'debug_str': {
-                    'type': 'str',
                     },
                 'http_filter_rates': {
                     'type': 'list',
@@ -1483,6 +1638,9 @@ def get_argspec():
                     'response_size_rate_limit': {
                         'type': 'str',
                         }
+                    },
+                'debug_str': {
+                    'type': 'str',
                     }
                 },
             'entry_displayed_count': {
@@ -1564,7 +1722,7 @@ def get_argspec():
                 'required': True,
                 'choices': ['dns-tcp', 'dns-udp', 'http', 'tcp', 'udp', 'ssl-l4', 'sip-udp', 'sip-tcp', 'quic']
                 },
-            'ip_filtering_policy_oper': {
+            'ip_filtering_policy_statistics': {
                 'type': 'dict',
                 'oper': {
                     'type': 'dict',
@@ -1574,6 +1732,9 @@ def get_argspec():
                             'type': 'int',
                             },
                         'hits': {
+                            'type': 'int',
+                            },
+                        'blacklisted_src_count': {
                             'type': 'int',
                             }
                         }
@@ -1674,21 +1835,6 @@ def get_argspec():
                             'sample_ratio': {
                                 'type': 'int',
                                 }
-                            }
-                        }
-                    }
-                },
-            'ips': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'signature_list': {
-                        'type': 'list',
-                        'sid': {
-                            'type': 'int',
-                            },
-                        'match_count': {
-                            'type': 'int',
                             }
                         }
                     }
@@ -1997,6 +2143,277 @@ def get_argspec():
                         'type': 'bool',
                         }
                     }
+                },
+            'virtualhosts': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    },
+                'virtualhost_list': {
+                    'type': 'list',
+                    'vhost': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'oper': {
+                        'type': 'dict',
+                        'ddos_entry_list': {
+                            'type': 'list',
+                            'dst_address_str': {
+                                'type': 'str',
+                                },
+                            'bw_state': {
+                                'type': 'str',
+                                },
+                            'is_auth_passed': {
+                                'type': 'str',
+                                },
+                            'level': {
+                                'type': 'int',
+                                },
+                            'bl_reasoning_rcode': {
+                                'type': 'str',
+                                },
+                            'bl_reasoning_timestamp': {
+                                'type': 'str',
+                                },
+                            'current_connections': {
+                                'type': 'str',
+                                },
+                            'is_connections_exceed': {
+                                'type': 'int',
+                                },
+                            'connection_limit': {
+                                'type': 'str',
+                                },
+                            'current_connection_rate': {
+                                'type': 'str',
+                                },
+                            'is_connection_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'connection_rate_limit': {
+                                'type': 'str',
+                                },
+                            'current_packet_rate': {
+                                'type': 'str',
+                                },
+                            'is_packet_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'packet_rate_limit': {
+                                'type': 'str',
+                                },
+                            'current_kBit_rate': {
+                                'type': 'str',
+                                },
+                            'is_kBit_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'kBit_rate_limit': {
+                                'type': 'str',
+                                },
+                            'current_frag_packet_rate': {
+                                'type': 'str',
+                                },
+                            'is_frag_packet_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'frag_packet_rate_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat1': {
+                                'type': 'str',
+                                },
+                            'is_app_stat1_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat1_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat2': {
+                                'type': 'str',
+                                },
+                            'is_app_stat2_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat2_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat3': {
+                                'type': 'str',
+                                },
+                            'is_app_stat3_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat3_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat4': {
+                                'type': 'str',
+                                },
+                            'is_app_stat4_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat4_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat5': {
+                                'type': 'str',
+                                },
+                            'is_app_stat5_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat5_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat6': {
+                                'type': 'str',
+                                },
+                            'is_app_stat6_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat6_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat7': {
+                                'type': 'str',
+                                },
+                            'is_app_stat7_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat7_limit': {
+                                'type': 'str',
+                                },
+                            'current_app_stat8': {
+                                'type': 'str',
+                                },
+                            'is_app_stat8_exceed': {
+                                'type': 'int',
+                                },
+                            'app_stat8_limit': {
+                                'type': 'str',
+                                },
+                            'age': {
+                                'type': 'int',
+                                },
+                            'lockup_time': {
+                                'type': 'int',
+                                },
+                            'dynamic_entry_count': {
+                                'type': 'str',
+                                },
+                            'dynamic_entry_limit': {
+                                'type': 'str',
+                                },
+                            'dynamic_entry_warn_state': {
+                                'type': 'str',
+                                },
+                            'sflow_source_id': {
+                                'type': 'int',
+                                },
+                            'http_filter_rates': {
+                                'type': 'list',
+                                'http_filter_rate_name': {
+                                    'type': 'str',
+                                    },
+                                'is_http_filter_rate_limit_exceed': {
+                                    'type': 'int',
+                                    },
+                                'current_http_filter_rate': {
+                                    'type': 'str',
+                                    },
+                                'http_filter_rate_limit': {
+                                    'type': 'str',
+                                    }
+                                },
+                            'response_size_rates': {
+                                'type': 'list',
+                                'response_size_rate_name': {
+                                    'type': 'str',
+                                    },
+                                'is_response_size_rate_limit_exceed': {
+                                    'type': 'int',
+                                    },
+                                'current_response_size_rate': {
+                                    'type': 'str',
+                                    },
+                                'response_size_rate_limit': {
+                                    'type': 'str',
+                                    }
+                                },
+                            'debug_str': {
+                                'type': 'str',
+                                }
+                            },
+                        'entry_displayed_count': {
+                            'type': 'int',
+                            },
+                        'service_displayed_count': {
+                            'type': 'int',
+                            },
+                        'reporting_status': {
+                            'type': 'int',
+                            },
+                        'sources': {
+                            'type': 'bool',
+                            },
+                        'overflow_policy': {
+                            'type': 'bool',
+                            },
+                        'sources_all_entries': {
+                            'type': 'bool',
+                            },
+                        'class_list': {
+                            'type': 'str',
+                            },
+                        'subnet_ip_addr': {
+                            'type': 'str',
+                            },
+                        'subnet_ipv6_addr': {
+                            'type': 'str',
+                            },
+                        'ipv6': {
+                            'type': 'str',
+                            },
+                        'exceeded': {
+                            'type': 'bool',
+                            },
+                        'black_listed': {
+                            'type': 'bool',
+                            },
+                        'white_listed': {
+                            'type': 'bool',
+                            },
+                        'authenticated': {
+                            'type': 'bool',
+                            },
+                        'level': {
+                            'type': 'bool',
+                            },
+                        'app_stat': {
+                            'type': 'bool',
+                            },
+                        'indicators': {
+                            'type': 'bool',
+                            },
+                        'indicator_detail': {
+                            'type': 'bool',
+                            },
+                        'l4_ext_rate': {
+                            'type': 'bool',
+                            },
+                        'hw_blacklisted': {
+                            'type': 'bool',
+                            },
+                        'suffix_request_rate': {
+                            'type': 'bool',
+                            },
+                        'domain_name': {
+                            'type': 'str',
+                            }
+                        }
+                    }
                 }
             }
         })
@@ -2156,13 +2573,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -2170,7 +2587,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -2197,8 +2614,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

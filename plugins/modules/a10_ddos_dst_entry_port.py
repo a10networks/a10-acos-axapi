@@ -87,6 +87,11 @@ options:
         - "Maximum number of records to show in topk"
         type: int
         required: False
+    topk_sort_key:
+        description:
+        - "'avg'= window average; 'max-peak'= max peak;"
+        type: str
+        required: False
     deny:
         description:
         - "Blacklist and Drop all incoming packets for protocol"
@@ -173,11 +178,6 @@ options:
         - "Set T2 counter value of current context to specified value"
         type: int
         required: False
-    ip_filtering_policy:
-        description:
-        - "Configure IP Filter"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -202,16 +202,6 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
-    ip_filtering_policy_oper:
-        description:
-        - "Field ip_filtering_policy_oper"
-        type: dict
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     topk_sources:
         description:
         - "Field topk_sources"
@@ -383,10 +373,6 @@ options:
                 description:
                 - "Field port_ind"
                 type: dict
-            ip_filtering_policy_oper:
-                description:
-                - "Field ip_filtering_policy_oper"
-                type: dict
             topk_sources:
                 description:
                 - "Field topk_sources"
@@ -458,8 +444,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "capture_config", "deny", "detection_enable", "dns_cache", "enable_top_k", "glid", "glid_exceed_action", "ip_filtering_policy", "ip_filtering_policy_oper", "oper", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_num", "progression_tracking", "protocol", "set_counter_base_val", "sflow", "signature_extraction",
-    "template", "topk_num_records", "topk_sources", "user_tag", "uuid",
+    "capture_config", "deny", "detection_enable", "dns_cache", "enable_top_k", "glid", "glid_exceed_action", "oper", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_num", "progression_tracking", "protocol", "set_counter_base_val", "sflow", "signature_extraction", "template", "topk_num_records", "topk_sort_key",
+    "topk_sources", "user_tag", "uuid",
     ]
 
 
@@ -498,6 +484,10 @@ def get_argspec():
             },
         'topk_num_records': {
             'type': 'int',
+            },
+        'topk_sort_key': {
+            'type': 'str',
+            'choices': ['avg', 'max-peak']
             },
         'deny': {
             'type': 'bool',
@@ -576,9 +566,6 @@ def get_argspec():
         'set_counter_base_val': {
             'type': 'int',
             },
-        'ip_filtering_policy': {
-            'type': 'str',
-            },
         'uuid': {
             'type': 'str',
             },
@@ -604,12 +591,6 @@ def get_argspec():
                         'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max'
                         ]
                     }
-                }
-            },
-        'ip_filtering_policy_oper': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
                 }
             },
         'topk_sources': {
@@ -776,6 +757,9 @@ def get_argspec():
                 'dynamic_entry_limit': {
                     'type': 'str',
                     },
+                'dynamic_entry_warn_state': {
+                    'type': 'str',
+                    },
                 'sflow_source_id': {
                     'type': 'str',
                     },
@@ -876,21 +860,6 @@ def get_argspec():
                         },
                     'detection_data_source': {
                         'type': 'str',
-                        }
-                    }
-                },
-            'ip_filtering_policy_oper': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'rule_list': {
-                        'type': 'list',
-                        'seq': {
-                            'type': 'int',
-                            },
-                        'hits': {
-                            'type': 'int',
-                            }
                         }
                     }
                 },
@@ -1236,13 +1205,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1250,7 +1219,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1277,8 +1246,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

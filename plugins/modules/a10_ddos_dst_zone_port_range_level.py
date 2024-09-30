@@ -155,6 +155,16 @@ options:
         - "Close session for unauthenticated sources"
         type: bool
         required: False
+    close_sessions_for_all_sources:
+        description:
+        - "Close session for all sources"
+        type: bool
+        required: False
+    clear_sources_upon_deescalation:
+        description:
+        - "Clear sources upon de-escalation from level 1 to 0 or manual to 0"
+        type: bool
+        required: False
     start_pattern_recognition:
         description:
         - "Start pattern recognition from this level"
@@ -195,7 +205,7 @@ options:
           have no payload; 'small-payload-rate'= rate of short payload packet; 'syn-fin-
           ratio'= ratio of incoming SYN packet rate divided by the rate of incoming FIN
           packets; 'cpu-utilization'= average data CPU utilization; 'interface-
-          utilization'= outside interface utilization;"
+          utilization'= outside interface utilization; 'learnt-sources'= learnt sources;"
                 type: str
             tcp_window_size:
                 description:
@@ -303,7 +313,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["apply_extracted_filters", "close_sessions_for_unauth_sources", "glid_action", "indicator_list", "level_num", "src_default_glid", "src_escalation_score", "src_violation_actions", "start_pattern_recognition", "user_tag", "uuid", "zone_escalation_score", "zone_template", "zone_violation_actions", ]
+AVAILABLE_PROPERTIES = [
+    "apply_extracted_filters", "clear_sources_upon_deescalation", "close_sessions_for_all_sources", "close_sessions_for_unauth_sources", "glid_action", "indicator_list", "level_num", "src_default_glid", "src_escalation_score", "src_violation_actions", "start_pattern_recognition", "user_tag", "uuid", "zone_escalation_score", "zone_template",
+    "zone_violation_actions",
+    ]
 
 
 def get_default_argspec():
@@ -378,6 +391,12 @@ def get_argspec():
         'close_sessions_for_unauth_sources': {
             'type': 'bool',
             },
+        'close_sessions_for_all_sources': {
+            'type': 'bool',
+            },
+        'clear_sources_upon_deescalation': {
+            'type': 'bool',
+            },
         'start_pattern_recognition': {
             'type': 'bool',
             },
@@ -395,7 +414,7 @@ def get_argspec():
             'ntype': {
                 'type': 'str',
                 'required': True,
-                'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization']
+                'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
                 },
             'tcp_window_size': {
                 'type': 'int',
@@ -599,13 +618,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -613,7 +632,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -635,8 +654,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
