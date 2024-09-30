@@ -12,8 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_ddos_zone_template_tcp_progression_tracking_mitigation_slow_attack
 description:
-    - Configure and enable TCP progression Tracking Mitigation for slow attack
-      (identify slow attacker)
+    - Configure and enable TCP Progression Tracking Mitigation for Slow Attack
 author: A10 Networks
 options:
     state:
@@ -59,6 +58,11 @@ options:
     tcp_name:
         description:
         - Key to identify parent object
+        type: str
+        required: True
+    slow_attack:
+        description:
+        - "'enable-check'= Enter Progression Tracking Tracking Slow Attack;"
         type: str
         required: True
     response_pkt_rate_max:
@@ -147,7 +151,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["init_request_max_time", "init_response_max_time", "progression_tracking_slow_action", "progression_tracking_slow_action_list_name", "response_pkt_rate_max", "uuid", ]
+AVAILABLE_PROPERTIES = ["init_request_max_time", "init_response_max_time", "progression_tracking_slow_action", "progression_tracking_slow_action_list_name", "response_pkt_rate_max", "slow_attack", "uuid", ]
 
 
 def get_default_argspec():
@@ -167,7 +171,32 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'response_pkt_rate_max': {'type': 'int', }, 'init_response_max_time': {'type': 'int', }, 'init_request_max_time': {'type': 'int', }, 'progression_tracking_slow_action_list_name': {'type': 'str', }, 'progression_tracking_slow_action': {'type': 'str', 'choices': ['drop', 'reset', 'blacklist-src']}, 'uuid': {'type': 'str', }})
+    rv.update({
+        'slow_attack': {
+            'type': 'str',
+            'required': True,
+            'choices': ['enable-check']
+            },
+        'response_pkt_rate_max': {
+            'type': 'int',
+            },
+        'init_response_max_time': {
+            'type': 'int',
+            },
+        'init_request_max_time': {
+            'type': 'int',
+            },
+        'progression_tracking_slow_action_list_name': {
+            'type': 'str',
+            },
+        'progression_tracking_slow_action': {
+            'type': 'str',
+            'choices': ['drop', 'reset', 'blacklist-src']
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
     rv.update(dict(tcp_name=dict(type='str', required=True), ))
     return rv

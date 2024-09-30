@@ -65,6 +65,11 @@ options:
         - "Enable max-min-fairness"
         type: bool
         required: False
+    parent:
+        description:
+        - "Specify the parent of limit-policy"
+        type: int
+        required: False
     limit_concurrent_sessions:
         description:
         - "Enable Concurrent Session Limit (Number of Concurrent Sessions)"
@@ -78,7 +83,8 @@ options:
     limit_scope:
         description:
         - "'aggregate'= Rule Level; 'subscriber-ip'= Subscriber IP Level; 'subscriber-
-          prefix'= Subscriber Prefix Level;"
+          prefix'= Subscriber Prefix Level; 'radius'= To apply rate-limit using RADIUS
+          attribute.;"
         type: str
         required: False
     prefix_length:
@@ -86,10 +92,11 @@ options:
         - "Prefix length"
         type: int
         required: False
-    parent:
+    attribute:
         description:
-        - "Specify the parent of limit-policy"
-        type: int
+        - "'usergroup'= To apply rate-limit at the level of user group.; 'userid'= To
+          apply rate-limit at the level of user ID.;"
+        type: str
         required: False
     uuid:
         description:
@@ -285,7 +292,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["limit_concurrent_sessions", "limit_cps", "limit_pps", "limit_scope", "limit_throughput", "log", "max_min_fair", "parent", "policy_number", "prefix_length", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["attribute", "limit_concurrent_sessions", "limit_cps", "limit_pps", "limit_scope", "limit_throughput", "log", "max_min_fair", "parent", "policy_number", "prefix_length", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -313,6 +320,9 @@ def get_argspec():
         'max_min_fair': {
             'type': 'bool',
             },
+        'parent': {
+            'type': 'int',
+            },
         'limit_concurrent_sessions': {
             'type': 'int',
             },
@@ -321,13 +331,14 @@ def get_argspec():
             },
         'limit_scope': {
             'type': 'str',
-            'choices': ['aggregate', 'subscriber-ip', 'subscriber-prefix']
+            'choices': ['aggregate', 'subscriber-ip', 'subscriber-prefix', 'radius']
             },
         'prefix_length': {
             'type': 'int',
             },
-        'parent': {
-            'type': 'int',
+        'attribute': {
+            'type': 'str',
+            'choices': ['usergroup', 'userid']
             },
         'uuid': {
             'type': 'str',

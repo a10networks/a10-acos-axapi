@@ -3042,15 +3042,6 @@ def get_argspec():
                 'kerberos_other_error': {
                     'type': 'bool',
                     },
-                'ntlm_authentication_failure': {
-                    'type': 'bool',
-                    },
-                'ntlm_proto_negotiation_failure': {
-                    'type': 'bool',
-                    },
-                'ntlm_session_setup_failed': {
-                    'type': 'bool',
-                    },
                 'kerberos_request_dropped': {
                     'type': 'bool',
                     },
@@ -3067,33 +3058,6 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'kerberos_polling_control_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_prepare_req_failed': {
-                    'type': 'bool',
-                    },
-                'ntlm_timeout_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_other_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_request_dropped': {
-                    'type': 'bool',
-                    },
-                'ntlm_response_failure': {
-                    'type': 'bool',
-                    },
-                'ntlm_response_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_response_timeout': {
-                    'type': 'bool',
-                    },
-                'ntlm_job_start_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_polling_control_error': {
                     'type': 'bool',
                     },
                 'kerberos_pw_expiry': {
@@ -3129,15 +3093,6 @@ def get_argspec():
                 'kerberos_other_error': {
                     'type': 'bool',
                     },
-                'ntlm_authentication_failure': {
-                    'type': 'bool',
-                    },
-                'ntlm_proto_negotiation_failure': {
-                    'type': 'bool',
-                    },
-                'ntlm_session_setup_failed': {
-                    'type': 'bool',
-                    },
                 'kerberos_request_dropped': {
                     'type': 'bool',
                     },
@@ -3154,33 +3109,6 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'kerberos_polling_control_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_prepare_req_failed': {
-                    'type': 'bool',
-                    },
-                'ntlm_timeout_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_other_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_request_dropped': {
-                    'type': 'bool',
-                    },
-                'ntlm_response_failure': {
-                    'type': 'bool',
-                    },
-                'ntlm_response_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_response_timeout': {
-                    'type': 'bool',
-                    },
-                'ntlm_job_start_error': {
-                    'type': 'bool',
-                    },
-                'ntlm_polling_control_error': {
                     'type': 'bool',
                     },
                 'kerberos_pw_expiry': {

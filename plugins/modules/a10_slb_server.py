@@ -727,7 +727,6 @@ def get_argspec():
                 },
             'service': {
                 'type': 'str',
-                'required': True,
                 },
             'template_port': {
                 'type': 'str',
@@ -963,10 +962,6 @@ def get_argspec():
                     'type': 'str',
                     'required': True,
                     'choices': ['tcp', 'udp']
-                    },
-                'service': {
-                    'type': 'str',
-                    'required': True,
                     },
                 'oper': {
                     'type': 'dict',
@@ -1209,10 +1204,6 @@ def get_argspec():
                     'type': 'str',
                     'required': True,
                     'choices': ['tcp', 'udp']
-                    },
-                'service': {
-                    'type': 'str',
-                    'required': True,
                     },
                 'stats': {
                     'type': 'dict',

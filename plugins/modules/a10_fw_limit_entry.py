@@ -90,6 +90,14 @@ options:
                 description:
                 - "Field prefix_len4"
                 type: int
+            string_value:
+                description:
+                - "Field string_value"
+                type: str
+            rule_name:
+                description:
+                - "Field rule_name"
+                type: str
 
 '''
 
@@ -178,6 +186,9 @@ def get_argspec():
                 'prefix_len': {
                     'type': 'int',
                     },
+                'string_value': {
+                    'type': 'str',
+                    },
                 'rule_name': {
                     'type': 'str',
                     },
@@ -205,6 +216,12 @@ def get_argspec():
                 },
             'prefix_len4': {
                 'type': 'int',
+                },
+            'string_value': {
+                'type': 'str',
+                },
+            'rule_name': {
+                'type': 'str',
                 }
             }
         })

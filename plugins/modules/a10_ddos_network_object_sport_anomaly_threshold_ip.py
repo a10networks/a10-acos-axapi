@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_ddos_network_object_sport_anomaly_threshold_ip
 description:
-    - Configure anomaly thresholds applied to source port entries of an IP
+    - Configure anomaly thresholds applied to source port entries of an IPv4 address
 author: A10 Networks
 options:
     state:
@@ -60,29 +60,49 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    ipv4:
+    ip_addr:
         description:
         - "Override threshold"
         type: str
         required: True
-    per_ip_sport_pkt_rate_percentage:
+    packet_rate_str:
         description:
-        - "Percentage"
+        - "'packet-rate'= Packet rate of a source port entry;"
+        type: str
+        required: True
+    packet_rate_percentage_str:
+        description:
+        - "'packet-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    bit_rate_str:
+        description:
+        - "'bit-rate'= Bit rate of a source port entry;"
+        type: str
+        required: True
+    bit_rate_percentage_str:
+        description:
+        - "'bit-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    packet_rate:
+        description:
+        - "Packet rate of a source port entry"
         type: int
         required: False
-    per_ip_sport_pkt_rate:
+    packet_rate_percentage:
         description:
-        - "Packet rate"
+        - "Percentage of source port entry's parent entry"
         type: int
         required: False
-    per_ip_sport_bit_rate_percentage:
+    bit_rate:
         description:
-        - "Percentage"
+        - "Bit rate of a source port entry"
         type: int
         required: False
-    per_ip_sport_bit_rate:
+    bit_rate_percentage:
         description:
-        - "Bit rate"
+        - "Percentage of source port entry's parent entry"
         type: int
         required: False
     sport_num:
@@ -95,24 +115,44 @@ options:
         - "'udp'= UDP port; 'tcp'= TCP Port;"
         type: str
         required: True
-    per_sport_per_ip_sport_pkt_rate_percentage:
+    ip_sport_packet_rate_str:
         description:
-        - "Percentage"
+        - "'packet-rate'= Packet rate of a source port entry;"
+        type: str
+        required: True
+    ip_sport_packet_rate_percentage_str:
+        description:
+        - "'packet-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    ip_sport_bit_rate_str:
+        description:
+        - "'bit-rate'= Bit rate of a source port entry;"
+        type: str
+        required: True
+    ip_sport_bit_rate_percentage_str:
+        description:
+        - "'bit-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    ip_sport_packet_rate:
+        description:
+        - "Packet rate of a source port entry"
         type: int
         required: False
-    per_sport_per_ip_sport_pkt_rate:
+    ip_sport_packet_rate_percentage:
         description:
-        - "Packet rate"
+        - "Percentage of source port entry's parent entry"
         type: int
         required: False
-    per_sport_per_ip_sport_bit_rate_percentage:
+    ip_sport_bit_rate:
         description:
-        - "Percentage"
+        - "Bit rate of a source port entry"
         type: int
         required: False
-    per_sport_per_ip_sport_bit_rate:
+    ip_sport_bit_rate_percentage:
         description:
-        - "Bit rate"
+        - "Percentage of source port entry's parent entry"
         type: int
         required: False
     uuid:
@@ -174,7 +214,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ipv4", "per_ip_sport_bit_rate", "per_ip_sport_bit_rate_percentage", "per_ip_sport_pkt_rate", "per_ip_sport_pkt_rate_percentage", "per_sport_per_ip_sport_bit_rate", "per_sport_per_ip_sport_bit_rate_percentage", "per_sport_per_ip_sport_pkt_rate", "per_sport_per_ip_sport_pkt_rate_percentage", "protocol", "sport_num", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "bit_rate", "bit_rate_percentage", "bit_rate_percentage_str", "bit_rate_str", "ip_addr", "ip_sport_bit_rate", "ip_sport_bit_rate_percentage", "ip_sport_bit_rate_percentage_str", "ip_sport_bit_rate_str", "ip_sport_packet_rate", "ip_sport_packet_rate_percentage", "ip_sport_packet_rate_percentage_str", "ip_sport_packet_rate_str", "packet_rate",
+    "packet_rate_percentage", "packet_rate_percentage_str", "packet_rate_str", "protocol", "sport_num", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -195,20 +238,40 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ipv4': {
+        'ip_addr': {
             'type': 'str',
             'required': True,
             },
-        'per_ip_sport_pkt_rate_percentage': {
+        'packet_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate']
+            },
+        'packet_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate-percentage']
+            },
+        'bit_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate']
+            },
+        'bit_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate-percentage']
+            },
+        'packet_rate': {
             'type': 'int',
             },
-        'per_ip_sport_pkt_rate': {
+        'packet_rate_percentage': {
             'type': 'int',
             },
-        'per_ip_sport_bit_rate_percentage': {
+        'bit_rate': {
             'type': 'int',
             },
-        'per_ip_sport_bit_rate': {
+        'bit_rate_percentage': {
             'type': 'int',
             },
         'sport_num': {
@@ -220,16 +283,36 @@ def get_argspec():
             'required': True,
             'choices': ['udp', 'tcp']
             },
-        'per_sport_per_ip_sport_pkt_rate_percentage': {
+        'ip_sport_packet_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate']
+            },
+        'ip_sport_packet_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate-percentage']
+            },
+        'ip_sport_bit_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate']
+            },
+        'ip_sport_bit_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate-percentage']
+            },
+        'ip_sport_packet_rate': {
             'type': 'int',
             },
-        'per_sport_per_ip_sport_pkt_rate': {
+        'ip_sport_packet_rate_percentage': {
             'type': 'int',
             },
-        'per_sport_per_ip_sport_bit_rate_percentage': {
+        'ip_sport_bit_rate': {
             'type': 'int',
             },
-        'per_sport_per_ip_sport_bit_rate': {
+        'ip_sport_bit_rate_percentage': {
             'type': 'int',
             },
         'uuid': {
@@ -244,13 +327,29 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/ip/{ipv4}+{sport_num}+{protocol}"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/ip/{ip_addr}+{packet_rate_str}+{packet_rate_percentage_str}+{bit_rate_str}+{bit_rate_percentage_str}+{sport_num}+{protocol}+{ip_sport_packet_rate_str}+{ip_sport_packet_rate_percentage_str}+{ip_sport_bit_rate_str}+{ip_sport_bit_rate_percentage_str}"
 
     f_dict = {}
-    if '/' in str(module.params["ipv4"]):
-        f_dict["ipv4"] = module.params["ipv4"].replace("/", "%2F")
+    if '/' in str(module.params["ip_addr"]):
+        f_dict["ip_addr"] = module.params["ip_addr"].replace("/", "%2F")
     else:
-        f_dict["ipv4"] = module.params["ipv4"]
+        f_dict["ip_addr"] = module.params["ip_addr"]
+    if '/' in str(module.params["packet_rate_str"]):
+        f_dict["packet_rate_str"] = module.params["packet_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["packet_rate_str"] = module.params["packet_rate_str"]
+    if '/' in str(module.params["packet_rate_percentage_str"]):
+        f_dict["packet_rate_percentage_str"] = module.params["packet_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["packet_rate_percentage_str"] = module.params["packet_rate_percentage_str"]
+    if '/' in str(module.params["bit_rate_str"]):
+        f_dict["bit_rate_str"] = module.params["bit_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["bit_rate_str"] = module.params["bit_rate_str"]
+    if '/' in str(module.params["bit_rate_percentage_str"]):
+        f_dict["bit_rate_percentage_str"] = module.params["bit_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["bit_rate_percentage_str"] = module.params["bit_rate_percentage_str"]
     if '/' in str(module.params["sport_num"]):
         f_dict["sport_num"] = module.params["sport_num"].replace("/", "%2F")
     else:
@@ -259,6 +358,22 @@ def existing_url(module):
         f_dict["protocol"] = module.params["protocol"].replace("/", "%2F")
     else:
         f_dict["protocol"] = module.params["protocol"]
+    if '/' in str(module.params["ip_sport_packet_rate_str"]):
+        f_dict["ip_sport_packet_rate_str"] = module.params["ip_sport_packet_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_packet_rate_str"] = module.params["ip_sport_packet_rate_str"]
+    if '/' in str(module.params["ip_sport_packet_rate_percentage_str"]):
+        f_dict["ip_sport_packet_rate_percentage_str"] = module.params["ip_sport_packet_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_packet_rate_percentage_str"] = module.params["ip_sport_packet_rate_percentage_str"]
+    if '/' in str(module.params["ip_sport_bit_rate_str"]):
+        f_dict["ip_sport_bit_rate_str"] = module.params["ip_sport_bit_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_bit_rate_str"] = module.params["ip_sport_bit_rate_str"]
+    if '/' in str(module.params["ip_sport_bit_rate_percentage_str"]):
+        f_dict["ip_sport_bit_rate_percentage_str"] = module.params["ip_sport_bit_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_bit_rate_percentage_str"] = module.params["ip_sport_bit_rate_percentage_str"]
     if '/' in module.params["network_object_object_name"]:
         f_dict["network_object_object_name"] = module.params["network_object_object_name"].replace("/", "%2F")
     else:
@@ -270,12 +385,20 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/ip/+"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/ip/+++++++++"
 
     f_dict = {}
-    f_dict["ipv4"] = ""
+    f_dict["ip_addr"] = ""
+    f_dict["packet_rate_str"] = ""
+    f_dict["packet_rate_percentage_str"] = ""
+    f_dict["bit_rate_str"] = ""
+    f_dict["bit_rate_percentage_str"] = ""
     f_dict["sport_num"] = ""
     f_dict["protocol"] = ""
+    f_dict["ip_sport_packet_rate_str"] = ""
+    f_dict["ip_sport_packet_rate_percentage_str"] = ""
+    f_dict["ip_sport_bit_rate_str"] = ""
+    f_dict["ip_sport_bit_rate_percentage_str"] = ""
     f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)

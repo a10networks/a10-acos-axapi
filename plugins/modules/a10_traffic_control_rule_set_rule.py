@@ -77,7 +77,9 @@ options:
         required: False
     ip_version:
         description:
-        - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
+        - "'v4'= IPv4 rule; 'v6'= IPv6 rule; 'any'= IP version is not specified. Only
+          compatible with filters by application, zone or the source class-list of radius
+          type.;"
         type: str
         required: False
     src_geoloc_name:
@@ -110,6 +112,18 @@ options:
         - "Match source IP against class-list"
         type: str
         required: False
+    src_class_list_type:
+        description:
+        - "'radius'= Match the value of specified RADIUS attribute in the class-list.;"
+        type: str
+        required: False
+    derived_attribute:
+        description:
+        - "'usergroup'= Match the value from the derived attribute of user group in the
+          class-list.; 'userid'= Match the value from the derived attribute of user ID in
+          the class-list.;"
+        type: str
+        required: False
     source_list:
         description:
         - "Field source_list"
@@ -132,10 +146,6 @@ options:
                 description:
                 - "Network object group"
                 type: str
-            src_slb_server:
-                description:
-                - "SLB Real server name"
-                type: str
     src_zone:
         description:
         - "Zone name"
@@ -144,11 +154,6 @@ options:
     src_zone_any:
         description:
         - "'any'= any;"
-        type: str
-        required: False
-    src_threat_list:
-        description:
-        - "Bind threat-list for source IP based filtering"
         type: str
         required: False
     dst_geoloc_name:
@@ -203,10 +208,6 @@ options:
                 description:
                 - "Network object group"
                 type: str
-            dst_slb_server:
-                description:
-                - "SLB Real server name"
-                type: str
             dst_slb_vserver:
                 description:
                 - "SLB Virtual server name"
@@ -224,11 +225,6 @@ options:
     dst_zone_any:
         description:
         - "'any'= any;"
-        type: str
-        required: False
-    dst_threat_list:
-        description:
-        - "Bind threat-list for destination IP based filtering"
         type: str
         required: False
     service_any:
@@ -602,8 +598,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action_group", "app_list", "application_any", "dest_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "ip_version", "move_rule", "name", "oper", "remark", "sampling_enable", "service_any", "service_list",
-    "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "user_tag", "uuid",
+    "action_group", "app_list", "application_any", "derived_attribute", "dest_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_zone", "dst_zone_any", "ip_version", "move_rule", "name", "oper", "remark", "sampling_enable", "service_any", "service_list",
+    "source_list", "src_class_list", "src_class_list_type", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_zone", "src_zone_any", "stats", "status", "user_tag", "uuid",
     ]
 
 
@@ -638,7 +634,7 @@ def get_argspec():
             },
         'ip_version': {
             'type': 'str',
-            'choices': ['v4', 'v6']
+            'choices': ['v4', 'v6', 'any']
             },
         'src_geoloc_name': {
             'type': 'str',
@@ -660,6 +656,14 @@ def get_argspec():
         'src_class_list': {
             'type': 'str',
             },
+        'src_class_list_type': {
+            'type': 'str',
+            'choices': ['radius']
+            },
+        'derived_attribute': {
+            'type': 'str',
+            'choices': ['usergroup', 'userid']
+            },
         'source_list': {
             'type': 'list',
             'src_ip_subnet': {
@@ -673,9 +677,6 @@ def get_argspec():
                 },
             'src_obj_grp_network': {
                 'type': 'str',
-                },
-            'src_slb_server': {
-                'type': 'str',
                 }
             },
         'src_zone': {
@@ -684,9 +685,6 @@ def get_argspec():
         'src_zone_any': {
             'type': 'str',
             'choices': ['any']
-            },
-        'src_threat_list': {
-            'type': 'str',
             },
         'dst_geoloc_name': {
             'type': 'str',
@@ -722,9 +720,6 @@ def get_argspec():
             'dst_obj_grp_network': {
                 'type': 'str',
                 },
-            'dst_slb_server': {
-                'type': 'str',
-                },
             'dst_slb_vserver': {
                 'type': 'str',
                 }
@@ -738,9 +733,6 @@ def get_argspec():
         'dst_zone_any': {
             'type': 'str',
             'choices': ['any']
-            },
-        'dst_threat_list': {
-            'type': 'str',
             },
         'service_any': {
             'type': 'str',

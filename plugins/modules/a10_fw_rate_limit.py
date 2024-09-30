@@ -101,7 +101,14 @@ options:
           Entries Allocated Totally; 'ratelimit_entry_count_freed'= Number of Rate-limit
           Entries Freed Totally; 'ratelimit_entry_count_rule_ip'= Number of Rate-limit
           Entries with Scope IP; 'ratelimit_entry_count_parent_ip'= Number of Parent
-          Rate-limit Entries with Scope IP;"
+          Rate-limit Entries with Scope IP; 'ratelimit_entry_count_radius_usergroup'= The
+          total number of rate-limiting entries with the scope RADIUS user group.;
+          'ratelimit_entry_count_parent_radius_usergroup'= The total number of parent
+          rate-limiting entries with the scope RADIUS user group.;
+          'ratelimit_entry_count_radius_userid'= The total number of rate-limiting
+          entries with the scope RADIUS user ID.;
+          'ratelimit_entry_count_parent_radius_userid'= The total number of parent rate-
+          limiting entries with the scope RADIUS user ID.;"
                 type: str
     summary:
         description:
@@ -134,6 +141,10 @@ options:
             v6_prefix:
                 description:
                 - "Field v6_prefix"
+                type: str
+            string_value:
+                description:
+                - "Field string_value"
                 type: str
             template_id:
                 description:
@@ -208,6 +219,23 @@ options:
             ratelimit_entry_count_parent_ip:
                 description:
                 - "Number of Parent Rate-limit Entries with Scope IP"
+                type: str
+            ratelimit_entry_count_radius_usergroup:
+                description:
+                - "The total number of rate-limiting entries with the scope RADIUS user group."
+                type: str
+            ratelimit_entry_count_parent_radius_usergroup:
+                description:
+                - "The total number of parent rate-limiting entries with the scope RADIUS user
+          group."
+                type: str
+            ratelimit_entry_count_radius_userid:
+                description:
+                - "The total number of rate-limiting entries with the scope RADIUS user ID."
+                type: str
+            ratelimit_entry_count_parent_radius_userid:
+                description:
+                - "The total number of parent rate-limiting entries with the scope RADIUS user ID."
                 type: str
 
 '''
@@ -295,7 +323,8 @@ def get_argspec():
                 'choices': [
                     'all', 'ratelimit_used_total_mem', 'ratelimit_used_spm_mem', 'ratelimit_used_heap_mem', 'ratelimit_entry_alloc_frm_spm_mem', 'ratelimit_high_accurate_entry_alloc_fail', 'ratelimit_high_perf_entry_alloc_fail', 'ratelimit_high_perf_entry_secondary_alloc_fail', 'ratelimit_entry_alloc_fail_rate_too_high',
                     'ratelimit_entry_alloc_fail_metric_count_gt_supported', 'ratelimit_entry_count_t2_key', 'ratelimit_entry_count_fw_rule_uid', 'ratelimit_entry_count_ip_addr', 'ratelimit_entry_count_ip6_addr', 'ratelimit_entry_count_session_id', 'ratelimit_entry_count_rule_ipv4_prefix', 'ratelimit_entry_count_rule_ipv6_prefix',
-                    'ratelimit_entry_count_parent_uid', 'ratelimit_entry_count_parent_ipv4_prefix', 'ratelimit_entry_count_parent_ipv6_prefix', 'ratelimit_infra_generic_errors', 'ratelimit_entry_count_allocated', 'ratelimit_entry_count_freed', 'ratelimit_entry_count_rule_ip', 'ratelimit_entry_count_parent_ip'
+                    'ratelimit_entry_count_parent_uid', 'ratelimit_entry_count_parent_ipv4_prefix', 'ratelimit_entry_count_parent_ipv6_prefix', 'ratelimit_infra_generic_errors', 'ratelimit_entry_count_allocated', 'ratelimit_entry_count_freed', 'ratelimit_entry_count_rule_ip', 'ratelimit_entry_count_parent_ip',
+                    'ratelimit_entry_count_radius_usergroup', 'ratelimit_entry_count_parent_radius_usergroup', 'ratelimit_entry_count_radius_userid', 'ratelimit_entry_count_parent_radius_userid'
                     ]
                 }
             },
@@ -309,6 +338,9 @@ def get_argspec():
             'type': 'dict',
             'rate_limit_list': {
                 'type': 'list',
+                'string_value': {
+                    'type': 'str',
+                    },
                 'address': {
                     'type': 'str',
                     },
@@ -361,6 +393,9 @@ def get_argspec():
             'v6_prefix': {
                 'type': 'str',
                 },
+            'string_value': {
+                'type': 'str',
+                },
             'template_id': {
                 'type': 'int',
                 },
@@ -395,6 +430,12 @@ def get_argspec():
                     'total_entries_scope_subscriber_prefix': {
                         'type': 'int',
                         },
+                    'total_entries_scope_radius_usergroup': {
+                        'type': 'int',
+                        },
+                    'total_entries_scope_radius_userid': {
+                        'type': 'int',
+                        },
                     'total_entries_scope_parent': {
                         'type': 'int',
                         },
@@ -402,6 +443,12 @@ def get_argspec():
                         'type': 'int',
                         },
                     'total_entries_scope_parent_subscriber_prefix': {
+                        'type': 'int',
+                        },
+                    'total_entries_scope_parent_radius_usergroup': {
+                        'type': 'int',
+                        },
+                    'total_entries_scope_parent_radius_userid': {
                         'type': 'int',
                         }
                     }
@@ -452,6 +499,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'ratelimit_entry_count_parent_ip': {
+                'type': 'str',
+                },
+            'ratelimit_entry_count_radius_usergroup': {
+                'type': 'str',
+                },
+            'ratelimit_entry_count_parent_radius_usergroup': {
+                'type': 'str',
+                },
+            'ratelimit_entry_count_radius_userid': {
+                'type': 'str',
+                },
+            'ratelimit_entry_count_parent_radius_userid': {
                 'type': 'str',
                 }
             }

@@ -150,6 +150,12 @@ options:
           minutes)"
         type: int
         required: False
+    network_object_subnet_notify_percent:
+        description:
+        - "Send subnet notification when anomaly children subnet entries over configured
+          percentage.(default 50%)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -269,8 +275,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "entry_saving", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "network_object_flooding_multiple", "network_object_window_size",
-    "notification_debug_log", "pkt_sampling", "reflection_attack_detection", "standalone_settings", "top_k_reset_interval", "uuid",
+    "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "entry_saving", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "network_object_flooding_multiple", "network_object_subnet_notify_percent",
+    "network_object_window_size", "notification_debug_log", "pkt_sampling", "reflection_attack_detection", "standalone_settings", "top_k_reset_interval", "uuid",
     ]
 
 
@@ -347,6 +353,9 @@ def get_argspec():
             'type': 'int',
             },
         'de_escalation_quiet_time': {
+            'type': 'int',
+            },
+        'network_object_subnet_notify_percent': {
             'type': 'int',
             },
         'uuid': {

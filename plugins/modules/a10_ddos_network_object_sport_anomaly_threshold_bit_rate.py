@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ddos_network_object_sub_network
+module: a10_ddos_network_object_sport_anomaly_threshold_bit_rate
 description:
-    - Configure sub-network in a DDos Network Object
+    - Bit rate of a source port entry
 author: A10 Networks
 options:
     state:
@@ -60,47 +60,14 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    subnet_ip_addr:
+    value:
         description:
-        - "IPv4 Subnet/host, supported prefix range is from 24 to 32"
-        type: str
-        required: True
-    host_anomaly_threshold:
-        description:
-        - "Field host_anomaly_threshold"
-        type: dict
+        - "Bit rate of a source port entry"
+        type: int
         required: False
-        suboptions:
-            static_pkt_rate_threshold:
-                description:
-                - "Packet rate of per host"
-                type: int
-            static_bit_rate_threshold:
-                description:
-                - "Bit rate of per host"
-                type: int
-    sub_network_anomaly_threshold:
-        description:
-        - "Field sub_network_anomaly_threshold"
-        type: dict
-        required: False
-        suboptions:
-            static_sub_network_pkt_rate:
-                description:
-                - "Packet rate of the sub-network"
-                type: int
-            static_sub_network_bit_rate:
-                description:
-                - "Bit rate of the sub-network"
-                type: int
     uuid:
         description:
         - "uuid of the object"
-        type: str
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
         type: str
         required: False
 
@@ -157,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["host_anomaly_threshold", "sub_network_anomaly_threshold", "subnet_ip_addr", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["uuid", "value", ]
 
 
 def get_default_argspec():
@@ -177,36 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'subnet_ip_addr': {
-            'type': 'str',
-            'required': True,
-            },
-        'host_anomaly_threshold': {
-            'type': 'dict',
-            'static_pkt_rate_threshold': {
-                'type': 'int',
-                },
-            'static_bit_rate_threshold': {
-                'type': 'int',
-                }
-            },
-        'sub_network_anomaly_threshold': {
-            'type': 'dict',
-            'static_sub_network_pkt_rate': {
-                'type': 'int',
-                },
-            'static_sub_network_bit_rate': {
-                'type': 'int',
-                }
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'value': {'type': 'int', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(network_object_object_name=dict(type='str', required=True), ))
     return rv
@@ -215,13 +153,9 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sub-network/{subnet_ip_addr}"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/bit-rate"
 
     f_dict = {}
-    if '/' in str(module.params["subnet_ip_addr"]):
-        f_dict["subnet_ip_addr"] = module.params["subnet_ip_addr"].replace("/", "%2F")
-    else:
-        f_dict["subnet_ip_addr"] = module.params["subnet_ip_addr"]
     if '/' in module.params["network_object_object_name"]:
         f_dict["network_object_object_name"] = module.params["network_object_object_name"].replace("/", "%2F")
     else:
@@ -233,10 +167,9 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sub-network"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/bit-rate"
 
     f_dict = {}
-    f_dict["subnet_ip_addr"] = ""
     f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
@@ -249,13 +182,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["sub-network"].items():
+    for k, v in payload["bit-rate"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["sub-network"].get(k) != v:
+        if config_changes["bit-rate"].get(k) != v:
             change_results["changed"] = True
-            config_changes["sub-network"][k] = v
+            config_changes["bit-rate"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -281,7 +214,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("sub-network", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("bit-rate", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -353,13 +286,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -367,17 +300,17 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["sub-network"] if info != "NotFound" else info
+                result["acos_info"] = info["bit-rate"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["sub-network-list"] if info != "NotFound" else info
+                result["acos_info"] = info["bit-rate-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -389,8 +322,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

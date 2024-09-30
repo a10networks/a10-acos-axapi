@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ips_profile
+module: a10_ddos_network_object_sport_anomaly_threshold_packet_rate_percentage
 description:
-    - IPS profile
+    - Percentage of source port entry's parent entry
 author: A10 Networks
 options:
     state:
@@ -55,33 +55,21 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    network_object_object_name:
+        description:
+        - Key to identify parent object
+        type: str
+        required: True
+    value:
+        description:
+        - "Percentage of source port entry's parent entry"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            profile_list:
-                description:
-                - "Field profile_list"
-                type: list
-            name:
-                description:
-                - "Field name"
-                type: str
-            sid:
-                description:
-                - "Field sid"
-                type: int
-            profile_detail:
-                description:
-                - "Field profile_detail"
-                type: bool
 
 '''
 
@@ -136,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["uuid", "value", ]
 
 
 def get_default_argspec():
@@ -156,65 +144,22 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'profile_list': {
-                'type': 'list',
-                'profile_name': {
-                    'type': 'str',
-                    },
-                'is_predefined': {
-                    'type': 'int',
-                    },
-                'reference_count': {
-                    'type': 'int',
-                    },
-                'signature_count': {
-                    'type': 'int',
-                    },
-                'signature_list': {
-                    'type': 'list',
-                    'sid': {
-                        'type': 'int',
-                        },
-                    'enable': {
-                        'type': 'int',
-                        },
-                    'action': {
-                        'type': 'str',
-                        },
-                    'missing_signature': {
-                        'type': 'int',
-                        },
-                    'message': {
-                        'type': 'str',
-                        }
-                    }
-                },
-            'name': {
-                'type': 'str',
-                },
-            'sid': {
-                'type': 'int',
-                },
-            'profile_detail': {
-                'type': 'bool',
-                }
-            }
-        })
+    rv.update({'value': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    # Parent keys
+    rv.update(dict(network_object_object_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ips/profile"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/packet-rate-percentage"
 
     f_dict = {}
+    if '/' in module.params["network_object_object_name"]:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"].replace("/", "%2F")
+    else:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -222,17 +167,31 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ips/profile"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/packet-rate-percentage"
 
     f_dict = {}
+    f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["packet-rate-percentage"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["packet-rate-percentage"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["packet-rate-percentage"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
@@ -255,7 +214,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("profile", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("packet-rate-percentage", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -327,13 +286,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -341,22 +300,17 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["profile"] if info != "NotFound" else info
+                result["acos_info"] = info["packet-rate-percentage"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["profile-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["profile"]["oper"] if info != "NotFound" else info
+                result["acos_info"] = info["packet-rate-percentage-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -368,8 +322,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -178,6 +178,11 @@ options:
         - "Enable SSL handshake logging"
         type: bool
         required: False
+    session_key_logging_enable:
+        description:
+        - "Enable SSL session key logging"
+        type: bool
+        required: False
     close_notify:
         description:
         - "Send close notification when terminate connection"
@@ -374,7 +379,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "alert_type", "ca_certs", "certificate", "cipher_template", "cipher_without_prio_list", "close_notify", "crl_certs", "dgversion", "dh_type", "early_data", "ec_list", "enable_ssli_ftp_alg", "enable_tls_alert_logging", "forward_proxy_enable", "handshake_logging_enable", "name", "ocsp_stapling", "renegotiation_disable", "server_certificate_error",
-    "server_name", "session_cache_size", "session_cache_timeout", "session_ticket_enable", "shared_partition_cipher_template", "ssli_logging", "sslilogging", "template_cipher_shared", "use_client_sni", "user_tag", "uuid", "version",
+    "server_name", "session_cache_size", "session_cache_timeout", "session_key_logging_enable", "session_ticket_enable", "shared_partition_cipher_template", "ssli_logging", "sslilogging", "template_cipher_shared", "use_client_sni", "user_tag", "uuid", "version",
     ]
 
 
@@ -459,6 +464,9 @@ def get_argspec():
             'choices': ['fatal']
             },
         'handshake_logging_enable': {
+            'type': 'bool',
+            },
+        'session_key_logging_enable': {
             'type': 'bool',
             },
         'close_notify': {

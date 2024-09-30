@@ -604,6 +604,9 @@ def get_argspec():
                     },
                 'dynamic_count_warn': {
                     'type': 'str',
+                    },
+                'src_zone_service_entry_hit': {
+                    'type': 'str',
                     }
                 }
             }

@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows_instance
 description:
-    - 'Windows Server, using Kerberos or NTLM for authentication'
+    - 'Windows Server, using Kerberos for authentication'
 author: A10 Networks
 options:
     state:
@@ -85,26 +85,6 @@ options:
         type: dict
         required: False
         suboptions:
-            ntlm_disable:
-                description:
-                - "Disable NTLM authentication protocol"
-                type: bool
-            ntlm_version:
-                description:
-                - "Specify NTLM version, default is 2"
-                type: int
-            ntlm_health_check:
-                description:
-                - "Check NTLM port's health status"
-                type: str
-            ntlm_health_check_disable:
-                description:
-                - "Disable configured NTLM port health check configuration"
-                type: bool
-            kerberos_disable:
-                description:
-                - "Disable Kerberos authentication protocol"
-                type: bool
             kerberos_port:
                 description:
                 - "Specify the Kerberos port, default is 88"
@@ -172,14 +152,6 @@ options:
           Kerberos Other Error; 'krb_pw_expiry'= Kerberos password expiry;
           'krb_pw_change_success'= Kerberos password change success;
           'krb_pw_change_failure'= Kerberos password change failure;
-          'ntlm_proto_nego_success'= NTLM Protocol Negotiation Success;
-          'ntlm_proto_nego_failure'= NTLM Protocol Negotiation Failure;
-          'ntlm_session_setup_success'= NTLM Session Setup Success;
-          'ntlm_session_setup_failure'= NTLM Session Setup Failure;
-          'ntlm_prepare_req_success'= NTLM Prepare Request Success;
-          'ntlm_prepare_req_error'= NTLM Prepare Request Error; 'ntlm_auth_success'= NTLM
-          Authentication Success; 'ntlm_auth_failure'= NTLM Authentication Failure;
-          'ntlm_timeout_error'= NTLM Timeout; 'ntlm_other_error'= NTLM Other Error;
           'krb_validate_kdc_success'= Kerberos KDC Validation Success;
           'krb_validate_kdc_failure'= Kerberos KDC Validation Failure;"
                 type: str
@@ -221,46 +193,6 @@ options:
             krb_pw_change_failure:
                 description:
                 - "Kerberos password change failure"
-                type: str
-            ntlm_proto_nego_success:
-                description:
-                - "NTLM Protocol Negotiation Success"
-                type: str
-            ntlm_proto_nego_failure:
-                description:
-                - "NTLM Protocol Negotiation Failure"
-                type: str
-            ntlm_session_setup_success:
-                description:
-                - "NTLM Session Setup Success"
-                type: str
-            ntlm_session_setup_failure:
-                description:
-                - "NTLM Session Setup Failure"
-                type: str
-            ntlm_prepare_req_success:
-                description:
-                - "NTLM Prepare Request Success"
-                type: str
-            ntlm_prepare_req_error:
-                description:
-                - "NTLM Prepare Request Error"
-                type: str
-            ntlm_auth_success:
-                description:
-                - "NTLM Authentication Success"
-                type: str
-            ntlm_auth_failure:
-                description:
-                - "NTLM Authentication Failure"
-                type: str
-            ntlm_timeout_error:
-                description:
-                - "NTLM Timeout"
-                type: str
-            ntlm_other_error:
-                description:
-                - "NTLM Other Error"
                 type: str
             krb_validate_kdc_success:
                 description:
@@ -367,21 +299,6 @@ def get_argspec():
             },
         'auth_protocol': {
             'type': 'dict',
-            'ntlm_disable': {
-                'type': 'bool',
-                },
-            'ntlm_version': {
-                'type': 'int',
-                },
-            'ntlm_health_check': {
-                'type': 'str',
-                },
-            'ntlm_health_check_disable': {
-                'type': 'bool',
-                },
-            'kerberos_disable': {
-                'type': 'bool',
-                },
             'kerberos_port': {
                 'type': 'int',
                 },
@@ -437,12 +354,8 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success', 'ntlm_prepare_req_error',
-                    'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
-                    ]
+                'type': 'str',
+                'choices': ['all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'krb_validate_kdc_success', 'krb_validate_kdc_failure']
                 }
             },
         'packet_capture_template': {
@@ -469,36 +382,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'krb_pw_change_failure': {
-                'type': 'str',
-                },
-            'ntlm_proto_nego_success': {
-                'type': 'str',
-                },
-            'ntlm_proto_nego_failure': {
-                'type': 'str',
-                },
-            'ntlm_session_setup_success': {
-                'type': 'str',
-                },
-            'ntlm_session_setup_failure': {
-                'type': 'str',
-                },
-            'ntlm_prepare_req_success': {
-                'type': 'str',
-                },
-            'ntlm_prepare_req_error': {
-                'type': 'str',
-                },
-            'ntlm_auth_success': {
-                'type': 'str',
-                },
-            'ntlm_auth_failure': {
-                'type': 'str',
-                },
-            'ntlm_timeout_error': {
-                'type': 'str',
-                },
-            'ntlm_other_error': {
                 'type': 'str',
                 },
             'krb_validate_kdc_success': {

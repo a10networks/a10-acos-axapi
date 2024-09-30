@@ -131,6 +131,11 @@ options:
         - "how long between heartbeats (in unit of second, default is 3)"
         type: int
         required: False
+    link_poll_timeout:
+        description:
+        - "link poll timeout, in millisecond, default is 500"
+        type: int
+        required: False
     chassis_id:
         description:
         - "Chassis ID"
@@ -253,8 +258,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "chassis_id", "config_info", "config_seq", "dead_interval", "dead_interval_mseconds", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "hold_preemption_interval", "memory_stat_interval", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "slog_level", "slog_method", "speed_limit",
-    "ssl_enable", "tcp_channel_monitor", "time_interval", "time_interval_mseconds", "transmit_fragment_size", "uuid",
+    "chassis_id", "config_info", "config_seq", "dead_interval", "dead_interval_mseconds", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "hold_preemption_interval", "link_poll_timeout", "memory_stat_interval", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "slog_level",
+    "slog_method", "speed_limit", "ssl_enable", "tcp_channel_monitor", "time_interval", "time_interval_mseconds", "transmit_fragment_size", "uuid",
     ]
 
 
@@ -319,6 +324,9 @@ def get_argspec():
             'type': 'int',
             },
         'time_interval': {
+            'type': 'int',
+            },
+        'link_poll_timeout': {
             'type': 'int',
             },
         'chassis_id': {

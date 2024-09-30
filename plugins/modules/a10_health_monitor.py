@@ -73,7 +73,7 @@ options:
     dplane:
         description:
         - "'enable'= Enable health-check on dplane; 'disable'= Disable health-check on
-          dplane; 'auto(default)'= Auto select;"
+          dplane; 'auto'= Auto select(default);"
         type: str
         required: False
     up_retry:
@@ -408,7 +408,7 @@ def get_argspec():
             },
         'dplane': {
             'type': 'str',
-            'choices': ['enable', 'disable', 'auto(default)']
+            'choices': ['enable', 'disable', 'auto']
             },
         'up_retry': {
             'type': 'int',
