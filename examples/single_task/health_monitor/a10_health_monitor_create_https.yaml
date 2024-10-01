@@ -1,0 +1,20 @@
+- name: "Update HTTPS Health Check"
+  collections:
+    a10.acos_axapi
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  a10.acos_axapi.a10_health_monitor_method_https:
+    state: present
+    monitor_name: my_https_monitor
+    https: true
+    disable_sslv2hello: true
+    https_host: "{{ https_host }}"
+    web_port: "{{ https_port }}"
+    https_expect: "{{ https_expect }}"
+    https_response_code: "{{ htps_expect_response_code }}"
+    https_url: "{{ specific_url }}"
+    url_path: "{{ url_path }}"
+    url_type: "{{ url_type }}"
+    cert: "{{ https_cert }}"
+    key: "{{ https_key }}"
+    sni: "{{ https_sni }}"

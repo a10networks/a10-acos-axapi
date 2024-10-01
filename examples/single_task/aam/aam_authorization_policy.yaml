@@ -1,0 +1,9 @@
+- name: "Create AAM Authorization Policy"
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  collections:
+    a10.acos_axapi
+  a10.acos_axapi.a10_aam_authorization_policy:
+    name: my_auth_policy_name
+    # attributes crated in aam_authorization_policy_attribute.yaml
+    user_tag: my_authorization_policy_tag

@@ -1,0 +1,10 @@
+- name: "Update UDP Health Check"
+  collections:
+    a10.acos_axapi
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  a10.acos_axapi.a10_health_monitor_method_udp:
+    state: present
+    monitor_name: my_udp_monitor
+    udp: true
+    udp_port: " {{ udp_port }}"

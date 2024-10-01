@@ -1,0 +1,15 @@
+- name: "Create AAM AAA Policy"
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  collections:
+    a10.acos_axapi
+  a10.acos_axapi.a10_aam_aaa_policy:
+    state: present
+    name: my_server
+    aaa_rule_list:
+      - index: 1
+      - action: deny # or allow
+      - authentication_template: my_template_name
+      - authorize_policy: my_policy_name
+      - user_tag: my_aaa_rule_tag
+    user_tag: my_aaa_policy_tag

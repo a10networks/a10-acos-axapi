@@ -1,0 +1,45 @@
+# This example is specific to SAML
+- name: "Create AAM Authentication Template"
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  collections:
+    a10.acos_axapi
+  a10.acos_axapi.a10_aam_authentication_template:
+    state: present
+    name: my_template_name
+    ntype: saml # Other options are standard or oauth
+    saml_sp: my_saml_sp_name
+    saml_idp: my_saml_idp_name
+    logout_idle_timeout: 300
+    max_session_time: 28800
+    relay: my_saml_relay_name # Must be already created or playbook will fail at this step
+    # auth_session_mode: # cookie-based/ip-based
+    # oauth_authorization_server:
+    # oauth_client:
+    # cookie_domain:
+    # cookie_domain_group:
+    # cookie_max_age:
+    # cookie_secure_enable:
+    # cookie_httponly_enable:
+    # cookie_samesite:
+    # max_session_time:
+    # local_logging:
+    # logon:
+    # logout_url:
+    # forward_logout_diable:
+    # jwt:
+    # server:
+    # service_group:
+    # account:
+    # captcha:
+    # accounting_server:
+    # accounting_service_group:
+    # redirect_hostname:
+    # modify_content_security_policy:
+    # log: #use-partition-level-config/enable/disable
+    # chain:
+    #   - chain_server:
+    #   - chain_server_priority:
+    #   - chain_sg:
+    #   - chain_sg_priority:
+...

@@ -1,0 +1,10 @@
+- name: "Update TCP Health Check"
+  collections:
+    a10.acos_axapi
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  a10.acos_axapi.a10_health_monitor_method_tcp:
+    state: present
+    monitor_name: my_tcp_monitor
+    method_tcp: true
+    tcp_port: " {{ tcp_monitor_port }}"
