@@ -55,11 +55,6 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    service:
-        description:
-        - Key to identify parent object
-        type: str
-        required: True
     protocol:
         description:
         - Key to identify parent object
@@ -83,11 +78,6 @@ options:
     protocol:
         description:
         - "'tcp'= TCP Port; 'udp'= UDP Port;"
-        type: str
-        required: True
-    service:
-        description:
-        - "Port Service"
         type: str
         required: True
     stats:
@@ -154,7 +144,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["port_number", "protocol", "service", "stats", ]
+AVAILABLE_PROPERTIES = ["port_number", "protocol", "stats", ]
 
 
 def get_default_argspec():
@@ -183,10 +173,6 @@ def get_argspec():
             'type': 'str',
             'required': True,
             'choices': ['tcp', 'udp']
-            },
-        'service': {
-            'type': 'str',
-            'required': True,
             },
         'stats': {
             'type': 'dict',
@@ -316,20 +302,16 @@ def get_argspec():
             }
         })
     # Parent keys
-    rv.update(dict(service=dict(type='str', required=True), protocol=dict(type='str', required=True), port_number=dict(type='str', required=True), server_name=dict(type='str', required=True), ))
+    rv.update(dict(protocol=dict(type='str', required=True), port_number=dict(type='str', required=True), server_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/server/{server_name}/port/{port_number}+{protocol}+{service}/stats?port-diameter=true"
+    url_base = "/axapi/v3/slb/server/{server_name}/port/{port_number}+{protocol}/stats?port-diameter=true"
 
     f_dict = {}
-    if '/' in module.params["service"]:
-        f_dict["service"] = module.params["service"].replace("/", "%2F")
-    else:
-        f_dict["service"] = module.params["service"]
     if '/' in module.params["protocol"]:
         f_dict["protocol"] = module.params["protocol"].replace("/", "%2F")
     else:
@@ -349,10 +331,9 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/server/{server_name}/port/{port_number}+{protocol}+{service}/stats?port-diameter=true"
+    url_base = "/axapi/v3/slb/server/{server_name}/port/{port_number}+{protocol}/stats?port-diameter=true"
 
     f_dict = {}
-    f_dict["service"] = module.params["service"]
     f_dict["protocol"] = module.params["protocol"]
     f_dict["port_number"] = module.params["port_number"]
     f_dict["server_name"] = module.params["server_name"]

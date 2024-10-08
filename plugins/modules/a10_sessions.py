@@ -340,6 +340,10 @@ options:
                 description:
                 - "Field persist_v6_dest_port"
                 type: int
+            force:
+                description:
+                - "Field force"
+                type: str
             ext:
                 description:
                 - "Field ext"
@@ -745,6 +749,9 @@ def get_argspec():
                 },
             'persist_v6_dest_port': {
                 'type': 'int',
+                },
+            'force': {
+                'type': 'str',
                 },
             'ext': {
                 'type': 'dict',

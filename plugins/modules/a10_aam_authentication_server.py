@@ -540,10 +540,9 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'ntlm-authentication-success', 'ntlm-authentication-failure', 'ntlm-proto-negotiation-success', 'ntlm-proto-negotiation-failure', 'ntlm-session-setup-success', 'ntlm-session-setup-failed', 'kerberos-request-normal',
-                        'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error', 'kerberos-polling-control-error', 'ntlm-prepare-req-success', 'ntlm-prepare-req-failed', 'ntlm-timeout-error',
-                        'ntlm-other-error', 'ntlm-request-normal', 'ntlm-request-dropped', 'ntlm-response-success', 'ntlm-response-failure', 'ntlm-response-error', 'ntlm-response-timeout', 'ntlm-response-other', 'ntlm-job-start-error', 'ntlm-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure',
-                        'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success', 'kerberos-generate-kdc-keytab-failure', 'kerberos-delete-kdc-keytab-success', 'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count'
+                        'all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'kerberos-request-normal', 'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other',
+                        'kerberos-job-start-error', 'kerberos-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure', 'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success', 'kerberos-generate-kdc-keytab-failure',
+                        'kerberos-delete-kdc-keytab-success', 'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count'
                         ]
                     }
                 },
@@ -567,21 +566,6 @@ def get_argspec():
                     },
                 'auth_protocol': {
                     'type': 'dict',
-                    'ntlm_disable': {
-                        'type': 'bool',
-                        },
-                    'ntlm_version': {
-                        'type': 'int',
-                        },
-                    'ntlm_health_check': {
-                        'type': 'str',
-                        },
-                    'ntlm_health_check_disable': {
-                        'type': 'bool',
-                        },
-                    'kerberos_disable': {
-                        'type': 'bool',
-                        },
                     'kerberos_port': {
                         'type': 'int',
                         },
@@ -637,12 +621,8 @@ def get_argspec():
                 'sampling_enable': {
                     'type': 'list',
                     'counters1': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success',
-                            'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
-                            ]
+                        'type': 'str',
+                        'choices': ['all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'krb_validate_kdc_success', 'krb_validate_kdc_failure']
                         }
                     },
                 'packet_capture_template': {
@@ -767,7 +747,7 @@ def get_argspec():
                     'type': 'dict',
                     'stats_clear_type': {
                         'type': 'str',
-                        'choices': ['windows', 'kerberos', 'ntlm']
+                        'choices': ['windows', 'kerberos']
                         },
                     'name': {
                         'type': 'str',

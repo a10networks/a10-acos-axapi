@@ -663,6 +663,10 @@ options:
                 description:
                 - "CNAME to respond (Canonical name)"
                 type: str
+            response_ttl:
+                description:
+                - "Set response TTL in seconds (TTL value in seconds)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -1346,6 +1350,9 @@ def get_argspec():
                 },
             'respond_cname_str': {
                 'type': 'str',
+                },
+            'response_ttl': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',

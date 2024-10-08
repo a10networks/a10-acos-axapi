@@ -90,6 +90,11 @@ options:
           information and answer section content;"
         type: str
         required: False
+    response_include_rcode:
+        description:
+        - "Log DNS Rcode with Response"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -172,7 +177,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_type", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_include_rcode", "response_type", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -215,6 +220,9 @@ def get_argspec():
         'dns_logging_response_section': {
             'type': 'str',
             'choices': ['all', 'header', 'answer']
+            },
+        'response_include_rcode': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

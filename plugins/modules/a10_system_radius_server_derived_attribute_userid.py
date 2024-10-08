@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ddos_template_tcp_progression_tracking_connection_tracking
+module: a10_system_radius_server_derived_attribute_userid
 description:
-    - Configure and enable TCP Progression Tracking per Connection
+    - Configure the derived attribute of user ID.
 author: A10 Networks
 options:
     state:
@@ -55,70 +55,18 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    tcp_name:
+    attribute:
         description:
-        - Key to identify parent object
-        type: str
-        required: True
-    progression_tracking_conn_enabled:
-        description:
-        - "'enable-check'= Enable General Progression Tracking per Connection;"
-        type: str
-        required: True
-    conn_sent_max:
-        description:
-        - "Set the maximum total sent byte"
-        type: int
-        required: False
-    conn_sent_min:
-        description:
-        - "Set the minimum total sent byte"
-        type: int
-        required: False
-    conn_rcvd_max:
-        description:
-        - "Set the maximum total received byte"
-        type: int
-        required: False
-    conn_rcvd_min:
-        description:
-        - "Set the minimum total received byte"
-        type: int
-        required: False
-    conn_rcvd_sent_ratio_min:
-        description:
-        - "Set the minimum received to sent ratio (in unit of 0.1% [1=1000])"
-        type: int
-        required: False
-    conn_rcvd_sent_ratio_max:
-        description:
-        - "Set the maximum received to sent ratio (in unit of 0.1% [1=1000])"
-        type: int
-        required: False
-    conn_duration_max:
-        description:
-        - "Set the maximum duration time (in unit of 100ms, up to 24 hours)"
-        type: int
-        required: False
-    conn_duration_min:
-        description:
-        - "Set the minimum duration time (in unit of 100ms, up to 24 hours)"
-        type: int
-        required: False
-    conn_violation:
-        description:
-        - "Set the violation threshold"
-        type: int
-        required: False
-    progression_tracking_conn_action_list_name:
-        description:
-        - "Configure action-list to take when progression tracking violation exceed"
+        - "'imei'= Specify the IMEI attribute.; 'imsi'= Specify the IMSI attribute.;
+          'msisdn'= Specify the MSISDN attribute.; 'custom1'= Specify the custom1
+          attribute.; 'custom2'= Specify the custom2 attribute.; 'custom3'= Specify the
+          custom3 attribute.; 'custom4'= Specify the custom4 attribute.; 'custom5'=
+          Specify the custom5 attribute.; 'custom6'= Specify the custom6 attribute.;"
         type: str
         required: False
-    progression_tracking_conn_action:
+    regex:
         description:
-        - "'drop'= Drop packets for progression tracking violation exceed (Default);
-          'blacklist-src'= Blacklist-src for progression tracking violation exceed;"
+        - "Specify the regular expression to parse the value from a RADIUS attribute."
         type: str
         required: False
     uuid:
@@ -180,7 +128,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["conn_duration_max", "conn_duration_min", "conn_rcvd_max", "conn_rcvd_min", "conn_rcvd_sent_ratio_max", "conn_rcvd_sent_ratio_min", "conn_sent_max", "conn_sent_min", "conn_violation", "progression_tracking_conn_action", "progression_tracking_conn_action_list_name", "progression_tracking_conn_enabled", "uuid", ]
+AVAILABLE_PROPERTIES = ["attribute", "regex", "uuid", ]
 
 
 def get_default_argspec():
@@ -200,65 +148,16 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'progression_tracking_conn_enabled': {
-            'type': 'str',
-            'required': True,
-            'choices': ['enable-check']
-            },
-        'conn_sent_max': {
-            'type': 'int',
-            },
-        'conn_sent_min': {
-            'type': 'int',
-            },
-        'conn_rcvd_max': {
-            'type': 'int',
-            },
-        'conn_rcvd_min': {
-            'type': 'int',
-            },
-        'conn_rcvd_sent_ratio_min': {
-            'type': 'int',
-            },
-        'conn_rcvd_sent_ratio_max': {
-            'type': 'int',
-            },
-        'conn_duration_max': {
-            'type': 'int',
-            },
-        'conn_duration_min': {
-            'type': 'int',
-            },
-        'conn_violation': {
-            'type': 'int',
-            },
-        'progression_tracking_conn_action_list_name': {
-            'type': 'str',
-            },
-        'progression_tracking_conn_action': {
-            'type': 'str',
-            'choices': ['drop', 'blacklist-src']
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
-    # Parent keys
-    rv.update(dict(tcp_name=dict(type='str', required=True), ))
+    rv.update({'attribute': {'type': 'str', 'choices': ['imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6']}, 'regex': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ddos/template/tcp/{tcp_name}/progression-tracking/connection-tracking"
+    url_base = "/axapi/v3/system/radius/server/derived-attribute/userid"
 
     f_dict = {}
-    if '/' in module.params["tcp_name"]:
-        f_dict["tcp_name"] = module.params["tcp_name"].replace("/", "%2F")
-    else:
-        f_dict["tcp_name"] = module.params["tcp_name"]
 
     return url_base.format(**f_dict)
 
@@ -266,10 +165,9 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ddos/template/tcp/{tcp_name}/progression-tracking/connection-tracking"
+    url_base = "/axapi/v3/system/radius/server/derived-attribute/userid"
 
     f_dict = {}
-    f_dict["tcp_name"] = module.params["tcp_name"]
 
     return url_base.format(**f_dict)
 
@@ -281,13 +179,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["connection-tracking"].items():
+    for k, v in payload["userid"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["connection-tracking"].get(k) != v:
+        if config_changes["userid"].get(k) != v:
             change_results["changed"] = True
-            config_changes["connection-tracking"][k] = v
+            config_changes["userid"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -313,7 +211,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("connection-tracking", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("userid", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -385,13 +283,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -399,17 +297,17 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["connection-tracking"] if info != "NotFound" else info
+                result["acos_info"] = info["userid"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["connection-tracking-list"] if info != "NotFound" else info
+                result["acos_info"] = info["userid-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -421,8 +319,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

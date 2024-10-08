@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_visibility_packet_capture_object_templates_aam_auth_relay_ntlm_tmpl_trigger_stats_rate
+module: a10_ddos_network_object_sport_anomaly_threshold_bit_rate_percentage
 description:
-    - Configure stats to triggers packet capture on increment
+    - Percentage of source port entry's parent entry
 author: A10 Networks
 options:
     state:
@@ -55,51 +55,15 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    aam_auth_relay_ntlm_tmpl_name:
+    network_object_object_name:
         description:
         - Key to identify parent object
         type: str
         required: True
-    threshold_exceeded_by:
+    value:
         description:
-        - "Set the threshold to the number of times greater than the previous duration to
-          start the capture, default is 5"
+        - "Percentage of source port entry's parent entry"
         type: int
-        required: False
-    duration:
-        description:
-        - "Time in seconds to look for the anomaly, default is 60"
-        type: int
-        required: False
-    failure:
-        description:
-        - "Enable automatic packet-capture for Failure"
-        type: bool
-        required: False
-    buffer_alloc_fail:
-        description:
-        - "Enable automatic packet-capture for Buffer Allocation Failure"
-        type: bool
-        required: False
-    encoding_fail:
-        description:
-        - "Enable automatic packet-capture for Encoding Failure"
-        type: bool
-        required: False
-    insert_header_fail:
-        description:
-        - "Enable automatic packet-capture for Insert Header Failure"
-        type: bool
-        required: False
-    parse_header_fail:
-        description:
-        - "Enable automatic packet-capture for Parse Header Failure"
-        type: bool
-        required: False
-    internal_error:
-        description:
-        - "Enable automatic packet-capture for Internal Error"
-        type: bool
         required: False
     uuid:
         description:
@@ -160,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["buffer_alloc_fail", "duration", "encoding_fail", "failure", "insert_header_fail", "internal_error", "parse_header_fail", "threshold_exceeded_by", "uuid", ]
+AVAILABLE_PROPERTIES = ["uuid", "value", ]
 
 
 def get_default_argspec():
@@ -180,22 +144,22 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'threshold_exceeded_by': {'type': 'int', }, 'duration': {'type': 'int', }, 'failure': {'type': 'bool', }, 'buffer_alloc_fail': {'type': 'bool', }, 'encoding_fail': {'type': 'bool', }, 'insert_header_fail': {'type': 'bool', }, 'parse_header_fail': {'type': 'bool', }, 'internal_error': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'value': {'type': 'int', }, 'uuid': {'type': 'str', }})
     # Parent keys
-    rv.update(dict(aam_auth_relay_ntlm_tmpl_name=dict(type='str', required=True), ))
+    rv.update(dict(network_object_object_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/packet-capture/object-templates/aam-auth-relay-ntlm-tmpl/{aam_auth_relay_ntlm_tmpl_name}/trigger-stats-rate"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/bit-rate-percentage"
 
     f_dict = {}
-    if '/' in module.params["aam_auth_relay_ntlm_tmpl_name"]:
-        f_dict["aam_auth_relay_ntlm_tmpl_name"] = module.params["aam_auth_relay_ntlm_tmpl_name"].replace("/", "%2F")
+    if '/' in module.params["network_object_object_name"]:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"].replace("/", "%2F")
     else:
-        f_dict["aam_auth_relay_ntlm_tmpl_name"] = module.params["aam_auth_relay_ntlm_tmpl_name"]
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -203,10 +167,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/visibility/packet-capture/object-templates/aam-auth-relay-ntlm-tmpl/{aam_auth_relay_ntlm_tmpl_name}/trigger-stats-rate"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/bit-rate-percentage"
 
     f_dict = {}
-    f_dict["aam_auth_relay_ntlm_tmpl_name"] = module.params["aam_auth_relay_ntlm_tmpl_name"]
+    f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -218,13 +182,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["trigger-stats-rate"].items():
+    for k, v in payload["bit-rate-percentage"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["trigger-stats-rate"].get(k) != v:
+        if config_changes["bit-rate-percentage"].get(k) != v:
             change_results["changed"] = True
-            config_changes["trigger-stats-rate"][k] = v
+            config_changes["bit-rate-percentage"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -250,7 +214,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-rate", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("bit-rate-percentage", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -340,13 +304,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-rate"] if info != "NotFound" else info
+                result["acos_info"] = info["bit-rate-percentage"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-rate-list"] if info != "NotFound" else info
+                result["acos_info"] = info["bit-rate-percentage-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

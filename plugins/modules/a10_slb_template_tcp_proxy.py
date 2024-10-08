@@ -299,6 +299,12 @@ options:
                 description:
                 - "'v1'= version 1; 'v2'= version 2;"
                 type: str
+    tcp_do_newsack:
+        description:
+        - "'enable'= Enable fast sack loss recovery; 'disable'= Disable fast sack loss
+          recovery; 'auto-select'= Auto select fast sack loss recovery (disable);"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -366,7 +372,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "ack_aggressiveness", "alive_if_active", "backend_wscale", "del_session_on_server_down", "disable", "disable_abc", "disable_sack", "disable_tcp_timestamps", "disable_window_scale", "down", "dynamic_buffer_allocation", "early_retransmit", "fin_timeout", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout",
     "half_open_idle_timeout", "idle_timeout", "init_cwnd", "initial_window_size", "insert_client_ip", "invalid_rate_limit", "keepalive_interval", "keepalive_probes", "limited_slowstart", "maxburst", "min_rto", "mss", "nagle", "naked_ack_on_handshake", "name", "proxy_header", "psh_flag_optimization", "qos", "reassembly_limit", "reassembly_timeout",
-    "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "timewait", "transmit_buffer", "user_tag", "uuid",
+    "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "tcp_do_newsack", "timewait", "transmit_buffer", "user_tag", "uuid",
     ]
 
 
@@ -533,6 +539,10 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['v1', 'v2']
                 }
+            },
+        'tcp_do_newsack': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'auto-select']
             },
         'uuid': {
             'type': 'str',

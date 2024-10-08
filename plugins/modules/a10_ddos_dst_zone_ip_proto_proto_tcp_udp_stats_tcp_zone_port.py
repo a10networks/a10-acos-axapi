@@ -901,6 +901,99 @@ def get_argspec():
                     },
                 'hybrid_auth_method_change': {
                     'type': 'str',
+                    },
+                'small_window_excd': {
+                    'type': 'str',
+                    },
+                'src_small_window_excd': {
+                    'type': 'str',
+                    },
+                'small_window_rcv': {
+                    'type': 'str',
+                    },
+                'hybrid_auth_entry_aged_out': {
+                    'type': 'str',
+                    },
+                'tcp_syn_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_syn_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_fin_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_rst_rcvd': {
+                    'type': 'str',
+                    },
+                'src_zone_service_entry_hit': {
+                    'type': 'str',
+                    },
+                'hybrid_auth_auth_no_match': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_syn': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_syn': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_ack': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_ack': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_rst': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_rst': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_ack_pass_auth': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_ack_pass_auth': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_ack_fail_auth': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_ack_fail_auth': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_rst_pass_auth': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_rst_pass_auth': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_rst_fail_auth': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_rst_fail_auth': {
+                    'type': 'str',
+                    },
+                'hybrid_auth_auth_no_match_rst_rcv': {
+                    'type': 'str',
+                    },
+                'hybrid_auth_auth_no_match_ack_rcv': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_ack_xmit': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_ack_xmit': {
+                    'type': 'str',
+                    },
+                'tcp_auth_drop_rst_xmit': {
+                    'type': 'str',
+                    },
+                'src_auth_drop_rst_xmit': {
+                    'type': 'str',
                     }
                 }
             }

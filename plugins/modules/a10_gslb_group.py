@@ -158,6 +158,12 @@ options:
           1)"
         type: int
         required: False
+    delay_start:
+        description:
+        - "Specify time for gslb group to delay start formation if VCS is enabled (Specify
+          delay start for VCS, unit=minute,default is 0)"
+        type: int
+        required: False
     force_full_sync:
         description:
         - "Force GSLB to full sync config and files to members"
@@ -233,7 +239,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "auto_map_learn", "auto_map_primary", "auto_map_smart", "config_anywhere", "config_merge", "config_save", "data_interface", "dns_discover", "enable", "force_full_sync", "learn", "mgmt_interface", "name", "primary_ipv6_list", "primary_list", "priority", "resolve_as", "standalone", "suffix", "sync_timeout", "user_tag", "uuid",
+    "auto_map_learn", "auto_map_primary", "auto_map_smart", "config_anywhere", "config_merge", "config_save", "data_interface", "delay_start", "dns_discover", "enable", "force_full_sync", "learn", "mgmt_interface", "name", "primary_ipv6_list", "primary_list", "priority", "resolve_as", "standalone", "suffix", "sync_timeout", "user_tag", "uuid",
     ]
 
 
@@ -315,6 +321,9 @@ def get_argspec():
             'type': 'str',
             },
         'sync_timeout': {
+            'type': 'int',
+            },
+        'delay_start': {
             'type': 'int',
             },
         'force_full_sync': {

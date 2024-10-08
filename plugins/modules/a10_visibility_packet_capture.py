@@ -254,10 +254,6 @@ options:
                 description:
                 - "Field aam_auth_relay_form_inst_tmpl_list"
                 type: list
-            aam_auth_relay_ntlm_tmpl_list:
-                description:
-                - "Field aam_auth_relay_ntlm_tmpl_list"
-                type: list
             aam_auth_relay_ws_fed_tmpl_list:
                 description:
                 - "Field aam_auth_relay_ws_fed_tmpl_list"
@@ -2294,15 +2290,6 @@ def get_argspec():
                             'kerberos_other_error': {
                                 'type': 'bool',
                                 },
-                            'ntlm_authentication_failure': {
-                                'type': 'bool',
-                                },
-                            'ntlm_proto_negotiation_failure': {
-                                'type': 'bool',
-                                },
-                            'ntlm_session_setup_failed': {
-                                'type': 'bool',
-                                },
                             'kerberos_request_dropped': {
                                 'type': 'bool',
                                 },
@@ -2319,33 +2306,6 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'kerberos_polling_control_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_prepare_req_failed': {
-                                'type': 'bool',
-                                },
-                            'ntlm_timeout_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_other_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_request_dropped': {
-                                'type': 'bool',
-                                },
-                            'ntlm_response_failure': {
-                                'type': 'bool',
-                                },
-                            'ntlm_response_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_response_timeout': {
-                                'type': 'bool',
-                                },
-                            'ntlm_job_start_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_polling_control_error': {
                                 'type': 'bool',
                                 },
                             'kerberos_pw_expiry': {
@@ -2381,15 +2341,6 @@ def get_argspec():
                             'kerberos_other_error': {
                                 'type': 'bool',
                                 },
-                            'ntlm_authentication_failure': {
-                                'type': 'bool',
-                                },
-                            'ntlm_proto_negotiation_failure': {
-                                'type': 'bool',
-                                },
-                            'ntlm_session_setup_failed': {
-                                'type': 'bool',
-                                },
                             'kerberos_request_dropped': {
                                 'type': 'bool',
                                 },
@@ -2406,33 +2357,6 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'kerberos_polling_control_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_prepare_req_failed': {
-                                'type': 'bool',
-                                },
-                            'ntlm_timeout_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_other_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_request_dropped': {
-                                'type': 'bool',
-                                },
-                            'ntlm_response_failure': {
-                                'type': 'bool',
-                                },
-                            'ntlm_response_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_response_timeout': {
-                                'type': 'bool',
-                                },
-                            'ntlm_job_start_error': {
-                                'type': 'bool',
-                                },
-                            'ntlm_polling_control_error': {
                                 'type': 'bool',
                                 },
                             'kerberos_pw_expiry': {
@@ -10589,24 +10513,6 @@ def get_argspec():
                     'krb_pw_change_failure': {
                         'type': 'bool',
                         },
-                    'ntlm_proto_nego_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_session_setup_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_prepare_req_error': {
-                        'type': 'bool',
-                        },
-                    'ntlm_auth_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_timeout_error': {
-                        'type': 'bool',
-                        },
-                    'ntlm_other_error': {
-                        'type': 'bool',
-                        },
                     'krb_validate_kdc_failure': {
                         'type': 'bool',
                         },
@@ -10632,24 +10538,6 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'krb_pw_change_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_proto_nego_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_session_setup_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_prepare_req_error': {
-                        'type': 'bool',
-                        },
-                    'ntlm_auth_failure': {
-                        'type': 'bool',
-                        },
-                    'ntlm_timeout_error': {
-                        'type': 'bool',
-                        },
-                    'ntlm_other_error': {
                         'type': 'bool',
                         },
                     'krb_validate_kdc_failure': {
@@ -11157,106 +11045,6 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'other_error': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    }
-                },
-            'aam_auth_relay_ntlm_tmpl_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                    },
-                'capture_config': {
-                    'type': 'str',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    },
-                'user_tag': {
-                    'type': 'str',
-                    },
-                'trigger_stats_severity': {
-                    'type': 'dict',
-                    'error': {
-                        'type': 'bool',
-                        },
-                    'error_alert': {
-                        'type': 'bool',
-                        },
-                    'error_warning': {
-                        'type': 'bool',
-                        },
-                    'error_critical': {
-                        'type': 'bool',
-                        },
-                    'drop': {
-                        'type': 'bool',
-                        },
-                    'drop_alert': {
-                        'type': 'bool',
-                        },
-                    'drop_warning': {
-                        'type': 'bool',
-                        },
-                    'drop_critical': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    },
-                'trigger_stats_inc': {
-                    'type': 'dict',
-                    'failure': {
-                        'type': 'bool',
-                        },
-                    'buffer_alloc_fail': {
-                        'type': 'bool',
-                        },
-                    'encoding_fail': {
-                        'type': 'bool',
-                        },
-                    'insert_header_fail': {
-                        'type': 'bool',
-                        },
-                    'parse_header_fail': {
-                        'type': 'bool',
-                        },
-                    'internal_error': {
-                        'type': 'bool',
-                        },
-                    'uuid': {
-                        'type': 'str',
-                        }
-                    },
-                'trigger_stats_rate': {
-                    'type': 'dict',
-                    'threshold_exceeded_by': {
-                        'type': 'int',
-                        },
-                    'duration': {
-                        'type': 'int',
-                        },
-                    'failure': {
-                        'type': 'bool',
-                        },
-                    'buffer_alloc_fail': {
-                        'type': 'bool',
-                        },
-                    'encoding_fail': {
-                        'type': 'bool',
-                        },
-                    'insert_header_fail': {
-                        'type': 'bool',
-                        },
-                    'parse_header_fail': {
-                        'type': 'bool',
-                        },
-                    'internal_error': {
                         'type': 'bool',
                         },
                     'uuid': {

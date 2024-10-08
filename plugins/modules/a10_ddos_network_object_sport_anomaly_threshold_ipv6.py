@@ -10,9 +10,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_visibility_packet_capture_object_templates_aam_auth_relay_ntlm_tmpl
+module: a10_ddos_network_object_sport_anomaly_threshold_ipv6
 description:
-    - Configure template for aam.authentication.relay.ntlm
+    - Configure anomaly thresholds applied to source port entries of an IPv6/64
+      address
 author: A10 Networks
 options:
     state:
@@ -55,145 +56,111 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    name:
+    network_object_object_name:
         description:
-        - "Packet Capture Template Name"
+        - Key to identify parent object
         type: str
         required: True
-    capture_config:
+    ip_addr:
         description:
-        - "Specify name of the capture-config to use with this template"
+        - "Override threshold"
         type: str
+        required: True
+    packet_rate_str:
+        description:
+        - "'packet-rate'= Packet rate of a source port entry;"
+        type: str
+        required: True
+    packet_rate_percentage_str:
+        description:
+        - "'packet-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    bit_rate_str:
+        description:
+        - "'bit-rate'= Bit rate of a source port entry;"
+        type: str
+        required: True
+    bit_rate_percentage_str:
+        description:
+        - "'bit-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    packet_rate:
+        description:
+        - "Packet rate of a source port entry"
+        type: int
+        required: False
+    packet_rate_percentage:
+        description:
+        - "Percentage of source port entry's parent entry"
+        type: int
+        required: False
+    bit_rate:
+        description:
+        - "Bit rate of a source port entry"
+        type: int
+        required: False
+    bit_rate_percentage:
+        description:
+        - "Percentage of source port entry's parent entry"
+        type: int
+        required: False
+    sport_num:
+        description:
+        - "Source port number"
+        type: int
+        required: True
+    protocol:
+        description:
+        - "'udp'= UDP port; 'tcp'= TCP Port;"
+        type: str
+        required: True
+    ip_sport_packet_rate_str:
+        description:
+        - "'packet-rate'= Packet rate of a source port entry;"
+        type: str
+        required: True
+    ip_sport_packet_rate_percentage_str:
+        description:
+        - "'packet-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    ip_sport_bit_rate_str:
+        description:
+        - "'bit-rate'= Bit rate of a source port entry;"
+        type: str
+        required: True
+    ip_sport_bit_rate_percentage_str:
+        description:
+        - "'bit-rate-percentage'= Percentage of source port entry's parent entry;"
+        type: str
+        required: True
+    ip_sport_packet_rate:
+        description:
+        - "Packet rate of a source port entry"
+        type: int
+        required: False
+    ip_sport_packet_rate_percentage:
+        description:
+        - "Percentage of source port entry's parent entry"
+        type: int
+        required: False
+    ip_sport_bit_rate:
+        description:
+        - "Bit rate of a source port entry"
+        type: int
+        required: False
+    ip_sport_bit_rate_percentage:
+        description:
+        - "Percentage of source port entry's parent entry"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        type: str
-        required: False
-    trigger_stats_severity:
-        description:
-        - "Field trigger_stats_severity"
-        type: dict
-        required: False
-        suboptions:
-            error:
-                description:
-                - "Enable packet capture on all error counters (Default disabled)"
-                type: bool
-            error_alert:
-                description:
-                - "Enable packet capture on all alert error counters (Default disabled)"
-                type: bool
-            error_warning:
-                description:
-                - "Enable packet capture on all warning error counters (Default disabled)"
-                type: bool
-            error_critical:
-                description:
-                - "Enable packet capture on all critical error counters (Default disabled)"
-                type: bool
-            drop:
-                description:
-                - "Enable packet capture on all drop counters (Default disabled)"
-                type: bool
-            drop_alert:
-                description:
-                - "Enable packet capture on all alert drop counters (Default disabled)"
-                type: bool
-            drop_warning:
-                description:
-                - "Enable packet capture on all warning drop counters (Default disabled)"
-                type: bool
-            drop_critical:
-                description:
-                - "Enable packet capture on all critical drop counters (Default disabled)"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    trigger_stats_inc:
-        description:
-        - "Field trigger_stats_inc"
-        type: dict
-        required: False
-        suboptions:
-            failure:
-                description:
-                - "Enable automatic packet-capture for Failure"
-                type: bool
-            buffer_alloc_fail:
-                description:
-                - "Enable automatic packet-capture for Buffer Allocation Failure"
-                type: bool
-            encoding_fail:
-                description:
-                - "Enable automatic packet-capture for Encoding Failure"
-                type: bool
-            insert_header_fail:
-                description:
-                - "Enable automatic packet-capture for Insert Header Failure"
-                type: bool
-            parse_header_fail:
-                description:
-                - "Enable automatic packet-capture for Parse Header Failure"
-                type: bool
-            internal_error:
-                description:
-                - "Enable automatic packet-capture for Internal Error"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    trigger_stats_rate:
-        description:
-        - "Field trigger_stats_rate"
-        type: dict
-        required: False
-        suboptions:
-            threshold_exceeded_by:
-                description:
-                - "Set the threshold to the number of times greater than the previous duration to
-          start the capture, default is 5"
-                type: int
-            duration:
-                description:
-                - "Time in seconds to look for the anomaly, default is 60"
-                type: int
-            failure:
-                description:
-                - "Enable automatic packet-capture for Failure"
-                type: bool
-            buffer_alloc_fail:
-                description:
-                - "Enable automatic packet-capture for Buffer Allocation Failure"
-                type: bool
-            encoding_fail:
-                description:
-                - "Enable automatic packet-capture for Encoding Failure"
-                type: bool
-            insert_header_fail:
-                description:
-                - "Enable automatic packet-capture for Insert Header Failure"
-                type: bool
-            parse_header_fail:
-                description:
-                - "Enable automatic packet-capture for Parse Header Failure"
-                type: bool
-            internal_error:
-                description:
-                - "Enable automatic packet-capture for Internal Error"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
 
 '''
 
@@ -248,7 +215,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["capture_config", "name", "trigger_stats_inc", "trigger_stats_rate", "trigger_stats_severity", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "bit_rate", "bit_rate_percentage", "bit_rate_percentage_str", "bit_rate_str", "ip_addr", "ip_sport_bit_rate", "ip_sport_bit_rate_percentage", "ip_sport_bit_rate_percentage_str", "ip_sport_bit_rate_str", "ip_sport_packet_rate", "ip_sport_packet_rate_percentage", "ip_sport_packet_rate_percentage_str", "ip_sport_packet_rate_str", "packet_rate",
+    "packet_rate_percentage", "packet_rate_percentage_str", "packet_rate_str", "protocol", "sport_num", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -269,117 +239,146 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'name': {
+        'ip_addr': {
             'type': 'str',
             'required': True,
             },
-        'capture_config': {
+        'packet_rate_str': {
             'type': 'str',
+            'required': True,
+            'choices': ['packet-rate']
+            },
+        'packet_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate-percentage']
+            },
+        'bit_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate']
+            },
+        'bit_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate-percentage']
+            },
+        'packet_rate': {
+            'type': 'int',
+            },
+        'packet_rate_percentage': {
+            'type': 'int',
+            },
+        'bit_rate': {
+            'type': 'int',
+            },
+        'bit_rate_percentage': {
+            'type': 'int',
+            },
+        'sport_num': {
+            'type': 'int',
+            'required': True,
+            },
+        'protocol': {
+            'type': 'str',
+            'required': True,
+            'choices': ['udp', 'tcp']
+            },
+        'ip_sport_packet_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate']
+            },
+        'ip_sport_packet_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['packet-rate-percentage']
+            },
+        'ip_sport_bit_rate_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate']
+            },
+        'ip_sport_bit_rate_percentage_str': {
+            'type': 'str',
+            'required': True,
+            'choices': ['bit-rate-percentage']
+            },
+        'ip_sport_packet_rate': {
+            'type': 'int',
+            },
+        'ip_sport_packet_rate_percentage': {
+            'type': 'int',
+            },
+        'ip_sport_bit_rate': {
+            'type': 'int',
+            },
+        'ip_sport_bit_rate_percentage': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            },
-        'trigger_stats_severity': {
-            'type': 'dict',
-            'error': {
-                'type': 'bool',
-                },
-            'error_alert': {
-                'type': 'bool',
-                },
-            'error_warning': {
-                'type': 'bool',
-                },
-            'error_critical': {
-                'type': 'bool',
-                },
-            'drop': {
-                'type': 'bool',
-                },
-            'drop_alert': {
-                'type': 'bool',
-                },
-            'drop_warning': {
-                'type': 'bool',
-                },
-            'drop_critical': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'trigger_stats_inc': {
-            'type': 'dict',
-            'failure': {
-                'type': 'bool',
-                },
-            'buffer_alloc_fail': {
-                'type': 'bool',
-                },
-            'encoding_fail': {
-                'type': 'bool',
-                },
-            'insert_header_fail': {
-                'type': 'bool',
-                },
-            'parse_header_fail': {
-                'type': 'bool',
-                },
-            'internal_error': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'trigger_stats_rate': {
-            'type': 'dict',
-            'threshold_exceeded_by': {
-                'type': 'int',
-                },
-            'duration': {
-                'type': 'int',
-                },
-            'failure': {
-                'type': 'bool',
-                },
-            'buffer_alloc_fail': {
-                'type': 'bool',
-                },
-            'encoding_fail': {
-                'type': 'bool',
-                },
-            'insert_header_fail': {
-                'type': 'bool',
-                },
-            'parse_header_fail': {
-                'type': 'bool',
-                },
-            'internal_error': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
-                }
             }
         })
+    # Parent keys
+    rv.update(dict(network_object_object_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/packet-capture/object-templates/aam-auth-relay-ntlm-tmpl/{name}"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/ipv6/{ip_addr}+{packet_rate_str}+{packet_rate_percentage_str}+{bit_rate_str}+{bit_rate_percentage_str}+{sport_num}+{protocol}+{ip_sport_packet_rate_str}+{ip_sport_packet_rate_percentage_str}+{ip_sport_bit_rate_str}+{ip_sport_bit_rate_percentage_str}"
 
     f_dict = {}
-    if '/' in str(module.params["name"]):
-        f_dict["name"] = module.params["name"].replace("/", "%2F")
+    if '/' in str(module.params["ip_addr"]):
+        f_dict["ip_addr"] = module.params["ip_addr"].replace("/", "%2F")
     else:
-        f_dict["name"] = module.params["name"]
+        f_dict["ip_addr"] = module.params["ip_addr"]
+    if '/' in str(module.params["packet_rate_str"]):
+        f_dict["packet_rate_str"] = module.params["packet_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["packet_rate_str"] = module.params["packet_rate_str"]
+    if '/' in str(module.params["packet_rate_percentage_str"]):
+        f_dict["packet_rate_percentage_str"] = module.params["packet_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["packet_rate_percentage_str"] = module.params["packet_rate_percentage_str"]
+    if '/' in str(module.params["bit_rate_str"]):
+        f_dict["bit_rate_str"] = module.params["bit_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["bit_rate_str"] = module.params["bit_rate_str"]
+    if '/' in str(module.params["bit_rate_percentage_str"]):
+        f_dict["bit_rate_percentage_str"] = module.params["bit_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["bit_rate_percentage_str"] = module.params["bit_rate_percentage_str"]
+    if '/' in str(module.params["sport_num"]):
+        f_dict["sport_num"] = module.params["sport_num"].replace("/", "%2F")
+    else:
+        f_dict["sport_num"] = module.params["sport_num"]
+    if '/' in str(module.params["protocol"]):
+        f_dict["protocol"] = module.params["protocol"].replace("/", "%2F")
+    else:
+        f_dict["protocol"] = module.params["protocol"]
+    if '/' in str(module.params["ip_sport_packet_rate_str"]):
+        f_dict["ip_sport_packet_rate_str"] = module.params["ip_sport_packet_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_packet_rate_str"] = module.params["ip_sport_packet_rate_str"]
+    if '/' in str(module.params["ip_sport_packet_rate_percentage_str"]):
+        f_dict["ip_sport_packet_rate_percentage_str"] = module.params["ip_sport_packet_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_packet_rate_percentage_str"] = module.params["ip_sport_packet_rate_percentage_str"]
+    if '/' in str(module.params["ip_sport_bit_rate_str"]):
+        f_dict["ip_sport_bit_rate_str"] = module.params["ip_sport_bit_rate_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_bit_rate_str"] = module.params["ip_sport_bit_rate_str"]
+    if '/' in str(module.params["ip_sport_bit_rate_percentage_str"]):
+        f_dict["ip_sport_bit_rate_percentage_str"] = module.params["ip_sport_bit_rate_percentage_str"].replace("/", "%2F")
+    else:
+        f_dict["ip_sport_bit_rate_percentage_str"] = module.params["ip_sport_bit_rate_percentage_str"]
+    if '/' in module.params["network_object_object_name"]:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"].replace("/", "%2F")
+    else:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -387,10 +386,21 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/visibility/packet-capture/object-templates/aam-auth-relay-ntlm-tmpl"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/sport-anomaly-threshold/ipv6/+++++++++"
 
     f_dict = {}
-    f_dict["name"] = ""
+    f_dict["ip_addr"] = ""
+    f_dict["packet_rate_str"] = ""
+    f_dict["packet_rate_percentage_str"] = ""
+    f_dict["bit_rate_str"] = ""
+    f_dict["bit_rate_percentage_str"] = ""
+    f_dict["sport_num"] = ""
+    f_dict["protocol"] = ""
+    f_dict["ip_sport_packet_rate_str"] = ""
+    f_dict["ip_sport_packet_rate_percentage_str"] = ""
+    f_dict["ip_sport_bit_rate_str"] = ""
+    f_dict["ip_sport_bit_rate_percentage_str"] = ""
+    f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -402,13 +412,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["aam-auth-relay-ntlm-tmpl"].items():
+    for k, v in payload["ipv6"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["aam-auth-relay-ntlm-tmpl"].get(k) != v:
+        if config_changes["ipv6"].get(k) != v:
             change_results["changed"] = True
-            config_changes["aam-auth-relay-ntlm-tmpl"][k] = v
+            config_changes["ipv6"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -434,7 +444,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("aam-auth-relay-ntlm-tmpl", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("ipv6", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -524,13 +534,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["aam-auth-relay-ntlm-tmpl"] if info != "NotFound" else info
+                result["acos_info"] = info["ipv6"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["aam-auth-relay-ntlm-tmpl-list"] if info != "NotFound" else info
+                result["acos_info"] = info["ipv6-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

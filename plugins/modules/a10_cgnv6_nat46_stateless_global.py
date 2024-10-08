@@ -55,6 +55,16 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    tcp:
+        description:
+        - "Field tcp"
+        type: dict
+        required: False
+        suboptions:
+            mss_clamp:
+                description:
+                - "Field mss_clamp"
+                type: dict
     uuid:
         description:
         - "uuid of the object"
@@ -219,7 +229,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "tcp", "uuid", ]
 
 
 def get_default_argspec():
@@ -240,6 +250,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'tcp': {
+            'type': 'dict',
+            'mss_clamp': {
+                'type': 'dict',
+                'mss_clamp_type': {
+                    'type': 'str',
+                    'choices': ['fixed', 'none', 'subtract']
+                    },
+                'mss_value': {
+                    'type': 'int',
+                    },
+                'mss_subtract': {
+                    'type': 'int',
+                    },
+                'min': {
+                    'type': 'int',
+                    }
+                }
+            },
         'uuid': {
             'type': 'str',
             },

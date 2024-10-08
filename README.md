@@ -53,12 +53,14 @@ This code is now being generated using the SDK generator at https://github.com/a
 
 | ACOS Version | Ansible Version | GitHub Branch |
 | :--------: | :-------: | :-------:  |
+| `ACOS 6.0.5` | [6.0.5-91924](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.5-91924)  | [ACOS 6.0.5](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_605)  |
 | `ACOS 6.0.4` | [6.0.4-90524](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.4-90524)  | [ACOS 6.0.4](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_604)  |
 | `ACOS 6.0.3` | [6.0.3-11924](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.3-11924)  | [ACOS 6.0.3](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_603)  |
 | `ACOS 6.0.2` | [6.0.2-110123](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.2-110123)  | [ACOS 6.0.2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_602)  |
 | `ACOS 6.0.1` | [6.0.1-71123](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.1-71123)  | [ACOS 6.0.1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_601)  |
 | `ACOS 6.0.0-p2` | [6.0.0-p2-050523](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.0-p2-050523)  | [ACOS 6.0.0-p2](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_600_p2)  |
 | `ACOS 6.0.0-p1` |  [6.0.0-p1-033023](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.0-p1-033023)  | [ACOS 6.0.0-p1](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_600_p1) |
+| `ACOS 5.2.1-p11` | [5.2.1-p11-90624](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p11-90624)  | [ACOS 5.2.1-p11](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p11)  |
 | `ACOS 5.2.1-p9` |  [5.2.1-p9-20224](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p9-20224)  | [ACOS 5.2.1-p9](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p9)  |
 | `ACOS 5.2.1-p8` |  [5.2.1-p8-102723](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p8-102723)  | [ACOS 5.2.1-p8](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p8)  |
 | `ACOS 5.2.1-p7` |  [5.2.1-p7-050523](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=5.2.1-p7-050523)  | [ACOS 5.2.1-p7](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_521_p7) |
@@ -519,4 +521,5 @@ Please raise issue in github repository. Please include the Ansible playbook or 
 
 ## Support
 For all issues, please send an email to support@a10networks.com
+
 
