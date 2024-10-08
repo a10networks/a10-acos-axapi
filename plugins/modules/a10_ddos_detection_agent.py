@@ -172,6 +172,24 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            brand:
+                description:
+                - "Field brand"
+                type: str
+            sampler_list:
+                description:
+                - "Field sampler_list"
+                type: list
+            agent_name:
+                description:
+                - "Specify name for the agent"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -392,7 +410,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["agent_name", "agent_type", "agent_v4_addr", "agent_v6_addr", "netflow", "sampling_enable", "sflow", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["agent_name", "agent_type", "agent_v4_addr", "agent_v6_addr", "netflow", "oper", "sampling_enable", "sflow", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -473,6 +491,37 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'brand': {
+                'type': 'str',
+                },
+            'sampler_list': {
+                'type': 'list',
+                'sampler_id': {
+                    'type': 'int',
+                    },
+                'sample_mode': {
+                    'type': 'int',
+                    },
+                'sampling_algorithm': {
+                    'type': 'int',
+                    },
+                'sampling_rate': {
+                    'type': 'int',
+                    },
+                'active_timeout': {
+                    'type': 'int',
+                    },
+                'inactive_timeout': {
+                    'type': 'int',
+                    }
+                },
+            'agent_name': {
+                'type': 'str',
+                'required': True,
                 }
             },
         'stats': {
@@ -764,6 +813,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["agent-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["agent"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

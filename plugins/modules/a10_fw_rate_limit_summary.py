@@ -102,6 +102,14 @@ options:
                 description:
                 - "Field total_entries_scope_subscriber_prefix"
                 type: int
+            total_entries_scope_radius_usergroup:
+                description:
+                - "Field total_entries_scope_radius_usergroup"
+                type: int
+            total_entries_scope_radius_userid:
+                description:
+                - "Field total_entries_scope_radius_userid"
+                type: int
             total_entries_scope_parent:
                 description:
                 - "Field total_entries_scope_parent"
@@ -113,6 +121,14 @@ options:
             total_entries_scope_parent_subscriber_prefix:
                 description:
                 - "Field total_entries_scope_parent_subscriber_prefix"
+                type: int
+            total_entries_scope_parent_radius_usergroup:
+                description:
+                - "Field total_entries_scope_parent_radius_usergroup"
+                type: int
+            total_entries_scope_parent_radius_userid:
+                description:
+                - "Field total_entries_scope_parent_radius_userid"
                 type: int
 
 '''
@@ -221,6 +237,12 @@ def get_argspec():
             'total_entries_scope_subscriber_prefix': {
                 'type': 'int',
                 },
+            'total_entries_scope_radius_usergroup': {
+                'type': 'int',
+                },
+            'total_entries_scope_radius_userid': {
+                'type': 'int',
+                },
             'total_entries_scope_parent': {
                 'type': 'int',
                 },
@@ -228,6 +250,12 @@ def get_argspec():
                 'type': 'int',
                 },
             'total_entries_scope_parent_subscriber_prefix': {
+                'type': 'int',
+                },
+            'total_entries_scope_parent_radius_usergroup': {
+                'type': 'int',
+                },
+            'total_entries_scope_parent_radius_userid': {
                 'type': 'int',
                 }
             }

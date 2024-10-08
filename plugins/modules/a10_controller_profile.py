@@ -139,6 +139,12 @@ options:
           the device. This is the default value.;"
         type: str
         required: False
+    analytics_data:
+        description:
+        - "Use data port for analytics information exportation, if not set analytics will
+          follow 'host use-mgmt-port' option"
+        type: bool
+        required: False
     action:
         description:
         - "'register'= Register the device to the controller; 'deregister'= Deregister the
@@ -342,7 +348,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "analytics", "api_key", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "force", "host", "host_ipv6", "interval", "oper", "organization", "password_encrypted", "port", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "action", "analytics", "analytics_data", "api_key", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "force", "host", "host_ipv6", "interval", "oper", "organization", "password_encrypted", "port", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -412,6 +420,9 @@ def get_argspec():
         'analytics': {
             'type': 'str',
             'choices': ['all', 'system', 'disable']
+            },
+        'analytics_data': {
+            'type': 'bool',
             },
         'action': {
             'type': 'str',

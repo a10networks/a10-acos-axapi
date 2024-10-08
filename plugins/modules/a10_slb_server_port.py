@@ -80,7 +80,7 @@ options:
         description:
         - "Port Service"
         type: str
-        required: True
+        required: False
     template_port:
         description:
         - "Port template (Port template name)"
@@ -361,10 +361,6 @@ options:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
                 type: str
-            service:
-                description:
-                - "Port Service"
-                type: str
     stats:
         description:
         - "Field stats"
@@ -519,10 +515,6 @@ options:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
                 type: str
-            service:
-                description:
-                - "Port Service"
-                type: str
 
 '''
 
@@ -615,7 +607,6 @@ def get_argspec():
             },
         'service': {
             'type': 'str',
-            'required': True,
             },
         'template_port': {
             'type': 'str',
@@ -897,10 +888,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
-                },
-            'service': {
-                'type': 'str',
-                'required': True,
                 }
             },
         'stats': {
@@ -1018,10 +1005,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
-                },
-            'service': {
-                'type': 'str',
-                'required': True,
                 }
             }
         })
@@ -1033,7 +1016,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/server/{server_name}/port/{port_number}+{protocol}+{service}"
+    url_base = "/axapi/v3/slb/server/{server_name}/port/{port_number}+{protocol}"
 
     f_dict = {}
     if '/' in str(module.params["port_number"]):
@@ -1044,10 +1027,6 @@ def existing_url(module):
         f_dict["protocol"] = module.params["protocol"].replace("/", "%2F")
     else:
         f_dict["protocol"] = module.params["protocol"]
-    if '/' in str(module.params["service"]):
-        f_dict["service"] = module.params["service"].replace("/", "%2F")
-    else:
-        f_dict["service"] = module.params["service"]
     if '/' in module.params["server_name"]:
         f_dict["server_name"] = module.params["server_name"].replace("/", "%2F")
     else:
@@ -1059,12 +1038,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/server/{server_name}/port/+"
+    url_base = "/axapi/v3/slb/server/{server_name}/port/"
 
     f_dict = {}
     f_dict["port_number"] = ""
     f_dict["protocol"] = ""
-    f_dict["service"] = ""
     f_dict["server_name"] = module.params["server_name"]
 
     return url_base.format(**f_dict)

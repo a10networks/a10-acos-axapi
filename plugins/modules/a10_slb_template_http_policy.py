@@ -323,6 +323,16 @@ options:
                 description:
                 - "Header value string"
                 type: str
+            cookie_name_value_match:
+                description:
+                - "When enabled, the rule will match only when both cookie-name and cookie-value
+          matches with same cookie"
+                type: bool
+            header_name_value_match:
+                description:
+                - "When enabled, the rule will match only when both header-name and header-value
+          matches with same header"
+                type: bool
             query_param_name_equals_type:
                 description:
                 - "'equals'= query parameter name equals to string;"
@@ -690,6 +700,12 @@ def get_argspec():
                 },
             'header_value_ends_with_string': {
                 'type': 'str',
+                },
+            'cookie_name_value_match': {
+                'type': 'bool',
+                },
+            'header_name_value_match': {
+                'type': 'bool',
                 },
             'query_param_name_equals_type': {
                 'type': 'str',

@@ -70,10 +70,6 @@ options:
                 description:
                 - "Field basic"
                 type: dict
-            ntlm:
-                description:
-                - "Field ntlm"
-                type: dict
             negotiate:
                 description:
                 - "Field negotiate"
@@ -249,12 +245,6 @@ def get_argspec():
                     'type': 'str',
                     },
                 'basic_enable': {
-                    'type': 'bool',
-                    }
-                },
-            'ntlm': {
-                'type': 'dict',
-                'ntlm_enable': {
                     'type': 'bool',
                     }
                 },

@@ -815,6 +815,9 @@ def get_argspec():
                     },
                 'rrsig_expire_drop': {
                     'type': 'str',
+                    },
+                'src_zone_service_entry_hit': {
+                    'type': 'str',
                     }
                 }
             }

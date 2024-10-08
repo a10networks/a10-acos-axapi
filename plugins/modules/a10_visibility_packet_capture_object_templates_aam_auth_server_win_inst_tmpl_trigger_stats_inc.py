@@ -80,36 +80,6 @@ options:
         - "Enable automatic packet-capture for Kerberos password change failure"
         type: bool
         required: False
-    ntlm_proto_nego_failure:
-        description:
-        - "Enable automatic packet-capture for NTLM Protocol Negotiation Failure"
-        type: bool
-        required: False
-    ntlm_session_setup_failure:
-        description:
-        - "Enable automatic packet-capture for NTLM Session Setup Failure"
-        type: bool
-        required: False
-    ntlm_prepare_req_error:
-        description:
-        - "Enable automatic packet-capture for NTLM Prepare Request Error"
-        type: bool
-        required: False
-    ntlm_auth_failure:
-        description:
-        - "Enable automatic packet-capture for NTLM Authentication Failure"
-        type: bool
-        required: False
-    ntlm_timeout_error:
-        description:
-        - "Enable automatic packet-capture for NTLM Timeout"
-        type: bool
-        required: False
-    ntlm_other_error:
-        description:
-        - "Enable automatic packet-capture for NTLM Other Error"
-        type: bool
-        required: False
     krb_validate_kdc_failure:
         description:
         - "Enable automatic packet-capture for Kerberos KDC Validation Failure"
@@ -174,7 +144,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["krb_other_error", "krb_pw_change_failure", "krb_pw_expiry", "krb_timeout_error", "krb_validate_kdc_failure", "ntlm_auth_failure", "ntlm_other_error", "ntlm_prepare_req_error", "ntlm_proto_nego_failure", "ntlm_session_setup_failure", "ntlm_timeout_error", "uuid", ]
+AVAILABLE_PROPERTIES = ["krb_other_error", "krb_pw_change_failure", "krb_pw_expiry", "krb_timeout_error", "krb_validate_kdc_failure", "uuid", ]
 
 
 def get_default_argspec():
@@ -194,44 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'krb_timeout_error': {
-            'type': 'bool',
-            },
-        'krb_other_error': {
-            'type': 'bool',
-            },
-        'krb_pw_expiry': {
-            'type': 'bool',
-            },
-        'krb_pw_change_failure': {
-            'type': 'bool',
-            },
-        'ntlm_proto_nego_failure': {
-            'type': 'bool',
-            },
-        'ntlm_session_setup_failure': {
-            'type': 'bool',
-            },
-        'ntlm_prepare_req_error': {
-            'type': 'bool',
-            },
-        'ntlm_auth_failure': {
-            'type': 'bool',
-            },
-        'ntlm_timeout_error': {
-            'type': 'bool',
-            },
-        'ntlm_other_error': {
-            'type': 'bool',
-            },
-        'krb_validate_kdc_failure': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'krb_timeout_error': {'type': 'bool', }, 'krb_other_error': {'type': 'bool', }, 'krb_pw_expiry': {'type': 'bool', }, 'krb_pw_change_failure': {'type': 'bool', }, 'krb_validate_kdc_failure': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(aam_auth_server_win_inst_tmpl_name=dict(type='str', required=True), ))
     return rv

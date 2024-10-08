@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ips_signature
+module: a10_system_config_mgmt
 description:
-    - IPS signature
+    - Setting of Configuration Management
 author: A10 Networks
 options:
     state:
@@ -21,7 +21,6 @@ options:
         choices:
           - noop
           - present
-          - absent
         type: str
         required: True
     ansible_host:
@@ -55,33 +54,17 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    delete_referenced_tagged_objects:
+        description:
+        - "'enable'= Allow deletion of referenced tagged objects. Default option.;
+          'disable'= Block deletion of referenced tagged objects;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            signature_list:
-                description:
-                - "Field signature_list"
-                type: list
-            sid:
-                description:
-                - "Field sid"
-                type: int
-            category:
-                description:
-                - "Field category"
-                type: str
-            ntype:
-                description:
-                - "Field type"
-                type: str
 
 '''
 
@@ -136,7 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["delete_referenced_tagged_objects", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,7 +127,7 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
         a10_partition=dict(type='str', required=False,
                            ),
@@ -156,135 +139,14 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'oper': {
-            'type': 'dict',
-            'signature_list': {
-                'type': 'list',
-                'sid': {
-                    'type': 'int',
-                    },
-                'default_action': {
-                    'type': 'str',
-                    },
-                'category': {
-                    'type': 'str',
-                    },
-                'revision': {
-                    'type': 'int',
-                    },
-                'is_enabled': {
-                    'type': 'int',
-                    },
-                'is_custom': {
-                    'type': 'int',
-                    },
-                'direction': {
-                    'type': 'str',
-                    },
-                'attack_target': {
-                    'type': 'str',
-                    },
-                'severity': {
-                    'type': 'int',
-                    },
-                'ntype': {
-                    'type': 'str',
-                    },
-                'cve_number': {
-                    'type': 'str',
-                    },
-                'message': {
-                    'type': 'str',
-                    },
-                'pattern_list': {
-                    'type': 'list',
-                    'is_invert': {
-                        'type': 'int',
-                        },
-                    'ignore_case': {
-                        'type': 'int',
-                        },
-                    'has_space_bar': {
-                        'type': 'int',
-                        },
-                    'is_multi_line': {
-                        'type': 'int',
-                        },
-                    'pattern_type': {
-                        'type': 'str',
-                        },
-                    'pattern_string': {
-                        'type': 'str',
-                        }
-                    },
-                'parameter_list': {
-                    'type': 'dict',
-                    'fast_pattern_index': {
-                        'type': 'int',
-                        },
-                    'max_payload_len': {
-                        'type': 'int',
-                        },
-                    'min_payload_len': {
-                        'type': 'int',
-                        },
-                    'max_uri_len': {
-                        'type': 'int',
-                        },
-                    'min_uri_len': {
-                        'type': 'int',
-                        },
-                    'http_status_code': {
-                        'type': 'int',
-                        },
-                    'http_method': {
-                        'type': 'str',
-                        },
-                    'dns_query': {
-                        'type': 'int',
-                        },
-                    'threshold': {
-                        'type': 'dict',
-                        'count': {
-                            'type': 'int',
-                            },
-                        'interval': {
-                            'type': 'int',
-                            },
-                        'track_direction': {
-                            'type': 'str',
-                            },
-                        'detection_filter': {
-                            'type': 'int',
-                            }
-                        }
-                    },
-                'hash': {
-                    'type': 'str',
-                    }
-                },
-            'sid': {
-                'type': 'int',
-                },
-            'category': {
-                'type': 'str',
-                },
-            'ntype': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'delete_referenced_tagged_objects': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ips/signature"
+    url_base = "/axapi/v3/system/config-mgmt"
 
     f_dict = {}
 
@@ -294,17 +156,30 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ips/signature"
+    url_base = "/axapi/v3/system/config-mgmt"
 
     f_dict = {}
 
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["config-mgmt"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["config-mgmt"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["config-mgmt"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
@@ -327,7 +202,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("signature", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("config-mgmt", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -336,28 +211,6 @@ def present(module, result, existing_config):
     elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
     return result
-
-
-def delete(module, result):
-    try:
-        call_result = api_client.delete(module.client, existing_url(module))
-        result["axapi_calls"].append(call_result)
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
-    return result
-
-
-def absent(module, result, existing_config):
-    if not existing_config:
-        result["changed"] = False
-        return result
-
-    if module.check_mode:
-        result["changed"] = True
-        return result
-
-    return delete(module, result)
 
 
 def run_command(module):
@@ -399,36 +252,28 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
-        if state == 'absent':
-            result = absent(module, result, existing_config)
-
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["signature"] if info != "NotFound" else info
+                result["acos_info"] = info["config-mgmt"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["signature-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["signature"]["oper"] if info != "NotFound" else info
+                result["acos_info"] = info["config-mgmt-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -440,8 +285,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

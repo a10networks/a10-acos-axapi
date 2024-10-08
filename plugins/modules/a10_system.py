@@ -2379,6 +2379,21 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    config_mgmt:
+        description:
+        - "Field config_mgmt"
+        type: dict
+        required: False
+        suboptions:
+            delete_referenced_tagged_objects:
+                description:
+                - "'enable'= Allow deletion of referenced tagged objects. Default option.;
+          'disable'= Block deletion of referenced tagged objects;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -2434,7 +2449,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "control_cpu", "core", "cosq_show", "cosq_stats",
+    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "config_mgmt", "control_cpu", "core", "cosq_show", "cosq_stats",
     "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn",
     "dynamic_service_dns_socket_pool", "enable_password", "environment", "even_port_hash_enable", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate",
     "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro",
@@ -4232,6 +4247,35 @@ def get_argspec():
                             'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop', 'radius-packets-redirected', 'radius-packets-redirect-fail-dropped', 'radius-packets-process-local', 'radius-packets-dropped-not-lo', 'radius-inter-card-dup-redir'
                             ]
                         }
+                    },
+                'derived_attribute': {
+                    'type': 'dict',
+                    'usergroup': {
+                        'type': 'dict',
+                        'attribute': {
+                            'type': 'str',
+                            'choices': ['imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6']
+                            },
+                        'regex': {
+                            'type': 'str',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'userid': {
+                        'type': 'dict',
+                        'attribute': {
+                            'type': 'str',
+                            'choices': ['imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6']
+                            },
+                        'regex': {
+                            'type': 'str',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
                     }
                 }
             },
@@ -5146,6 +5190,16 @@ def get_argspec():
                         'curr_entries_target_vserver', 'curr_entries_target_vport', 'curr_entries_target_LOC', 'curr_entries_target_rserver', 'curr_entries_target_rport', 'curr_entries_target_service', 'curr_entries_stats', 'curr_entries_target_global_dns_cache'
                         ]
                     }
+                }
+            },
+        'config_mgmt': {
+            'type': 'dict',
+            'delete_referenced_tagged_objects': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
                 }
             }
         })

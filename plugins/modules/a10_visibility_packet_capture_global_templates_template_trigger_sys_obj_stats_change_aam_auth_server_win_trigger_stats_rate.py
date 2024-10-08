@@ -81,21 +81,6 @@ options:
         - "Enable automatic packet-capture for Total Kerberos Other Error"
         type: bool
         required: False
-    ntlm_authentication_failure:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Authentication Failure"
-        type: bool
-        required: False
-    ntlm_proto_negotiation_failure:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Protocol Negotiation Failure"
-        type: bool
-        required: False
-    ntlm_session_setup_failed:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Session Setup Failure"
-        type: bool
-        required: False
     kerberos_request_dropped:
         description:
         - "Enable automatic packet-capture for Total Kerberos Dropped Request"
@@ -124,51 +109,6 @@ options:
     kerberos_polling_control_error:
         description:
         - "Enable automatic packet-capture for Total Kerberos Polling Control Error"
-        type: bool
-        required: False
-    ntlm_prepare_req_failed:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Prepare Request Failed"
-        type: bool
-        required: False
-    ntlm_timeout_error:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Timeout"
-        type: bool
-        required: False
-    ntlm_other_error:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Other Error"
-        type: bool
-        required: False
-    ntlm_request_dropped:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Dropped Request"
-        type: bool
-        required: False
-    ntlm_response_failure:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Failure Response"
-        type: bool
-        required: False
-    ntlm_response_error:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Error Response"
-        type: bool
-        required: False
-    ntlm_response_timeout:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Timeout Response"
-        type: bool
-        required: False
-    ntlm_job_start_error:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Job Start Error"
-        type: bool
-        required: False
-    ntlm_polling_control_error:
-        description:
-        - "Enable automatic packet-capture for Total NTLM Polling Control Error"
         type: bool
         required: False
     kerberos_pw_expiry:
@@ -258,8 +198,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "duration", "kerberos_delete_kdc_keytab_failure", "kerberos_generate_kdc_keytab_failure", "kerberos_job_start_error", "kerberos_other_error", "kerberos_polling_control_error", "kerberos_pw_change_failure", "kerberos_pw_expiry", "kerberos_request_dropped", "kerberos_response_error", "kerberos_response_failure", "kerberos_response_timeout",
-    "kerberos_timeout_error", "kerberos_validate_kdc_failure", "ntlm_authentication_failure", "ntlm_job_start_error", "ntlm_other_error", "ntlm_polling_control_error", "ntlm_prepare_req_failed", "ntlm_proto_negotiation_failure", "ntlm_request_dropped", "ntlm_response_error", "ntlm_response_failure", "ntlm_response_timeout",
-    "ntlm_session_setup_failed", "ntlm_timeout_error", "threshold_exceeded_by", "uuid",
+    "kerberos_timeout_error", "kerberos_validate_kdc_failure", "threshold_exceeded_by", "uuid",
     ]
 
 
@@ -293,15 +232,6 @@ def get_argspec():
         'kerberos_other_error': {
             'type': 'bool',
             },
-        'ntlm_authentication_failure': {
-            'type': 'bool',
-            },
-        'ntlm_proto_negotiation_failure': {
-            'type': 'bool',
-            },
-        'ntlm_session_setup_failed': {
-            'type': 'bool',
-            },
         'kerberos_request_dropped': {
             'type': 'bool',
             },
@@ -318,33 +248,6 @@ def get_argspec():
             'type': 'bool',
             },
         'kerberos_polling_control_error': {
-            'type': 'bool',
-            },
-        'ntlm_prepare_req_failed': {
-            'type': 'bool',
-            },
-        'ntlm_timeout_error': {
-            'type': 'bool',
-            },
-        'ntlm_other_error': {
-            'type': 'bool',
-            },
-        'ntlm_request_dropped': {
-            'type': 'bool',
-            },
-        'ntlm_response_failure': {
-            'type': 'bool',
-            },
-        'ntlm_response_error': {
-            'type': 'bool',
-            },
-        'ntlm_response_timeout': {
-            'type': 'bool',
-            },
-        'ntlm_job_start_error': {
-            'type': 'bool',
-            },
-        'ntlm_polling_control_error': {
             'type': 'bool',
             },
         'kerberos_pw_expiry': {

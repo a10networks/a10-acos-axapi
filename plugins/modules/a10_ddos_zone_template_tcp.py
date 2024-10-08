@@ -1022,6 +1022,10 @@ def get_argspec():
                     },
                 'slow_attack': {
                     'type': 'dict',
+                    'slow_attack': {
+                        'type': 'str',
+                        'choices': ['enable-check']
+                        },
                     'response_pkt_rate_max': {
                         'type': 'int',
                         },

@@ -65,6 +65,12 @@ options:
         - "Disable L3 forwarding between VLANs"
         type: bool
         required: False
+    l2_fwd_for_me_arp_ns:
+        description:
+        - "Enable L2 forwarding for both ARP and NS packet with target IP/IPv6 addresses
+          that are owned by the device"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -78,7 +84,8 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'xparent_vlan_list_err'= Transparent Mode VLAN List Errors;"
+                - "'all'= all; 'xparent_vlan_list_err'= Transparent Mode VLAN List Errors;
+          'asymmetric_route_drop_err'= asymmetric_route_drop_err;"
                 type: str
     oper:
         description:
@@ -99,6 +106,10 @@ options:
             xparent_vlan_list_err:
                 description:
                 - "Transparent Mode VLAN List Errors"
+                type: str
+            asymmetric_route_drop_err:
+                description:
+                - "Field asymmetric_route_drop_err"
                 type: str
 
 '''
@@ -154,7 +165,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable_def_vlan_l2_forwarding", "l3_vlan_fwd_disable", "oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["enable_def_vlan_l2_forwarding", "l2_fwd_for_me_arp_ns", "l3_vlan_fwd_disable", "oper", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -181,6 +192,9 @@ def get_argspec():
         'l3_vlan_fwd_disable': {
             'type': 'bool',
             },
+        'l2_fwd_for_me_arp_ns': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -188,7 +202,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'xparent_vlan_list_err']
+                'choices': ['all', 'xparent_vlan_list_err', 'asymmetric_route_drop_err']
                 }
             },
         'oper': {
@@ -203,6 +217,9 @@ def get_argspec():
         'stats': {
             'type': 'dict',
             'xparent_vlan_list_err': {
+                'type': 'str',
+                },
+            'asymmetric_route_drop_err': {
                 'type': 'str',
                 }
             }

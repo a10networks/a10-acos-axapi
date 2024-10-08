@@ -100,6 +100,11 @@ options:
         - "CNAME to respond (Canonical name)"
         type: str
         required: False
+    response_ttl:
+        description:
+        - "Set response TTL in seconds (TTL value in seconds)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -159,7 +164,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["category_name", "drop", "permit", "respond", "respond_cname_str", "respond_ip_addr", "respond_ipv6_addr", "respond_nxdomain", "uuid", ]
+AVAILABLE_PROPERTIES = ["category_name", "drop", "permit", "respond", "respond_cname_str", "respond_ip_addr", "respond_ipv6_addr", "respond_nxdomain", "response_ttl", "uuid", ]
 
 
 def get_default_argspec():
@@ -179,7 +184,39 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'category_name': {'type': 'str', 'required': True, }, 'permit': {'type': 'bool', }, 'drop': {'type': 'bool', }, 'respond': {'type': 'bool', }, 'respond_nxdomain': {'type': 'bool', }, 'respond_ip_addr': {'type': 'str', }, 'respond_ipv6_addr': {'type': 'str', }, 'respond_cname_str': {'type': 'str', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'category_name': {
+            'type': 'str',
+            'required': True,
+            },
+        'permit': {
+            'type': 'bool',
+            },
+        'drop': {
+            'type': 'bool',
+            },
+        'respond': {
+            'type': 'bool',
+            },
+        'respond_nxdomain': {
+            'type': 'bool',
+            },
+        'respond_ip_addr': {
+            'type': 'str',
+            },
+        'respond_ipv6_addr': {
+            'type': 'str',
+            },
+        'respond_cname_str': {
+            'type': 'str',
+            },
+        'response_ttl': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
     rv.update(dict(dns_name=dict(type='str', required=True), ))
     return rv

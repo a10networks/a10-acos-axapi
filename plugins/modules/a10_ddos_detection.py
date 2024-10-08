@@ -166,6 +166,11 @@ options:
                 - "Configure de-escalation needed time in minutes from level 1 to 0.(default 1
           minutes)"
                 type: int
+            network_object_subnet_notify_percent:
+                description:
+                - "Send subnet notification when anomaly children subnet entries over configured
+          percentage.(default 50%)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -413,6 +418,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'de_escalation_quiet_time': {
+                'type': 'int',
+                },
+            'network_object_subnet_notify_percent': {
                 'type': 'int',
                 },
             'uuid': {

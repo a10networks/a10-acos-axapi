@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ips_global
+module: a10_vcs_offload
 description:
-    - IPS profile
+    - Virtual Chassis System offload settings
 author: A10 Networks
 options:
     state:
@@ -55,74 +55,21 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    application:
+        description:
+        - "'upgrade'= Image transfer during upgrade;"
+        type: str
+        required: True
+    protocol:
+        description:
+        - "'scp'= Use scp;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        type: list
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'ips_matched_total'= IPS Matched Total; 'ips_matched_http'= IPS
-          Matched HTTP; 'ips_matched_dns'= IPS Matched DNS; 'ips_matched_other'= IPS
-          Matched Other; 'ips_matched_action_pass'= IPS Matched Action Pass;
-          'ips_matched_action_drop'= IPS Matched Action Drop;
-          'ips_matched_action_blacklist'= IPS Matched Action Blacklist;
-          'ips_matched_severity_high'= IPS Matched Severity High;
-          'ips_matched_severity_medium'= IPS Matched Severity Medium;
-          'ips_matched_severity_low'= IPS Matched Severity Low;"
-                type: str
-    stats:
-        description:
-        - "Field stats"
-        type: dict
-        required: False
-        suboptions:
-            ips_matched_total:
-                description:
-                - "IPS Matched Total"
-                type: str
-            ips_matched_http:
-                description:
-                - "IPS Matched HTTP"
-                type: str
-            ips_matched_dns:
-                description:
-                - "IPS Matched DNS"
-                type: str
-            ips_matched_other:
-                description:
-                - "IPS Matched Other"
-                type: str
-            ips_matched_action_pass:
-                description:
-                - "IPS Matched Action Pass"
-                type: str
-            ips_matched_action_drop:
-                description:
-                - "IPS Matched Action Drop"
-                type: str
-            ips_matched_action_blacklist:
-                description:
-                - "IPS Matched Action Blacklist"
-                type: str
-            ips_matched_severity_high:
-                description:
-                - "IPS Matched Severity High"
-                type: str
-            ips_matched_severity_medium:
-                description:
-                - "IPS Matched Severity Medium"
-                type: str
-            ips_matched_severity_low:
-                description:
-                - "IPS Matched Severity Low"
-                type: str
 
 '''
 
@@ -177,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["application", "protocol", "uuid", ]
 
 
 def get_default_argspec():
@@ -197,60 +144,20 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-            },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'ips_matched_total', 'ips_matched_http', 'ips_matched_dns', 'ips_matched_other', 'ips_matched_action_pass', 'ips_matched_action_drop', 'ips_matched_action_blacklist', 'ips_matched_severity_high', 'ips_matched_severity_medium', 'ips_matched_severity_low']
-                }
-            },
-        'stats': {
-            'type': 'dict',
-            'ips_matched_total': {
-                'type': 'str',
-                },
-            'ips_matched_http': {
-                'type': 'str',
-                },
-            'ips_matched_dns': {
-                'type': 'str',
-                },
-            'ips_matched_other': {
-                'type': 'str',
-                },
-            'ips_matched_action_pass': {
-                'type': 'str',
-                },
-            'ips_matched_action_drop': {
-                'type': 'str',
-                },
-            'ips_matched_action_blacklist': {
-                'type': 'str',
-                },
-            'ips_matched_severity_high': {
-                'type': 'str',
-                },
-            'ips_matched_severity_medium': {
-                'type': 'str',
-                },
-            'ips_matched_severity_low': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'application': {'type': 'str', 'required': True, 'choices': ['upgrade']}, 'protocol': {'type': 'str', 'choices': ['scp']}, 'uuid': {'type': 'str', }})
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ips/global"
+    url_base = "/axapi/v3/vcs/offload/{application}"
 
     f_dict = {}
+    if '/' in str(module.params["application"]):
+        f_dict["application"] = module.params["application"].replace("/", "%2F")
+    else:
+        f_dict["application"] = module.params["application"]
 
     return url_base.format(**f_dict)
 
@@ -258,9 +165,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ips/global"
+    url_base = "/axapi/v3/vcs/offload"
 
     f_dict = {}
+    f_dict["application"] = ""
 
     return url_base.format(**f_dict)
 
@@ -272,13 +180,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["global"].items():
+    for k, v in payload["offload"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["global"].get(k) != v:
+        if config_changes["offload"].get(k) != v:
             change_results["changed"] = True
-            config_changes["global"][k] = v
+            config_changes["offload"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -304,7 +212,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("global", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("offload", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -376,13 +284,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -390,22 +298,17 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["global"] if info != "NotFound" else info
+                result["acos_info"] = info["offload"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["global-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_type_result)
-                info = get_type_result["response_body"]
-                result["acos_info"] = info["global"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["offload-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -417,8 +320,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

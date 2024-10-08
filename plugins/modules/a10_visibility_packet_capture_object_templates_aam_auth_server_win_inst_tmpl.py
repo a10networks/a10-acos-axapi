@@ -139,30 +139,6 @@ options:
                 description:
                 - "Enable automatic packet-capture for Kerberos password change failure"
                 type: bool
-            ntlm_proto_nego_failure:
-                description:
-                - "Enable automatic packet-capture for NTLM Protocol Negotiation Failure"
-                type: bool
-            ntlm_session_setup_failure:
-                description:
-                - "Enable automatic packet-capture for NTLM Session Setup Failure"
-                type: bool
-            ntlm_prepare_req_error:
-                description:
-                - "Enable automatic packet-capture for NTLM Prepare Request Error"
-                type: bool
-            ntlm_auth_failure:
-                description:
-                - "Enable automatic packet-capture for NTLM Authentication Failure"
-                type: bool
-            ntlm_timeout_error:
-                description:
-                - "Enable automatic packet-capture for NTLM Timeout"
-                type: bool
-            ntlm_other_error:
-                description:
-                - "Enable automatic packet-capture for NTLM Other Error"
-                type: bool
             krb_validate_kdc_failure:
                 description:
                 - "Enable automatic packet-capture for Kerberos KDC Validation Failure"
@@ -201,30 +177,6 @@ options:
             krb_pw_change_failure:
                 description:
                 - "Enable automatic packet-capture for Kerberos password change failure"
-                type: bool
-            ntlm_proto_nego_failure:
-                description:
-                - "Enable automatic packet-capture for NTLM Protocol Negotiation Failure"
-                type: bool
-            ntlm_session_setup_failure:
-                description:
-                - "Enable automatic packet-capture for NTLM Session Setup Failure"
-                type: bool
-            ntlm_prepare_req_error:
-                description:
-                - "Enable automatic packet-capture for NTLM Prepare Request Error"
-                type: bool
-            ntlm_auth_failure:
-                description:
-                - "Enable automatic packet-capture for NTLM Authentication Failure"
-                type: bool
-            ntlm_timeout_error:
-                description:
-                - "Enable automatic packet-capture for NTLM Timeout"
-                type: bool
-            ntlm_other_error:
-                description:
-                - "Enable automatic packet-capture for NTLM Other Error"
                 type: bool
             krb_validate_kdc_failure:
                 description:
@@ -366,24 +318,6 @@ def get_argspec():
             'krb_pw_change_failure': {
                 'type': 'bool',
                 },
-            'ntlm_proto_nego_failure': {
-                'type': 'bool',
-                },
-            'ntlm_session_setup_failure': {
-                'type': 'bool',
-                },
-            'ntlm_prepare_req_error': {
-                'type': 'bool',
-                },
-            'ntlm_auth_failure': {
-                'type': 'bool',
-                },
-            'ntlm_timeout_error': {
-                'type': 'bool',
-                },
-            'ntlm_other_error': {
-                'type': 'bool',
-                },
             'krb_validate_kdc_failure': {
                 'type': 'bool',
                 },
@@ -409,24 +343,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'krb_pw_change_failure': {
-                'type': 'bool',
-                },
-            'ntlm_proto_nego_failure': {
-                'type': 'bool',
-                },
-            'ntlm_session_setup_failure': {
-                'type': 'bool',
-                },
-            'ntlm_prepare_req_error': {
-                'type': 'bool',
-                },
-            'ntlm_auth_failure': {
-                'type': 'bool',
-                },
-            'ntlm_timeout_error': {
-                'type': 'bool',
-                },
-            'ntlm_other_error': {
                 'type': 'bool',
                 },
             'krb_validate_kdc_failure': {

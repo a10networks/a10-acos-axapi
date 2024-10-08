@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows
 description:
-    - 'Windows Server, using Kerberos or NTLM for authentication'
+    - 'Windows Server, using Kerberos for authentication'
 author: A10 Networks
 options:
     state:
@@ -70,39 +70,24 @@ options:
                 description:
                 - "'all'= all; 'kerberos-request-send'= Total Kerberos Request; 'kerberos-
           response-get'= Total Kerberos Response; 'kerberos-timeout-error'= Total
-          Kerberos Timeout; 'kerberos-other-error'= Total Kerberos Other Error; 'ntlm-
-          authentication-success'= Total NTLM Authentication Success; 'ntlm-
-          authentication-failure'= Total NTLM Authentication Failure; 'ntlm-proto-
-          negotiation-success'= Total NTLM Protocol Negotiation Success; 'ntlm-proto-
-          negotiation-failure'= Total NTLM Protocol Negotiation Failure; 'ntlm-session-
-          setup-success'= Total NTLM Session Setup Success; 'ntlm-session-setup-failed'=
-          Total NTLM Session Setup Failure; 'kerberos-request-normal'= Total Kerberos
-          Normal Request; 'kerberos-request-dropped'= Total Kerberos Dropped Request;
-          'kerberos-response-success'= Total Kerberos Success Response; 'kerberos-
-          response-failure'= Total Kerberos Failure Response; 'kerberos-response-error'=
-          Total Kerberos Error Response; 'kerberos-response-timeout'= Total Kerberos
-          Timeout Response; 'kerberos-response-other'= Total Kerberos Other Response;
-          'kerberos-job-start-error'= Total Kerberos Job Start Error; 'kerberos-polling-
-          control-error'= Total Kerberos Polling Control Error; 'ntlm-prepare-req-
-          success'= Total NTLM Prepare Request Success; 'ntlm-prepare-req-failed'= Total
-          NTLM Prepare Request Failed; 'ntlm-timeout-error'= Total NTLM Timeout; 'ntlm-
-          other-error'= Total NTLM Other Error; 'ntlm-request-normal'= Total NTLM Normal
-          Request; 'ntlm-request-dropped'= Total NTLM Dropped Request; 'ntlm-response-
-          success'= Total NTLM Success Response; 'ntlm-response-failure'= Total NTLM
-          Failure Response; 'ntlm-response-error'= Total NTLM Error Response; 'ntlm-
-          response-timeout'= Total NTLM Timeout Response; 'ntlm-response-other'= Total
-          NTLM Other Response; 'ntlm-job-start-error'= Total NTLM Job Start Error; 'ntlm-
-          polling-control-error'= Total NTLM Polling Control Error; 'kerberos-pw-expiry'=
-          Total Kerberos password expiry; 'kerberos-pw-change-success'= Total Kerberos
-          password change success; 'kerberos-pw-change-failure'= Total Kerberos password
-          change failure; 'kerberos-validate-kdc-success'= Total Kerberos KDC Validation
-          Success; 'kerberos-validate-kdc-failure'= Total Kerberos KDC Validation
-          Failure; 'kerberos-generate-kdc-keytab-success'= Total Kerberos KDC Keytab
-          Generation Success; 'kerberos-generate-kdc-keytab-failure'= Total Kerberos KDC
-          Keytab Generation Failure; 'kerberos-delete-kdc-keytab-success'= Total Kerberos
-          KDC Keytab Deletion Success; 'kerberos-delete-kdc-keytab-failure'= Total
-          Kerberos KDC Keytab Deletion Failure; 'kerberos-kdc-keytab-count'= Current
-          Kerberos KDC Keytab Count;"
+          Kerberos Timeout; 'kerberos-other-error'= Total Kerberos Other Error;
+          'kerberos-request-normal'= Total Kerberos Normal Request; 'kerberos-request-
+          dropped'= Total Kerberos Dropped Request; 'kerberos-response-success'= Total
+          Kerberos Success Response; 'kerberos-response-failure'= Total Kerberos Failure
+          Response; 'kerberos-response-error'= Total Kerberos Error Response; 'kerberos-
+          response-timeout'= Total Kerberos Timeout Response; 'kerberos-response-other'=
+          Total Kerberos Other Response; 'kerberos-job-start-error'= Total Kerberos Job
+          Start Error; 'kerberos-polling-control-error'= Total Kerberos Polling Control
+          Error; 'kerberos-pw-expiry'= Total Kerberos password expiry; 'kerberos-pw-
+          change-success'= Total Kerberos password change success; 'kerberos-pw-change-
+          failure'= Total Kerberos password change failure; 'kerberos-validate-kdc-
+          success'= Total Kerberos KDC Validation Success; 'kerberos-validate-kdc-
+          failure'= Total Kerberos KDC Validation Failure; 'kerberos-generate-kdc-keytab-
+          success'= Total Kerberos KDC Keytab Generation Success; 'kerberos-generate-kdc-
+          keytab-failure'= Total Kerberos KDC Keytab Generation Failure; 'kerberos-
+          delete-kdc-keytab-success'= Total Kerberos KDC Keytab Deletion Success;
+          'kerberos-delete-kdc-keytab-failure'= Total Kerberos KDC Keytab Deletion
+          Failure; 'kerberos-kdc-keytab-count'= Current Kerberos KDC Keytab Count;"
                 type: str
     instance_list:
         description:
@@ -194,30 +179,6 @@ options:
                 description:
                 - "Total Kerberos Other Error"
                 type: str
-            ntlm_authentication_success:
-                description:
-                - "Total NTLM Authentication Success"
-                type: str
-            ntlm_authentication_failure:
-                description:
-                - "Total NTLM Authentication Failure"
-                type: str
-            ntlm_proto_negotiation_success:
-                description:
-                - "Total NTLM Protocol Negotiation Success"
-                type: str
-            ntlm_proto_negotiation_failure:
-                description:
-                - "Total NTLM Protocol Negotiation Failure"
-                type: str
-            ntlm_session_setup_success:
-                description:
-                - "Total NTLM Session Setup Success"
-                type: str
-            ntlm_session_setup_failed:
-                description:
-                - "Total NTLM Session Setup Failure"
-                type: str
             kerberos_request_normal:
                 description:
                 - "Total Kerberos Normal Request"
@@ -253,58 +214,6 @@ options:
             kerberos_polling_control_error:
                 description:
                 - "Total Kerberos Polling Control Error"
-                type: str
-            ntlm_prepare_req_success:
-                description:
-                - "Total NTLM Prepare Request Success"
-                type: str
-            ntlm_prepare_req_failed:
-                description:
-                - "Total NTLM Prepare Request Failed"
-                type: str
-            ntlm_timeout_error:
-                description:
-                - "Total NTLM Timeout"
-                type: str
-            ntlm_other_error:
-                description:
-                - "Total NTLM Other Error"
-                type: str
-            ntlm_request_normal:
-                description:
-                - "Total NTLM Normal Request"
-                type: str
-            ntlm_request_dropped:
-                description:
-                - "Total NTLM Dropped Request"
-                type: str
-            ntlm_response_success:
-                description:
-                - "Total NTLM Success Response"
-                type: str
-            ntlm_response_failure:
-                description:
-                - "Total NTLM Failure Response"
-                type: str
-            ntlm_response_error:
-                description:
-                - "Total NTLM Error Response"
-                type: str
-            ntlm_response_timeout:
-                description:
-                - "Total NTLM Timeout Response"
-                type: str
-            ntlm_response_other:
-                description:
-                - "Total NTLM Other Response"
-                type: str
-            ntlm_job_start_error:
-                description:
-                - "Total NTLM Job Start Error"
-                type: str
-            ntlm_polling_control_error:
-                description:
-                - "Total NTLM Polling Control Error"
                 type: str
             kerberos_pw_expiry:
                 description:
@@ -434,10 +343,9 @@ def get_argspec():
                 'type':
                 'str',
                 'choices': [
-                    'all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'ntlm-authentication-success', 'ntlm-authentication-failure', 'ntlm-proto-negotiation-success', 'ntlm-proto-negotiation-failure', 'ntlm-session-setup-success', 'ntlm-session-setup-failed', 'kerberos-request-normal',
-                    'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error', 'kerberos-polling-control-error', 'ntlm-prepare-req-success', 'ntlm-prepare-req-failed', 'ntlm-timeout-error', 'ntlm-other-error',
-                    'ntlm-request-normal', 'ntlm-request-dropped', 'ntlm-response-success', 'ntlm-response-failure', 'ntlm-response-error', 'ntlm-response-timeout', 'ntlm-response-other', 'ntlm-job-start-error', 'ntlm-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure',
-                    'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success', 'kerberos-generate-kdc-keytab-failure', 'kerberos-delete-kdc-keytab-success', 'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count'
+                    'all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'kerberos-request-normal', 'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error',
+                    'kerberos-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure', 'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success', 'kerberos-generate-kdc-keytab-failure', 'kerberos-delete-kdc-keytab-success',
+                    'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count'
                     ]
                 }
             },
@@ -461,21 +369,6 @@ def get_argspec():
                 },
             'auth_protocol': {
                 'type': 'dict',
-                'ntlm_disable': {
-                    'type': 'bool',
-                    },
-                'ntlm_version': {
-                    'type': 'int',
-                    },
-                'ntlm_health_check': {
-                    'type': 'str',
-                    },
-                'ntlm_health_check_disable': {
-                    'type': 'bool',
-                    },
-                'kerberos_disable': {
-                    'type': 'bool',
-                    },
                 'kerberos_port': {
                     'type': 'int',
                     },
@@ -531,12 +424,8 @@ def get_argspec():
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success',
-                        'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure'
-                        ]
+                    'type': 'str',
+                    'choices': ['all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'krb_validate_kdc_success', 'krb_validate_kdc_failure']
                     }
                 },
             'packet_capture_template': {
@@ -547,7 +436,7 @@ def get_argspec():
             'type': 'dict',
             'stats_clear_type': {
                 'type': 'str',
-                'choices': ['windows', 'kerberos', 'ntlm']
+                'choices': ['windows', 'kerberos']
                 },
             'name': {
                 'type': 'str',
@@ -565,24 +454,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'kerberos_other_error': {
-                'type': 'str',
-                },
-            'ntlm_authentication_success': {
-                'type': 'str',
-                },
-            'ntlm_authentication_failure': {
-                'type': 'str',
-                },
-            'ntlm_proto_negotiation_success': {
-                'type': 'str',
-                },
-            'ntlm_proto_negotiation_failure': {
-                'type': 'str',
-                },
-            'ntlm_session_setup_success': {
-                'type': 'str',
-                },
-            'ntlm_session_setup_failed': {
                 'type': 'str',
                 },
             'kerberos_request_normal': {
@@ -610,45 +481,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'kerberos_polling_control_error': {
-                'type': 'str',
-                },
-            'ntlm_prepare_req_success': {
-                'type': 'str',
-                },
-            'ntlm_prepare_req_failed': {
-                'type': 'str',
-                },
-            'ntlm_timeout_error': {
-                'type': 'str',
-                },
-            'ntlm_other_error': {
-                'type': 'str',
-                },
-            'ntlm_request_normal': {
-                'type': 'str',
-                },
-            'ntlm_request_dropped': {
-                'type': 'str',
-                },
-            'ntlm_response_success': {
-                'type': 'str',
-                },
-            'ntlm_response_failure': {
-                'type': 'str',
-                },
-            'ntlm_response_error': {
-                'type': 'str',
-                },
-            'ntlm_response_timeout': {
-                'type': 'str',
-                },
-            'ntlm_response_other': {
-                'type': 'str',
-                },
-            'ntlm_job_start_error': {
-                'type': 'str',
-                },
-            'ntlm_polling_control_error': {
                 'type': 'str',
                 },
             'kerberos_pw_expiry': {
@@ -708,36 +540,6 @@ def get_argspec():
                         'type': 'str',
                         },
                     'krb_pw_change_failure': {
-                        'type': 'str',
-                        },
-                    'ntlm_proto_nego_success': {
-                        'type': 'str',
-                        },
-                    'ntlm_proto_nego_failure': {
-                        'type': 'str',
-                        },
-                    'ntlm_session_setup_success': {
-                        'type': 'str',
-                        },
-                    'ntlm_session_setup_failure': {
-                        'type': 'str',
-                        },
-                    'ntlm_prepare_req_success': {
-                        'type': 'str',
-                        },
-                    'ntlm_prepare_req_error': {
-                        'type': 'str',
-                        },
-                    'ntlm_auth_success': {
-                        'type': 'str',
-                        },
-                    'ntlm_auth_failure': {
-                        'type': 'str',
-                        },
-                    'ntlm_timeout_error': {
-                        'type': 'str',
-                        },
-                    'ntlm_other_error': {
                         'type': 'str',
                         },
                     'krb_validate_kdc_success': {

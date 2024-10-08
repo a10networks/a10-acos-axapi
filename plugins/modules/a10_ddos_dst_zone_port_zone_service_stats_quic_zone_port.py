@@ -662,6 +662,18 @@ def get_argspec():
                     },
                 'dynamic_count_warn': {
                     'type': 'str',
+                    },
+                'aead_pkt_rate_exceed': {
+                    'type': 'str',
+                    },
+                'dcid_pkt_rate_exceed': {
+                    'type': 'str',
+                    },
+                'create_conn_init_only': {
+                    'type': 'str',
+                    },
+                'src_zone_service_entry_hit': {
+                    'type': 'str',
                     }
                 }
             }

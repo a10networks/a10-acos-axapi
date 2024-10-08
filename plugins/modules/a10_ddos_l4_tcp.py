@@ -510,6 +510,26 @@ options:
                 description:
                 - "SYN Auth Hybrid Method Change"
                 type: str
+            tcp_small_window:
+                description:
+                - "TCP Small-Window Total"
+                type: str
+            tcp_small_window_bl:
+                description:
+                - "TCP Small-Window Blacklisted"
+                type: str
+            tcp_small_window_drop:
+                description:
+                - "TCP Small-Window Dropped"
+                type: str
+            hybrid_syn_auth_entry_aged_out:
+                description:
+                - "SYN Auth Hybrid Entry Aged Out"
+                type: str
+            hybrid_syn_auth_auth_no_match:
+                description:
+                - "SYN Auth Hybrid Auth no match"
+                type: str
 
 '''
 
@@ -921,6 +941,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'hybrid_syn_auth_method_change': {
+                'type': 'str',
+                },
+            'tcp_small_window': {
+                'type': 'str',
+                },
+            'tcp_small_window_bl': {
+                'type': 'str',
+                },
+            'tcp_small_window_drop': {
+                'type': 'str',
+                },
+            'hybrid_syn_auth_entry_aged_out': {
+                'type': 'str',
+                },
+            'hybrid_syn_auth_auth_no_match': {
                 'type': 'str',
                 }
             }

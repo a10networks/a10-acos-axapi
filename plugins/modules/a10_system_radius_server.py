@@ -231,6 +231,20 @@ options:
           dropped-not-lo'= RADIUS packets dropped dest not loopback (SO); 'radius-inter-
           card-dup-redir'= RADIUS packet dropped as redirected by other blade (SO);"
                 type: str
+    derived_attribute:
+        description:
+        - "Field derived_attribute"
+        type: dict
+        required: False
+        suboptions:
+            usergroup:
+                description:
+                - "Field usergroup"
+                type: dict
+            userid:
+                description:
+                - "Field userid"
+                type: dict
     oper:
         description:
         - "Field oper"
@@ -252,6 +266,14 @@ options:
             custom_attr_value:
                 description:
                 - "Field custom_attr_value"
+                type: str
+            derived_attribute_name:
+                description:
+                - "Field derived_attribute_name"
+                type: str
+            derived_attribute_value:
+                description:
+                - "Field derived_attribute_value"
                 type: str
             starts_with:
                 description:
@@ -381,7 +403,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accounting_interim_update", "accounting_on", "accounting_start", "accounting_stop", "attribute", "attribute_name", "custom_attribute_name", "disable_reply", "encrypted", "listen_port", "oper", "remote", "sampling_enable", "secret", "secret_string", "stats", "uuid", "vrid", ]
+AVAILABLE_PROPERTIES = ["accounting_interim_update", "accounting_on", "accounting_start", "accounting_stop", "attribute", "attribute_name", "custom_attribute_name", "derived_attribute", "disable_reply", "encrypted", "listen_port", "oper", "remote", "sampling_enable", "secret", "secret_string", "stats", "uuid", "vrid", ]
 
 
 def get_default_argspec():
@@ -512,6 +534,35 @@ def get_argspec():
                     ]
                 }
             },
+        'derived_attribute': {
+            'type': 'dict',
+            'usergroup': {
+                'type': 'dict',
+                'attribute': {
+                    'type': 'str',
+                    'choices': ['imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6']
+                    },
+                'regex': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'userid': {
+                'type': 'dict',
+                'attribute': {
+                    'type': 'str',
+                    'choices': ['imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6']
+                    },
+                'regex': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
         'oper': {
             'type': 'dict',
             'radius_table_entries_list': {
@@ -552,6 +603,12 @@ def get_argspec():
                 'custom6_attr_value': {
                     'type': 'str',
                     },
+                'derived_attr_usergroup_value': {
+                    'type': 'str',
+                    },
+                'derived_attr_userid_value': {
+                    'type': 'str',
+                    },
                 'is_obsolete': {
                     'type': 'bool',
                     }
@@ -563,6 +620,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'custom_attr_value': {
+                'type': 'str',
+                },
+            'derived_attribute_name': {
+                'type': 'str',
+                },
+            'derived_attribute_value': {
                 'type': 'str',
                 },
             'starts_with': {

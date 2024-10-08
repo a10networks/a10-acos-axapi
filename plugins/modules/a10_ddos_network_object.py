@@ -67,7 +67,9 @@ options:
         required: False
     threshold_sensitivity:
         description:
-        - "'LOW'= LOW; 'MEDIUM'= MEDIUM; 'HIGH'= HIGH; 'OFF'= OFF;"
+        - "tune threshold ranges with levels LOW/MEDIUM/HIGH/OFF (default) or multiplier
+          of threshold value (available options are LOW=5x/MEDIUM=3x/HIGH=1.5x/OFF=1x, or
+          float value between 1.0-10.0)"
         type: str
         required: False
     histogram_mode:
@@ -372,29 +374,29 @@ options:
         type: dict
         required: False
         suboptions:
-            sport_pkt_rate:
+            packet_rate:
                 description:
-                - "Packet rate of a source port entry"
-                type: int
-            sport_pkt_rate_percentage:
+                - "Field packet_rate"
+                type: dict
+            packet_rate_percentage:
                 description:
-                - "Percentage of source port entry's parent entry"
-                type: int
-            sport_bit_rate:
+                - "Field packet_rate_percentage"
+                type: dict
+            bit_rate:
                 description:
-                - "Bit rate of a source port entry"
-                type: int
-            sport_bit_rate_percentage:
+                - "Field bit_rate"
+                type: dict
+            bit_rate_percentage:
                 description:
-                - "Percentage of source port entry's parent entry"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
+                - "Field bit_rate_percentage"
+                type: dict
             ip_list:
                 description:
                 - "Field ip_list"
+                type: list
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
                 type: list
             sport_list:
                 description:
@@ -662,7 +664,6 @@ def get_argspec():
             },
         'threshold_sensitivity': {
             'type': 'str',
-            'choices': ['LOW', 'MEDIUM', 'HIGH', 'OFF']
             },
         'histogram_mode': {
             'type': 'str',
@@ -1040,37 +1041,78 @@ def get_argspec():
             },
         'sport_anomaly_threshold': {
             'type': 'dict',
-            'sport_pkt_rate': {
-                'type': 'int',
+            'packet_rate': {
+                'type': 'dict',
+                'value': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
-            'sport_pkt_rate_percentage': {
-                'type': 'int',
+            'packet_rate_percentage': {
+                'type': 'dict',
+                'value': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
-            'sport_bit_rate': {
-                'type': 'int',
+            'bit_rate': {
+                'type': 'dict',
+                'value': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
-            'sport_bit_rate_percentage': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
+            'bit_rate_percentage': {
+                'type': 'dict',
+                'value': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 },
             'ip_list': {
                 'type': 'list',
-                'ipv4': {
+                'ip_addr': {
                     'type': 'str',
                     'required': True,
                     },
-                'per_ip_sport_pkt_rate_percentage': {
+                'packet_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate']
+                    },
+                'packet_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate-percentage']
+                    },
+                'bit_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate']
+                    },
+                'bit_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate-percentage']
+                    },
+                'packet_rate': {
                     'type': 'int',
                     },
-                'per_ip_sport_pkt_rate': {
+                'packet_rate_percentage': {
                     'type': 'int',
                     },
-                'per_ip_sport_bit_rate_percentage': {
+                'bit_rate': {
                     'type': 'int',
                     },
-                'per_ip_sport_bit_rate': {
+                'bit_rate_percentage': {
                     'type': 'int',
                     },
                 'sport_num': {
@@ -1082,16 +1124,119 @@ def get_argspec():
                     'required': True,
                     'choices': ['udp', 'tcp']
                     },
-                'per_sport_per_ip_sport_pkt_rate_percentage': {
+                'ip_sport_packet_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate']
+                    },
+                'ip_sport_packet_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate-percentage']
+                    },
+                'ip_sport_bit_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate']
+                    },
+                'ip_sport_bit_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate-percentage']
+                    },
+                'ip_sport_packet_rate': {
                     'type': 'int',
                     },
-                'per_sport_per_ip_sport_pkt_rate': {
+                'ip_sport_packet_rate_percentage': {
                     'type': 'int',
                     },
-                'per_sport_per_ip_sport_bit_rate_percentage': {
+                'ip_sport_bit_rate': {
                     'type': 'int',
                     },
-                'per_sport_per_ip_sport_bit_rate': {
+                'ip_sport_bit_rate_percentage': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'ipv6_list': {
+                'type': 'list',
+                'ip_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'packet_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate']
+                    },
+                'packet_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate-percentage']
+                    },
+                'bit_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate']
+                    },
+                'bit_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate-percentage']
+                    },
+                'packet_rate': {
+                    'type': 'int',
+                    },
+                'packet_rate_percentage': {
+                    'type': 'int',
+                    },
+                'bit_rate': {
+                    'type': 'int',
+                    },
+                'bit_rate_percentage': {
+                    'type': 'int',
+                    },
+                'sport_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['udp', 'tcp']
+                    },
+                'ip_sport_packet_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate']
+                    },
+                'ip_sport_packet_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate-percentage']
+                    },
+                'ip_sport_bit_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate']
+                    },
+                'ip_sport_bit_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate-percentage']
+                    },
+                'ip_sport_packet_rate': {
+                    'type': 'int',
+                    },
+                'ip_sport_packet_rate_percentage': {
+                    'type': 'int',
+                    },
+                'ip_sport_bit_rate': {
+                    'type': 'int',
+                    },
+                'ip_sport_bit_rate_percentage': {
                     'type': 'int',
                     },
                 'uuid': {
@@ -1109,16 +1254,36 @@ def get_argspec():
                     'required': True,
                     'choices': ['udp', 'tcp']
                     },
-                'per_sport_pkt_rate_percentage': {
+                'packet_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate']
+                    },
+                'packet_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['packet-rate-percentage']
+                    },
+                'bit_rate_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate']
+                    },
+                'bit_rate_percentage_str': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['bit-rate-percentage']
+                    },
+                'packet_rate': {
                     'type': 'int',
                     },
-                'per_sport_pkt_rate': {
+                'packet_rate_percentage': {
                     'type': 'int',
                     },
-                'per_sport_bit_rate_percentage': {
+                'bit_rate': {
                     'type': 'int',
                     },
-                'per_sport_bit_rate': {
+                'bit_rate_percentage': {
                     'type': 'int',
                     },
                 'uuid': {

@@ -174,6 +174,9 @@ def get_argspec():
                 'secret_access_key': {
                     'type': 'str',
                     },
+                'cpu': {
+                    'type': 'str',
+                    },
                 'cache_entries': {
                     'type': 'int',
                     },

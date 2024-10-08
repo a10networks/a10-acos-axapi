@@ -55,11 +55,16 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    lineage:
+    object_list:
         description:
-        - "Lineage of object e.g.= slb, slb.service-group"
-        type: str
+        - "Field object_list"
+        type: dict
         required: False
+        suboptions:
+            lineage:
+                description:
+                - "Lineage of object e.g.= slb, slb.service-group"
+                type: str
     action:
         description:
         - "'disable'= Disable dynamic sync (default); 'enable'= Enable dynamic sync;"
@@ -124,7 +129,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "lineage", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "object_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,7 +149,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'lineage': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['disable', 'enable']}, 'uuid': {'type': 'str', }})
+    rv.update({'object_list': {'type': 'dict', 'lineage': {'type': 'str', }}, 'action': {'type': 'str', 'choices': ['disable', 'enable']}, 'uuid': {'type': 'str', }})
     return rv
 
 

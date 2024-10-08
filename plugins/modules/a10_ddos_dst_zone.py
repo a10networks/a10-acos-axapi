@@ -203,19 +203,17 @@ options:
     sflow_common:
         description:
         - "Enable sFlow counter polling packets, tcp-basic, tcp-stateful and http.
-          WARNING= Zone level Sflow polling might induce heavy CP"
+          WARNING= May induce heavy CPU load."
         type: bool
         required: False
     sflow_packets:
         description:
-        - "Enable sFlow packet-level counter polling. WARNING= Zone level Sflow polling
-          might induce heavy CPU load depending on the total"
+        - "Enable sFlow packet-level counter polling. WARNING= May induce heavy CPU load."
         type: bool
         required: False
     sflow_layer_4:
         description:
-        - "Enable sFlow Layer 4 counter polling. WARNING= Zone level Sflow polling might
-          induce heavy CPU load depending on the number of"
+        - "Enable sFlow Layer 4 counter polling. WARNING= May induce heavy CPU load."
         type: bool
         required: False
     sflow_tcp:
@@ -226,18 +224,15 @@ options:
         suboptions:
             sflow_tcp_basic:
                 description:
-                - "Enable sFlow basic TCP counter polling. WARNING= Zone level Sflow polling might
-          induce heavy CPU load depending on the total nu"
+                - "Enable sFlow basic TCP counter polling. WARNING= May induce heavy CPU load."
                 type: bool
             sflow_tcp_stateful:
                 description:
-                - "Enable sFlow stateful TCP counter polling. WARNING= Zone level Sflow polling
-          might induce heavy CPU load depending on the total"
+                - "Enable sFlow stateful TCP counter polling. WARNING= May induce heavy CPU load."
                 type: bool
     sflow_http:
         description:
-        - "Enable sFlow HTTP counter polling. WARNING= Zone level Sflow polling might
-          induce heavy CPU load depending on the total number"
+        - "Enable sFlow HTTP counter polling. WARNING= May induce heavy CPU load."
         type: bool
         required: False
     advertised_enable:

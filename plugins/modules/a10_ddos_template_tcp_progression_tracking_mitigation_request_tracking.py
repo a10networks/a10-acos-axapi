@@ -67,8 +67,8 @@ options:
         required: True
     request_response_model:
         description:
-        - "'enable'= Enable Request Response Model; 'disable'= Disable Request Response
-          Model;"
+        - "'enable'= Enable Request Response Model (Default); 'disable'= Disable Request
+          Response Model;"
         type: str
         required: False
     response_length_max:

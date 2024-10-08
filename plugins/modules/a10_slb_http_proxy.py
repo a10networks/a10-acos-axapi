@@ -1405,6 +1405,9 @@ def get_argspec():
                 'lb_switching': {
                     'type': 'int',
                     },
+                'http_policy_switching': {
+                    'type': 'int',
+                    },
                 'l4_switching_ok': {
                     'type': 'int',
                     },
@@ -1423,6 +1426,9 @@ def get_argspec():
                 'lb_switching_ok': {
                     'type': 'int',
                     },
+                'http_policy_switching_ok': {
+                    'type': 'int',
+                    },
                 'l4_switching_enqueue': {
                     'type': 'int',
                     },
@@ -1439,6 +1445,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'lb_switching_enqueue': {
+                    'type': 'int',
+                    },
+                'http_policy_switching_enqueue': {
                     'type': 'int',
                     },
                 'non_http_bypass': {

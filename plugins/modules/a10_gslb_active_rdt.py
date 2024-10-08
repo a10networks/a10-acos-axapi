@@ -95,6 +95,11 @@ options:
         - "Using ICMP"
         type: bool
         required: False
+    enable:
+        description:
+        - "Enable active rdt for system"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -154,7 +159,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["domain", "icmp", "interval", "port", "retry", "sleep", "timeout", "track", "uuid", ]
+AVAILABLE_PROPERTIES = ["domain", "enable", "icmp", "interval", "port", "retry", "sleep", "timeout", "track", "uuid", ]
 
 
 def get_default_argspec():
@@ -174,7 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'domain': {'type': 'str', }, 'interval': {'type': 'int', }, 'port': {'type': 'int', }, 'sleep': {'type': 'int', }, 'timeout': {'type': 'int', }, 'track': {'type': 'int', }, 'retry': {'type': 'int', }, 'icmp': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'domain': {'type': 'str', }, 'interval': {'type': 'int', }, 'port': {'type': 'int', }, 'sleep': {'type': 'int', }, 'timeout': {'type': 'int', }, 'track': {'type': 'int', }, 'retry': {'type': 'int', }, 'icmp': {'type': 'bool', }, 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 
