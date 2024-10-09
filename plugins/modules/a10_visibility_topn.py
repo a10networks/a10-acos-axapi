@@ -82,6 +82,51 @@ options:
           delq; 'obj-metric-deleted'= Total Object metric node deleted; 'hc-obj-alloc-
           failed'= Send failed to HC, Out of Memory;"
                 type: str
+    tmpl_gtp_plcy_topn_tmpl_list:
+        description:
+        - "Field tmpl_gtp_plcy_topn_tmpl_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Template Name"
+                type: str
+            topn_size:
+                description:
+                - "Congure value of N for topn"
+                type: int
+            interval:
+                description:
+                - "'5'= 5 minutes; '15'= 15 minutes; '30'= 30 minutes; '60'= 60 minutes; 'all-
+          time'= Since template is activated;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            metrics:
+                description:
+                - "Field metrics"
+                type: dict
+    tmpl_gtp_plcy_topn_node:
+        description:
+        - "Field tmpl_gtp_plcy_topn_node"
+        type: dict
+        required: False
+        suboptions:
+            activate:
+                description:
+                - "Name of the templated to be activated"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     cgnv6_nat_pool_topn_tmpl_list:
         description:
         - "Field cgnv6_nat_pool_topn_tmpl_list"
@@ -343,7 +388,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cgnv6_nat_pool_topn_node", "cgnv6_nat_pool_topn_tmpl_list", "gtp_apn_prefix_topn_node", "gtp_apn_prefix_topn_tmpl_list", "gtp_network_element_topn_node", "gtp_network_element_topn_tmpl_list", "oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["cgnv6_nat_pool_topn_node", "cgnv6_nat_pool_topn_tmpl_list", "gtp_apn_prefix_topn_node", "gtp_apn_prefix_topn_tmpl_list", "gtp_network_element_topn_node", "gtp_network_element_topn_tmpl_list", "oper", "sampling_enable", "stats", "tmpl_gtp_plcy_topn_node", "tmpl_gtp_plcy_topn_tmpl_list", "uuid", ]
 
 
 def get_default_argspec():
@@ -376,6 +421,44 @@ def get_argspec():
                     'all', 'heap-alloc-success', 'heap-alloc-failed', 'heap-alloc-oom', 'obj-reg-success', 'obj-reg-failed', 'obj-reg-oom', 'heap-deleted', 'obj-deleted', 'heap-metric-alloc-success', 'heap-metric-alloc-oom', 'heap-move-to-delq', 'heap-metric-deleted', 'obj-metric-reg-success', 'obj-metric-reg-oom', 'obj-move-to-delq',
                     'obj-metric-deleted', 'hc-obj-alloc-failed'
                     ]
+                }
+            },
+        'tmpl_gtp_plcy_topn_tmpl_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'topn_size': {
+                'type': 'int',
+                },
+            'interval': {
+                'type': 'str',
+                'choices': ['5', '15', '30', '60', 'all-time']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'metrics': {
+                'type': 'dict',
+                'rl_message_monitor': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'tmpl_gtp_plcy_topn_node': {
+            'type': 'dict',
+            'activate': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'cgnv6_nat_pool_topn_tmpl_list': {
@@ -698,6 +781,9 @@ def get_argspec():
                 'drop_rl_gtp_u_max_concurrent_tunnels': {
                     'type': 'bool',
                     },
+                'rl_message_monitor': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -1000,6 +1086,9 @@ def get_argspec():
                 'drop_rl_gtp_u_max_concurrent_tunnels': {
                     'type': 'bool',
                     },
+                'rl_message_monitor': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -1206,13 +1295,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1220,7 +1309,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1252,8 +1341,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -91,7 +91,11 @@ options:
           fail; 'hps_fwdreq_fail_buff'= Fwd req fail - buff; 'hps_fwdreq_fail_rport'= Fwd
           req fail - rport; 'hps_fwdreq_fail_route'= Fwd req fail - route;
           'hps_fwdreq_fail_persist'= Fwd req fail - persist; 'hps_fwdreq_fail_server'=
-          Fwd req fail - server; 'hps_fwdreq_fail_tuple'= Fwd req fail - tuple;"
+          Fwd req fail - server; 'hps_fwdreq_fail_tuple'= Fwd req fail - tuple;
+          'transaction_cleaned'= Transaction cleaned - tuple; 'old_server_cleaned'= Old
+          server cleaned - tuple; 'server_not_cleaned'= Server not cleaned - tuple;
+          'client_not_cleaned'= Client not cleaned - tuple; 'invalid_server'= Invalid
+          server - tuple;"
                 type: str
     oper:
         description:
@@ -267,7 +271,7 @@ def get_argspec():
                 'choices': [
                     'all', 'start_server_conn_succ', 'conn_not_exist', 'data_event', 'client_fin', 'server_fin', 'wbuf_event', 'wbuf_cb_failed', 'err_event', 'err_cb_failed', 'server_conn_failed', 'client_rst', 'server_rst', 'client_rst_req', 'client_rst_connecting', 'client_rst_connected', 'client_rst_rsp', 'server_rst_req',
                     'server_rst_connecting', 'server_rst_connected', 'server_rst_rsp', 'proxy_v1_connection', 'proxy_v2_connection', 'curr_proxy', 'curr_proxy_client', 'curr_proxy_server', 'curr_proxy_es', 'total_proxy', 'total_proxy_client', 'total_proxy_server', 'total_proxy_es', 'server_select_fail', 'est_event', 'est_cb_failed',
-                    'data_cb_failed', 'hps_fwdreq_fail', 'hps_fwdreq_fail_buff', 'hps_fwdreq_fail_rport', 'hps_fwdreq_fail_route', 'hps_fwdreq_fail_persist', 'hps_fwdreq_fail_server', 'hps_fwdreq_fail_tuple'
+                    'data_cb_failed', 'hps_fwdreq_fail', 'hps_fwdreq_fail_buff', 'hps_fwdreq_fail_rport', 'hps_fwdreq_fail_route', 'hps_fwdreq_fail_persist', 'hps_fwdreq_fail_server', 'hps_fwdreq_fail_tuple', 'transaction_cleaned', 'old_server_cleaned', 'server_not_cleaned', 'client_not_cleaned', 'invalid_server'
                     ]
                 }
             },
@@ -396,6 +400,21 @@ def get_argspec():
                     'type': 'int',
                     },
                 'proxy_v2_connection': {
+                    'type': 'int',
+                    },
+                'transaction_cleaned': {
+                    'type': 'int',
+                    },
+                'old_server_cleaned': {
+                    'type': 'int',
+                    },
+                'server_not_cleaned': {
+                    'type': 'int',
+                    },
+                'client_not_cleaned': {
+                    'type': 'int',
+                    },
+                'invalid_server': {
                     'type': 'int',
                     }
                 },
@@ -592,13 +611,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -606,7 +625,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -638,8 +657,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

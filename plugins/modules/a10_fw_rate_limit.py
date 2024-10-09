@@ -102,7 +102,9 @@ options:
           with Scope IPv4 Prefix; 'ratelimit_entry_count_parent_ipv6_prefix'= Number of
           Parent Rate-limit Entries with Scope IPv6 Prefix;
           'ratelimit_infra_generic_errors'= Current Number of Generic Errors Encountered
-          in Ratelimit Infra; 'ratelimit_entry_count_rule_ip'= Number of Rate-limit
+          in Ratelimit Infra; 'ratelimit_entry_count_allocated'= Number of Rate-limit
+          Entries Allocated Totally; 'ratelimit_entry_count_freed'= Number of Rate-limit
+          Entries Freed Totally; 'ratelimit_entry_count_rule_ip'= Number of Rate-limit
           Entries with Scope IP; 'ratelimit_entry_count_parent_ip'= Number of Parent
           Rate-limit Entries with Scope IP;"
                 type: str
@@ -195,6 +197,14 @@ options:
             ratelimit_entry_count_parent_ipv6_prefix:
                 description:
                 - "Number of Parent Rate-limit Entries with Scope IPv6 Prefix"
+                type: str
+            ratelimit_entry_count_allocated:
+                description:
+                - "Number of Rate-limit Entries Allocated Totally"
+                type: str
+            ratelimit_entry_count_freed:
+                description:
+                - "Number of Rate-limit Entries Freed Totally"
                 type: str
             ratelimit_entry_count_rule_ip:
                 description:
@@ -294,7 +304,7 @@ def get_argspec():
                 'choices': [
                     'all', 'ratelimit_used_total_mem', 'ratelimit_used_spm_mem', 'ratelimit_used_heap_mem', 'ratelimit_entry_alloc_frm_spm_mem', 'ratelimit_high_accurate_entry_alloc_fail', 'ratelimit_high_perf_entry_alloc_fail', 'ratelimit_high_perf_entry_secondary_alloc_fail', 'ratelimit_entry_alloc_fail_rate_too_high',
                     'ratelimit_entry_alloc_fail_metric_count_gt_supported', 'ratelimit_entry_count_t2_key', 'ratelimit_entry_count_fw_rule_uid', 'ratelimit_entry_count_ip_addr', 'ratelimit_entry_count_ip6_addr', 'ratelimit_entry_count_session_id', 'ratelimit_entry_count_rule_ipv4_prefix', 'ratelimit_entry_count_rule_ipv6_prefix',
-                    'ratelimit_entry_count_parent_uid', 'ratelimit_entry_count_parent_ipv4_prefix', 'ratelimit_entry_count_parent_ipv6_prefix', 'ratelimit_infra_generic_errors', 'ratelimit_entry_count_rule_ip', 'ratelimit_entry_count_parent_ip'
+                    'ratelimit_entry_count_parent_uid', 'ratelimit_entry_count_parent_ipv4_prefix', 'ratelimit_entry_count_parent_ipv6_prefix', 'ratelimit_infra_generic_errors', 'ratelimit_entry_count_allocated', 'ratelimit_entry_count_freed', 'ratelimit_entry_count_rule_ip', 'ratelimit_entry_count_parent_ip'
                     ]
                 }
             },
@@ -379,6 +389,12 @@ def get_argspec():
                     'total_num_entries': {
                         'type': 'int',
                         },
+                    'total_num_entries_allocated': {
+                        'type': 'int',
+                        },
+                    'total_num_entries_freed': {
+                        'type': 'int',
+                        },
                     'total_entries_scope_aggregate': {
                         'type': 'int',
                         },
@@ -433,6 +449,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'ratelimit_entry_count_parent_ipv6_prefix': {
+                'type': 'str',
+                },
+            'ratelimit_entry_count_allocated': {
+                'type': 'str',
+                },
+            'ratelimit_entry_count_freed': {
                 'type': 'str',
                 },
             'ratelimit_entry_count_rule_ip': {
@@ -577,13 +599,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -591,7 +613,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -623,8 +645,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

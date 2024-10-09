@@ -299,6 +299,12 @@ options:
                 description:
                 - "'v1'= version 1; 'v2'= version 2;"
                 type: str
+    tcp_do_newsack:
+        description:
+        - "'enable'= Enable fast sack loss recovery; 'disable'= Disable fast sack loss
+          recovery; 'auto-select'= Auto select fast sack loss recovery (disable);"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -366,7 +372,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "ack_aggressiveness", "alive_if_active", "backend_wscale", "del_session_on_server_down", "disable", "disable_abc", "disable_sack", "disable_tcp_timestamps", "disable_window_scale", "down", "dynamic_buffer_allocation", "early_retransmit", "fin_timeout", "force_delete_timeout", "force_delete_timeout_100ms", "half_close_idle_timeout",
     "half_open_idle_timeout", "idle_timeout", "init_cwnd", "initial_window_size", "insert_client_ip", "invalid_rate_limit", "keepalive_interval", "keepalive_probes", "limited_slowstart", "maxburst", "min_rto", "mss", "nagle", "naked_ack_on_handshake", "name", "proxy_header", "psh_flag_optimization", "qos", "reassembly_limit", "reassembly_timeout",
-    "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "timewait", "transmit_buffer", "user_tag", "uuid",
+    "receive_buffer", "reno", "reset_fwd", "reset_rev", "retransmit_retries", "server_down_action", "syn_retries", "tcp_do_newsack", "timewait", "transmit_buffer", "user_tag", "uuid",
     ]
 
 
@@ -534,6 +540,10 @@ def get_argspec():
                 'choices': ['v1', 'v2']
                 }
             },
+        'tcp_do_newsack': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'auto-select']
+            },
         'uuid': {
             'type': 'str',
             },
@@ -680,13 +690,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -694,7 +704,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -716,8 +726,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -1062,6 +1062,12 @@ options:
         - "Web Category List name"
         type: str
         required: False
+    fast_path:
+        description:
+        - "'force'= Force fast path in SLB processing; 'disable'= Disable fast path in SLB
+          processing;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -1691,9 +1697,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "acl_list", "action", "aflex_scripts", "aflex_table_entry_syn_disable", "aflex_table_entry_syn_enable", "alt_protocol1", "alt_protocol2", "alternate_port", "alternate_port_number", "attack_detection", "auth_cfg", "auto", "clientip_sticky_nat", "conn_limit", "cpu_compute", "def_selection_if_pref_failed", "enable_playerid_check",
-    "enable_scaleout", "eth_fwd", "eth_rev", "expand", "extended_stats", "force_routing_mode", "gslb_enable", "gtp_session_lb", "ha_conn_mirror", "ignore_global", "ip_map_list", "ip_only_lb", "ip_smart_rr", "ipinip", "l7_hardware_assist", "l7_service_chain", "memory_compute", "message_switching", "name", "no_auto_up_on_aflex", "no_dest_nat",
-    "no_logging", "on_syn", "one_server_conn", "oper", "optimization_level", "p_template_sip_shared", "packet_capture_template", "persist_type", "pool", "pool_shared", "port_number", "port_translation", "precedence", "protocol", "proxy_layer", "range", "rate", "redirect_to_https", "reply_acme_challenge", "req_fail", "reselection", "reset",
-    "reset_on_server_selection_fail", "resolve_web_cat_list", "rtp_sip_call_id_match", "sampling_enable", "scaleout_bucket_count", "scaleout_device_group", "secs", "serv_sel_fail", "server_group", "service_group", "shared_partition_cache_template", "shared_partition_client_ssl_template", "shared_partition_connection_reuse_template",
+    "enable_scaleout", "eth_fwd", "eth_rev", "expand", "extended_stats", "fast_path", "force_routing_mode", "gslb_enable", "gtp_session_lb", "ha_conn_mirror", "ignore_global", "ip_map_list", "ip_only_lb", "ip_smart_rr", "ipinip", "l7_hardware_assist", "l7_service_chain", "memory_compute", "message_switching", "name", "no_auto_up_on_aflex",
+    "no_dest_nat", "no_logging", "on_syn", "one_server_conn", "oper", "optimization_level", "p_template_sip_shared", "packet_capture_template", "persist_type", "pool", "pool_shared", "port_number", "port_translation", "precedence", "protocol", "proxy_layer", "range", "rate", "redirect_to_https", "reply_acme_challenge", "req_fail", "reselection",
+    "reset", "reset_on_server_selection_fail", "resolve_web_cat_list", "rtp_sip_call_id_match", "sampling_enable", "scaleout_bucket_count", "scaleout_device_group", "secs", "serv_sel_fail", "server_group", "service_group", "shared_partition_cache_template", "shared_partition_client_ssl_template", "shared_partition_connection_reuse_template",
     "shared_partition_dblb_template", "shared_partition_diameter_template", "shared_partition_dns_template", "shared_partition_doh_template", "shared_partition_dynamic_service_template", "shared_partition_external_service_template", "shared_partition_fix_template", "shared_partition_http_policy_template", "shared_partition_http_template",
     "shared_partition_imap_pop3_template", "shared_partition_persist_cookie_template", "shared_partition_persist_destination_ip_template", "shared_partition_persist_source_ip_template", "shared_partition_persist_ssl_sid_template", "shared_partition_policy_template", "shared_partition_pool", "shared_partition_server_ssl_template",
     "shared_partition_smpp_template", "shared_partition_smtp_template", "shared_partition_tcp", "shared_partition_tcp_proxy_template", "shared_partition_udp", "shared_partition_virtual_port_template", "showtech_print_extended_stats", "skip_rev_hash", "snat_on_vip", "stats", "stats_data_action", "substitute_source_mac", "support_http2",
@@ -2338,6 +2344,10 @@ def get_argspec():
             },
         'resolve_web_cat_list': {
             'type': 'str',
+            },
+        'fast_path': {
+            'type': 'str',
+            'choices': ['force', 'disable']
             },
         'uuid': {
             'type': 'str',
@@ -3492,13 +3502,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -3506,7 +3516,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -3538,8 +3548,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

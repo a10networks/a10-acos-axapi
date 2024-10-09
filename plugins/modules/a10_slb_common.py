@@ -367,11 +367,6 @@ options:
         - "Enable source NAT traffic against VIP"
         type: bool
         required: False
-    low_latency:
-        description:
-        - "Enable low latency mode"
-        type: bool
-        required: False
     mss_table:
         description:
         - "Set MSS table (128-750, default is 536)"
@@ -722,10 +717,10 @@ AVAILABLE_PROPERTIES = [
     "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "cancel_stream_loop_limit", "compress_block_size",
     "conn_rate_limit", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size",
     "dns_cache_ttl_adjustment_enable", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable",
-    "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "N5_new", "N5_old",
-    "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port_scan_detection", "QAT", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache",
-    "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "sort_res",
-    "ssl_n5_delay_tx_enable", "ssl_ratelimit_cfg", "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_mss_tab", "uuid",
+    "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "N5_new", "N5_old", "no_auto_up_on_aflex",
+    "odd_even_nat_enable", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port_scan_detection", "QAT", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "reset_stale_session",
+    "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13", "sort_res", "ssl_n5_delay_tx_enable",
+    "ssl_ratelimit_cfg", "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_mss_tab", "uuid",
     ]
 
 
@@ -931,9 +926,6 @@ def get_argspec():
             'type': 'int',
             },
         'snat_on_vip': {
-            'type': 'bool',
-            },
-        'low_latency': {
             'type': 'bool',
             },
         'mss_table': {
@@ -1300,13 +1292,13 @@ def run_command(module):
         if a10_device_context_id:
             result["axapi_calls"].append(api_client.switch_device_context(module.client, a10_device_context_id))
 
-        existing_config = api_client.get(module.client, existing_url(module))
-        result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'NotFound':
-            existing_config = existing_config["response_body"]
-        else:
-            existing_config = None
-
+        if state == 'present' or state == 'absent':
+            existing_config = api_client.get(module.client, existing_url(module))
+            result["axapi_calls"].append(existing_config)
+            if existing_config['response_body'] != 'NotFound':
+                existing_config = existing_config["response_body"]
+            else:
+                existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
 
@@ -1314,7 +1306,7 @@ def run_command(module):
             result = absent(module, result, existing_config)
 
         if state == 'noop':
-            if module.params.get("get_type") == "single":
+            if module.params.get("get_type") == "single" or module.params.get("get_type") is None:
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
@@ -1341,8 +1333,37 @@ def run_command(module):
     return result
 
 
+"""
+    Custom class which override the _check_required_arguments function to check check required arguments based on state and get_type.
+"""
+
+
+class AcosAnsibleModule(AnsibleModule):
+
+    def __init__(self, *args, **kwargs):
+        super(AcosAnsibleModule, self).__init__(*args, **kwargs)
+
+    def _check_required_arguments(self, spec=None, param=None):
+        if spec is None:
+            spec = self.argument_spec
+        if param is None:
+            param = self.params
+        # skip validation if state is 'noop' and get_type is 'list'
+        if not (param.get("state") == "noop" and param.get("get_type") == "list"):
+            missing = []
+            if spec is None:
+                return missing
+            # Check for missing required parameters in the provided argument spec
+            for (k, v) in spec.items():
+                required = v.get('required', False)
+                if required and k not in param:
+                    missing.append(k)
+            if missing:
+                self.fail_json(msg="Missing required parameters: {}".format(", ".join(missing)))
+
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AcosAnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
