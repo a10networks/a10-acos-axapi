@@ -2,8 +2,7 @@
   connection: local
   hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10.acos_axapi.a10_gslb_policy instance
-    - name: Create a10.acos_axapi.a10_file_aflex instance
+  - name: Update a10.acos_axapi.a10_file_aflex instance
     a10.acos_axapi.a10_file_aflex:
       state: present
       file:  aflex_script
