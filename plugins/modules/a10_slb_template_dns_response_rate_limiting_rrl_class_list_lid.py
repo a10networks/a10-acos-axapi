@@ -68,12 +68,18 @@ options:
     lid_response_rate:
         description:
         - "Responses exceeding this rate within the window will be dropped (default 5 per
-          second)"
+          second), 0 for unlimited"
         type: int
         required: False
     lid_slip_rate:
         description:
         - "Every n'th response that would be rate-limited will be let through instead"
+        type: int
+        required: False
+    lid_nx_response_rate:
+        description:
+        - "Queries from entries whose NX Responses exceeding this rate within the window
+          will be dropped (default 5 per second)"
         type: int
         required: False
     lid_tc_rate:
@@ -177,7 +183,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["lid_action", "lid_enable_log", "lid_match_subnet", "lid_match_subnet_v6", "lid_response_rate", "lid_slip_rate", "lid_src_ip_only", "lid_tc_rate", "lid_window", "lidnum", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["lid_action", "lid_enable_log", "lid_match_subnet", "lid_match_subnet_v6", "lid_nx_response_rate", "lid_response_rate", "lid_slip_rate", "lid_src_ip_only", "lid_tc_rate", "lid_window", "lidnum", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -206,6 +212,9 @@ def get_argspec():
             'type': 'int',
             },
         'lid_slip_rate': {
+            'type': 'int',
+            },
+        'lid_nx_response_rate': {
             'type': 'int',
             },
         'lid_tc_rate': {

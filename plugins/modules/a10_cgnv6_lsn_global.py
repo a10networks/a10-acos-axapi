@@ -562,7 +562,8 @@ options:
           and 9000; 'port_overloading_port_tcp_inserted'= Port Overloading NAT Port TCP
           Created; 'port_overloading_port_udp_inserted'= Port Overloading NAT Port UDP
           Created; 'port_overloading_port_free_tcp'= TCP Port Overloading NAT Port Freed;
-          'port_overloading_port_free_udp'= UDP Port Overloading NAT Port Freed;"
+          'port_overloading_port_free_udp'= UDP Port Overloading NAT Port Freed;
+          'chassis_incorrect_pu'= chassis incorrect pu;"
                 type: str
     stats:
         description:
@@ -1054,6 +1055,10 @@ options:
                 description:
                 - "UDP Port Overloading NAT Port Freed"
                 type: str
+            chassis_incorrect_pu:
+                description:
+                - "chassis incorrect pu"
+                type: str
 
 '''
 
@@ -1270,7 +1275,7 @@ def get_argspec():
                     'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp',
                     'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2',
                     'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4',
-                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'port_overloading_port_tcp_inserted', 'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp'
+                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'port_overloading_port_tcp_inserted', 'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp', 'chassis_incorrect_pu'
                     ]
                 }
             },
@@ -1637,6 +1642,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'port_overloading_port_free_udp': {
+                'type': 'str',
+                },
+            'chassis_incorrect_pu': {
                 'type': 'str',
                 }
             }

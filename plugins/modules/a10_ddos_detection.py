@@ -179,13 +179,13 @@ options:
                 description:
                 - "Field entry_saving"
                 type: dict
-            reflection_attack_detection:
-                description:
-                - "Field reflection_attack_detection"
-                type: dict
             standalone_settings:
                 description:
                 - "Field standalone_settings"
+                type: dict
+            zone_notifications:
+                description:
+                - "Field zone_notifications"
                 type: dict
     entry_saving:
         description:
@@ -251,6 +251,46 @@ options:
                 description:
                 - "Field netflow"
                 type: dict
+    agent_group_list:
+        description:
+        - "Field agent_group_list"
+        type: list
+        required: False
+        suboptions:
+            agent_group_name:
+                description:
+                - "Specify name for the agent-group"
+                type: str
+            agent:
+                description:
+                - "Field agent"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    trustlist:
+        description:
+        - "Field trustlist"
+        type: dict
+        required: False
+        suboptions:
+            v4_class_list:
+                description:
+                - "IPv4 Class-list name"
+                type: str
+            v6_class_list:
+                description:
+                - "IPv6 Class-list name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     statistics:
         description:
         - "Field statistics"
@@ -315,7 +355,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["agent_list", "ddos_script", "disable", "entry_saving", "resource_usage", "settings", "statistics", "uuid", ]
+AVAILABLE_PROPERTIES = ["agent_group_list", "agent_list", "ddos_script", "disable", "entry_saving", "resource_usage", "settings", "statistics", "trustlist", "uuid", ]
 
 
 def get_default_argspec():
@@ -438,18 +478,6 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
-            'reflection_attack_detection': {
-                'type': 'dict',
-                'heavy_hitter_threshold': {
-                    'type': 'int',
-                    },
-                'sport_discovery_threshold': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
             'standalone_settings': {
                 'type': 'dict',
                 'action': {
@@ -476,9 +504,23 @@ def get_argspec():
                     'template_active_timeout': {
                         'type': 'int',
                         },
+                    'distribute_by_duration': {
+                        'type': 'str',
+                        'choices': ['enable', 'disable']
+                        },
                     'uuid': {
                         'type': 'str',
                         }
+                    }
+                },
+            'zone_notifications': {
+                'type': 'dict',
+                'source_entry': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'uuid': {
+                    'type': 'str',
                     }
                 }
             },
@@ -560,6 +602,37 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'agent_group_list': {
+            'type': 'list',
+            'agent_group_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'agent': {
+                'type': 'list',
+                'agent_name': {
+                    'type': 'str',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                }
+            },
+        'trustlist': {
+            'type': 'dict',
+            'v4_class_list': {
+                'type': 'str',
+                },
+            'v6_class_list': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'statistics': {

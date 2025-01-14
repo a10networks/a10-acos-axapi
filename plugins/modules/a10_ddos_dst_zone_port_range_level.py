@@ -200,12 +200,13 @@ options:
           'concurrent-conns'= number of concurrent connections; 'conn-miss-rate'= rate of
           incoming packets for which no previously established connection exists; 'syn-
           rate'= rate on incoming SYN packets; 'fin-rate'= rate on incoming FIN packets;
-          'rst-rate'= rate of incoming RST packets; 'small-window-ack-rate'= rate of
-          small window advertisement; 'empty-ack-rate'= rate of incoming packets which
-          have no payload; 'small-payload-rate'= rate of short payload packet; 'syn-fin-
-          ratio'= ratio of incoming SYN packet rate divided by the rate of incoming FIN
-          packets; 'cpu-utilization'= average data CPU utilization; 'interface-
-          utilization'= outside interface utilization; 'learnt-sources'= learnt sources;"
+          'rst-rate'= rate of incoming RST packets; 'syn-ack-rate'= rate on incoming SYN-
+          ACK packets; 'small-window-ack-rate'= rate of small window advertisement;
+          'empty-ack-rate'= rate of incoming packets which have no payload; 'small-
+          payload-rate'= rate of short payload packet; 'syn-fin-ratio'= ratio of incoming
+          SYN packet rate divided by the rate of incoming FIN packets; 'cpu-utilization'=
+          average data CPU utilization; 'interface-utilization'= outside interface
+          utilization; 'learnt-sources'= learnt sources;"
                 type: str
             tcp_window_size:
                 description:
@@ -414,7 +415,7 @@ def get_argspec():
             'ntype': {
                 'type': 'str',
                 'required': True,
-                'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
+                'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'syn-ack-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
                 },
             'tcp_window_size': {
                 'type': 'int',

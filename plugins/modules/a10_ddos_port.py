@@ -126,6 +126,10 @@ options:
                 description:
                 - "Dst SrcPort Conn Rate Exceeded"
                 type: str
+            dst_port_same_sport_drop:
+                description:
+                - "Dst Port Same Src Port Dropped"
+                type: str
 
 '''
 
@@ -249,6 +253,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'dst_sport_conn_rate_exceed': {
+                'type': 'str',
+                },
+            'dst_port_same_sport_drop': {
                 'type': 'str',
                 }
             }

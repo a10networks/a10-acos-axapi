@@ -99,7 +99,12 @@ options:
         required: False
     servername_match_any:
         description:
-        - "Match when there is no SNI or other servernames are not matched"
+        - "Match any SNI extension"
+        type: bool
+        required: False
+    servername_no_sni:
+        description:
+        - "Match when there is no SNI extension found"
         type: bool
         required: False
     source_tracking:
@@ -325,7 +330,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["deny", "glid_cfg", "level_list", "oper", "servername", "servername_list", "servername_match_any", "source_tracking", "user_tag", "uuid", "vhost", ]
+AVAILABLE_PROPERTIES = ["deny", "glid_cfg", "level_list", "oper", "servername", "servername_list", "servername_match_any", "servername_no_sni", "source_tracking", "user_tag", "uuid", "vhost", ]
 
 
 def get_default_argspec():
@@ -364,6 +369,9 @@ def get_argspec():
             'type': 'str',
             },
         'servername_match_any': {
+            'type': 'bool',
+            },
+        'servername_no_sni': {
             'type': 'bool',
             },
         'source_tracking': {
@@ -405,6 +413,9 @@ def get_argspec():
                 },
             'zone_template': {
                 'type': 'dict',
+                'ssl_l4': {
+                    'type': 'str',
+                    },
                 'tcp': {
                     'type': 'str',
                     }

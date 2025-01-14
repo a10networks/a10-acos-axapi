@@ -65,6 +65,12 @@ options:
         - "bind tracking template name"
         type: str
         required: True
+    ip_version:
+        description:
+        - "'ipv4'= take action for IPv4 traffic-only; 'ipv6'= take action for IPv6
+          traffic-only;"
+        type: str
+        required: True
     threshold_cfg:
         description:
         - "Field threshold_cfg"
@@ -79,11 +85,6 @@ options:
                 description:
                 - "'down'= node stops processing user traffic; 'exit-cluster'= node exits scaleout
           cluster;"
-                type: str
-            ip_version:
-                description:
-                - "'ipv4'= take action for IPv4 traffic-only; 'ipv6'= take action for IPv6
-          traffic-only;"
                 type: str
     uuid:
         description:
@@ -149,7 +150,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["template", "threshold_cfg", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["ip_version", "template", "threshold_cfg", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -169,7 +170,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'template': {'type': 'str', 'required': True, }, 'threshold_cfg': {'type': 'list', 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}, 'ip_version': {'type': 'str', 'choices': ['ipv4', 'ipv6']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({'template': {'type': 'str', 'required': True, }, 'ip_version': {'type': 'str', 'required': True, 'choices': ['ipv4', 'ipv6']}, 'threshold_cfg': {'type': 'list', 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(cluster_id=dict(type='str', required=True), ))
     return rv

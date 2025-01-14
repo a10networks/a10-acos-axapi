@@ -133,6 +133,11 @@ options:
         - "Allow TPS to packet up to 127 character zone names"
         type: bool
         required: False
+    one_blk_per_pkt:
+        description:
+        - "Forces sFlow packet to only contain one sFlow counter block"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -193,8 +198,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "append_mapping_info", "counter_polling_interval", "default_counter_polling_mtu", "enlarge_zone_name", "local_collection", "local_t1_polling_interval", "local_t2_polling_interval", "management_link_utilization", "management_link_utilization_percentage", "max_header", "packet_sampling_rate", "port_range_end", "port_range_start",
-    "randomize_source_port", "source_ip_use_mgmt", "uuid",
+    "append_mapping_info", "counter_polling_interval", "default_counter_polling_mtu", "enlarge_zone_name", "local_collection", "local_t1_polling_interval", "local_t2_polling_interval", "management_link_utilization", "management_link_utilization_percentage", "max_header", "one_blk_per_pkt", "packet_sampling_rate", "port_range_end",
+    "port_range_start", "randomize_source_port", "source_ip_use_mgmt", "uuid",
     ]
 
 
@@ -261,6 +266,9 @@ def get_argspec():
             'type': 'bool',
             },
         'enlarge_zone_name': {
+            'type': 'bool',
+            },
+        'one_blk_per_pkt': {
             'type': 'bool',
             },
         'uuid': {

@@ -339,6 +339,11 @@ options:
                 description:
                 - "Max negative cache ttl, default is 2 hours"
                 type: int
+            cache_non_valid:
+                description:
+                - "Enable caching non-valid negative response, otherwise will only cache valid
+          negative response"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -455,6 +460,11 @@ options:
                 description:
                 - "Responses exceeding this rate within the window will be dropped (default 5 per
           second)"
+                type: int
+            nx_response_rate:
+                description:
+                - "Queries from entries whose NX Responses exceeding this rate within the window
+          will be dropped (default 5 per second)"
                 type: int
             filter_response_rate:
                 description:
@@ -939,6 +949,9 @@ def get_argspec():
             'max_negative_cache_ttl': {
                 'type': 'int',
                 },
+            'cache_non_valid': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -1092,6 +1105,9 @@ def get_argspec():
             'response_rate': {
                 'type': 'int',
                 },
+            'nx_response_rate': {
+                'type': 'int',
+                },
             'filter_response_rate': {
                 'type': 'int',
                 },
@@ -1145,6 +1161,9 @@ def get_argspec():
                         'type': 'int',
                         },
                     'lid_slip_rate': {
+                        'type': 'int',
+                        },
+                    'lid_nx_response_rate': {
                         'type': 'int',
                         },
                     'lid_tc_rate': {

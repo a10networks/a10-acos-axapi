@@ -65,6 +65,25 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    pu_sync_detection:
+        description:
+        - "Field pu_sync_detection"
+        type: dict
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Time interval (seconds) for detection. Default is 30 seconds."
+                type: int
+            action:
+                description:
+                - "'enable'= Enable pu-sync-detection feature; 'disable'= Disable pu-sync-
+          detection feature;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -119,7 +138,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["delete_referenced_tagged_objects", "uuid", ]
+AVAILABLE_PROPERTIES = ["delete_referenced_tagged_objects", "pu_sync_detection", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +158,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'delete_referenced_tagged_objects': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
+    rv.update({'delete_referenced_tagged_objects': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }, 'pu_sync_detection': {'type': 'dict', 'interval': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }}})
     return rv
 
 

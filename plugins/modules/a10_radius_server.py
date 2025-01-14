@@ -60,6 +60,11 @@ options:
         - "Specify the RADIUS default privilege"
         type: bool
         required: False
+    message_authenticator_verify_enable:
+        description:
+        - "Enable the verification of Message-Authenticator attribute"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -137,7 +142,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["default_privilege_read_write", "host", "uuid", ]
+AVAILABLE_PROPERTIES = ["default_privilege_read_write", "host", "message_authenticator_verify_enable", "uuid", ]
 
 
 def get_default_argspec():
@@ -159,6 +164,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update({
         'default_privilege_read_write': {
+            'type': 'bool',
+            },
+        'message_authenticator_verify_enable': {
             'type': 'bool',
             },
         'uuid': {

@@ -80,6 +80,11 @@ options:
         - "Class-list name"
         type: str
         required: True
+    class_list_glid:
+        description:
+        - "Global limit ID (class-list based)"
+        type: str
+        required: False
     glid:
         description:
         - "Global limit ID"
@@ -150,7 +155,12 @@ options:
                 description:
                 - "'all'= all; 'packet_received'= Packets Received; 'packet_dropped'= Packets
           Dropped; 'entry_learned'= Entry Learned; 'entry_count_overflow'= Entry Count
-          Overflow;"
+          Overflow; 'exceed_drop_pkt_rate_clist'= Packet Rate Exceeded;
+          'exceed_drop_conn_rate_clist'= Conn Rate Exceeded;
+          'exceed_drop_conn_limit_clist'= Conn Limit Exceeded;
+          'exceed_drop_kbit_rate_clist'= KiBit Rate Exceeded;
+          'exceed_drop_kbit_rate_clist_pkt'= KiBit Rate Exceeded Count;
+          'exceed_drop_frag_rate_clist'= Frag Rate Exceeded;"
                 type: str
     class_list_overflow_policy_list:
         description:
@@ -191,6 +201,80 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            current_connections:
+                description:
+                - "Field current_connections"
+                type: int
+            is_connections_exceed:
+                description:
+                - "Field is_connections_exceed"
+                type: int
+            connection_limit:
+                description:
+                - "Field connection_limit"
+                type: int
+            current_connection_rate:
+                description:
+                - "Field current_connection_rate"
+                type: int
+            is_connection_rate_exceed:
+                description:
+                - "Field is_connection_rate_exceed"
+                type: int
+            connection_rate_limit:
+                description:
+                - "Field connection_rate_limit"
+                type: int
+            current_packet_rate:
+                description:
+                - "Field current_packet_rate"
+                type: int
+            is_packet_rate_exceed:
+                description:
+                - "Field is_packet_rate_exceed"
+                type: int
+            packet_rate_limit:
+                description:
+                - "Field packet_rate_limit"
+                type: int
+            current_kBit_rate:
+                description:
+                - "Field current_kBit_rate"
+                type: int
+            is_kBit_rate_exceed:
+                description:
+                - "Field is_kBit_rate_exceed"
+                type: int
+            kBit_rate_limit:
+                description:
+                - "Field kBit_rate_limit"
+                type: int
+            current_frag_packet_rate:
+                description:
+                - "Field current_frag_packet_rate"
+                type: int
+            is_frag_packet_rate_exceed:
+                description:
+                - "Field is_frag_packet_rate_exceed"
+                type: int
+            frag_packet_rate_limit:
+                description:
+                - "Field frag_packet_rate_limit"
+                type: int
+            debug_str:
+                description:
+                - "Field debug_str"
+                type: str
+            class_list_name:
+                description:
+                - "Class-list name"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -212,6 +296,30 @@ options:
             entry_count_overflow:
                 description:
                 - "Entry Count Overflow"
+                type: str
+            exceed_drop_pkt_rate_clist:
+                description:
+                - "Packet Rate Exceeded"
+                type: str
+            exceed_drop_conn_rate_clist:
+                description:
+                - "Conn Rate Exceeded"
+                type: str
+            exceed_drop_conn_limit_clist:
+                description:
+                - "Conn Limit Exceeded"
+                type: str
+            exceed_drop_kbit_rate_clist:
+                description:
+                - "KiBit Rate Exceeded"
+                type: str
+            exceed_drop_kbit_rate_clist_pkt:
+                description:
+                - "KiBit Rate Exceeded Count"
+                type: str
+            exceed_drop_frag_rate_clist:
+                description:
+                - "Frag Rate Exceeded"
                 type: str
             class_list_name:
                 description:
@@ -271,7 +379,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "class_list_name", "class_list_overflow_policy_list", "dynamic_entry_count_warn_threshold", "glid", "glid_action", "max_dynamic_entry_count", "sampling_enable", "stats", "user_tag", "uuid", "zone_template", ]
+AVAILABLE_PROPERTIES = ["action", "class_list_glid", "class_list_name", "class_list_overflow_policy_list", "dynamic_entry_count_warn_threshold", "glid", "glid_action", "max_dynamic_entry_count", "oper", "sampling_enable", "stats", "user_tag", "uuid", "zone_template", ]
 
 
 def get_default_argspec():
@@ -295,6 +403,9 @@ def get_argspec():
         'class_list_name': {
             'type': 'str',
             'required': True,
+            },
+        'class_list_glid': {
+            'type': 'str',
             },
         'glid': {
             'type': 'str',
@@ -338,7 +449,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                 }
             },
         'class_list_overflow_policy_list': {
@@ -395,6 +506,61 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'oper': {
+            'type': 'dict',
+            'current_connections': {
+                'type': 'int',
+                },
+            'is_connections_exceed': {
+                'type': 'int',
+                },
+            'connection_limit': {
+                'type': 'int',
+                },
+            'current_connection_rate': {
+                'type': 'int',
+                },
+            'is_connection_rate_exceed': {
+                'type': 'int',
+                },
+            'connection_rate_limit': {
+                'type': 'int',
+                },
+            'current_packet_rate': {
+                'type': 'int',
+                },
+            'is_packet_rate_exceed': {
+                'type': 'int',
+                },
+            'packet_rate_limit': {
+                'type': 'int',
+                },
+            'current_kBit_rate': {
+                'type': 'int',
+                },
+            'is_kBit_rate_exceed': {
+                'type': 'int',
+                },
+            'kBit_rate_limit': {
+                'type': 'int',
+                },
+            'current_frag_packet_rate': {
+                'type': 'int',
+                },
+            'is_frag_packet_rate_exceed': {
+                'type': 'int',
+                },
+            'frag_packet_rate_limit': {
+                'type': 'int',
+                },
+            'debug_str': {
+                'type': 'str',
+                },
+            'class_list_name': {
+                'type': 'str',
+                'required': True,
+                }
+            },
         'stats': {
             'type': 'dict',
             'packet_received': {
@@ -407,6 +573,24 @@ def get_argspec():
                 'type': 'str',
                 },
             'entry_count_overflow': {
+                'type': 'str',
+                },
+            'exceed_drop_pkt_rate_clist': {
+                'type': 'str',
+                },
+            'exceed_drop_conn_rate_clist': {
+                'type': 'str',
+                },
+            'exceed_drop_conn_limit_clist': {
+                'type': 'str',
+                },
+            'exceed_drop_kbit_rate_clist': {
+                'type': 'str',
+                },
+            'exceed_drop_kbit_rate_clist_pkt': {
+                'type': 'str',
+                },
+            'exceed_drop_frag_rate_clist': {
                 'type': 'str',
                 },
             'class_list_name': {
@@ -601,6 +785,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["policy-class-list-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["policy-class-list"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

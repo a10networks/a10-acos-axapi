@@ -167,6 +167,11 @@ options:
                 description:
                 - "Enable sFlow stateful TCP counter polling"
                 type: bool
+    sflow_ip_filtering_policy:
+        description:
+        - "Enable sFlow IP filtering policy per port per rule counter polling"
+        type: bool
+        required: False
     unlimited_dynamic_entry_count:
         description:
         - "No limit for maximum dynamic src entry count"
@@ -218,6 +223,11 @@ options:
         description:
         - "Configure IP Filter"
         type: str
+        required: False
+    same_source_dest_port_drop:
+        description:
+        - "Drop packet with same Source Port and Dest Port"
+        type: bool
         required: False
     uuid:
         description:
@@ -634,6 +644,10 @@ options:
                 description:
                 - "Field topk_destinations"
                 type: dict
+            src_based_policy_list:
+                description:
+                - "Field src_based_policy_list"
+                type: list
 
 '''
 
@@ -690,8 +704,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "age", "apply_policy_on_overflow", "default_action_list", "deny", "dynamic_entry_count_warn_threshold", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "level_list", "manual_mode_enable",
-    "manual_mode_list", "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_other", "progression_tracking", "protocol", "set_counter_base_val", "sflow_common", "sflow_packets", "sflow_tcp", "src_based_policy_list", "stateful", "topk_destinations", "topk_dst_num_records",
-    "topk_dst_sort_key", "topk_num_records", "topk_sort_key", "topk_sources", "unlimited_dynamic_entry_count", "uuid",
+    "manual_mode_list", "max_dynamic_entry_count", "oper", "outbound_only", "pattern_recognition", "pattern_recognition_pu_details", "port_ind", "port_other", "progression_tracking", "protocol", "same_source_dest_port_drop", "set_counter_base_val", "sflow_common", "sflow_ip_filtering_policy", "sflow_packets", "sflow_tcp", "src_based_policy_list",
+    "stateful", "topk_destinations", "topk_dst_num_records", "topk_dst_sort_key", "topk_num_records", "topk_sort_key", "topk_sources", "unlimited_dynamic_entry_count", "uuid",
     ]
 
 
@@ -786,6 +800,9 @@ def get_argspec():
                 'type': 'bool',
                 }
             },
+        'sflow_ip_filtering_policy': {
+            'type': 'bool',
+            },
         'unlimited_dynamic_entry_count': {
             'type': 'bool',
             },
@@ -815,6 +832,9 @@ def get_argspec():
             },
         'ip_filtering_policy': {
             'type': 'str',
+            },
+        'same_source_dest_port_drop': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',
@@ -927,7 +947,8 @@ def get_argspec():
                 'ntype': {
                     'type': 'str',
                     'required': True,
-                    'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
+                    'choices':
+                    ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'syn-ack-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
                     },
                 'tcp_window_size': {
                     'type': 'int',
@@ -1028,7 +1049,7 @@ def get_argspec():
                         'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                         'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                         'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current',
-                        'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                        'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                         ]
                     }
                 }
@@ -1068,6 +1089,9 @@ def get_argspec():
                 'class_list_name': {
                     'type': 'str',
                     'required': True,
+                    },
+                'class_list_glid': {
+                    'type': 'str',
                     },
                 'glid': {
                     'type': 'str',
@@ -1111,7 +1135,7 @@ def get_argspec():
                     'type': 'list',
                     'counters1': {
                         'type': 'str',
-                        'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                        'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                         }
                     },
                 'class_list_overflow_policy_list': {
@@ -1880,6 +1904,74 @@ def get_argspec():
                         },
                     'top_k_key': {
                         'type': 'str',
+                        }
+                    }
+                },
+            'src_based_policy_list': {
+                'type': 'list',
+                'src_based_policy_name': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'oper': {
+                    'type': 'dict',
+                    },
+                'policy_class_list_list': {
+                    'type': 'list',
+                    'class_list_name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'oper': {
+                        'type': 'dict',
+                        'current_connections': {
+                            'type': 'int',
+                            },
+                        'is_connections_exceed': {
+                            'type': 'int',
+                            },
+                        'connection_limit': {
+                            'type': 'int',
+                            },
+                        'current_connection_rate': {
+                            'type': 'int',
+                            },
+                        'is_connection_rate_exceed': {
+                            'type': 'int',
+                            },
+                        'connection_rate_limit': {
+                            'type': 'int',
+                            },
+                        'current_packet_rate': {
+                            'type': 'int',
+                            },
+                        'is_packet_rate_exceed': {
+                            'type': 'int',
+                            },
+                        'packet_rate_limit': {
+                            'type': 'int',
+                            },
+                        'current_kBit_rate': {
+                            'type': 'int',
+                            },
+                        'is_kBit_rate_exceed': {
+                            'type': 'int',
+                            },
+                        'kBit_rate_limit': {
+                            'type': 'int',
+                            },
+                        'current_frag_packet_rate': {
+                            'type': 'int',
+                            },
+                        'is_frag_packet_rate_exceed': {
+                            'type': 'int',
+                            },
+                        'frag_packet_rate_limit': {
+                            'type': 'int',
+                            },
+                        'debug_str': {
+                            'type': 'str',
+                            }
                         }
                     }
                 }

@@ -1995,7 +1995,7 @@ def get_argspec():
                         'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop', 'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop',
                         'dns_filter_class_hesiod_drop', 'dns_filter_class_none_drop', 'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip',
                         'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name', 'compression_bytes_before_br', 'compression_bytes_after_br', 'compression_bytes_before_total', 'compression_bytes_after_total', 'compression_hit_br', 'compression_miss_br', 'compression_hit_total',
-                        'compression_miss_total', 'dnsrrl_total_tc', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
+                        'compression_miss_total', 'dnsrrl_total_tc', 'http1_client_idle_timeout', 'http2_client_idle_timeout', 'dnsrrl_nx_exceed'
                         ]
                     }
                 },

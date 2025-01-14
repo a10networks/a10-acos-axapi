@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    white_list:
+        description:
+        - "Bind exception-list (class-list name)"
+        type: str
+        required: False
     class_list_cfg:
         description:
         - "Field class_list_cfg"
@@ -128,7 +133,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list_cfg", "uuid", ]
+AVAILABLE_PROPERTIES = ["class_list_cfg", "uuid", "white_list", ]
 
 
 def get_default_argspec():
@@ -148,7 +153,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'class_list_cfg': {'type': 'list', 'class_list': {'type': 'str', }, 'ip_threat_action_tmpl': {'type': 'int', }}, 'uuid': {'type': 'str', }})
+    rv.update({'white_list': {'type': 'str', }, 'class_list_cfg': {'type': 'list', 'class_list': {'type': 'str', }, 'ip_threat_action_tmpl': {'type': 'int', }}, 'uuid': {'type': 'str', }})
     return rv
 
 

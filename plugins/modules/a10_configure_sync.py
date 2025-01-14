@@ -92,6 +92,11 @@ options:
         - "Use private key for authentication"
         type: str
         required: False
+    timeout:
+        description:
+        - "Specify the timeout (in second)"
+        type: int
+        required: False
     usr:
         description:
         - "Field usr"
@@ -161,7 +166,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address", "all_partitions", "auto_authentication", "partition_name", "private_key", "pwd", "pwd_enc", "shared", "ntype", "usr", ]
+AVAILABLE_PROPERTIES = ["address", "all_partitions", "auto_authentication", "partition_name", "private_key", "pwd", "pwd_enc", "shared", "timeout", "ntype", "usr", ]
 
 
 def get_default_argspec():
@@ -203,6 +208,9 @@ def get_argspec():
             },
         'private_key': {
             'type': 'str',
+            },
+        'timeout': {
+            'type': 'int',
             },
         'usr': {
             'type': 'str',

@@ -2025,6 +2025,40 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    domain_list_settings:
+        description:
+        - "Field domain_list_settings"
+        type: dict
+        required: False
+        suboptions:
+            polling_interval:
+                description:
+                - "'1-second'= Set interval to 1 second; '5-second'= Set interval to 5 seconds;
+          '10-second'= Set interval to 10 seconds (Default);"
+                type: str
+            concurrent_task:
+                description:
+                - "Configure max concurrent AXFR task (Default 6)"
+                type: int
+            domain_list_per_group:
+                description:
+                - "'16'= Allow 16 domain-list per group (Default); '32'= Allow 32 domain-list per
+          group;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    cl_threat_category:
+        description:
+        - "Field cl_threat_category"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     psu_info:
         description:
         - "Field psu_info"
@@ -2394,6 +2428,10 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+            pu_sync_detection:
+                description:
+                - "Field pu_sync_detection"
+                type: dict
 
 '''
 
@@ -2449,14 +2487,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "config_mgmt", "control_cpu", "core", "cosq_show", "cosq_stats",
-    "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn",
-    "dynamic_service_dns_socket_pool", "enable_password", "environment", "even_port_hash_enable", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate",
-    "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro",
-    "management_interface_mode", "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype",
-    "port_count", "port_info", "port_list", "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec",
-    "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp", "tcp_stats",
-    "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
+    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "cl_threat_category", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "config_mgmt", "control_cpu", "core",
+    "cosq_show", "cosq_stats", "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "domain_list_settings", "dpdk_stats",
+    "drop_linux_closed_port_syn", "dynamic_service_dns_socket_pool", "enable_password", "environment", "even_port_hash_enable", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware",
+    "hardware_accelerate", "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability",
+    "link_monitor", "lro", "management_interface_mode", "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit",
+    "platformtype", "port_count", "port_info", "port_list", "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue",
+    "set_tcp_syn_per_sec", "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp",
+    "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
     ]
 
 
@@ -2580,7 +2618,7 @@ def get_argspec():
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
-                    'choices': ['all', 'input-bytes-per-sec', 'output-bytes-per-sec']
+                    'choices': ['all', 'input-bytes-per-sec', 'output-bytes-per-sec', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'licexpire_drop', 'bwl_drop']
                     }
                 }
             },
@@ -4388,6 +4426,9 @@ def get_argspec():
                     },
                 'template_name': {
                     'type': 'str',
+                    },
+                'geo_location_load_temp_include_ipv6': {
+                    'type': 'bool',
                     }
                 },
             'uuid': {
@@ -4551,6 +4592,9 @@ def get_argspec():
                 },
             'ipv4_internet_host_list': {
                 'type': 'dict',
+                'white_list': {
+                    'type': 'str',
+                    },
                 'class_list_cfg': {
                     'type': 'list',
                     'class_list': {
@@ -4566,6 +4610,9 @@ def get_argspec():
                 },
             'ipv6_internet_host_list': {
                 'type': 'dict',
+                'white_list': {
+                    'type': 'str',
+                    },
                 'class_list_cfg': {
                     'type': 'list',
                     'class_list': {
@@ -4801,6 +4848,29 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'domain_list_settings': {
+            'type': 'dict',
+            'polling_interval': {
+                'type': 'str',
+                'choices': ['1-second', '5-second', '10-second']
+                },
+            'concurrent_task': {
+                'type': 'int',
+                },
+            'domain_list_per_group': {
+                'type': 'str',
+                'choices': ['16', '32']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'cl_threat_category': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
+            },
         'psu_info': {
             'type': 'dict',
             'uuid': {
@@ -4884,7 +4954,7 @@ def get_argspec():
                     'str',
                     'choices': [
                         'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew', 'currclose', 'currclsw', 'currlack', 'currlstn',
-                        'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
+                        'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied', 'syn_rcv_rexmit', 'sock_init', 'invalid_drop'
                         ]
                     }
                 },
@@ -5074,9 +5144,12 @@ def get_argspec():
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type': 'str',
-                    'choices':
-                    ['all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r']
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r',
+                        'qps', 'hit_rate_per_sec'
+                        ]
                     }
                 }
             },
@@ -5200,6 +5273,19 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
+                },
+            'pu_sync_detection': {
+                'type': 'dict',
+                'interval': {
+                    'type': 'int',
+                    },
+                'action': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             }
         })

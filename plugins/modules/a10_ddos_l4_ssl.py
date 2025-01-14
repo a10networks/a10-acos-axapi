@@ -104,7 +104,7 @@ options:
                 type: str
             ssl_l4_is_tls1_3:
                 description:
-                - "TLS v1.2"
+                - "TLS v1.2 or higher version"
                 type: str
             ssl_l4_is_renegotiation:
                 description:

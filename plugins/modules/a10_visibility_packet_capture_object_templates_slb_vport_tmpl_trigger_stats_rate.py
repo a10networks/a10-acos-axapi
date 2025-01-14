@@ -107,6 +107,12 @@ options:
         - "Enable automatic packet-capture for DNS Response-Rate-Limiting Bad FQDN"
         type: bool
         required: False
+    dnsrrl_nx_exceed:
+        description:
+        - "Enable automatic packet-capture for DNS Response-Rate-Limiting NX Responses
+          Exceed Limit"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -166,7 +172,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["compression_miss_no_client", "compression_miss_template_exclusion", "dnsrrl_bad_fqdn", "dnsrrl_total_dropped", "duration", "es_total_failure_actions", "loc_deny", "threshold_exceeded_by", "total_mf_dns_pkts", "uuid", ]
+AVAILABLE_PROPERTIES = ["compression_miss_no_client", "compression_miss_template_exclusion", "dnsrrl_bad_fqdn", "dnsrrl_nx_exceed", "dnsrrl_total_dropped", "duration", "es_total_failure_actions", "loc_deny", "threshold_exceeded_by", "total_mf_dns_pkts", "uuid", ]
 
 
 def get_default_argspec():
@@ -212,6 +218,9 @@ def get_argspec():
             'type': 'bool',
             },
         'dnsrrl_bad_fqdn': {
+            'type': 'bool',
+            },
+        'dnsrrl_nx_exceed': {
             'type': 'bool',
             },
         'uuid': {

@@ -62,18 +62,27 @@ options:
         required: True
     uplink:
         description:
-        - "Uplink Throughput limit (Mega (default) or Kilo Bits per second)"
+        - "Uplink Throughput limit (Megabites/sec (default) other units= Kilobites/sec,
+          Gigabites/sec)"
         type: int
         required: False
     uplink_unit:
         description:
-        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
         type: str
         required: False
     uplink_burstsize:
         description:
-        - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+        - "Token Bucket Size (Must Exceed Configured Rate) (Megabites/sec (default) other
+          units= Kilobites/sec, Gigabites/sec)"
         type: int
+        required: False
+    uplink_burstsize_unit:
+        description:
+        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
+        type: str
         required: False
     uplink_relaxed:
         description:
@@ -82,18 +91,27 @@ options:
         required: False
     downlink:
         description:
-        - "Downlink Throughput limit (Mega (default) or Kilo Bits per second)"
+        - "Downlink Throughput limit (Megabites/sec (default) other units= Kilobites/sec,
+          Gigabites/sec)"
         type: int
         required: False
     downlink_unit:
         description:
-        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
         type: str
         required: False
     downlink_burstsize:
         description:
-        - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+        - "Token Bucket Size (Must Exceed Configured Rate) (Megabites/sec (default) other
+          units= Kilobites/sec, Gigabites/sec)"
         type: int
+        required: False
+    downlink_burstsize_unit:
+        description:
+        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
+        type: str
         required: False
     downlink_relaxed:
         description:
@@ -102,18 +120,27 @@ options:
         required: False
     total:
         description:
-        - "Total Throughput limit (Mega (default) or Kilo Bits per second)"
+        - "Total Throughput limit (Megabites/sec (default) other units= Kilobites/sec,
+          Gigabites/sec)"
         type: int
         required: False
     total_unit:
         description:
-        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
         type: str
         required: False
     total_burstsize:
         description:
-        - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+        - "Token Bucket Size (Must Exceed Configured Rate) (Megabites/sec (default) other
+          units= Kilobites/sec, Gigabites/sec)"
         type: int
+        required: False
+    total_burstsize_unit:
+        description:
+        - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
+        type: str
         required: False
     total_relaxed:
         description:
@@ -179,7 +206,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["downlink", "downlink_burstsize", "downlink_relaxed", "downlink_unit", "total", "total_burstsize", "total_relaxed", "total_unit", "uplink", "uplink_burstsize", "uplink_relaxed", "uplink_unit", "uuid", ]
+AVAILABLE_PROPERTIES = ["downlink", "downlink_burstsize", "downlink_burstsize_unit", "downlink_relaxed", "downlink_unit", "total", "total_burstsize", "total_burstsize_unit", "total_relaxed", "total_unit", "uplink", "uplink_burstsize", "uplink_burstsize_unit", "uplink_relaxed", "uplink_unit", "uuid", ]
 
 
 def get_default_argspec():
@@ -205,10 +232,14 @@ def get_argspec():
             },
         'uplink_unit': {
             'type': 'str',
-            'choices': ['Mbps', 'Kbps']
+            'choices': ['Mbps', 'Kbps', 'Gbps']
             },
         'uplink_burstsize': {
             'type': 'int',
+            },
+        'uplink_burstsize_unit': {
+            'type': 'str',
+            'choices': ['Mbps', 'Kbps', 'Gbps']
             },
         'uplink_relaxed': {
             'type': 'bool',
@@ -218,10 +249,14 @@ def get_argspec():
             },
         'downlink_unit': {
             'type': 'str',
-            'choices': ['Mbps', 'Kbps']
+            'choices': ['Mbps', 'Kbps', 'Gbps']
             },
         'downlink_burstsize': {
             'type': 'int',
+            },
+        'downlink_burstsize_unit': {
+            'type': 'str',
+            'choices': ['Mbps', 'Kbps', 'Gbps']
             },
         'downlink_relaxed': {
             'type': 'bool',
@@ -231,10 +266,14 @@ def get_argspec():
             },
         'total_unit': {
             'type': 'str',
-            'choices': ['Mbps', 'Kbps']
+            'choices': ['Mbps', 'Kbps', 'Gbps']
             },
         'total_burstsize': {
             'type': 'int',
+            },
+        'total_burstsize_unit': {
+            'type': 'str',
+            'choices': ['Mbps', 'Kbps', 'Gbps']
             },
         'total_relaxed': {
             'type': 'bool',

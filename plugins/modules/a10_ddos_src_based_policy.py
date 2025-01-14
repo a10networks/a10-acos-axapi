@@ -84,6 +84,64 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            src_based_policy_name:
+                description:
+                - "Field src_based_policy_name"
+                type: str
+            ipv4_total_single_ip:
+                description:
+                - "Field ipv4_total_single_ip"
+                type: int
+            ipv4_total_subnet:
+                description:
+                - "Field ipv4_total_subnet"
+                type: int
+            ipv6_total_single_ip:
+                description:
+                - "Field ipv6_total_single_ip"
+                type: int
+            ipv6_total_subnet:
+                description:
+                - "Field ipv6_total_subnet"
+                type: int
+            geoloc_ipv4_total_single_ip:
+                description:
+                - "Field geoloc_ipv4_total_single_ip"
+                type: int
+            geoloc_ipv4_total_subnet:
+                description:
+                - "Field geoloc_ipv4_total_subnet"
+                type: int
+            geoloc_ipv6_total_single_ip:
+                description:
+                - "Field geoloc_ipv6_total_single_ip"
+                type: int
+            geoloc_ipv6_total_subnet:
+                description:
+                - "Field geoloc_ipv6_total_subnet"
+                type: int
+            class_list_entries:
+                description:
+                - "Field class_list_entries"
+                type: list
+            all_entries:
+                description:
+                - "Field all_entries"
+                type: bool
+            resource_usage:
+                description:
+                - "Field resource_usage"
+                type: bool
+            name:
+                description:
+                - "Specify name of the policy"
+                type: str
 
 '''
 
@@ -138,7 +196,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name", "policy_class_list_list", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["name", "oper", "policy_class_list_list", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -158,7 +216,80 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'policy_class_list_list': {'type': 'list', 'class_list_name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }}})
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'policy_class_list_list': {
+            'type': 'list',
+            'class_list_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'src_based_policy_name': {
+                'type': 'str',
+                },
+            'ipv4_total_single_ip': {
+                'type': 'int',
+                },
+            'ipv4_total_subnet': {
+                'type': 'int',
+                },
+            'ipv6_total_single_ip': {
+                'type': 'int',
+                },
+            'ipv6_total_subnet': {
+                'type': 'int',
+                },
+            'geoloc_ipv4_total_single_ip': {
+                'type': 'int',
+                },
+            'geoloc_ipv4_total_subnet': {
+                'type': 'int',
+                },
+            'geoloc_ipv6_total_single_ip': {
+                'type': 'int',
+                },
+            'geoloc_ipv6_total_subnet': {
+                'type': 'int',
+                },
+            'class_list_entries': {
+                'type': 'list',
+                'address': {
+                    'type': 'str',
+                    },
+                'class_list_name': {
+                    'type': 'str',
+                    },
+                'geo_location_name': {
+                    'type': 'str',
+                    }
+                },
+            'all_entries': {
+                'type': 'bool',
+                },
+            'resource_usage': {
+                'type': 'bool',
+                },
+            'name': {
+                'type': 'str',
+                'required': True,
+                }
+            }
+        })
     return rv
 
 
@@ -323,6 +454,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["src-based-policy-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["src-based-policy"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

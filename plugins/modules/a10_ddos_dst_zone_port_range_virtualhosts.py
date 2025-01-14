@@ -285,6 +285,9 @@ def get_argspec():
                     },
                 'zone_template': {
                     'type': 'dict',
+                    'ssl_l4': {
+                        'type': 'str',
+                        },
                     'tcp': {
                         'type': 'str',
                         }

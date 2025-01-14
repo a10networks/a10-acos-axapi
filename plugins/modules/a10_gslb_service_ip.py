@@ -135,10 +135,6 @@ options:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
                 type: str
-            service:
-                description:
-                - "Port Service"
-                type: str
             action:
                 description:
                 - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
@@ -155,6 +151,53 @@ options:
             follow_port_protocol:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            health_check_protocol_disable:
+                description:
+                - "Disable GSLB Protocol Health Monitor"
+                type: bool
+            health_check_disable:
+                description:
+                - "Disable Health Check Monitor"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    service_list:
+        description:
+        - "Field service_list"
+        type: list
+        required: False
+        suboptions:
+            port_num:
+                description:
+                - "Port Number"
+                type: int
+            port_proto:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            label:
+                description:
+                - "Service Label"
+                type: str
+            action:
+                description:
+                - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
+          port;"
+                type: str
+            health_check:
+                description:
+                - "Health Check Monitor (Monitor Name)"
                 type: str
             health_check_protocol_disable:
                 description:
@@ -234,6 +277,10 @@ options:
                 description:
                 - "Field port_list"
                 type: list
+            service_list:
+                description:
+                - "Field service_list"
+                type: list
     stats:
         description:
         - "Field stats"
@@ -255,6 +302,10 @@ options:
             port_list:
                 description:
                 - "Field port_list"
+                type: list
+            service_list:
+                description:
+                - "Field service_list"
                 type: list
 
 '''
@@ -310,7 +361,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "external_ip", "health_check", "health_check_disable", "health_check_protocol_disable", "ip_address", "ipv6", "ipv6_address", "node_name", "oper", "port_list", "sampling_enable", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "external_ip", "health_check", "health_check_disable", "health_check_protocol_disable", "ip_address", "ipv6", "ipv6_address", "node_name", "oper", "port_list", "sampling_enable", "service_list", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -384,10 +435,6 @@ def get_argspec():
                 'required': True,
                 'choices': ['tcp', 'udp']
                 },
-            'service': {
-                'type': 'str',
-                'required': True,
-                },
             'action': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
@@ -401,6 +448,48 @@ def get_argspec():
             'follow_port_protocol': {
                 'type': 'str',
                 'choices': ['tcp', 'udp']
+                },
+            'health_check_protocol_disable': {
+                'type': 'bool',
+                },
+            'health_check_disable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'active', 'current']
+                    }
+                }
+            },
+        'service_list': {
+            'type': 'list',
+            'port_num': {
+                'type': 'int',
+                'required': True,
+                },
+            'port_proto': {
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
+                },
+            'label': {
+                'type': 'str',
+                'required': True,
+                },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'health_check': {
+                'type': 'str',
                 },
             'health_check_protocol_disable': {
                 'type': 'bool',
@@ -472,7 +561,49 @@ def get_argspec():
                     'required': True,
                     'choices': ['tcp', 'udp']
                     },
-                'service': {
+                'oper': {
+                    'type': 'dict',
+                    'service_port': {
+                        'type': 'int',
+                        },
+                    'state': {
+                        'type': 'str',
+                        },
+                    'disabled': {
+                        'type': 'int',
+                        },
+                    'gslb_protocol': {
+                        'type': 'int',
+                        },
+                    'local_protocol': {
+                        'type': 'int',
+                        },
+                    'tcp': {
+                        'type': 'int',
+                        },
+                    'manually_health_check': {
+                        'type': 'int',
+                        },
+                    'use_gslb_state': {
+                        'type': 'int',
+                        },
+                    'dynamic': {
+                        'type': 'int',
+                        }
+                    }
+                },
+            'service_list': {
+                'type': 'list',
+                'port_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'port_proto': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                    },
+                'label': {
                     'type': 'str',
                     'required': True,
                     },
@@ -531,7 +662,28 @@ def get_argspec():
                     'required': True,
                     'choices': ['tcp', 'udp']
                     },
-                'service': {
+                'stats': {
+                    'type': 'dict',
+                    'active': {
+                        'type': 'str',
+                        },
+                    'current': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'service_list': {
+                'type': 'list',
+                'port_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'port_proto': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                    },
+                'label': {
                     'type': 'str',
                     'required': True,
                     },

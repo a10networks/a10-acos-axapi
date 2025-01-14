@@ -65,6 +65,29 @@ options:
         - "Disable fixed-bit malform check"
         type: bool
         required: False
+    pkt_rate_cfg:
+        description:
+        - "Field pkt_rate_cfg"
+        type: dict
+        required: False
+        suboptions:
+            quic_pkt_rate_limit:
+                description:
+                - "QUIC Packet Rate Limit"
+                type: bool
+            quic_pkt_rate:
+                description:
+                - "Limiting rate (Range= 5-16000000)"
+                type: int
+            per:
+                description:
+                - "'aead-tag'= AEAD Tag; 'dcid'= Destination Connection ID;"
+                type: str
+    create_conn_on_initial_only:
+        description:
+        - "Create connection on QUIC Initial Packets Only"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -193,7 +216,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action_on_initial", "fixed_bit_check_disable", "quic_tmpl_name", "user_tag", "uuid", "version_supported_list", ]
+AVAILABLE_PROPERTIES = ["action_on_initial", "create_conn_on_initial_only", "fixed_bit_check_disable", "pkt_rate_cfg", "quic_tmpl_name", "user_tag", "uuid", "version_supported_list", ]
 
 
 def get_default_argspec():
@@ -219,6 +242,22 @@ def get_argspec():
             'required': True,
             },
         'fixed_bit_check_disable': {
+            'type': 'bool',
+            },
+        'pkt_rate_cfg': {
+            'type': 'dict',
+            'quic_pkt_rate_limit': {
+                'type': 'bool',
+                },
+            'quic_pkt_rate': {
+                'type': 'int',
+                },
+            'per': {
+                'type': 'str',
+                'choices': ['aead-tag', 'dcid']
+                }
+            },
+        'create_conn_on_initial_only': {
             'type': 'bool',
             },
         'uuid': {

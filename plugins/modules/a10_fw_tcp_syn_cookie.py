@@ -88,6 +88,16 @@ options:
           cookie verification passed; 'verification_failed'= SYN cookie verification
           failed; 'conn_setup_failed'= SYN cookie connection setup failed;"
                 type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            syn_cookie_on:
+                description:
+                - "Field syn_cookie_on"
+                type: int
     stats:
         description:
         - "Field stats"
@@ -160,7 +170,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "syn_cookie_enable", "syn_cookie_on_threshold", "syn_cookie_on_timeout", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "syn_cookie_enable", "syn_cookie_on_threshold", "syn_cookie_on_timeout", "uuid", ]
 
 
 def get_default_argspec():
@@ -198,6 +208,12 @@ def get_argspec():
             'counters1': {
                 'type': 'str',
                 'choices': ['all', 'syn_ack_sent', 'verification_passed', 'verification_failed', 'conn_setup_failed']
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'syn_cookie_on': {
+                'type': 'int',
                 }
             },
         'stats': {
@@ -372,6 +388,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["syn-cookie-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["syn-cookie"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

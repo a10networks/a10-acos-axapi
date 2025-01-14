@@ -78,7 +78,8 @@ options:
           for lower weight; 'total_log'= Total stats log sent; 'total_alloc'= Total
           allocated; 'total_freed'= Total freed; 'current_allocate'= Current allocate;
           'current_data_allocate'= Current data allocate; 'resolver_queue_full'= Resolver
-          task queue full; 'truncated_r'= Response with Truncation bit set;"
+          task queue full; 'truncated_r'= Response with Truncation bit set; 'qps'= Cache
+          Queries-per-second; 'hit_rate_per_sec'= Cache hit rate per second;"
                 type: str
     oper:
         description:
@@ -106,6 +107,10 @@ options:
                 description:
                 - "Field cache_hit_ratio"
                 type: str
+            hit_ratio_percentage_per_sec:
+                description:
+                - "Field hit_ratio_percentage_per_sec"
+                type: int
             client:
                 description:
                 - "Field client"
@@ -280,6 +285,14 @@ options:
                 description:
                 - "Response with Truncation bit set"
                 type: str
+            qps:
+                description:
+                - "Cache Queries-per-second"
+                type: str
+            hit_rate_per_sec:
+                description:
+                - "Cache hit rate per second"
+                type: str
 
 '''
 
@@ -361,8 +374,12 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type': 'str',
-                'choices': ['all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r']
+                'type':
+                'str',
+                'choices': [
+                    'all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r', 'qps',
+                    'hit_rate_per_sec'
+                    ]
                 }
             },
         'oper': {
@@ -468,6 +485,9 @@ def get_argspec():
                 },
             'cache_hit_ratio': {
                 'type': 'str',
+                },
+            'hit_ratio_percentage_per_sec': {
+                'type': 'int',
                 },
             'client': {
                 'type': 'bool',
@@ -599,6 +619,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'truncated_r': {
+                'type': 'str',
+                },
+            'qps': {
+                'type': 'str',
+                },
+            'hit_rate_per_sec': {
                 'type': 'str',
                 }
             }

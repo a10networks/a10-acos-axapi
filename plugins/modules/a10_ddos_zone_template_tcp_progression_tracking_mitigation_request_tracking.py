@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_ddos_zone_template_tcp_progression_tracking_mitigation_request_tracking
 description:
-    - Configure and enable TCP Progression Tracking Mitigation per Request response
+    - Configure and enable TCP Progression Tracking Mitigation per Request Response
 author: A10 Networks
 options:
     state:

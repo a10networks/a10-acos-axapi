@@ -146,7 +146,10 @@ options:
           'ddet_ind_total_szp_current'= Total Learnt Sources Current;
           'ddet_ind_total_szp_min'= Total Learnt Sources Min; 'ddet_ind_total_szp_max'=
           Total Learnt Sources Max; 'ddet_ind_total_szp_adaptive_threshold'= Total Learnt
-          Sources Adaptive Threshold;"
+          Sources Adaptive Threshold; 'ddet_ind_syn_ack_rate_current'= TCP SYN ACK Rate
+          Current; 'ddet_ind_syn_ack_rate_min'= TCP SYN ACK Rate Min;
+          'ddet_ind_syn_ack_rate_max'= TCP SYN ACK Rate Max;
+          'ddet_ind_syn_ack_rate_adaptive_threshold'= TCP SYN ACK Adaptive Threshold;"
                 type: str
     oper:
         description:
@@ -508,6 +511,22 @@ options:
                 description:
                 - "Total Learnt Sources Adaptive Threshold"
                 type: str
+            ddet_ind_syn_ack_rate_current:
+                description:
+                - "TCP SYN ACK Rate Current"
+                type: str
+            ddet_ind_syn_ack_rate_min:
+                description:
+                - "TCP SYN ACK Rate Min"
+                type: str
+            ddet_ind_syn_ack_rate_max:
+                description:
+                - "TCP SYN ACK Rate Max"
+                type: str
+            ddet_ind_syn_ack_rate_adaptive_threshold:
+                description:
+                - "TCP SYN ACK Adaptive Threshold"
+                type: str
 
 '''
 
@@ -599,7 +618,8 @@ def get_argspec():
                     'ddet_ind_inb_per_outb_current', 'ddet_ind_inb_per_outb_min', 'ddet_ind_inb_per_outb_max', 'ddet_ind_inb_per_outb_adaptive_threshold', 'ddet_ind_syn_per_fin_rate_current', 'ddet_ind_syn_per_fin_rate_min', 'ddet_ind_syn_per_fin_rate_max', 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current',
                     'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max', 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min',
                     'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max', 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max',
-                    'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                    'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current',
+                    'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                     ]
                 }
             },
@@ -962,6 +982,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'ddet_ind_total_szp_adaptive_threshold': {
+                'type': 'str',
+                },
+            'ddet_ind_syn_ack_rate_current': {
+                'type': 'str',
+                },
+            'ddet_ind_syn_ack_rate_min': {
+                'type': 'str',
+                },
+            'ddet_ind_syn_ack_rate_max': {
+                'type': 'str',
+                },
+            'ddet_ind_syn_ack_rate_adaptive_threshold': {
                 'type': 'str',
                 }
             }

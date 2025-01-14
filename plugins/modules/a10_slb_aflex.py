@@ -226,6 +226,9 @@ def get_argspec():
                         },
                     'aborts': {
                         'type': 'int',
+                        },
+                    'exceed_time_limit': {
+                        'type': 'int',
                         }
                     }
                 },

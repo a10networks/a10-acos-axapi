@@ -832,6 +832,9 @@ def get_argspec():
                     },
                 'src_zone_service_entry_hit': {
                     'type': 'str',
+                    },
+                'same_sport_dport_drop': {
+                    'type': 'str',
                     }
                 }
             }

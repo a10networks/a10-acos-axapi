@@ -89,7 +89,10 @@ options:
           'quic_short_headr_action_drop'= QUIC Short Header Drop; 'quic_encrypt_fail'=
           QUIC Encrypt Fail; 'quic_decrypt_fail'= QUIC Decrypt Fail;
           'quic_encrypt_success'= QUIC Encrypt Success; 'quic_decrypt_success'= QUIC
-          Decrypt Success; 'quic_0rtt_drop'= QUIC 0RTT Drop;"
+          Decrypt Success; 'quic_0rtt_drop'= QUIC 0RTT Drop; 'quic_aead_pkt_rate_exceed'=
+          QUIC AEAD Packet Rate Exceed; 'quic_dcid_pkt_rate_exceed'= QUIC DCID Packet
+          Rate Exceed; 'quic_create_conn_init_only'= QUIC Create Connection on Initial
+          Only;"
                 type: str
     stats:
         description:
@@ -205,6 +208,18 @@ options:
                 description:
                 - "QUIC 0RTT Drop"
                 type: str
+            quic_aead_pkt_rate_exceed:
+                description:
+                - "QUIC AEAD Packet Rate Exceed"
+                type: str
+            quic_dcid_pkt_rate_exceed:
+                description:
+                - "QUIC DCID Packet Rate Exceed"
+                type: str
+            quic_create_conn_init_only:
+                description:
+                - "QUIC Create Connection on Initial Only"
+                type: str
 
 '''
 
@@ -291,7 +306,7 @@ def get_argspec():
                 'choices': [
                     'all', 'quic_packet_received', 'quic_initial_received', 'quic_version_negotiation_received', 'quic_retry_received', 'quic_0rtt_recevied', 'quic_handshake_received', 'quic_version_match_action_taken', 'quic_version_match_action_drop', 'quic_version_match_action_blacklist', 'quic_malformed_action_taken',
                     'quic_malformed_action_drop', 'quic_malformed_action_blacklist', 'quic_malformed_dcid_len_max_exceed', 'quic_malformed_scid_len_max_exceed', 'quic_fixed_bit_not_set', 'quic_retry_auth_sent', 'quic_retry_auth_pass', 'quic_retry_auth_fail', 'quic_connection_close_sent', 'quic_invalid_retry_token', 'quic_short_header_received',
-                    'quic_short_headr_action_drop', 'quic_encrypt_fail', 'quic_decrypt_fail', 'quic_encrypt_success', 'quic_decrypt_success', 'quic_0rtt_drop'
+                    'quic_short_headr_action_drop', 'quic_encrypt_fail', 'quic_decrypt_fail', 'quic_encrypt_success', 'quic_decrypt_success', 'quic_0rtt_drop', 'quic_aead_pkt_rate_exceed', 'quic_dcid_pkt_rate_exceed', 'quic_create_conn_init_only'
                     ]
                 }
             },
@@ -376,6 +391,15 @@ def get_argspec():
                 'type': 'str',
                 },
             'quic_0rtt_drop': {
+                'type': 'str',
+                },
+            'quic_aead_pkt_rate_exceed': {
+                'type': 'str',
+                },
+            'quic_dcid_pkt_rate_exceed': {
+                'type': 'str',
+                },
+            'quic_create_conn_init_only': {
                 'type': 'str',
                 }
             }

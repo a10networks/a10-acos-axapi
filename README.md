@@ -53,6 +53,7 @@ This code is now being generated using the SDK generator at https://github.com/a
 
 | ACOS Version | Ansible Version | GitHub Branch |
 | :--------: | :-------: | :-------:  |
+| `ACOS 6.0.6` | [6.0.6-11425](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.6-11425)  | [ACOS 6.0.6](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_606)  |
 | `ACOS 6.0.5` | [6.0.5-91924](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.5-91924)  | [ACOS 6.0.5](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_605)  |
 | `ACOS 6.0.4` | [6.0.4-90524](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.4-90524)  | [ACOS 6.0.4](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_604)  |
 | `ACOS 6.0.3` | [6.0.3-11924](https://galaxy.ansible.com/ui/repo/published/a10/acos_axapi/?version=6.0.3-11924)  | [ACOS 6.0.3](https://github.com/a10networks/a10-acos-axapi/tree/stable/acos_603)  |
@@ -521,5 +522,6 @@ Please raise issue in github repository. Please include the Ansible playbook or 
 
 ## Support
 For all issues, please send an email to support@a10networks.com
+
 
 

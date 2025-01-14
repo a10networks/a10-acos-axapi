@@ -70,11 +70,6 @@ options:
         - "'tcp'= TCP Port; 'udp'= UDP Port;"
         type: str
         required: True
-    service:
-        description:
-        - "Port Service"
-        type: str
-        required: True
     action:
         description:
         - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
@@ -176,10 +171,6 @@ options:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
                 type: str
-            service:
-                description:
-                - "Port Service"
-                type: str
     stats:
         description:
         - "Field stats"
@@ -201,10 +192,6 @@ options:
             port_proto:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port;"
-                type: str
-            service:
-                description:
-                - "Port Service"
                 type: str
 
 '''
@@ -260,7 +247,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "health_check_protocol_disable", "oper", "port_num", "port_proto", "sampling_enable", "service", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "health_check_protocol_disable", "oper", "port_num", "port_proto", "sampling_enable", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -289,10 +276,6 @@ def get_argspec():
             'type': 'str',
             'required': True,
             'choices': ['tcp', 'udp']
-            },
-        'service': {
-            'type': 'str',
-            'required': True,
             },
         'action': {
             'type': 'str',
@@ -364,10 +347,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
-                },
-            'service': {
-                'type': 'str',
-                'required': True,
                 }
             },
         'stats': {
@@ -386,10 +365,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
-                },
-            'service': {
-                'type': 'str',
-                'required': True,
                 }
             }
         })
@@ -401,7 +376,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/gslb/service-ip/{service_ip_node_name}/port/{port_num}+{port_proto}+{service}"
+    url_base = "/axapi/v3/gslb/service-ip/{service_ip_node_name}/port/{port_num}+{port_proto}"
 
     f_dict = {}
     if '/' in str(module.params["port_num"]):
@@ -412,10 +387,6 @@ def existing_url(module):
         f_dict["port_proto"] = module.params["port_proto"].replace("/", "%2F")
     else:
         f_dict["port_proto"] = module.params["port_proto"]
-    if '/' in str(module.params["service"]):
-        f_dict["service"] = module.params["service"].replace("/", "%2F")
-    else:
-        f_dict["service"] = module.params["service"]
     if '/' in module.params["service_ip_node_name"]:
         f_dict["service_ip_node_name"] = module.params["service_ip_node_name"].replace("/", "%2F")
     else:
@@ -427,12 +398,11 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/service-ip/{service_ip_node_name}/port/+"
+    url_base = "/axapi/v3/gslb/service-ip/{service_ip_node_name}/port/"
 
     f_dict = {}
     f_dict["port_num"] = ""
     f_dict["port_proto"] = ""
-    f_dict["service"] = ""
     f_dict["service_ip_node_name"] = module.params["service_ip_node_name"]
 
     return url_base.format(**f_dict)

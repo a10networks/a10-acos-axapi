@@ -67,8 +67,8 @@ options:
         required: False
     threshold_sensitivity:
         description:
-        - "tune threshold ranges with levels LOW/MEDIUM/HIGH/OFF (default) or multiplier
-          of threshold value (available options are LOW=5x/MEDIUM=3x/HIGH=1.5x/OFF=1x, or
+        - "tune threshold ranges with levels LOW/MEDIUM/HIGH/OFF(default) or multiplier of
+          threshold value (available options are LOW=5x/MEDIUM=3x/HIGH=1.5x/OFF=1x, or
           float value between 1.0-10.0)"
         type: str
         required: False
@@ -89,9 +89,10 @@ options:
         - "'disable'= Disable service discovery for hosts (default= enabled);"
         type: str
         required: False
-    sport_discovery:
+    host_sport_discovery:
         description:
-        - "'disable'= Disable source port discovery (default= enabled);"
+        - "'enable'= Enable source port discovery.; 'disable'= Disable source port
+          discovery.;"
         type: str
         required: False
     sport_anomaly_detection:
@@ -209,11 +210,11 @@ options:
         suboptions:
             sport_heavy_hitter_percentage:
                 description:
-                - "Percentage of the bit rate of undiscovered source ports (default= 50)"
+                - "Percentage of the bit rate of undiscovered source ports (default= 10)"
                 type: int
             sport_discovery_bit_rate_percentage:
                 description:
-                - "Percentage of the bit rate of source port's parent entry (default= 5)"
+                - "Percentage of the bit rate of source port's parent entry"
                 type: int
     network_object_anomaly_threshold:
         description:
@@ -272,7 +273,10 @@ options:
           Entry Aged; 'service_create_fail'= Service Entry Create Failures;
           'packet_rate'= PPS; 'bit_rate'= B(bits)PS; 'topk_allocate_fail'= Topk Allocate
           Failures; 'sport_learned'= Source Port Entry Learned; 'sport_aged'= Source Port
-          Entry Aged; 'sport_create_fail'= Source Port Entry Create Failures;"
+          Entry Aged; 'sport_create_fail'= Source Port Entry Create Failures;
+          'agent_group_learned'= Agent Group Entry Learned; 'agent_group_aged'= Agent
+          Group Entry Aged; 'agent_group_create_fail'= Agent Group Entry Create Failures;
+          'duplicate_sample_pkt_rcv'= Duplicate Sample Packet Received;"
                 type: str
     ip_list:
         description:
@@ -420,6 +424,86 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    trustlist:
+        description:
+        - "Field trustlist"
+        type: dict
+        required: False
+        suboptions:
+            v4_class_list:
+                description:
+                - "IPv4 Class-list name"
+                type: str
+            v6_class_list:
+                description:
+                - "IPv6 Class-list name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    indicators_to_monitor:
+        description:
+        - "Field indicators_to_monitor"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
+            monitor_pkt_rate:
+                description:
+                - "Forward packet rate"
+                type: bool
+            monitor_bit_rate:
+                description:
+                - "Forward bit rate"
+                type: bool
+            monitor_rev_pkt_rate:
+                description:
+                - "Reverse packet rate"
+                type: bool
+            monitor_rev_bit_rate:
+                description:
+                - "Reverse bit rate"
+                type: bool
+            monitor_undiscovered_pkt_rate:
+                description:
+                - "Undiscovered forward packet rate"
+                type: bool
+            monitor_flow_count:
+                description:
+                - "Flow count"
+                type: bool
+            monitor_syn_rate:
+                description:
+                - "SYN packet rate"
+                type: bool
+            monitor_fin_rate:
+                description:
+                - "FIN packet rate"
+                type: bool
+            monitor_rst_rate:
+                description:
+                - "RST packet rate"
+                type: bool
+            monitor_tcp_pkt_rate:
+                description:
+                - "TCP packet rate"
+                type: bool
+            monitor_udp_pkt_rate:
+                description:
+                - "UDP packet rate"
+                type: bool
+            monitor_icmp_pkt_rate:
+                description:
+                - "ICMP packet rate"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -437,6 +521,14 @@ options:
             details:
                 description:
                 - "Field details"
+                type: bool
+            trusted_details:
+                description:
+                - "Field trusted_details"
+                type: bool
+            total_details:
+                description:
+                - "Field total_details"
                 type: bool
             victim_list:
                 description:
@@ -489,6 +581,10 @@ options:
             single_layer_discovered_list:
                 description:
                 - "Field single_layer_discovered_list"
+                type: bool
+            agent_group_details:
+                description:
+                - "Field agent_group_details"
                 type: bool
             object_name:
                 description:
@@ -564,6 +660,22 @@ options:
                 description:
                 - "Source Port Entry Create Failures"
                 type: str
+            agent_group_learned:
+                description:
+                - "Agent Group Entry Learned"
+                type: str
+            agent_group_aged:
+                description:
+                - "Agent Group Entry Aged"
+                type: str
+            agent_group_create_fail:
+                description:
+                - "Agent Group Entry Create Failures"
+                type: str
+            duplicate_sample_pkt_rcv:
+                description:
+                - "Duplicate Sample Packet Received"
+                type: str
             object_name:
                 description:
                 - "Field object_name"
@@ -631,8 +743,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "anomaly_detection_trigger", "enable_top_k", "flooding_multiplier", "histogram_mode", "host_anomaly_threshold", "ip_list", "ipv6_list", "network_object_anomaly_threshold", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold", "sampling_enable", "service_break_down_threshold_local", "service_discovery",
-    "sport_anomaly_detection", "sport_anomaly_threshold", "sport_discovery", "sport_discovery_threshold", "sport_list", "static_auto_break_down_threshold", "stats", "sub_network", "threshold_sensitivity", "topk_destinations", "user_tag", "uuid",
+    "anomaly_detection_trigger", "enable_top_k", "flooding_multiplier", "histogram_mode", "host_anomaly_threshold", "host_sport_discovery", "indicators_to_monitor", "ip_list", "ipv6_list", "network_object_anomaly_threshold", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold", "sampling_enable",
+    "service_break_down_threshold_local", "service_discovery", "sport_anomaly_detection", "sport_anomaly_threshold", "sport_discovery_threshold", "sport_list", "static_auto_break_down_threshold", "stats", "sub_network", "threshold_sensitivity", "topk_destinations", "trustlist", "user_tag", "uuid",
     ]
 
 
@@ -677,9 +789,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['disable']
             },
-        'sport_discovery': {
+        'host_sport_discovery': {
             'type': 'str',
-            'choices': ['disable']
+            'choices': ['enable', 'disable']
             },
         'sport_anomaly_detection': {
             'type': 'str',
@@ -795,8 +907,12 @@ def get_argspec():
         'sampling_enable': {
             'type': 'list',
             'counters1': {
-                'type': 'str',
-                'choices': ['all', 'subnet_learned', 'subnet_aged', 'subnet_create_fail', 'ip_learned', 'ip_aged', 'ip_create_fail', 'service_learned', 'service_aged', 'service_create_fail', 'packet_rate', 'bit_rate', 'topk_allocate_fail', 'sport_learned', 'sport_aged', 'sport_create_fail']
+                'type':
+                'str',
+                'choices': [
+                    'all', 'subnet_learned', 'subnet_aged', 'subnet_create_fail', 'ip_learned', 'ip_aged', 'ip_create_fail', 'service_learned', 'service_aged', 'service_create_fail', 'packet_rate', 'bit_rate', 'topk_allocate_fail', 'sport_learned', 'sport_aged', 'sport_create_fail', 'agent_group_learned', 'agent_group_aged',
+                    'agent_group_create_fail', 'duplicate_sample_pkt_rcv'
+                    ]
                 }
             },
         'ip_list': {
@@ -1306,6 +1422,63 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'trustlist': {
+            'type': 'dict',
+            'v4_class_list': {
+                'type': 'str',
+                },
+            'v6_class_list': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'indicators_to_monitor': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+                },
+            'monitor_pkt_rate': {
+                'type': 'bool',
+                },
+            'monitor_bit_rate': {
+                'type': 'bool',
+                },
+            'monitor_rev_pkt_rate': {
+                'type': 'bool',
+                },
+            'monitor_rev_bit_rate': {
+                'type': 'bool',
+                },
+            'monitor_undiscovered_pkt_rate': {
+                'type': 'bool',
+                },
+            'monitor_flow_count': {
+                'type': 'bool',
+                },
+            'monitor_syn_rate': {
+                'type': 'bool',
+                },
+            'monitor_fin_rate': {
+                'type': 'bool',
+                },
+            'monitor_rst_rate': {
+                'type': 'bool',
+                },
+            'monitor_tcp_pkt_rate': {
+                'type': 'bool',
+                },
+            'monitor_udp_pkt_rate': {
+                'type': 'bool',
+                },
+            'monitor_icmp_pkt_rate': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
         'oper': {
             'type': 'dict',
             'entry_list': {
@@ -1326,6 +1499,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'service_protocol': {
+                    'type': 'str',
+                    },
+                'agent_group_name': {
                     'type': 'str',
                     },
                 'indicators': {
@@ -1367,6 +1543,9 @@ def get_argspec():
                 'histogram_mode': {
                     'type': 'int',
                     },
+                'display_filter': {
+                    'type': 'str',
+                    },
                 'es_timestamp': {
                     'type': 'str',
                     },
@@ -1378,6 +1557,12 @@ def get_argspec():
                 'type': 'int',
                 },
             'details': {
+                'type': 'bool',
+                },
+            'trusted_details': {
+                'type': 'bool',
+                },
+            'total_details': {
                 'type': 'bool',
                 },
             'victim_list': {
@@ -1417,6 +1602,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'single_layer_discovered_list': {
+                'type': 'bool',
+                },
+            'agent_group_details': {
                 'type': 'bool',
                 },
             'object_name': {
@@ -1499,6 +1687,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'sport_create_fail': {
+                'type': 'str',
+                },
+            'agent_group_learned': {
+                'type': 'str',
+                },
+            'agent_group_aged': {
+                'type': 'str',
+                },
+            'agent_group_create_fail': {
+                'type': 'str',
+                },
+            'duplicate_sample_pkt_rcv': {
                 'type': 'str',
                 },
             'object_name': {

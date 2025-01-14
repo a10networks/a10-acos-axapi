@@ -103,10 +103,20 @@ options:
         - "Set T2 counter value of current context to specified value"
         type: int
         required: False
+    sflow_ip_filtering_policy:
+        description:
+        - "Enable sFlow IP filtering policy per port per rule counter polling"
+        type: bool
+        required: False
     ip_filtering_policy:
         description:
         - "Configure IP Filter"
         type: str
+        required: False
+    same_source_dest_port_drop:
+        description:
+        - "Drop packet with same Source Port and Dest Port"
+        type: bool
         required: False
     uuid:
         description:
@@ -279,7 +289,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["deny", "drop_frag_pkt", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "oper", "protocol", "set_counter_base_val", "uuid", ]
+AVAILABLE_PROPERTIES = ["deny", "drop_frag_pkt", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "oper", "protocol", "same_source_dest_port_drop", "set_counter_base_val", "sflow_ip_filtering_policy", "uuid", ]
 
 
 def get_default_argspec():
@@ -330,8 +340,14 @@ def get_argspec():
         'set_counter_base_val': {
             'type': 'int',
             },
+        'sflow_ip_filtering_policy': {
+            'type': 'bool',
+            },
         'ip_filtering_policy': {
             'type': 'str',
+            },
+        'same_source_dest_port_drop': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',

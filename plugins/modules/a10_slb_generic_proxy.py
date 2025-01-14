@@ -110,7 +110,8 @@ options:
           'reply_unable_to_deliver'= Reply with unable to deliver error info;
           'reply_error_info_fail'= Fail to reply error info to peer; 'dpr_out'= Number of
           DPRs out; 'dpr_in'= Number of DPRs in; 'dpa_out'= Number of DPAs out; 'dpa_in'=
-          Number of DPAs in;"
+          Number of DPAs in; 'diameter_too_busy_in'= Number of DIAMETER_TOO_BUSY in;
+          'diameter_too_busy_out'= Number of DIAMETER_TOO_BUSY out;"
                 type: str
     oper:
         description:
@@ -424,6 +425,14 @@ options:
                 description:
                 - "Number of DPAs in"
                 type: str
+            diameter_too_busy_in:
+                description:
+                - "Number of DIAMETER_TOO_BUSY in"
+                type: str
+            diameter_too_busy_out:
+                description:
+                - "Number of DIAMETER_TOO_BUSY out"
+                type: str
 
 '''
 
@@ -511,7 +520,7 @@ def get_argspec():
                     'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'client_fail', 'server_fail', 'no_sess', 'user_session', 'acr_out', 'acr_in', 'aca_out', 'aca_in', 'cea_out', 'cea_in', 'cer_out', 'cer_in', 'dwr_out', 'dwr_in', 'dwa_out', 'dwa_in', 'str_out', 'str_in', 'sta_out', 'sta_in', 'asr_out', 'asr_in', 'asa_out',
                     'asa_in', 'other_out', 'other_in', 'total_http_req_enter_gen', 'mismatch_fwd_id', 'mismatch_rev_id', 'unkwn_cmd_code', 'no_session_id', 'no_fwd_tuple', 'no_rev_tuple', 'dcmsg_fwd_in', 'dcmsg_fwd_out', 'dcmsg_rev_in', 'dcmsg_rev_out', 'dcmsg_error', 'retry_client_request', 'retry_client_request_fail', 'reply_unknown_session_id',
                     'ccr_out', 'ccr_in', 'cca_out', 'cca_in', 'ccr_i', 'ccr_u', 'ccr_t', 'cca_t', 'terminate_on_cca_t', 'forward_unknown_session_id', 'update_latest_server', 'client_select_fail', 'close_conn_when_vport_down', 'invalid_avp', 'reselect_fwd_tuple', 'reselect_fwd_tuple_other_cpu', 'reselect_rev_tuple', 'conn_closed_by_client',
-                    'conn_closed_by_server', 'reply_invalid_avp_value', 'reply_unable_to_deliver', 'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out', 'dpa_in'
+                    'conn_closed_by_server', 'reply_invalid_avp_value', 'reply_unable_to_deliver', 'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out', 'dpa_in', 'diameter_too_busy_in', 'diameter_too_busy_out'
                     ]
                 }
             },
@@ -730,6 +739,12 @@ def get_argspec():
                     'type': 'int',
                     },
                 'reply_error_info_fail': {
+                    'type': 'int',
+                    },
+                'diameter_too_busy_in': {
+                    'type': 'int',
+                    },
+                'diameter_too_busy_out': {
                     'type': 'int',
                     }
                 },
@@ -956,6 +971,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'dpa_in': {
+                'type': 'str',
+                },
+            'diameter_too_busy_in': {
+                'type': 'str',
+                },
+            'diameter_too_busy_out': {
                 'type': 'str',
                 }
             }

@@ -237,6 +237,12 @@ def get_argspec():
                 'session_count': {
                     'type': 'int',
                     },
+                'session_count_udp': {
+                    'type': 'int',
+                    },
+                'session_count_tcp': {
+                    'type': 'int',
+                    },
                 'nat_pool_name': {
                     'type': 'str',
                     },

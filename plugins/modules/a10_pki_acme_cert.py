@@ -201,6 +201,12 @@ options:
           ENCRYPTED secret string)"
         type: str
         required: False
+    acme_client:
+        description:
+        - "'agent-v1'= Set agent-v1 as the ACME client (default); 'agent-v2'= Set agent-v2
+          as the ACME client;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -266,8 +272,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cert_type", "domain", "eab_hmac_key", "eab_key_id", "ec_key_length", "ecdsa_type", "email", "encrypted", "enroll", "force", "log_level", "minute", "name", "renew_before", "renew_before_type", "renew_before_value", "renew_every", "renew_every_type", "renew_every_value", "rsa_key_length", "rsa_type", "san_domain", "secret_string", "staging",
-    "staging_url", "url", "user_tag", "uuid", "vrid",
+    "acme_client", "cert_type", "domain", "eab_hmac_key", "eab_key_id", "ec_key_length", "ecdsa_type", "email", "encrypted", "enroll", "force", "log_level", "minute", "name", "renew_before", "renew_before_type", "renew_before_value", "renew_every", "renew_every_type", "renew_every_value", "rsa_key_length", "rsa_type", "san_domain", "secret_string",
+    "staging", "staging_url", "url", "user_tag", "uuid", "vrid",
     ]
 
 
@@ -374,6 +380,10 @@ def get_argspec():
             },
         'encrypted': {
             'type': 'str',
+            },
+        'acme_client': {
+            'type': 'str',
+            'choices': ['agent-v1', 'agent-v2']
             },
         'uuid': {
             'type': 'str',

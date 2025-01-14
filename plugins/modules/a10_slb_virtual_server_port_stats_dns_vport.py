@@ -843,6 +843,21 @@ def get_argspec():
                     },
                 'dns_filter_tld_drop': {
                     'type': 'str',
+                    },
+                'dnsrrl_qps_drop': {
+                    'type': 'str',
+                    },
+                'dnsrrl_nx_drop': {
+                    'type': 'str',
+                    },
+                'dnsrrl_nx_exceed': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_request_send': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_response_receive': {
+                    'type': 'str',
                     }
                 }
             }

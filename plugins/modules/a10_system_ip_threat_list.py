@@ -137,6 +137,10 @@ options:
         type: dict
         required: False
         suboptions:
+            white_list:
+                description:
+                - "Bind exception-list (class-list name)"
+                type: str
             class_list_cfg:
                 description:
                 - "Field class_list_cfg"
@@ -151,6 +155,10 @@ options:
         type: dict
         required: False
         suboptions:
+            white_list:
+                description:
+                - "Bind exception-list (class-list name)"
+                type: str
             class_list_cfg:
                 description:
                 - "Field class_list_cfg"
@@ -366,6 +374,9 @@ def get_argspec():
             },
         'ipv4_internet_host_list': {
             'type': 'dict',
+            'white_list': {
+                'type': 'str',
+                },
             'class_list_cfg': {
                 'type': 'list',
                 'class_list': {
@@ -381,6 +392,9 @@ def get_argspec():
             },
         'ipv6_internet_host_list': {
             'type': 'dict',
+            'white_list': {
+                'type': 'str',
+                },
             'class_list_cfg': {
                 'type': 'list',
                 'class_list': {
@@ -409,6 +423,12 @@ def get_argspec():
                     },
                 'age': {
                     'type': 'int',
+                    },
+                'hit_count': {
+                    'type': 'int',
+                    },
+                'class_list': {
+                    'type': 'str',
                     }
                 },
             'v4_address': {

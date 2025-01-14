@@ -390,6 +390,10 @@ options:
                 description:
                 - "Source Port Entry of Network-object Create Failed"
                 type: str
+            trusted_sample_processed:
+                description:
+                - "Samples with Source IP in Trustlist Processed"
+                type: str
 
 '''
 
@@ -711,6 +715,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'n_sport_create_fail': {
+                'type': 'str',
+                },
+            'trusted_sample_processed': {
                 'type': 'str',
                 }
             }

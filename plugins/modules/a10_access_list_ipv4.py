@@ -158,9 +158,6 @@ def get_argspec():
                 'name': {
                     'type': 'str',
                     },
-                'mgmt_pkt_hit_count': {
-                    'type': 'int',
-                    },
                 'binding': {
                     'type': 'bool',
                     },
@@ -258,7 +255,13 @@ def get_argspec():
                         },
                     'data_plane_hits': {
                         'type': 'int',
+                        },
+                    'mgmt_plane_hits': {
+                        'type': 'int',
                         }
+                    },
+                'mgmt_pkt_hit_count': {
+                    'type': 'int',
                     }
                 }
             }

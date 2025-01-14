@@ -265,10 +265,6 @@ options:
                 - "Port range (Port range value - used for vip-to-rport-mapping and vport-rport
           range mapping)"
                 type: int
-            service:
-                description:
-                - "Port Service"
-                type: str
             template_port:
                 description:
                 - "Port template (Port template name)"
@@ -375,6 +371,53 @@ options:
                 description:
                 - "Name of the packet capture template to be bind with this object"
                 type: str
+    service_list:
+        description:
+        - "Field service_list"
+        type: list
+        required: False
+        suboptions:
+            port_number:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            label:
+                description:
+                - "Service Label"
+                type: str
+            action:
+                description:
+                - "'enable'= enable; 'disable'= disable; 'disable-with-health-check'= disable
+          port, but health check work;"
+                type: str
+            health_check:
+                description:
+                - "Health Check (Monitor Name)"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable health check"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     oper:
         description:
         - "Field oper"
@@ -440,6 +483,10 @@ options:
             port_list:
                 description:
                 - "Field port_list"
+                type: list
+            service_list:
+                description:
+                - "Field service_list"
                 type: list
     stats:
         description:
@@ -523,6 +570,10 @@ options:
                 description:
                 - "Field port_list"
                 type: list
+            service_list:
+                description:
+                - "Field service_list"
+                type: list
 
 '''
 
@@ -578,7 +629,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "alternate_server", "conn_limit", "conn_resume", "ethernet", "extended_stats", "external_ip", "fqdn_name", "health_check", "health_check_disable", "health_check_shared", "host", "ipv6", "l2_health_check_path", "name", "no_logging", "oper", "port_list", "resolve_as", "sampling_enable", "server_ipv6_addr",
+    "action", "alternate_server", "conn_limit", "conn_resume", "ethernet", "extended_stats", "external_ip", "fqdn_name", "health_check", "health_check_disable", "health_check_shared", "host", "ipv6", "l2_health_check_path", "name", "no_logging", "oper", "port_list", "resolve_as", "sampling_enable", "server_ipv6_addr", "service_list",
     "shared_partition_health_check", "shared_partition_server_template", "slow_start", "spoofing_cache", "stats", "stats_data_action", "template_link_cost", "template_server", "template_server_shared", "trunk", "use_aam_server", "user_tag", "uuid", "weight",
     ]
 
@@ -725,9 +776,6 @@ def get_argspec():
             'range': {
                 'type': 'int',
                 },
-            'service': {
-                'type': 'str',
-                },
             'template_port': {
                 'type': 'str',
                 },
@@ -808,6 +856,52 @@ def get_argspec():
                 'service_principal_name': {
                     'type': 'str',
                     }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'curr_req', 'total_req', 'total_req_succ', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'last_total_conn', 'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400', 'es_resp_500', 'es_resp_other', 'es_req_count', 'es_resp_count', 'es_resp_invalid_http',
+                        'total_rev_pkts_inspected', 'total_rev_pkts_inspected_good_status_code', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'resp-count', 'resp-1xx', 'resp-2xx', 'resp-3xx', 'resp-4xx', 'resp-5xx', 'resp-other', 'resp-latency', 'curr_pconn'
+                        ]
+                    }
+                },
+            'packet_capture_template': {
+                'type': 'str',
+                }
+            },
+        'service_list': {
+            'type': 'list',
+            'port_number': {
+                'type': 'int',
+                'required': True,
+                },
+            'protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
+                },
+            'label': {
+                'type': 'str',
+                'required': True,
+                },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable', 'disable-with-health-check']
+                },
+            'health_check': {
+                'type': 'str',
+                },
+            'health_check_disable': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -1135,6 +1229,194 @@ def get_argspec():
                             }
                         }
                     }
+                },
+            'service_list': {
+                'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                    },
+                'label': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'oper': {
+                    'type': 'dict',
+                    'state': {
+                        'type': 'str',
+                        'choices': ['Up', 'Down', 'Disabled', 'Maintenance', 'Unknown', 'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE', 'DIS-EXCEED-RATE', 'DIS-DAMP']
+                        },
+                    'curr_conn_rate': {
+                        'type': 'int',
+                        },
+                    'conn_rate_unit': {
+                        'type': 'str',
+                        },
+                    'slow_start_conn_limit': {
+                        'type': 'int',
+                        },
+                    'curr_observe_rate': {
+                        'type': 'int',
+                        },
+                    'down_grace_period_allowed': {
+                        'type': 'int',
+                        },
+                    'current_time': {
+                        'type': 'int',
+                        },
+                    'down_time_grace_period': {
+                        'type': 'int',
+                        },
+                    'diameter_enabled': {
+                        'type': 'int',
+                        },
+                    'es_resp_time': {
+                        'type': 'int',
+                        },
+                    'inband_hm_reassign_num': {
+                        'type': 'int',
+                        },
+                    'disable': {
+                        'type': 'int',
+                        },
+                    'hm_key': {
+                        'type': 'int',
+                        },
+                    'hm_index': {
+                        'type': 'int',
+                        },
+                    'soft_down_time': {
+                        'type': 'int',
+                        },
+                    'aflow_conn_limit': {
+                        'type': 'int',
+                        },
+                    'aflow_queue_size': {
+                        'type': 'int',
+                        },
+                    'resv_conn': {
+                        'type': 'int',
+                        },
+                    'auto_nat_addr_list': {
+                        'type': 'list',
+                        'auto_nat_ip': {
+                            'type': 'str',
+                            },
+                        'vrid': {
+                            'type': 'int',
+                            },
+                        'ha_group_id': {
+                            'type': 'int',
+                            },
+                        'ip_rr': {
+                            'type': 'int',
+                            },
+                        'ports_consumed': {
+                            'type': 'int',
+                            },
+                        'ports_consumed_total': {
+                            'type': 'int',
+                            },
+                        'ports_freed_total': {
+                            'type': 'int',
+                            },
+                        'alloc_failed': {
+                            'type': 'int',
+                            }
+                        },
+                    'drs_auto_nat_list': {
+                        'type': 'list',
+                        'drs_name': {
+                            'type': 'str',
+                            },
+                        'drs_port': {
+                            'type': 'int',
+                            },
+                        'drs_auto_nat_address_list': {
+                            'type': 'list',
+                            'auto_nat_ip': {
+                                'type': 'str',
+                                },
+                            'vrid': {
+                                'type': 'int',
+                                },
+                            'ha_group_id': {
+                                'type': 'int',
+                                },
+                            'ip_rr': {
+                                'type': 'int',
+                                },
+                            'ports_consumed': {
+                                'type': 'int',
+                                },
+                            'ports_consumed_total': {
+                                'type': 'int',
+                                },
+                            'ports_freed_total': {
+                                'type': 'int',
+                                },
+                            'alloc_failed': {
+                                'type': 'int',
+                                }
+                            }
+                        },
+                    'pool_name': {
+                        'type': 'str',
+                        },
+                    'nat_pool_addr_list': {
+                        'type': 'list',
+                        'nat_ip': {
+                            'type': 'str',
+                            },
+                        'ports_consumed': {
+                            'type': 'int',
+                            },
+                        'ports_consumed_total': {
+                            'type': 'int',
+                            },
+                        'ports_freed_total': {
+                            'type': 'int',
+                            },
+                        'alloc_failed': {
+                            'type': 'int',
+                            }
+                        },
+                    'drs_ip_nat_list': {
+                        'type': 'list',
+                        'drs_name': {
+                            'type': 'str',
+                            },
+                        'drs_port': {
+                            'type': 'int',
+                            },
+                        'pool_name': {
+                            'type': 'str',
+                            },
+                        'nat_pool_addr_list': {
+                            'type': 'list',
+                            'nat_ip': {
+                                'type': 'str',
+                                },
+                            'ports_consumed': {
+                                'type': 'int',
+                                },
+                            'ports_consumed_total': {
+                                'type': 'int',
+                                },
+                            'ports_freed_total': {
+                                'type': 'int',
+                                },
+                            'alloc_failed': {
+                                'type': 'int',
+                                }
+                            }
+                        }
+                    }
                 }
             },
         'stats': {
@@ -1204,6 +1486,130 @@ def get_argspec():
                     'type': 'str',
                     'required': True,
                     'choices': ['tcp', 'udp']
+                    },
+                'stats': {
+                    'type': 'dict',
+                    'curr_conn': {
+                        'type': 'str',
+                        },
+                    'curr_req': {
+                        'type': 'str',
+                        },
+                    'total_req': {
+                        'type': 'str',
+                        },
+                    'total_req_succ': {
+                        'type': 'str',
+                        },
+                    'total_fwd_bytes': {
+                        'type': 'str',
+                        },
+                    'total_fwd_pkts': {
+                        'type': 'str',
+                        },
+                    'total_rev_bytes': {
+                        'type': 'str',
+                        },
+                    'total_rev_pkts': {
+                        'type': 'str',
+                        },
+                    'total_conn': {
+                        'type': 'str',
+                        },
+                    'last_total_conn': {
+                        'type': 'str',
+                        },
+                    'peak_conn': {
+                        'type': 'str',
+                        },
+                    'es_resp_200': {
+                        'type': 'str',
+                        },
+                    'es_resp_300': {
+                        'type': 'str',
+                        },
+                    'es_resp_400': {
+                        'type': 'str',
+                        },
+                    'es_resp_500': {
+                        'type': 'str',
+                        },
+                    'es_resp_other': {
+                        'type': 'str',
+                        },
+                    'es_req_count': {
+                        'type': 'str',
+                        },
+                    'es_resp_count': {
+                        'type': 'str',
+                        },
+                    'es_resp_invalid_http': {
+                        'type': 'str',
+                        },
+                    'total_rev_pkts_inspected': {
+                        'type': 'str',
+                        },
+                    'total_rev_pkts_inspected_good_status_code': {
+                        'type': 'str',
+                        },
+                    'response_time': {
+                        'type': 'str',
+                        },
+                    'fastest_rsp_time': {
+                        'type': 'str',
+                        },
+                    'slowest_rsp_time': {
+                        'type': 'str',
+                        },
+                    'curr_ssl_conn': {
+                        'type': 'str',
+                        },
+                    'total_ssl_conn': {
+                        'type': 'str',
+                        },
+                    'resp_count': {
+                        'type': 'str',
+                        },
+                    'resp_1xx': {
+                        'type': 'str',
+                        },
+                    'resp_2xx': {
+                        'type': 'str',
+                        },
+                    'resp_3xx': {
+                        'type': 'str',
+                        },
+                    'resp_4xx': {
+                        'type': 'str',
+                        },
+                    'resp_5xx': {
+                        'type': 'str',
+                        },
+                    'resp_other': {
+                        'type': 'str',
+                        },
+                    'resp_latency': {
+                        'type': 'str',
+                        },
+                    'curr_pconn': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'service_list': {
+                'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                    },
+                'label': {
+                    'type': 'str',
+                    'required': True,
                     },
                 'stats': {
                     'type': 'dict',

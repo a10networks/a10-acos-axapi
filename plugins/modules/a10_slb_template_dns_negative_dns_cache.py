@@ -75,6 +75,12 @@ options:
         - "Max negative cache ttl, default is 2 hours"
         type: int
         required: False
+    cache_non_valid:
+        description:
+        - "Enable caching non-valid negative response, otherwise will only cache valid
+          negative response"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -134,7 +140,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bypass_query_threshold", "enable_negative_dns_cache", "max_negative_cache_ttl", "uuid", ]
+AVAILABLE_PROPERTIES = ["bypass_query_threshold", "cache_non_valid", "enable_negative_dns_cache", "max_negative_cache_ttl", "uuid", ]
 
 
 def get_default_argspec():
@@ -154,7 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'enable_negative_dns_cache': {'type': 'bool', 'required': True, }, 'bypass_query_threshold': {'type': 'int', }, 'max_negative_cache_ttl': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'enable_negative_dns_cache': {'type': 'bool', 'required': True, }, 'bypass_query_threshold': {'type': 'int', }, 'max_negative_cache_ttl': {'type': 'int', }, 'cache_non_valid': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(dns_name=dict(type='str', required=True), ))
     return rv

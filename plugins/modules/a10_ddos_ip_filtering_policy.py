@@ -66,6 +66,11 @@ options:
           packets not meet any rule (Default);"
         type: str
         required: False
+    rule_statistics:
+        description:
+        - "'enable'= Enable;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -224,7 +229,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name", "no_rule_match_action", "rule_list", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["name", "no_rule_match_action", "rule_list", "rule_statistics", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -252,6 +257,10 @@ def get_argspec():
         'no_rule_match_action': {
             'type': 'str',
             'choices': ['drop', 'permit']
+            },
+        'rule_statistics': {
+            'type': 'str',
+            'choices': ['enable']
             },
         'uuid': {
             'type': 'str',

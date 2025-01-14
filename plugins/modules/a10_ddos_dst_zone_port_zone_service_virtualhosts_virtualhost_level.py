@@ -97,6 +97,10 @@ options:
         type: dict
         required: False
         suboptions:
+            ssl_l4:
+                description:
+                - "DDOS ssl-l4 template"
+                type: str
             tcp:
                 description:
                 - "DDOS tcp template"
@@ -185,7 +189,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'level_num': {'type': 'str', 'required': True, 'choices': ['0']}, 'src_default_glid': {'type': 'str', }, 'glid_action': {'type': 'str', 'choices': ['drop', 'blacklist-src', 'ignore']}, 'zone_template': {'type': 'dict', 'tcp': {'type': 'str', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({'level_num': {'type': 'str', 'required': True, 'choices': ['0']}, 'src_default_glid': {'type': 'str', }, 'glid_action': {'type': 'str', 'choices': ['drop', 'blacklist-src', 'ignore']}, 'zone_template': {'type': 'dict', 'ssl_l4': {'type': 'str', }, 'tcp': {'type': 'str', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     # Parent keys
     rv.update(dict(virtualhost_vhost=dict(type='str', required=True), protocol=dict(type='str', required=True), zone_service_port_num=dict(type='str', required=True), zone_name=dict(type='str', required=True), ))
     return rv

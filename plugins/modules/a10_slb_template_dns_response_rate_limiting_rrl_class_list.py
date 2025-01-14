@@ -88,11 +88,16 @@ options:
             lid_response_rate:
                 description:
                 - "Responses exceeding this rate within the window will be dropped (default 5 per
-          second)"
+          second), 0 for unlimited"
                 type: int
             lid_slip_rate:
                 description:
                 - "Every n'th response that would be rate-limited will be let through instead"
+                type: int
+            lid_nx_response_rate:
+                description:
+                - "Queries from entries whose NX Responses exceeding this rate within the window
+          will be dropped (default 5 per second)"
                 type: int
             lid_tc_rate:
                 description:
@@ -227,6 +232,9 @@ def get_argspec():
                 'type': 'int',
                 },
             'lid_slip_rate': {
+                'type': 'int',
+                },
+            'lid_nx_response_rate': {
                 'type': 'int',
                 },
             'lid_tc_rate': {

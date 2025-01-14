@@ -76,11 +76,6 @@ options:
           range mapping)"
         type: int
         required: False
-    service:
-        description:
-        - "Port Service"
-        type: str
-        required: False
     template_port:
         description:
         - "Port template (Port template name)"
@@ -570,7 +565,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action", "alternate_port", "auth_cfg", "conn_limit", "conn_resume", "extended_stats", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "no_logging", "no_ssl", "only", "oper", "packet_capture_template", "port_number", "protocol", "range", "rport_health_check_shared", "sampling_enable", "service",
+    "action", "alternate_port", "auth_cfg", "conn_limit", "conn_resume", "extended_stats", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "no_logging", "no_ssl", "only", "oper", "packet_capture_template", "port_number", "protocol", "range", "rport_health_check_shared", "sampling_enable",
     "shared_partition_port_template", "shared_rport_health_check", "stats", "stats_data_action", "support_http2", "template_port", "template_port_shared", "template_server_ssl", "user_tag", "uuid", "weight",
     ]
 
@@ -604,9 +599,6 @@ def get_argspec():
             },
         'range': {
             'type': 'int',
-            },
-        'service': {
-            'type': 'str',
             },
         'template_port': {
             'type': 'str',

@@ -10,9 +10,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = r'''
-module: a10_ddos_detection_settings_reflection_attack_detection
+module: a10_ddos_network_object_indicators_to_monitor
 description:
-    - Detection entries and indicators saving configuration
+    - Configure monitoring of indicators for anomaly based on ONLY adaptive threshold
 author: A10 Networks
 options:
     state:
@@ -55,15 +55,75 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    heavy_hitter_threshold:
+    network_object_object_name:
         description:
-        - "Fractional threshold relative to total undiscovered source ports (default 50%)"
-        type: int
+        - Key to identify parent object
+        type: str
+        required: True
+    enable:
+        description:
+        - "Field enable"
+        type: bool
+        required: True
+    monitor_pkt_rate:
+        description:
+        - "Forward packet rate"
+        type: bool
         required: False
-    sport_discovery_threshold:
+    monitor_bit_rate:
         description:
-        - "Fractional threshold relative to parent entry's bit-rate (default 5%)"
-        type: int
+        - "Forward bit rate"
+        type: bool
+        required: False
+    monitor_rev_pkt_rate:
+        description:
+        - "Reverse packet rate"
+        type: bool
+        required: False
+    monitor_rev_bit_rate:
+        description:
+        - "Reverse bit rate"
+        type: bool
+        required: False
+    monitor_undiscovered_pkt_rate:
+        description:
+        - "Undiscovered forward packet rate"
+        type: bool
+        required: False
+    monitor_flow_count:
+        description:
+        - "Flow count"
+        type: bool
+        required: False
+    monitor_syn_rate:
+        description:
+        - "SYN packet rate"
+        type: bool
+        required: False
+    monitor_fin_rate:
+        description:
+        - "FIN packet rate"
+        type: bool
+        required: False
+    monitor_rst_rate:
+        description:
+        - "RST packet rate"
+        type: bool
+        required: False
+    monitor_tcp_pkt_rate:
+        description:
+        - "TCP packet rate"
+        type: bool
+        required: False
+    monitor_udp_pkt_rate:
+        description:
+        - "UDP packet rate"
+        type: bool
+        required: False
+    monitor_icmp_pkt_rate:
+        description:
+        - "ICMP packet rate"
+        type: bool
         required: False
     uuid:
         description:
@@ -124,7 +184,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["heavy_hitter_threshold", "sport_discovery_threshold", "uuid", ]
+AVAILABLE_PROPERTIES = ["enable", "monitor_bit_rate", "monitor_fin_rate", "monitor_flow_count", "monitor_icmp_pkt_rate", "monitor_pkt_rate", "monitor_rev_bit_rate", "monitor_rev_pkt_rate", "monitor_rst_rate", "monitor_syn_rate", "monitor_tcp_pkt_rate", "monitor_udp_pkt_rate", "monitor_undiscovered_pkt_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,16 +204,66 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'heavy_hitter_threshold': {'type': 'int', }, 'sport_discovery_threshold': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'enable': {
+            'type': 'bool',
+            'required': True,
+            },
+        'monitor_pkt_rate': {
+            'type': 'bool',
+            },
+        'monitor_bit_rate': {
+            'type': 'bool',
+            },
+        'monitor_rev_pkt_rate': {
+            'type': 'bool',
+            },
+        'monitor_rev_bit_rate': {
+            'type': 'bool',
+            },
+        'monitor_undiscovered_pkt_rate': {
+            'type': 'bool',
+            },
+        'monitor_flow_count': {
+            'type': 'bool',
+            },
+        'monitor_syn_rate': {
+            'type': 'bool',
+            },
+        'monitor_fin_rate': {
+            'type': 'bool',
+            },
+        'monitor_rst_rate': {
+            'type': 'bool',
+            },
+        'monitor_tcp_pkt_rate': {
+            'type': 'bool',
+            },
+        'monitor_udp_pkt_rate': {
+            'type': 'bool',
+            },
+        'monitor_icmp_pkt_rate': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
+    # Parent keys
+    rv.update(dict(network_object_object_name=dict(type='str', required=True), ))
     return rv
 
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ddos/detection/settings/reflection-attack-detection"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/indicators-to-monitor"
 
     f_dict = {}
+    if '/' in module.params["network_object_object_name"]:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"].replace("/", "%2F")
+    else:
+        f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -161,9 +271,10 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ddos/detection/settings/reflection-attack-detection"
+    url_base = "/axapi/v3/ddos/network-object/{network_object_object_name}/indicators-to-monitor"
 
     f_dict = {}
+    f_dict["network_object_object_name"] = module.params["network_object_object_name"]
 
     return url_base.format(**f_dict)
 
@@ -175,13 +286,13 @@ def report_changes(module, result, existing_config, payload):
         return change_results
 
     config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["reflection-attack-detection"].items():
+    for k, v in payload["indicators-to-monitor"].items():
         v = 1 if str(v).lower() == "true" else v
         v = 0 if str(v).lower() == "false" else v
 
-        if config_changes["reflection-attack-detection"].get(k) != v:
+        if config_changes["indicators-to-monitor"].get(k) != v:
             change_results["changed"] = True
-            config_changes["reflection-attack-detection"][k] = v
+            config_changes["indicators-to-monitor"][k] = v
 
     change_results["modified_values"].update(**config_changes)
     return change_results
@@ -207,7 +318,7 @@ def update(module, result, existing_config, payload={}):
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("reflection-attack-detection", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("indicators-to-monitor", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -297,13 +408,13 @@ def run_command(module):
                 get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["reflection-attack-detection"] if info != "NotFound" else info
+                result["acos_info"] = info["indicators-to-monitor"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
                 get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["reflection-attack-detection-list"] if info != "NotFound" else info
+                result["acos_info"] = info["indicators-to-monitor-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

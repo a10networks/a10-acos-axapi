@@ -524,6 +524,11 @@ def get_argspec():
                         'type': 'str',
                         'required': True,
                         },
+                    'ip_version': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['ipv4', 'ipv6']
+                        },
                     'threshold_cfg': {
                         'type': 'list',
                         'threshold': {
@@ -532,10 +537,6 @@ def get_argspec():
                         'action': {
                             'type': 'str',
                             'choices': ['down', 'exit-cluster']
-                            },
-                        'ip_version': {
-                            'type': 'str',
-                            'choices': ['ipv4', 'ipv6']
                             }
                         },
                     'uuid': {

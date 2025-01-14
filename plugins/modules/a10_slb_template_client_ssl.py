@@ -1367,7 +1367,7 @@ options:
                 type: bool
             sni_template_client_ssl_shared_name:
                 description:
-                - "Client SSL Template Name"
+                - "Shared Partition Client SSL Template Name"
                 type: str
             server_name_regex:
                 description:
@@ -1418,7 +1418,7 @@ options:
                 type: bool
             sni_regex_template_client_ssl_shared_name:
                 description:
-                - "Client SSL Template Name"
+                - "Shared Partition Client SSL Template Name"
                 type: str
     server_name_auto_map:
         description:

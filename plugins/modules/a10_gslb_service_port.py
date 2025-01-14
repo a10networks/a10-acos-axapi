@@ -144,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'service_port_list': {'type': 'list', 'service_port_name': {'type': 'str', }, 'attributes': {'type': 'str', }, 'state': {'type': 'str', }, 'active_real_server': {'type': 'int', }, 'current_connections': {'type': 'int', }}}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'service_port_list': {'type': 'list', 'service_port_name': {'type': 'str', }, 'attributes': {'type': 'str', }, 'state': {'type': 'str', }, 'active_real_server': {'type': 'int', }, 'current_connections': {'type': 'int', }, 'service_label': {'type': 'str', }}}})
     return rv
 
 

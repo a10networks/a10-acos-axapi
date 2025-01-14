@@ -105,7 +105,11 @@ options:
                 type: str
             servername_match_any:
                 description:
-                - "Match when there is no SNI or other servernames are not matched"
+                - "Match any SNI extension"
+                type: bool
+            servername_no_sni:
+                description:
+                - "Match when there is no SNI extension found"
                 type: bool
             source_tracking:
                 description:
@@ -241,6 +245,9 @@ def get_argspec():
             'servername_match_any': {
                 'type': 'bool',
                 },
+            'servername_no_sni': {
+                'type': 'bool',
+                },
             'source_tracking': {
                 'type': 'str',
                 'choices': ['follow', 'enable', 'disable']
@@ -280,6 +287,9 @@ def get_argspec():
                     },
                 'zone_template': {
                     'type': 'dict',
+                    'ssl_l4': {
+                        'type': 'str',
+                        },
                     'tcp': {
                         'type': 'str',
                         }

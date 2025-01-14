@@ -86,7 +86,7 @@ options:
         required: False
     multicast_ip:
         description:
-        - "Multicast (group) IP address (Multicast IP address)"
+        - "Multicast (group) IP address (Multicast IP address (224.0.0.211 by default))"
         type: str
         required: False
     multicast_ipv6:
@@ -133,7 +133,7 @@ options:
         required: False
     link_poll_timeout:
         description:
-        - "link poll timeout, in millisecond, default is 500"
+        - "Field link_poll_timeout"
         type: int
         required: False
     chassis_id:

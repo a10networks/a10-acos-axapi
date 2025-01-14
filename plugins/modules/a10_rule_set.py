@@ -349,6 +349,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
             action_group:
                 description:
                 - "Field action_group"
@@ -1020,9 +1024,12 @@ def get_argspec():
                     'str',
                     'choices': [
                         'all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other', 'active-session-sctp', 'session-sctp',
-                        'hitcount-timestamp', 'rate-limit-drops'
+                        'hitcount-timestamp', 'rate-limit-drops', 'syn-cookie-syn-ack-sent', 'syn-cookie-verification-passed', 'syn-cookie-verification-failed', 'syn-cookie-conn-setup-failed', 'tcp-half-open-count'
                         ]
                     }
+                },
+            'packet_capture_template': {
+                'type': 'str',
                 },
             'action_group': {
                 'type': 'dict',
@@ -1127,6 +1134,22 @@ def get_argspec():
                     'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']
                     },
                 'dscp_number': {
+                    'type': 'int',
+                    },
+                'tcp': {
+                    'type': 'bool',
+                    },
+                'syn_cookie': {
+                    'type': 'bool',
+                    },
+                'syn_cookie_enable': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'threshold_val': {
+                    'type': 'int',
+                    },
+                'on_timeout': {
                     'type': 'int',
                     },
                 'uuid': {
@@ -1347,6 +1370,21 @@ def get_argspec():
                         },
                     'ratelimitdrops': {
                         'type': 'int',
+                        },
+                    'syncookieon': {
+                        'type': 'int',
+                        },
+                    'synacksent': {
+                        'type': 'int',
+                        },
+                    'verificationpassed': {
+                        'type': 'int',
+                        },
+                    'verificationfailed': {
+                        'type': 'int',
+                        },
+                    'tcphalfopencount': {
+                        'type': 'int',
                         }
                     }
                 },
@@ -1537,6 +1575,18 @@ def get_argspec():
                         'type': 'str',
                         },
                     'rate_limit_drops': {
+                        'type': 'str',
+                        },
+                    'syn_cookie_syn_ack_sent': {
+                        'type': 'str',
+                        },
+                    'syn_cookie_verification_passed': {
+                        'type': 'str',
+                        },
+                    'syn_cookie_verification_failed': {
+                        'type': 'str',
+                        },
+                    'tcp_half_open_count': {
                         'type': 'str',
                         }
                     }

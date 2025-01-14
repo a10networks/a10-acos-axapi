@@ -177,6 +177,20 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    pool_based_log:
+        description:
+        - "Field pool_based_log"
+        type: dict
+        required: False
+        suboptions:
+            cycle:
+                description:
+                - "Logging cycle"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -445,7 +459,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["nat_quota_exceeded", "nat_resource_exhausted", "sampling_enable", "source_address", "stats", "tcp_svr_status", "uuid", ]
+AVAILABLE_PROPERTIES = ["nat_quota_exceeded", "nat_resource_exhausted", "pool_based_log", "sampling_enable", "source_address", "stats", "tcp_svr_status", "uuid", ]
 
 
 def get_default_argspec():
@@ -512,6 +526,15 @@ def get_argspec():
             'level': {
                 'type': 'str',
                 'choices': ['warning', 'critical', 'notice']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'pool_based_log': {
+            'type': 'dict',
+            'cycle': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',

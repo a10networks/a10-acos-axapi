@@ -57,7 +57,8 @@ options:
         required: False
     num_ctrl_cpus:
         description:
-        - "Set number of control CPUs. Default is 1, and max limit is platform dependent."
+        - "Set number of control CPUs. Default is lowest possible. Limits are platform
+          dependent."
         type: int
         required: False
 

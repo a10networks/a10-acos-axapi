@@ -70,6 +70,20 @@ options:
                 description:
                 - "Field trunk"
                 type: list
+    stats:
+        description:
+        - "Field stats"
+        type: str
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable trunk interface stats generation"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -124,7 +138,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -203,6 +217,16 @@ def get_argspec():
                 'working_lead': {
                     'type': 'int',
                     }
+                }
+            },
+        'stats': {
+            'type': 'str',
+            'required': False,
+            'enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             }
         })
@@ -357,6 +381,11 @@ def run_command(module):
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
                 result["acos_info"] = info["trunk"]["oper"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "stats":
+                get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_type_result)
+                info = get_type_result["response_body"]
+                result["acos_info"] = info["trunk"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

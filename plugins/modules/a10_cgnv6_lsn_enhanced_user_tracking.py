@@ -198,6 +198,12 @@ def get_argspec():
                 'session_count': {
                     'type': 'int',
                     },
+                'session_count_tcp': {
+                    'type': 'int',
+                    },
+                'session_count_udp': {
+                    'type': 'int',
+                    },
                 'tcp_peak': {
                     'type': 'int',
                     },

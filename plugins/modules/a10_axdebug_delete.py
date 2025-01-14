@@ -21,7 +21,6 @@ options:
         choices:
           - noop
           - present
-          - absent
         type: str
         required: True
     ansible_host:
@@ -127,7 +126,7 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
         a10_partition=dict(type='str', required=False,
                            ),
@@ -213,28 +212,6 @@ def present(module, result, existing_config):
     return result
 
 
-def delete(module, result):
-    try:
-        call_result = api_client.delete(module.client, existing_url(module))
-        result["axapi_calls"].append(call_result)
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
-    return result
-
-
-def absent(module, result, existing_config):
-    if not existing_config:
-        result["changed"] = False
-        return result
-
-    if module.check_mode:
-        result["changed"] = True
-        return result
-
-    return delete(module, result)
-
-
 def run_command(module):
     result = dict(changed=False, messages="", modified_values={}, axapi_calls=[], ansible_facts={}, acos_info={})
 
@@ -283,9 +260,6 @@ def run_command(module):
                 existing_config = None
         if state == 'present':
             result = present(module, result, existing_config)
-
-        if state == 'absent':
-            result = absent(module, result, existing_config)
 
         if state == 'noop':
             if module.params.get("get_type") == "single" or module.params.get("get_type") is None:

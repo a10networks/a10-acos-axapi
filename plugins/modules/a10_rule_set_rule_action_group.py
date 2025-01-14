@@ -228,6 +228,32 @@ options:
         - "DSCP Number"
         type: int
         required: False
+    tcp:
+        description:
+        - "Firewall rule TCP parameters"
+        type: bool
+        required: False
+    syn_cookie:
+        description:
+        - "Configure Firewall rule Syn-Cookie Protection"
+        type: bool
+        required: False
+    syn_cookie_enable:
+        description:
+        - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
+    threshold_val:
+        description:
+        - "Decimal number"
+        type: int
+        required: False
+    on_timeout:
+        description:
+        - "on-timeout for Syn-cookie (Timeout in seconds, default is 120 seconds (2
+          minutes))"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -288,8 +314,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "deny_reset_limit_policy", "dscp_number", "dscp_value", "forward", "inspect_payload", "ipsec", "ipsec_group", "listen_on_port", "logging_template_list", "permit_limit_policy", "permit_log",
-    "permit_respond_to_user_mac", "reset_fw_log", "reset_log", "reset_log_template_type", "reset_respond_to_user_mac", "set_dscp", "ntype", "uuid", "vpn_ipsec_group_name", "vpn_ipsec_name",
+    "cgnv6", "cgnv6_ds_lite", "cgnv6_ds_lite_lsn_lid", "cgnv6_lsn_lid", "cgnv6_policy", "deny_fw_log", "deny_log", "deny_log_template_type", "deny_reset_limit_policy", "dscp_number", "dscp_value", "forward", "inspect_payload", "ipsec", "ipsec_group", "listen_on_port", "logging_template_list", "on_timeout", "permit_limit_policy", "permit_log",
+    "permit_respond_to_user_mac", "reset_fw_log", "reset_log", "reset_log_template_type", "reset_respond_to_user_mac", "set_dscp", "syn_cookie", "syn_cookie_enable", "tcp", "threshold_val", "ntype", "uuid", "vpn_ipsec_group_name", "vpn_ipsec_name",
     ]
 
 
@@ -412,6 +438,22 @@ def get_argspec():
             'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']
             },
         'dscp_number': {
+            'type': 'int',
+            },
+        'tcp': {
+            'type': 'bool',
+            },
+        'syn_cookie': {
+            'type': 'bool',
+            },
+        'syn_cookie_enable': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'threshold_val': {
+            'type': 'int',
+            },
+        'on_timeout': {
             'type': 'int',
             },
         'uuid': {

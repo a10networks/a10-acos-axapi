@@ -358,6 +358,21 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'slow_attacker_identification': {
+                    'type': 'dict',
+                    'enable_identification': {
+                        'type': 'bool',
+                        },
+                    'active_connection': {
+                        'type': 'int',
+                        },
+                    'bad_connection': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     }
                 }
             },

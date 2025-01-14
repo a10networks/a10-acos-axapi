@@ -152,6 +152,11 @@ options:
                 description:
                 - "Enable automatic packet-capture for DNS Response-Rate-Limiting Bad FQDN"
                 type: bool
+            dnsrrl_nx_exceed:
+                description:
+                - "Enable automatic packet-capture for DNS Response-Rate-Limiting NX Responses
+          Exceed Limit"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -199,6 +204,11 @@ options:
             dnsrrl_bad_fqdn:
                 description:
                 - "Enable automatic packet-capture for DNS Response-Rate-Limiting Bad FQDN"
+                type: bool
+            dnsrrl_nx_exceed:
+                description:
+                - "Enable automatic packet-capture for DNS Response-Rate-Limiting NX Responses
+          Exceed Limit"
                 type: bool
             uuid:
                 description:
@@ -345,6 +355,9 @@ def get_argspec():
             'dnsrrl_bad_fqdn': {
                 'type': 'bool',
                 },
+            'dnsrrl_nx_exceed': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -376,6 +389,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'dnsrrl_bad_fqdn': {
+                'type': 'bool',
+                },
+            'dnsrrl_nx_exceed': {
                 'type': 'bool',
                 },
             'uuid': {

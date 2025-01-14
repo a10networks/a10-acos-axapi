@@ -556,6 +556,12 @@ def get_argspec():
                 'custom6_attr_value': {
                     'type': 'str',
                     },
+                'derived_attr_usergroup_value': {
+                    'type': 'str',
+                    },
+                'derived_attr_userid_value': {
+                    'type': 'str',
+                    },
                 'is_obsolete': {
                     'type': 'bool',
                     }

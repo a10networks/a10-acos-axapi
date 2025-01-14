@@ -83,7 +83,9 @@ options:
         required: False
     threshold_sensitivity:
         description:
-        - "tune threshold range (default OFF)"
+        - "tune threshold ranges with levels LOW/MEDIUM/HIGH/OFF(default) or multiplier of
+          threshold value (available options are LOW=5x/MEDIUM=3x/HIGH=1.5x/OFF=1x, or
+          float value between 1.0-10.0)"
         type: str
         required: False
     ip:
@@ -635,7 +637,10 @@ options:
           'token_auth_previous_salt_matched'= Token Authentication Previous Salt Matched;
           'token_auth_session_created'= Token Authentication Session Created;
           'token_auth_session_created_fail'= Token Authentication Session Created Fail;
-          'tcp_invalid_synack'= TCP Invalid SYNACK Received;"
+          'tcp_invalid_synack'= TCP Invalid SYNACK Received;
+          'zone_tcp_small_window_excd'= TCP Small-Window Exceeded;
+          'src_tcp_small_window_excd'= Src TCP Small-Window Exceeded; 'small_window_rcv'=
+          Small Window Received;"
                 type: str
     detection:
         description:
@@ -899,6 +904,10 @@ options:
                 description:
                 - "Enable sFlow packet-level counter polling"
                 type: bool
+            sflow_ip_filtering_policy:
+                description:
+                - "Enable sFlow IP filtering policy per port per rule counter polling"
+                type: bool
             sflow_tcp:
                 description:
                 - "Field sflow_tcp"
@@ -977,6 +986,10 @@ options:
                 description:
                 - "Configure IP Filter"
                 type: str
+            same_source_dest_port_drop:
+                description:
+                - "Drop packet with same Source Port and Dest Port"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -2500,6 +2513,18 @@ options:
                 description:
                 - "TCP Invalid SYNACK Received"
                 type: str
+            zone_tcp_small_window_excd:
+                description:
+                - "TCP Small-Window Exceeded"
+                type: str
+            src_tcp_small_window_excd:
+                description:
+                - "Src TCP Small-Window Exceeded"
+                type: str
+            small_window_rcv:
+                description:
+                - "Small Window Received"
+                type: str
             zone_name:
                 description:
                 - "Field zone_name"
@@ -2811,7 +2836,7 @@ def get_argspec():
                     'prog_win_rcvd_sent_ratio_exceed', 'prog_exceed_drop', 'prog_exceed_bl', 'prog_conn_exceed_drop', 'prog_conn_exceed_bl', 'prog_win_exceed_drop', 'prog_win_exceed_bl', 'east_west_inbound_rcv_pkt', 'east_west_inbound_drop_pkt', 'east_west_inbound_fwd_pkt', 'east_west_inbound_rcv_byte', 'east_west_inbound_drop_byte',
                     'east_west_inbound_fwd_byte', 'east_west_outbound_rcv_pkt', 'east_west_outbound_drop_pkt', 'east_west_outbound_fwd_pkt', 'east_west_outbound_rcv_byte', 'east_west_outbound_drop_byte', 'east_west_outbound_fwd_byte', 'dst_exceed_action_drop', 'dst_src_learn_overflow', 'dst_tcp_auth_rst', 'prog_query_exceed', 'prog_think_exceed',
                     'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'victim_ip_learned', 'victim_ip_aged', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'token_auth_mismatched_packets', 'token_auth_invalid_packets', 'token_auth_current_salt_matched', 'token_auth_previous_salt_matched',
-                    'token_auth_session_created', 'token_auth_session_created_fail', 'tcp_invalid_synack'
+                    'token_auth_session_created', 'token_auth_session_created_fail', 'tcp_invalid_synack', 'zone_tcp_small_window_excd', 'src_tcp_small_window_excd', 'small_window_rcv'
                     ]
                 }
             },
@@ -3413,6 +3438,9 @@ def get_argspec():
                 'faster_de_escalation': {
                     'type': 'bool',
                     },
+                'sflow_ip_filtering_policy': {
+                    'type': 'bool',
+                    },
                 'ip_filtering_policy': {
                     'type': 'str',
                     },
@@ -3442,6 +3470,9 @@ def get_argspec():
                         'class_list_name': {
                             'type': 'str',
                             'required': True,
+                            },
+                        'class_list_glid': {
+                            'type': 'str',
                             },
                         'glid': {
                             'type': 'str',
@@ -3485,7 +3516,7 @@ def get_argspec():
                             'type': 'list',
                             'counters1': {
                                 'type': 'str',
-                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                                 }
                             },
                         'class_list_overflow_policy_list': {
@@ -3685,7 +3716,7 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                                 ]
                             }
                         }
@@ -3741,8 +3772,14 @@ def get_argspec():
                 'set_counter_base_val': {
                     'type': 'int',
                     },
+                'sflow_ip_filtering_policy': {
+                    'type': 'bool',
+                    },
                 'ip_filtering_policy': {
                     'type': 'str',
+                    },
+                'same_source_dest_port_drop': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -3840,6 +3877,9 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'faster_de_escalation': {
+                    'type': 'bool',
+                    },
+                'sflow_ip_filtering_policy': {
                     'type': 'bool',
                     },
                 'ip_filtering_policy': {
@@ -4000,6 +4040,9 @@ def get_argspec():
                             'type': 'str',
                             'required': True,
                             },
+                        'class_list_glid': {
+                            'type': 'str',
+                            },
                         'glid': {
                             'type': 'str',
                             },
@@ -4051,7 +4094,7 @@ def get_argspec():
                             'type': 'list',
                             'counters1': {
                                 'type': 'str',
-                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                                 }
                             },
                         'class_list_overflow_policy_list': {
@@ -4153,7 +4196,7 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                                 ]
                             }
                         }
@@ -4223,6 +4266,9 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'sflow_packets': {
+                    'type': 'bool',
+                    },
+                'sflow_ip_filtering_policy': {
                     'type': 'bool',
                     },
                 'sflow_tcp': {
@@ -4296,6 +4342,9 @@ def get_argspec():
                     },
                 'ip_filtering_policy': {
                     'type': 'str',
+                    },
+                'same_source_dest_port_drop': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -4427,9 +4476,14 @@ def get_argspec():
                     'indicator_list': {
                         'type': 'list',
                         'ntype': {
-                            'type': 'str',
-                            'required': True,
-                            'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
+                            'type':
+                            'str',
+                            'required':
+                            True,
+                            'choices': [
+                                'pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'syn-ack-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization',
+                                'learnt-sources'
+                                ]
                             },
                         'tcp_window_size': {
                             'type': 'int',
@@ -4545,7 +4599,7 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                                 ]
                             }
                         }
@@ -4585,6 +4639,9 @@ def get_argspec():
                         'class_list_name': {
                             'type': 'str',
                             'required': True,
+                            },
+                        'class_list_glid': {
+                            'type': 'str',
                             },
                         'glid': {
                             'type': 'str',
@@ -4649,7 +4706,7 @@ def get_argspec():
                             'type': 'list',
                             'counters1': {
                                 'type': 'str',
-                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                                 }
                             },
                         'class_list_overflow_policy_list': {
@@ -4802,6 +4859,9 @@ def get_argspec():
                         'servername_match_any': {
                             'type': 'bool',
                             },
+                        'servername_no_sni': {
+                            'type': 'bool',
+                            },
                         'source_tracking': {
                             'type': 'str',
                             'choices': ['follow', 'enable', 'disable']
@@ -4841,6 +4901,9 @@ def get_argspec():
                                 },
                             'zone_template': {
                                 'type': 'dict',
+                                'ssl_l4': {
+                                    'type': 'str',
+                                    },
                                 'tcp': {
                                     'type': 'str',
                                     }
@@ -4930,6 +4993,9 @@ def get_argspec():
                         'type': 'bool',
                         }
                     },
+                'sflow_ip_filtering_policy': {
+                    'type': 'bool',
+                    },
                 'unlimited_dynamic_entry_count': {
                     'type': 'bool',
                     },
@@ -4959,6 +5025,9 @@ def get_argspec():
                     },
                 'ip_filtering_policy': {
                     'type': 'str',
+                    },
+                'same_source_dest_port_drop': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -5069,9 +5138,14 @@ def get_argspec():
                     'indicator_list': {
                         'type': 'list',
                         'ntype': {
-                            'type': 'str',
-                            'required': True,
-                            'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
+                            'type':
+                            'str',
+                            'required':
+                            True,
+                            'choices': [
+                                'pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'syn-ack-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization',
+                                'learnt-sources'
+                                ]
                             },
                         'tcp_window_size': {
                             'type': 'int',
@@ -5172,7 +5246,7 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                                 ]
                             }
                         }
@@ -5212,6 +5286,9 @@ def get_argspec():
                         'class_list_name': {
                             'type': 'str',
                             'required': True,
+                            },
+                        'class_list_glid': {
+                            'type': 'str',
                             },
                         'glid': {
                             'type': 'str',
@@ -5255,7 +5332,7 @@ def get_argspec():
                             'type': 'list',
                             'counters1': {
                                 'type': 'str',
-                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                                'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                                 }
                             },
                         'class_list_overflow_policy_list': {
@@ -5419,6 +5496,9 @@ def get_argspec():
             'sflow_packets': {
                 'type': 'bool',
                 },
+            'sflow_ip_filtering_policy': {
+                'type': 'bool',
+                },
             'sflow_tcp': {
                 'type': 'dict',
                 'sflow_tcp_basic': {
@@ -5490,6 +5570,9 @@ def get_argspec():
                 },
             'ip_filtering_policy': {
                 'type': 'str',
+                },
+            'same_source_dest_port_drop': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -5621,9 +5704,12 @@ def get_argspec():
                 'indicator_list': {
                     'type': 'list',
                     'ntype': {
-                        'type': 'str',
-                        'required': True,
-                        'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
+                        'type':
+                        'str',
+                        'required':
+                        True,
+                        'choices':
+                        ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'syn-ack-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
                         },
                     'tcp_window_size': {
                         'type': 'int',
@@ -5739,7 +5825,7 @@ def get_argspec():
                             'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                             'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                             'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current',
-                            'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold'
+                            'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
                             ]
                         }
                     }
@@ -5779,6 +5865,9 @@ def get_argspec():
                     'class_list_name': {
                         'type': 'str',
                         'required': True,
+                        },
+                    'class_list_glid': {
+                        'type': 'str',
                         },
                     'glid': {
                         'type': 'str',
@@ -5837,7 +5926,7 @@ def get_argspec():
                         'type': 'list',
                         'counters1': {
                             'type': 'str',
-                            'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                            'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                             }
                         },
                     'class_list_overflow_policy_list': {
@@ -6029,6 +6118,9 @@ def get_argspec():
                             },
                         'zone_template': {
                             'type': 'dict',
+                            'ssl_l4': {
+                                'type': 'str',
+                                },
                             'tcp': {
                                 'type': 'str',
                                 }
@@ -7696,6 +7788,74 @@ def get_argspec():
                                 }
                             }
                         },
+                    'src_based_policy_list': {
+                        'type': 'list',
+                        'src_based_policy_name': {
+                            'type': 'str',
+                            'required': True,
+                            },
+                        'oper': {
+                            'type': 'dict',
+                            },
+                        'policy_class_list_list': {
+                            'type': 'list',
+                            'class_list_name': {
+                                'type': 'str',
+                                'required': True,
+                                },
+                            'oper': {
+                                'type': 'dict',
+                                'current_connections': {
+                                    'type': 'int',
+                                    },
+                                'is_connections_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_connection_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_connection_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_kBit_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_kBit_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'kBit_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_frag_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_frag_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'frag_packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'debug_str': {
+                                    'type': 'str',
+                                    }
+                                }
+                            }
+                        },
                     'port_ind': {
                         'type': 'dict',
                         'oper': {
@@ -8355,6 +8515,74 @@ def get_argspec():
                                     },
                                 'blacklisted_src_count': {
                                     'type': 'int',
+                                    }
+                                }
+                            }
+                        },
+                    'src_based_policy_list': {
+                        'type': 'list',
+                        'src_based_policy_name': {
+                            'type': 'str',
+                            'required': True,
+                            },
+                        'oper': {
+                            'type': 'dict',
+                            },
+                        'policy_class_list_list': {
+                            'type': 'list',
+                            'class_list_name': {
+                                'type': 'str',
+                                'required': True,
+                                },
+                            'oper': {
+                                'type': 'dict',
+                                'current_connections': {
+                                    'type': 'int',
+                                    },
+                                'is_connections_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_connection_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_connection_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_kBit_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_kBit_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'kBit_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_frag_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_frag_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'frag_packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'debug_str': {
+                                    'type': 'str',
                                     }
                                 }
                             }
@@ -9374,6 +9602,74 @@ def get_argspec():
                                 }
                             }
                         },
+                    'src_based_policy_list': {
+                        'type': 'list',
+                        'src_based_policy_name': {
+                            'type': 'str',
+                            'required': True,
+                            },
+                        'oper': {
+                            'type': 'dict',
+                            },
+                        'policy_class_list_list': {
+                            'type': 'list',
+                            'class_list_name': {
+                                'type': 'str',
+                                'required': True,
+                                },
+                            'oper': {
+                                'type': 'dict',
+                                'current_connections': {
+                                    'type': 'int',
+                                    },
+                                'is_connections_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_connection_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_connection_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_kBit_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_kBit_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'kBit_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_frag_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_frag_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'frag_packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'debug_str': {
+                                    'type': 'str',
+                                    }
+                                }
+                            }
+                        },
                     'virtualhosts': {
                         'type': 'dict',
                         'oper': {
@@ -10316,6 +10612,74 @@ def get_argspec():
                                 'type': 'str',
                                 }
                             }
+                        },
+                    'src_based_policy_list': {
+                        'type': 'list',
+                        'src_based_policy_name': {
+                            'type': 'str',
+                            'required': True,
+                            },
+                        'oper': {
+                            'type': 'dict',
+                            },
+                        'policy_class_list_list': {
+                            'type': 'list',
+                            'class_list_name': {
+                                'type': 'str',
+                                'required': True,
+                                },
+                            'oper': {
+                                'type': 'dict',
+                                'current_connections': {
+                                    'type': 'int',
+                                    },
+                                'is_connections_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_connection_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_connection_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'connection_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_kBit_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_kBit_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'kBit_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'current_frag_packet_rate': {
+                                    'type': 'int',
+                                    },
+                                'is_frag_packet_rate_exceed': {
+                                    'type': 'int',
+                                    },
+                                'frag_packet_rate_limit': {
+                                    'type': 'int',
+                                    },
+                                'debug_str': {
+                                    'type': 'str',
+                                    }
+                                }
+                            }
                         }
                     }
                 },
@@ -11011,6 +11375,74 @@ def get_argspec():
                             },
                         'template_debug_table': {
                             'type': 'bool',
+                            }
+                        }
+                    },
+                'src_based_policy_list': {
+                    'type': 'list',
+                    'src_based_policy_name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'oper': {
+                        'type': 'dict',
+                        },
+                    'policy_class_list_list': {
+                        'type': 'list',
+                        'class_list_name': {
+                            'type': 'str',
+                            'required': True,
+                            },
+                        'oper': {
+                            'type': 'dict',
+                            'current_connections': {
+                                'type': 'int',
+                                },
+                            'is_connections_exceed': {
+                                'type': 'int',
+                                },
+                            'connection_limit': {
+                                'type': 'int',
+                                },
+                            'current_connection_rate': {
+                                'type': 'int',
+                                },
+                            'is_connection_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'connection_rate_limit': {
+                                'type': 'int',
+                                },
+                            'current_packet_rate': {
+                                'type': 'int',
+                                },
+                            'is_packet_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'packet_rate_limit': {
+                                'type': 'int',
+                                },
+                            'current_kBit_rate': {
+                                'type': 'int',
+                                },
+                            'is_kBit_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'kBit_rate_limit': {
+                                'type': 'int',
+                                },
+                            'current_frag_packet_rate': {
+                                'type': 'int',
+                                },
+                            'is_frag_packet_rate_exceed': {
+                                'type': 'int',
+                                },
+                            'frag_packet_rate_limit': {
+                                'type': 'int',
+                                },
+                            'debug_str': {
+                                'type': 'str',
+                                }
                             }
                         }
                     },
@@ -12250,6 +12682,15 @@ def get_argspec():
                 'type': 'str',
                 },
             'tcp_invalid_synack': {
+                'type': 'str',
+                },
+            'zone_tcp_small_window_excd': {
+                'type': 'str',
+                },
+            'src_tcp_small_window_excd': {
+                'type': 'str',
+                },
+            'small_window_rcv': {
                 'type': 'str',
                 },
             'zone_name': {

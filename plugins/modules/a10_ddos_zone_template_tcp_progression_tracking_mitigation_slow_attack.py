@@ -97,6 +97,30 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    slow_attacker_identification:
+        description:
+        - "Field slow_attacker_identification"
+        type: dict
+        required: False
+        suboptions:
+            enable_identification:
+                description:
+                - "Progression tracking will identify slow attacker and blacklist it based on the
+          config value"
+                type: bool
+            active_connection:
+                description:
+                - "Set the minimum tracking active connection to start identifying slow attacker,
+          default value is 3"
+                type: int
+            bad_connection:
+                description:
+                - "Set the maximum percentage of slow connection (per source), default value is 75"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -151,7 +175,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["init_request_max_time", "init_response_max_time", "progression_tracking_slow_action", "progression_tracking_slow_action_list_name", "response_pkt_rate_max", "slow_attack", "uuid", ]
+AVAILABLE_PROPERTIES = ["init_request_max_time", "init_response_max_time", "progression_tracking_slow_action", "progression_tracking_slow_action_list_name", "response_pkt_rate_max", "slow_attack", "slow_attacker_identification", "uuid", ]
 
 
 def get_default_argspec():
@@ -195,6 +219,21 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'slow_attacker_identification': {
+            'type': 'dict',
+            'enable_identification': {
+                'type': 'bool',
+                },
+            'active_connection': {
+                'type': 'int',
+                },
+            'bad_connection': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             }
         })
     # Parent keys

@@ -66,6 +66,12 @@ options:
           active timeout(mins)(default 30mins))"
         type: int
         required: False
+    distribute_by_duration:
+        description:
+        - "'enable'= Enable data distribution by flow duration(default); 'disable'=
+          Disable data distribution by flow duration;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -125,7 +131,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["listening_port", "template_active_timeout", "uuid", ]
+AVAILABLE_PROPERTIES = ["distribute_by_duration", "listening_port", "template_active_timeout", "uuid", ]
 
 
 def get_default_argspec():
@@ -145,7 +151,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'listening_port': {'type': 'int', }, 'template_active_timeout': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'listening_port': {'type': 'int', }, 'template_active_timeout': {'type': 'int', }, 'distribute_by_duration': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
     return rv
 
 

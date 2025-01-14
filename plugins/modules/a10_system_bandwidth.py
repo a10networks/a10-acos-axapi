@@ -79,7 +79,10 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'input-bytes-per-sec'= In Bytes per second; 'output-bytes-per-sec'=
-          Out Bytes per second;"
+          Out Bytes per second; 'ppsl_drop_egr'= Packet-Per-Sec Limit Drop at egress;
+          'ppsl_drop_ing'= Packet-Per-Sec Limit Drop at ingress; 'ppsl_ignore_limit'=
+          Packet-Per-Sec Limit ignored packets count; 'licexpire_drop'= License Expire
+          Drop; 'bwl_drop'= BW Limit Drop;"
                 type: str
     stats:
         description:
@@ -94,6 +97,26 @@ options:
             output_bytes_per_sec:
                 description:
                 - "Out Bytes per second"
+                type: str
+            ppsl_drop_egr:
+                description:
+                - "Packet-Per-Sec Limit Drop at egress"
+                type: str
+            ppsl_drop_ing:
+                description:
+                - "Packet-Per-Sec Limit Drop at ingress"
+                type: str
+            ppsl_ignore_limit:
+                description:
+                - "Packet-Per-Sec Limit ignored packets count"
+                type: str
+            licexpire_drop:
+                description:
+                - "License Expire Drop"
+                type: str
+            bwl_drop:
+                description:
+                - "BW Limit Drop"
                 type: str
 
 '''
@@ -183,7 +206,7 @@ def get_argspec():
             'type': 'list',
             'counters1': {
                 'type': 'str',
-                'choices': ['all', 'input-bytes-per-sec', 'output-bytes-per-sec']
+                'choices': ['all', 'input-bytes-per-sec', 'output-bytes-per-sec', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'licexpire_drop', 'bwl_drop']
                 }
             },
         'stats': {
@@ -192,6 +215,21 @@ def get_argspec():
                 'type': 'str',
                 },
             'output_bytes_per_sec': {
+                'type': 'str',
+                },
+            'ppsl_drop_egr': {
+                'type': 'str',
+                },
+            'ppsl_drop_ing': {
+                'type': 'str',
+                },
+            'ppsl_ignore_limit': {
+                'type': 'str',
+                },
+            'licexpire_drop': {
+                'type': 'str',
+                },
+            'bwl_drop': {
                 'type': 'str',
                 }
             }

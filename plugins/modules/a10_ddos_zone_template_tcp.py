@@ -266,6 +266,29 @@ options:
         - "'100ms'= 100ms; '1sec'= 1sec; '10sec'= 10sec;"
         type: str
         required: False
+    small_win_cfg:
+        description:
+        - "Field small_win_cfg"
+        type: dict
+        required: False
+        suboptions:
+            small_window:
+                description:
+                - "Smallest allowed window size"
+                type: int
+            small_window_threshold:
+                description:
+                - "Take action if small window pkts exceed configured threshold"
+                type: int
+            small_window_action_list_name:
+                description:
+                - "Configure action-list to take for small window exceed"
+                type: str
+            small_window_action:
+                description:
+                - "'drop'= Drop packets for small-window exceed (Default); 'blacklist-src'= help
+          Blacklist-src for small-window exceed; 'ignore'= Ignore small-window exceed;"
+                type: str
     dst:
         description:
         - "Field dst"
@@ -573,8 +596,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "ack_authentication", "ack_authentication_synack_reset", "action_on_ack_rto_retry_count", "action_on_syn_rto_retry_count", "age", "age_out_reset_server", "age_second", "allow_syn_otherflags", "allow_synack_skip_authentications", "allow_tcp_tfo", "concurrent", "conn_rate_limit_on_syn_only", "create_conn_on_syn_only", "dst", "filter_list",
-    "filter_match_type", "known_resp_src_port_cfg", "max_rexmit_syn_per_flow_cfg", "name", "out_of_seq_cfg", "per_conn_out_of_seq_rate_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "per_conn_retransmit_rate_cfg", "per_conn_zero_win_rate_cfg", "progression_tracking", "retransmit_cfg", "src", "syn_authentication", "syn_cookie",
-    "synack_rate_limit", "tcp_half_open_timeout", "tcp_half_open_timeout_reset_server", "track_together_with_syn", "user_tag", "uuid", "zero_win_cfg",
+    "filter_match_type", "known_resp_src_port_cfg", "max_rexmit_syn_per_flow_cfg", "name", "out_of_seq_cfg", "per_conn_out_of_seq_rate_cfg", "per_conn_pkt_rate_cfg", "per_conn_rate_interval", "per_conn_retransmit_rate_cfg", "per_conn_zero_win_rate_cfg", "progression_tracking", "retransmit_cfg", "small_win_cfg", "src", "syn_authentication",
+    "syn_cookie", "synack_rate_limit", "tcp_half_open_timeout", "tcp_half_open_timeout_reset_server", "track_together_with_syn", "user_tag", "uuid", "zero_win_cfg",
     ]
 
 
@@ -735,6 +758,22 @@ def get_argspec():
         'per_conn_rate_interval': {
             'type': 'str',
             'choices': ['100ms', '1sec', '10sec']
+            },
+        'small_win_cfg': {
+            'type': 'dict',
+            'small_window': {
+                'type': 'int',
+                },
+            'small_window_threshold': {
+                'type': 'int',
+                },
+            'small_window_action_list_name': {
+                'type': 'str',
+                },
+            'small_window_action': {
+                'type': 'str',
+                'choices': ['drop', 'blacklist-src', 'ignore']
+                }
             },
         'dst': {
             'type': 'dict',
@@ -1044,6 +1083,21 @@ def get_argspec():
                         },
                     'uuid': {
                         'type': 'str',
+                        },
+                    'slow_attacker_identification': {
+                        'type': 'dict',
+                        'enable_identification': {
+                            'type': 'bool',
+                            },
+                        'active_connection': {
+                            'type': 'int',
+                            },
+                        'bad_connection': {
+                            'type': 'int',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
                         }
                     }
                 },

@@ -95,6 +95,11 @@ options:
                 - "Configure active timeout of the netflow templates received in mins (Template
           active timeout(mins)(default 30mins))"
                 type: int
+            distribute_by_duration:
+                description:
+                - "'enable'= Enable data distribution by flow duration(default); 'disable'=
+          Disable data distribution by flow duration;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -173,7 +178,40 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }, 'sflow': {'type': 'dict', 'listening_port': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'netflow': {'type': 'dict', 'listening_port': {'type': 'int', }, 'template_active_timeout': {'type': 'int', }, 'uuid': {'type': 'str', }}})
+    rv.update({
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'sflow': {
+            'type': 'dict',
+            'listening_port': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'netflow': {
+            'type': 'dict',
+            'listening_port': {
+                'type': 'int',
+                },
+            'template_active_timeout': {
+                'type': 'int',
+                },
+            'distribute_by_duration': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 

@@ -666,8 +666,17 @@ options:
           udp'= UDP session counter; 'session-icmp'= ICMP session counter; 'session-
           other'= Other protocol session counter; 'active-session-sctp'= Active SCTP
           session counter; 'session-sctp'= SCTP session counter; 'hitcount-timestamp'=
-          Last hit counts timestamp; 'rate-limit-drops'= Rate Limit Drops;"
+          Last hit counts timestamp; 'rate-limit-drops'= Rate Limit Drops; 'syn-cookie-
+          syn-ack-sent'= SYN cookie SYN ACK sent; 'syn-cookie-verification-passed'= SYN
+          cookie verification passed; 'syn-cookie-verification-failed'= SYN cookie
+          verification failed; 'syn-cookie-conn-setup-failed'= SYN cookie connection
+          setup failed; 'tcp-half-open-count'= TCP half open sessions matching the rule;"
                 type: str
+    packet_capture_template:
+        description:
+        - "Name of the packet capture template to be bind with this object"
+        type: str
+        required: False
     action_group:
         description:
         - "Field action_group"
@@ -795,6 +804,27 @@ options:
                 description:
                 - "DSCP Number"
                 type: int
+            tcp:
+                description:
+                - "Firewall rule TCP parameters"
+                type: bool
+            syn_cookie:
+                description:
+                - "Configure Firewall rule Syn-Cookie Protection"
+                type: bool
+            syn_cookie_enable:
+                description:
+                - "'enable'= enable; 'disable'= disable;"
+                type: str
+            threshold_val:
+                description:
+                - "Decimal number"
+                type: int
+            on_timeout:
+                description:
+                - "on-timeout for Syn-cookie (Timeout in seconds, default is 120 seconds (2
+          minutes))"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -919,6 +949,26 @@ options:
                 description:
                 - "Field ratelimitdrops"
                 type: int
+            syncookieon:
+                description:
+                - "Field syncookieon"
+                type: int
+            synacksent:
+                description:
+                - "Field synacksent"
+                type: int
+            verificationpassed:
+                description:
+                - "Field verificationpassed"
+                type: int
+            verificationfailed:
+                description:
+                - "Field verificationfailed"
+                type: int
+            tcphalfopencount:
+                description:
+                - "Field tcphalfopencount"
+                type: int
             name:
                 description:
                 - "Rule name"
@@ -1005,6 +1055,22 @@ options:
                 description:
                 - "Rate Limit Drops"
                 type: str
+            syn_cookie_syn_ack_sent:
+                description:
+                - "SYN cookie SYN ACK sent"
+                type: str
+            syn_cookie_verification_passed:
+                description:
+                - "SYN cookie verification passed"
+                type: str
+            syn_cookie_verification_failed:
+                description:
+                - "SYN cookie verification failed"
+                type: str
+            tcp_half_open_count:
+                description:
+                - "TCP half open sessions matching the rule"
+                type: str
             name:
                 description:
                 - "Rule name"
@@ -1065,9 +1131,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "action", "action_group", "app_list", "application_any", "cgnv6_ds_lite", "cgnv6_ds_lite_log", "cgnv6_ds_lite_lsn_lid", "cgnv6_fixed_nat_log", "cgnv6_log", "cgnv6_lsn_lid", "cgnv6_lsn_log", "cgnv6_policy", "dest_list", "dscp_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name",
-    "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "forward_listen_on_port", "forward_log", "fw_log", "fwlog", "gtp_template", "idle_timeout", "inspect_payload", "ip_version", "lid", "lidlog", "listen_on_port", "listen_on_port_lid", "listen_on_port_lidlog", "log", "move_rule", "name", "oper", "policy", "remark",
-    "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application", "user_tag", "uuid", "vpn_ipsec_group_name",
-    "vpn_ipsec_name",
+    "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "forward_listen_on_port", "forward_log", "fw_log", "fwlog", "gtp_template", "idle_timeout", "inspect_payload", "ip_version", "lid", "lidlog", "listen_on_port", "listen_on_port_lid", "listen_on_port_lidlog", "log", "move_rule", "name", "oper",
+    "packet_capture_template", "policy", "remark", "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application",
+    "user_tag", "uuid", "vpn_ipsec_group_name", "vpn_ipsec_name",
     ]
 
 
@@ -1434,9 +1500,12 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other', 'active-session-sctp', 'session-sctp', 'hitcount-timestamp',
-                    'rate-limit-drops'
+                    'rate-limit-drops', 'syn-cookie-syn-ack-sent', 'syn-cookie-verification-passed', 'syn-cookie-verification-failed', 'syn-cookie-conn-setup-failed', 'tcp-half-open-count'
                     ]
                 }
+            },
+        'packet_capture_template': {
+            'type': 'str',
             },
         'action_group': {
             'type': 'dict',
@@ -1543,6 +1612,22 @@ def get_argspec():
             'dscp_number': {
                 'type': 'int',
                 },
+            'tcp': {
+                'type': 'bool',
+                },
+            'syn_cookie': {
+                'type': 'bool',
+                },
+            'syn_cookie_enable': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'threshold_val': {
+                'type': 'int',
+                },
+            'on_timeout': {
+                'type': 'int',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -1634,6 +1719,21 @@ def get_argspec():
             'ratelimitdrops': {
                 'type': 'int',
                 },
+            'syncookieon': {
+                'type': 'int',
+                },
+            'synacksent': {
+                'type': 'int',
+                },
+            'verificationpassed': {
+                'type': 'int',
+                },
+            'verificationfailed': {
+                'type': 'int',
+                },
+            'tcphalfopencount': {
+                'type': 'int',
+                },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -1696,6 +1796,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'rate_limit_drops': {
+                'type': 'str',
+                },
+            'syn_cookie_syn_ack_sent': {
+                'type': 'str',
+                },
+            'syn_cookie_verification_passed': {
+                'type': 'str',
+                },
+            'syn_cookie_verification_failed': {
+                'type': 'str',
+                },
+            'tcp_half_open_count': {
                 'type': 'str',
                 },
             'name': {

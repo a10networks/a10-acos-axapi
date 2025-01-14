@@ -635,6 +635,9 @@ def get_argspec():
                 'ipv4_gtp_policy': {
                     'type': 'str',
                     },
+                'ipv4_category': {
+                    'type': 'int',
+                    },
                 'ipv4_hit_count': {
                     'type': 'int',
                     },
@@ -664,6 +667,9 @@ def get_argspec():
                     },
                 'ipv6_gtp_policy': {
                     'type': 'str',
+                    },
+                'ipv6_category': {
+                    'type': 'int',
                     },
                 'ipv6_hit_count': {
                     'type': 'int',

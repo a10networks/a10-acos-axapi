@@ -153,18 +153,6 @@ options:
                 - "'enable'= Enable sflow polling for DDOS statistics; 'disable'= Disable sflow
           polling for DDOS statistics;"
                 type: str
-            3_0_compatibility:
-                description:
-                - "Enable DDOS sflow polling 3.0/3.1 compatibility mode"
-                type: bool
-            address_byte_order_host:
-                description:
-                - "Export sflow address field in host byte order"
-                type: bool
-            2_9_compatibility:
-                description:
-                - "Enable DDOS sflow polling 2.9 compatibility mode"
-                type: bool
             dns_cache_zone_stats:
                 description:
                 - "Enable polling for dns cache per instance and per zone statistics"
@@ -377,15 +365,6 @@ def get_argspec():
             'toggle': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
-                },
-            '3_0_compatibility': {
-                'type': 'bool',
-                },
-            'address_byte_order_host': {
-                'type': 'bool',
-                },
-            '2_9_compatibility': {
-                'type': 'bool',
                 },
             'dns_cache_zone_stats': {
                 'type': 'bool',

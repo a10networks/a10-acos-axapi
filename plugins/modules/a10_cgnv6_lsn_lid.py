@@ -165,6 +165,14 @@ options:
                 description:
                 - "User Quota for number of data sessions"
                 type: int
+            session_udp:
+                description:
+                - "User Quota for number of UDP sessions"
+                type: int
+            session_tcp:
+                description:
+                - "User Quota for number of TCP sessions"
+                type: int
     uuid:
         description:
         - "uuid of the object"
@@ -339,6 +347,12 @@ def get_argspec():
                     }
                 },
             'session': {
+                'type': 'int',
+                },
+            'session_udp': {
+                'type': 'int',
+                },
+            'session_tcp': {
                 'type': 'int',
                 }
             },

@@ -61,21 +61,6 @@ options:
           polling for DDOS statistics;"
         type: str
         required: False
-    3_0_compatibility:
-        description:
-        - "Enable DDOS sflow polling 3.0/3.1 compatibility mode"
-        type: bool
-        required: False
-    address_byte_order_host:
-        description:
-        - "Export sflow address field in host byte order"
-        type: bool
-        required: False
-    2_9_compatibility:
-        description:
-        - "Enable DDOS sflow polling 2.9 compatibility mode"
-        type: bool
-        required: False
     dns_cache_zone_stats:
         description:
         - "Enable polling for dns cache per instance and per zone statistics"
@@ -150,7 +135,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["2_9_compatibility", "3_0_compatibility", "address_byte_order_host", "dns_cache_zone_stats", "dyn_entry_stats", "enable_anomaly_stats", "toggle", "uuid", ]
+AVAILABLE_PROPERTIES = ["dns_cache_zone_stats", "dyn_entry_stats", "enable_anomaly_stats", "toggle", "uuid", ]
 
 
 def get_default_argspec():
@@ -170,33 +155,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'toggle': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        '3_0_compatibility': {
-            'type': 'bool',
-            },
-        'address_byte_order_host': {
-            'type': 'bool',
-            },
-        '2_9_compatibility': {
-            'type': 'bool',
-            },
-        'dns_cache_zone_stats': {
-            'type': 'bool',
-            },
-        'enable_anomaly_stats': {
-            'type': 'bool',
-            },
-        'dyn_entry_stats': {
-            'type': 'bool',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'toggle': {'type': 'str', 'choices': ['enable', 'disable']}, 'dns_cache_zone_stats': {'type': 'bool', }, 'enable_anomaly_stats': {'type': 'bool', }, 'dyn_entry_stats': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

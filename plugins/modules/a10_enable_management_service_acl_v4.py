@@ -112,6 +112,11 @@ options:
         - "All Data Interfaces"
         type: bool
         required: False
+    priority:
+        description:
+        - "High Priority"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -176,7 +181,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_id", "all_data_intf", "eth_cfg", "management", "tunnel_cfg", "user_tag", "uuid", "ve_cfg", ]
+AVAILABLE_PROPERTIES = ["acl_id", "all_data_intf", "eth_cfg", "management", "priority", "tunnel_cfg", "user_tag", "uuid", "ve_cfg", ]
 
 
 def get_default_argspec():
@@ -232,6 +237,9 @@ def get_argspec():
             'type': 'bool',
             },
         'all_data_intf': {
+            'type': 'bool',
+            },
+        'priority': {
             'type': 'bool',
             },
         'uuid': {

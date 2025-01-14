@@ -221,7 +221,7 @@ def get_argspec():
                 'is_tls1_1': {
                     'type': 'str',
                     },
-                'is_tls1_2': {
+                'is_tls1_2+': {
                     'type': 'str',
                     },
                 'is_renegotiation': {
@@ -1146,6 +1146,126 @@ def get_argspec():
                     'type': 'str',
                     },
                 'src_auth_drop_rst_xmit': {
+                    'type': 'str',
+                    },
+                'same_sport_dport_drop': {
+                    'type': 'str',
+                    },
+                'tcp_psh_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_psh_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_fin_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_rst_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_urg_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_ece_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_cwr_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_empty_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_ack_data_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_syn_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_psh_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_fin_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_rst_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_fin_drop': {
+                    'type': 'str',
+                    },
+                'tcp_rst_drop': {
+                    'type': 'str',
+                    },
+                'tcp_psh_drop': {
+                    'type': 'str',
+                    },
+                'tcp_urg_drop': {
+                    'type': 'str',
+                    },
+                'tcp_ece_drop': {
+                    'type': 'str',
+                    },
+                'tcp_cwr_drop': {
+                    'type': 'str',
+                    },
+                'tcp_empty_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_ack_data_drop': {
+                    'type': 'str',
+                    },
+                'tcp_syn_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_syn_ack_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_psh_ack_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_fin_ack_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_rst_ack_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_ack_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_fin_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_rst_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_psh_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_urg_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_ece_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_cwr_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_empty_ack_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_ack_data_fwd': {
+                    'type': 'str',
+                    },
+                'tcp_fin_psh_ack_rcvd': {
+                    'type': 'str',
+                    },
+                'tcp_fin_psh_ack_drop': {
+                    'type': 'str',
+                    },
+                'tcp_fin_psh_ack_fwd': {
                     'type': 'str',
                     }
                 }

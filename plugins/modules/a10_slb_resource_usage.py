@@ -155,6 +155,11 @@ options:
         - "Total Virtual Servers in the System"
         type: int
         required: False
+    log_template_count:
+        description:
+        - "Total configurable SLB Logging Templates in the System"
+        type: int
+        required: False
     gslb_site_count:
         description:
         - "Total GSLB sites in the System"
@@ -632,6 +637,18 @@ options:
                 description:
                 - "Field cache_template_default"
                 type: int
+            log_template_min:
+                description:
+                - "Field log_template_min"
+                type: int
+            log_template_max:
+                description:
+                - "Field log_template_max"
+                type: int
+            log_template_default:
+                description:
+                - "Field log_template_default"
+                type: int
             slb_threshold_res_usage_default:
                 description:
                 - "Field slb_threshold_res_usage_default"
@@ -700,8 +717,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "cache_template_count", "client_ssl_template_count", "conn_reuse_template_count", "fast_tcp_template_count", "fast_udp_template_count", "fix_template_count", "gslb_device_count", "gslb_geo_location_count", "gslb_ip_list_count", "gslb_policy_count", "gslb_service_count", "gslb_service_ip_count", "gslb_service_port_count", "gslb_site_count",
-    "gslb_svc_group_count", "gslb_template_count", "gslb_zone_count", "health_monitor_count", "http_template_count", "link_cost_template_count", "nat_pool_addr_count", "oper", "pbslb_entry_count", "pbslb_subnet_count", "persist_cookie_template_count", "persist_srcip_template_count", "proxy_template_count", "real_port_count", "real_server_count",
-    "server_ssl_template_count", "service_group_count", "slb_threshold_res_usage_percent", "stream_template_count", "uuid", "virtual_port_count", "virtual_server_count",
+    "gslb_svc_group_count", "gslb_template_count", "gslb_zone_count", "health_monitor_count", "http_template_count", "link_cost_template_count", "log_template_count", "nat_pool_addr_count", "oper", "pbslb_entry_count", "pbslb_subnet_count", "persist_cookie_template_count", "persist_srcip_template_count", "proxy_template_count", "real_port_count",
+    "real_server_count", "server_ssl_template_count", "service_group_count", "slb_threshold_res_usage_percent", "stream_template_count", "uuid", "virtual_port_count", "virtual_server_count",
     ]
 
 
@@ -781,6 +798,9 @@ def get_argspec():
             'type': 'int',
             },
         'virtual_server_count': {
+            'type': 'int',
+            },
+        'log_template_count': {
             'type': 'int',
             },
         'gslb_site_count': {
@@ -1125,6 +1145,15 @@ def get_argspec():
                 'type': 'int',
                 },
             'cache_template_default': {
+                'type': 'int',
+                },
+            'log_template_min': {
+                'type': 'int',
+                },
+            'log_template_max': {
+                'type': 'int',
+                },
+            'log_template_default': {
                 'type': 'int',
                 },
             'slb_threshold_res_usage_default': {

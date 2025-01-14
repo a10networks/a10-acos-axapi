@@ -107,7 +107,7 @@ options:
         required: False
     service_name:
         description:
-        - "Specify port service name"
+        - "Specify service label"
         type: str
         required: False
     static:

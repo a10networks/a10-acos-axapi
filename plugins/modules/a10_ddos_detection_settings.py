@@ -179,24 +179,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    reflection_attack_detection:
-        description:
-        - "Field reflection_attack_detection"
-        type: dict
-        required: False
-        suboptions:
-            heavy_hitter_threshold:
-                description:
-                - "Fractional threshold relative to total undiscovered source ports (default 50%)"
-                type: int
-            sport_discovery_threshold:
-                description:
-                - "Fractional threshold relative to parent entry's bit-rate (default 5%)"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     standalone_settings:
         description:
         - "Field standalone_settings"
@@ -220,6 +202,21 @@ options:
                 description:
                 - "Field netflow"
                 type: dict
+    zone_notifications:
+        description:
+        - "Field zone_notifications"
+        type: dict
+        required: False
+        suboptions:
+            source_entry:
+                description:
+                - "'enable'= Enable source entry detection notification; 'disable'= Disable source
+          entry detection notification(default);"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -276,7 +273,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "entry_saving", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "network_object_flooding_multiple", "network_object_subnet_notify_percent",
-    "network_object_window_size", "notification_debug_log", "pkt_sampling", "reflection_attack_detection", "standalone_settings", "top_k_reset_interval", "uuid",
+    "network_object_window_size", "notification_debug_log", "pkt_sampling", "standalone_settings", "top_k_reset_interval", "uuid", "zone_notifications",
     ]
 
 
@@ -373,18 +370,6 @@ def get_argspec():
                 'type': 'str',
                 }
             },
-        'reflection_attack_detection': {
-            'type': 'dict',
-            'heavy_hitter_threshold': {
-                'type': 'int',
-                },
-            'sport_discovery_threshold': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
         'standalone_settings': {
             'type': 'dict',
             'action': {
@@ -411,9 +396,23 @@ def get_argspec():
                 'template_active_timeout': {
                     'type': 'int',
                     },
+                'distribute_by_duration': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'zone_notifications': {
+            'type': 'dict',
+            'source_entry': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
                 }
             }
         })

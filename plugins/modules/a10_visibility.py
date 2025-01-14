@@ -12551,6 +12551,106 @@ def get_argspec():
                             }
                         }
                     },
+                'slb_service_tmpl_list': {
+                    'type': 'list',
+                    'name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'capture_config': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_severity': {
+                        'type': 'dict',
+                        'error': {
+                            'type': 'bool',
+                            },
+                        'error_alert': {
+                            'type': 'bool',
+                            },
+                        'error_warning': {
+                            'type': 'bool',
+                            },
+                        'error_critical': {
+                            'type': 'bool',
+                            },
+                        'drop': {
+                            'type': 'bool',
+                            },
+                        'drop_alert': {
+                            'type': 'bool',
+                            },
+                        'drop_warning': {
+                            'type': 'bool',
+                            },
+                        'drop_critical': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'es_resp_300': {
+                            'type': 'bool',
+                            },
+                        'es_resp_400': {
+                            'type': 'bool',
+                            },
+                        'es_resp_500': {
+                            'type': 'bool',
+                            },
+                        'resp_3xx': {
+                            'type': 'bool',
+                            },
+                        'resp_4xx': {
+                            'type': 'bool',
+                            },
+                        'resp_5xx': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'es_resp_300': {
+                            'type': 'bool',
+                            },
+                        'es_resp_400': {
+                            'type': 'bool',
+                            },
+                        'es_resp_500': {
+                            'type': 'bool',
+                            },
+                        'resp_3xx': {
+                            'type': 'bool',
+                            },
+                        'resp_4xx': {
+                            'type': 'bool',
+                            },
+                        'resp_5xx': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
                 'slb_vport_tmpl_list': {
                     'type': 'list',
                     'name': {
@@ -12619,6 +12719,9 @@ def get_argspec():
                         'dnsrrl_bad_fqdn': {
                             'type': 'bool',
                             },
+                        'dnsrrl_nx_exceed': {
+                            'type': 'bool',
+                            },
                         'uuid': {
                             'type': 'str',
                             }
@@ -12650,6 +12753,9 @@ def get_argspec():
                             'type': 'bool',
                             },
                         'dnsrrl_bad_fqdn': {
+                            'type': 'bool',
+                            },
+                        'dnsrrl_nx_exceed': {
                             'type': 'bool',
                             },
                         'uuid': {
@@ -13526,6 +13632,76 @@ def get_argspec():
                             'type': 'bool',
                             },
                         'reset': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
+                'rule_set_rule_tmpl_list': {
+                    'type': 'list',
+                    'name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'capture_config': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_severity': {
+                        'type': 'dict',
+                        'error': {
+                            'type': 'bool',
+                            },
+                        'error_alert': {
+                            'type': 'bool',
+                            },
+                        'error_warning': {
+                            'type': 'bool',
+                            },
+                        'error_critical': {
+                            'type': 'bool',
+                            },
+                        'drop': {
+                            'type': 'bool',
+                            },
+                        'drop_alert': {
+                            'type': 'bool',
+                            },
+                        'drop_warning': {
+                            'type': 'bool',
+                            },
+                        'drop_critical': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'syn_cookie_verification_failed': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'syn_cookie_verification_failed': {
                             'type': 'bool',
                             },
                         'uuid': {

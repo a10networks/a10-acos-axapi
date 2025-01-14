@@ -166,48 +166,72 @@ options:
         suboptions:
             uplink:
                 description:
-                - "Uplink Throughput limit (Mega (default) or Kilo Bits per second)"
+                - "Uplink Throughput limit (Megabites/sec (default) other units= Kilobites/sec,
+          Gigabites/sec)"
                 type: int
             uplink_unit:
                 description:
-                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
                 type: str
             uplink_burstsize:
                 description:
-                - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+                - "Token Bucket Size (Must Exceed Configured Rate) (Megabites/sec (default) other
+          units= Kilobites/sec, Gigabites/sec)"
                 type: int
+            uplink_burstsize_unit:
+                description:
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
+                type: str
             uplink_relaxed:
                 description:
                 - "Relax the limitation when the policy has more tokens from the parent of policy"
                 type: bool
             downlink:
                 description:
-                - "Downlink Throughput limit (Mega (default) or Kilo Bits per second)"
+                - "Downlink Throughput limit (Megabites/sec (default) other units= Kilobites/sec,
+          Gigabites/sec)"
                 type: int
             downlink_unit:
                 description:
-                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
                 type: str
             downlink_burstsize:
                 description:
-                - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+                - "Token Bucket Size (Must Exceed Configured Rate) (Megabites/sec (default) other
+          units= Kilobites/sec, Gigabites/sec)"
                 type: int
+            downlink_burstsize_unit:
+                description:
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
+                type: str
             downlink_relaxed:
                 description:
                 - "Relax the limitation when the policy has more tokens from the parent of policy"
                 type: bool
             total:
                 description:
-                - "Total Throughput limit (Mega (default) or Kilo Bits per second)"
+                - "Total Throughput limit (Megabites/sec (default) other units= Kilobites/sec,
+          Gigabites/sec)"
                 type: int
             total_unit:
                 description:
-                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps;"
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
                 type: str
             total_burstsize:
                 description:
-                - "Token Bucket Size (Must Exceed Configured Rate) (In Mega Bits per second)"
+                - "Token Bucket Size (Must Exceed Configured Rate) (Megabites/sec (default) other
+          units= Kilobites/sec, Gigabites/sec)"
                 type: int
+            total_burstsize_unit:
+                description:
+                - "'Mbps'= default; 'Kbps'= minimum configurable limit is 100 Kbps; 'Gbps'=
+          maximum configurable limit is 10000 Gbps;"
+                type: str
             total_relaxed:
                 description:
                 - "Relax the limitation when the policy has more tokens from the parent of policy"
@@ -389,10 +413,14 @@ def get_argspec():
                 },
             'uplink_unit': {
                 'type': 'str',
-                'choices': ['Mbps', 'Kbps']
+                'choices': ['Mbps', 'Kbps', 'Gbps']
                 },
             'uplink_burstsize': {
                 'type': 'int',
+                },
+            'uplink_burstsize_unit': {
+                'type': 'str',
+                'choices': ['Mbps', 'Kbps', 'Gbps']
                 },
             'uplink_relaxed': {
                 'type': 'bool',
@@ -402,10 +430,14 @@ def get_argspec():
                 },
             'downlink_unit': {
                 'type': 'str',
-                'choices': ['Mbps', 'Kbps']
+                'choices': ['Mbps', 'Kbps', 'Gbps']
                 },
             'downlink_burstsize': {
                 'type': 'int',
+                },
+            'downlink_burstsize_unit': {
+                'type': 'str',
+                'choices': ['Mbps', 'Kbps', 'Gbps']
                 },
             'downlink_relaxed': {
                 'type': 'bool',
@@ -415,10 +447,14 @@ def get_argspec():
                 },
             'total_unit': {
                 'type': 'str',
-                'choices': ['Mbps', 'Kbps']
+                'choices': ['Mbps', 'Kbps', 'Gbps']
                 },
             'total_burstsize': {
                 'type': 'int',
+                },
+            'total_burstsize_unit': {
+                'type': 'str',
+                'choices': ['Mbps', 'Kbps', 'Gbps']
                 },
             'total_relaxed': {
                 'type': 'bool',

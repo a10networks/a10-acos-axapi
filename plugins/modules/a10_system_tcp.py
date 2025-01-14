@@ -83,7 +83,9 @@ options:
           'syn_rcv_rst'= Rcv RST on SYN; 'syn_rcv_ack'= Rcv ACK on SYN; 'ax_rexmit_syn'=
           TCP rexmit SYN; 'tcpabortontimeout'= TCP abort on timeout; 'noroute'= TCPIP out
           noroute; 'exceedmss'= MSS exceeded pkt dropped; 'tfo_conns'= TFO Total
-          Connections; 'tfo_actives'= TFO Current Actives; 'tfo_denied'= TFO Denied;"
+          Connections; 'tfo_actives'= TFO Current Actives; 'tfo_denied'= TFO Denied;
+          'syn_rcv_rexmit'= Rcv SYN rexmit; 'sock_init'= Socket init; 'invalid_drop'=
+          Invalid packet drop;"
                 type: str
     rate_limit_reset_unknown_conn:
         description:
@@ -220,7 +222,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew', 'currclose', 'currclsw', 'currlack', 'currlstn',
-                    'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
+                    'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied', 'syn_rcv_rexmit', 'sock_init', 'invalid_drop'
                     ]
                 }
             },
@@ -282,6 +284,9 @@ def get_argspec():
                 'inerrs': {
                     'type': 'int',
                     },
+                'sock_init': {
+                    'type': 'int',
+                    },
                 'sock_alloc': {
                     'type': 'int',
                     },
@@ -339,6 +344,9 @@ def get_argspec():
                 'syn_rcv_ack': {
                     'type': 'int',
                     },
+                'syn_rcv_rexmit': {
+                    'type': 'int',
+                    },
                 'tcpabortontimeout': {
                     'type': 'int',
                     },
@@ -346,6 +354,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'exceedmss': {
+                    'type': 'int',
+                    },
+                'invalid_drop': {
                     'type': 'int',
                     }
                 },

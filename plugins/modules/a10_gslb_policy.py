@@ -524,6 +524,10 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+            sticky_options:
+                description:
+                - "Field sticky_options"
+                type: dict
     geo_location_list:
         description:
         - "Field geo_location_list"
@@ -1117,6 +1121,18 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
+                },
+            'sticky_options': {
+                'type': 'dict',
+                'edns_client_subnet': {
+                    'type': 'bool',
+                    },
+                'only_ecs': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'geo_location_list': {
