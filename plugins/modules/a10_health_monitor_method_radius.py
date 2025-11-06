@@ -92,6 +92,11 @@ options:
           ENCRYPTED password string)"
         type: str
         required: False
+    radius_message_authenticator:
+        description:
+        - "message-authenticator type"
+        type: bool
+        required: False
     radius_port:
         description:
         - "Specify the RADIUS port, default is 1812 (Port number (default 1812))"
@@ -167,7 +172,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["radius", "radius_encrypted", "radius_expect", "radius_password_string", "radius_port", "radius_response_code", "radius_secret", "radius_secret_encrypted", "radius_username", "uuid", ]
+AVAILABLE_PROPERTIES = ["radius", "radius_encrypted", "radius_expect", "radius_message_authenticator", "radius_password_string", "radius_port", "radius_response_code", "radius_secret", "radius_secret_encrypted", "radius_username", "uuid", ]
 
 
 def get_default_argspec():
@@ -205,6 +210,9 @@ def get_argspec():
             },
         'radius_secret_encrypted': {
             'type': 'str',
+            },
+        'radius_message_authenticator': {
+            'type': 'bool',
             },
         'radius_port': {
             'type': 'int',
@@ -277,7 +285,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

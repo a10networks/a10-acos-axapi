@@ -105,7 +105,11 @@ options:
                 type: str
             servername_match_any:
                 description:
-                - "Match when there is no SNI or other servernames are not matched"
+                - "Match any SNI extension"
+                type: bool
+            servername_no_sni:
+                description:
+                - "Match when there is no SNI extension found"
                 type: bool
             source_tracking:
                 description:
@@ -241,6 +245,9 @@ def get_argspec():
             'servername_match_any': {
                 'type': 'bool',
                 },
+            'servername_no_sni': {
+                'type': 'bool',
+                },
             'source_tracking': {
                 'type': 'str',
                 'choices': ['follow', 'enable', 'disable']
@@ -280,6 +287,9 @@ def get_argspec():
                     },
                 'zone_template': {
                     'type': 'dict',
+                    'ssl_l4': {
+                        'type': 'str',
+                        },
                     'tcp': {
                         'type': 'str',
                         }
@@ -361,7 +371,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

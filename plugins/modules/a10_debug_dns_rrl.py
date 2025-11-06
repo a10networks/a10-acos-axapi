@@ -55,10 +55,10 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    dumy:
+    level:
         description:
-        - "Dummy"
-        type: bool
+        - "Debug level (Level 1-4)"
+        type: int
         required: False
     uuid:
         description:
@@ -119,7 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dumy", "uuid", ]
+AVAILABLE_PROPERTIES = ["level", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +139,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'dumy': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'level': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 
@@ -191,7 +191,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

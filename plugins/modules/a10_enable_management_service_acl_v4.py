@@ -102,6 +102,16 @@ options:
                 description:
                 - "tunnel port"
                 type: int
+    lif_cfg:
+        description:
+        - "Field lif_cfg"
+        type: dict
+        required: False
+        suboptions:
+            lif:
+                description:
+                - "Lif name (Lif interface name)"
+                type: str
     management:
         description:
         - "Management Interface"
@@ -110,6 +120,11 @@ options:
     all_data_intf:
         description:
         - "All Data Interfaces"
+        type: bool
+        required: False
+    priority:
+        description:
+        - "High Priority"
         type: bool
         required: False
     uuid:
@@ -176,7 +191,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_id", "all_data_intf", "eth_cfg", "management", "tunnel_cfg", "user_tag", "uuid", "ve_cfg", ]
+AVAILABLE_PROPERTIES = ["acl_id", "all_data_intf", "eth_cfg", "lif_cfg", "management", "priority", "tunnel_cfg", "user_tag", "uuid", "ve_cfg", ]
 
 
 def get_default_argspec():
@@ -228,10 +243,19 @@ def get_argspec():
                 'type': 'int',
                 }
             },
+        'lif_cfg': {
+            'type': 'dict',
+            'lif': {
+                'type': 'str',
+                }
+            },
         'management': {
             'type': 'bool',
             },
         'all_data_intf': {
+            'type': 'bool',
+            },
+        'priority': {
             'type': 'bool',
             },
         'uuid': {
@@ -297,7 +321,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

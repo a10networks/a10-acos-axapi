@@ -202,6 +202,14 @@ options:
                 description:
                 - "TCP Option Error"
                 type: str
+            undersize_ip_pl:
+                description:
+                - "IP Payload Too Small"
+                type: str
+            undersize_icmp:
+                description:
+                - "ICMP Undersize"
+                type: str
 
 '''
 
@@ -383,6 +391,12 @@ def get_argspec():
                 },
             'tcp_opt_overflow': {
                 'type': 'str',
+                },
+            'undersize_ip_pl': {
+                'type': 'str',
+                },
+            'undersize_icmp': {
+                'type': 'str',
                 }
             }
         })
@@ -424,7 +438,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

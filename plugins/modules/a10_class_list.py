@@ -55,6 +55,16 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    flag:
+        description:
+        - "Specifies whether the module performs a differential IP update or a full replacement. When
+            set to true, the module compares the new IP list with the existing one: any IPs already
+            present in the old list are removed from the configuration, while IPs not present in the
+            old list are added. When omitted or set to false, the module directly applies the new
+            IP list and replaces the existing configuration. By default, this flag is set to false."
+        type: bool
+        required: false
+        default: false
     name:
         description:
         - "Specify name of the class list"
@@ -427,6 +437,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'flag': {
+            'type': 'bool',
+            'default': False,
+            },
         'name': {
             'type': 'str',
             'required': True,
@@ -635,6 +649,9 @@ def get_argspec():
                 'ipv4_gtp_policy': {
                     'type': 'str',
                     },
+                'ipv4_category': {
+                    'type': 'int',
+                    },
                 'ipv4_hit_count': {
                     'type': 'int',
                     },
@@ -664,6 +681,9 @@ def get_argspec():
                     },
                 'ipv6_gtp_policy': {
                     'type': 'str',
+                    },
+                'ipv6_category': {
+                    'type': 'int',
                     },
                 'ipv6_hit_count': {
                     'type': 'int',
@@ -805,7 +825,32 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    if module.params.get('flag') is True:
+        existing_class_list = existing_config.get("class-list", {}) if existing_config else {}
+        payload_class_list = payload.get("class-list", {})
+
+        def filter_ipv_list(existing_list, new_list, key_name):
+            existing_ips = {item.get(key_name) for item in existing_list if key_name in item}
+            new_ips = {item.get(key_name) for item in new_list if key_name in item}
+            ips_to_keep = existing_ips ^ new_ips
+
+            for item in existing_list + new_list:
+                if item.get(key_name) in ips_to_keep:
+                    yield item
+
+        new_ipv4_list = payload_class_list.get("ipv4-list", [])
+        existing_ipv4_list = existing_class_list.get("ipv4-list", [])
+        if new_ipv4_list and existing_ipv4_list:
+            filtered_ipv4_list = list(filter_ipv_list(existing_ipv4_list, new_ipv4_list, "ipv4addr"))
+            final_payload.setdefault("class-list", {})["ipv4-list"] = filtered_ipv4_list
+        new_ipv6_list = payload_class_list.get("ipv6-list", [])
+        existing_ipv6_list = existing_class_list.get("ipv6-list", [])
+        if new_ipv6_list and existing_ipv6_list:
+            filtered_ipv6_list = list(filter_ipv_list(existing_ipv6_list, new_ipv6_list, "ipv6addr"))
+            final_payload.setdefault("class-list", {})["ipv6-list"] = filtered_ipv6_list
+
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

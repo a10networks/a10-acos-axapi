@@ -57,12 +57,40 @@ options:
         required: False
     quic_tmpl_name:
         description:
-        - "Field quic_tmpl_name"
+        - "DDOS QUIC Template Name"
         type: str
         required: True
     fixed_bit_check_disable:
         description:
         - "Disable fixed-bit malform check"
+        type: bool
+        required: False
+    pkt_rate_cfg:
+        description:
+        - "Field pkt_rate_cfg"
+        type: dict
+        required: False
+        suboptions:
+            quic_pkt_rate_limit:
+                description:
+                - "QUIC Packet Source Rate Limit"
+                type: bool
+            quic_pkt_rate:
+                description:
+                - "Limiting rate (Range= 5-16000000)"
+                type: int
+            per:
+                description:
+                - "'aead-tag'= AEAD Tag; 'dcid'= Destination Connection ID;"
+                type: str
+    create_conn_on_initial_only:
+        description:
+        - "Create connection on QUIC Initial Packets Only"
+        type: bool
+        required: False
+    drop_on_no_version_match:
+        description:
+        - "Drop packets that do not match a defined version"
         type: bool
         required: False
     uuid:
@@ -83,7 +111,7 @@ options:
         suboptions:
             version_start:
                 description:
-                - "Configure versions supported"
+                - "Configure versions supported in hex"
                 type: str
             version_end:
                 description:
@@ -193,7 +221,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action_on_initial", "fixed_bit_check_disable", "quic_tmpl_name", "user_tag", "uuid", "version_supported_list", ]
+AVAILABLE_PROPERTIES = ["action_on_initial", "create_conn_on_initial_only", "drop_on_no_version_match", "fixed_bit_check_disable", "pkt_rate_cfg", "quic_tmpl_name", "user_tag", "uuid", "version_supported_list", ]
 
 
 def get_default_argspec():
@@ -219,6 +247,25 @@ def get_argspec():
             'required': True,
             },
         'fixed_bit_check_disable': {
+            'type': 'bool',
+            },
+        'pkt_rate_cfg': {
+            'type': 'dict',
+            'quic_pkt_rate_limit': {
+                'type': 'bool',
+                },
+            'quic_pkt_rate': {
+                'type': 'int',
+                },
+            'per': {
+                'type': 'str',
+                'choices': ['aead-tag', 'dcid']
+                }
+            },
+        'create_conn_on_initial_only': {
+            'type': 'bool',
+            },
+        'drop_on_no_version_match': {
             'type': 'bool',
             },
         'uuid': {
@@ -354,7 +401,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

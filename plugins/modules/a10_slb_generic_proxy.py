@@ -110,22 +110,9 @@ options:
           'reply_unable_to_deliver'= Reply with unable to deliver error info;
           'reply_error_info_fail'= Fail to reply error info to peer; 'dpr_out'= Number of
           DPRs out; 'dpr_in'= Number of DPRs in; 'dpa_out'= Number of DPAs out; 'dpa_in'=
-          Number of DPAs in;"
+          Number of DPAs in; 'diameter_too_busy_in'= Number of DIAMETER_TOO_BUSY in;
+          'diameter_too_busy_out'= Number of DIAMETER_TOO_BUSY out;"
                 type: str
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            generic_proxy_cpu_list:
-                description:
-                - "Field generic_proxy_cpu_list"
-                type: list
-            cpu_count:
-                description:
-                - "Field cpu_count"
-                type: int
     stats:
         description:
         - "Field stats"
@@ -424,6 +411,14 @@ options:
                 description:
                 - "Number of DPAs in"
                 type: str
+            diameter_too_busy_in:
+                description:
+                - "Number of DIAMETER_TOO_BUSY in"
+                type: str
+            diameter_too_busy_out:
+                description:
+                - "Number of DIAMETER_TOO_BUSY out"
+                type: str
 
 '''
 
@@ -478,7 +473,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -511,230 +506,8 @@ def get_argspec():
                     'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'client_fail', 'server_fail', 'no_sess', 'user_session', 'acr_out', 'acr_in', 'aca_out', 'aca_in', 'cea_out', 'cea_in', 'cer_out', 'cer_in', 'dwr_out', 'dwr_in', 'dwa_out', 'dwa_in', 'str_out', 'str_in', 'sta_out', 'sta_in', 'asr_out', 'asr_in', 'asa_out',
                     'asa_in', 'other_out', 'other_in', 'total_http_req_enter_gen', 'mismatch_fwd_id', 'mismatch_rev_id', 'unkwn_cmd_code', 'no_session_id', 'no_fwd_tuple', 'no_rev_tuple', 'dcmsg_fwd_in', 'dcmsg_fwd_out', 'dcmsg_rev_in', 'dcmsg_rev_out', 'dcmsg_error', 'retry_client_request', 'retry_client_request_fail', 'reply_unknown_session_id',
                     'ccr_out', 'ccr_in', 'cca_out', 'cca_in', 'ccr_i', 'ccr_u', 'ccr_t', 'cca_t', 'terminate_on_cca_t', 'forward_unknown_session_id', 'update_latest_server', 'client_select_fail', 'close_conn_when_vport_down', 'invalid_avp', 'reselect_fwd_tuple', 'reselect_fwd_tuple_other_cpu', 'reselect_rev_tuple', 'conn_closed_by_client',
-                    'conn_closed_by_server', 'reply_invalid_avp_value', 'reply_unable_to_deliver', 'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out', 'dpa_in'
+                    'conn_closed_by_server', 'reply_invalid_avp_value', 'reply_unable_to_deliver', 'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out', 'dpa_in', 'diameter_too_busy_in', 'diameter_too_busy_out'
                     ]
-                }
-            },
-        'oper': {
-            'type': 'dict',
-            'generic_proxy_cpu_list': {
-                'type': 'list',
-                'curr_proxy_conns': {
-                    'type': 'int',
-                    },
-                'total_proxy_conns': {
-                    'type': 'int',
-                    },
-                'total_http_conn_generic_proxy': {
-                    'type': 'int',
-                    },
-                'client_fail': {
-                    'type': 'int',
-                    },
-                'server_fail': {
-                    'type': 'int',
-                    },
-                'server_selection_fail': {
-                    'type': 'int',
-                    },
-                'no_route_fail': {
-                    'type': 'int',
-                    },
-                'source_nat_fail': {
-                    'type': 'int',
-                    },
-                'user_session': {
-                    'type': 'str',
-                    },
-                'acr_out': {
-                    'type': 'int',
-                    },
-                'acr_in': {
-                    'type': 'int',
-                    },
-                'aca_out': {
-                    'type': 'int',
-                    },
-                'aca_in': {
-                    'type': 'int',
-                    },
-                'dpr_out': {
-                    'type': 'int',
-                    },
-                'dpr_in': {
-                    'type': 'int',
-                    },
-                'dpa_out': {
-                    'type': 'int',
-                    },
-                'dpa_in': {
-                    'type': 'int',
-                    },
-                'cea_out': {
-                    'type': 'int',
-                    },
-                'cea_in': {
-                    'type': 'int',
-                    },
-                'cer_out': {
-                    'type': 'int',
-                    },
-                'cer_in': {
-                    'type': 'int',
-                    },
-                'dwa_out': {
-                    'type': 'int',
-                    },
-                'dwa_in': {
-                    'type': 'int',
-                    },
-                'dwr_out': {
-                    'type': 'int',
-                    },
-                'dwr_in': {
-                    'type': 'int',
-                    },
-                'str_out': {
-                    'type': 'int',
-                    },
-                'str_in': {
-                    'type': 'int',
-                    },
-                'sta_out': {
-                    'type': 'int',
-                    },
-                'sta_in': {
-                    'type': 'int',
-                    },
-                'asr_out': {
-                    'type': 'int',
-                    },
-                'asr_in': {
-                    'type': 'int',
-                    },
-                'asa_out': {
-                    'type': 'int',
-                    },
-                'asa_in': {
-                    'type': 'int',
-                    },
-                'other_out': {
-                    'type': 'int',
-                    },
-                'other_in': {
-                    'type': 'int',
-                    },
-                'mismatch_fwd_id': {
-                    'type': 'int',
-                    },
-                'mismatch_rev_id': {
-                    'type': 'int',
-                    },
-                'unkwn_cmd_code': {
-                    'type': 'int',
-                    },
-                'no_session_id': {
-                    'type': 'int',
-                    },
-                'no_fwd_tuple': {
-                    'type': 'int',
-                    },
-                'no_rev_tuple': {
-                    'type': 'int',
-                    },
-                'dcmsg_fwd_in': {
-                    'type': 'int',
-                    },
-                'dcmsg_fwd_out': {
-                    'type': 'int',
-                    },
-                'dcmsg_rev_in': {
-                    'type': 'int',
-                    },
-                'dcmsg_rev_out': {
-                    'type': 'int',
-                    },
-                'dcmsg_error': {
-                    'type': 'int',
-                    },
-                'retry_client_request': {
-                    'type': 'int',
-                    },
-                'retry_client_request_fail': {
-                    'type': 'int',
-                    },
-                'reply_unknown_session_id': {
-                    'type': 'int',
-                    },
-                'ccr_out': {
-                    'type': 'int',
-                    },
-                'ccr_in': {
-                    'type': 'int',
-                    },
-                'cca_out': {
-                    'type': 'int',
-                    },
-                'cca_in': {
-                    'type': 'int',
-                    },
-                'ccr_i': {
-                    'type': 'int',
-                    },
-                'ccr_u': {
-                    'type': 'int',
-                    },
-                'ccr_t': {
-                    'type': 'int',
-                    },
-                'cca_t': {
-                    'type': 'int',
-                    },
-                'terminate_on_cca_t': {
-                    'type': 'int',
-                    },
-                'forward_unknown_session_id': {
-                    'type': 'int',
-                    },
-                'update_latest_server': {
-                    'type': 'int',
-                    },
-                'client_select_fail': {
-                    'type': 'int',
-                    },
-                'close_conn_when_vport_down': {
-                    'type': 'int',
-                    },
-                'invalid_avp': {
-                    'type': 'int',
-                    },
-                'reselect_fwd_tuple': {
-                    'type': 'int',
-                    },
-                'reselect_fwd_tuple_other_cpu': {
-                    'type': 'int',
-                    },
-                'reselect_rev_tuple': {
-                    'type': 'int',
-                    },
-                'conn_closed_by_client': {
-                    'type': 'int',
-                    },
-                'conn_closed_by_server': {
-                    'type': 'int',
-                    },
-                'reply_invalid_avp_value': {
-                    'type': 'int',
-                    },
-                'reply_unable_to_deliver': {
-                    'type': 'int',
-                    },
-                'reply_error_info_fail': {
-                    'type': 'int',
-                    }
-                },
-            'cpu_count': {
-                'type': 'int',
                 }
             },
         'stats': {
@@ -957,6 +730,12 @@ def get_argspec():
                 },
             'dpa_in': {
                 'type': 'str',
+                },
+            'diameter_too_busy_in': {
+                'type': 'str',
+                },
+            'diameter_too_busy_out': {
+                'type': 'str',
                 }
             }
         })
@@ -1011,7 +790,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
@@ -1119,11 +899,6 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["generic-proxy-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["generic-proxy"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

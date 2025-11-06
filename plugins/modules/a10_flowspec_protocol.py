@@ -76,7 +76,7 @@ options:
         description:
         - "Specify the protocol number"
         type: int
-        required: False
+        required: True
     uuid:
         description:
         - "uuid of the object"
@@ -156,7 +156,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'proto_attribute': {'type': 'str', 'required': True, 'choices': ['eq', 'gt', 'lt', 'range']}, 'proto_num': {'type': 'int', 'required': True, }, 'proto_num_end': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'proto_attribute': {'type': 'str', 'required': True, 'choices': ['eq', 'gt', 'lt', 'range']}, 'proto_num': {'type': 'int', 'required': True, }, 'proto_num_end': {'type': 'int', 'required': True, }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(flowspec_name=dict(type='str', required=True), ))
     return rv
@@ -165,7 +165,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/flowspec/{flowspec_name}/protocol/{proto_attribute}+{proto_num}"
+    url_base = "/axapi/v3/flowspec/{flowspec_name}/protocol/{proto_attribute}+{proto_num}+{proto_num_end}"
 
     f_dict = {}
     if '/' in str(module.params["proto_attribute"]):
@@ -176,6 +176,10 @@ def existing_url(module):
         f_dict["proto_num"] = module.params["proto_num"].replace("/", "%2F")
     else:
         f_dict["proto_num"] = module.params["proto_num"]
+    if '/' in str(module.params["proto_num_end"]):
+        f_dict["proto_num_end"] = module.params["proto_num_end"].replace("/", "%2F")
+    else:
+        f_dict["proto_num_end"] = module.params["proto_num_end"]
     if '/' in module.params["flowspec_name"]:
         f_dict["flowspec_name"] = module.params["flowspec_name"].replace("/", "%2F")
     else:
@@ -187,11 +191,12 @@ def existing_url(module):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/flowspec/{flowspec_name}/protocol/"
+    url_base = "/axapi/v3/flowspec/{flowspec_name}/protocol/+"
 
     f_dict = {}
     f_dict["proto_attribute"] = ""
     f_dict["proto_num"] = ""
+    f_dict["proto_num_end"] = ""
     f_dict["flowspec_name"] = module.params["flowspec_name"]
 
     return url_base.format(**f_dict)
@@ -225,7 +230,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

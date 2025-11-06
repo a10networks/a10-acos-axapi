@@ -72,8 +72,7 @@ options:
         required: False
     action:
         description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        - "'import'= import; 'export'= export;"
         type: str
         required: False
     file_handle:
@@ -195,7 +194,7 @@ def get_argspec():
             },
         'action': {
             'type': 'str',
-            'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']
+            'choices': ['import', 'export']
             },
         'file_handle': {
             'type': 'str',
@@ -303,10 +302,11 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
+    final_payload = copy.deepcopy(payload)
     if module.params["action"] == "import":
-        call_result = api_client.post_file(module.client, existing_url(module), payload, file_path=module.params["file_path"], file_name=module.params["file"])
+        call_result = api_client.post_file(module.client, existing_url(module), final_payload, file_path=module.params["file_path"], file_name=module.params["file"])
     else:
-        call_result = api_client.post(module.client, existing_url(module), payload)
+        call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

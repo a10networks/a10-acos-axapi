@@ -78,7 +78,7 @@ options:
         required: False
     conn_rate_limit:
         description:
-        - "Connection rate limit per rate-interval (TPS range 1-16000000)"
+        - "Connection rate limit per rate-interval"
         type: int
         required: False
     conn_rate_limit_interval:
@@ -445,7 +445,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

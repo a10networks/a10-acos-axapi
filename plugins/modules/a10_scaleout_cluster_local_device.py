@@ -465,6 +465,11 @@ def get_argspec():
                     'type': 'str',
                     'required': True,
                     },
+                'ip_version': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['ipv4', 'ipv6']
+                    },
                 'threshold_cfg': {
                     'type': 'list',
                     'threshold': {
@@ -473,10 +478,6 @@ def get_argspec():
                     'action': {
                         'type': 'str',
                         'choices': ['down', 'exit-cluster']
-                        },
-                    'ip_version': {
-                        'type': 'str',
-                        'choices': ['ipv4', 'ipv6']
                         }
                     },
                 'uuid': {
@@ -580,7 +581,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

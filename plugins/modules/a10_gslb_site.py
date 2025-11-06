@@ -351,10 +351,54 @@ options:
         type: dict
         required: False
         suboptions:
+            bw_cost:
+                description:
+                - "Field bw_cost"
+                type: int
             gslb_site:
                 description:
                 - "Field gslb_site"
                 type: str
+            template_name:
+                description:
+                - "Field template_name"
+                type: str
+            curr_count:
+                description:
+                - "Field curr_count"
+                type: int
+            highest_count:
+                description:
+                - "Field highest_count"
+                type: int
+            unlimited:
+                description:
+                - "Field unlimited"
+                type: int
+            limit:
+                description:
+                - "Field limit"
+                type: int
+            unusable:
+                description:
+                - "Field unusable"
+                type: int
+            ntype:
+                description:
+                - "Field type"
+                type: str
+            len:
+                description:
+                - "Field len"
+                type: int
+            value:
+                description:
+                - "Field value"
+                type: int
+            time:
+                description:
+                - "Field time"
+                type: int
             state:
                 description:
                 - "Field state"
@@ -731,8 +775,41 @@ def get_argspec():
             },
         'oper': {
             'type': 'dict',
+            'bw_cost': {
+                'type': 'int',
+                },
             'gslb_site': {
                 'type': 'str',
+                },
+            'template_name': {
+                'type': 'str',
+                },
+            'curr_count': {
+                'type': 'int',
+                },
+            'highest_count': {
+                'type': 'int',
+                },
+            'unlimited': {
+                'type': 'int',
+                },
+            'limit': {
+                'type': 'int',
+                },
+            'unusable': {
+                'type': 'int',
+                },
+            'ntype': {
+                'type': 'str',
+                },
+            'len': {
+                'type': 'int',
+                },
+            'value': {
+                'type': 'int',
+                },
+            'time': {
+                'type': 'int',
                 },
             'state': {
                 'type': 'str',
@@ -930,8 +1007,47 @@ def get_argspec():
                     },
                 'oper': {
                     'type': 'dict',
+                    'fqdn_based': {
+                        'type': 'int',
+                        },
                     'dev_name': {
                         'type': 'str',
+                        },
+                    'dynamic_dev_list': {
+                        'type': 'list',
+                        'dyn_dev_name': {
+                            'type': 'str',
+                            },
+                        'dyn_dev_ip': {
+                            'type': 'str',
+                            },
+                        'dyn_dev_inherit_vipserver': {
+                            'type': 'int',
+                            }
+                        },
+                    'dyn_vipserver_list': {
+                        'type': 'list',
+                        'dyn_svr_ip': {
+                            'type': 'str',
+                            },
+                        'dyn_svr_state': {
+                            'type': 'str',
+                            },
+                        'dyn_svr_hits': {
+                            'type': 'int',
+                            },
+                        'port_list': {
+                            'type': 'list',
+                            'port_num': {
+                                'type': 'int',
+                                },
+                            'port_protocol': {
+                                'type': 'str',
+                                },
+                            'port_state': {
+                                'type': 'str',
+                                }
+                            }
                         },
                     'dev_ip': {
                         'type': 'str',
@@ -956,6 +1072,9 @@ def get_argspec():
                         },
                     'dev_state': {
                         'type': 'str',
+                        },
+                    'dev_creation_type': {
+                        'type': 'int',
                         },
                     'client_ldns_list': {
                         'type': 'list',
@@ -1304,7 +1423,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

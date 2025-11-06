@@ -188,6 +188,11 @@ options:
         - "Specify retry timeout (Default is 30 mins)"
         type: int
         required: False
+    require_sni_cert_matched:
+        description:
+        - "SNI is required to match configured certificate subject or SAN"
+        type: bool
+        required: False
     ssli_inbound_enable:
         description:
         - "Enable inbound SSLi"
@@ -1367,7 +1372,7 @@ options:
                 type: bool
             sni_template_client_ssl_shared_name:
                 description:
-                - "Client SSL Template Name"
+                - "Shared Partition Client SSL Template Name"
                 type: str
             server_name_regex:
                 description:
@@ -1418,7 +1423,7 @@ options:
                 type: bool
             sni_regex_template_client_ssl_shared_name:
                 description:
-                - "Client SSL Template Name"
+                - "Shared Partition Client SSL Template Name"
                 type: str
     server_name_auto_map:
         description:
@@ -2212,10 +2217,10 @@ AVAILABLE_PROPERTIES = [
     "fp_ca_key_shared", "fp_ca_shared", "fp_cert_ext_aia_ca_issuers", "fp_cert_ext_aia_ocsp", "fp_cert_ext_crldp", "fp_cert_fetch_autonat", "fp_cert_fetch_autonat_precedence", "fp_cert_fetch_natpool_name", "fp_cert_fetch_natpool_name_shared", "fp_cert_fetch_natpool_precedence", "fp_esni_action", "handshake_logging_enable", "hsm_type",
     "inspect_certificate_issuer_cl_name", "inspect_certificate_san_cl_name", "inspect_certificate_subject_cl_name", "inspect_list_name", "ja3_enable", "ja3_insert_http_header", "ja3_reject_class_list", "ja3_reject_max_number_per_host", "ja3_ttl", "ja4_enable", "ja4_insert_http_header", "ja4_reject_class_list", "ja4_reject_max_number_per_host",
     "ja4_ttl", "ldap_base_dn_from_cert", "ldap_search_filter", "local_cert_pin_list", "local_logging", "multi_class_list", "name", "no_anti_replay", "no_shared_cipher_action", "non_ssl_bypass_l4session", "non_ssl_bypass_service_group", "notafter", "notafterday", "notaftermonth", "notafteryear", "notbefore", "notbeforeday", "notbeforemonth",
-    "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days", "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_web_category",
-    "sampling_enable", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout", "session_key_logging_enable", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log", "sni_bypass_expired_cert",
-    "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid", "verify_cert_fail_action",
-    "version", "web_category", "web_reputation",
+    "notbeforeyear", "ocsp_stapling", "ocspst_ca_cert", "ocspst_ocsp", "ocspst_sg", "ocspst_sg_days", "ocspst_sg_hours", "ocspst_sg_minutes", "ocspst_sg_timeout", "ocspst_srvr", "ocspst_srvr_days", "ocspst_srvr_hours", "ocspst_srvr_minutes", "ocspst_srvr_timeout", "oper", "renegotiation_disable", "req_ca_lists", "require_sni_cert_matched",
+    "require_web_category", "sampling_enable", "server_ipv4_list", "server_ipv6_list", "server_name_auto_map", "server_name_list", "session_cache_size", "session_cache_timeout", "session_key_logging_enable", "session_ticket_disable", "session_ticket_lifetime", "shared_partition_cipher_template", "shared_partition_pool", "sni_bypass_enable_log",
+    "sni_bypass_expired_cert", "sni_bypass_explicit_list", "sni_bypass_missing_cert", "sni_enable_log", "ssl_false_start_disable", "ssli_inbound_enable", "ssli_logging", "sslilogging", "sslv2_bypass_service_group", "starts_with_list", "stats", "template_cipher", "template_cipher_shared", "template_hsm", "user_name_list", "user_tag", "uuid",
+    "verify_cert_fail_action", "version", "web_category", "web_reputation",
     ]
 
 
@@ -2320,6 +2325,9 @@ def get_argspec():
             },
         'ocspst_sg_timeout': {
             'type': 'int',
+            },
+        'require_sni_cert_matched': {
+            'type': 'bool',
             },
         'ssli_inbound_enable': {
             'type': 'bool',
@@ -3560,7 +3568,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

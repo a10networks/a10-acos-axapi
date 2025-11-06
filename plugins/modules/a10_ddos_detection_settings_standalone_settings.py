@@ -95,6 +95,11 @@ options:
                 - "Configure active timeout of the netflow templates received in mins (Template
           active timeout(mins)(default 30mins))"
                 type: int
+            distribute_by_duration:
+                description:
+                - "'enable'= Enable data distribution by flow duration(default); 'disable'=
+          Disable data distribution by flow duration;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -173,7 +178,40 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }, 'sflow': {'type': 'dict', 'listening_port': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'netflow': {'type': 'dict', 'listening_port': {'type': 'int', }, 'template_active_timeout': {'type': 'int', }, 'uuid': {'type': 'str', }}})
+    rv.update({
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'sflow': {
+            'type': 'dict',
+            'listening_port': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'netflow': {
+            'type': 'dict',
+            'listening_port': {
+                'type': 'int',
+                },
+            'template_active_timeout': {
+                'type': 'int',
+                },
+            'distribute_by_duration': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -225,7 +263,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

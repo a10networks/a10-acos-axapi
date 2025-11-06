@@ -66,7 +66,8 @@ options:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
           Floating IP; 'ip-nat-list'= IP NAT list; 'ip-nat'= IP NAT; 'isis'= ISO IS-IS;
           'lw4o6'= LW4O6 Prefix; 'nat-map'= NAT MAP Prefix; 'static-nat'= Static NAT;
-          'ospf'= Open Shortest Path First (OSPF); 'static'= Static routes;"
+          'public-ip'= Public IPv4 Prefixes; 'ospf'= Open Shortest Path First (OSPF);
+          'static'= Static routes;"
                 type: str
             metric:
                 description:
@@ -179,7 +180,7 @@ def get_argspec():
             'type': 'list',
             'ntype': {
                 'type': 'str',
-                'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'isis', 'lw4o6', 'nat-map', 'static-nat', 'ospf', 'static']
+                'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'isis', 'lw4o6', 'nat-map', 'static-nat', 'public-ip', 'ospf', 'static']
                 },
             'metric': {
                 'type': 'int',
@@ -256,7 +257,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -62,8 +62,7 @@ options:
         required: True
     softhsm_enum:
         description:
-        - "'softHSM'= software implementation of a cryptographic store; 'thalesHSM'=
-          Thales HSM;"
+        - "'softHSM'= software implementation of a cryptographic store;"
         type: str
         required: False
     hsm_dev:
@@ -246,7 +245,7 @@ def get_argspec():
             },
         'softhsm_enum': {
             'type': 'str',
-            'choices': ['softHSM', 'thalesHSM']
+            'choices': ['softHSM']
             },
         'hsm_dev': {
             'type': 'list',
@@ -365,7 +364,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

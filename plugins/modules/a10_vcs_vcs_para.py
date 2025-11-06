@@ -84,9 +84,24 @@ options:
         - "Enable SSL"
         type: bool
         required: False
+    ssl_config:
+        description:
+        - "Configure SSL"
+        type: bool
+        required: False
+    ssl_cert:
+        description:
+        - "Specify the cert file name"
+        type: str
+        required: False
+    ssl_key:
+        description:
+        - "Specify the key file name"
+        type: str
+        required: False
     multicast_ip:
         description:
-        - "Multicast (group) IP address (Multicast IP address)"
+        - "Multicast (group) IP address (Multicast IP address (224.0.0.211 by default))"
         type: str
         required: False
     multicast_ipv6:
@@ -133,7 +148,7 @@ options:
         required: False
     link_poll_timeout:
         description:
-        - "link poll timeout, in millisecond, default is 500"
+        - "Field link_poll_timeout"
         type: int
         required: False
     chassis_id:
@@ -259,7 +274,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "chassis_id", "config_info", "config_seq", "dead_interval", "dead_interval_mseconds", "failure_retry_count_value", "floating_ip_cfg", "floating_ipv6_cfg", "force_wait_interval", "forever", "hold_preemption_interval", "link_poll_timeout", "memory_stat_interval", "multicast_ip", "multicast_ipv6", "multicast_port", "size", "slog_level",
-    "slog_method", "speed_limit", "ssl_enable", "tcp_channel_monitor", "time_interval", "time_interval_mseconds", "transmit_fragment_size", "uuid",
+    "slog_method", "speed_limit", "ssl_cert", "ssl_config", "ssl_enable", "ssl_key", "tcp_channel_monitor", "time_interval", "time_interval_mseconds", "transmit_fragment_size", "uuid",
     ]
 
 
@@ -298,6 +313,15 @@ def get_argspec():
             },
         'ssl_enable': {
             'type': 'bool',
+            },
+        'ssl_config': {
+            'type': 'bool',
+            },
+        'ssl_cert': {
+            'type': 'str',
+            },
+        'ssl_key': {
+            'type': 'str',
             },
         'multicast_ip': {
             'type': 'str',
@@ -420,7 +444,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

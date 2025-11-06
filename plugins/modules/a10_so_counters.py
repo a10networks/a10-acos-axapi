@@ -121,7 +121,15 @@ options:
           map mismatch drop; 'so_pkts_redirection_loop_drop'= Packets redirection loop
           drop; 'so_pkts_l2redirect_frag_vlan_retrieval_error'= L2 redirect pkt frag vlan
           not retrieved; 'so_pkts_l2redirect_tx_frag_vlan_add_fail'= L2 redirect tx pkt
-          failed to add vlan;"
+          failed to add vlan; 'so_hairpin_inbound_check_no_route'= Scaleout hairpin
+          inbound check no route; 'so_hairpin_incorrect_intf_tag'= Scaleout hairpin
+          incorrect interface tag; 'so_hairpin_inbound_no_dst_change'= Scaleout hairpin
+          inbound conn no dest change; 'so_hairpin_missing_pkt_hash'= Scaleout hairpin
+          missing pkt hash; 'so_hairpin_no_fwd_dev'= Scaleout hairpin no fwd device;
+          'so_hairpin_conn_ext_failed'= Scaleout hairpin connection extension failed;
+          'so_hairpin_no_hairpin_intf'= Scaleout hairpin no hairpin interface;
+          'so_hairpin_intf_wrong_tag'= Scaleout hairpin wrong hairpin interface tag;
+          'so_hairpin_conn_success'= Scaleout hairpin connection success;"
                 type: str
     stats:
         description:
@@ -370,7 +378,8 @@ def get_argspec():
                     'so_pkts_l3_redirect_decap_non_ipv4_vxlan_drop', 'so_pkts_l3_redirect_decap_rx_encap_params_drop', 'so_pkts_l3_redirect_table_error', 'so_pkts_l3_redirect_rcvd_in_l2_mode_drop', 'so_pkts_l3_redirect_fragmentation_error', 'so_pkts_l3_redirect_table_no_entry_found', 'so_pkts_l3_redirect_invalid_dev_dir',
                     'so_pkts_l3_redirect_chassis_dest_mac_error', 'so_pkts_l3_redirect_encap_ipv4_jumbo_frag_drop', 'so_pkts_l3_redirect_encap_ipv6_jumbo_frag_drop', 'so_pkts_l3_redirect_too_large_pkts_in_drop', 'so_pkts_l3_redirect_encap_mtu_error_drop', 'so_sync_fw_shadow_session_create', 'so_sync_fw_shadow_session_delete',
                     'so_sync_fw_shadow_ext', 'so_sync_shadow_stats_to_active', 'so_fw_internal_rule_count', 'so_hc_registration_done', 'so_hc_deregistration_done', 'so_pkts_l2redirect_vlan_retrieval_error', 'so_pkts_l2redirect_port_retrieval_error', 'so_pkts_l2redirect_loop_detect_drop', 'so_pkts_l2redirect_same_pkt_multiple_times',
-                    'so_slb_shadow_session_created', 'so_sync_slb_shadow_session_create', 'so_sync_slb_shadow_session_delete', 'so_pkts_cgn_traffic_map_mismatch_drop', 'so_pkts_redirection_loop_drop', 'so_pkts_l2redirect_frag_vlan_retrieval_error', 'so_pkts_l2redirect_tx_frag_vlan_add_fail'
+                    'so_slb_shadow_session_created', 'so_sync_slb_shadow_session_create', 'so_sync_slb_shadow_session_delete', 'so_pkts_cgn_traffic_map_mismatch_drop', 'so_pkts_redirection_loop_drop', 'so_pkts_l2redirect_frag_vlan_retrieval_error', 'so_pkts_l2redirect_tx_frag_vlan_add_fail', 'so_hairpin_inbound_check_no_route',
+                    'so_hairpin_incorrect_intf_tag', 'so_hairpin_inbound_no_dst_change', 'so_hairpin_missing_pkt_hash', 'so_hairpin_no_fwd_dev', 'so_hairpin_conn_ext_failed', 'so_hairpin_no_hairpin_intf', 'so_hairpin_intf_wrong_tag', 'so_hairpin_conn_success'
                     ]
                 }
             },
@@ -543,7 +552,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

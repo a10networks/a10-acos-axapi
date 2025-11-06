@@ -55,33 +55,10 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    distribution_method:
+    regular_rebalance:
         description:
-        - "'cpu-usage'= Entry/Zone distribution based on CPU usage percentage; 'traffic-
-          rate'= Entry/Zone distribution based on traffic kbit/pkt rate (Default);"
+        - "'enable'= enable; 'disable'= disable;"
         type: str
-        required: False
-    cpu_threshold_per_entry:
-        description:
-        - "Entry/zone percentage threshold of CPU usage for source hash mode. Requires
-          distribution-method cpu-usage. Default=60"
-        type: int
-        required: False
-    cpu_threshold_per_pu:
-        description:
-        - "Per PU percentage threshold of average CPU usage to start check entry usage.
-          Requires distribution-method cpu-usage. Default=80"
-        type: int
-        required: False
-    rate_pkt_threshold:
-        description:
-        - "DDOS DST Entry/Zone packet rate threshold for source hash mode"
-        type: int
-        required: False
-    rate_kbit_threshold:
-        description:
-        - "DDOS DST Entry/Zone kbit rate threshold for source hash mode"
-        type: int
         required: False
     uuid:
         description:
@@ -142,7 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cpu_threshold_per_entry", "cpu_threshold_per_pu", "distribution_method", "rate_kbit_threshold", "rate_pkt_threshold", "uuid", ]
+AVAILABLE_PROPERTIES = ["regular_rebalance", "uuid", ]
 
 
 def get_default_argspec():
@@ -162,7 +139,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'distribution_method': {'type': 'str', 'choices': ['cpu-usage', 'traffic-rate']}, 'cpu_threshold_per_entry': {'type': 'int', }, 'cpu_threshold_per_pu': {'type': 'int', }, 'rate_pkt_threshold': {'type': 'int', }, 'rate_kbit_threshold': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'regular_rebalance': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
     return rv
 
 
@@ -214,7 +191,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -593,6 +593,7 @@ def get_argspec():
                 },
             'port_num_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -611,6 +612,7 @@ def get_argspec():
                 },
             'port_num_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -629,6 +631,7 @@ def get_argspec():
                 },
             'port_num_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -647,6 +650,7 @@ def get_argspec():
                 },
             'proto_num_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -676,6 +680,7 @@ def get_argspec():
                 },
             'type_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -694,6 +699,7 @@ def get_argspec():
                 },
             'code_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -712,6 +718,7 @@ def get_argspec():
                 },
             'length_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -730,6 +737,7 @@ def get_argspec():
                 },
             'dscp_val_end': {
                 'type': 'int',
+                'required': True,
                 },
             'uuid': {
                 'type': 'str',
@@ -879,7 +887,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

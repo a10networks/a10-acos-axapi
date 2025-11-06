@@ -62,7 +62,7 @@ options:
         required: True
     l3_proto:
         description:
-        - "'arp'= arp; 'neighbor'= neighbor;"
+        - "'arp'= arp; 'ip'= ip; 'ipv6'= ipv6; 'neighbor'= neighbor;"
         type: str
         required: False
     dst:
@@ -395,7 +395,7 @@ def get_argspec():
             },
         'l3_proto': {
             'type': 'str',
-            'choices': ['arp', 'neighbor']
+            'choices': ['arp', 'ip', 'ipv6', 'neighbor']
             },
         'dst': {
             'type': 'bool',
@@ -603,7 +603,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

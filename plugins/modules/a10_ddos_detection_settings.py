@@ -85,20 +85,17 @@ options:
     pkt_sampling:
         description:
         - "Field pkt_sampling"
-        type: dict
+        type: list
         required: False
         suboptions:
             override_rate:
                 description:
                 - "Sample 1 in X packets (default= X=1)"
                 type: int
-            assign_index:
+            start_level:
                 description:
-                - "Lower index is more aggressive sampling"
-                type: int
-            assign_rate:
-                description:
-                - "Assign rate to given index"
+                - "Configure the start level for dynamic sampling adjustment (Sample 1 in N
+          packets, the larger level the larger value of N (default= 1))"
                 type: int
     histogram_escalate_percentage:
         description:
@@ -179,24 +176,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-    reflection_attack_detection:
-        description:
-        - "Field reflection_attack_detection"
-        type: dict
-        required: False
-        suboptions:
-            heavy_hitter_threshold:
-                description:
-                - "Fractional threshold relative to total undiscovered source ports (default 50%)"
-                type: int
-            sport_discovery_threshold:
-                description:
-                - "Fractional threshold relative to parent entry's bit-rate (default 5%)"
-                type: int
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     standalone_settings:
         description:
         - "Field standalone_settings"
@@ -220,6 +199,21 @@ options:
                 description:
                 - "Field netflow"
                 type: dict
+    zone_notifications:
+        description:
+        - "Field zone_notifications"
+        type: dict
+        required: False
+        suboptions:
+            source_entry:
+                description:
+                - "'enable'= Enable source entry detection notification; 'disable'= Disable source
+          entry detection notification(default);"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -276,7 +270,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "ctrl_cpu_usage", "de_escalation_quiet_time", "dedicated_cpus", "detection_window_size", "detector_mode", "entry_saving", "export_interval", "full_core_enable", "histogram_de_escalate_percentage", "histogram_escalate_percentage", "initial_learning_interval", "network_object_flooding_multiple", "network_object_subnet_notify_percent",
-    "network_object_window_size", "notification_debug_log", "pkt_sampling", "reflection_attack_detection", "standalone_settings", "top_k_reset_interval", "uuid",
+    "network_object_window_size", "notification_debug_log", "pkt_sampling", "standalone_settings", "top_k_reset_interval", "uuid", "zone_notifications",
     ]
 
 
@@ -315,14 +309,11 @@ def get_argspec():
             'type': 'int',
             },
         'pkt_sampling': {
-            'type': 'dict',
+            'type': 'list',
             'override_rate': {
                 'type': 'int',
                 },
-            'assign_index': {
-                'type': 'int',
-                },
-            'assign_rate': {
+            'start_level': {
                 'type': 'int',
                 }
             },
@@ -373,18 +364,6 @@ def get_argspec():
                 'type': 'str',
                 }
             },
-        'reflection_attack_detection': {
-            'type': 'dict',
-            'heavy_hitter_threshold': {
-                'type': 'int',
-                },
-            'sport_discovery_threshold': {
-                'type': 'int',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
         'standalone_settings': {
             'type': 'dict',
             'action': {
@@ -411,9 +390,23 @@ def get_argspec():
                 'template_active_timeout': {
                     'type': 'int',
                     },
+                'distribute_by_duration': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'zone_notifications': {
+            'type': 'dict',
+            'source_entry': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
                 }
             }
         })
@@ -468,7 +461,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

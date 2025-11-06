@@ -263,6 +263,10 @@ options:
                 description:
                 - "Enable automatic packet-capture for IPv6 Malformed Extension Header Drop"
                 type: bool
+            tcp_udp_zero_port:
+                description:
+                - "Enable automatic packet-capture for TCP UDP Zero Port Drop"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -473,6 +477,10 @@ options:
             ipv6_eh_malformed:
                 description:
                 - "Enable automatic packet-capture for IPv6 Malformed Extension Header Drop"
+                type: bool
+            tcp_udp_zero_port:
+                description:
+                - "Enable automatic packet-capture for TCP UDP Zero Port Drop"
                 type: bool
             uuid:
                 description:
@@ -702,6 +710,9 @@ def get_argspec():
             'ipv6_eh_malformed': {
                 'type': 'bool',
                 },
+            'tcp_udp_zero_port': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -858,6 +869,9 @@ def get_argspec():
             'ipv6_eh_malformed': {
                 'type': 'bool',
                 },
+            'tcp_udp_zero_port': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -921,7 +935,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

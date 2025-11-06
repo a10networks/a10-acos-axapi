@@ -300,6 +300,11 @@ options:
         - "Enable automatic packet-capture for IPv6 Malformed Extension Header Drop"
         type: bool
         required: False
+    tcp_udp_zero_port:
+        description:
+        - "Enable automatic packet-capture for TCP UDP Zero Port Drop"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -361,8 +366,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "bad_ip_flg", "bad_ip_frg_offset", "bad_ip_hdrlen", "bad_ip_payload_len", "bad_ip_ttl", "bad_tcp_urg_offset", "csum", "emp_frg", "emp_mic_frg", "frg", "gre_pptp_err", "ipip_tnl_err", "ipip_tnl_msmtch", "ipv6_eh_ah", "ipv6_eh_dest", "ipv6_eh_esp", "ipv6_eh_frag", "ipv6_eh_hbh", "ipv6_eh_malformed", "ipv6_eh_mobility", "ipv6_eh_none",
-    "ipv6_eh_other", "ipv6_eh_routing", "land", "no_ip_payload", "nvgre_err", "opt", "over_ip_payload", "pod", "runt_ip_hdr", "runt_tcp_udp_hdr", "tcp_bad_csum", "tcp_bad_iplen", "tcp_frg_hdr", "tcp_null_frg", "tcp_null_scan", "tcp_opt_err", "tcp_sht_hdr", "tcp_syn_fin", "tcp_syn_frg", "tcp_xmas", "tcp_xmas_scan", "udp_bad_csum", "udp_bad_len",
-    "udp_kerb_frg", "udp_port_lb", "udp_srt_hdr", "uuid", "vxlan_err",
+    "ipv6_eh_other", "ipv6_eh_routing", "land", "no_ip_payload", "nvgre_err", "opt", "over_ip_payload", "pod", "runt_ip_hdr", "runt_tcp_udp_hdr", "tcp_bad_csum", "tcp_bad_iplen", "tcp_frg_hdr", "tcp_null_frg", "tcp_null_scan", "tcp_opt_err", "tcp_sht_hdr", "tcp_syn_fin", "tcp_syn_frg", "tcp_udp_zero_port", "tcp_xmas", "tcp_xmas_scan",
+    "udp_bad_csum", "udp_bad_len", "udp_kerb_frg", "udp_port_lb", "udp_srt_hdr", "uuid", "vxlan_err",
     ]
 
 
@@ -528,6 +533,9 @@ def get_argspec():
         'ipv6_eh_malformed': {
             'type': 'bool',
             },
+        'tcp_udp_zero_port': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             }
@@ -590,7 +598,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

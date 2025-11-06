@@ -293,10 +293,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-            stateful_firewall:
-                description:
-                - "Field stateful_firewall"
-                type: dict
             router:
                 description:
                 - "Field router"
@@ -343,10 +339,6 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
-            stateful_firewall:
-                description:
-                - "Field stateful_firewall"
-                type: dict
             router:
                 description:
                 - "Field router"
@@ -988,27 +980,6 @@ def get_argspec():
             'uuid': {
                 'type': 'str',
                 },
-            'stateful_firewall': {
-                'type': 'dict',
-                'inside': {
-                    'type': 'bool',
-                    },
-                'class_list': {
-                    'type': 'str',
-                    },
-                'outside': {
-                    'type': 'bool',
-                    },
-                'access_list': {
-                    'type': 'bool',
-                    },
-                'acl_id': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
             'router': {
                 'type': 'dict',
                 'isis': {
@@ -1367,27 +1338,6 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
-                },
-            'stateful_firewall': {
-                'type': 'dict',
-                'inside': {
-                    'type': 'bool',
-                    },
-                'class_list': {
-                    'type': 'str',
-                    },
-                'outside': {
-                    'type': 'bool',
-                    },
-                'access_list': {
-                    'type': 'bool',
-                    },
-                'acl_name': {
-                    'type': 'str',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
                 },
             'router': {
                 'type': 'dict',
@@ -2060,7 +2010,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

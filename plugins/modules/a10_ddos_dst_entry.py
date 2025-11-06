@@ -266,12 +266,6 @@ options:
                 description:
                 - "'avg'= window average; 'max-peak'= max peak;"
                 type: str
-    traffic_distribution_mode:
-        description:
-        - "'default'= Distribute traffic to one slot using default distribution mechanism;
-          'source-ip-based'= Distribute traffic between slots, based on source ip;"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -2764,7 +2758,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "advertised_enable", "blackhole_on_glid_exceed", "capture_config_list", "description", "dest_nat_ip", "dest_nat_ipv6", "drop_disable", "drop_disable_fwd_immediate", "drop_frag_pkt", "drop_on_no_src_dst_default", "dst_entry_name", "dynamic_entry_overflow_policy_list", "enable_top_k", "exceed_log_cfg", "exceed_log_dep_cfg", "glid",
     "glid_exceed_action", "hw_blacklist_blocking", "inbound_forward_dscp", "ip_addr", "ip_proto_list", "ipv6_addr", "l4_type_list", "log_periodic", "oper", "operational_mode", "outbound_forward_dscp", "pattern_recognition_hw_filter_enable", "pattern_recognition_sensitivity", "port_list", "port_range_list", "reporting_disabled", "sampling_enable",
-    "set_counter_base_val", "sflow", "source_nat_pool", "src_dst_pair", "src_dst_pair_class_list_list", "src_dst_pair_policy_list", "src_dst_pair_settings_list", "src_port_list", "src_port_range_list", "stats", "subnet_ip_addr", "subnet_ipv6_addr", "template", "topk_destinations", "traffic_distribution_mode", "user_tag", "uuid",
+    "set_counter_base_val", "sflow", "source_nat_pool", "src_dst_pair", "src_dst_pair_class_list_list", "src_dst_pair_policy_list", "src_dst_pair_settings_list", "src_port_list", "src_port_range_list", "stats", "subnet_ip_addr", "subnet_ipv6_addr", "template", "topk_destinations", "user_tag", "uuid",
     ]
 
 
@@ -2953,10 +2947,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['avg', 'max-peak']
                 }
-            },
-        'traffic_distribution_mode': {
-            'type': 'str',
-            'choices': ['default', 'source-ip-based']
             },
         'uuid': {
             'type': 'str',
@@ -7296,7 +7286,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -65,20 +65,15 @@ options:
         - "domain list local file name"
         type: str
         required: False
-    size:
+    action:
         description:
-        - "domain list file size in byte"
-        type: int
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
+          rename; 'check'= check; 'replace'= replace;"
+        type: str
         required: False
     file_handle:
         description:
         - "full path of the uploaded file"
-        type: str
-        required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
-          rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
         type: str
         required: False
     dst_file:
@@ -159,7 +154,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "dst_file", "file", "file_handle", "oper", "size", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "dst_file", "file", "file_handle", "oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -186,15 +181,12 @@ def get_argspec():
         'file': {
             'type': 'str',
             },
-        'size': {
-            'type': 'int',
+        'action': {
+            'type': 'str',
+            'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace']
             },
         'file_handle': {
             'type': 'str',
-            },
-        'action': {
-            'type': 'str',
-            'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']
             },
         'dst_file': {
             'type': 'str',
@@ -284,10 +276,11 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
+    final_payload = copy.deepcopy(payload)
     if module.params["action"] == "import":
-        call_result = api_client.post_file(module.client, existing_url(module), payload, file_path=module.params["file_path"], file_name=module.params["file"])
+        call_result = api_client.post_file(module.client, existing_url(module), final_payload, file_path=module.params["file_path"], file_name=module.params["file"])
     else:
-        call_result = api_client.post(module.client, existing_url(module), payload)
+        call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

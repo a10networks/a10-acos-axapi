@@ -57,7 +57,7 @@ options:
         required: False
     ssl_l4_tmpl_name:
         description:
-        - "Field ssl_l4_tmpl_name"
+        - "DDOS SSL-L4 Template Name"
         type: str
         required: True
     disable:
@@ -544,7 +544,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

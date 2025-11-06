@@ -153,6 +153,11 @@ options:
         - "'enable'= enable (default); 'disable'= disable;"
         type: str
         required: False
+    disable_ssh_agent_forwarding:
+        description:
+        - "Disable sshd agent forwarding"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -343,20 +348,6 @@ options:
                 description:
                 - "port number to be configured (Specify port number)"
                 type: int
-    tls_1_3_mgmt:
-        description:
-        - "Field tls_1_3_mgmt"
-        type: dict
-        required: False
-        suboptions:
-            enable:
-                description:
-                - "Enable TLS 1.3 support on ACOS management plane"
-                type: bool
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     multi_queue_support:
         description:
         - "Field multi_queue_support"
@@ -605,6 +596,10 @@ options:
                 description:
                 - "Field link_down_on_restart"
                 type: dict
+            monitoring_mode:
+                description:
+                - "Field monitoring_mode"
+                type: dict
     memory:
         description:
         - "Field memory"
@@ -625,16 +620,6 @@ options:
         type: dict
         required: False
         suboptions:
-            ssl_context_memory:
-                description:
-                - "Total SSL context memory needed in units of MB. Will be rounded to closest
-          multiple of 2MB"
-                type: int
-            ssl_dma_memory:
-                description:
-                - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple
-          of 2MB"
-                type: int
             nat_pool_addr_count:
                 description:
                 - "Total configurable NAT Pool addresses in the System"
@@ -2025,6 +2010,125 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    domain_list_settings:
+        description:
+        - "Field domain_list_settings"
+        type: dict
+        required: False
+        suboptions:
+            polling_interval:
+                description:
+                - "'1-second'= Set interval to 1 second; '5-second'= Set interval to 5 seconds;
+          '10-second'= Set interval to 10 seconds (Default);"
+                type: str
+            concurrent_task:
+                description:
+                - "Configure max concurrent AXFR task (Default 6)"
+                type: int
+            domain_list_per_group:
+                description:
+                - "'16'= Allow 16 domain-list per group (Default); '32'= Allow 32 domain-list per
+          group;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    cl_threat_category:
+        description:
+        - "Field cl_threat_category"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    forced_group_speed_list:
+        description:
+        - "Field forced_group_speed_list"
+        type: list
+        required: False
+        suboptions:
+            eth01_to_04:
+                description:
+                - "Set speed for interface ethernet  1 ~  4"
+                type: bool
+            eth05_to_08:
+                description:
+                - "Set speed for interface ethernet  5 ~  8"
+                type: bool
+            eth09_to_12:
+                description:
+                - "Set speed for interface ethernet  9 ~ 12"
+                type: bool
+            eth13_to_16:
+                description:
+                - "Set speed for interface ethernet 13 ~ 16"
+                type: bool
+            eth17_to_20:
+                description:
+                - "Set speed for interface ethernet 17 ~ 20"
+                type: bool
+            eth21_to_24:
+                description:
+                - "Set speed for interface ethernet 21 ~ 24"
+                type: bool
+            speed:
+                description:
+                - "'1G'= Speed 1G; '10G'= Speed 10G (default); '25G'= Speed 25G;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    udp:
+        description:
+        - "Field udp"
+        type: dict
+        required: False
+        suboptions:
+            skip_checksum_when_zero:
+                description:
+                - "When enabled, the system does not modify the L4 checksum if the original
+          passthrough packet was received with UDP checksum valu"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ssl_hw_memory:
+        description:
+        - "Field ssl_hw_memory"
+        type: dict
+        required: False
+        suboptions:
+            mem_block_cfg:
+                description:
+                - "Field mem_block_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    enable_disk_encryption:
+        description:
+        - "Field enable_disk_encryption"
+        type: dict
+        required: False
+        suboptions:
+            cipher:
+                description:
+                - "'aes'= cipher aes; 'serpent'= cipher serpent; 'twofish'= cipher twofish;"
+                type: str
+            passphrase:
+                description:
+                - "Enter phassphrase in plain text format"
+                type: str
+            passphrase_base64:
+                description:
+                - "Enter phassphrase in base64 format"
+                type: str
     psu_info:
         description:
         - "Field psu_info"
@@ -2107,6 +2211,72 @@ options:
                 description:
                 - "one interval is 300ms (0 = disable)"
                 type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    software_tcam:
+        description:
+        - "Field software_tcam"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable software TCAM"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ip:
+        description:
+        - "Field ip"
+        type: dict
+        required: False
+        suboptions:
+            icmp_unreachable_disable:
+                description:
+                - "Disable icmp unreachable messages"
+                type: bool
+            icmp_redirect_disable:
+                description:
+                - "Disable icmp redirect messages"
+                type: bool
+            rpf_check_enable:
+                description:
+                - "Enable reverse path filter (strict mode)"
+                type: bool
+            source_route_pkt_drop_enable:
+                description:
+                - "Enable IPv4 source routed packet drop"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ipv6:
+        description:
+        - "Field ipv6"
+        type: dict
+        required: False
+        suboptions:
+            icmpv6_unreachable_disable:
+                description:
+                - "Disable icmpv6 unreachable messages"
+                type: bool
+            icmpv6_redirect_disable:
+                description:
+                - "Disable icmpv6 redirect messages"
+                type: bool
+            rpf_check_enable:
+                description:
+                - "Enable reverse path filter (strict mode)"
+                type: bool
+            source_route_pkt_drop_enable:
+                description:
+                - "Enable IPv6 source routed packet drop"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -2394,6 +2564,18 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+            pu_sync_detection:
+                description:
+                - "Field pu_sync_detection"
+                type: dict
+            mpm:
+                description:
+                - "Field mpm"
+                type: dict
+            notification:
+                description:
+                - "Field notification"
+                type: dict
 
 '''
 
@@ -2449,14 +2631,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "config_mgmt", "control_cpu", "core", "cosq_show", "cosq_stats",
-    "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info", "dpdk_stats", "drop_linux_closed_port_syn",
-    "dynamic_service_dns_socket_pool", "enable_password", "environment", "even_port_hash_enable", "ext_only_logging", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list", "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate",
-    "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats", "ipmi", "ipmi_service", "ipsec", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro",
-    "management_interface_mode", "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support", "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype",
-    "port_count", "port_info", "port_list", "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage", "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec",
-    "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host", "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp", "tcp_stats",
-    "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "tls_1_3_mgmt", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "upgrade_status", "uuid", "ve_mac_scheme", "xaui_dlb_mode",
+    "add_cpu_core", "add_port", "all_vlan_limit", "anomaly_log", "anomaly_log_rate_limit", "app_performance", "apps_global", "asic_debug_dump", "asic_mmu_fail_safe", "attack_log", "bandwidth", "bfd", "cl_threat_category", "class_list_hitcount_enable", "cli_monitor_interval", "cm_update_file_name_ref", "config_mgmt", "control_cpu", "core",
+    "cosq_show", "cosq_stats", "counter_lib_accounting", "cpu_hyper_thread", "cpu_list", "cpu_load_sharing", "cpu_map", "cpu_packet_prio_support", "data_cpu", "ddos_attack", "ddos_log", "default_mtu", "del_port", "delete_cpu_core", "disable_ssh_agent_forwarding", "dns", "dns_cache", "domain_list_hitcount_enable", "domain_list_info",
+    "domain_list_settings", "dpdk_stats", "drop_linux_closed_port_syn", "dynamic_service_dns_socket_pool", "enable_disk_encryption", "enable_password", "environment", "even_port_hash_enable", "ext_only_logging", "forced_group_speed_list", "fpga_core_crc", "fpga_drop", "fw", "geo_db_hitcount_enable", "geo_location", "geoloc", "geoloc_list_list",
+    "geoloc_name_helper", "geolocation_file", "glid", "guest_file", "gui_image_list", "hardware", "hardware_accelerate", "health_check_list", "high_memory_l4_session", "hrxq_status", "hw_blocking_enable", "icmp", "icmp_rate", "icmp6", "inuse_cpu_list", "inuse_port_list", "io_cpu", "ip", "ip_dns_cache", "ip_stats", "ip_threat_list", "ip6_stats",
+    "ipmi", "ipmi_service", "ipsec", "ipv6", "ipv6_prefix_length", "job_offload", "link_capability", "link_monitor", "lro", "management_interface_mode", "memory", "memory_block_debug", "mfa_auth", "mfa_cert_store", "mfa_management", "mfa_validation_type", "mgmt_port", "modify_port", "module_ctrl_cpu", "mon_template", "multi_queue_support",
+    "ndisc_ra", "netvsc_monitor", "nsm_a10lb", "password_policy", "path_list", "pbslb", "per_vlan_limit", "platformtype", "port_count", "port_info", "port_list", "ports", "power_on_self_test", "probe_network_devices", "promiscuous_mode", "psu_info", "q_in_q", "queuing_buffer", "radius", "reboot", "resource_accounting", "resource_usage",
+    "rfc_ipfix_ie_spec", "session", "session_reclaim_limit", "set_rxtx_desc_size", "set_rxtx_queue", "set_tcp_syn_per_sec", "shared_poll_mode", "shell_privileges", "shm_logging", "shutdown", "software_tcam", "spe_profile", "spe_status", "src_ip_hash_enable", "ssl_hw_memory", "ssl_req_q", "ssl_scv", "ssl_scv_verify_crl_sign", "ssl_scv_verify_host",
+    "ssl_set_compatible_cipher", "ssl_status", "syslog_time_msec", "system_chassis_port_split_enable", "table_integrity", "tcp", "tcp_stats", "tcp_syn_per_sec", "telemetry_log", "template", "template_bind", "throughput", "timeout_value", "trunk", "trunk_hw_hash", "trunk_xaui_hw_hash", "tso", "udp", "upgrade_status", "uuid", "ve_mac_scheme",
+    "xaui_dlb_mode",
     ]
 
 
@@ -2538,6 +2721,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable', 'disable']
             },
+        'disable_ssh_agent_forwarding': {
+            'type': 'bool',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -2580,7 +2766,7 @@ def get_argspec():
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
-                    'choices': ['all', 'input-bytes-per-sec', 'output-bytes-per-sec']
+                    'choices': ['all', 'input-bytes-per-sec', 'output-bytes-per-sec', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'licexpire_drop', 'bwl_drop']
                     }
                 }
             },
@@ -2663,15 +2849,6 @@ def get_argspec():
                 },
             'port_number': {
                 'type': 'int',
-                }
-            },
-        'tls_1_3_mgmt': {
-            'type': 'dict',
-            'enable': {
-                'type': 'bool',
-                },
-            'uuid': {
-                'type': 'str',
                 }
             },
         'multi_queue_support': {
@@ -2946,6 +3123,16 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                },
+            'monitoring_mode': {
+                'type': 'dict',
+                'mmode': {
+                    'type': 'str',
+                    'choices': ['interdependent', 'and']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'memory': {
@@ -2963,12 +3150,6 @@ def get_argspec():
             },
         'resource_usage': {
             'type': 'dict',
-            'ssl_context_memory': {
-                'type': 'int',
-                },
-            'ssl_dma_memory': {
-                'type': 'int',
-                },
             'nat_pool_addr_count': {
                 'type': 'int',
                 },
@@ -4388,6 +4569,9 @@ def get_argspec():
                     },
                 'template_name': {
                     'type': 'str',
+                    },
+                'geo_location_load_temp_include_ipv6': {
+                    'type': 'bool',
                     }
                 },
             'uuid': {
@@ -4551,6 +4735,9 @@ def get_argspec():
                 },
             'ipv4_internet_host_list': {
                 'type': 'dict',
+                'white_list': {
+                    'type': 'str',
+                    },
                 'class_list_cfg': {
                     'type': 'list',
                     'class_list': {
@@ -4566,6 +4753,9 @@ def get_argspec():
                 },
             'ipv6_internet_host_list': {
                 'type': 'dict',
+                'white_list': {
+                    'type': 'str',
+                    },
                 'class_list_cfg': {
                     'type': 'list',
                     'class_list': {
@@ -4801,6 +4991,101 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'domain_list_settings': {
+            'type': 'dict',
+            'polling_interval': {
+                'type': 'str',
+                'choices': ['1-second', '5-second', '10-second']
+                },
+            'concurrent_task': {
+                'type': 'int',
+                },
+            'domain_list_per_group': {
+                'type': 'str',
+                'choices': ['16', '32']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'cl_threat_category': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'forced_group_speed_list': {
+            'type': 'list',
+            'eth01_to_04': {
+                'type': 'bool',
+                'required': True,
+                },
+            'eth05_to_08': {
+                'type': 'bool',
+                'required': True,
+                },
+            'eth09_to_12': {
+                'type': 'bool',
+                'required': True,
+                },
+            'eth13_to_16': {
+                'type': 'bool',
+                'required': True,
+                },
+            'eth17_to_20': {
+                'type': 'bool',
+                'required': True,
+                },
+            'eth21_to_24': {
+                'type': 'bool',
+                'required': True,
+                },
+            'speed': {
+                'type': 'str',
+                'choices': ['1G', '10G', '25G']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'udp': {
+            'type': 'dict',
+            'skip_checksum_when_zero': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ssl_hw_memory': {
+            'type': 'dict',
+            'mem_block_cfg': {
+                'type': 'list',
+                'mem_block': {
+                    'type': 'str',
+                    'choices': ['ssl_mem', 'ssl_context', 'ssl_context_2', 'ssl_context_3', 'ssl_context_4', 'ssl_context_5', 'ssl_context_6', 'ssl_context_7', 'ssl_context_8', 'ssl_context_9', 'ssl_context_10', 'ssl_context_11', 'ssl_context_12', 'ssl_context_13', 'ssl_context_14', 'ssl_context_15', 'ssl_context_16']
+                    },
+                'size': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'enable_disk_encryption': {
+            'type': 'dict',
+            'cipher': {
+                'type': 'str',
+                'choices': ['aes', 'serpent', 'twofish']
+                },
+            'passphrase': {
+                'type': 'str',
+                },
+            'passphrase_base64': {
+                'type': 'str',
+                }
+            },
         'psu_info': {
             'type': 'dict',
             'uuid': {
@@ -4863,6 +5148,51 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'software_tcam': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ip': {
+            'type': 'dict',
+            'icmp_unreachable_disable': {
+                'type': 'bool',
+                },
+            'icmp_redirect_disable': {
+                'type': 'bool',
+                },
+            'rpf_check_enable': {
+                'type': 'bool',
+                },
+            'source_route_pkt_drop_enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'ipv6': {
+            'type': 'dict',
+            'icmpv6_unreachable_disable': {
+                'type': 'bool',
+                },
+            'icmpv6_redirect_disable': {
+                'type': 'bool',
+                },
+            'rpf_check_enable': {
+                'type': 'bool',
+                },
+            'source_route_pkt_drop_enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
         'nsm_a10lb': {
             'type': 'dict',
             'kill': {
@@ -4884,7 +5214,7 @@ def get_argspec():
                     'str',
                     'choices': [
                         'all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew', 'currclose', 'currclsw', 'currlack', 'currlstn',
-                        'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
+                        'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied', 'syn_rcv_rexmit', 'sock_init', 'invalid_drop', 'delayed_free'
                         ]
                     }
                 },
@@ -5074,9 +5404,12 @@ def get_argspec():
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
-                    'type': 'str',
-                    'choices':
-                    ['all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r']
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r',
+                        'qps', 'hit_rate_per_sec'
+                        ]
                     }
                 }
             },
@@ -5200,6 +5533,43 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
+                },
+            'pu_sync_detection': {
+                'type': 'dict',
+                'interval': {
+                    'type': 'int',
+                    },
+                'action': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'mpm': {
+                'type': 'dict',
+                'max_workers': {
+                    'type': 'int',
+                    },
+                'min_idle_workers': {
+                    'type': 'int',
+                    },
+                'start_workers': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'notification': {
+                'type': 'dict',
+                'period': {
+                    'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             }
         })
@@ -5254,7 +5624,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

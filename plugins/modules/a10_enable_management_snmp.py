@@ -144,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'port_list': {'type': 'list', 'management': {'type': 'int', }, 'ethernet': {'type': 'int', }, 've': {'type': 'int', }, 'tunnel': {'type': 'int', }, 'action': {'type': 'str', }, 'ipv4_acl': {'type': 'str', }, 'ipv6_acl': {'type': 'str', }}}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'port_list': {'type': 'list', 'management': {'type': 'int', }, 'ethernet': {'type': 'int', }, 've': {'type': 'int', }, 'tunnel': {'type': 'int', }, 'lif': {'type': 'str', }, 'action': {'type': 'str', }, 'ipv4_acl': {'type': 'str', }, 'ipv6_acl': {'type': 'str', }}}})
     return rv
 
 
@@ -183,7 +183,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

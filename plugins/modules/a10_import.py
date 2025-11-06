@@ -275,6 +275,11 @@ options:
         - "Specific a proxy (format=HOST=PORT)"
         type: str
         required: False
+    use_ssh_key:
+        description:
+        - "Use private key to authenticate"
+        type: str
+        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -594,7 +599,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 AVAILABLE_PROPERTIES = [
     "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "auth_saml_idp", "background", "bios_file", "bw_list", "ca_cert", "certificate_type", "class_list", "class_list_convert", "class_list_type", "cloud_config", "cloud_creds", "csr_generate", "ddos_script", "digest", "dnssec_dnskey", "dnssec_ds", "domain_list", "geo_location",
     "geo_location_archive", "glm_cert", "glm_license", "health_external", "health_postfile", "ip_map_list", "local_uri_file", "lw_4o6", "ng_waf_custom_page", "ng_waf_module", "overwrite", "password", "pfx_password", "proxy", "remote_file", "remote_file_zone_transfer", "rpz", "secured", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "store",
-    "store_name", "terminal", "thales_kmdata", "thales_secworld", "to_device", "tsig", "usb_license", "use_mgmt_port", "user_tag", "web_category_license", "xml_schema", "zone_transfer",
+    "store_name", "terminal", "thales_kmdata", "thales_secworld", "to_device", "tsig", "usb_license", "use_mgmt_port", "use_ssh_key", "user_tag", "web_category_license", "xml_schema", "zone_transfer",
     ]
 
 
@@ -751,6 +756,9 @@ def get_argspec():
             'type': 'bool',
             },
         'proxy': {
+            'type': 'str',
+            },
+        'use_ssh_key': {
             'type': 'str',
             },
         'use_mgmt_port': {
@@ -986,7 +994,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

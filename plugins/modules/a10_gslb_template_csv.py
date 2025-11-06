@@ -89,7 +89,7 @@ options:
                 description:
                 - "'ip-from'= Beginning address of IP range or subnet; 'ip-to-mask'= Ending
           address of IP range or Mask; 'continent'= Continent; 'country'= Country;
-          'state'= State or province; 'city'= City;"
+          'state'= State or province; 'city'= City; 'ASN'= Autonomous System Number;"
                 type: str
     uuid:
         description:
@@ -196,7 +196,7 @@ def get_argspec():
                 },
             'csv_type': {
                 'type': 'str',
-                'choices': ['ip-from', 'ip-to-mask', 'continent', 'country', 'state', 'city']
+                'choices': ['ip-from', 'ip-to-mask', 'continent', 'country', 'state', 'city', 'ASN']
                 }
             },
         'uuid': {
@@ -262,7 +262,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

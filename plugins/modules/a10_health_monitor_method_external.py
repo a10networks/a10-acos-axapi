@@ -95,6 +95,11 @@ options:
         - "Get server's perference"
         type: bool
         required: False
+    ext_root_shell:
+        description:
+        - "Enable root-shell environment"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -154,7 +159,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ext_arguments", "ext_port", "ext_preference", "ext_program", "ext_program_shared", "external", "shared_partition_program", "uuid", ]
+AVAILABLE_PROPERTIES = ["ext_arguments", "ext_port", "ext_preference", "ext_program", "ext_program_shared", "ext_root_shell", "external", "shared_partition_program", "uuid", ]
 
 
 def get_default_argspec():
@@ -174,7 +179,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'external': {'type': 'bool', }, 'ext_program': {'type': 'str', }, 'shared_partition_program': {'type': 'bool', }, 'ext_program_shared': {'type': 'str', }, 'ext_port': {'type': 'int', }, 'ext_arguments': {'type': 'str', }, 'ext_preference': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'external': {'type': 'bool', }, 'ext_program': {'type': 'str', }, 'shared_partition_program': {'type': 'bool', }, 'ext_program_shared': {'type': 'str', }, 'ext_port': {'type': 'int', }, 'ext_arguments': {'type': 'str', }, 'ext_preference': {'type': 'bool', }, 'ext_root_shell': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     # Parent keys
     rv.update(dict(monitor_name=dict(type='str', required=True), ))
     return rv
@@ -233,7 +238,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

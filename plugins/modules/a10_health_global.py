@@ -104,6 +104,12 @@ options:
           should be less than or equal to interval)"
         type: int
         required: False
+    support_deprecated_tls:
+        description:
+        - "'enable'= Enable TLS 1.0 and TLS 1.1 health-check (default); 'disable'= Disable
+          TLS 1.0 and TLS 1.1 health-check;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -163,7 +169,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["check_rate", "disable_auto_adjust", "external_rate", "interval", "multi_process", "per", "retry", "timeout", "up_retry", "uuid", ]
+AVAILABLE_PROPERTIES = ["check_rate", "disable_auto_adjust", "external_rate", "interval", "multi_process", "per", "retry", "support_deprecated_tls", "timeout", "up_retry", "uuid", ]
 
 
 def get_default_argspec():
@@ -183,7 +189,42 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'multi_process': {'type': 'int', }, 'disable_auto_adjust': {'type': 'bool', }, 'check_rate': {'type': 'int', }, 'external_rate': {'type': 'int', }, 'per': {'type': 'int', }, 'retry': {'type': 'int', }, 'up_retry': {'type': 'int', }, 'interval': {'type': 'int', }, 'timeout': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'multi_process': {
+            'type': 'int',
+            },
+        'disable_auto_adjust': {
+            'type': 'bool',
+            },
+        'check_rate': {
+            'type': 'int',
+            },
+        'external_rate': {
+            'type': 'int',
+            },
+        'per': {
+            'type': 'int',
+            },
+        'retry': {
+            'type': 'int',
+            },
+        'up_retry': {
+            'type': 'int',
+            },
+        'interval': {
+            'type': 'int',
+            },
+        'timeout': {
+            'type': 'int',
+            },
+        'support_deprecated_tls': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
@@ -235,7 +276,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

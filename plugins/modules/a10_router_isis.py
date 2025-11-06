@@ -669,7 +669,7 @@ def get_argspec():
                 'type': 'list',
                 'ntype': {
                     'type': 'str',
-                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map', 'static-nat', 'ospf', 'rip', 'static']
+                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map', 'static-nat', 'public-ip', 'ospf', 'rip', 'static']
                     },
                 'metric': {
                     'type': 'int',
@@ -787,7 +787,7 @@ def get_argspec():
                         'type': 'list',
                         'ntype': {
                             'type': 'str',
-                            'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map', 'static-nat', 'nat64', 'ospf', 'rip', 'static']
+                            'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map', 'static-nat', 'public-ip', 'nat64', 'ospf', 'rip', 'static']
                             },
                         'metric': {
                             'type': 'int',
@@ -915,7 +915,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

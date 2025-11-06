@@ -60,6 +60,16 @@ options:
         - "OSPF process ID"
         type: int
         required: True
+    router_id:
+        description:
+        - "Field router_id"
+        type: dict
+        required: False
+        suboptions:
+            value:
+                description:
+                - "OSPF router-id in IPv4 address format"
+                type: str
     auto_cost_reference_bandwidth:
         description:
         - "Use reference bandwidth method to assign OSPF cost (The reference bandwidth in
@@ -109,8 +119,9 @@ options:
             di_type:
                 description:
                 - "'lw4o6'= LW4O6 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-
-          list'= IP NAT list; 'static-nat'= Static NAT; 'vip'= Only not flagged Virtual
-          IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP);"
+          list'= IP NAT list; 'static-nat'= Static NAT; 'public-ip'= Public IPv4
+          Prefixes; 'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'=
+          Selected Virtual IP (VIP);"
                 type: str
             di_area_ipv4:
                 description:
@@ -142,9 +153,9 @@ options:
                 description:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
           Floating IP; 'lw4o6'= LW4O6 Prefix; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT
-          list; 'static-nat'= Static NAT; 'isis'= ISO IS-IS; 'ospf'= Open Shortest Path
-          First (OSPF); 'rip'= Routing Information Protocol (RIP); 'static'= Static
-          routes;"
+          list; 'static-nat'= Static NAT; 'public-ip'= Public IPv4 Prefixes; 'isis'= ISO
+          IS-IS; 'ospf'= Open Shortest Path First (OSPF); 'rip'= Routing Information
+          Protocol (RIP); 'static'= Static routes;"
                 type: str
             ospf_id:
                 description:
@@ -257,16 +268,6 @@ options:
                 description:
                 - "Field abr_type"
                 type: dict
-    router_id:
-        description:
-        - "Field router_id"
-        type: dict
-        required: False
-        suboptions:
-            value:
-                description:
-                - "OSPF router-id in IPv4 address format"
-                type: str
     overflow:
         description:
         - "Field overflow"
@@ -559,6 +560,12 @@ def get_argspec():
             'type': 'int',
             'required': True,
             },
+        'router_id': {
+            'type': 'dict',
+            'value': {
+                'type': 'str',
+                }
+            },
         'auto_cost_reference_bandwidth': {
             'type': 'int',
             },
@@ -596,7 +603,7 @@ def get_argspec():
             'type': 'list',
             'di_type': {
                 'type': 'str',
-                'choices': ['lw4o6', 'floating-ip', 'ip-nat', 'ip-nat-list', 'static-nat', 'vip', 'vip-only-flagged']
+                'choices': ['lw4o6', 'floating-ip', 'ip-nat', 'ip-nat-list', 'static-nat', 'public-ip', 'vip', 'vip-only-flagged']
                 },
             'di_area_ipv4': {
                 'type': 'str',
@@ -619,7 +626,7 @@ def get_argspec():
                 },
             'protocol': {
                 'type': 'str',
-                'choices': ['bgp', 'connected', 'floating-ip', 'lw4o6', 'ip-nat', 'ip-nat-list', 'static-nat', 'isis', 'ospf', 'rip', 'static']
+                'choices': ['bgp', 'connected', 'floating-ip', 'lw4o6', 'ip-nat', 'ip-nat-list', 'static-nat', 'public-ip', 'isis', 'ospf', 'rip', 'static']
                 },
             'ospf_id': {
                 'type': 'int',
@@ -716,12 +723,6 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['cisco', 'ibm', 'shortcut', 'standard']
                     }
-                }
-            },
-        'router_id': {
-            'type': 'dict',
-            'value': {
-                'type': 'str',
                 }
             },
         'overflow': {
@@ -991,7 +992,7 @@ def get_argspec():
                 'type': 'list',
                 'ntype': {
                     'type': 'str',
-                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'lw4o6', 'nat-map', 'static-nat', 'isis', 'rip', 'static']
+                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'lw4o6', 'nat-map', 'static-nat', 'public-ip', 'isis', 'rip', 'static']
                     },
                 'metric': {
                     'type': 'int',
@@ -1144,7 +1145,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

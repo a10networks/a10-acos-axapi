@@ -81,6 +81,10 @@ options:
                 description:
                 - "Field tunnel_cfg"
                 type: list
+            lif_cfg:
+                description:
+                - "Field lif_cfg"
+                type: dict
             management:
                 description:
                 - "Management Interface"
@@ -119,6 +123,10 @@ options:
                 description:
                 - "Field tunnel_cfg"
                 type: list
+            lif_cfg:
+                description:
+                - "Field lif_cfg"
+                type: dict
             management:
                 description:
                 - "Management Interface"
@@ -246,6 +254,12 @@ def get_argspec():
                     'type': 'int',
                     }
                 },
+            'lif_cfg': {
+                'type': 'dict',
+                'lif': {
+                    'type': 'str',
+                    }
+                },
             'management': {
                 'type': 'bool',
                 },
@@ -290,6 +304,12 @@ def get_argspec():
                     },
                 'tunnel_end': {
                     'type': 'int',
+                    }
+                },
+            'lif_cfg': {
+                'type': 'dict',
+                'lif': {
+                    'type': 'str',
                     }
                 },
             'management': {
@@ -357,7 +377,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
