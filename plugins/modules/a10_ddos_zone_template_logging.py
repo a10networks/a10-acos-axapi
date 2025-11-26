@@ -67,7 +67,7 @@ options:
         required: False
     use_obj_name:
         description:
-        - "Show obj name instead of ip in the log"
+        - "Show obj name in the log"
         type: bool
         required: False
     log_format_custom:
@@ -221,7 +221,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

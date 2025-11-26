@@ -85,6 +85,11 @@ options:
         - "Keep GSLB state information"
         type: bool
         required: False
+    extended:
+        description:
+        - "Debug for additional info"
+        type: bool
+        required: False
     one_shot:
         description:
         - "Stop after get 64 states"
@@ -349,7 +354,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["glname", "group", "id", "ip_addr", "ipv6_addr", "memory", "one_shot", "protocol", "state", "uuid", ]
+AVAILABLE_PROPERTIES = ["extended", "glname", "group", "id", "ip_addr", "ipv6_addr", "memory", "one_shot", "protocol", "state", "uuid", ]
 
 
 def get_default_argspec():
@@ -386,6 +391,9 @@ def get_argspec():
             'type': 'str',
             },
         'state': {
+            'type': 'bool',
+            },
+        'extended': {
             'type': 'bool',
             },
         'one_shot': {
@@ -593,7 +601,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

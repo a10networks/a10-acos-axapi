@@ -101,20 +101,6 @@ options:
           fail; 'cookie_not_found'= Persist cookie not found; 'cookie_pass_thru'= Persist
           cookie Pass-thru; 'cookie_invalid'= Invalid persist cookie;"
                 type: str
-    oper:
-        description:
-        - "Field oper"
-        type: dict
-        required: False
-        suboptions:
-            persist_cpu_list:
-                description:
-                - "Field persist_cpu_list"
-                type: list
-            cpu_count:
-                description:
-                - "Field cpu_count"
-                type: int
     stats:
         description:
         - "Field stats"
@@ -387,7 +373,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -422,174 +408,6 @@ def get_argspec():
                     'dst_ip_new_sess_sel', 'dst_ip_new_sess_sel_fail', 'dst_ip_hash_pri', 'dst_ip_hash_enqueue', 'dst_ip_hash_sec', 'dst_ip_hash_fail', 'cssl_sid_not_found', 'cssl_sid_match', 'cssl_sid_not_match', 'sssl_sid_not_found', 'sssl_sid_reset', 'sssl_sid_match', 'sssl_sid_not_match', 'ssl_sid_persist_ok', 'ssl_sid_persist_fail',
                     'ssl_sid_session_ok', 'ssl_sid_session_fail', 'cookie_persist_ok', 'cookie_persist_fail', 'cookie_not_found', 'cookie_pass_thru', 'cookie_invalid'
                     ]
-                }
-            },
-        'oper': {
-            'type': 'dict',
-            'persist_cpu_list': {
-                'type': 'list',
-                'hash_tbl_trylock_fail': {
-                    'type': 'int',
-                    },
-                'hash_tbl_create_ok': {
-                    'type': 'int',
-                    },
-                'hash_tbl_create_fail': {
-                    'type': 'int',
-                    },
-                'hash_tbl_free': {
-                    'type': 'int',
-                    },
-                'hash_tbl_rst_updown': {
-                    'type': 'int',
-                    },
-                'hash_tbl_rst_adddel': {
-                    'type': 'int',
-                    },
-                'url_hash_pri': {
-                    'type': 'int',
-                    },
-                'url_hash_enqueue': {
-                    'type': 'int',
-                    },
-                'url_hash_sec': {
-                    'type': 'int',
-                    },
-                'url_hash_fail': {
-                    'type': 'int',
-                    },
-                'header_hash_pri': {
-                    'type': 'int',
-                    },
-                'header_hash_enqueue': {
-                    'type': 'int',
-                    },
-                'header_hash_sec': {
-                    'type': 'int',
-                    },
-                'header_hash_fail': {
-                    'type': 'int',
-                    },
-                'src_ip': {
-                    'type': 'int',
-                    },
-                'src_ip_enqueue': {
-                    'type': 'int',
-                    },
-                'src_ip_fail': {
-                    'type': 'int',
-                    },
-                'src_ip_new_sess_cache': {
-                    'type': 'int',
-                    },
-                'src_ip_new_sess_cache_fail': {
-                    'type': 'int',
-                    },
-                'src_ip_new_sess_sel': {
-                    'type': 'int',
-                    },
-                'src_ip_new_sess_sel_fail': {
-                    'type': 'int',
-                    },
-                'src_ip_hash_pri': {
-                    'type': 'int',
-                    },
-                'src_ip_hash_enqueue': {
-                    'type': 'int',
-                    },
-                'src_ip_hash_sec': {
-                    'type': 'int',
-                    },
-                'src_ip_hash_fail': {
-                    'type': 'int',
-                    },
-                'src_ip_enforce': {
-                    'type': 'int',
-                    },
-                'dst_ip': {
-                    'type': 'int',
-                    },
-                'dst_ip_enqueue': {
-                    'type': 'int',
-                    },
-                'dst_ip_fail': {
-                    'type': 'int',
-                    },
-                'dst_ip_new_sess_cache': {
-                    'type': 'int',
-                    },
-                'dst_ip_new_sess_cache_fail': {
-                    'type': 'int',
-                    },
-                'dst_ip_new_sess_sel': {
-                    'type': 'int',
-                    },
-                'dst_ip_new_sess_sel_fail': {
-                    'type': 'int',
-                    },
-                'dst_ip_hash_pri': {
-                    'type': 'int',
-                    },
-                'dst_ip_hash_enqueue': {
-                    'type': 'int',
-                    },
-                'dst_ip_hash_sec': {
-                    'type': 'int',
-                    },
-                'dst_ip_hash_fail': {
-                    'type': 'int',
-                    },
-                'cssl_sid_not_found': {
-                    'type': 'int',
-                    },
-                'cssl_sid_match': {
-                    'type': 'int',
-                    },
-                'cssl_sid_not_match': {
-                    'type': 'int',
-                    },
-                'sssl_sid_not_found': {
-                    'type': 'int',
-                    },
-                'sssl_sid_reset': {
-                    'type': 'int',
-                    },
-                'sssl_sid_match': {
-                    'type': 'int',
-                    },
-                'sssl_sid_not_match': {
-                    'type': 'int',
-                    },
-                'ssl_sid_persist_ok': {
-                    'type': 'int',
-                    },
-                'ssl_sid_persist_fail': {
-                    'type': 'int',
-                    },
-                'ssl_sid_session_ok': {
-                    'type': 'int',
-                    },
-                'ssl_sid_session_fail': {
-                    'type': 'int',
-                    },
-                'cookie_persist_ok': {
-                    'type': 'int',
-                    },
-                'cookie_persist_fail': {
-                    'type': 'int',
-                    },
-                'cookie_not_found': {
-                    'type': 'int',
-                    },
-                'cookie_pass_thru': {
-                    'type': 'int',
-                    },
-                'cookie_invalid': {
-                    'type': 'int',
-                    }
-                },
-            'cpu_count': {
-                'type': 'int',
                 }
             },
         'stats': {
@@ -806,7 +624,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
@@ -914,11 +733,6 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["persist-list"] if info != "NotFound" else info
-            elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
-                result["axapi_calls"].append(get_oper_result)
-                info = get_oper_result["response_body"]
-                result["acos_info"] = info["persist"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
                 get_type_result = api_client.get_stats(module.client, existing_url(module), params=module.params)
                 result["axapi_calls"].append(get_type_result)

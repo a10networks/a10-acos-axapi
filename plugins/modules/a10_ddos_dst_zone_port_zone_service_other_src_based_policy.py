@@ -95,6 +95,10 @@ options:
                 description:
                 - "Class-list name"
                 type: str
+            class_list_glid:
+                description:
+                - "Global limit ID (class-list based)"
+                type: str
             glid:
                 description:
                 - "Global limit ID"
@@ -229,6 +233,9 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
                 },
+            'class_list_glid': {
+                'type': 'str',
+                },
             'glid': {
                 'type': 'str',
                 },
@@ -271,7 +278,7 @@ def get_argspec():
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
-                    'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow']
+                    'choices': ['all', 'packet_received', 'packet_dropped', 'entry_learned', 'entry_count_overflow', 'exceed_drop_pkt_rate_clist', 'exceed_drop_conn_rate_clist', 'exceed_drop_conn_limit_clist', 'exceed_drop_kbit_rate_clist', 'exceed_drop_kbit_rate_clist_pkt', 'exceed_drop_frag_rate_clist']
                     }
                 },
             'class_list_overflow_policy_list': {
@@ -403,7 +410,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

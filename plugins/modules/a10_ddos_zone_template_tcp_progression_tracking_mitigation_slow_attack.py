@@ -12,7 +12,8 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_ddos_zone_template_tcp_progression_tracking_mitigation_slow_attack
 description:
-    - Configure and enable TCP Progression Tracking Mitigation for Slow Attack
+    - Configure and enable TCP progression Tracking Mitigation for slow attack
+      (identify slow attacker)
 author: A10 Networks
 options:
     state:
@@ -60,11 +61,6 @@ options:
         - Key to identify parent object
         type: str
         required: True
-    slow_attack:
-        description:
-        - "'enable-check'= Enter Progression Tracking Tracking Slow Attack;"
-        type: str
-        required: True
     response_pkt_rate_max:
         description:
         - "Set the transferred packets per response"
@@ -97,6 +93,30 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    slow_attacker_identification:
+        description:
+        - "Field slow_attacker_identification"
+        type: dict
+        required: False
+        suboptions:
+            enable_identification:
+                description:
+                - "Progression tracking will identify slow attacker and blacklist it based on the
+          config value"
+                type: bool
+            active_connection:
+                description:
+                - "Set the minimum tracking active connection to start identifying slow attacker,
+          default value is 3"
+                type: int
+            bad_connection:
+                description:
+                - "Set the maximum percentage of slow connection (per source), default value is 75"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -151,7 +171,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["init_request_max_time", "init_response_max_time", "progression_tracking_slow_action", "progression_tracking_slow_action_list_name", "response_pkt_rate_max", "slow_attack", "uuid", ]
+AVAILABLE_PROPERTIES = ["init_request_max_time", "init_response_max_time", "progression_tracking_slow_action", "progression_tracking_slow_action_list_name", "response_pkt_rate_max", "slow_attacker_identification", "uuid", ]
 
 
 def get_default_argspec():
@@ -172,11 +192,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'slow_attack': {
-            'type': 'str',
-            'required': True,
-            'choices': ['enable-check']
-            },
         'response_pkt_rate_max': {
             'type': 'int',
             },
@@ -195,6 +210,21 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'slow_attacker_identification': {
+            'type': 'dict',
+            'enable_identification': {
+                'type': 'bool',
+                },
+            'active_connection': {
+                'type': 'int',
+                },
+            'bad_connection': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             }
         })
     # Parent keys
@@ -255,7 +285,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

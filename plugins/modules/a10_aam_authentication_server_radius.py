@@ -159,6 +159,10 @@ options:
                 - "'pap'= PAP authentication. Default; 'mschapv2'= MS-CHAPv2 authentication;
           'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP;"
                 type: str
+            message_authenticator_verify_enable:
+                description:
+                - "Verify Message-Authenticator attribute"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -411,6 +415,9 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['pap', 'mschapv2', 'mschapv2-pap']
                 },
+            'message_authenticator_verify_enable': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 },
@@ -583,7 +590,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

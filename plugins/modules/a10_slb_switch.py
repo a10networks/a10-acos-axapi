@@ -140,7 +140,9 @@ options:
           ingress; 'tls12_ignore_req'= TLS12-Request-Per-Sec Limit ignored packets count;
           'tls12_tls13_drop_req'= TLS12--TLS13-Request-Per-Sec Limit Drop at ingress;
           'tls12_tls13_ignore_req'= TLS12-TLS13-Request-Per-Sec Limit ignored packets
-          count;"
+          count; 'mac_movement'= MAC movement; 'ipv4-src-routed-pkt-drop'= IPv4 source
+          routed packet drop; 'ipv6-src-routed-pkt-drop'= IPv6 source routed packet drop;
+          'ipv4-rpf-drop'= IPv4 RPF drop; 'ipv6-rpf-drop'= IPv6 RPF drop;"
                 type: str
     stats:
         description:
@@ -584,6 +586,26 @@ options:
                 description:
                 - "TLS12-TLS13-Request-Per-Sec Limit ignored packets count"
                 type: str
+            mac_movement:
+                description:
+                - "MAC movement"
+                type: str
+            ipv4_src_routed_pkt_drop:
+                description:
+                - "IPv4 source routed packet drop"
+                type: str
+            ipv6_src_routed_pkt_drop:
+                description:
+                - "IPv6 source routed packet drop"
+                type: str
+            ipv4_rpf_drop:
+                description:
+                - "IPv4 RPF drop"
+                type: str
+            ipv6_rpf_drop:
+                description:
+                - "IPv6 RPF drop"
+                type: str
 
 '''
 
@@ -675,7 +697,7 @@ def get_argspec():
                     'sp_non_ctrl_pkt_drop', 'urpf_pkt_drop', 'fw_smp_zone_mismatch', 'ipfrag_udp', 'ipfrag_icmp', 'ipfrag_ospf', 'ipfrag_esp', 'ipfrag_tcp_dropped', 'ipfrag_udp_dropped', 'ipfrag_ipip_dropped', 'redirect_fwd_fail', 'redirect_fwd_sent', 'redirect_rev_fail', 'redirect_rev_sent', 'redirect_setup_fail', 'ip_frag_sent',
                     'invalid_rx_arp_pkt', 'invalid_sender_mac_arp_drop', 'dev_based_arp_drop', 'scaleout_arp_drop', 'virtual_ip_not_found_arp_drop', 'inactive_static_nat_pool_arp_drop', 'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop', 'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop', 'ip_not_found_arp_drop', 'dev_link_down_arp_drop',
                     'lacp_tx_intf_err_drop', 'service_chain_sent', 'service_chain_rcvd', 'unnumbered_nat_error', 'unnumbered_unsupported_drop', 'ipv6frag_gre_dropped', 'ipv6_ndisc_dad_prefix_mismatch_drop', 'bw_ignore_limit', 'ppsl_drop_egr', 'ppsl_drop_ing', 'ppsl_ignore_limit', 'closed_port_syn_drop', 'ip_icmp_error_drop', 'tls13_drop_req',
-                    'tls13_ignore_req', 'tls12_drop_req', 'tls12_ignore_req', 'tls12_tls13_drop_req', 'tls12_tls13_ignore_req'
+                    'tls13_ignore_req', 'tls12_drop_req', 'tls12_ignore_req', 'tls12_tls13_drop_req', 'tls12_tls13_ignore_req', 'mac_movement', 'ipv4-src-routed-pkt-drop', 'ipv6-src-routed-pkt-drop', 'ipv4-rpf-drop', 'ipv6-rpf-drop'
                     ]
                 }
             },
@@ -1007,6 +1029,21 @@ def get_argspec():
                 },
             'tls12_tls13_ignore_req': {
                 'type': 'str',
+                },
+            'mac_movement': {
+                'type': 'str',
+                },
+            'ipv4_src_routed_pkt_drop': {
+                'type': 'str',
+                },
+            'ipv6_src_routed_pkt_drop': {
+                'type': 'str',
+                },
+            'ipv4_rpf_drop': {
+                'type': 'str',
+                },
+            'ipv6_rpf_drop': {
+                'type': 'str',
                 }
             }
         })
@@ -1061,7 +1098,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -213,10 +213,20 @@ options:
         - "'enable'= enable; 'disable'= disable;"
         type: str
         required: False
+    pkt_rate_limit_on_reassemble:
+        description:
+        - "'enable'= enable; 'disable'= disable (Default);"
+        type: str
+        required: False
     blacklist_reason_tracking:
         description:
         - "Enable blacklist reason tracking"
         type: bool
+        required: False
+    rate_limit_sync_interval:
+        description:
+        - "Multi-PU rate limit syncing interval (default 3)"
+        type: int
         required: False
     uuid:
         description:
@@ -259,29 +269,10 @@ options:
         type: dict
         required: False
         suboptions:
-            distribution_method:
+            regular_rebalance:
                 description:
-                - "'cpu-usage'= Entry/Zone distribution based on CPU usage percentage; 'traffic-
-          rate'= Entry/Zone distribution based on traffic kbit/pkt rate (Default);"
+                - "'enable'= enable; 'disable'= disable;"
                 type: str
-            cpu_threshold_per_entry:
-                description:
-                - "Entry/zone percentage threshold of CPU usage for source hash mode. Requires
-          distribution-method cpu-usage. Default=60"
-                type: int
-            cpu_threshold_per_pu:
-                description:
-                - "Per PU percentage threshold of average CPU usage to start check entry usage.
-          Requires distribution-method cpu-usage. Default=80"
-                type: int
-            rate_pkt_threshold:
-                description:
-                - "DDOS DST Entry/Zone packet rate threshold for source hash mode"
-                type: int
-            rate_kbit_threshold:
-                description:
-                - "DDOS DST Entry/Zone kbit rate threshold for source hash mode"
-                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -622,8 +613,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "blacklist_reason_tracking", "close_sess_for_unauth_src_without_rst", "disable_advanced_core_analysis", "disable_delay_dynamic_src_learning", "disable_on_reboot", "disallow_rst_ack_in_syn_auth", "enable_now", "fast_aging", "fast_path_disable", "force_routing_on_transp", "force_traffic_to_same_blade_disable", "hw_blocking_enable",
-    "hw_blocking_threshold_limit", "ipv6_src_hash_mask_bits", "mpls", "multi_pu_zone_distribution", "non_zero_win_size_syncookie", "oper", "per_service_szp_entry_limit", "progression_tracking", "rate_interval", "rexmit_syn_log", "src_dst_entry_limit", "src_hash_function", "src_ip_hash_bit", "src_ipv6_hash_bit", "src_zone_port_entry_limit",
-    "szp_clist_warn_threshold", "szp_warn_exceed_enable", "szp_warn_threshold", "toggle", "use_route", "uuid", "vxlan_outbound_check",
+    "hw_blocking_threshold_limit", "ipv6_src_hash_mask_bits", "mpls", "multi_pu_zone_distribution", "non_zero_win_size_syncookie", "oper", "per_service_szp_entry_limit", "pkt_rate_limit_on_reassemble", "progression_tracking", "rate_interval", "rate_limit_sync_interval", "rexmit_syn_log", "src_dst_entry_limit", "src_hash_function",
+    "src_ip_hash_bit", "src_ipv6_hash_bit", "src_zone_port_entry_limit", "szp_clist_warn_threshold", "szp_warn_exceed_enable", "szp_warn_threshold", "toggle", "use_route", "uuid", "vxlan_outbound_check",
     ]
 
 
@@ -742,8 +733,15 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable', 'disable']
             },
+        'pkt_rate_limit_on_reassemble': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
         'blacklist_reason_tracking': {
             'type': 'bool',
+            },
+        'rate_limit_sync_interval': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -771,21 +769,9 @@ def get_argspec():
             },
         'multi_pu_zone_distribution': {
             'type': 'dict',
-            'distribution_method': {
+            'regular_rebalance': {
                 'type': 'str',
-                'choices': ['cpu-usage', 'traffic-rate']
-                },
-            'cpu_threshold_per_entry': {
-                'type': 'int',
-                },
-            'cpu_threshold_per_pu': {
-                'type': 'int',
-                },
-            'rate_pkt_threshold': {
-                'type': 'int',
-                },
-            'rate_kbit_threshold': {
-                'type': 'int',
+                'choices': ['enable', 'disable']
                 },
             'uuid': {
                 'type': 'str',
@@ -1110,7 +1096,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

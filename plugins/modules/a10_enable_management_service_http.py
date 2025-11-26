@@ -96,6 +96,16 @@ options:
                 description:
                 - "tunnel port"
                 type: int
+    lif_cfg:
+        description:
+        - "Field lif_cfg"
+        type: dict
+        required: False
+        suboptions:
+            lif:
+                description:
+                - "Lif name (Lif interface name)"
+                type: str
     all_data_intf:
         description:
         - "All Data Interfaces"
@@ -128,6 +138,10 @@ options:
                 description:
                 - "Field tunnel_cfg"
                 type: list
+            lif_cfg:
+                description:
+                - "Field lif_cfg"
+                type: dict
             management:
                 description:
                 - "Management Interface"
@@ -166,6 +180,10 @@ options:
                 description:
                 - "Field tunnel_cfg"
                 type: list
+            lif_cfg:
+                description:
+                - "Field lif_cfg"
+                type: dict
             management:
                 description:
                 - "Management Interface"
@@ -236,7 +254,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_v4_list", "acl_v6_list", "all_data_intf", "eth_cfg", "tunnel_cfg", "uuid", "ve_cfg", ]
+AVAILABLE_PROPERTIES = ["acl_v4_list", "acl_v6_list", "all_data_intf", "eth_cfg", "lif_cfg", "tunnel_cfg", "uuid", "ve_cfg", ]
 
 
 def get_default_argspec():
@@ -284,6 +302,12 @@ def get_argspec():
                 'type': 'int',
                 }
             },
+        'lif_cfg': {
+            'type': 'dict',
+            'lif': {
+                'type': 'str',
+                }
+            },
         'all_data_intf': {
             'type': 'bool',
             },
@@ -321,6 +345,12 @@ def get_argspec():
                     },
                 'tunnel_end': {
                     'type': 'int',
+                    }
+                },
+            'lif_cfg': {
+                'type': 'dict',
+                'lif': {
+                    'type': 'str',
                     }
                 },
             'management': {
@@ -367,6 +397,12 @@ def get_argspec():
                     },
                 'tunnel_end': {
                     'type': 'int',
+                    }
+                },
+            'lif_cfg': {
+                'type': 'dict',
+                'lif': {
+                    'type': 'str',
                     }
                 },
             'management': {
@@ -434,7 +470,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -188,7 +188,7 @@ def get_argspec():
                     },
                 'Type': {
                     'type': 'str',
-                    'choices': ['kernel', 'connected', 'static', 'rip', 'ospf', 'bgp', 'isis', 'vip', 'selected-vip', 'ip-nat-list', 'ip-nat', 'floating-ip', 'static-nat', 'a10']
+                    'choices': ['kernel', 'connected', 'static', 'rip', 'ospf', 'bgp', 'isis', 'vip', 'selected-vip', 'ip-nat-list', 'ip-nat', 'floating-ip', 'static-nat', 'public-ip', 'a10']
                     },
                 'Subtype': {
                     'type': 'str',
@@ -247,7 +247,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

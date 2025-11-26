@@ -127,6 +127,18 @@ options:
                 description:
                 - "Enable automatic packet-capture for SYN cookie verification failed"
                 type: bool
+            l3_entry_del_to_hw_failure:
+                description:
+                - "Enable automatic packet-capture for L3 entry HW del failure"
+                type: bool
+            l4_entry_del_to_hw_failure:
+                description:
+                - "Enable automatic packet-capture for L4 entry HW del failure"
+                type: bool
+            l4_entry_add_to_hw_failure:
+                description:
+                - "Enable automatic packet-capture for L4 entry HW add failure"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -201,6 +213,18 @@ options:
             syn_cookie_verification_failed:
                 description:
                 - "Enable automatic packet-capture for SYN cookie verification failed"
+                type: bool
+            l3_entry_del_to_hw_failure:
+                description:
+                - "Enable automatic packet-capture for L3 entry HW del failure"
+                type: bool
+            l4_entry_del_to_hw_failure:
+                description:
+                - "Enable automatic packet-capture for L4 entry HW del failure"
+                type: bool
+            l4_entry_add_to_hw_failure:
+                description:
+                - "Enable automatic packet-capture for L4 entry HW add failure"
                 type: bool
             uuid:
                 description:
@@ -328,6 +352,15 @@ def get_argspec():
             'syn_cookie_verification_failed': {
                 'type': 'bool',
                 },
+            'l3_entry_del_to_hw_failure': {
+                'type': 'bool',
+                },
+            'l4_entry_del_to_hw_failure': {
+                'type': 'bool',
+                },
+            'l4_entry_add_to_hw_failure': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -380,6 +413,15 @@ def get_argspec():
                 'type': 'bool',
                 },
             'syn_cookie_verification_failed': {
+                'type': 'bool',
+                },
+            'l3_entry_del_to_hw_failure': {
+                'type': 'bool',
+                },
+            'l4_entry_del_to_hw_failure': {
+                'type': 'bool',
+                },
+            'l4_entry_add_to_hw_failure': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -445,7 +487,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -86,6 +86,11 @@ options:
         - "limit management link speed in (Mbps)"
         type: int
         required: False
+    sampling_rate_limit:
+        description:
+        - "sFlow packet sampling rate limit, default is 1000"
+        type: int
+        required: False
     local_collection:
         description:
         - "'enable'= Enable local sflow collection; 'disable'= Disable local sflow
@@ -131,6 +136,16 @@ options:
     enlarge_zone_name:
         description:
         - "Allow TPS to packet up to 127 character zone names"
+        type: bool
+        required: False
+    one_blk_per_pkt:
+        description:
+        - "Forces sFlow packet to only contain one sFlow counter block"
+        type: bool
+        required: False
+    ddos_source_id_export:
+        description:
+        - "Enable exporting DDoS sourceID in sflow packet sample"
         type: bool
         required: False
     uuid:
@@ -193,8 +208,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "append_mapping_info", "counter_polling_interval", "default_counter_polling_mtu", "enlarge_zone_name", "local_collection", "local_t1_polling_interval", "local_t2_polling_interval", "management_link_utilization", "management_link_utilization_percentage", "max_header", "packet_sampling_rate", "port_range_end", "port_range_start",
-    "randomize_source_port", "source_ip_use_mgmt", "uuid",
+    "append_mapping_info", "counter_polling_interval", "ddos_source_id_export", "default_counter_polling_mtu", "enlarge_zone_name", "local_collection", "local_t1_polling_interval", "local_t2_polling_interval", "management_link_utilization", "management_link_utilization_percentage", "max_header", "one_blk_per_pkt", "packet_sampling_rate",
+    "port_range_end", "port_range_start", "randomize_source_port", "sampling_rate_limit", "source_ip_use_mgmt", "uuid",
     ]
 
 
@@ -234,6 +249,9 @@ def get_argspec():
         'management_link_utilization': {
             'type': 'int',
             },
+        'sampling_rate_limit': {
+            'type': 'int',
+            },
         'local_collection': {
             'type': 'str',
             'choices': ['enable', 'disable']
@@ -261,6 +279,12 @@ def get_argspec():
             'type': 'bool',
             },
         'enlarge_zone_name': {
+            'type': 'bool',
+            },
+        'one_blk_per_pkt': {
+            'type': 'bool',
+            },
+        'ddos_source_id_export': {
             'type': 'bool',
             },
         'uuid': {
@@ -318,7 +342,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

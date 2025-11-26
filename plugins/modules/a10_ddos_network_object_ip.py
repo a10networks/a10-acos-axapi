@@ -62,7 +62,7 @@ options:
         required: True
     subnet_ip_addr:
         description:
-        - "IP Subnet, supported prefix range is from 8 to 31"
+        - "IP Subnet, supported prefix range is from 8 to 32"
         type: str
         required: True
     prefix_anomaly_threshold:
@@ -115,7 +115,7 @@ options:
                 type: str
             subnet_ip_addr:
                 description:
-                - "IP Subnet, supported prefix range is from 8 to 31"
+                - "IP Subnet, supported prefix range is from 8 to 32"
                 type: str
 
 '''
@@ -295,7 +295,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

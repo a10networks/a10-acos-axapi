@@ -70,6 +70,11 @@ options:
         - "Class-list to match for NAT64"
         type: str
         required: False
+    follow_nat_pool_vrid:
+        description:
+        - "Follow NAT pool vird"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -129,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list", "prefix_val", "uuid", "vrid", ]
+AVAILABLE_PROPERTIES = ["class_list", "follow_nat_pool_vrid", "prefix_val", "uuid", "vrid", ]
 
 
 def get_default_argspec():
@@ -149,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'prefix_val': {'type': 'str', 'required': True, }, 'vrid': {'type': 'int', }, 'class_list': {'type': 'str', }, 'uuid': {'type': 'str', }})
+    rv.update({'prefix_val': {'type': 'str', 'required': True, }, 'vrid': {'type': 'int', }, 'class_list': {'type': 'str', }, 'follow_nat_pool_vrid': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 
@@ -206,7 +211,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

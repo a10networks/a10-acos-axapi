@@ -270,6 +270,10 @@ options:
                 description:
                 - "Field slb_port_tmpl_list"
                 type: list
+            slb_service_tmpl_list:
+                description:
+                - "Field slb_service_tmpl_list"
+                type: list
             slb_vport_tmpl_list:
                 description:
                 - "Field slb_vport_tmpl_list"
@@ -297,6 +301,10 @@ options:
             rule_set_tmpl_list:
                 description:
                 - "Field rule_set_tmpl_list"
+                type: list
+            rule_set_rule_tmpl_list:
+                description:
+                - "Field rule_set_rule_tmpl_list"
                 type: list
             fw_server_port_tmpl_list:
                 description:
@@ -1708,6 +1716,9 @@ def get_argspec():
                             'ipv6_eh_malformed': {
                                 'type': 'bool',
                                 },
+                            'tcp_udp_zero_port': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 }
@@ -1862,6 +1873,9 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'ipv6_eh_malformed': {
+                                'type': 'bool',
+                                },
+                            'tcp_udp_zero_port': {
                                 'type': 'bool',
                                 },
                             'uuid': {
@@ -4648,6 +4662,15 @@ def get_argspec():
                             'syn_cookie_verification_failed': {
                                 'type': 'bool',
                                 },
+                            'l3_entry_del_to_hw_failure': {
+                                'type': 'bool',
+                                },
+                            'l4_entry_del_to_hw_failure': {
+                                'type': 'bool',
+                                },
+                            'l4_entry_add_to_hw_failure': {
+                                'type': 'bool',
+                                },
                             'uuid': {
                                 'type': 'str',
                                 }
@@ -4700,6 +4723,15 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'syn_cookie_verification_failed': {
+                                'type': 'bool',
+                                },
+                            'l3_entry_del_to_hw_failure': {
+                                'type': 'bool',
+                                },
+                            'l4_entry_del_to_hw_failure': {
+                                'type': 'bool',
+                                },
+                            'l4_entry_add_to_hw_failure': {
                                 'type': 'bool',
                                 },
                             'uuid': {
@@ -5120,84 +5152,6 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'tcp_out_of_order_drop': {
-                                'type': 'bool',
-                                },
-                            'uuid': {
-                                'type': 'str',
-                                }
-                            }
-                        },
-                    'cgnv6_lsn_radius': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                            },
-                        'trigger_stats_inc': {
-                            'type': 'dict',
-                            'radius_request_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_bad_secret_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_no_key_vap_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_malformed_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_ignored': {
-                                'type': 'bool',
-                                },
-                            'radius_table_full': {
-                                'type': 'bool',
-                                },
-                            'secret_not_configured_dropped': {
-                                'type': 'bool',
-                                },
-                            'ha_standby_dropped': {
-                                'type': 'bool',
-                                },
-                            'invalid_key': {
-                                'type': 'bool',
-                                },
-                            'uuid': {
-                                'type': 'str',
-                                }
-                            },
-                        'trigger_stats_rate': {
-                            'type': 'dict',
-                            'threshold_exceeded_by': {
-                                'type': 'int',
-                                },
-                            'duration': {
-                                'type': 'int',
-                                },
-                            'radius_request_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_bad_secret_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_no_key_vap_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_malformed_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_ignored': {
-                                'type': 'bool',
-                                },
-                            'radius_table_full': {
-                                'type': 'bool',
-                                },
-                            'secret_not_configured_dropped': {
-                                'type': 'bool',
-                                },
-                            'ha_standby_dropped': {
-                                'type': 'bool',
-                                },
-                            'invalid_key': {
                                 'type': 'bool',
                                 },
                             'uuid': {
@@ -6164,84 +6118,6 @@ def get_argspec():
                                 'type': 'bool',
                                 },
                             'call_reply_pns_call_id_mismatch': {
-                                'type': 'bool',
-                                },
-                            'uuid': {
-                                'type': 'str',
-                                }
-                            }
-                        },
-                    'fw_rad_server': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                            },
-                        'trigger_stats_inc': {
-                            'type': 'dict',
-                            'radius_request_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_bad_secret_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_no_key_vap_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_malformed_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_ignored': {
-                                'type': 'bool',
-                                },
-                            'radius_table_full': {
-                                'type': 'bool',
-                                },
-                            'ha_standby_dropped': {
-                                'type': 'bool',
-                                },
-                            'ipv6_prefix_length_mismatch': {
-                                'type': 'bool',
-                                },
-                            'invalid_key': {
-                                'type': 'bool',
-                                },
-                            'uuid': {
-                                'type': 'str',
-                                }
-                            },
-                        'trigger_stats_rate': {
-                            'type': 'dict',
-                            'threshold_exceeded_by': {
-                                'type': 'int',
-                                },
-                            'duration': {
-                                'type': 'int',
-                                },
-                            'radius_request_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_bad_secret_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_no_key_vap_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_malformed_dropped': {
-                                'type': 'bool',
-                                },
-                            'request_ignored': {
-                                'type': 'bool',
-                                },
-                            'radius_table_full': {
-                                'type': 'bool',
-                                },
-                            'ha_standby_dropped': {
-                                'type': 'bool',
-                                },
-                            'ipv6_prefix_length_mismatch': {
-                                'type': 'bool',
-                                },
-                            'invalid_key': {
                                 'type': 'bool',
                                 },
                             'uuid': {
@@ -11422,6 +11298,106 @@ def get_argspec():
                         }
                     }
                 },
+            'slb_service_tmpl_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'capture_config': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    },
+                'trigger_stats_severity': {
+                    'type': 'dict',
+                    'error': {
+                        'type': 'bool',
+                        },
+                    'error_alert': {
+                        'type': 'bool',
+                        },
+                    'error_warning': {
+                        'type': 'bool',
+                        },
+                    'error_critical': {
+                        'type': 'bool',
+                        },
+                    'drop': {
+                        'type': 'bool',
+                        },
+                    'drop_alert': {
+                        'type': 'bool',
+                        },
+                    'drop_warning': {
+                        'type': 'bool',
+                        },
+                    'drop_critical': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'trigger_stats_inc': {
+                    'type': 'dict',
+                    'es_resp_300': {
+                        'type': 'bool',
+                        },
+                    'es_resp_400': {
+                        'type': 'bool',
+                        },
+                    'es_resp_500': {
+                        'type': 'bool',
+                        },
+                    'resp_3xx': {
+                        'type': 'bool',
+                        },
+                    'resp_4xx': {
+                        'type': 'bool',
+                        },
+                    'resp_5xx': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'trigger_stats_rate': {
+                    'type': 'dict',
+                    'threshold_exceeded_by': {
+                        'type': 'int',
+                        },
+                    'duration': {
+                        'type': 'int',
+                        },
+                    'es_resp_300': {
+                        'type': 'bool',
+                        },
+                    'es_resp_400': {
+                        'type': 'bool',
+                        },
+                    'es_resp_500': {
+                        'type': 'bool',
+                        },
+                    'resp_3xx': {
+                        'type': 'bool',
+                        },
+                    'resp_4xx': {
+                        'type': 'bool',
+                        },
+                    'resp_5xx': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
             'slb_vport_tmpl_list': {
                 'type': 'list',
                 'name': {
@@ -11490,6 +11466,9 @@ def get_argspec():
                     'dnsrrl_bad_fqdn': {
                         'type': 'bool',
                         },
+                    'dnsrrl_nx_exceed': {
+                        'type': 'bool',
+                        },
                     'uuid': {
                         'type': 'str',
                         }
@@ -11521,6 +11500,9 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'dnsrrl_bad_fqdn': {
+                        'type': 'bool',
+                        },
+                    'dnsrrl_nx_exceed': {
                         'type': 'bool',
                         },
                     'uuid': {
@@ -12397,6 +12379,76 @@ def get_argspec():
                         'type': 'bool',
                         },
                     'reset': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    }
+                },
+            'rule_set_rule_tmpl_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'capture_config': {
+                    'type': 'str',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    },
+                'trigger_stats_severity': {
+                    'type': 'dict',
+                    'error': {
+                        'type': 'bool',
+                        },
+                    'error_alert': {
+                        'type': 'bool',
+                        },
+                    'error_warning': {
+                        'type': 'bool',
+                        },
+                    'error_critical': {
+                        'type': 'bool',
+                        },
+                    'drop': {
+                        'type': 'bool',
+                        },
+                    'drop_alert': {
+                        'type': 'bool',
+                        },
+                    'drop_warning': {
+                        'type': 'bool',
+                        },
+                    'drop_critical': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'trigger_stats_inc': {
+                    'type': 'dict',
+                    'syn_cookie_verification_failed': {
+                        'type': 'bool',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
+                    },
+                'trigger_stats_rate': {
+                    'type': 'dict',
+                    'threshold_exceeded_by': {
+                        'type': 'int',
+                        },
+                    'duration': {
+                        'type': 'int',
+                        },
+                    'syn_cookie_verification_failed': {
                         'type': 'bool',
                         },
                     'uuid': {
@@ -13956,7 +14008,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

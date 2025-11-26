@@ -114,8 +114,12 @@ options:
                 type: bool
             template_name:
                 description:
-                - "CSV template to load this file"
+                - "Use CSV template to load this file"
                 type: str
+            geo_location_load_temp_include_ipv6:
+                description:
+                - "Include IPv6 address"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
@@ -252,6 +256,9 @@ def get_argspec():
                 },
             'template_name': {
                 'type': 'str',
+                },
+            'geo_location_load_temp_include_ipv6': {
+                'type': 'bool',
                 }
             },
         'uuid': {
@@ -343,7 +350,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -228,6 +228,20 @@ options:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
                 type: str
+    public_ip_cfg:
+        description:
+        - "Field public_ip_cfg"
+        type: dict
+        required: False
+        suboptions:
+            public_ip:
+                description:
+                - "Public IPv6/IPv4 Prefixes"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
     vip:
         description:
         - "Field vip"
@@ -301,7 +315,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["connected_cfg", "floating_ip_cfg", "ip_nat_cfg", "ip_nat_list_cfg", "isis_cfg", "lw4o6_cfg", "nat_map_cfg", "nat64_cfg", "ospf_cfg", "rip_cfg", "static_cfg", "static_nat_cfg", "uuid", "vip", ]
+AVAILABLE_PROPERTIES = ["connected_cfg", "floating_ip_cfg", "ip_nat_cfg", "ip_nat_list_cfg", "isis_cfg", "lw4o6_cfg", "nat_map_cfg", "nat64_cfg", "ospf_cfg", "public_ip_cfg", "rip_cfg", "static_cfg", "static_nat_cfg", "uuid", "vip", ]
 
 
 def get_default_argspec():
@@ -430,6 +444,15 @@ def get_argspec():
                 'type': 'str',
                 }
             },
+        'public_ip_cfg': {
+            'type': 'dict',
+            'public_ip': {
+                'type': 'bool',
+                },
+            'route_map': {
+                'type': 'str',
+                }
+            },
         'vip': {
             'type': 'dict',
             'only_flagged_cfg': {
@@ -513,7 +536,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

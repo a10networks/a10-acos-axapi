@@ -153,18 +153,6 @@ options:
                 - "'enable'= Enable sflow polling for DDOS statistics; 'disable'= Disable sflow
           polling for DDOS statistics;"
                 type: str
-            3_0_compatibility:
-                description:
-                - "Enable DDOS sflow polling 3.0/3.1 compatibility mode"
-                type: bool
-            address_byte_order_host:
-                description:
-                - "Export sflow address field in host byte order"
-                type: bool
-            2_9_compatibility:
-                description:
-                - "Enable DDOS sflow polling 2.9 compatibility mode"
-                type: bool
             dns_cache_zone_stats:
                 description:
                 - "Enable polling for dns cache per instance and per zone statistics"
@@ -176,6 +164,14 @@ options:
             dyn_entry_stats:
                 description:
                 - "Enable polling for dynamic entry statistics"
+                type: bool
+            zone_session:
+                description:
+                - "Enable polling for zone session information"
+                type: bool
+            auto_discovered_sni:
+                description:
+                - "Enable polling for auto discovered sni"
                 type: bool
             uuid:
                 description:
@@ -378,15 +374,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['enable', 'disable']
                 },
-            '3_0_compatibility': {
-                'type': 'bool',
-                },
-            'address_byte_order_host': {
-                'type': 'bool',
-                },
-            '2_9_compatibility': {
-                'type': 'bool',
-                },
             'dns_cache_zone_stats': {
                 'type': 'bool',
                 },
@@ -394,6 +381,12 @@ def get_argspec():
                 'type': 'bool',
                 },
             'dyn_entry_stats': {
+                'type': 'bool',
+                },
+            'zone_session': {
+                'type': 'bool',
+                },
+            'auto_discovered_sni': {
                 'type': 'bool',
                 },
             'uuid': {
@@ -491,7 +484,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

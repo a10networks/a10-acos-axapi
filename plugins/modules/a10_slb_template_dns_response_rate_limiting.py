@@ -66,6 +66,12 @@ options:
           second)"
         type: int
         required: False
+    nx_response_rate:
+        description:
+        - "Queries from entries whose NX Responses exceeding this rate within the window
+          will be dropped (default 5 per second)"
+        type: int
+        required: False
     filter_response_rate:
         description:
         - "Maximum allowed request rate for the filter. This should match average traffic.
@@ -195,7 +201,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "enable_log", "filter_response_rate", "match_subnet", "match_subnet_v6", "response_rate", "rrl_class_list_list", "slip_rate", "src_ip_only", "TC_rate", "uuid", "window", ]
+AVAILABLE_PROPERTIES = ["action", "enable_log", "filter_response_rate", "match_subnet", "match_subnet_v6", "nx_response_rate", "response_rate", "rrl_class_list_list", "slip_rate", "src_ip_only", "TC_rate", "uuid", "window", ]
 
 
 def get_default_argspec():
@@ -217,6 +223,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update({
         'response_rate': {
+            'type': 'int',
+            },
+        'nx_response_rate': {
             'type': 'int',
             },
         'filter_response_rate': {
@@ -272,6 +281,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'lid_slip_rate': {
+                    'type': 'int',
+                    },
+                'lid_nx_response_rate': {
                     'type': 'int',
                     },
                 'lid_tc_rate': {
@@ -363,7 +375,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

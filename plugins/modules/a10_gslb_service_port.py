@@ -66,10 +66,22 @@ options:
         type: dict
         required: False
         suboptions:
+            service_hash:
+                description:
+                - "Field service_hash"
+                type: int
             service_port_list:
                 description:
                 - "Field service_port_list"
                 type: list
+            label:
+                description:
+                - "Field label"
+                type: str
+            port_count:
+                description:
+                - "Field port_count"
+                type: int
 
 '''
 
@@ -144,7 +156,47 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'service_port_list': {'type': 'list', 'service_port_name': {'type': 'str', }, 'attributes': {'type': 'str', }, 'state': {'type': 'str', }, 'active_real_server': {'type': 'int', }, 'current_connections': {'type': 'int', }}}})
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'oper': {
+            'type': 'dict',
+            'service_hash': {
+                'type': 'int',
+                },
+            'service_port_list': {
+                'type': 'list',
+                'service_port_name': {
+                    'type': 'str',
+                    },
+                'attributes': {
+                    'type': 'str',
+                    },
+                'state': {
+                    'type': 'str',
+                    },
+                'active_real_server': {
+                    'type': 'int',
+                    },
+                'current_connections': {
+                    'type': 'int',
+                    },
+                'service_label': {
+                    'type': 'str',
+                    },
+                'service_hcode': {
+                    'type': 'int',
+                    }
+                },
+            'label': {
+                'type': 'str',
+                },
+            'port_count': {
+                'type': 'int',
+                }
+            }
+        })
     return rv
 
 
@@ -183,7 +235,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

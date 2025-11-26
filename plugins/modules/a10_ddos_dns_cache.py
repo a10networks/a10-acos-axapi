@@ -98,6 +98,11 @@ options:
         - "Respond with SERVFAIL for expired zones and zones failing to cache"
         type: bool
         required: False
+    edns_udp_size:
+        description:
+        - "Set the maximum EDNS UDP message size"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -554,8 +559,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "any_query_action_str", "default_serving_action", "dns_logging", "domain_group", "fqdn_manual_override_action_list", "name", "neg_cache_action_follow_q_rate", "non_authoritative_zone_query_action_str", "oper", "respond_servfail", "sampling_enable", "sharded_domain_group_list", "stats", "user_tag", "uuid", "zone_domain_lookup_miss_action",
-    "zone_manual_override_action_list", "zone_transfer",
+    "any_query_action_str", "default_serving_action", "dns_logging", "domain_group", "edns_udp_size", "fqdn_manual_override_action_list", "name", "neg_cache_action_follow_q_rate", "non_authoritative_zone_query_action_str", "oper", "respond_servfail", "sampling_enable", "sharded_domain_group_list", "stats", "user_tag", "uuid",
+    "zone_domain_lookup_miss_action", "zone_manual_override_action_list", "zone_transfer",
     ]
 
 
@@ -605,6 +610,9 @@ def get_argspec():
             },
         'respond_servfail': {
             'type': 'bool',
+            },
+        'edns_udp_size': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -1280,7 +1288,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

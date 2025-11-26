@@ -128,7 +128,14 @@ options:
           Duration Error; 'flow-dst-entry-miss'= DDoS Destination Entry Lookup Failures;
           'flow-ip-proto-or-port-miss'= DDoS Destination Service Lookup Failures; 'flow-
           detection-msgq-full'= Detection Message Enqueue Failures; 'flow-network-entry-
-          miss'= DDoS Destination Network-object Entry Lookup Failures;"
+          miss'= DDoS Destination Network-object Entry Lookup Failures; 'xflow-extend-
+          pkt-rcv'= XFlow Sample Extend Packets Received; 'xflow-extend-byte-rcv'= XFlow
+          Sample Extend Bytes Received; 'xflow-dst-entry-miss-extend-pkt-rcv'= Extend
+          Packets Received of DDoS Destination Entry Miss; 'xflow-dst-entry-miss-extend-
+          byte-rcv'= Extend Bytes Received of DDoS Destination Entry Miss; 'xflow-dst-
+          svc-miss-extend-pkt-rcv'= Extend Packets Received of DDoS Destination Service
+          Miss; 'xflow-dst-svc-miss-extend-byte-rcv'= Extend Bytes Received of DDoS
+          Destination Service Miss;"
                 type: str
     sflow:
         description:
@@ -352,6 +359,30 @@ options:
                 description:
                 - "DDoS Destination Network-object Entry Lookup Failures"
                 type: str
+            xflow_extend_pkt_rcv:
+                description:
+                - "XFlow Sample Extend Packets Received"
+                type: str
+            xflow_extend_byte_rcv:
+                description:
+                - "XFlow Sample Extend Bytes Received"
+                type: str
+            xflow_dst_entry_miss_extend_pkt_rcv:
+                description:
+                - "Extend Packets Received of DDoS Destination Entry Miss"
+                type: str
+            xflow_dst_entry_miss_extend_byte_rcv:
+                description:
+                - "Extend Bytes Received of DDoS Destination Entry Miss"
+                type: str
+            xflow_dst_svc_miss_extend_pkt_rcv:
+                description:
+                - "Extend Packets Received of DDoS Destination Service Miss"
+                type: str
+            xflow_dst_svc_miss_extend_byte_rcv:
+                description:
+                - "Extend Bytes Received of DDoS Destination Service Miss"
+                type: str
             agent_name:
                 description:
                 - "Specify name for the agent"
@@ -460,7 +491,8 @@ def get_argspec():
                     'all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2', 'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled',
                     'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len',
                     'netflow-v9-sample-flowset-bad-padding', 'netflow-v9-max-records-exceed', 'netflow-v9-template-not-found', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received',
-                    'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss'
+                    'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss', 'xflow-extend-pkt-rcv',
+                    'xflow-extend-byte-rcv', 'xflow-dst-entry-miss-extend-pkt-rcv', 'xflow-dst-entry-miss-extend-byte-rcv', 'xflow-dst-svc-miss-extend-pkt-rcv', 'xflow-dst-svc-miss-extend-byte-rcv'
                     ]
                 }
             },
@@ -643,6 +675,24 @@ def get_argspec():
             'flow_network_entry_miss': {
                 'type': 'str',
                 },
+            'xflow_extend_pkt_rcv': {
+                'type': 'str',
+                },
+            'xflow_extend_byte_rcv': {
+                'type': 'str',
+                },
+            'xflow_dst_entry_miss_extend_pkt_rcv': {
+                'type': 'str',
+                },
+            'xflow_dst_entry_miss_extend_byte_rcv': {
+                'type': 'str',
+                },
+            'xflow_dst_svc_miss_extend_pkt_rcv': {
+                'type': 'str',
+                },
+            'xflow_dst_svc_miss_extend_byte_rcv': {
+                'type': 'str',
+                },
             'agent_name': {
                 'type': 'str',
                 'required': True,
@@ -705,7 +755,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

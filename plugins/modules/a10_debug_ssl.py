@@ -55,10 +55,37 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    dumy:
+    client_server:
         description:
-        - "Dummy"
+        - "'clientside'= clientside SSL connection; 'serverside'= serverside SSL
+          connection;"
+        type: str
+        required: False
+    payload_dump_max:
+        description:
+        - "Application payloads exceeding this limit will be truncated to dump. Set to 0
+          to disable payload dumping"
+        type: int
+        required: False
+    payload_dump_string:
+        description:
+        - "Dump the application payload as strings"
         type: bool
+        required: False
+    read_write:
+        description:
+        - "'read'= read record; 'write'= write record;"
+        type: str
+        required: False
+    record_start:
+        description:
+        - "The first record number to debug prints messages. Default is 0"
+        type: int
+        required: False
+    record_end:
+        description:
+        - "The last record number to print debug messages. Default= 0 (no end)"
+        type: int
         required: False
     uuid:
         description:
@@ -119,7 +146,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dumy", "uuid", ]
+AVAILABLE_PROPERTIES = ["client_server", "payload_dump_max", "payload_dump_string", "read_write", "record_end", "record_start", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +166,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'dumy': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'client_server': {'type': 'str', 'choices': ['clientside', 'serverside']}, 'payload_dump_max': {'type': 'int', }, 'payload_dump_string': {'type': 'bool', }, 'read_write': {'type': 'str', 'choices': ['read', 'write']}, 'record_start': {'type': 'int', }, 'record_end': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 
@@ -191,7 +218,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

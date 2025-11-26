@@ -65,6 +65,61 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    pu_sync_detection:
+        description:
+        - "Field pu_sync_detection"
+        type: dict
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Time interval (seconds) for detection. Default is 30 seconds."
+                type: int
+            action:
+                description:
+                - "'enable'= Enable pu-sync-detection feature; 'disable'= Disable pu-sync-
+          detection feature;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    mpm:
+        description:
+        - "Field mpm"
+        type: dict
+        required: False
+        suboptions:
+            max_workers:
+                description:
+                - "Set max workers count. Default is 1"
+                type: int
+            min_idle_workers:
+                description:
+                - "Set minimum idle workers count. Default is 1"
+                type: int
+            start_workers:
+                description:
+                - "Set starting workers count. Default is 1"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    notification:
+        description:
+        - "Field notification"
+        type: dict
+        required: False
+        suboptions:
+            period:
+                description:
+                - "Time interval (seconds) for kafka notification. Default is 15 seconds."
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -119,7 +174,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["delete_referenced_tagged_objects", "uuid", ]
+AVAILABLE_PROPERTIES = ["delete_referenced_tagged_objects", "mpm", "notification", "pu_sync_detection", "uuid", ]
 
 
 def get_default_argspec():
@@ -139,7 +194,52 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'delete_referenced_tagged_objects': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }})
+    rv.update({
+        'delete_referenced_tagged_objects': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'pu_sync_detection': {
+            'type': 'dict',
+            'interval': {
+                'type': 'int',
+                },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'mpm': {
+            'type': 'dict',
+            'max_workers': {
+                'type': 'int',
+                },
+            'min_idle_workers': {
+                'type': 'int',
+                },
+            'start_workers': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'notification': {
+            'type': 'dict',
+            'period': {
+                'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 
@@ -191,7 +291,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

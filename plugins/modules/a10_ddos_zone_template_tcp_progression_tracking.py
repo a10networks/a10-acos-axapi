@@ -336,10 +336,6 @@ def get_argspec():
                 },
             'slow_attack': {
                 'type': 'dict',
-                'slow_attack': {
-                    'type': 'str',
-                    'choices': ['enable-check']
-                    },
                 'response_pkt_rate_max': {
                     'type': 'int',
                     },
@@ -358,6 +354,21 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    },
+                'slow_attacker_identification': {
+                    'type': 'dict',
+                    'enable_identification': {
+                        'type': 'bool',
+                        },
+                    'active_connection': {
+                        'type': 'int',
+                        },
+                    'bad_connection': {
+                        'type': 'int',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        }
                     }
                 }
             },
@@ -435,7 +446,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

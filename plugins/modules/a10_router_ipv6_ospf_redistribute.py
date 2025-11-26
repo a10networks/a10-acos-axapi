@@ -70,8 +70,9 @@ options:
                 description:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
           Floating IP; 'ip-nat-list'= IP NAT list; 'nat-map'= NAT MAP Prefix; 'static-
-          nat'= Static NAT; 'nat64'= NAT64 Prefix; 'lw4o6'= LW4O6 Prefix; 'isis'= ISO IS-
-          IS; 'rip'= Routing Information Protocol (RIP); 'static'= Static routes;"
+          nat'= Static NAT; 'public-ip'= Public IPv6 Prefixes; 'nat64'= NAT64 Prefix;
+          'lw4o6'= LW4O6 Prefix; 'isis'= ISO IS-IS; 'rip'= Routing Information Protocol
+          (RIP); 'static'= Static routes;"
                 type: str
             metric:
                 description:
@@ -270,7 +271,7 @@ def get_argspec():
             'type': 'list',
             'ntype': {
                 'type': 'str',
-                'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis', 'rip', 'static']
+                'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'public-ip', 'nat64', 'lw4o6', 'isis', 'rip', 'static']
                 },
             'metric': {
                 'type': 'int',
@@ -412,7 +413,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

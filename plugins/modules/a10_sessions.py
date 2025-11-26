@@ -560,6 +560,12 @@ def get_argspec():
                     },
                 'radius_id': {
                     'type': 'int',
+                    },
+                'fwd_pkt_hash': {
+                    'type': 'int',
+                    },
+                'rev_pkt_hash': {
+                    'type': 'int',
                     }
                 },
             'total_sessions': {
@@ -890,7 +896,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

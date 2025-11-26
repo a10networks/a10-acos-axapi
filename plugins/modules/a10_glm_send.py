@@ -60,6 +60,11 @@ options:
         - "Immediately send a single GLM license request"
         type: bool
         required: False
+    harmony:
+        description:
+        - "Harmony specific single GLM license request"
+        type: bool
+        required: False
     ha_status:
         description:
         - "Send a ELM HA status request"
@@ -119,7 +124,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ha_status", "license_request", ]
+AVAILABLE_PROPERTIES = ["ha_status", "harmony", "license_request", ]
 
 
 def get_default_argspec():
@@ -139,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'license_request': {'type': 'bool', }, 'ha_status': {'type': 'bool', }})
+    rv.update({'license_request': {'type': 'bool', }, 'harmony': {'type': 'bool', }, 'ha_status': {'type': 'bool', }})
     return rv
 
 
@@ -191,7 +196,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

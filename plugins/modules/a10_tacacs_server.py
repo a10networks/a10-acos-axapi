@@ -88,6 +88,16 @@ options:
                 description:
                 - "Field tacacs_hostname_list"
                 type: list
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            tacacs_server_list:
+                description:
+                - "Field tacacs_server_list"
+                type: list
 
 '''
 
@@ -142,7 +152,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["host", "interval", "monitor", "uuid", ]
+AVAILABLE_PROPERTIES = ["host", "interval", "monitor", "oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -214,6 +224,9 @@ def get_argspec():
                         'timeout': {
                             'type': 'int',
                             },
+                        'prefer_data_interface': {
+                            'type': 'bool',
+                            },
                         'monitor': {
                             'type': 'bool',
                             },
@@ -274,6 +287,9 @@ def get_argspec():
                             },
                         'timeout': {
                             'type': 'int',
+                            },
+                        'prefer_data_interface': {
+                            'type': 'bool',
                             },
                         'monitor': {
                             'type': 'bool',
@@ -339,6 +355,9 @@ def get_argspec():
                         'timeout': {
                             'type': 'int',
                             },
+                        'prefer_data_interface': {
+                            'type': 'bool',
+                            },
                         'monitor': {
                             'type': 'bool',
                             },
@@ -358,6 +377,57 @@ def get_argspec():
                     },
                 'uuid': {
                     'type': 'str',
+                    }
+                }
+            },
+        'oper': {
+            'type': 'dict',
+            'tacacs_server_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    },
+                'port': {
+                    'type': 'int',
+                    },
+                'socket_open': {
+                    'type': 'int',
+                    },
+                'socket_close': {
+                    'type': 'int',
+                    },
+                'socket_aborts': {
+                    'type': 'int',
+                    },
+                'socket_errors': {
+                    'type': 'int',
+                    },
+                'socket_timeout': {
+                    'type': 'int',
+                    },
+                'socket_failconn': {
+                    'type': 'int',
+                    },
+                'socket_rev': {
+                    'type': 'int',
+                    },
+                'socket_send': {
+                    'type': 'int',
+                    },
+                'monitor_oper': {
+                    'type': 'int',
+                    },
+                'con_fail_attempts': {
+                    'type': 'int',
+                    },
+                'total_fail_conn': {
+                    'type': 'int',
+                    },
+                'total_fail_auth': {
+                    'type': 'int',
+                    },
+                'last_available': {
+                    'type': 'int',
                     }
                 }
             }
@@ -413,7 +483,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
@@ -521,6 +592,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["tacacs-server-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["tacacs-server"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
