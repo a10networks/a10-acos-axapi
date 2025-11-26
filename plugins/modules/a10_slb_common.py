@@ -163,6 +163,11 @@ options:
         - "aFleX table entry aging interval in second"
         type: int
         required: False
+    aflex_persist_uie_chassis_sync_enable:
+        description:
+        - "Enable aflex persist uie cross PU sync"
+        type: bool
+        required: False
     override_port:
         description:
         - "Enable override port in DSR health check mode"
@@ -182,6 +187,17 @@ options:
         description:
         - "Enable DNS negative cache"
         type: bool
+        required: False
+    dns_negative_cache_caching_non_valid:
+        description:
+        - "Enable caching non-valid negative response, otherwise will only cache valid
+          negative response"
+        type: bool
+        required: False
+    dns_negative_cache_bypass_threshold:
+        description:
+        - "Query bypass threshold of negative cache entry, default is 100"
+        type: int
         required: False
     dns_cookie_cache_policy:
         description:
@@ -368,6 +384,11 @@ options:
         - "Enable odd even nat pool allocation in dual blade systems"
         type: bool
         required: False
+    odd_even_nat_one_arm:
+        description:
+        - "Enable odd even nat pool allocation in one-arm deployment"
+        type: bool
+        required: False
     http_fast_enable:
         description:
         - "Enable Http Fast in SLB processing"
@@ -488,11 +509,6 @@ options:
         - "'vport'= traffic-map per vport; 'global'= global traffic-map;"
         type: str
         required: False
-    sort_res:
-        description:
-        - "Enable SLB sorting of resource names"
-        type: bool
-        required: False
     use_mss_tab:
         description:
         - "Use MSS based on internal table for SLB processing"
@@ -571,12 +587,7 @@ options:
         required: False
     software:
         description:
-        - "Software"
-        type: bool
-        required: False
-    software_tls13:
-        description:
-        - "Software TLS1.3"
+        - "Software(includes TLS 1.3 support)"
         type: bool
         required: False
     QAT:
@@ -589,44 +600,11 @@ options:
         - "HW assisted QAT Gen4 SSL module"
         type: bool
         required: False
-    N5_new:
-        description:
-        - "HW assisted N5 SSL module with TLS 1.3 and TLS 1.2 support using OpenSSL 1.1.1"
-        type: bool
-        required: False
-    N5_old:
-        description:
-        - "HW assisted N5 SSL module with TLS 1.2 support using OpenSSL 0.9.7"
-        type: bool
-        required: False
     software_tls13_offload:
         description:
         - "Software TLS1.3 with CPU Offload Support"
         type: bool
         required: False
-    ssl_n5_delay_tx_enable:
-        description:
-        - "Enable delay transmission for N5-new"
-        type: bool
-        required: False
-    ssl_ratelimit_cfg:
-        description:
-        - "Field ssl_ratelimit_cfg"
-        type: dict
-        required: False
-        suboptions:
-            disable_rate:
-                description:
-                - "Disable HW SSL Rate limit for N5-new"
-                type: bool
-            tls12_rate:
-                description:
-                - "Enabling Rateliming for TLS1.2 HW requests per chip in 1K - default 120"
-                type: int
-            tls13_rate:
-                description:
-                - "Enabling Rateliming for TLS1.3 HW requests per chip in 1K - default 72"
-                type: int
     ssl_module_usage_enable:
         description:
         - "Enable SSL module usage calculations for QAT"
@@ -907,6 +885,10 @@ options:
                 description:
                 - "Maximum number of entries allowed"
                 type: int
+            source_entry_age:
+                description:
+                - "Source entry age in minutes (default 2)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -990,16 +972,16 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "attack_resp_code", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "cache_expire_time", "cancel_stream_loop_limit",
-    "cert_pinning", "clientside_ip", "clientside_ipv6", "compress_block_size", "conn_rate_limit", "custom_message", "custom_page", "custom_signal_clist", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect",
-    "dns_cache_age", "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_hitcount_enable", "dns_cache_sync", "dns_cache_sync_entry_size", "dns_cache_sync_ttl_threshold", "dns_cache_ttl_adjustment_enable", "dns_cookie_cache_policy", "dns_negative_cache_enable",
-    "dns_persistent_cache_enable", "dns_persistent_cache_hit_threshold", "dns_persistent_cache_ttl_threshold", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_ddos", "enable_fast_path_rerouting", "enable_l7_req_acct", "entity", "exclude_destination",
-    "extended_stats", "fast_path_disable", "gateway_health_check", "global_dns_cache", "graceful_shutdown", "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "ipv6_subnet", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn",
-    "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_persistent_cache", "max_remote_rate", "monitor_mode_enable", "msl_time", "mss_table", "N5_new", "N5_old", "ngwaf_proxy_ipv4", "ngwaf_proxy_ipv6", "ngwaf_proxy_port", "no_auto_up_on_aflex", "odd_even_nat_enable", "one_server_conn_hm_rate", "oper",
-    "override_port", "pbslb_entry_age", "pbslb_overflow_glid", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port", "port_scan_detection", "pre_process_enable", "QAT", "QAT4", "quic", "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "redirect_dummy_ethernet",
-    "redirect_dummy_vlan", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "serverside_ip", "serverside_ipv6", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd", "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip",
-    "snat_preserve", "software", "software_tls13", "software_tls13_offload", "sort_res", "ssl_module_usage_enable", "ssl_n5_delay_tx_enable", "ssl_ratelimit_cfg", "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_silent_termination_enable", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable",
-    "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_https_proxy", "use_mgmt_port", "use_mss_tab", "uuid", "vport_global", "vport_l3v",
+    "aflex_persist_uie_chassis_sync_enable", "aflex_table_entry_aging_interval", "aflex_table_entry_sync", "after_disable", "allow_in_gateway_mode", "attack_resp_code", "auto_nat_no_ip_refresh", "auto_translate_port", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low",
+    "cache_expire_time", "cancel_stream_loop_limit", "cert_pinning", "clientside_ip", "clientside_ipv6", "compress_block_size", "conn_rate_limit", "custom_message", "custom_page", "custom_signal_clist", "ddos_pkt_count_thresh", "ddos_pkt_size_thresh", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring",
+    "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_age_min_threshold", "dns_cache_aging_weight", "dns_cache_enable", "dns_cache_entry_size", "dns_cache_hitcount_enable", "dns_cache_sync", "dns_cache_sync_entry_size", "dns_cache_sync_ttl_threshold", "dns_cache_ttl_adjustment_enable", "dns_cookie_cache_policy",
+    "dns_negative_cache_bypass_threshold", "dns_negative_cache_caching_non_valid", "dns_negative_cache_enable", "dns_persistent_cache_enable", "dns_persistent_cache_hit_threshold", "dns_persistent_cache_ttl_threshold", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash",
+    "enable_ddos", "enable_fast_path_rerouting", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "global_dns_cache", "graceful_shutdown", "graceful_shutdown_enable", "health_check_to_all_vip", "honor_server_response_ttl", "http_fast_enable", "hw_compression", "hw_syn_rr",
+    "interval", "ipv4_offset", "ipv6_subnet", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_persistent_cache", "max_remote_rate", "monitor_mode_enable", "msl_time", "mss_table", "ngwaf_proxy_ipv4", "ngwaf_proxy_ipv6", "ngwaf_proxy_port",
+    "no_auto_up_on_aflex", "odd_even_nat_enable", "odd_even_nat_one_arm", "one_server_conn_hm_rate", "oper", "override_port", "pbslb_entry_age", "pbslb_overflow_glid", "per_thr_percent", "ping_sweep_detection", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "port", "port_scan_detection", "pre_process_enable", "QAT", "QAT4", "quic",
+    "range", "range_end", "range_start", "rate_limit_logging", "recursive_ns_cache", "redirect_dummy_ethernet", "redirect_dummy_vlan", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "scale_out_traffic_map", "serverside_ip", "serverside_ipv6", "service_group_on_no_dest_nat_vports", "show_slb_server_legacy_cmd",
+    "show_slb_service_group_legacy_cmd", "show_slb_virtual_server_legacy_cmd", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "software_tls13_offload", "ssl_module_usage_enable", "ssli_cert_not_ready_inspect_limit", "ssli_cert_not_ready_inspect_timeout", "ssli_silent_termination_enable", "ssli_sni_hash_enable",
+    "stateless_sg_multi_binding", "stats_data_disable", "substitute_source_mac", "timeout", "traffic_map_type", "ttl_threshold", "use_default_sess_count", "use_https_proxy", "use_mgmt_port", "use_mss_tab", "uuid", "vport_global", "vport_l3v",
     ]
 
 
@@ -1088,6 +1070,9 @@ def get_argspec():
         'aflex_table_entry_aging_interval': {
             'type': 'int',
             },
+        'aflex_persist_uie_chassis_sync_enable': {
+            'type': 'bool',
+            },
         'override_port': {
             'type': 'bool',
             },
@@ -1099,6 +1084,12 @@ def get_argspec():
             },
         'dns_negative_cache_enable': {
             'type': 'bool',
+            },
+        'dns_negative_cache_caching_non_valid': {
+            'type': 'bool',
+            },
+        'dns_negative_cache_bypass_threshold': {
+            'type': 'int',
             },
         'dns_cookie_cache_policy': {
             'type': 'str',
@@ -1208,6 +1199,9 @@ def get_argspec():
         'odd_even_nat_enable': {
             'type': 'bool',
             },
+        'odd_even_nat_one_arm': {
+            'type': 'bool',
+            },
         'http_fast_enable': {
             'type': 'bool',
             },
@@ -1281,9 +1275,6 @@ def get_argspec():
             'type': 'str',
             'choices': ['vport', 'global']
             },
-        'sort_res': {
-            'type': 'bool',
-            },
         'use_mss_tab': {
             'type': 'bool',
             },
@@ -1344,38 +1335,14 @@ def get_argspec():
         'software': {
             'type': 'bool',
             },
-        'software_tls13': {
-            'type': 'bool',
-            },
         'QAT': {
             'type': 'bool',
             },
         'QAT4': {
             'type': 'bool',
             },
-        'N5_new': {
-            'type': 'bool',
-            },
-        'N5_old': {
-            'type': 'bool',
-            },
         'software_tls13_offload': {
             'type': 'bool',
-            },
-        'ssl_n5_delay_tx_enable': {
-            'type': 'bool',
-            },
-        'ssl_ratelimit_cfg': {
-            'type': 'dict',
-            'disable_rate': {
-                'type': 'bool',
-                },
-            'tls12_rate': {
-                'type': 'int',
-                },
-            'tls13_rate': {
-                'type': 'int',
-                }
             },
         'ssl_module_usage_enable': {
             'type': 'bool',
@@ -1617,6 +1584,9 @@ def get_argspec():
             'max_table_entries': {
                 'type': 'int',
                 },
+            'source_entry_age': {
+                'type': 'int',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -1742,7 +1712,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

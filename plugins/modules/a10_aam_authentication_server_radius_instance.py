@@ -153,6 +153,11 @@ options:
           'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP;"
         type: str
         required: False
+    message_authenticator_verify_enable:
+        description:
+        - "Verify Message-Authenticator attribute"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -287,7 +292,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accounting_port", "acct_port_hm", "acct_port_hm_disable", "auth_type", "encrypted", "health_check", "health_check_disable", "health_check_string", "host", "interval", "name", "packet_capture_template", "port", "port_hm", "port_hm_disable", "retry", "sampling_enable", "secret", "secret_string", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "accounting_port", "acct_port_hm", "acct_port_hm_disable", "auth_type", "encrypted", "health_check", "health_check_disable", "health_check_string", "host", "interval", "message_authenticator_verify_enable", "name", "packet_capture_template", "port", "port_hm", "port_hm_disable", "retry", "sampling_enable", "secret", "secret_string", "stats",
+    "uuid",
+    ]
 
 
 def get_default_argspec():
@@ -366,6 +374,9 @@ def get_argspec():
         'auth_type': {
             'type': 'str',
             'choices': ['pap', 'mschapv2', 'mschapv2-pap']
+            },
+        'message_authenticator_verify_enable': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',
@@ -477,7 +488,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

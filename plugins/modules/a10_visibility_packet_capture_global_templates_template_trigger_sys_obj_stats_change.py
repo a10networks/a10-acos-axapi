@@ -587,24 +587,6 @@ options:
                 description:
                 - "Field trigger_stats_rate"
                 type: dict
-    cgnv6_lsn_radius:
-        description:
-        - "Field cgnv6_lsn_radius"
-        type: dict
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            trigger_stats_inc:
-                description:
-                - "Field trigger_stats_inc"
-                type: dict
-            trigger_stats_rate:
-                description:
-                - "Field trigger_stats_rate"
-                type: dict
     cgnv6_nat64_global:
         description:
         - "Field cgnv6_nat64_global"
@@ -896,24 +878,6 @@ options:
     fw_alg_pptp:
         description:
         - "Field fw_alg_pptp"
-        type: dict
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-            trigger_stats_inc:
-                description:
-                - "Field trigger_stats_inc"
-                type: dict
-            trigger_stats_rate:
-                description:
-                - "Field trigger_stats_rate"
-                type: dict
-    fw_rad_server:
-        description:
-        - "Field fw_rad_server"
         type: dict
         required: False
         suboptions:
@@ -1633,10 +1597,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "aam_auth_account", "aam_auth_captcha", "aam_auth_relay_kerberos", "aam_auth_saml_global", "aam_auth_server_ldap", "aam_auth_server_ocsp", "aam_auth_server_radius", "aam_auth_server_win", "aam_authentication_global", "aam_rdns", "cgnv6_ddos_proc", "cgnv6_dhcpv6", "cgnv6_dns64", "cgnv6_ds_lite_global", "cgnv6_fixed_nat_alg_pptp",
-    "cgnv6_fixed_nat_alg_rtsp", "cgnv6_fixed_nat_alg_sip", "cgnv6_fixed_nat_global", "cgnv6_http_alg", "cgnv6_icmp", "cgnv6_l4", "cgnv6_logging", "cgnv6_lsn", "cgnv6_lsn_alg_esp", "cgnv6_lsn_alg_h323", "cgnv6_lsn_alg_mgcp", "cgnv6_lsn_alg_pptp", "cgnv6_lsn_alg_rtsp", "cgnv6_lsn_alg_sip", "cgnv6_lsn_radius", "cgnv6_nat64_global", "cgnv6_pcp",
-    "fw_alg_pptp", "fw_alg_rtsp", "fw_ddos_protection", "fw_global", "fw_gtp", "fw_logging", "fw_rad_server", "fw_tcp_syn_cookie", "ip_anomaly_drop", "logging_local_log_global", "slb_aflow", "slb_conn_reuse", "slb_crl_srcip", "slb_fast_http", "slb_fix", "slb_ftp_proxy", "slb_generic", "slb_http_proxy", "slb_http2", "slb_hw_compress", "slb_icap",
-    "slb_imap_proxy", "slb_l4", "slb_l7session", "slb_link_probe", "slb_mlb", "slb_mqtt", "slb_mssql", "slb_mysql", "slb_persist", "slb_plyr_id_gbl", "slb_pop3_proxy", "slb_rc_cache", "slb_rpz", "slb_sip", "slb_smpp", "slb_smtp", "slb_spdy_proxy", "slb_sport_rate", "slb_ssl_cert_revoke", "slb_ssl_error", "slb_ssl_forward_proxy", "slb_switch",
-    "so_counters", "system_ctr_lib_acct", "system_dpdk_stats", "system_fpga_drop", "system_hardware_accelerate", "system_ip_threat_list", "system_radius_server", "system_tcp", "uuid", "vpn_error",
+    "cgnv6_fixed_nat_alg_rtsp", "cgnv6_fixed_nat_alg_sip", "cgnv6_fixed_nat_global", "cgnv6_http_alg", "cgnv6_icmp", "cgnv6_l4", "cgnv6_logging", "cgnv6_lsn", "cgnv6_lsn_alg_esp", "cgnv6_lsn_alg_h323", "cgnv6_lsn_alg_mgcp", "cgnv6_lsn_alg_pptp", "cgnv6_lsn_alg_rtsp", "cgnv6_lsn_alg_sip", "cgnv6_nat64_global", "cgnv6_pcp", "fw_alg_pptp",
+    "fw_alg_rtsp", "fw_ddos_protection", "fw_global", "fw_gtp", "fw_logging", "fw_tcp_syn_cookie", "ip_anomaly_drop", "logging_local_log_global", "slb_aflow", "slb_conn_reuse", "slb_crl_srcip", "slb_fast_http", "slb_fix", "slb_ftp_proxy", "slb_generic", "slb_http_proxy", "slb_http2", "slb_hw_compress", "slb_icap", "slb_imap_proxy", "slb_l4",
+    "slb_l7session", "slb_link_probe", "slb_mlb", "slb_mqtt", "slb_mssql", "slb_mysql", "slb_persist", "slb_plyr_id_gbl", "slb_pop3_proxy", "slb_rc_cache", "slb_rpz", "slb_sip", "slb_smpp", "slb_smtp", "slb_spdy_proxy", "slb_sport_rate", "slb_ssl_cert_revoke", "slb_ssl_error", "slb_ssl_forward_proxy", "slb_switch", "so_counters",
+    "system_ctr_lib_acct", "system_dpdk_stats", "system_fpga_drop", "system_hardware_accelerate", "system_ip_threat_list", "system_radius_server", "system_tcp", "uuid", "vpn_error",
     ]
 
 
@@ -2460,6 +2424,9 @@ def get_argspec():
                 'ipv6_eh_malformed': {
                     'type': 'bool',
                     },
+                'tcp_udp_zero_port': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -2614,6 +2581,9 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'ipv6_eh_malformed': {
+                    'type': 'bool',
+                    },
+                'tcp_udp_zero_port': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -5400,6 +5370,15 @@ def get_argspec():
                 'syn_cookie_verification_failed': {
                     'type': 'bool',
                     },
+                'l3_entry_del_to_hw_failure': {
+                    'type': 'bool',
+                    },
+                'l4_entry_del_to_hw_failure': {
+                    'type': 'bool',
+                    },
+                'l4_entry_add_to_hw_failure': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     }
@@ -5452,6 +5431,15 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'syn_cookie_verification_failed': {
+                    'type': 'bool',
+                    },
+                'l3_entry_del_to_hw_failure': {
+                    'type': 'bool',
+                    },
+                'l4_entry_del_to_hw_failure': {
+                    'type': 'bool',
+                    },
+                'l4_entry_add_to_hw_failure': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -5872,84 +5860,6 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'tcp_out_of_order_drop': {
-                    'type': 'bool',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                }
-            },
-        'cgnv6_lsn_radius': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-                },
-            'trigger_stats_inc': {
-                'type': 'dict',
-                'radius_request_dropped': {
-                    'type': 'bool',
-                    },
-                'request_bad_secret_dropped': {
-                    'type': 'bool',
-                    },
-                'request_no_key_vap_dropped': {
-                    'type': 'bool',
-                    },
-                'request_malformed_dropped': {
-                    'type': 'bool',
-                    },
-                'request_ignored': {
-                    'type': 'bool',
-                    },
-                'radius_table_full': {
-                    'type': 'bool',
-                    },
-                'secret_not_configured_dropped': {
-                    'type': 'bool',
-                    },
-                'ha_standby_dropped': {
-                    'type': 'bool',
-                    },
-                'invalid_key': {
-                    'type': 'bool',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'trigger_stats_rate': {
-                'type': 'dict',
-                'threshold_exceeded_by': {
-                    'type': 'int',
-                    },
-                'duration': {
-                    'type': 'int',
-                    },
-                'radius_request_dropped': {
-                    'type': 'bool',
-                    },
-                'request_bad_secret_dropped': {
-                    'type': 'bool',
-                    },
-                'request_no_key_vap_dropped': {
-                    'type': 'bool',
-                    },
-                'request_malformed_dropped': {
-                    'type': 'bool',
-                    },
-                'request_ignored': {
-                    'type': 'bool',
-                    },
-                'radius_table_full': {
-                    'type': 'bool',
-                    },
-                'secret_not_configured_dropped': {
-                    'type': 'bool',
-                    },
-                'ha_standby_dropped': {
-                    'type': 'bool',
-                    },
-                'invalid_key': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -6916,84 +6826,6 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'call_reply_pns_call_id_mismatch': {
-                    'type': 'bool',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                }
-            },
-        'fw_rad_server': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-                },
-            'trigger_stats_inc': {
-                'type': 'dict',
-                'radius_request_dropped': {
-                    'type': 'bool',
-                    },
-                'request_bad_secret_dropped': {
-                    'type': 'bool',
-                    },
-                'request_no_key_vap_dropped': {
-                    'type': 'bool',
-                    },
-                'request_malformed_dropped': {
-                    'type': 'bool',
-                    },
-                'request_ignored': {
-                    'type': 'bool',
-                    },
-                'radius_table_full': {
-                    'type': 'bool',
-                    },
-                'ha_standby_dropped': {
-                    'type': 'bool',
-                    },
-                'ipv6_prefix_length_mismatch': {
-                    'type': 'bool',
-                    },
-                'invalid_key': {
-                    'type': 'bool',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'trigger_stats_rate': {
-                'type': 'dict',
-                'threshold_exceeded_by': {
-                    'type': 'int',
-                    },
-                'duration': {
-                    'type': 'int',
-                    },
-                'radius_request_dropped': {
-                    'type': 'bool',
-                    },
-                'request_bad_secret_dropped': {
-                    'type': 'bool',
-                    },
-                'request_no_key_vap_dropped': {
-                    'type': 'bool',
-                    },
-                'request_malformed_dropped': {
-                    'type': 'bool',
-                    },
-                'request_ignored': {
-                    'type': 'bool',
-                    },
-                'radius_table_full': {
-                    'type': 'bool',
-                    },
-                'ha_standby_dropped': {
-                    'type': 'bool',
-                    },
-                'ipv6_prefix_length_mismatch': {
-                    'type': 'bool',
-                    },
-                'invalid_key': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -10288,7 +10120,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

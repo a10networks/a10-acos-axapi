@@ -1189,7 +1189,8 @@ options:
           'compression_miss_total'= Number of requests NOT compressed; 'dnsrrl_total_tc'=
           DNS Response-Rate-Limiting Total Responses Replied With Truncated;
           'http1_client_idle_timeout'= HTTP1 Client Idle Timeout;
-          'http2_client_idle_timeout'= HTTP2 Client Idle Timeout;"
+          'http2_client_idle_timeout'= HTTP2 Client Idle Timeout; 'dnsrrl_nx_exceed'= DNS
+          Response-Rate-Limiting NX Responses Exceed Limit;"
                 type: str
     packet_capture_template:
         description:
@@ -1692,6 +1693,10 @@ options:
             http2_client_idle_timeout:
                 description:
                 - "HTTP2 Client Idle Timeout"
+                type: str
+            dnsrrl_nx_exceed:
+                description:
+                - "DNS Response-Rate-Limiting NX Responses Exceed Limit"
                 type: str
             port_number:
                 description:
@@ -2463,7 +2468,7 @@ def get_argspec():
                     'dns_filter_type_cname_drop', 'dns_filter_type_mx_drop', 'dns_filter_type_ns_drop', 'dns_filter_type_srv_drop', 'dns_filter_type_ptr_drop', 'dns_filter_type_soa_drop', 'dns_filter_type_txt_drop', 'dns_filter_type_any_drop', 'dns_filter_type_others_drop', 'dns_filter_class_internet_drop', 'dns_filter_class_chaos_drop',
                     'dns_filter_class_hesiod_drop', 'dns_filter_class_none_drop', 'dns_filter_class_any_drop', 'dns_filter_class_others_drop', 'dns_rpz_action_drop', 'dns_rpz_action_pass_thru', 'dns_rpz_action_tcp_only', 'dns_rpz_action_nxdomain', 'dns_rpz_action_nodata', 'dns_rpz_action_local_data', 'dns_rpz_trigger_client_ip',
                     'dns_rpz_trigger_resp_ip', 'dns_rpz_trigger_ns_ip', 'dns_rpz_trigger_qname', 'dns_rpz_trigger_ns_name', 'compression_bytes_before_br', 'compression_bytes_after_br', 'compression_bytes_before_total', 'compression_bytes_after_total', 'compression_hit_br', 'compression_miss_br', 'compression_hit_total', 'compression_miss_total',
-                    'dnsrrl_total_tc', 'http1_client_idle_timeout', 'http2_client_idle_timeout'
+                    'dnsrrl_total_tc', 'http1_client_idle_timeout', 'http2_client_idle_timeout', 'dnsrrl_nx_exceed'
                     ]
                 }
             },
@@ -2557,6 +2562,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'status_102': {
+                    'type': 'int',
+                    },
+                'status_103': {
                     'type': 'int',
                     },
                 'status_300': {
@@ -2785,6 +2793,9 @@ def get_argspec():
                     'type': 'int',
                     },
                 'REQ_OVER_5s': {
+                    'type': 'int',
+                    },
+                'total_requests': {
                     'type': 'int',
                     },
                 'curr_http2_conn': {
@@ -3468,6 +3479,9 @@ def get_argspec():
             'http2_client_idle_timeout': {
                 'type': 'str',
                 },
+            'dnsrrl_nx_exceed': {
+                'type': 'str',
+                },
             'port_number': {
                 'type': 'int',
                 'required': True,
@@ -3552,7 +3566,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

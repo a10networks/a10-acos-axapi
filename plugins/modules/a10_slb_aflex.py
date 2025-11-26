@@ -66,21 +66,25 @@ options:
         type: dict
         required: False
         suboptions:
-            filter_entry:
+            name:
                 description:
-                - "Field filter_entry"
+                - "Field name"
                 type: str
-            filter_event:
+            exact_match:
                 description:
-                - "Field filter_event"
+                - "Field exact_match"
+                type: bool
+            event:
+                description:
+                - "Field event"
                 type: str
             filter_debug:
                 description:
                 - "Field filter_debug"
-                type: int
-            filter_substring:
+                type: bool
+            substring:
                 description:
-                - "Field filter_substring"
+                - "Field substring"
                 type: int
             aflex_file_size_max:
                 description:
@@ -178,16 +182,19 @@ def get_argspec():
             },
         'oper': {
             'type': 'dict',
-            'filter_entry': {
+            'name': {
                 'type': 'str',
                 },
-            'filter_event': {
+            'exact_match': {
+                'type': 'bool',
+                },
+            'event': {
                 'type': 'str',
                 },
             'filter_debug': {
-                'type': 'int',
+                'type': 'bool',
                 },
-            'filter_substring': {
+            'substring': {
                 'type': 'int',
                 },
             'aflex_file_size_max': {
@@ -225,6 +232,9 @@ def get_argspec():
                         'type': 'int',
                         },
                     'aborts': {
+                        'type': 'int',
+                        },
+                    'exceed_time_limit': {
                         'type': 'int',
                         }
                     }
@@ -302,7 +312,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

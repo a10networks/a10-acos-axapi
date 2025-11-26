@@ -241,6 +241,74 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    enable_log_by_destination:
+        description:
+        - "Field enable_log_by_destination"
+        type: dict
+        required: False
+        suboptions:
+            tcp_list:
+                description:
+                - "Field tcp_list"
+                type: list
+            udp_list:
+                description:
+                - "Field udp_list"
+                type: list
+            icmp:
+                description:
+                - "Enable logging for the ICMP traffic"
+                type: bool
+            others:
+                description:
+                - "Enable logging for the other layer-4 protocols"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
+            ip6_list:
+                description:
+                - "Field ip6_list"
+                type: list
+    disable_log_by_destination:
+        description:
+        - "Field disable_log_by_destination"
+        type: dict
+        required: False
+        suboptions:
+            tcp_list:
+                description:
+                - "Field tcp_list"
+                type: list
+            udp_list:
+                description:
+                - "Field udp_list"
+                type: list
+            icmp:
+                description:
+                - "Disable logging for the ICMP traffic"
+                type: bool
+            others:
+                description:
+                - "Disable logging for the other layer-4 protocols"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
+            ip6_list:
+                description:
+                - "Field ip6_list"
+                type: list
 
 '''
 
@@ -295,7 +363,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom", "facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "include_year", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["custom", "disable_log_by_destination", "enable_log_by_destination", "facility", "format", "include_dest_fqdn", "include_http", "include_radius_attribute", "include_year", "log", "merged_style", "name", "resolution", "rule", "service_group", "session_periodic_log", "severity", "source_address", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -481,6 +549,214 @@ def get_argspec():
             'uuid': {
                 'type': 'str',
                 }
+            },
+        'enable_log_by_destination': {
+            'type': 'dict',
+            'tcp_list': {
+                'type': 'list',
+                'tcp_port_start': {
+                    'type': 'int',
+                    },
+                'tcp_port_end': {
+                    'type': 'int',
+                    }
+                },
+            'udp_list': {
+                'type': 'list',
+                'udp_port_start': {
+                    'type': 'int',
+                    },
+                'udp_port_end': {
+                    'type': 'int',
+                    }
+                },
+            'icmp': {
+                'type': 'bool',
+                },
+            'others': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'ip_list': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                        },
+                    'tcp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                        },
+                    'udp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'icmp': {
+                    'type': 'bool',
+                    },
+                'others': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
+                },
+            'ip6_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                        },
+                    'tcp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                        },
+                    'udp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'icmp': {
+                    'type': 'bool',
+                    },
+                'others': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'disable_log_by_destination': {
+            'type': 'dict',
+            'tcp_list': {
+                'type': 'list',
+                'tcp_port_start': {
+                    'type': 'int',
+                    },
+                'tcp_port_end': {
+                    'type': 'int',
+                    }
+                },
+            'udp_list': {
+                'type': 'list',
+                'udp_port_start': {
+                    'type': 'int',
+                    },
+                'udp_port_end': {
+                    'type': 'int',
+                    }
+                },
+            'icmp': {
+                'type': 'bool',
+                },
+            'others': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'ip_list': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                        },
+                    'tcp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                        },
+                    'udp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'icmp': {
+                    'type': 'bool',
+                    },
+                'others': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
+                },
+            'ip6_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                    },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                        },
+                    'tcp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                        },
+                    'udp_port_end': {
+                        'type': 'int',
+                        }
+                    },
+                'icmp': {
+                    'type': 'bool',
+                    },
+                'others': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
+                }
             }
         })
     return rv
@@ -539,7 +815,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

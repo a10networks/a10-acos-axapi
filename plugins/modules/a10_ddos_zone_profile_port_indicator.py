@@ -75,11 +75,11 @@ options:
         - "'pkt-rate'= pkt-rate; 'pkt-drop-rate'= pkt-drop-rate; 'bit-rate'= bit-rate;
           'pkt-drop-ratio'= pkt-drop-ratio; 'bytes-to-bytes-from-ratio'= bytes-to-bytes-
           from-ratio; 'concurrent-conns'= concurrent-conns; 'conn-miss-rate'= conn-miss-
-          rate; 'syn-rate'= syn-rate; 'fin-rate'= fin-rate; 'rst-rate'= rst-rate; 'small-
-          window-ack-rate'= small-window-ack-rate; 'empty-ack-rate'= empty-ack-rate;
-          'small-payload-rate'= small-payload-rate; 'syn-fin-ratio'= syn-fin-ratio; 'cpu-
-          utilization'= cpu-utilization; 'interface-utilization'= interface-utilization;
-          'learnt-sources'= learnt-sources;"
+          rate; 'syn-rate'= syn-rate; 'fin-rate'= fin-rate; 'rst-rate'= rst-rate; 'syn-
+          ack-rate'= syn-ack-rate; 'small-window-ack-rate'= small-window-ack-rate;
+          'empty-ack-rate'= empty-ack-rate; 'small-payload-rate'= small-payload-rate;
+          'syn-fin-ratio'= syn-fin-ratio; 'cpu-utilization'= cpu-utilization; 'interface-
+          utilization'= interface-utilization; 'learnt-sources'= learnt-sources;"
         type: str
         required: True
     src_threshold_cfg:
@@ -206,7 +206,7 @@ def get_argspec():
         'indicator_name': {
             'type': 'str',
             'required': True,
-            'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
+            'choices': ['pkt-rate', 'pkt-drop-rate', 'bit-rate', 'pkt-drop-ratio', 'bytes-to-bytes-from-ratio', 'concurrent-conns', 'conn-miss-rate', 'syn-rate', 'fin-rate', 'rst-rate', 'syn-ack-rate', 'small-window-ack-rate', 'empty-ack-rate', 'small-payload-rate', 'syn-fin-ratio', 'cpu-utilization', 'interface-utilization', 'learnt-sources']
             },
         'src_threshold_cfg': {
             'type': 'dict',
@@ -312,7 +312,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

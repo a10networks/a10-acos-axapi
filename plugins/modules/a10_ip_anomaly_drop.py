@@ -133,6 +133,11 @@ options:
         - "drop fragmented TCP packets with syn flag set"
         type: bool
         required: False
+    tcp_udp_zero_port:
+        description:
+        - "drop all TCP/UDP packets with 0 port"
+        type: bool
+        required: False
     zero_window:
         description:
         - "zero window size threshold (threshold value)"
@@ -234,7 +239,8 @@ options:
           Authentication Header Drop; 'ipv6_eh_esp'= IPv6 ESP Header Drop;
           'ipv6_eh_mobility'= IPv6 Mobility Header Drop; 'ipv6_eh_none'= IPv6 No Next
           Header Drop; 'ipv6_eh_other'= IPv6 Unknown Extension Header Drop;
-          'ipv6_eh_malformed'= IPv6 Malformed Extension Header Drop;"
+          'ipv6_eh_malformed'= IPv6 Malformed Extension Header Drop; 'tcp_udp_zero_port'=
+          TCP UDP Zero Port Drop;"
                 type: str
     stats:
         description:
@@ -434,6 +440,10 @@ options:
                 description:
                 - "IPv6 Malformed Extension Header Drop"
                 type: str
+            tcp_udp_zero_port:
+                description:
+                - "TCP UDP Zero Port Drop"
+                type: str
 
 '''
 
@@ -488,7 +498,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bad_content", "drop_all", "frag", "ip_option", "ipv6_ext_header", "land_attack", "out_of_sequence", "packet_deformity", "ping_of_death", "sampling_enable", "security_attack", "stats", "tcp_no_flag", "tcp_syn_fin", "tcp_syn_frag", "uuid", "zero_window", ]
+AVAILABLE_PROPERTIES = ["bad_content", "drop_all", "frag", "ip_option", "ipv6_ext_header", "land_attack", "out_of_sequence", "packet_deformity", "ping_of_death", "sampling_enable", "security_attack", "stats", "tcp_no_flag", "tcp_syn_fin", "tcp_syn_frag", "tcp_udp_zero_port", "uuid", "zero_window", ]
 
 
 def get_default_argspec():
@@ -555,6 +565,9 @@ def get_argspec():
             'type': 'bool',
             },
         'tcp_syn_frag': {
+            'type': 'bool',
+            },
+        'tcp_udp_zero_port': {
             'type': 'bool',
             },
         'zero_window': {
@@ -637,7 +650,7 @@ def get_argspec():
                 'choices': [
                     'all', 'land', 'emp_frg', 'emp_mic_frg', 'opt', 'frg', 'bad_ip_hdrlen', 'bad_ip_flg', 'bad_ip_ttl', 'no_ip_payload', 'over_ip_payload', 'bad_ip_payload_len', 'bad_ip_frg_offset', 'csum', 'pod', 'bad_tcp_urg_offset', 'tcp_sht_hdr', 'tcp_bad_iplen', 'tcp_null_frg', 'tcp_null_scan', 'tcp_syn_fin', 'tcp_xmas', 'tcp_xmas_scan',
                     'tcp_syn_frg', 'tcp_frg_hdr', 'tcp_bad_csum', 'udp_srt_hdr', 'udp_bad_len', 'udp_kerb_frg', 'udp_port_lb', 'udp_bad_csum', 'runt_ip_hdr', 'runt_tcp_udp_hdr', 'ipip_tnl_msmtch', 'tcp_opt_err', 'ipip_tnl_err', 'vxlan_err', 'nvgre_err', 'gre_pptp_err', 'ipv6_eh_hbh', 'ipv6_eh_dest', 'ipv6_eh_routing', 'ipv6_eh_frag', 'ipv6_eh_ah',
-                    'ipv6_eh_esp', 'ipv6_eh_mobility', 'ipv6_eh_none', 'ipv6_eh_other', 'ipv6_eh_malformed'
+                    'ipv6_eh_esp', 'ipv6_eh_mobility', 'ipv6_eh_none', 'ipv6_eh_other', 'ipv6_eh_malformed', 'tcp_udp_zero_port'
                     ]
                 }
             },
@@ -786,6 +799,9 @@ def get_argspec():
                 },
             'ipv6_eh_malformed': {
                 'type': 'str',
+                },
+            'tcp_udp_zero_port': {
+                'type': 'str',
                 }
             }
         })
@@ -840,7 +856,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

@@ -95,6 +95,12 @@ options:
         - "Log DNS Rcode with Response"
         type: bool
         required: False
+    response_tuple:
+        description:
+        - "'client-side'= DNS response log with client-side tuple; 'server-side'= DNS
+          response log with server-side tuple;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -123,6 +129,33 @@ options:
                 description:
                 - "Field type_list"
                 type: list
+    custom_log_list:
+        description:
+        - "Field custom_log_list"
+        type: list
+        required: False
+        suboptions:
+            trigger_reason:
+                description:
+                - "'request'= log when request comes from client; 'response'= log when response to
+          client;"
+                type: str
+            format:
+                description:
+                - "Request Message (Custom message string)"
+                type: str
+            enable:
+                description:
+                - "Enable this log"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -177,7 +210,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_include_rcode", "response_type", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["custom_log_list", "disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_include_rcode", "response_tuple", "response_type", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -223,6 +256,10 @@ def get_argspec():
             },
         'response_include_rcode': {
             'type': 'bool',
+            },
+        'response_tuple': {
+            'type': 'str',
+            'choices': ['client-side', 'server-side']
             },
         'uuid': {
             'type': 'str',
@@ -327,6 +364,26 @@ def get_argspec():
                     'type': 'str',
                     }
                 }
+            },
+        'custom_log_list': {
+            'type': 'list',
+            'trigger_reason': {
+                'type': 'str',
+                'required': True,
+                'choices': ['request', 'response']
+                },
+            'format': {
+                'type': 'str',
+                },
+            'enable': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                }
             }
         })
     return rv
@@ -385,7 +442,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

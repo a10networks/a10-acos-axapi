@@ -102,14 +102,6 @@ options:
                 description:
                 - "Field udp_nat_ports_free"
                 type: int
-            radius_entries_used:
-                description:
-                - "Field radius_entries_used"
-                type: int
-            radius_entries_free:
-                description:
-                - "Field radius_entries_free"
-                type: int
 
 '''
 
@@ -216,12 +208,6 @@ def get_argspec():
                 },
             'udp_nat_ports_free': {
                 'type': 'int',
-                },
-            'radius_entries_used': {
-                'type': 'int',
-                },
-            'radius_entries_free': {
-                'type': 'int',
                 }
             }
         })
@@ -263,7 +249,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

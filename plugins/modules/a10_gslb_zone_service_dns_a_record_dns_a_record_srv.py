@@ -75,6 +75,11 @@ options:
         - "Specify name"
         type: str
         required: True
+    service_name:
+        description:
+        - "Specify service label"
+        type: str
+        required: False
     no_resp:
         description:
         - "Don't use this Service-IP as DNS response"
@@ -104,11 +109,6 @@ options:
         description:
         - "Disable this Service-IP"
         type: bool
-        required: False
-    service_name:
-        description:
-        - "Specify port service name"
-        type: str
         required: False
     static:
         description:
@@ -218,6 +218,9 @@ def get_argspec():
             'type': 'str',
             'required': True,
             },
+        'service_name': {
+            'type': 'str',
+            },
         'no_resp': {
             'type': 'bool',
             },
@@ -235,9 +238,6 @@ def get_argspec():
             },
         'disable': {
             'type': 'bool',
-            },
-        'service_name': {
-            'type': 'str',
             },
         'static': {
             'type': 'bool',
@@ -332,7 +332,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

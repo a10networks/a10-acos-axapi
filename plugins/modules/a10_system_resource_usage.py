@@ -55,18 +55,6 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    ssl_context_memory:
-        description:
-        - "Total SSL context memory needed in units of MB. Will be rounded to closest
-          multiple of 2MB"
-        type: int
-        required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple
-          of 2MB"
-        type: int
-        required: False
     nat_pool_addr_count:
         description:
         - "Total configurable NAT Pool addresses in the System"
@@ -396,22 +384,6 @@ options:
                 description:
                 - "Field ram_cache_memory_limit_default"
                 type: int
-            waf_template_cur:
-                description:
-                - "Field waf_template_cur"
-                type: int
-            waf_template_min:
-                description:
-                - "Field waf_template_min"
-                type: int
-            waf_template_max:
-                description:
-                - "Field waf_template_max"
-                type: int
-            waf_template_default:
-                description:
-                - "Field waf_template_default"
-                type: int
             auth_session_count_cur:
                 description:
                 - "Field auth_session_count_cur"
@@ -516,7 +488,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "aflex_table_entry_count", "auth_portal_html_file_size", "auth_portal_image_file_size", "auth_session_count", "authz_policy_number", "class_list_ac_entry_count", "class_list_entry_count", "class_list_ipv6_addr_count", "ipsec_sa_number", "l4_session_count", "max_aflex_authz_collection_number", "max_aflex_file_size", "nat_pool_addr_count",
-    "ngwaf_cache_entry", "oper", "radius_table_size", "ram_cache_memory_limit", "ssl_context_memory", "ssl_dma_memory", "uuid", "visibility",
+    "ngwaf_cache_entry", "oper", "radius_table_size", "ram_cache_memory_limit", "uuid", "visibility",
     ]
 
 
@@ -538,12 +510,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ssl_context_memory': {
-            'type': 'int',
-            },
-        'ssl_dma_memory': {
-            'type': 'int',
-            },
         'nat_pool_addr_count': {
             'type': 'int',
             },
@@ -774,18 +740,6 @@ def get_argspec():
             'ram_cache_memory_limit_default': {
                 'type': 'int',
                 },
-            'waf_template_cur': {
-                'type': 'int',
-                },
-            'waf_template_min': {
-                'type': 'int',
-                },
-            'waf_template_max': {
-                'type': 'int',
-                },
-            'waf_template_default': {
-                'type': 'int',
-                },
             'auth_session_count_cur': {
                 'type': 'int',
                 },
@@ -875,7 +829,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

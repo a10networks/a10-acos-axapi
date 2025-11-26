@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    file_size:
+        description:
+        - "merged pcap file size limit (unit MB)"
+        type: int
+        required: False
     count:
         description:
         - "Maximum packets to capture per cpu. Default is 3000. (Maximum packets to
@@ -195,7 +200,7 @@ options:
                 type: int
             l3_proto:
                 description:
-                - "'arp'= arp; 'neighbor'= neighbor;"
+                - "'arp'= arp; 'ip'= ip; 'ipv6'= ipv6; 'neighbor'= neighbor;"
                 type: str
             dst:
                 description:
@@ -470,7 +475,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["apply_config", "capture", "count", "delete", "exit", "filter_config_list", "inc_port_num", "incoming", "length", "maxfile", "out_port_num", "outgoing", "pcapng_config", "save_config", "sess_filter_dis", "timeout", "uuid", ]
+AVAILABLE_PROPERTIES = ["apply_config", "capture", "count", "delete", "exit", "file_size", "filter_config_list", "inc_port_num", "incoming", "length", "maxfile", "out_port_num", "outgoing", "pcapng_config", "save_config", "sess_filter_dis", "timeout", "uuid", ]
 
 
 def get_default_argspec():
@@ -491,6 +496,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'file_size': {
+            'type': 'int',
+            },
         'count': {
             'type': 'int',
             },
@@ -577,7 +585,7 @@ def get_argspec():
                 },
             'l3_proto': {
                 'type': 'str',
-                'choices': ['arp', 'neighbor']
+                'choices': ['arp', 'ip', 'ipv6', 'neighbor']
                 },
             'dst': {
                 'type': 'bool',
@@ -796,7 +804,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

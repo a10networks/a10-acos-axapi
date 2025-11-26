@@ -927,6 +927,9 @@ def get_argspec():
                 'radius_secret_encrypted': {
                     'type': 'str',
                     },
+                'radius_message_authenticator': {
+                    'type': 'bool',
+                    },
                 'radius_port': {
                     'type': 'int',
                     },
@@ -1068,6 +1071,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'ext_preference': {
+                    'type': 'bool',
+                    },
+                'ext_root_shell': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -1410,7 +1416,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

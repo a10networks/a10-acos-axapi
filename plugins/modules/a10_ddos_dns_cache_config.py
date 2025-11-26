@@ -55,6 +55,16 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    edns_udp_size:
+        description:
+        - "Set the global maximum EDNS UDP message size (Default= 1232)"
+        type: int
+        required: False
+    minimal_truncation_responses:
+        description:
+        - "Enable sending an empty DNS message when the response is truncated."
+        type: bool
+        required: False
     disable_zone_transfer_in_warm_up_mode:
         description:
         - "Disable warm up zone transfer"
@@ -147,7 +157,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable_zone_transfer_in_oper_mode", "disable_zone_transfer_in_warm_up_mode", "enable_cache_warm_up_bgp_advertise", "max_concurrent_zone_transfers", "uuid", ]
+AVAILABLE_PROPERTIES = ["disable_zone_transfer_in_oper_mode", "disable_zone_transfer_in_warm_up_mode", "edns_udp_size", "enable_cache_warm_up_bgp_advertise", "max_concurrent_zone_transfers", "minimal_truncation_responses", "uuid", ]
 
 
 def get_default_argspec():
@@ -168,6 +178,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'edns_udp_size': {
+            'type': 'int',
+            },
+        'minimal_truncation_responses': {
+            'type': 'bool',
+            },
         'disable_zone_transfer_in_warm_up_mode': {
             'type': 'bool',
             },
@@ -244,7 +260,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

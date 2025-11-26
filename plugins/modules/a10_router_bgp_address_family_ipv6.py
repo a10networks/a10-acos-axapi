@@ -256,6 +256,10 @@ options:
                 description:
                 - "Field static_cfg"
                 type: dict
+            public_ip_cfg:
+                description:
+                - "Field public_ip_cfg"
+                type: dict
             vip:
                 description:
                 - "Field vip"
@@ -856,6 +860,15 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
+            'public_ip_cfg': {
+                'type': 'dict',
+                'public_ip': {
+                    'type': 'bool',
+                    },
+                'route_map': {
+                    'type': 'str',
+                    }
+                },
             'vip': {
                 'type': 'dict',
                 'only_flagged_cfg': {
@@ -940,7 +953,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

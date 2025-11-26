@@ -60,6 +60,11 @@ options:
         - "OSPFv3 process tag"
         type: str
         required: True
+    router_id:
+        description:
+        - "router-id for the OSPF process (OSPFv3 router-id in IPv4 address format)"
+        type: str
+        required: False
     abr_type_option:
         description:
         - "'cisco'= Alternative ABR, Cisco implementation (RFC3509); 'ibm'= Alternative
@@ -91,9 +96,9 @@ options:
             ntype:
                 description:
                 - "'lw4o6'= LW4O6 Prefix; 'nat64'= NAT64 Prefix; 'static-nat'= Static NAT;
-          'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list;
-          'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual
-          IP (VIP);"
+          'public-ip'= Public IPv6 Prefixes; 'floating-ip'= Floating IP; 'ip-nat'= IP
+          NAT; 'ip-nat-list'= IP NAT list; 'vip'= Only not flagged Virtual IP (VIP);
+          'vip-only-flagged'= Selected Virtual IP (VIP);"
                 type: str
             area_ipv4:
                 description:
@@ -167,11 +172,6 @@ options:
                 description:
                 - "Field eth_cfg"
                 type: list
-    router_id:
-        description:
-        - "router-id for the OSPF process (OSPFv3 router-id in IPv4 address format)"
-        type: str
-        required: False
     timers:
         description:
         - "Field timers"
@@ -389,6 +389,9 @@ def get_argspec():
             'type': 'str',
             'required': True,
             },
+        'router_id': {
+            'type': 'str',
+            },
         'abr_type_option': {
             'type': 'str',
             'choices': ['cisco', 'ibm', 'standard']
@@ -406,7 +409,7 @@ def get_argspec():
             'type': 'list',
             'ntype': {
                 'type': 'str',
-                'choices': ['lw4o6', 'nat64', 'static-nat', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged']
+                'choices': ['lw4o6', 'nat64', 'static-nat', 'public-ip', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged']
                 },
             'area_ipv4': {
                 'type': 'str',
@@ -479,9 +482,6 @@ def get_argspec():
                     'type': 'str',
                     }
                 }
-            },
-        'router_id': {
-            'type': 'str',
             },
         'timers': {
             'type': 'dict',
@@ -588,7 +588,7 @@ def get_argspec():
                 'type': 'list',
                 'ntype': {
                     'type': 'str',
-                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis', 'rip', 'static']
+                    'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'public-ip', 'nat64', 'lw4o6', 'isis', 'rip', 'static']
                     },
                 'metric': {
                     'type': 'int',
@@ -729,7 +729,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

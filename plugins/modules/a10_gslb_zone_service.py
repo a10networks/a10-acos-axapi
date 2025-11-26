@@ -125,21 +125,15 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'received-query'= Number of DNS queries received for the service;
-          'sent-response'= Number of DNS replies sent to clients for the service; 'proxy-
-          mode-response'= Number of DNS replies sent to clients by the ACOS device as a
-          DNS proxy for the service; 'cache-mode-response'= Number of cached DNS replies
-          sent to clients by the ACOS device for the service. (This statistic applies
-          only if the DNS cache; 'server-mode-response'= Number of DNS replies sent to
-          clients by the ACOS device as a DNS server for the service. (This statistic
-          applies only if the D; 'sticky-mode-response'= Number of DNS replies sent to
-          clients by the ACOS device to keep the clients on the same site. (This
-          statistic applies only if; 'backup-mode-response'= Number of DNS replies sent
-          to clients by the ACOS device in backup mode; 'smrule-redir-from-svc-hit'=
-          Number of DNS queries redirected to the service by service-matching rule and
-          the query originally hits a service; 'smrule-redir-from-svc-miss'= Number of
-          DNS queries redirected to the service by service-matching rule and the query
-          originally doesn't hit a service;"
+                - "'all'= all; 'received-query'= DNS queries received for the service; 'sent-
+          response'= DNS replies sent to clients for the service; 'proxy-mode-response'=
+          DNS replies sent by ACOS as DNS proxy (service); 'cache-mode-response'= Cached
+          DNS replies sent by ACOS (service, if cache enabled); 'server-mode-response'=
+          DNS replies sent by ACOS (service, if server enabled); 'sticky-mode-response'=
+          DNS replies sent by ACOS on same site (if sticky enabled); 'backup-mode-
+          response'= DNS replies sent by ACOS in backup mode; 'smrule-redir-from-svc-
+          hit'= DNS queries redirected by rule (originally hit a service); 'smrule-redir-
+          from-svc-miss'= DNS queries redirected by rule (originally missed service);"
                 type: str
     dns_a_record:
         description:
@@ -505,45 +499,39 @@ options:
         suboptions:
             received_query:
                 description:
-                - "Number of DNS queries received for the service"
+                - "DNS queries received for the service"
                 type: str
             sent_response:
                 description:
-                - "Number of DNS replies sent to clients for the service"
+                - "DNS replies sent to clients for the service"
                 type: str
             proxy_mode_response:
                 description:
-                - "Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the
-          service"
+                - "DNS replies sent by ACOS as DNS proxy (service)"
                 type: str
             cache_mode_response:
                 description:
-                - "Number of cached DNS replies sent to clients by the ACOS device for the
-          service. (This statistic applies only if the DNS cache"
+                - "Cached DNS replies sent by ACOS (service, if cache enabled)"
                 type: str
             server_mode_response:
                 description:
-                - "Number of DNS replies sent to clients by the ACOS device as a DNS server for
-          the service. (This statistic applies only if the D"
+                - "DNS replies sent by ACOS (service, if server enabled)"
                 type: str
             sticky_mode_response:
                 description:
-                - "Number of DNS replies sent to clients by the ACOS device to keep the clients on
-          the same site. (This statistic applies only if"
+                - "DNS replies sent by ACOS on same site (if sticky enabled)"
                 type: str
             backup_mode_response:
                 description:
-                - "Number of DNS replies sent to clients by the ACOS device in backup mode"
+                - "DNS replies sent by ACOS in backup mode"
                 type: str
             smrule_redir_from_svc_hit:
                 description:
-                - "Number of DNS queries redirected to the service by service-matching rule and
-          the query originally hits a service"
+                - "DNS queries redirected by rule (originally hit a service)"
                 type: str
             smrule_redir_from_svc_miss:
                 description:
-                - "Number of DNS queries redirected to the service by service-matching rule and
-          the query originally doesn't hit a service"
+                - "DNS queries redirected by rule (originally missed service)"
                 type: str
             service_port:
                 description:
@@ -716,6 +704,9 @@ def get_argspec():
                     'type': 'str',
                     'required': True,
                     },
+                'service_name': {
+                    'type': 'str',
+                    },
                 'no_resp': {
                     'type': 'bool',
                     },
@@ -733,9 +724,6 @@ def get_argspec():
                     },
                 'disable': {
                     'type': 'bool',
-                    },
-                'service_name': {
-                    'type': 'str',
                     },
                 'static': {
                     'type': 'bool',
@@ -1418,7 +1406,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

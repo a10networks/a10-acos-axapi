@@ -439,7 +439,14 @@ options:
           'port_overloading_port_tcp_inserted'= Port Overloading NAT Port TCP Inserted;
           'port_overloading_port_udp_inserted'= Port Overloading NAT Port UDP Inserted;
           'port_overloading_port_free_tcp'= TCP Port Overloading NAT Port Freed;
-          'port_overloading_port_free_udp'= UDP Port Overloading NAT Port Freed;"
+          'port_overloading_port_free_udp'= UDP Port Overloading NAT Port Freed;
+          'data_session_created_sby'= Data Session Created Standby;
+          'data_session_freed_sby'= Data Session Freed Standby; 'user_quota_created_sby'=
+          User-Quota Created Standby; 'user_quota_put_in_del_q_sby'= User-Quota Freed
+          Standby; 'tcp_fullcone_created_sby'= TCP Full-cone Session Created Standby;
+          'tcp_fullcone_freed_sby'= TCP Full-cone Session Freed Standby;
+          'udp_fullcone_created_sby'= UDP Full-cone Session Created Standby;
+          'udp_fullcone_freed_sby'= UDP Full-cone Session Freed Standby;"
                 type: str
     stats:
         description:
@@ -859,6 +866,38 @@ options:
                 description:
                 - "UDP Port Overloading NAT Port Freed"
                 type: str
+            data_session_created_sby:
+                description:
+                - "Data Session Created Standby"
+                type: str
+            data_session_freed_sby:
+                description:
+                - "Data Session Freed Standby"
+                type: str
+            user_quota_created_sby:
+                description:
+                - "User-Quota Created Standby"
+                type: str
+            user_quota_put_in_del_q_sby:
+                description:
+                - "User-Quota Freed Standby"
+                type: str
+            tcp_fullcone_created_sby:
+                description:
+                - "TCP Full-cone Session Created Standby"
+                type: str
+            tcp_fullcone_freed_sby:
+                description:
+                - "TCP Full-cone Session Freed Standby"
+                type: str
+            udp_fullcone_created_sby:
+                description:
+                - "UDP Full-cone Session Created Standby"
+                type: str
+            udp_fullcone_freed_sby:
+                description:
+                - "UDP Full-cone Session Freed Standby"
+                type: str
 
 '''
 
@@ -1045,7 +1084,7 @@ def get_argspec():
                     'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others',
                     'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4',
                     'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'prefix_quota_mismatch', 'port_overloading_port_tcp_inserted',
-                    'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp'
+                    'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp', 'data_session_created_sby', 'data_session_freed_sby', 'user_quota_created_sby', 'user_quota_put_in_del_q_sby', 'tcp_fullcone_created_sby', 'tcp_fullcone_freed_sby', 'udp_fullcone_created_sby', 'udp_fullcone_freed_sby'
                     ]
                 }
             },
@@ -1359,6 +1398,30 @@ def get_argspec():
                 },
             'port_overloading_port_free_udp': {
                 'type': 'str',
+                },
+            'data_session_created_sby': {
+                'type': 'str',
+                },
+            'data_session_freed_sby': {
+                'type': 'str',
+                },
+            'user_quota_created_sby': {
+                'type': 'str',
+                },
+            'user_quota_put_in_del_q_sby': {
+                'type': 'str',
+                },
+            'tcp_fullcone_created_sby': {
+                'type': 'str',
+                },
+            'tcp_fullcone_freed_sby': {
+                'type': 'str',
+                },
+            'udp_fullcone_created_sby': {
+                'type': 'str',
+                },
+            'udp_fullcone_freed_sby': {
+                'type': 'str',
                 }
             }
         })
@@ -1413,7 +1476,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

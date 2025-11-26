@@ -100,6 +100,16 @@ options:
         - "Debug logs for harmony controller (per-connection)"
         type: bool
         required: False
+    logd_syslog_export:
+        description:
+        - "Debug logs for harmony controller (logd-syslog-export)"
+        type: bool
+        required: False
+    logd_audit_export:
+        description:
+        - "Debug logs for harmony controller (logd-audit-export)"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -159,7 +169,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["anomaly", "app_svc_id", "error", "metrics", "object_uuid", "per_connection", "per_request", "registration", "uri", "uuid", ]
+AVAILABLE_PROPERTIES = ["anomaly", "app_svc_id", "error", "logd_audit_export", "logd_syslog_export", "metrics", "object_uuid", "per_connection", "per_request", "registration", "uri", "uuid", ]
 
 
 def get_default_argspec():
@@ -179,7 +189,44 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'metrics': {'type': 'bool', }, 'object_uuid': {'type': 'str', }, 'uri': {'type': 'str', }, 'per_request': {'type': 'bool', }, 'app_svc_id': {'type': 'str', }, 'anomaly': {'type': 'bool', }, 'registration': {'type': 'bool', }, 'error': {'type': 'bool', }, 'per_connection': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'metrics': {
+            'type': 'bool',
+            },
+        'object_uuid': {
+            'type': 'str',
+            },
+        'uri': {
+            'type': 'str',
+            },
+        'per_request': {
+            'type': 'bool',
+            },
+        'app_svc_id': {
+            'type': 'str',
+            },
+        'anomaly': {
+            'type': 'bool',
+            },
+        'registration': {
+            'type': 'bool',
+            },
+        'error': {
+            'type': 'bool',
+            },
+        'per_connection': {
+            'type': 'bool',
+            },
+        'logd_syslog_export': {
+            'type': 'bool',
+            },
+        'logd_audit_export': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
@@ -231,7 +278,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

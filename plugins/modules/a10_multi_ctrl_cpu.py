@@ -57,7 +57,8 @@ options:
         required: False
     num_ctrl_cpus:
         description:
-        - "Set number of control CPUs. Default is 1, and max limit is platform dependent."
+        - "Set number of control CPUs. Default is lowest possible. Limits are platform
+          dependent."
         type: int
         required: False
 
@@ -186,7 +187,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

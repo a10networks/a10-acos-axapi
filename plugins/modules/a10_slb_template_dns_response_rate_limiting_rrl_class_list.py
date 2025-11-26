@@ -88,11 +88,16 @@ options:
             lid_response_rate:
                 description:
                 - "Responses exceeding this rate within the window will be dropped (default 5 per
-          second)"
+          second), 0 for unlimited"
                 type: int
             lid_slip_rate:
                 description:
                 - "Every n'th response that would be rate-limited will be let through instead"
+                type: int
+            lid_nx_response_rate:
+                description:
+                - "Queries from entries whose NX Responses exceeding this rate within the window
+          will be dropped (default 5 per second)"
                 type: int
             lid_tc_rate:
                 description:
@@ -229,6 +234,9 @@ def get_argspec():
             'lid_slip_rate': {
                 'type': 'int',
                 },
+            'lid_nx_response_rate': {
+                'type': 'int',
+                },
             'lid_tc_rate': {
                 'type': 'int',
                 },
@@ -322,7 +330,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

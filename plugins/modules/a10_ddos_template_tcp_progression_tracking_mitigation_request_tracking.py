@@ -67,8 +67,8 @@ options:
         required: True
     request_response_model:
         description:
-        - "'enable'= Enable Request Response Model (Default); 'disable'= Disable Request
-          Response Model;"
+        - "'enable'= Enable Request Response Model; 'disable'= Disable Request Response
+          Model;"
         type: str
         required: False
     response_length_max:
@@ -306,7 +306,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

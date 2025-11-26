@@ -124,7 +124,7 @@ options:
             pkt_sampling:
                 description:
                 - "Field pkt_sampling"
-                type: dict
+                type: list
             histogram_escalate_percentage:
                 description:
                 - "histogram escalate sensitivity for DDoS detection"
@@ -179,13 +179,13 @@ options:
                 description:
                 - "Field entry_saving"
                 type: dict
-            reflection_attack_detection:
-                description:
-                - "Field reflection_attack_detection"
-                type: dict
             standalone_settings:
                 description:
                 - "Field standalone_settings"
+                type: dict
+            zone_notifications:
+                description:
+                - "Field zone_notifications"
                 type: dict
     entry_saving:
         description:
@@ -251,6 +251,46 @@ options:
                 description:
                 - "Field netflow"
                 type: dict
+    agent_group_list:
+        description:
+        - "Field agent_group_list"
+        type: list
+        required: False
+        suboptions:
+            agent_group_name:
+                description:
+                - "Specify name for the agent-group"
+                type: str
+            agent:
+                description:
+                - "Field agent"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    trustlist:
+        description:
+        - "Field trustlist"
+        type: dict
+        required: False
+        suboptions:
+            v4_class_list:
+                description:
+                - "IPv4 Class-list name"
+                type: str
+            v6_class_list:
+                description:
+                - "IPv6 Class-list name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     statistics:
         description:
         - "Field statistics"
@@ -315,7 +355,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["agent_list", "ddos_script", "disable", "entry_saving", "resource_usage", "settings", "statistics", "uuid", ]
+AVAILABLE_PROPERTIES = ["agent_group_list", "agent_list", "ddos_script", "disable", "entry_saving", "resource_usage", "settings", "statistics", "trustlist", "uuid", ]
 
 
 def get_default_argspec():
@@ -380,14 +420,11 @@ def get_argspec():
                 'type': 'int',
                 },
             'pkt_sampling': {
-                'type': 'dict',
+                'type': 'list',
                 'override_rate': {
                     'type': 'int',
                     },
-                'assign_index': {
-                    'type': 'int',
-                    },
-                'assign_rate': {
+                'start_level': {
                     'type': 'int',
                     }
                 },
@@ -438,18 +475,6 @@ def get_argspec():
                     'type': 'str',
                     }
                 },
-            'reflection_attack_detection': {
-                'type': 'dict',
-                'heavy_hitter_threshold': {
-                    'type': 'int',
-                    },
-                'sport_discovery_threshold': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
             'standalone_settings': {
                 'type': 'dict',
                 'action': {
@@ -476,9 +501,23 @@ def get_argspec():
                     'template_active_timeout': {
                         'type': 'int',
                         },
+                    'distribute_by_duration': {
+                        'type': 'str',
+                        'choices': ['enable', 'disable']
+                        },
                     'uuid': {
                         'type': 'str',
                         }
+                    }
+                },
+            'zone_notifications': {
+                'type': 'dict',
+                'source_entry': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
+                    },
+                'uuid': {
+                    'type': 'str',
                     }
                 }
             },
@@ -528,7 +567,8 @@ def get_argspec():
                         'all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2', 'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled',
                         'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len',
                         'netflow-v9-sample-flowset-bad-padding', 'netflow-v9-max-records-exceed', 'netflow-v9-template-not-found', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received',
-                        'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss'
+                        'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss', 'xflow-extend-pkt-rcv',
+                        'xflow-extend-byte-rcv', 'xflow-dst-entry-miss-extend-pkt-rcv', 'xflow-dst-entry-miss-extend-byte-rcv', 'xflow-dst-svc-miss-extend-pkt-rcv', 'xflow-dst-svc-miss-extend-byte-rcv'
                         ]
                     }
                 },
@@ -560,6 +600,37 @@ def get_argspec():
                 'uuid': {
                     'type': 'str',
                     }
+                }
+            },
+        'agent_group_list': {
+            'type': 'list',
+            'agent_group_name': {
+                'type': 'str',
+                'required': True,
+                },
+            'agent': {
+                'type': 'list',
+                'agent_name': {
+                    'type': 'str',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                }
+            },
+        'trustlist': {
+            'type': 'dict',
+            'v4_class_list': {
+                'type': 'str',
+                },
+            'v6_class_list': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
                 }
             },
         'statistics': {
@@ -620,7 +691,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

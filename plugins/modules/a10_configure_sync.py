@@ -92,6 +92,11 @@ options:
         - "Use private key for authentication"
         type: str
         required: False
+    timeout:
+        description:
+        - "Specify the timeout (in second)"
+        type: int
+        required: False
     usr:
         description:
         - "Field usr"
@@ -107,6 +112,25 @@ options:
         - "Field pwd_enc"
         type: str
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            all_partitions:
+                description:
+                - "Field all_partitions"
+                type: bool
+            config_sync_list:
+                description:
+                - "Field config_sync_list"
+                type: list
 
 '''
 
@@ -161,7 +185,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address", "all_partitions", "auto_authentication", "partition_name", "private_key", "pwd", "pwd_enc", "shared", "ntype", "usr", ]
+AVAILABLE_PROPERTIES = ["address", "all_partitions", "auto_authentication", "oper", "partition_name", "private_key", "pwd", "pwd_enc", "shared", "timeout", "ntype", "usr", "uuid", ]
 
 
 def get_default_argspec():
@@ -204,6 +228,9 @@ def get_argspec():
         'private_key': {
             'type': 'str',
             },
+        'timeout': {
+            'type': 'int',
+            },
         'usr': {
             'type': 'str',
             },
@@ -212,6 +239,27 @@ def get_argspec():
             },
         'pwd_enc': {
             'type': 'str',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'oper': {
+            'type': 'dict',
+            'all_partitions': {
+                'type': 'bool',
+                },
+            'config_sync_list': {
+                'type': 'list',
+                'partition_name': {
+                    'type': 'str',
+                    },
+                'run_sync_status': {
+                    'type': 'str',
+                    },
+                'startup_sync_status': {
+                    'type': 'str',
+                    }
+                }
             }
         })
     return rv
@@ -265,7 +313,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
@@ -373,6 +422,11 @@ def run_command(module):
 
                 info = get_list_result["response_body"]
                 result["acos_info"] = info["sync-list"] if info != "NotFound" else info
+            elif module.params.get("get_type") == "oper":
+                get_oper_result = api_client.get_oper(module.client, existing_url(module), params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["sync"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:

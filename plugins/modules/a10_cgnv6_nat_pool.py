@@ -75,11 +75,6 @@ options:
         - "Configure mask for pool"
         type: str
         required: False
-    service_config_template:
-        description:
-        - "Service-template name to bind"
-        type: str
-        required: False
     exclude_ip:
         description:
         - "Field exclude_ip"
@@ -103,6 +98,11 @@ options:
         description:
         - "Number of users that can be assigned to a NAT IP"
         type: int
+        required: False
+    service_config_template:
+        description:
+        - "Service-template name to bind"
+        type: str
         required: False
     shared:
         description:
@@ -395,9 +395,6 @@ def get_argspec():
         'netmask': {
             'type': 'str',
             },
-        'service_config_template': {
-            'type': 'str',
-            },
         'exclude_ip': {
             'type': 'list',
             'exclude_ip_start': {
@@ -412,6 +409,9 @@ def get_argspec():
             },
         'max_users_per_ip': {
             'type': 'int',
+            },
+        'service_config_template': {
+            'type': 'str',
             },
         'shared': {
             'type': 'bool',
@@ -680,7 +680,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

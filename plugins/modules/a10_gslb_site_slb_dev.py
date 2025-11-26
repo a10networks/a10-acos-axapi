@@ -204,10 +204,22 @@ options:
         type: dict
         required: False
         suboptions:
+            fqdn_based:
+                description:
+                - "Field fqdn_based"
+                type: int
             dev_name:
                 description:
                 - "Field dev_name"
                 type: str
+            dynamic_dev_list:
+                description:
+                - "Field dynamic_dev_list"
+                type: list
+            dyn_vipserver_list:
+                description:
+                - "Field dyn_vipserver_list"
+                type: list
             dev_ip:
                 description:
                 - "Field dev_ip"
@@ -240,6 +252,10 @@ options:
                 description:
                 - "Field dev_state"
                 type: str
+            dev_creation_type:
+                description:
+                - "Field dev_creation_type"
+                type: int
             client_ldns_list:
                 description:
                 - "Field client_ldns_list"
@@ -460,8 +476,47 @@ def get_argspec():
             },
         'oper': {
             'type': 'dict',
+            'fqdn_based': {
+                'type': 'int',
+                },
             'dev_name': {
                 'type': 'str',
+                },
+            'dynamic_dev_list': {
+                'type': 'list',
+                'dyn_dev_name': {
+                    'type': 'str',
+                    },
+                'dyn_dev_ip': {
+                    'type': 'str',
+                    },
+                'dyn_dev_inherit_vipserver': {
+                    'type': 'int',
+                    }
+                },
+            'dyn_vipserver_list': {
+                'type': 'list',
+                'dyn_svr_ip': {
+                    'type': 'str',
+                    },
+                'dyn_svr_state': {
+                    'type': 'str',
+                    },
+                'dyn_svr_hits': {
+                    'type': 'int',
+                    },
+                'port_list': {
+                    'type': 'list',
+                    'port_num': {
+                        'type': 'int',
+                        },
+                    'port_protocol': {
+                        'type': 'str',
+                        },
+                    'port_state': {
+                        'type': 'str',
+                        }
+                    }
                 },
             'dev_ip': {
                 'type': 'str',
@@ -486,6 +541,9 @@ def get_argspec():
                 },
             'dev_state': {
                 'type': 'str',
+                },
+            'dev_creation_type': {
+                'type': 'int',
                 },
             'client_ldns_list': {
                 'type': 'list',
@@ -817,7 +875,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

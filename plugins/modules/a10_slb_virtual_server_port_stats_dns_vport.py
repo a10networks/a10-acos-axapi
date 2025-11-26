@@ -843,6 +843,21 @@ def get_argspec():
                     },
                 'dns_filter_tld_drop': {
                     'type': 'str',
+                    },
+                'dnsrrl_qps_drop': {
+                    'type': 'str',
+                    },
+                'dnsrrl_nx_drop': {
+                    'type': 'str',
+                    },
+                'dnsrrl_nx_exceed': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_request_send': {
+                    'type': 'str',
+                    },
+                'dns_recursive_resolution_response_receive': {
+                    'type': 'str',
                     }
                 }
             }
@@ -915,7 +930,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

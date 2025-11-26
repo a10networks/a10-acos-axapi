@@ -122,14 +122,6 @@ options:
                 description:
                 - "Field fw_helper_sessions_total_count"
                 type: int
-            radius_table_current_count:
-                description:
-                - "Field radius_table_current_count"
-                type: int
-            radius_table_total_count:
-                description:
-                - "Field radius_table_total_count"
-                type: int
             clause_per_obj_grp_current_count:
                 description:
                 - "Field clause_per_obj_grp_current_count"
@@ -165,10 +157,6 @@ options:
             helper_sessions:
                 description:
                 - "Field helper_sessions"
-                type: bool
-            radius_table_size:
-                description:
-                - "Field radius_table_size"
                 type: bool
             clause_per_obj_grp:
                 description:
@@ -296,12 +284,6 @@ def get_argspec():
             'fw_helper_sessions_total_count': {
                 'type': 'int',
                 },
-            'radius_table_current_count': {
-                'type': 'int',
-                },
-            'radius_table_total_count': {
-                'type': 'int',
-                },
             'clause_per_obj_grp_current_count': {
                 'type': 'str',
                 },
@@ -327,9 +309,6 @@ def get_argspec():
                 'type': 'bool',
                 },
             'helper_sessions': {
-                'type': 'bool',
-                },
-            'radius_table_size': {
                 'type': 'bool',
                 },
             'clause_per_obj_grp': {
@@ -375,7 +354,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

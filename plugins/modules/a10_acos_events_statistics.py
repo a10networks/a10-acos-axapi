@@ -103,7 +103,11 @@ options:
           Dropped, Invalid partition Id; 'acos_evt_test_logs_ticks'= Number of ticks when
           running ACOS Event Test Logs; 'param_msg_sent_to_hc'= Parameterized log sent to
           HC; 'param_msg_sent_fail'= Parameterized log send to HC failed;
-          'param_msg_encode_fail'= Parameterized log AVRO encoding failed;"
+          'param_msg_encode_fail'= Parameterized log AVRO encoding failed;
+          'logd_stats_system_logs'= Logd system logs sent to hc;
+          'logd_stats_system_logs_dropped'= Logd system logs dropped;
+          'logd_stats_audit_logs'= Logd audit logs sent to hc;
+          'logd_stats_audit_logs_dropped'= Logd audit logs dropped;"
                 type: str
     stats:
         description:
@@ -174,6 +178,22 @@ options:
             param_msg_encode_fail:
                 description:
                 - "Parameterized log AVRO encoding failed"
+                type: str
+            logd_stats_system_logs:
+                description:
+                - "Logd system logs sent to hc"
+                type: str
+            logd_stats_system_logs_dropped:
+                description:
+                - "Logd system logs dropped"
+                type: str
+            logd_stats_audit_logs:
+                description:
+                - "Logd audit logs sent to hc"
+                type: str
+            logd_stats_audit_logs_dropped:
+                description:
+                - "Logd audit logs dropped"
                 type: str
 
 '''
@@ -262,7 +282,7 @@ def get_argspec():
                     'all', 'msg_sent', 'msg_sent_logdb', 'msg_dropped_format_not_defined', 'msg_dropped_malloc_failure', 'msg_dropped_no_template', 'msg_dropped_selector', 'msg_dropped_too_long', 'msg_dropped_craft_fail', 'msg_dropped_local_log_ratelimit', 'msg_dropped_remote_log_ratelimit', 'msg_dropped_send_failed',
                     'msg_dropped_no_active_member', 'msg_dropped_route_fail', 'msg_dropped_other', 'no_template', 'msg_dropped_lost_during_config_change', 'local_enqueue_pass', 'msg_sent_to_logd', 'msg_retry_after_socket_fail', 'msg_sent_direct_syslog', 'msg_dropped_send_to_logd_fail', 'msg_dropped_trylock_fail',
                     'msg_dropped_remote_cplane_log_ratelimit', 'msg_dropped_remote_dplane_log_ratelimit', 'msg_dropped_local_enqueue_failed', 'msg_dropped_grp_not_used', 'msg_sent_remote_cplane', 'msg_dropped_no_template_logd', 'msg_dropped_lost_during_config_change_logd', 'msg_dropped_craft_fail_logd', 'msg_dropped_send_failed_logd',
-                    'msg_dropped_no_active_member_logd', 'msg_dropped_other_logd', 'msg_dropped_invalid_part', 'acos_evt_test_logs_ticks', 'param_msg_sent_to_hc', 'param_msg_sent_fail', 'param_msg_encode_fail'
+                    'msg_dropped_no_active_member_logd', 'msg_dropped_other_logd', 'msg_dropped_invalid_part', 'acos_evt_test_logs_ticks', 'param_msg_sent_to_hc', 'param_msg_sent_fail', 'param_msg_encode_fail', 'logd_stats_system_logs', 'logd_stats_system_logs_dropped', 'logd_stats_audit_logs', 'logd_stats_audit_logs_dropped'
                     ]
                 }
             },
@@ -314,6 +334,18 @@ def get_argspec():
                 'type': 'str',
                 },
             'param_msg_encode_fail': {
+                'type': 'str',
+                },
+            'logd_stats_system_logs': {
+                'type': 'str',
+                },
+            'logd_stats_system_logs_dropped': {
+                'type': 'str',
+                },
+            'logd_stats_audit_logs': {
+                'type': 'str',
+                },
+            'logd_stats_audit_logs_dropped': {
                 'type': 'str',
                 }
             }
@@ -369,7 +401,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False

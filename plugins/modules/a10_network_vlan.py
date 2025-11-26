@@ -95,7 +95,7 @@ options:
                 type: int
     untagged_lif:
         description:
-        - "Logical tunnel interface (Logical tunnel interface name)"
+        - "Logical tunnel interface (Logical interface name)"
         type: str
         required: False
     tagged_eth_list:
@@ -510,7 +510,8 @@ def create(module, result, payload={}):
 
 
 def update(module, result, existing_config, payload={}):
-    call_result = api_client.post(module.client, existing_url(module), payload)
+    final_payload = copy.deepcopy(payload)
+    call_result = api_client.post(module.client, existing_url(module), final_payload)
     result["axapi_calls"].append(call_result)
     if call_result["response_body"] == existing_config:
         result["changed"] = False
