@@ -128,6 +128,10 @@ options:
                 description:
                 - "DNS notify enabled"
                 type: bool
+            refresh_interval_by_soa:
+                description:
+                - "Read by SOA record"
+                type: bool
             refresh_interval_hours:
                 description:
                 - "Zone transfer refresh rate in hours (Default 4). 0 means no refresh"
@@ -272,6 +276,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'dns_notify_enable_ipv6': {
+                'type': 'bool',
+                },
+            'refresh_interval_by_soa': {
                 'type': 'bool',
                 },
             'refresh_interval_hours': {

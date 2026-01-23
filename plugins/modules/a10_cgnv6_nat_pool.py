@@ -300,6 +300,34 @@ options:
                 description:
                 - "IP Total"
                 type: str
+            udp_total_port:
+                description:
+                - "UDP Total Port"
+                type: str
+            udp_port_usage_percentage:
+                description:
+                - "UDP Port Usage Percentage"
+                type: str
+            tcp_total_port:
+                description:
+                - "TCP Total Port"
+                type: str
+            tcp_port_usage_percentage:
+                description:
+                - "TCP Port Usage Percentage"
+                type: str
+            max_users_allowed:
+                description:
+                - "Max Users Allowed"
+                type: str
+            user_occupation_percentage:
+                description:
+                - "User Occupation Percentage"
+                type: str
+            ip_total_cluster:
+                description:
+                - "IP Total in Scaleout Cluster"
+                type: str
             pool_name:
                 description:
                 - "Specify pool name"
@@ -616,6 +644,27 @@ def get_argspec():
                 'type': 'str',
                 },
             'ip_total': {
+                'type': 'str',
+                },
+            'udp_total_port': {
+                'type': 'str',
+                },
+            'udp_port_usage_percentage': {
+                'type': 'str',
+                },
+            'tcp_total_port': {
+                'type': 'str',
+                },
+            'tcp_port_usage_percentage': {
+                'type': 'str',
+                },
+            'max_users_allowed': {
+                'type': 'str',
+                },
+            'user_occupation_percentage': {
+                'type': 'str',
+                },
+            'ip_total_cluster': {
                 'type': 'str',
                 },
             'pool_name': {

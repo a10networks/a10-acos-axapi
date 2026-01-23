@@ -63,7 +63,7 @@ options:
     trigger_reason:
         description:
         - "'request'= log when request comes from client; 'response'= log when response to
-          client;"
+          client; 'timeout'= log when request connection timeout;"
         type: str
         required: True
     format:
@@ -86,6 +86,24 @@ options:
         - "Customized tag"
         type: str
         required: False
+    log_filter_list:
+        description:
+        - "Field log_filter_list"
+        type: list
+        required: False
+        suboptions:
+            feature:
+                description:
+                - "'RPZ'= log when rpz feature hit;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -140,7 +158,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable", "format", "trigger_reason", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["enable", "format", "log_filter_list", "trigger_reason", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -160,7 +178,39 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'trigger_reason': {'type': 'str', 'required': True, 'choices': ['request', 'response']}, 'format': {'type': 'str', }, 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
+    rv.update({
+        'trigger_reason': {
+            'type': 'str',
+            'required': True,
+            'choices': ['request', 'response', 'timeout']
+            },
+        'format': {
+            'type': 'str',
+            },
+        'enable': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            },
+        'user_tag': {
+            'type': 'str',
+            },
+        'log_filter_list': {
+            'type': 'list',
+            'feature': {
+                'type': 'str',
+                'required': True,
+                'choices': ['RPZ']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                }
+            }
+        })
     # Parent keys
     rv.update(dict(dns_logging_name=dict(type='str', required=True), ))
     return rv

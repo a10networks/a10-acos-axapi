@@ -75,6 +75,16 @@ options:
         - "'enable'= enable; 'disable'= disable;"
         type: str
         required: False
+    failure_domain:
+        description:
+        - "configure failure-domain"
+        type: bool
+        required: False
+    failure_domain_string:
+        description:
+        - "Specify the failure-domain name"
+        type: str
+        required: False
     start_delay:
         description:
         - "Field start_delay"
@@ -259,7 +269,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "cluster_mode", "exclude_interfaces", "id", "l2_redirect", "priority", "session_sync", "start_delay", "tracking_template", "traffic_redirection", "uuid", ]
+AVAILABLE_PROPERTIES = ["action", "cluster_mode", "exclude_interfaces", "failure_domain", "failure_domain_string", "id", "l2_redirect", "priority", "session_sync", "start_delay", "tracking_template", "traffic_redirection", "uuid", ]
 
 
 def get_default_argspec():
@@ -289,6 +299,12 @@ def get_argspec():
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable']
+            },
+        'failure_domain': {
+            'type': 'bool',
+            },
+        'failure_domain_string': {
+            'type': 'str',
             },
         'start_delay': {
             'type': 'int',

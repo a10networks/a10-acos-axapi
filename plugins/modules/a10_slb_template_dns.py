@@ -224,6 +224,12 @@ options:
         - "Enable DNS cache entry hit count"
         type: bool
         required: False
+    max_udp_size:
+        description:
+        - "Set maximum DNS response message size that ACOS sends by UDP (Maximum DNS
+          response message size (bytes))"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -623,6 +629,26 @@ options:
                 description:
                 - "'enabled'= Enable DNSSEC validation; 'disabled'= Disable DNSSEC validation;"
                 type: str
+            edns_udp_size:
+                description:
+                - "Set EDNS UDP payload size of queries sent during resolution (EDNS UDP payload
+          size of queries, default=4096 bytes)"
+                type: int
+            max_signature_validation_attempts:
+                description:
+                - "Set maximum number of times DNSSEC signature validation attempts allowed per
+          resolution"
+                type: int
+            max_signature_validation_failures:
+                description:
+                - "Set maximum number of times DNSSEC signature validation failures allowed per
+          resolution"
+                type: int
+            max_key_digest_validation_failures:
+                description:
+                - "Set maximum number of times DNSSEC key-digest validation failures allowed per
+          resolution"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -737,7 +763,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "add_padding_to_client", "cache_hitcount_enable", "cache_record_serving_policy", "cache_ttl_adjustment_enable", "category_lookup_bypass", "category_lookup_list", "category_lookup_online_lookup", "class_list", "default_policy", "disable_dns_template", "disable_ra_cached_resp", "disable_rpz_attach_soa", "dns_cookie_cache_policy", "dns_logging",
-    "dns64", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6", "label_count_filter", "label_length_filter", "local_dns_resolution", "max_cache_entry_size", "max_cache_size", "max_query_length", "name", "negative_dns_cache", "period", "qps_log_high", "qps_log_low", "qps_threshold_log",
+    "dns64", "dnssec_service_group", "drop", "enable_cache_sharing", "forward", "insert_ipv4", "insert_ipv6", "label_count_filter", "label_length_filter", "local_dns_resolution", "max_cache_entry_size", "max_cache_size", "max_query_length", "max_udp_size", "name", "negative_dns_cache", "period", "qps_log_high", "qps_log_low", "qps_threshold_log",
     "query_class_filter", "query_id_switch", "query_type_filter", "recursive_dns_resolution", "redirect_to_tcp_port", "remove_aa_flag", "remove_csubnet", "remove_padding_to_server", "response_rate_limiting", "rpz_list", "tld_filter_log_enable", "tld_filter_white_list", "udp_retransmit", "user_tag", "uuid",
     ]
 
@@ -863,6 +889,9 @@ def get_argspec():
             },
         'cache_hitcount_enable': {
             'type': 'bool',
+            },
+        'max_udp_size': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',
@@ -1283,6 +1312,18 @@ def get_argspec():
             'dnssec_validation': {
                 'type': 'str',
                 'choices': ['enabled', 'disabled']
+                },
+            'edns_udp_size': {
+                'type': 'int',
+                },
+            'max_signature_validation_attempts': {
+                'type': 'int',
+                },
+            'max_signature_validation_failures': {
+                'type': 'int',
+                },
+            'max_key_digest_validation_failures': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',

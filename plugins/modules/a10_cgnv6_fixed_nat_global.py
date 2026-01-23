@@ -415,26 +415,10 @@ options:
           'fnatdslite_rev_egress_pkt_size_range4'= Fixed DS-Lite Reverse Egress Packet
           size between 1551 and 9000; 'active-subscriber-added'= Active Subscriber Added;
           'active-subscriber-removed'= Active Subscriber Removed; 'config-not-found-in-
-          ctx'= Fixed NAT Config Pointer Not Found in MY_CTX; 'nat44-data-session-
-          created-sby'= NAT44 Data Sessions Created on StandBy Device; 'nat44-data-
-          session-freed-sby'= NAT44 Data Sessions Freed on StandBy Device; 'nat64-data-
-          session-created-sby'= NAT64 Data Sessions Created on StandBy Device;
-          'nat64-data-session-freed-sby'= NAT64 Data Sessions Freed on StandBy Device;
-          'dslite-data-session-created-sby'= DS-Lite Data Sessions Created on StandBy
-          Device; 'dslite-data-session-freed-sby'= DS-Lite Data Sessions Freed on StandBy
-          Device; 'dslite-tcp-fullcone-created-sby'= DS-Lite TCP Full-Cone Created on
-          StandBy Device; 'dslite-tcp-fullcone-freed-sby'= DS-Lite TCP Full-Cone Freed on
-          StandBy Device; 'dslite-udp-fullcone-created-sby'= DS-Lite UDP Full-Cone
-          Created on StandBy Device; 'dslite-udp-fullcone-freed-sby'= DS-Lite UDP Full-
-          Cone Freed on StandBy Device; 'nat44-tcp-fullcone-created-sby'= NAT44 TCP Full-
-          Cone Created on StandBy Device; 'nat44-tcp-fullcone-freed-sby'= NAT44 TCP Full-
-          Cone Freed on StandBy Device; 'nat44-udp-fullcone-created-sby'= NAT44 UDP Full-
-          Cone Created on StandBy Device; 'nat44-udp-fullcone-freed-sby'= NAT44 UDP Full-
-          Cone Freed on StandBy Device; 'nat64-tcp-fullcone-created-sby'= NAT64 TCP Full-
-          Cone Created on StandBy Device; 'nat64-tcp-fullcone-freed-sby'= NAT64 TCP Full-
-          Cone Freed on StandBy Device; 'nat64-udp-fullcone-created-sby'= NAT64 UDP Full-
-          Cone Created on StandBy Device; 'nat64-udp-fullcone-freed-sby'= NAT64 UDP Full-
-          Cone Freed on StandBy Device;"
+          ctx'= Fixed NAT Config Pointer Not Found in MY_CTX; 'unused-ip-drop'= Fixed NAT
+          UNUSED IP Hit and Drop; 'cross-cpu-rr-self-sent'= Cross CPU Helper Packets Self
+          Sent in CPU RR; 'cross-cpu-rr-no-conn-drop'= Cross CPU Helper Packets Dropped
+          no conn;"
                 type: str
     stats:
         description:
@@ -1302,77 +1286,9 @@ options:
                 description:
                 - "Active Subscriber Removed"
                 type: str
-            nat44_data_session_created_sby:
+            unused_ip_drop:
                 description:
-                - "NAT44 Data Sessions Created on StandBy Device"
-                type: str
-            nat44_data_session_freed_sby:
-                description:
-                - "NAT44 Data Sessions Freed on StandBy Device"
-                type: str
-            nat64_data_session_created_sby:
-                description:
-                - "NAT64 Data Sessions Created on StandBy Device"
-                type: str
-            nat64_data_session_freed_sby:
-                description:
-                - "NAT64 Data Sessions Freed on StandBy Device"
-                type: str
-            dslite_data_session_created_sby:
-                description:
-                - "DS-Lite Data Sessions Created on StandBy Device"
-                type: str
-            dslite_data_session_freed_sby:
-                description:
-                - "DS-Lite Data Sessions Freed on StandBy Device"
-                type: str
-            dslite_tcp_fullcone_created_sby:
-                description:
-                - "DS-Lite TCP Full-Cone Created on StandBy Device"
-                type: str
-            dslite_tcp_fullcone_freed_sby:
-                description:
-                - "DS-Lite TCP Full-Cone Freed on StandBy Device"
-                type: str
-            dslite_udp_fullcone_created_sby:
-                description:
-                - "DS-Lite UDP Full-Cone Created on StandBy Device"
-                type: str
-            dslite_udp_fullcone_freed_sby:
-                description:
-                - "DS-Lite UDP Full-Cone Freed on StandBy Device"
-                type: str
-            nat44_tcp_fullcone_created_sby:
-                description:
-                - "NAT44 TCP Full-Cone Created on StandBy Device"
-                type: str
-            nat44_tcp_fullcone_freed_sby:
-                description:
-                - "NAT44 TCP Full-Cone Freed on StandBy Device"
-                type: str
-            nat44_udp_fullcone_created_sby:
-                description:
-                - "NAT44 UDP Full-Cone Created on StandBy Device"
-                type: str
-            nat44_udp_fullcone_freed_sby:
-                description:
-                - "NAT44 UDP Full-Cone Freed on StandBy Device"
-                type: str
-            nat64_tcp_fullcone_created_sby:
-                description:
-                - "NAT64 TCP Full-Cone Created on StandBy Device"
-                type: str
-            nat64_tcp_fullcone_freed_sby:
-                description:
-                - "NAT64 TCP Full-Cone Freed on StandBy Device"
-                type: str
-            nat64_udp_fullcone_created_sby:
-                description:
-                - "NAT64 UDP Full-Cone Created on StandBy Device"
-                type: str
-            nat64_udp_fullcone_freed_sby:
-                description:
-                - "NAT64 UDP Full-Cone Freed on StandBy Device"
+                - "Fixed NAT UNUSED IP Hit and Drop"
                 type: str
 
 '''
@@ -1518,9 +1434,7 @@ def get_argspec():
                 'choices': [
                     'fnatdslite_fwd_ingress_pkt_size_range2', 'fnatdslite_fwd_ingress_pkt_size_range3', 'fnatdslite_fwd_ingress_pkt_size_range4', 'fnatdslite_fwd_egress_pkt_size_range1', 'fnatdslite_fwd_egress_pkt_size_range2', 'fnatdslite_fwd_egress_pkt_size_range3', 'fnatdslite_fwd_egress_pkt_size_range4',
                     'fnatdslite_rev_ingress_pkt_size_range1', 'fnatdslite_rev_ingress_pkt_size_range2', 'fnatdslite_rev_ingress_pkt_size_range3', 'fnatdslite_rev_ingress_pkt_size_range4', 'fnatdslite_rev_egress_pkt_size_range1', 'fnatdslite_rev_egress_pkt_size_range2', 'fnatdslite_rev_egress_pkt_size_range3',
-                    'fnatdslite_rev_egress_pkt_size_range4', 'active-subscriber-added', 'active-subscriber-removed', 'config-not-found-in-ctx', 'nat44-data-session-created-sby', 'nat44-data-session-freed-sby', 'nat64-data-session-created-sby', 'nat64-data-session-freed-sby', 'dslite-data-session-created-sby', 'dslite-data-session-freed-sby',
-                    'dslite-tcp-fullcone-created-sby', 'dslite-tcp-fullcone-freed-sby', 'dslite-udp-fullcone-created-sby', 'dslite-udp-fullcone-freed-sby', 'nat44-tcp-fullcone-created-sby', 'nat44-tcp-fullcone-freed-sby', 'nat44-udp-fullcone-created-sby', 'nat44-udp-fullcone-freed-sby', 'nat64-tcp-fullcone-created-sby',
-                    'nat64-tcp-fullcone-freed-sby', 'nat64-udp-fullcone-created-sby', 'nat64-udp-fullcone-freed-sby'
+                    'fnatdslite_rev_egress_pkt_size_range4', 'active-subscriber-added', 'active-subscriber-removed', 'config-not-found-in-ctx', 'unused-ip-drop', 'cross-cpu-rr-self-sent', 'cross-cpu-rr-no-conn-drop'
                     ]
                 }
             },
@@ -2171,58 +2085,7 @@ def get_argspec():
             'active_subscriber_removed': {
                 'type': 'str',
                 },
-            'nat44_data_session_created_sby': {
-                'type': 'str',
-                },
-            'nat44_data_session_freed_sby': {
-                'type': 'str',
-                },
-            'nat64_data_session_created_sby': {
-                'type': 'str',
-                },
-            'nat64_data_session_freed_sby': {
-                'type': 'str',
-                },
-            'dslite_data_session_created_sby': {
-                'type': 'str',
-                },
-            'dslite_data_session_freed_sby': {
-                'type': 'str',
-                },
-            'dslite_tcp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'dslite_tcp_fullcone_freed_sby': {
-                'type': 'str',
-                },
-            'dslite_udp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'dslite_udp_fullcone_freed_sby': {
-                'type': 'str',
-                },
-            'nat44_tcp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'nat44_tcp_fullcone_freed_sby': {
-                'type': 'str',
-                },
-            'nat44_udp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'nat44_udp_fullcone_freed_sby': {
-                'type': 'str',
-                },
-            'nat64_tcp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'nat64_tcp_fullcone_freed_sby': {
-                'type': 'str',
-                },
-            'nat64_udp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'nat64_udp_fullcone_freed_sby': {
+            'unused_ip_drop': {
                 'type': 'str',
                 }
             }

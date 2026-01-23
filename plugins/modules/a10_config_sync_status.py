@@ -66,10 +66,6 @@ options:
         type: dict
         required: False
         suboptions:
-            all_partitions:
-                description:
-                - "Field all_partitions"
-                type: bool
             config_sync_list:
                 description:
                 - "Field config_sync_list"
@@ -148,7 +144,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'all_partitions': {'type': 'bool', }, 'config_sync_list': {'type': 'list', 'partition_name': {'type': 'str', }, 'run_sync_status': {'type': 'str', }, 'startup_sync_status': {'type': 'str', }}}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'config_sync_list': {'type': 'list', 'partition_name': {'type': 'str', }, 'run_sync_status': {'type': 'str', }, 'startup_sync_status': {'type': 'str', }}}})
     return rv
 
 

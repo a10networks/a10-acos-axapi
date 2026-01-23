@@ -109,6 +109,11 @@ options:
         - "Specify JWT token will not be stripped while forwarding client request"
         type: bool
         required: False
+    client_error_resp_code:
+        description:
+        - "Specify the HTTP response code to return when client JWT authorization fails"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -234,7 +239,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encrypted", "exp_claim_requried", "jwt_cache_enable", "jwt_exp_default", "jwt_forwarding", "log_level", "name", "packet_capture_template", "sampling_enable", "stats", "user_tag", "uuid", "verification_cert", "verification_jwks", "verification_secret", ]
+AVAILABLE_PROPERTIES = ["client_error_resp_code", "encrypted", "exp_claim_requried", "jwt_cache_enable", "jwt_exp_default", "jwt_forwarding", "log_level", "name", "packet_capture_template", "sampling_enable", "stats", "user_tag", "uuid", "verification_cert", "verification_jwks", "verification_secret", ]
 
 
 def get_default_argspec():
@@ -286,6 +291,9 @@ def get_argspec():
             },
         'jwt_forwarding': {
             'type': 'bool',
+            },
+        'client_error_resp_code': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',

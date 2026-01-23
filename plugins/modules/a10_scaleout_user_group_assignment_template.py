@@ -84,6 +84,11 @@ options:
                 description:
                 - "User group assignment prefix length, default is 32"
                 type: int
+            assignment_prefix_auto:
+                description:
+                - "Automatically break down the prefix so that each user-group is assigned one and
+          only one subnet"
+                type: bool
             user_group_range_start:
                 description:
                 - "User group range start"
@@ -94,8 +99,12 @@ options:
                 type: int
             service_config_template:
                 description:
-                - "Field service_config_template"
+                - "Configure a scaleout service config template to use"
                 type: str
+            private_ip:
+                description:
+                - "Set the assignment as private, and no BGP route will be advertised for it"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -114,6 +123,11 @@ options:
                 description:
                 - "User group assignment prefix length, default is 128"
                 type: int
+            assignment_prefix_auto:
+                description:
+                - "Automatically break down the prefix so that each user-group is assigned one and
+          only one subnet"
+                type: bool
             user_group_range_start:
                 description:
                 - "User group range start"
@@ -126,6 +140,10 @@ options:
                 description:
                 - "Configure a scaleout service config template to use"
                 type: str
+            private_ip:
+                description:
+                - "Set the assignment as private, and no BGP route will be advertised for it"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -224,6 +242,9 @@ def get_argspec():
             'assignment_prefix_length': {
                 'type': 'int',
                 },
+            'assignment_prefix_auto': {
+                'type': 'bool',
+                },
             'user_group_range_start': {
                 'type': 'int',
                 },
@@ -232,6 +253,9 @@ def get_argspec():
                 },
             'service_config_template': {
                 'type': 'str',
+                },
+            'private_ip': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -246,6 +270,9 @@ def get_argspec():
             'assignment_prefix_length': {
                 'type': 'int',
                 },
+            'assignment_prefix_auto': {
+                'type': 'bool',
+                },
             'user_group_range_start': {
                 'type': 'int',
                 },
@@ -254,6 +281,9 @@ def get_argspec():
                 },
             'service_config_template': {
                 'type': 'str',
+                },
+            'private_ip': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',

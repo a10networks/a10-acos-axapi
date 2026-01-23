@@ -55,6 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    sdk_module:
+        description:
+        - "'legacy'= Legacy SDK module; 'new'= New SDK module (default);"
+        type: str
+        required: False
     server:
         description:
         - "BrightCloud Query Server"
@@ -155,7 +160,7 @@ options:
                 type: int
             auth_type:
                 description:
-                - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
+                - "'ntlm'= NTLM authentication; 'basic'= Basic authentication (default);"
                 type: str
             domain:
                 description:
@@ -775,8 +780,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "bypassed_urls", "category_list_list", "cloud_query_cache_size", "cloud_query_disable", "database_server", "db_update_time", "enable", "intercepted_urls", "license", "online_check_disable", "oper", "port", "proxy_server", "remote_syslog_enable", "reputation_scope_list", "rtu_cache_size", "rtu_update_disable", "rtu_update_interval", "server",
-    "server_timeout", "ssl_port", "statistics", "url", "use_mgmt_port", "uuid", "web_reputation",
+    "bypassed_urls", "category_list_list", "cloud_query_cache_size", "cloud_query_disable", "database_server", "db_update_time", "enable", "intercepted_urls", "license", "online_check_disable", "oper", "port", "proxy_server", "remote_syslog_enable", "reputation_scope_list", "rtu_cache_size", "rtu_update_disable", "rtu_update_interval",
+    "sdk_module", "server", "server_timeout", "ssl_port", "statistics", "url", "use_mgmt_port", "uuid", "web_reputation",
     ]
 
 
@@ -798,6 +803,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'sdk_module': {
+            'type': 'str',
+            'choices': ['legacy', 'new']
+            },
         'server': {
             'type': 'str',
             },

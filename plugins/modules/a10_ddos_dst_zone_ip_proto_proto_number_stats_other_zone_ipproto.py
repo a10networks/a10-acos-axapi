@@ -426,6 +426,12 @@ def get_argspec():
                     },
                 'src_zone_service_entry_hit': {
                     'type': 'str',
+                    },
+                'src_ip_filtering_drop': {
+                    'type': 'str',
+                    },
+                'src_ip_filtering_bypass': {
+                    'type': 'str',
                     }
                 }
             }

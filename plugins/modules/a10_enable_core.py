@@ -65,6 +65,11 @@ options:
         - "Enable full system core dump"
         type: bool
         required: False
+    disallow_auto_full_core:
+        description:
+        - "Disallow the automatic full core generation."
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -124,7 +129,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["core_level", "full", "uuid", ]
+AVAILABLE_PROPERTIES = ["core_level", "disallow_auto_full_core", "full", "uuid", ]
 
 
 def get_default_argspec():
@@ -144,7 +149,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'core_level': {'type': 'str', 'choices': ['a10', 'system']}, 'full': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({'core_level': {'type': 'str', 'choices': ['a10', 'system']}, 'full': {'type': 'bool', }, 'disallow_auto_full_core': {'type': 'bool', }, 'uuid': {'type': 'str', }})
     return rv
 
 

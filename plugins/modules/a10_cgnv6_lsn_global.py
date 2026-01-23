@@ -563,14 +563,12 @@ options:
           Created; 'port_overloading_port_udp_inserted'= Port Overloading NAT Port UDP
           Created; 'port_overloading_port_free_tcp'= TCP Port Overloading NAT Port Freed;
           'port_overloading_port_free_udp'= UDP Port Overloading NAT Port Freed;
-          'chassis_incorrect_pu'= chassis incorrect pu; 'data_session_created_sby'= Data
-          Session Created Standby; 'data_session_freed_sby'= Data Session Freed Standby;
-          'user_quota_created_sby'= User-Quota Created Standby;
-          'user_quota_put_in_del_q_sby'= User-Quota Freed Standby;
-          'tcp_fullcone_created_sby'= TCP Full-cone Session Created Standby;
-          'tcp_fullcone_freed_sby'= TCP Full-cone Session Freed Standby;
-          'udp_fullcone_created_sby'= UDP Full-cone Session Created Standby;
-          'udp_fullcone_freed_sby'= UDP Full-cone Session Freed Standby;"
+          'chassis_incorrect_pu'= chassis incorrect pu; 'cross_cpu_rr_self_sent'= Cross
+          CPU Helper Packets CPU RR Self Sent; 'static_nat_cross_cpu_rr_self_sent'=
+          Static NAT Cross CPU Helper CPU RR Self Sent; 'cross_cpu_rr_loop_drop'= Cross
+          CPU Helper Packets Drop Due to CPU RR loop; 'cross_cpu_rr_no_conn_drop'= Cross
+          CPU Helper Packets CPU RR No Conn Drop; 'static_nat_cross_cpu_rr_no_conn_drop'=
+          Static NAT Cross CPU Helper CPU RR packet dropped no conn;"
                 type: str
     stats:
         description:
@@ -1066,38 +1064,6 @@ options:
                 description:
                 - "chassis incorrect pu"
                 type: str
-            data_session_created_sby:
-                description:
-                - "Data Session Created Standby"
-                type: str
-            data_session_freed_sby:
-                description:
-                - "Data Session Freed Standby"
-                type: str
-            user_quota_created_sby:
-                description:
-                - "User-Quota Created Standby"
-                type: str
-            user_quota_put_in_del_q_sby:
-                description:
-                - "User-Quota Freed Standby"
-                type: str
-            tcp_fullcone_created_sby:
-                description:
-                - "TCP Full-cone Session Created Standby"
-                type: str
-            tcp_fullcone_freed_sby:
-                description:
-                - "TCP Full-cone Session Freed Standby"
-                type: str
-            udp_fullcone_created_sby:
-                description:
-                - "UDP Full-cone Session Created Standby"
-                type: str
-            udp_fullcone_freed_sby:
-                description:
-                - "UDP Full-cone Session Freed Standby"
-                type: str
 
 '''
 
@@ -1314,8 +1280,8 @@ def get_argspec():
                     'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp',
                     'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2',
                     'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4',
-                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'port_overloading_port_tcp_inserted', 'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp', 'chassis_incorrect_pu', 'data_session_created_sby',
-                    'data_session_freed_sby', 'user_quota_created_sby', 'user_quota_put_in_del_q_sby', 'tcp_fullcone_created_sby', 'tcp_fullcone_freed_sby', 'udp_fullcone_created_sby', 'udp_fullcone_freed_sby'
+                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'port_overloading_port_tcp_inserted', 'port_overloading_port_udp_inserted', 'port_overloading_port_free_tcp', 'port_overloading_port_free_udp', 'chassis_incorrect_pu', 'cross_cpu_rr_self_sent',
+                    'static_nat_cross_cpu_rr_self_sent', 'cross_cpu_rr_loop_drop', 'cross_cpu_rr_no_conn_drop', 'static_nat_cross_cpu_rr_no_conn_drop'
                     ]
                 }
             },
@@ -1685,30 +1651,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'chassis_incorrect_pu': {
-                'type': 'str',
-                },
-            'data_session_created_sby': {
-                'type': 'str',
-                },
-            'data_session_freed_sby': {
-                'type': 'str',
-                },
-            'user_quota_created_sby': {
-                'type': 'str',
-                },
-            'user_quota_put_in_del_q_sby': {
-                'type': 'str',
-                },
-            'tcp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'tcp_fullcone_freed_sby': {
-                'type': 'str',
-                },
-            'udp_fullcone_created_sby': {
-                'type': 'str',
-                },
-            'udp_fullcone_freed_sby': {
                 'type': 'str',
                 }
             }

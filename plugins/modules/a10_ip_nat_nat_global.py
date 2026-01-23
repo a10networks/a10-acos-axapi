@@ -77,7 +77,9 @@ options:
           Unsupported L4; 'cross_cpu_no_session'= Cross CPU No Session Found;
           'cross_cpu_helper_deleted'= Cross CPU Helper Deleted;
           'cross_cpu_helper_free_retry_lookup'= Cross CPU Helper Free Retry Lookup;
-          'cross_cpu_helper_free_not_found'= Cross CPU Helper Free Not Found;"
+          'cross_cpu_helper_free_not_found'= Cross CPU Helper Free Not Found;
+          'cross_cpu_rr_self_sent'= Cross CPU Helper Packets Self Sent in CPU RR;
+          'cross_cpu_rr_no_conn_drop'= Cross CPU Helper Packets Dropped no conn;"
                 type: str
     stats:
         description:
@@ -167,8 +169,10 @@ def get_argspec():
             'counters1': {
                 'type':
                 'str',
-                'choices':
-                ['all', 'cross_cpu_helper_created', 'cross_cpu_helper_free', 'cross_cpu_sent', 'cross_cpu_rcv', 'cross_cpu_helper_nat_pool_standby', 'cross_cpu_helper_cpu_mismatch', 'cross_cpu_bad_l3', 'cross_cpu_bad_l4', 'cross_cpu_no_session', 'cross_cpu_helper_deleted', 'cross_cpu_helper_free_retry_lookup', 'cross_cpu_helper_free_not_found']
+                'choices': [
+                    'all', 'cross_cpu_helper_created', 'cross_cpu_helper_free', 'cross_cpu_sent', 'cross_cpu_rcv', 'cross_cpu_helper_nat_pool_standby', 'cross_cpu_helper_cpu_mismatch', 'cross_cpu_bad_l3', 'cross_cpu_bad_l4', 'cross_cpu_no_session', 'cross_cpu_helper_deleted', 'cross_cpu_helper_free_retry_lookup', 'cross_cpu_helper_free_not_found',
+                    'cross_cpu_rr_self_sent', 'cross_cpu_rr_no_conn_drop'
+                    ]
                 }
             },
         'stats': {

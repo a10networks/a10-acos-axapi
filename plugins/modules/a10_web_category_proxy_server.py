@@ -72,7 +72,7 @@ options:
         required: False
     auth_type:
         description:
-        - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
+        - "'ntlm'= NTLM authentication; 'basic'= Basic authentication (default);"
         type: str
         required: False
     domain:

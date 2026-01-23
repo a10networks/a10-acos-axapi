@@ -200,6 +200,36 @@ options:
         - "uuid of the object"
         type: str
         required: False
+    stateful_firewall:
+        description:
+        - "Field stateful_firewall"
+        type: dict
+        required: False
+        suboptions:
+            inside:
+                description:
+                - "Inside (private) interface for stateful firewall"
+                type: bool
+            class_list:
+                description:
+                - "Class List (Class List Name)"
+                type: str
+            outside:
+                description:
+                - "Outside (public) interface for stateful firewall"
+                type: bool
+            access_list:
+                description:
+                - "Access-list for traffic from the outside"
+                type: bool
+            acl_name:
+                description:
+                - "Access-list Name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     router:
         description:
         - "Field router"
@@ -340,7 +370,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address_list", "inbound", "inside", "ipv6_enable", "ospf", "outside", "rip", "router", "router_adver", "ttl_ignore", "uuid", "v6_acl_name", ]
+AVAILABLE_PROPERTIES = ["address_list", "inbound", "inside", "ipv6_enable", "ospf", "outside", "rip", "router", "router_adver", "stateful_firewall", "ttl_ignore", "uuid", "v6_acl_name", ]
 
 
 def get_default_argspec():
@@ -469,6 +499,27 @@ def get_argspec():
             },
         'uuid': {
             'type': 'str',
+            },
+        'stateful_firewall': {
+            'type': 'dict',
+            'inside': {
+                'type': 'bool',
+                },
+            'class_list': {
+                'type': 'str',
+                },
+            'outside': {
+                'type': 'bool',
+                },
+            'access_list': {
+                'type': 'bool',
+                },
+            'acl_name': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                }
             },
         'router': {
             'type': 'dict',

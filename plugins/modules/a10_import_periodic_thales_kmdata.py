@@ -80,6 +80,16 @@ options:
         - "Specify the period in second"
         type: int
         required: False
+    password:
+        description:
+        - "Config remote server  password"
+        type: str
+        required: False
+    encrypted:
+        description:
+        - "Specify an ENCRYPTED password string (remote server password)"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -139,7 +149,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["overwrite", "period", "remote_file", "thales_kmdata", "use_mgmt_port", "uuid", ]
+AVAILABLE_PROPERTIES = ["encrypted", "overwrite", "password", "period", "remote_file", "thales_kmdata", "use_mgmt_port", "uuid", ]
 
 
 def get_default_argspec():
@@ -159,7 +169,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'thales_kmdata': {'type': 'str', 'required': True, }, 'overwrite': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({'thales_kmdata': {'type': 'str', 'required': True, }, 'overwrite': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'password': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

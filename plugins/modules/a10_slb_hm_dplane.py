@@ -99,7 +99,8 @@ options:
           'total_start_server_conn_err'= Total start server connections error;
           'err_missing_server_ssl_template'= Missing Server-SSL Template;
           'err_create_ssl_ctx_fail'= Error in creating SSL CTX;
-          'err_entry_missing_vport'= Entry missing Virtual-Port;"
+          'err_entry_missing_vport'= Entry missing Virtual-Port;
+          'err_entry_check_slb_failed'= Error in checking HM internal SLB Resource;"
                 type: str
     stats:
         description:
@@ -255,6 +256,10 @@ options:
                 description:
                 - "Entry missing Virtual-Port"
                 type: str
+            err_entry_check_slb_failed:
+                description:
+                - "Error in checking HM internal SLB Resource"
+                type: str
 
 '''
 
@@ -341,7 +346,7 @@ def get_argspec():
                 'choices': [
                     'all', 'curr_entries', 'total_created', 'total_inserted', 'curr_ready_to_free', 'total_freed', 'err_entry_create_failed', 'err_entry_create_oom', 'err_entry_insert_failed', 'total_tcp_err', 'err_smart_nat_alloc', 'err_smart_nat_port_alloc', 'err_l4_sess_alloc', 'err_hm_tcp_conn_sent', 'hm_tcp_conn_sent', 'entry_deleted',
                     'err_entry_create_slb_failed', 'total_match_resp_code', 'total_match_default_resp_code', 'total_maintenance_received', 'total_wrong_status_received', 'err_no_hm_entry', 'err_ssl_cert_name_mismatch', 'err_server_syn_timeout', 'err_http2_callback', 'err_l7_sess_process_tcp_estab_failed', 'err_l7_sess_process_tcp_data_failed',
-                    'err_http2_ver_mismatch', 'smart_nat_alloc', 'smart_nat_release', 'smart_nat_alloc_failed', 'smart_nat_release_failed', 'total_server_quic_conn', 'total_server_quic_conn_err', 'total_start_server_conn_err', 'err_missing_server_ssl_template', 'err_create_ssl_ctx_fail', 'err_entry_missing_vport'
+                    'err_http2_ver_mismatch', 'smart_nat_alloc', 'smart_nat_release', 'smart_nat_alloc_failed', 'smart_nat_release_failed', 'total_server_quic_conn', 'total_server_quic_conn_err', 'total_start_server_conn_err', 'err_missing_server_ssl_template', 'err_create_ssl_ctx_fail', 'err_entry_missing_vport', 'err_entry_check_slb_failed'
                     ]
                 }
             },
@@ -456,6 +461,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'err_entry_missing_vport': {
+                'type': 'str',
+                },
+            'err_entry_check_slb_failed': {
                 'type': 'str',
                 }
             }

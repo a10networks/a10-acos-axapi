@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = r'''
 module: a10_controller_telemetry
 description:
-    - Controller telemetry config
+    - A10 Controller telemetry config
 author: A10 Networks
 options:
     state:
@@ -65,40 +65,6 @@ options:
         - "uuid of the object"
         type: str
         required: False
-    probe:
-        description:
-        - "Field probe"
-        type: dict
-        required: False
-        suboptions:
-            action:
-                description:
-                - "'enable'= Enable the probe functionality; 'disable'= Disable the probe
-          functionality;"
-                type: str
-            interval:
-                description:
-                - "snapshot export interval in minute,default is 15."
-                type: int
-            log_level:
-                description:
-                - "'ERROR'= show errors only(default).; 'WARNING'= show warnings; 'INFO'= show
-          info messages; 'DEBUG'= show debug logs;"
-                type: str
-            export_policy:
-                description:
-                - "'snapshots-all'= Export historical/missed snapshots.; 'snapshots-new'= Export
-          only new snapshots(default).;"
-                type: str
-            target:
-                description:
-                - "'remote'= Export data to remote. This is the default value.; 'local'= Export
-          data local.;"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
 
 '''
 
@@ -153,7 +119,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["log_rate", "probe", "uuid", ]
+AVAILABLE_PROPERTIES = ["log_rate", "uuid", ]
 
 
 def get_default_argspec():
@@ -173,39 +139,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'log_rate': {
-            'type': 'int',
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'probe': {
-            'type': 'dict',
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-                },
-            'interval': {
-                'type': 'int',
-                },
-            'log_level': {
-                'type': 'str',
-                'choices': ['ERROR', 'WARNING', 'INFO', 'DEBUG']
-                },
-            'export_policy': {
-                'type': 'str',
-                'choices': ['snapshots-all', 'snapshots-new']
-                },
-            'target': {
-                'type': 'str',
-                'choices': ['remote', 'local']
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            }
-        })
+    rv.update({'log_rate': {'type': 'int', }, 'uuid': {'type': 'str', }})
     return rv
 
 

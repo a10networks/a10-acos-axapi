@@ -139,7 +139,7 @@ options:
                 type: int
             message:
                 description:
-                - "Amount of Messages, default is 10000 (Number)"
+                - "Amount of Messages, default is 100000 (Number)"
                 type: int
             uuid:
                 description:

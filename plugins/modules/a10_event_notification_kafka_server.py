@@ -129,39 +129,39 @@ options:
           SSL metrics dropped,enq error analytics qs; 'pc-throttle-drop'= L4 PC logs
           dropped,throttling; 'metrics-dropped-pt-missing'= Metrics dropped,missing
           partition tenant mapping; 'ssli-pc-acos-harmony-topic'= SSLi PC topic counter
-          from acos to harmony; 'ssli-pc-acos-harmony-topic-dequeue-err'= SSLi PC topic
-          to harmony dequeue error; 'ssli-pe-acos-harmony-topic'= SSLi PE topic counter
-          from acos to harmony; 'ssli-pe-acos-harmony-topic-dequeue-err'= SSLi PE topic
-          to harmony dequeue error; 'analytics-bus-restart'= Analytics bus restart count;
-          'waf-learn-pr-topic'= WAF learn topic counter; 'waf-learn-pr-topic-dequeue-
-          err'= WAF learn metrics dropped,enq error analytics qs; 'waf-events-topic'= WAF
-          events topic counter; 'waf-events-topic-dequeue-err'= WAF events metrics
-          dropped,enq error analytics qs; 'visibility-topn-harmony-topic'= Visibility
-          TopN sent; 'visibility-topn-harmony-topic-dequeue-err'= Visibility TopN metrics
-          dropped,enq error analytics qs; 'hc-logs-sent-to-master'= HC logs sent to
-          master; 'hc-logs-received-from-blade'= HC logs received from blade; 'hc-oper-
-          sent-to-master'= HC oper to master; 'hc-oper-received-from-blade'= HC oper
-          received from blade; 'hc-counters-sent-to-master'= HC counters sent to master;
-          'hc-counters-received-from-blade'= HC counters received from blade; 'hc-
-          counters-dropped-from-blade'= HC counters dropped from blade (uuid or size
-          mismatch); 'pe-acos-harmony-topic'= L7 PE logs sent; 'pe-acos-harmony-topic-
-          enqueue-err'= L7 PE dropped,enq error on acos queues; 'pe-acos-harmony-topic-
-          dequeue-err'= L7 PE dropped,enq error analytics queues; 'vpn-ipsec-sa-metrics-
-          topic'= IPSec SA metrics sent; 'vpn-ipsec-sa-metrics-topic-dequeue-err'= IPSec
-          SA metrics dropped,enq error analytics qs; 'vpn-ike-gateway-metrics-topic'= IKE
-          gateway metrics sent; 'vpn-ike-gateway-metrics-topic-dequeue-err'= IKE gateway
-          metrics dropped,enq error analytics qs; 'vpn-stats-metrics-topic'= VPN STATS
-          metrics sent; 'vpn-stats-metrics-topic-dequeue-err'= VPN STATS metrics
-          dropped,enq error analytics qs; 'cgn-port-usage-hstgrm-acos-harmony-topic'= CGN
-          Port Usage Histogram HC Export; 'cgn-port-usage-hstgrm-acos-harmony-topic-
-          dequeue-err'= CGN Port Usage Histogram HC Export Failed; 'avro-system-env-
-          topic'= System environment sent; 'avro-system-env-dequeue-err'= System
-          Environmet dropped,enq error analytics queues; 'cert-pinning-list-topic'= Cert-
-          pinning candidate list sent; 'cert-pinning-list-topic-dequeue-err'= Cert-
-          pinning candidate list dropped,enq error analytics queues; 'ngwaf-hc-ep-topic'=
-          NGWAF HC PE export; 'ngwaf-hc-ep-topic-dequeue-err'= NGWAF HC PE export failed;
-          'ngwaf-hc-metrics-topic'= NGWAF HC metrics export; 'ngwaf-hc-metrics-topic-
-          dequeue-err'= NGWAF HC metrics export failed;"
+          from acos to A10C; 'ssli-pc-acos-harmony-topic-dequeue-err'= SSLi PC topic to
+          A10C dequeue error; 'ssli-pe-acos-harmony-topic'= SSLi PE topic counter from
+          acos to A10C; 'ssli-pe-acos-harmony-topic-dequeue-err'= SSLi PE topic to A10C
+          dequeue error; 'analytics-bus-restart'= Analytics bus restart count; 'waf-
+          learn-pr-topic'= WAF learn topic counter; 'waf-learn-pr-topic-dequeue-err'= WAF
+          learn metrics dropped,enq error analytics qs; 'waf-events-topic'= WAF events
+          topic counter; 'waf-events-topic-dequeue-err'= WAF events metrics dropped,enq
+          error analytics qs; 'visibility-topn-harmony-topic'= Visibility TopN sent;
+          'visibility-topn-harmony-topic-dequeue-err'= Visibility TopN metrics
+          dropped,enq error analytics qs; 'hc-logs-sent-to-master'= A10C logs sent to
+          master; 'hc-logs-received-from-blade'= A10C logs received from blade; 'hc-oper-
+          sent-to-master'= A10C oper to master; 'hc-oper-received-from-blade'= A10C oper
+          received from blade; 'hc-counters-sent-to-master'= A10C counters sent to
+          master; 'hc-counters-received-from-blade'= A10C counters received from blade;
+          'hc-counters-dropped-from-blade'= A10C counters dropped from blade (uuid or
+          size mismatch); 'pe-acos-harmony-topic'= L7 PE logs sent; 'pe-acos-harmony-
+          topic-enqueue-err'= L7 PE dropped,enq error on acos queues; 'pe-acos-harmony-
+          topic-dequeue-err'= L7 PE dropped,enq error analytics queues; 'vpn-ipsec-sa-
+          metrics-topic'= IPSec SA metrics sent; 'vpn-ipsec-sa-metrics-topic-dequeue-
+          err'= IPSec SA metrics dropped,enq error analytics qs; 'vpn-ike-gateway-
+          metrics-topic'= IKE gateway metrics sent; 'vpn-ike-gateway-metrics-topic-
+          dequeue-err'= IKE gateway metrics dropped,enq error analytics qs; 'vpn-stats-
+          metrics-topic'= VPN STATS metrics sent; 'vpn-stats-metrics-topic-dequeue-err'=
+          VPN STATS metrics dropped,enq error analytics qs; 'cgn-port-usage-hstgrm-acos-
+          harmony-topic'= CGN Port Usage Histogram A10C Export; 'cgn-port-usage-hstgrm-
+          acos-harmony-topic-dequeue-err'= CGN Port Usage Histogram A10C Export Failed;
+          'avro-system-env-topic'= System environment sent; 'avro-system-env-dequeue-
+          err'= System Environmet dropped,enq error analytics queues; 'cert-pinning-list-
+          topic'= Cert-pinning candidate list sent; 'cert-pinning-list-topic-dequeue-
+          err'= Cert-pinning candidate list dropped,enq error analytics queues; 'ngwaf-
+          hc-ep-topic'= NGWAF A10C PE export; 'ngwaf-hc-ep-topic-dequeue-err'= NGWAF A10C
+          PE export failed; 'ngwaf-hc-metrics-topic'= NGWAF A10C metrics export; 'ngwaf-
+          hc-metrics-topic-dequeue-err'= NGWAF A10C metrics export failed;"
                 type: str
     oper:
         description:
@@ -377,19 +377,19 @@ options:
                 type: str
             ssli_pc_acos_harmony_topic:
                 description:
-                - "SSLi PC topic counter from acos to harmony"
+                - "SSLi PC topic counter from acos to A10C"
                 type: str
             ssli_pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "SSLi PC topic to harmony dequeue error"
+                - "SSLi PC topic to A10C dequeue error"
                 type: str
             ssli_pe_acos_harmony_topic:
                 description:
-                - "SSLi PE topic counter from acos to harmony"
+                - "SSLi PE topic counter from acos to A10C"
                 type: str
             ssli_pe_acos_harmony_topic_dequeue_err:
                 description:
-                - "SSLi PE topic to harmony dequeue error"
+                - "SSLi PE topic to A10C dequeue error"
                 type: str
             analytics_bus_restart:
                 description:
@@ -421,31 +421,31 @@ options:
                 type: str
             hc_logs_sent_to_master:
                 description:
-                - "HC logs sent to master"
+                - "A10C logs sent to master"
                 type: str
             hc_logs_received_from_blade:
                 description:
-                - "HC logs received from blade"
+                - "A10C logs received from blade"
                 type: str
             hc_oper_sent_to_master:
                 description:
-                - "HC oper to master"
+                - "A10C oper to master"
                 type: str
             hc_oper_received_from_blade:
                 description:
-                - "HC oper received from blade"
+                - "A10C oper received from blade"
                 type: str
             hc_counters_sent_to_master:
                 description:
-                - "HC counters sent to master"
+                - "A10C counters sent to master"
                 type: str
             hc_counters_received_from_blade:
                 description:
-                - "HC counters received from blade"
+                - "A10C counters received from blade"
                 type: str
             hc_counters_dropped_from_blade:
                 description:
-                - "HC counters dropped from blade (uuid or size mismatch)"
+                - "A10C counters dropped from blade (uuid or size mismatch)"
                 type: str
             pe_acos_harmony_topic:
                 description:
@@ -485,11 +485,11 @@ options:
                 type: str
             cgn_port_usage_hstgrm_acos_harmony_topic:
                 description:
-                - "CGN Port Usage Histogram HC Export"
+                - "CGN Port Usage Histogram A10C Export"
                 type: str
             cgn_port_usage_hstgrm_acos_harmony_topic_dequeue_err:
                 description:
-                - "CGN Port Usage Histogram HC Export Failed"
+                - "CGN Port Usage Histogram A10C Export Failed"
                 type: str
             avro_system_env_topic:
                 description:
@@ -509,19 +509,19 @@ options:
                 type: str
             ngwaf_hc_ep_topic:
                 description:
-                - "NGWAF HC PE export"
+                - "NGWAF A10C PE export"
                 type: str
             ngwaf_hc_ep_topic_dequeue_err:
                 description:
-                - "NGWAF HC PE export failed"
+                - "NGWAF A10C PE export failed"
                 type: str
             ngwaf_hc_metrics_topic:
                 description:
-                - "NGWAF HC metrics export"
+                - "NGWAF A10C metrics export"
                 type: str
             ngwaf_hc_metrics_topic_dequeue_err:
                 description:
-                - "NGWAF HC metrics export failed"
+                - "NGWAF A10C metrics export failed"
                 type: str
 
 '''

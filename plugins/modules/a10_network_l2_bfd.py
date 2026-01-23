@@ -57,7 +57,7 @@ options:
         required: False
     ether_type:
         description:
-        - "Ethernet payload type for L2BFD packets, help-val 16 bit hex value, default is
+        - "Ethernet paylaod type for L2BFD packets, help-val 16 bit hex value, default is
           hex 88B6"
         type: str
         required: False

@@ -468,6 +468,12 @@ def get_argspec():
                     },
                 'same_sport_dport_drop': {
                     'type': 'str',
+                    },
+                'src_ip_filtering_drop': {
+                    'type': 'str',
+                    },
+                'src_ip_filtering_bypass': {
+                    'type': 'str',
                     }
                 }
             }

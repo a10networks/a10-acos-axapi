@@ -82,6 +82,14 @@ options:
                 description:
                 - "Field smp_sessions_free"
                 type: int
+            radius_entries_used:
+                description:
+                - "Field radius_entries_used"
+                type: int
+            radius_entries_free:
+                description:
+                - "Field radius_entries_free"
+                type: int
 
 '''
 
@@ -156,7 +164,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'data_sessions_used': {'type': 'int', }, 'data_sessions_free': {'type': 'int', }, 'smp_sessions_used': {'type': 'int', }, 'smp_sessions_free': {'type': 'int', }}})
+    rv.update({'uuid': {'type': 'str', }, 'oper': {'type': 'dict', 'data_sessions_used': {'type': 'int', }, 'data_sessions_free': {'type': 'int', }, 'smp_sessions_used': {'type': 'int', }, 'smp_sessions_free': {'type': 'int', }, 'radius_entries_used': {'type': 'int', }, 'radius_entries_free': {'type': 'int', }}})
     return rv
 
 

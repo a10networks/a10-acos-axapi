@@ -89,15 +89,10 @@ options:
         - "'disable'= Disable service discovery for hosts (default= enabled);"
         type: str
         required: False
-    host_sport_discovery:
+    src_service_discovery:
         description:
-        - "'enable'= Enable source port discovery.; 'disable'= Disable source port
+        - "'enable'= Enable source service discovery.; 'disable'= Disable source service
           discovery.;"
-        type: str
-        required: False
-    sport_anomaly_detection:
-        description:
-        - "'disable'= Disable source port anomaly detection (default= enabled);"
         type: str
         required: False
     flooding_multiplier:
@@ -140,6 +135,12 @@ options:
                 description:
                 - "percentage of parent ip node"
                 type: int
+    anomaly_child_percentage:
+        description:
+        - "percentage of anomaly child's threshold used in delayed notification sending
+          check (default 75)"
+        type: int
+        required: False
     host_anomaly_threshold:
         description:
         - "Field host_anomaly_threshold"
@@ -202,20 +203,11 @@ options:
                 description:
                 - "Forward bit rate of per undiscovered host"
                 type: int
-    sport_discovery_threshold:
+    src_service_discovery_threshold:
         description:
-        - "Field sport_discovery_threshold"
-        type: dict
+        - "Percentage of the bit rate of undiscovered source services (default= 10)"
+        type: int
         required: False
-        suboptions:
-            sport_heavy_hitter_percentage:
-                description:
-                - "Percentage of the bit rate of undiscovered source ports (default= 10)"
-                type: int
-            sport_discovery_bit_rate_percentage:
-                description:
-                - "Percentage of the bit rate of source port's parent entry"
-                type: int
     network_object_anomaly_threshold:
         description:
         - "Field network_object_anomaly_threshold"
@@ -309,6 +301,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            src_port_list:
+                description:
+                - "Field src_port_list"
+                type: list
     ipv6_list:
         description:
         - "Field ipv6_list"
@@ -334,6 +330,10 @@ options:
             sampling_enable:
                 description:
                 - "Field sampling_enable"
+                type: list
+            src_port_list:
+                description:
+                - "Field src_port_list"
                 type: list
     notification:
         description:
@@ -373,58 +373,6 @@ options:
         type: dict
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    sport_anomaly_threshold:
-        description:
-        - "Field sport_anomaly_threshold"
-        type: dict
-        required: False
-        suboptions:
-            packet_rate:
-                description:
-                - "Field packet_rate"
-                type: dict
-            packet_rate_percentage:
-                description:
-                - "Field packet_rate_percentage"
-                type: dict
-            bit_rate:
-                description:
-                - "Field bit_rate"
-                type: dict
-            bit_rate_percentage:
-                description:
-                - "Field bit_rate_percentage"
-                type: dict
-            ip_list:
-                description:
-                - "Field ip_list"
-                type: list
-            ipv6_list:
-                description:
-                - "Field ipv6_list"
-                type: list
-            sport_list:
-                description:
-                - "Field sport_list"
-                type: list
-    sport_list:
-        description:
-        - "Field sport_list"
-        type: list
-        required: False
-        suboptions:
-            port_num:
-                description:
-                - "Port Number"
-                type: int
-            protocol:
-                description:
-                - "'udp'= UDP port; 'tcp'= TCP Port;"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -543,9 +491,9 @@ options:
                 description:
                 - "Field discovered_list"
                 type: bool
-            sport_list:
+            src_service_list:
                 description:
-                - "Field sport_list"
+                - "Field src_service_list"
                 type: bool
             subnet_ip_addr:
                 description:
@@ -567,9 +515,9 @@ options:
                 description:
                 - "Field anomaly_ip_list"
                 type: bool
-            sport:
+            src_port:
                 description:
-                - "Field sport"
+                - "Field src_port"
                 type: bool
             port_start:
                 description:
@@ -590,6 +538,10 @@ options:
             agent_group_details:
                 description:
                 - "Field agent_group_details"
+                type: bool
+            aggregated_details:
+                description:
+                - "Field aggregated_details"
                 type: bool
             object_name:
                 description:
@@ -748,8 +700,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "anomaly_detection_trigger", "enable_top_k", "flooding_multiplier", "histogram_mode", "host_anomaly_threshold", "host_sport_discovery", "indicators_to_monitor", "ip_list", "ipv6_list", "network_object_anomaly_threshold", "network_object_template", "notification", "object_name", "oper", "operational_mode", "relative_auto_break_down_threshold",
-    "sampling_enable", "service_break_down_threshold_local", "service_discovery", "sport_anomaly_detection", "sport_anomaly_threshold", "sport_discovery_threshold", "sport_list", "static_auto_break_down_threshold", "stats", "sub_network", "threshold_sensitivity", "topk_destinations", "trustlist", "user_tag", "uuid",
+    "anomaly_child_percentage", "anomaly_detection_trigger", "enable_top_k", "flooding_multiplier", "histogram_mode", "host_anomaly_threshold", "indicators_to_monitor", "ip_list", "ipv6_list", "network_object_anomaly_threshold", "network_object_template", "notification", "object_name", "oper", "operational_mode",
+    "relative_auto_break_down_threshold", "sampling_enable", "service_break_down_threshold_local", "service_discovery", "src_service_discovery", "src_service_discovery_threshold", "static_auto_break_down_threshold", "stats", "sub_network", "threshold_sensitivity", "topk_destinations", "trustlist", "user_tag", "uuid",
     ]
 
 
@@ -794,13 +746,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['disable']
             },
-        'host_sport_discovery': {
+        'src_service_discovery': {
             'type': 'str',
             'choices': ['enable', 'disable']
-            },
-        'sport_anomaly_detection': {
-            'type': 'str',
-            'choices': ['disable']
             },
         'flooding_multiplier': {
             'type': 'int',
@@ -825,6 +773,9 @@ def get_argspec():
             'svc_percentage': {
                 'type': 'int',
                 }
+            },
+        'anomaly_child_percentage': {
+            'type': 'int',
             },
         'host_anomaly_threshold': {
             'type': 'dict',
@@ -871,14 +822,8 @@ def get_argspec():
                 'type': 'int',
                 }
             },
-        'sport_discovery_threshold': {
-            'type': 'dict',
-            'sport_heavy_hitter_percentage': {
-                'type': 'int',
-                },
-            'sport_discovery_bit_rate_percentage': {
-                'type': 'int',
-                }
+        'src_service_discovery_threshold': {
+            'type': 'int',
             },
         'network_object_anomaly_threshold': {
             'type': 'dict',
@@ -950,6 +895,42 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'packet_rate', 'bit_rate']
                     }
+                },
+            'src_port_list': {
+                'type': 'list',
+                'port_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['udp', 'tcp']
+                    },
+                'host_src_port_anomaly_threshold': {
+                    'type': 'dict',
+                    'host_src_port_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'host_src_port_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'subnet_src_port_anomaly_threshold': {
+                    'type': 'dict',
+                    'subnet_src_port_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'subnet_src_port_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
                 }
             },
         'ipv6_list': {
@@ -978,6 +959,42 @@ def get_argspec():
                 'counters1': {
                     'type': 'str',
                     'choices': ['all', 'packet_rate', 'bit_rate']
+                    }
+                },
+            'src_port_list': {
+                'type': 'list',
+                'port_num': {
+                    'type': 'int',
+                    'required': True,
+                    },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['udp', 'tcp']
+                    },
+                'host_src_port_anomaly_threshold': {
+                    'type': 'dict',
+                    'host_src_port_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'host_src_port_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'subnet_src_port_anomaly_threshold': {
+                    'type': 'dict',
+                    'subnet_src_port_pkt_rate': {
+                        'type': 'int',
+                        },
+                    'subnet_src_port_bit_rate': {
+                        'type': 'int',
+                        }
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
                     }
                 }
             },
@@ -1163,273 +1180,6 @@ def get_argspec():
                 'type': 'str',
                 }
             },
-        'sport_anomaly_threshold': {
-            'type': 'dict',
-            'packet_rate': {
-                'type': 'dict',
-                'value': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'packet_rate_percentage': {
-                'type': 'dict',
-                'value': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'bit_rate': {
-                'type': 'dict',
-                'value': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'bit_rate_percentage': {
-                'type': 'dict',
-                'value': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'ip_list': {
-                'type': 'list',
-                'ip_addr': {
-                    'type': 'str',
-                    'required': True,
-                    },
-                'packet_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate']
-                    },
-                'packet_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate-percentage']
-                    },
-                'bit_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate']
-                    },
-                'bit_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate-percentage']
-                    },
-                'packet_rate': {
-                    'type': 'int',
-                    },
-                'packet_rate_percentage': {
-                    'type': 'int',
-                    },
-                'bit_rate': {
-                    'type': 'int',
-                    },
-                'bit_rate_percentage': {
-                    'type': 'int',
-                    },
-                'sport_num': {
-                    'type': 'int',
-                    'required': True,
-                    },
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['udp', 'tcp']
-                    },
-                'ip_sport_packet_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate']
-                    },
-                'ip_sport_packet_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate-percentage']
-                    },
-                'ip_sport_bit_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate']
-                    },
-                'ip_sport_bit_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate-percentage']
-                    },
-                'ip_sport_packet_rate': {
-                    'type': 'int',
-                    },
-                'ip_sport_packet_rate_percentage': {
-                    'type': 'int',
-                    },
-                'ip_sport_bit_rate': {
-                    'type': 'int',
-                    },
-                'ip_sport_bit_rate_percentage': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'ipv6_list': {
-                'type': 'list',
-                'ip_addr': {
-                    'type': 'str',
-                    'required': True,
-                    },
-                'packet_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate']
-                    },
-                'packet_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate-percentage']
-                    },
-                'bit_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate']
-                    },
-                'bit_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate-percentage']
-                    },
-                'packet_rate': {
-                    'type': 'int',
-                    },
-                'packet_rate_percentage': {
-                    'type': 'int',
-                    },
-                'bit_rate': {
-                    'type': 'int',
-                    },
-                'bit_rate_percentage': {
-                    'type': 'int',
-                    },
-                'sport_num': {
-                    'type': 'int',
-                    'required': True,
-                    },
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['udp', 'tcp']
-                    },
-                'ip_sport_packet_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate']
-                    },
-                'ip_sport_packet_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate-percentage']
-                    },
-                'ip_sport_bit_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate']
-                    },
-                'ip_sport_bit_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate-percentage']
-                    },
-                'ip_sport_packet_rate': {
-                    'type': 'int',
-                    },
-                'ip_sport_packet_rate_percentage': {
-                    'type': 'int',
-                    },
-                'ip_sport_bit_rate': {
-                    'type': 'int',
-                    },
-                'ip_sport_bit_rate_percentage': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                },
-            'sport_list': {
-                'type': 'list',
-                'sport_num': {
-                    'type': 'int',
-                    'required': True,
-                    },
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['udp', 'tcp']
-                    },
-                'packet_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate']
-                    },
-                'packet_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['packet-rate-percentage']
-                    },
-                'bit_rate_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate']
-                    },
-                'bit_rate_percentage_str': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['bit-rate-percentage']
-                    },
-                'packet_rate': {
-                    'type': 'int',
-                    },
-                'packet_rate_percentage': {
-                    'type': 'int',
-                    },
-                'bit_rate': {
-                    'type': 'int',
-                    },
-                'bit_rate_percentage': {
-                    'type': 'int',
-                    },
-                'uuid': {
-                    'type': 'str',
-                    }
-                }
-            },
-        'sport_list': {
-            'type': 'list',
-            'port_num': {
-                'type': 'int',
-                'required': True,
-                },
-            'protocol': {
-                'type': 'str',
-                'required': True,
-                'choices': ['udp', 'tcp']
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
         'trustlist': {
             'type': 'dict',
             'v4_class_list': {
@@ -1559,6 +1309,9 @@ def get_argspec():
                     },
                 'de_es_timestamp': {
                     'type': 'str',
+                    },
+                'estimated_bit_rate': {
+                    'type': 'str',
                     }
                 },
             'entry_count': {
@@ -1579,7 +1332,7 @@ def get_argspec():
             'discovered_list': {
                 'type': 'bool',
                 },
-            'sport_list': {
+            'src_service_list': {
                 'type': 'bool',
                 },
             'subnet_ip_addr': {
@@ -1597,7 +1350,7 @@ def get_argspec():
             'anomaly_ip_list': {
                 'type': 'bool',
                 },
-            'sport': {
+            'src_port': {
                 'type': 'bool',
                 },
             'port_start': {
@@ -1613,6 +1366,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'agent_group_details': {
+                'type': 'bool',
+                },
+            'aggregated_details': {
                 'type': 'bool',
                 },
             'object_name': {
