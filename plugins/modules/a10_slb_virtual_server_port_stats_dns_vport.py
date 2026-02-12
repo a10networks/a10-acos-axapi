@@ -858,6 +858,21 @@ def get_argspec():
                     },
                 'dns_recursive_resolution_response_receive': {
                     'type': 'str',
+                    },
+                'dns_recursive_resolution_received_tc_response': {
+                    'type': 'str',
+                    },
+                'dns_max_udp_size_sent_tc_response': {
+                    'type': 'str',
+                    },
+                'dns_rr_exceed_per_resolv_max_sig_val_attempts': {
+                    'type': 'str',
+                    },
+                'dns_rr_exceed_per_resolv_max_sig_val_failures': {
+                    'type': 'str',
+                    },
+                'dns_rr_exceed_per_resolv_max_dgst_val_failures': {
+                    'type': 'str',
                     }
                 }
             }

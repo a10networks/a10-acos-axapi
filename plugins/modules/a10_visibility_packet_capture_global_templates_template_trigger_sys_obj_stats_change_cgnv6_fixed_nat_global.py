@@ -154,6 +154,10 @@ options:
                 description:
                 - "Enable automatic packet-capture for HA Sessions User Quota Exceeded"
                 type: bool
+            unused_ip_drop:
+                description:
+                - "Enable automatic packet-capture for Fixed NAT UNUSED IP Hit and Drop"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -255,6 +259,10 @@ options:
             ha_session_user_quota_exceeded:
                 description:
                 - "Enable automatic packet-capture for HA Sessions User Quota Exceeded"
+                type: bool
+            unused_ip_drop:
+                description:
+                - "Enable automatic packet-capture for Fixed NAT UNUSED IP Hit and Drop"
                 type: bool
             uuid:
                 description:
@@ -400,6 +408,9 @@ def get_argspec():
             'ha_session_user_quota_exceeded': {
                 'type': 'bool',
                 },
+            'unused_ip_drop': {
+                'type': 'bool',
+                },
             'uuid': {
                 'type': 'str',
                 }
@@ -470,6 +481,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'ha_session_user_quota_exceeded': {
+                'type': 'bool',
+                },
+            'unused_ip_drop': {
                 'type': 'bool',
                 },
             'uuid': {

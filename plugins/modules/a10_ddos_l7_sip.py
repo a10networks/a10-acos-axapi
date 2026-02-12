@@ -368,27 +368,27 @@ options:
                 type: str
             src_dst_header_filter_match:
                 description:
-                - "Src Header Filter Match"
+                - "Src Dst Header Filter Match"
                 type: str
             src_dst_header_filter_not_match:
                 description:
-                - "Src Header Filter Not Match"
+                - "Src Dst Header Filter Not Match"
                 type: str
             src_dst_header_filter_action_drop:
                 description:
-                - "Src Header Filter Action Drop"
+                - "Src Dst Header Filter Action Drop"
                 type: str
             src_dst_header_filter_action_blacklist:
                 description:
-                - "Src Header Filter Action Blacklist"
+                - "Src Dst Header Filter Action Blacklist"
                 type: str
             src_dst_header_filter_action_whitelist:
                 description:
-                - "Src Header Filter Action Whitelist"
+                - "Src Dst Header Filter Action Whitelist"
                 type: str
             src_dst_header_filter_action_default_pass:
                 description:
-                - "Src Header Filter Action Default Pass"
+                - "Src Dst Header Filter Action Default Pass"
                 type: str
 
 '''

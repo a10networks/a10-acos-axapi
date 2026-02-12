@@ -135,7 +135,8 @@ options:
           byte-rcv'= Extend Bytes Received of DDoS Destination Entry Miss; 'xflow-dst-
           svc-miss-extend-pkt-rcv'= Extend Packets Received of DDoS Destination Service
           Miss; 'xflow-dst-svc-miss-extend-byte-rcv'= Extend Bytes Received of DDoS
-          Destination Service Miss;"
+          Destination Service Miss; 'xflow-sample-dropped-by-intf-select'= Xflow Samples
+          Dropped by Interface Selection;"
                 type: str
     sflow:
         description:
@@ -175,6 +176,28 @@ options:
                 description:
                 - "Configure agent's flow inactive timeout (seconds)"
                 type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    snmp:
+        description:
+        - "Field snmp"
+        type: dict
+        required: False
+        suboptions:
+            ipv4_addr:
+                description:
+                - "Configure agent's IPv4 address for SNMP"
+                type: str
+            community_string:
+                description:
+                - "Configure agent's community-string for SNMP"
+                type: str
+            refresh:
+                description:
+                - "refresh SNMP information"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -383,6 +406,10 @@ options:
                 description:
                 - "Extend Bytes Received of DDoS Destination Service Miss"
                 type: str
+            xflow_sample_dropped_by_intf_select:
+                description:
+                - "Xflow Samples Dropped by Interface Selection"
+                type: str
             agent_name:
                 description:
                 - "Specify name for the agent"
@@ -441,7 +468,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["agent_name", "agent_type", "agent_v4_addr", "agent_v6_addr", "netflow", "oper", "sampling_enable", "sflow", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["agent_name", "agent_type", "agent_v4_addr", "agent_v6_addr", "netflow", "oper", "sampling_enable", "sflow", "snmp", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -492,7 +519,7 @@ def get_argspec():
                     'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len',
                     'netflow-v9-sample-flowset-bad-padding', 'netflow-v9-max-records-exceed', 'netflow-v9-template-not-found', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received',
                     'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss', 'xflow-extend-pkt-rcv',
-                    'xflow-extend-byte-rcv', 'xflow-dst-entry-miss-extend-pkt-rcv', 'xflow-dst-entry-miss-extend-byte-rcv', 'xflow-dst-svc-miss-extend-pkt-rcv', 'xflow-dst-svc-miss-extend-byte-rcv'
+                    'xflow-extend-byte-rcv', 'xflow-dst-entry-miss-extend-pkt-rcv', 'xflow-dst-entry-miss-extend-byte-rcv', 'xflow-dst-svc-miss-extend-pkt-rcv', 'xflow-dst-svc-miss-extend-byte-rcv', 'xflow-sample-dropped-by-intf-select'
                     ]
                 }
             },
@@ -520,6 +547,21 @@ def get_argspec():
                 },
             'inactive_timeout': {
                 'type': 'int',
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'snmp': {
+            'type': 'dict',
+            'ipv4_addr': {
+                'type': 'str',
+                },
+            'community_string': {
+                'type': 'str',
+                },
+            'refresh': {
+                'type': 'bool',
                 },
             'uuid': {
                 'type': 'str',
@@ -691,6 +733,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'xflow_dst_svc_miss_extend_byte_rcv': {
+                'type': 'str',
+                },
+            'xflow_sample_dropped_by_intf_select': {
                 'type': 'str',
                 },
             'agent_name': {

@@ -1133,6 +1133,21 @@ def get_argspec():
                     },
                 'tcp_fin_psh_ack_fwd': {
                     'type': 'str',
+                    },
+                'pattern_filter1_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter2_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter3_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter4_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter5_drop': {
+                    'type': 'str',
                     }
                 }
             }

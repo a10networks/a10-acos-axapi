@@ -234,6 +234,21 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    mgmt_svc_acl:
+        description:
+        - "Field mgmt_svc_acl"
+        type: dict
+        required: False
+        suboptions:
+            toggle:
+                description:
+                - "'enable'= Enable polling MGMT Service ACL counters; 'disable'= Disable polling
+          MGMT Service ACL counters;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -288,7 +303,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["a10_proprietary", "acos_info", "cpu_usage", "ddos", "eth_list", "ethernet_ext_list", "ethernet_list", "http", "http_counter", "system_health", "uuid", "ve_list", ]
+AVAILABLE_PROPERTIES = ["a10_proprietary", "acos_info", "cpu_usage", "ddos", "eth_list", "ethernet_ext_list", "ethernet_list", "http", "http_counter", "mgmt_svc_acl", "system_health", "uuid", "ve_list", ]
 
 
 def get_default_argspec():
@@ -423,6 +438,16 @@ def get_argspec():
                 }
             },
         'acos_info': {
+            'type': 'dict',
+            'toggle': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'mgmt_svc_acl': {
             'type': 'dict',
             'toggle': {
                 'type': 'str',

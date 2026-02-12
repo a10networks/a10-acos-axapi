@@ -138,7 +138,7 @@ options:
             trigger_reason:
                 description:
                 - "'request'= log when request comes from client; 'response'= log when response to
-          client;"
+          client; 'timeout'= log when request connection timeout;"
                 type: str
             format:
                 description:
@@ -156,6 +156,32 @@ options:
                 description:
                 - "Customized tag"
                 type: str
+            log_filter_list:
+                description:
+                - "Field log_filter_list"
+                type: list
+    standard_log_list:
+        description:
+        - "Field standard_log_list"
+        type: list
+        required: False
+        suboptions:
+            trigger_reason:
+                description:
+                - "'request'= log when request comes from client;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            log_filter_list:
+                description:
+                - "Field log_filter_list"
+                type: list
 
 '''
 
@@ -210,7 +236,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom_log_list", "disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_include_rcode", "response_tuple", "response_type", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["custom_log_list", "disable", "dns_logging_protocol", "dns_logging_request_section", "dns_logging_response_section", "dns_logging_type", "name", "response_include_rcode", "response_tuple", "response_type", "standard_log_list", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -370,7 +396,7 @@ def get_argspec():
             'trigger_reason': {
                 'type': 'str',
                 'required': True,
-                'choices': ['request', 'response']
+                'choices': ['request', 'response', 'timeout']
                 },
             'format': {
                 'type': 'str',
@@ -383,6 +409,48 @@ def get_argspec():
                 },
             'user_tag': {
                 'type': 'str',
+                },
+            'log_filter_list': {
+                'type': 'list',
+                'feature': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['RPZ']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'standard_log_list': {
+            'type': 'list',
+            'trigger_reason': {
+                'type': 'str',
+                'required': True,
+                'choices': ['request']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'log_filter_list': {
+                'type': 'list',
+                'feature': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['RPZ']
+                    },
+                'uuid': {
+                    'type': 'str',
+                    },
+                'user_tag': {
+                    'type': 'str',
+                    }
                 }
             }
         })

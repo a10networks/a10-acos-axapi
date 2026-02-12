@@ -163,6 +163,11 @@ options:
         - "Enable automatic packet-capture for HA Sessions User Quota Exceeded"
         type: bool
         required: False
+    unused_ip_drop:
+        description:
+        - "Enable automatic packet-capture for Fixed NAT UNUSED IP Hit and Drop"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -224,7 +229,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "config_not_found", "dest_rlist_drop", "dest_rlist_pass_through", "dest_rlist_snat_drop", "dslite_eif_limit_exceeded", "dslite_inbound_filtered", "fixed_nat_fullcone_self_hairpinning_dro", "fullcone_failure", "ha_session_user_quota_exceeded", "nat_port_unavailable_icmp", "nat_port_unavailable_tcp", "nat_port_unavailable_udp",
-    "nat44_eif_limit_exceeded", "nat44_inbound_filtered", "nat64_eif_limit_exceeded", "nat64_inbound_filtered", "port_overload_failed", "session_user_quota_exceeded", "sixrd_drop", "standby_drop", "uuid",
+    "nat44_eif_limit_exceeded", "nat44_inbound_filtered", "nat64_eif_limit_exceeded", "nat64_inbound_filtered", "port_overload_failed", "session_user_quota_exceeded", "sixrd_drop", "standby_drop", "unused_ip_drop", "uuid",
     ]
 
 
@@ -304,6 +309,9 @@ def get_argspec():
             'type': 'bool',
             },
         'ha_session_user_quota_exceeded': {
+            'type': 'bool',
+            },
+        'unused_ip_drop': {
             'type': 'bool',
             },
         'uuid': {

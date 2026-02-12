@@ -102,6 +102,14 @@ options:
                 description:
                 - "Field udp_nat_ports_free"
                 type: int
+            radius_entries_used:
+                description:
+                - "Field radius_entries_used"
+                type: int
+            radius_entries_free:
+                description:
+                - "Field radius_entries_free"
+                type: int
 
 '''
 
@@ -207,6 +215,12 @@ def get_argspec():
                 'type': 'int',
                 },
             'udp_nat_ports_free': {
+                'type': 'int',
+                },
+            'radius_entries_used': {
+                'type': 'int',
+                },
+            'radius_entries_free': {
                 'type': 'int',
                 }
             }

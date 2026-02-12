@@ -121,6 +121,11 @@ options:
         - "Distribute an IPv6 default route"
         type: bool
         required: False
+    prefer_global:
+        description:
+        - "Prefer Global IPv6 Nexthop address"
+        type: bool
+        required: False
     aggregate_address_list:
         description:
         - "Field aggregate_address_list"
@@ -322,7 +327,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aggregate_address_list", "auto_summary", "bgp", "distance", "maximum_paths_value", "neighbor", "network", "originate", "redistribute", "synchronization", "uuid", ]
+AVAILABLE_PROPERTIES = ["aggregate_address_list", "auto_summary", "bgp", "distance", "maximum_paths_value", "neighbor", "network", "originate", "prefer_global", "redistribute", "synchronization", "uuid", ]
 
 
 def get_default_argspec():
@@ -383,6 +388,9 @@ def get_argspec():
             'type': 'int',
             },
         'originate': {
+            'type': 'bool',
+            },
+        'prefer_global': {
             'type': 'bool',
             },
         'aggregate_address_list': {

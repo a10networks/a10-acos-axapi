@@ -78,6 +78,10 @@ options:
                 description:
                 - "File URL"
                 type: str
+            password:
+                description:
+                - "password for the remote site"
+                type: str
             image_file:
                 description:
                 - "image file from AXAPI"
@@ -156,7 +160,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'revoke': {'type': 'bool', }, 'apply': {'type': 'dict', 'use_mgmt_port': {'type': 'bool', }, 'source_ip_address': {'type': 'str', }, 'file_url': {'type': 'str', }, 'image_file': {'type': 'str', }}})
+    rv.update({'revoke': {'type': 'bool', }, 'apply': {'type': 'dict', 'use_mgmt_port': {'type': 'bool', }, 'source_ip_address': {'type': 'str', }, 'file_url': {'type': 'str', }, 'password': {'type': 'str', }, 'image_file': {'type': 'str', }}})
     return rv
 
 

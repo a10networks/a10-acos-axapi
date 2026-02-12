@@ -154,8 +154,8 @@ options:
         required: False
     sync_timeout:
         description:
-        - "Specify timeout for gslb config sync (Specify timeout, unit=minute,default is
-          1)"
+        - "Specify timeout for gslb group config sync (Specify timeout,
+          unit=minute,default is 1)"
         type: int
         required: False
     delay_start:

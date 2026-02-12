@@ -102,6 +102,11 @@ options:
           'deny'= Blacklist incoming packets for service;"
         type: str
         required: False
+    log_enable:
+        description:
+        - "Enable logging"
+        type: bool
+        required: False
     max_dynamic_entry_count:
         description:
         - "Maximum count for dynamic source zone service entry allowed for this class-list"
@@ -379,7 +384,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "class_list_glid", "class_list_name", "class_list_overflow_policy_list", "dynamic_entry_count_warn_threshold", "glid", "glid_action", "max_dynamic_entry_count", "oper", "sampling_enable", "stats", "user_tag", "uuid", "zone_template", ]
+AVAILABLE_PROPERTIES = ["action", "class_list_glid", "class_list_name", "class_list_overflow_policy_list", "dynamic_entry_count_warn_threshold", "glid", "glid_action", "log_enable", "max_dynamic_entry_count", "oper", "sampling_enable", "stats", "user_tag", "uuid", "zone_template", ]
 
 
 def get_default_argspec():
@@ -417,6 +422,9 @@ def get_argspec():
         'action': {
             'type': 'str',
             'choices': ['bypass', 'deny']
+            },
+        'log_enable': {
+            'type': 'bool',
             },
         'max_dynamic_entry_count': {
             'type': 'int',

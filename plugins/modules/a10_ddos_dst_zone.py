@@ -62,7 +62,8 @@ options:
         required: True
     operational_mode:
         description:
-        - "'idle'= Idle mode; 'monitor'= Monitor mode; 'learning'= Learning mode;"
+        - "'idle'= Idle mode; 'monitor'= Monitor mode; 'learning'= Learning mode;
+          'bypass'= Bypass mode;"
         type: str
         required: False
     force_operational_mode:
@@ -235,6 +236,10 @@ options:
                 description:
                 - "Enable sFlow Zone Session Sampling"
                 type: int
+            sflow_samp_packet:
+                description:
+                - "Enable sFlow Packet Sampling"
+                type: int
     sflow_http:
         description:
         - "Enable sFlow HTTP counter polling. WARNING= May induce heavy CPU load."
@@ -331,6 +336,16 @@ options:
     src_prefix_len:
         description:
         - "Specify src prefix length for IPv6 (default= not set)"
+        type: int
+        required: False
+    inbound_mitigation_enforce_enable:
+        description:
+        - "Enable mitigation actions for outbound-initiated connections"
+        type: bool
+        required: False
+    baseline_window_size:
+        description:
+        - "Configure baseline window size in minutes, 0 means disable"
         type: int
         required: False
     uuid:
@@ -652,7 +667,9 @@ options:
           'service_miss_fwd_pkt_rcvd'= Service Match Miss= Inbound Packet Received;
           'service_miss_fwd_byte_rcvd'= Service Match Miss= Inbound Byte Received;
           'service_miss_rev_pkt_rcvd'= Service Match Miss= Outbound Packet Received;
-          'service_miss_rev_byte_rcvd'= Service Match Miss= Outbound Byte Received;"
+          'service_miss_rev_byte_rcvd'= Service Match Miss= Outbound Byte Received;
+          'zone_dst_ip_bypass'= Dst IP Bypass; 'zone_src_ip_filtering_bypass'= Src IP
+          Filtering Bypass; 'zone_src_ip_filtering_deny'= Src IP Filtering Deny;"
                 type: str
     detection:
         description:
@@ -702,6 +719,32 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    src_ip_filtering:
+        description:
+        - "Field src_ip_filtering"
+        type: dict
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Apply src IP filtering"
+                type: str
+            per_class_list_hit_tracking:
+                description:
+                - "Enable per class-list hit count tracking"
+                type: bool
+            per_service_tracking:
+                description:
+                - "Enable per service drop and bypass count tracking"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     outbound_policy:
         description:
         - "Field outbound_policy"
@@ -1206,6 +1249,10 @@ options:
             packet_anomaly_detection:
                 description:
                 - "Field packet_anomaly_detection"
+                type: dict
+            src_ip_filtering:
+                description:
+                - "Field src_ip_filtering"
                 type: dict
             outbound_policy:
                 description:
@@ -2577,10 +2624,26 @@ options:
                 description:
                 - "Service Match Miss= Outbound Byte Received"
                 type: str
+            zone_dst_ip_bypass:
+                description:
+                - "Dst IP Bypass"
+                type: str
+            zone_src_ip_filtering_bypass:
+                description:
+                - "Src IP Filtering Bypass"
+                type: str
+            zone_src_ip_filtering_deny:
+                description:
+                - "Src IP Filtering Deny"
+                type: str
             zone_name:
                 description:
                 - "Field zone_name"
                 type: str
+            src_ip_filtering:
+                description:
+                - "Field src_ip_filtering"
+                type: dict
 
 '''
 
@@ -2636,10 +2699,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "action_list", "advertised_enable", "capture_config_list", "collector", "continuous_learning", "description", "dest_nat_ip", "dest_nat_ipv6", "detection", "drop_frag_pkt", "enable_top_k", "force_operational_mode", "glid", "hw_blacklist_blocking", "inbound_forward_dscp", "ip", "ip_proto", "ipv6", "is_from_wizard", "log_enable",
-    "log_high_frequency", "log_periodic", "non_restrictive", "oper", "operational_mode", "outbound_forward_dscp", "outbound_policy", "packet_anomaly_detection", "pattern_recognition_hw_filter_enable", "pattern_recognition_sensitivity", "per_addr_glid", "port", "port_range_list", "rate_limit", "reporting_disabled", "sampling_enable",
-    "set_counter_base_val", "sflow_common", "sflow_http", "sflow_layer_4", "sflow_packets", "sflow_tcp", "source_nat_pool", "src_port", "src_port_range_list", "src_prefix_len", "stats", "telemetry_enable", "threshold_sensitivity", "topk_destinations", "user_tag", "uuid", "web_gui", "zone_migrate_to_opposite", "zone_name", "zone_profile",
-    "zone_template",
+    "action_list", "advertised_enable", "baseline_window_size", "capture_config_list", "collector", "continuous_learning", "description", "dest_nat_ip", "dest_nat_ipv6", "detection", "drop_frag_pkt", "enable_top_k", "force_operational_mode", "glid", "hw_blacklist_blocking", "inbound_forward_dscp", "inbound_mitigation_enforce_enable", "ip",
+    "ip_proto", "ipv6", "is_from_wizard", "log_enable", "log_high_frequency", "log_periodic", "non_restrictive", "oper", "operational_mode", "outbound_forward_dscp", "outbound_policy", "packet_anomaly_detection", "pattern_recognition_hw_filter_enable", "pattern_recognition_sensitivity", "per_addr_glid", "port", "port_range_list", "rate_limit",
+    "reporting_disabled", "sampling_enable", "set_counter_base_val", "sflow_common", "sflow_http", "sflow_layer_4", "sflow_packets", "sflow_tcp", "source_nat_pool", "src_ip_filtering", "src_port", "src_port_range_list", "src_prefix_len", "stats", "telemetry_enable", "threshold_sensitivity", "topk_destinations", "user_tag", "uuid", "web_gui",
+    "zone_migrate_to_opposite", "zone_name", "zone_profile", "zone_template",
     ]
 
 
@@ -2667,7 +2730,7 @@ def get_argspec():
             },
         'operational_mode': {
             'type': 'str',
-            'choices': ['idle', 'monitor', 'learning']
+            'choices': ['idle', 'monitor', 'learning', 'bypass']
             },
         'force_operational_mode': {
             'type': 'bool',
@@ -2776,6 +2839,9 @@ def get_argspec():
                 },
             'sflow_samp_session': {
                 'type': 'int',
+                },
+            'sflow_samp_packet': {
+                'type': 'int',
                 }
             },
         'sflow_http': {
@@ -2836,6 +2902,12 @@ def get_argspec():
         'src_prefix_len': {
             'type': 'int',
             },
+        'inbound_mitigation_enforce_enable': {
+            'type': 'bool',
+            },
+        'baseline_window_size': {
+            'type': 'int',
+            },
         'uuid': {
             'type': 'str',
             },
@@ -2891,7 +2963,7 @@ def get_argspec():
                     'east_west_inbound_fwd_byte', 'east_west_outbound_rcv_pkt', 'east_west_outbound_drop_pkt', 'east_west_outbound_fwd_pkt', 'east_west_outbound_rcv_byte', 'east_west_outbound_drop_byte', 'east_west_outbound_fwd_byte', 'dst_exceed_action_drop', 'dst_src_learn_overflow', 'dst_tcp_auth_rst', 'prog_query_exceed', 'prog_think_exceed',
                     'prog_conn_samples', 'prog_req_samples', 'prog_win_samples', 'victim_ip_learned', 'victim_ip_aged', 'prog_conn_samples_processed', 'prog_req_samples_processed', 'prog_win_samples_processed', 'token_auth_mismatched_packets', 'token_auth_invalid_packets', 'token_auth_current_salt_matched', 'token_auth_previous_salt_matched',
                     'token_auth_session_created', 'token_auth_session_created_fail', 'tcp_invalid_synack', 'zone_tcp_small_window_excd', 'src_tcp_small_window_excd', 'small_window_rcv', 'multi_pu_src_hash_pu1', 'multi_pu_src_hash_pu2', 'port_zero_fwd_pkt_rcvd', 'port_zero_fwd_byte_rcvd', 'port_zero_rev_pkt_rcvd', 'port_zero_rev_byte_rcvd',
-                    'service_miss_fwd_pkt_rcvd', 'service_miss_fwd_byte_rcvd', 'service_miss_rev_pkt_rcvd', 'service_miss_rev_byte_rcvd'
+                    'service_miss_fwd_pkt_rcvd', 'service_miss_fwd_byte_rcvd', 'service_miss_rev_pkt_rcvd', 'service_miss_rev_byte_rcvd', 'zone_dst_ip_bypass', 'zone_src_ip_filtering_bypass', 'zone_src_ip_filtering_deny'
                     ]
                 }
             },
@@ -3081,6 +3153,28 @@ def get_argspec():
             'type': 'dict',
             'uuid': {
                 'type': 'str',
+                }
+            },
+        'src_ip_filtering': {
+            'type': 'dict',
+            'name': {
+                'type': 'str',
+                },
+            'per_class_list_hit_tracking': {
+                'type': 'bool',
+                },
+            'per_service_tracking': {
+                'type': 'bool',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'class-list-1-match', 'class-list-2-match', 'class-list-3-match', 'class-list-4-match', 'class-list-5-match', 'class-list-6-match', 'class-list-7-match', 'class-list-8-match']
+                    }
                 }
             },
         'outbound_policy': {
@@ -3493,11 +3587,17 @@ def get_argspec():
                 'faster_de_escalation': {
                     'type': 'bool',
                     },
+                'default_action_list': {
+                    'type': 'str',
+                    },
                 'sflow_ip_filtering_policy': {
                     'type': 'bool',
                     },
                 'ip_filtering_policy': {
                     'type': 'str',
+                    },
+                'log_src_default_enable': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -3771,7 +3871,8 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current',
+                                'ddet_ind_inside_out_concurrent_conns_min', 'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold', 'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                                 ]
                             }
                         }
@@ -3934,11 +4035,17 @@ def get_argspec():
                 'faster_de_escalation': {
                     'type': 'bool',
                     },
+                'default_action_list': {
+                    'type': 'str',
+                    },
                 'sflow_ip_filtering_policy': {
                     'type': 'bool',
                     },
                 'ip_filtering_policy': {
                     'type': 'str',
+                    },
+                'log_src_default_enable': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -4251,7 +4358,8 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current',
+                                'ddet_ind_inside_out_concurrent_conns_min', 'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold', 'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                                 ]
                             }
                         }
@@ -4402,6 +4510,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'same_source_dest_port_drop': {
+                    'type': 'bool',
+                    },
+                'log_src_default_enable': {
                     'type': 'bool',
                     },
                 'uuid': {
@@ -4657,7 +4768,8 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current',
+                                'ddet_ind_inside_out_concurrent_conns_min', 'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold', 'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                                 ]
                             }
                         }
@@ -5087,6 +5199,9 @@ def get_argspec():
                 'same_source_dest_port_drop': {
                     'type': 'bool',
                     },
+                'log_src_default_enable': {
+                    'type': 'bool',
+                    },
                 'uuid': {
                     'type': 'str',
                     },
@@ -5304,7 +5419,8 @@ def get_argspec():
                                 'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                                 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                                 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold',
-                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                                'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current',
+                                'ddet_ind_inside_out_concurrent_conns_min', 'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold', 'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                                 ]
                             }
                         }
@@ -5358,6 +5474,9 @@ def get_argspec():
                         'action': {
                             'type': 'str',
                             'choices': ['bypass', 'deny']
+                            },
+                        'log_enable': {
+                            'type': 'bool',
                             },
                         'max_dynamic_entry_count': {
                             'type': 'int',
@@ -5883,7 +6002,8 @@ def get_argspec():
                             'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                             'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                             'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current',
-                            'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                            'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current', 'ddet_ind_inside_out_concurrent_conns_min',
+                            'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold', 'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                             ]
                         }
                     }
@@ -6699,6 +6819,21 @@ def get_argspec():
                         },
                     'data_source': {
                         'type': 'str',
+                        }
+                    }
+                },
+            'src_ip_filtering': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'class_list': {
+                        'type': 'list',
+                        'name': {
+                            'type': 'str',
+                            },
+                        'hit': {
+                            'type': 'int',
+                            }
                         }
                     }
                 },
@@ -8040,6 +8175,9 @@ def get_argspec():
                             'active_time': {
                                 'type': 'int',
                                 },
+                            'baseline_window_size': {
+                                'type': 'int',
+                                },
                             'sources_all_entries': {
                                 'type': 'bool',
                                 },
@@ -8771,6 +8909,9 @@ def get_argspec():
                             'active_time': {
                                 'type': 'int',
                                 },
+                            'baseline_window_size': {
+                                'type': 'int',
+                                },
                             'sources_all_entries': {
                                 'type': 'bool',
                                 },
@@ -9479,6 +9620,9 @@ def get_argspec():
                                 'choices': ['None', 'Initializing', 'Completed']
                                 },
                             'active_time': {
+                                'type': 'int',
+                                },
+                            'baseline_window_size': {
                                 'type': 'int',
                                 },
                             'sources_all_entries': {
@@ -10492,6 +10636,9 @@ def get_argspec():
                             'active_time': {
                                 'type': 'int',
                                 },
+                            'baseline_window_size': {
+                                'type': 'int',
+                                },
                             'sources_all_entries': {
                                 'type': 'bool',
                                 },
@@ -11255,6 +11402,9 @@ def get_argspec():
                             'choices': ['None', 'Initializing', 'Completed']
                             },
                         'active_time': {
+                            'type': 'int',
+                            },
+                        'baseline_window_size': {
                             'type': 'int',
                             },
                         'sources_all_entries': {
@@ -12784,9 +12934,48 @@ def get_argspec():
             'service_miss_rev_byte_rcvd': {
                 'type': 'str',
                 },
+            'zone_dst_ip_bypass': {
+                'type': 'str',
+                },
+            'zone_src_ip_filtering_bypass': {
+                'type': 'str',
+                },
+            'zone_src_ip_filtering_deny': {
+                'type': 'str',
+                },
             'zone_name': {
                 'type': 'str',
                 'required': True,
+                },
+            'src_ip_filtering': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'class_list_1_match': {
+                        'type': 'str',
+                        },
+                    'class_list_2_match': {
+                        'type': 'str',
+                        },
+                    'class_list_3_match': {
+                        'type': 'str',
+                        },
+                    'class_list_4_match': {
+                        'type': 'str',
+                        },
+                    'class_list_5_match': {
+                        'type': 'str',
+                        },
+                    'class_list_6_match': {
+                        'type': 'str',
+                        },
+                    'class_list_7_match': {
+                        'type': 'str',
+                        },
+                    'class_list_8_match': {
+                        'type': 'str',
+                        }
+                    }
                 }
             }
         })

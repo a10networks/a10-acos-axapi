@@ -74,6 +74,10 @@ options:
                 description:
                 - "Field role"
                 type: str
+            failure_safe:
+                description:
+                - "Field failure_safe"
+                type: str
             device_list:
                 description:
                 - "Field device_list"
@@ -153,6 +157,14 @@ options:
             exclude_interface_ipv6_list:
                 description:
                 - "Field exclude_interface_ipv6_list"
+                type: list
+            fallback:
+                description:
+                - "Field fallback"
+                type: int
+            failure_domain_list:
+                description:
+                - "Field failure_domain_list"
                 type: list
 
 '''
@@ -238,6 +250,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'role': {
+                'type': 'str',
+                },
+            'failure_safe': {
                 'type': 'str',
                 },
             'device_list': {
@@ -357,6 +372,18 @@ def get_argspec():
             'exclude_interface_ipv6_list': {
                 'type': 'list',
                 'ipv6': {
+                    'type': 'str',
+                    }
+                },
+            'fallback': {
+                'type': 'int',
+                },
+            'failure_domain_list': {
+                'type': 'list',
+                'dev_id': {
+                    'type': 'int',
+                    },
+                'failure_domain_name': {
                     'type': 'str',
                     }
                 }

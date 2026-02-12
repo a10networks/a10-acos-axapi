@@ -89,7 +89,7 @@ options:
         required: False
     force:
         description:
-        - "Ignore the next renewal time and force to renew cert"
+        - "Able to do the enrollment again"
         type: bool
         required: False
     staging:

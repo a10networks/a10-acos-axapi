@@ -68,9 +68,13 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'global-system-throughput-bits-per-sec'= Global System throughput
-          in bits/sec; 'per-part-throughput-bits-per-sec'= Partition throughput in
-          bits/sec;"
+                - "'all'= all; 'global-system-throughput-bits-per-sec'= Global System egress
+          throughput in bits/sec; 'global-system-ingress-throughput-bits-per-sec'= Global
+          System ingress throughput in bits/sec; 'per-part-throughput-bits-per-sec'=
+          Partition throughput in bits/sec; 'global-client-ssl-count'= global ssl count;
+          'global-server-ssl-count'= global server ssl count; 'global-client-ssl-
+          connections-per-sec'= global ssl conneciton per sec; 'global-server-ssl-
+          connections-per-sec'= global server ssl conneciton;"
                 type: str
     stats:
         description:
@@ -80,11 +84,31 @@ options:
         suboptions:
             global_system_throughput_bits_per_sec:
                 description:
-                - "Global System throughput in bits/sec"
+                - "Global System egress throughput in bits/sec"
+                type: str
+            global_system_ingress_throughput_bits_per_sec:
+                description:
+                - "Global System ingress throughput in bits/sec"
                 type: str
             per_part_throughput_bits_per_sec:
                 description:
                 - "Partition throughput in bits/sec"
+                type: str
+            global_client_ssl_count:
+                description:
+                - "global ssl count"
+                type: str
+            global_server_ssl_count:
+                description:
+                - "global server ssl count"
+                type: str
+            global_client_ssl_connections_per_sec:
+                description:
+                - "global ssl conneciton per sec"
+                type: str
+            global_server_ssl_connections_per_sec:
+                description:
+                - "global server ssl conneciton"
                 type: str
 
 '''
@@ -160,7 +184,42 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'global-system-throughput-bits-per-sec', 'per-part-throughput-bits-per-sec']}}, 'stats': {'type': 'dict', 'global_system_throughput_bits_per_sec': {'type': 'str', }, 'per_part_throughput_bits_per_sec': {'type': 'str', }}})
+    rv.update({
+        'uuid': {
+            'type': 'str',
+            },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'global-system-throughput-bits-per-sec', 'global-system-ingress-throughput-bits-per-sec', 'per-part-throughput-bits-per-sec', 'global-client-ssl-count', 'global-server-ssl-count', 'global-client-ssl-connections-per-sec', 'global-server-ssl-connections-per-sec']
+                }
+            },
+        'stats': {
+            'type': 'dict',
+            'global_system_throughput_bits_per_sec': {
+                'type': 'str',
+                },
+            'global_system_ingress_throughput_bits_per_sec': {
+                'type': 'str',
+                },
+            'per_part_throughput_bits_per_sec': {
+                'type': 'str',
+                },
+            'global_client_ssl_count': {
+                'type': 'str',
+                },
+            'global_server_ssl_count': {
+                'type': 'str',
+                },
+            'global_client_ssl_connections_per_sec': {
+                'type': 'str',
+                },
+            'global_server_ssl_connections_per_sec': {
+                'type': 'str',
+                }
+            }
+        })
     return rv
 
 

@@ -676,6 +676,9 @@ def get_argspec():
                 'dns_notify_enable_ipv6': {
                     'type': 'bool',
                     },
+                'refresh_interval_by_soa': {
+                    'type': 'bool',
+                    },
                 'refresh_interval_hours': {
                     'type': 'int',
                     },
@@ -696,6 +699,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'force': {
+                    'type': 'bool',
+                    },
+                'ixfr': {
                     'type': 'bool',
                     },
                 'cache_all_records': {
@@ -778,6 +784,9 @@ def get_argspec():
                     'type': 'str',
                     },
                 'dns_notify_enable_ipv6': {
+                    'type': 'bool',
+                    },
+                'refresh_interval_by_soa': {
                     'type': 'bool',
                     },
                 'refresh_interval_hours': {

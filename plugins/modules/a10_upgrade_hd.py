@@ -116,6 +116,11 @@ options:
         - "reboot system after upgrade is done"
         type: bool
         required: False
+    password:
+        description:
+        - "password for the remote site"
+        type: str
+        required: False
 
 '''
 
@@ -170,7 +175,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["Device", "file_url", "image", "image_file", "local", "reboot_after_upgrade", "rollback", "source_ip_address", "staggered_upgrade_mode", "use_mgmt_port", ]
+AVAILABLE_PROPERTIES = ["Device", "file_url", "image", "image_file", "local", "password", "reboot_after_upgrade", "rollback", "source_ip_address", "staggered_upgrade_mode", "use_mgmt_port", ]
 
 
 def get_default_argspec():
@@ -224,6 +229,9 @@ def get_argspec():
             },
         'reboot_after_upgrade': {
             'type': 'bool',
+            },
+        'password': {
+            'type': 'str',
             }
         })
     return rv

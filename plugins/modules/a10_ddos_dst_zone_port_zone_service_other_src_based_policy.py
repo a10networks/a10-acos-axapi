@@ -113,6 +113,10 @@ options:
                 - "'bypass'= Always permit for the Source to bypass all feature & limit checks;
           'deny'= Blacklist incoming packets for service;"
                 type: str
+            log_enable:
+                description:
+                - "Enable logging"
+                type: bool
             max_dynamic_entry_count:
                 description:
                 - "Maximum count for dynamic source zone service entry allowed for this class-list"
@@ -246,6 +250,9 @@ def get_argspec():
             'action': {
                 'type': 'str',
                 'choices': ['bypass', 'deny']
+                },
+            'log_enable': {
+                'type': 'bool',
                 },
             'max_dynamic_entry_count': {
                 'type': 'int',

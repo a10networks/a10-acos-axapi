@@ -72,6 +72,13 @@ options:
         - "Dump the application payload as strings"
         type: bool
         required: False
+    event_log:
+        description:
+        - "'minimal'= Minimal event logs, skip encryption/decryption hardware operations;
+          'basic'= Basic event logs; 'detailed'= Detailed event logs, including logs for
+          encryption/decryption operations; 'verbose'= Verbose event logs;"
+        type: str
+        required: False
     read_write:
         description:
         - "'read'= read record; 'write'= write record;"
@@ -146,7 +153,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["client_server", "payload_dump_max", "payload_dump_string", "read_write", "record_end", "record_start", "uuid", ]
+AVAILABLE_PROPERTIES = ["client_server", "event_log", "payload_dump_max", "payload_dump_string", "read_write", "record_end", "record_start", "uuid", ]
 
 
 def get_default_argspec():
@@ -166,7 +173,35 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'client_server': {'type': 'str', 'choices': ['clientside', 'serverside']}, 'payload_dump_max': {'type': 'int', }, 'payload_dump_string': {'type': 'bool', }, 'read_write': {'type': 'str', 'choices': ['read', 'write']}, 'record_start': {'type': 'int', }, 'record_end': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'client_server': {
+            'type': 'str',
+            'choices': ['clientside', 'serverside']
+            },
+        'payload_dump_max': {
+            'type': 'int',
+            },
+        'payload_dump_string': {
+            'type': 'bool',
+            },
+        'event_log': {
+            'type': 'str',
+            'choices': ['minimal', 'basic', 'detailed', 'verbose']
+            },
+        'read_write': {
+            'type': 'str',
+            'choices': ['read', 'write']
+            },
+        'record_start': {
+            'type': 'int',
+            },
+        'record_end': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 

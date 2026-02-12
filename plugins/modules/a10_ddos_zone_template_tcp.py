@@ -396,6 +396,10 @@ options:
           pass; 'send-rst-once'= Send RST to one client concurrent auth attempts;
           'hybrid'= Combining force-rst-by-synack and send-rst together;"
                 type: str
+            fail_on_ack:
+                description:
+                - "Enable fail action on bare-ACK if configured"
+                type: bool
             syn_auth_timeout:
                 description:
                 - "syn retransmit timeout in seconds(default timeout= 5 seconds)"
@@ -867,6 +871,9 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['send-rst', 'force-rst-by-ack', 'force-rst-by-synack', 'send-rst-once', 'hybrid']
                 },
+            'fail_on_ack': {
+                'type': 'bool',
+                },
             'syn_auth_timeout': {
                 'type': 'int',
                 },
@@ -1069,6 +1076,10 @@ def get_argspec():
                     },
                 'slow_attack': {
                     'type': 'dict',
+                    'slow_attack': {
+                        'type': 'str',
+                        'choices': ['enable-check']
+                        },
                     'response_pkt_rate_max': {
                         'type': 'int',
                         },

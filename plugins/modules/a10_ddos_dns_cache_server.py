@@ -266,6 +266,10 @@ options:
                 description:
                 - "Lookup Server Fail Response"
                 type: str
+            zt_ixfr_attempts:
+                description:
+                - "Zone Transfer IXFR Started"
+                type: str
 
 '''
 
@@ -494,6 +498,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'lookup_servfail_resp': {
+                'type': 'str',
+                },
+            'zt_ixfr_attempts': {
                 'type': 'str',
                 }
             }

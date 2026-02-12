@@ -398,7 +398,7 @@ def get_argspec():
                         'sndrst', 'sndfin', 'sndsyn', 'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff', 'rcvmemdrop', 'rcvduppack', 'rcvdupbyte', 'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack', 'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin', 'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch', 'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop',
                         'predack', 'preddat', 'persistdrop', 'badrst', 'finwait2_drops', 'sack_recovery_episode', 'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks', 'sack_send_blocks', 'sndcack', 'cacklim', 'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce', 'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack', 'a2brxdata',
                         'a2btcpoptions', 'a2boodata', 'a2bpartialack', 'a2bfsmtransition', 'a2btransitionnum', 'b2atransitionnum', 'bad_iochan', 'atcpforward', 'atcpsent', 'atcprexmitsadrop', 'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail', 'a2bappbuffering', 'atcpsendfail', 'earlyrexmit', 'mburstlim', 'a2bsndwnd', 'proxyheaderv1',
-                        'proxyheaderv2'
+                        'proxyheaderv2', 'cpurrdrop'
                         ]
                     }
                 }

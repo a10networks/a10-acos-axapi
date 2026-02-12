@@ -79,6 +79,20 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    separate_v4_v6_traffic_map:
+        description:
+        - "Field separate_v4_v6_traffic_map"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Separates traffic maps for IPv4 and IPv6"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -133,7 +147,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable", "skip_mac_overwrite", "uuid", ]
+AVAILABLE_PROPERTIES = ["enable", "separate_v4_v6_traffic_map", "skip_mac_overwrite", "uuid", ]
 
 
 def get_default_argspec():
@@ -153,7 +167,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'skip_mac_overwrite': {'type': 'dict', 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }}})
+    rv.update({'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'skip_mac_overwrite': {'type': 'dict', 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }}, 'separate_v4_v6_traffic_map': {'type': 'dict', 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }}})
     return rv
 
 

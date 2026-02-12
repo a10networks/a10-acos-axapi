@@ -101,6 +101,24 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    threat_logs:
+        description:
+        - "Field threat_logs"
+        type: dict
+        required: False
+        suboptions:
+            check:
+                description:
+                - "Check if the system is under threat from a specific user"
+                type: bool
+            days:
+                description:
+                - "Set min-days to go back"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -155,7 +173,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["commands", "debug", "nexec", "stop_only", "tacplus", "uuid", ]
+AVAILABLE_PROPERTIES = ["commands", "debug", "nexec", "stop_only", "tacplus", "threat_logs", "uuid", ]
 
 
 def get_default_argspec():
@@ -200,6 +218,18 @@ def get_argspec():
             'accounting_exec_method': {
                 'type': 'str',
                 'choices': ['tacplus', 'radius']
+                },
+            'uuid': {
+                'type': 'str',
+                }
+            },
+        'threat_logs': {
+            'type': 'dict',
+            'check': {
+                'type': 'bool',
+                },
+            'days': {
+                'type': 'int',
                 },
             'uuid': {
                 'type': 'str',
