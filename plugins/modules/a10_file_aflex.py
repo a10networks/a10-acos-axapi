@@ -249,6 +249,14 @@ def new_url(module):
 def report_changes(module, result, existing_config, payload):
     change_results = copy.deepcopy(result)
     if not existing_config:
+        change_results["changed"] = True
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    if module.params.get("action") == "import":
+        # /file/aflex/oper does not expose script contents, so import cannot
+        # safely determine content idempotency from existing_config metadata.
+        change_results["changed"] = True
         change_results["modified_values"].update(**payload)
         return change_results
 
