@@ -79,7 +79,8 @@ options:
           allocated; 'total_freed'= Total freed; 'current_allocate'= Current allocate;
           'current_data_allocate'= Current data allocate; 'resolver_queue_full'= Resolver
           task queue full; 'truncated_r'= Response with Truncation bit set; 'qps'= Cache
-          Queries-per-second; 'hit_rate_per_sec'= Cache hit rate per second;"
+          Queries-per-second; 'hit_rate_per_sec'= Cache hit rate per second;
+          'multiple_answer_no_cache'= Response not cached due to multiple answers;"
                 type: str
     oper:
         description:
@@ -123,6 +124,10 @@ options:
                 description:
                 - "Field global"
                 type: bool
+            template:
+                description:
+                - "Field template"
+                type: str
             cache_content:
                 description:
                 - "Field cache_content"
@@ -293,6 +298,10 @@ options:
                 description:
                 - "Cache hit rate per second"
                 type: str
+            multiple_answer_no_cache:
+                description:
+                - "Response not cached due to multiple answers"
+                type: str
 
 '''
 
@@ -378,7 +387,7 @@ def get_argspec():
                 'str',
                 'choices': [
                     'all', 'total_q', 'total_r', 'hit', 'bad_q', 'encode_q', 'multiple_q', 'oversize_q', 'bad_r', 'oversize_r', 'encode_r', 'multiple_r', 'answer_r', 'ttl_r', 'ageout', 'bad_answer', 'ageout_weight', 'total_log', 'total_alloc', 'total_freed', 'current_allocate', 'current_data_allocate', 'resolver_queue_full', 'truncated_r', 'qps',
-                    'hit_rate_per_sec'
+                    'hit_rate_per_sec', 'multiple_answer_no_cache'
                     ]
                 }
             },
@@ -497,6 +506,9 @@ def get_argspec():
                 },
             'global': {
                 'type': 'bool',
+                },
+            'template': {
+                'type': 'str',
                 },
             'cache_content': {
                 'type': 'bool',
@@ -625,6 +637,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'hit_rate_per_sec': {
+                'type': 'str',
+                },
+            'multiple_answer_no_cache': {
                 'type': 'str',
                 }
             }

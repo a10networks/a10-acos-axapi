@@ -108,11 +108,6 @@ options:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.)"
                 type: str
-            encryption_algorithm:
-                description:
-                - "'aes128-cts-hmac-sha1-96'= AES-128 CTS mode with 96-bit SHA-1 HMAC;
-          'aes256-cts-hmac-sha1-96'= AES-256 CTS mode with 96-bit SHA-1 HMAC (default);"
-                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -263,10 +258,6 @@ def get_argspec():
                 },
             'encrypted': {
                 'type': 'str',
-                },
-            'encryption_algorithm': {
-                'type': 'str',
-                'choices': ['aes128-cts-hmac-sha1-96', 'aes256-cts-hmac-sha1-96']
                 },
             'uuid': {
                 'type': 'str',

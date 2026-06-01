@@ -70,6 +70,11 @@ options:
         - "File URL"
         type: str
         required: False
+    password:
+        description:
+        - "password for the remote site"
+        type: str
+        required: False
     image_file:
         description:
         - "image file from AXAPI"
@@ -129,7 +134,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["file_url", "image_file", "source_ip_address", "use_mgmt_port", ]
+AVAILABLE_PROPERTIES = ["file_url", "image_file", "password", "source_ip_address", "use_mgmt_port", ]
 
 
 def get_default_argspec():
@@ -149,7 +154,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'use_mgmt_port': {'type': 'bool', }, 'source_ip_address': {'type': 'str', }, 'file_url': {'type': 'str', }, 'image_file': {'type': 'str', }})
+    rv.update({'use_mgmt_port': {'type': 'bool', }, 'source_ip_address': {'type': 'str', }, 'file_url': {'type': 'str', }, 'password': {'type': 'str', }, 'image_file': {'type': 'str', }})
     return rv
 
 

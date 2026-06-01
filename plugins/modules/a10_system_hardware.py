@@ -210,10 +210,6 @@ options:
                 description:
                 - "Field mcpld_date"
                 type: str
-            hw_gpus:
-                description:
-                - "Field hw_gpus"
-                type: str
 
 '''
 
@@ -457,9 +453,6 @@ def get_argspec():
                 'type': 'int',
                 },
             'mcpld_date': {
-                'type': 'str',
-                },
-            'hw_gpus': {
                 'type': 'str',
                 }
             }

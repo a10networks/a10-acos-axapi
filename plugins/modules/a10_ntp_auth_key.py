@@ -62,9 +62,8 @@ options:
         required: True
     alg_type:
         description:
-        - "'MD5'= encryption using MD5; 'SHA1'= encryption using SHA1; 'SHA256'=
-          encryption using SHA256; 'SHA384'= encryption using SHA384; 'SHA512'=
-          encryption using SHA512;"
+        - "'M'= encryption using MD5; 'SHA'= encryption using SHA; 'SHA1'= encryption
+          using SHA1;"
         type: str
         required: False
     key_type:
@@ -173,35 +172,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'key': {
-            'type': 'int',
-            'required': True,
-            },
-        'alg_type': {
-            'type': 'str',
-            'choices': ['MD5', 'SHA1', 'SHA256', 'SHA384', 'SHA512']
-            },
-        'key_type': {
-            'type': 'str',
-            'choices': ['ascii', 'hex']
-            },
-        'asc_key': {
-            'type': 'str',
-            },
-        'encrypted': {
-            'type': 'str',
-            },
-        'hex_key': {
-            'type': 'str',
-            },
-        'hex_encrypted': {
-            'type': 'str',
-            },
-        'uuid': {
-            'type': 'str',
-            }
-        })
+    rv.update({'key': {'type': 'int', 'required': True, }, 'alg_type': {'type': 'str', 'choices': ['M', 'SHA', 'SHA1']}, 'key_type': {'type': 'str', 'choices': ['ascii', 'hex']}, 'asc_key': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'hex_key': {'type': 'str', }, 'hex_encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }})
     return rv
 
 

@@ -55,24 +55,9 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    icmp_unreachable_disable:
+    class_e_address_range_enable:
         description:
-        - "Disable icmp unreachable messages"
-        type: bool
-        required: False
-    icmp_redirect_disable:
-        description:
-        - "Disable icmp redirect messages"
-        type: bool
-        required: False
-    rpf_check_enable:
-        description:
-        - "Enable reverse path filter (strict mode)"
-        type: bool
-        required: False
-    source_route_pkt_drop_enable:
-        description:
-        - "Enable IPv4 source routed packet drop"
+        - "Enable class E (240.0.0.0/4) configuration"
         type: bool
         required: False
     uuid:
@@ -148,7 +133,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["icmp_redirect_disable", "icmp_unreachable_disable", "rpf_check_enable", "source_route_pkt_drop_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = ["class_e_address_range_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -169,16 +154,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'icmp_unreachable_disable': {
-            'type': 'bool',
-            },
-        'icmp_redirect_disable': {
-            'type': 'bool',
-            },
-        'rpf_check_enable': {
-            'type': 'bool',
-            },
-        'source_route_pkt_drop_enable': {
+        'class_e_address_range_enable': {
             'type': 'bool',
             },
         'uuid': {

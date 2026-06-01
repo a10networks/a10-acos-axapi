@@ -198,6 +198,11 @@ options:
         - "De-escalate faster in standalone mode"
         type: bool
         required: False
+    default_action_list:
+        description:
+        - "Configure default-action-list in ip-proto"
+        type: str
+        required: False
     sflow_ip_filtering_policy:
         description:
         - "Enable sFlow IP filtering policy per port per rule counter polling"
@@ -207,6 +212,11 @@ options:
         description:
         - "Configure IP Filter"
         type: str
+        required: False
+    log_src_default_enable:
+        description:
+        - "Enable src default logging in ip-proto"
+        type: bool
         required: False
     uuid:
         description:
@@ -582,9 +592,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "age", "apply_policy_on_overflow", "deny", "drop_frag_pkt", "dynamic_entry_count_warn_threshold", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "key_cfg", "level_list",
-    "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "port_ind", "progression_tracking", "protocol", "set_counter_base_val", "sflow_ip_filtering_policy", "src_based_policy_list", "topk_destinations", "topk_dst_num_records", "topk_dst_sort_key", "topk_num_records", "topk_sort_key", "topk_sources", "tunnel_decap",
-    "tunnel_rate_limit", "unlimited_dynamic_entry_count", "uuid",
+    "age", "apply_policy_on_overflow", "default_action_list", "deny", "drop_frag_pkt", "dynamic_entry_count_warn_threshold", "dynamic_entry_overflow_policy_list", "enable_class_list_overflow", "enable_top_k", "enable_top_k_destination", "faster_de_escalation", "glid_cfg", "ip_filtering_policy", "ip_filtering_policy_statistics", "key_cfg",
+    "level_list", "log_src_default_enable", "manual_mode_enable", "manual_mode_list", "max_dynamic_entry_count", "oper", "port_ind", "progression_tracking", "protocol", "set_counter_base_val", "sflow_ip_filtering_policy", "src_based_policy_list", "topk_destinations", "topk_dst_num_records", "topk_dst_sort_key", "topk_num_records", "topk_sort_key",
+    "topk_sources", "tunnel_decap", "tunnel_rate_limit", "unlimited_dynamic_entry_count", "uuid",
     ]
 
 
@@ -692,11 +702,17 @@ def get_argspec():
         'faster_de_escalation': {
             'type': 'bool',
             },
+        'default_action_list': {
+            'type': 'str',
+            },
         'sflow_ip_filtering_policy': {
             'type': 'bool',
             },
         'ip_filtering_policy': {
             'type': 'str',
+            },
+        'log_src_default_enable': {
+            'type': 'bool',
             },
         'uuid': {
             'type': 'str',
@@ -1009,7 +1025,8 @@ def get_argspec():
                         'ddet_ind_syn_per_fin_rate_adaptive_threshold', 'ddet_ind_conn_miss_rate_current', 'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max',
                         'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min', 'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max',
                         'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max', 'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current',
-                        'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                        'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current', 'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current', 'ddet_ind_inside_out_concurrent_conns_min',
+                        'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold', 'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                         ]
                     }
                 }
@@ -1396,6 +1413,9 @@ def get_argspec():
                         'choices': ['None', 'Initializing', 'Completed']
                         },
                     'active_time': {
+                        'type': 'int',
+                        },
+                    'baseline_window_size': {
                         'type': 'int',
                         },
                     'sources_all_entries': {

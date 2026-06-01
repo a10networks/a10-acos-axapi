@@ -99,6 +99,36 @@ options:
                 description:
                 - "'all'= all; 'packet_rate'= PPS; 'bit_rate'= B(bits)PS;"
                 type: str
+    src_port_list:
+        description:
+        - "Field src_port_list"
+        type: list
+        required: False
+        suboptions:
+            port_num:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'udp'= UDP port; 'tcp'= TCP Port;"
+                type: str
+            host_src_port_anomaly_threshold:
+                description:
+                - "Field host_src_port_anomaly_threshold"
+                type: dict
+            subnet_src_port_anomaly_threshold:
+                description:
+                - "Field subnet_src_port_anomaly_threshold"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -171,7 +201,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["prefix_anomaly_threshold", "sampling_enable", "stats", "subnet_ip_addr", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["prefix_anomaly_threshold", "sampling_enable", "src_port_list", "stats", "subnet_ip_addr", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -216,6 +246,42 @@ def get_argspec():
             'counters1': {
                 'type': 'str',
                 'choices': ['all', 'packet_rate', 'bit_rate']
+                }
+            },
+        'src_port_list': {
+            'type': 'list',
+            'port_num': {
+                'type': 'int',
+                'required': True,
+                },
+            'protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['udp', 'tcp']
+                },
+            'host_src_port_anomaly_threshold': {
+                'type': 'dict',
+                'host_src_port_pkt_rate': {
+                    'type': 'int',
+                    },
+                'host_src_port_bit_rate': {
+                    'type': 'int',
+                    }
+                },
+            'subnet_src_port_anomaly_threshold': {
+                'type': 'dict',
+                'subnet_src_port_pkt_rate': {
+                    'type': 'int',
+                    },
+                'subnet_src_port_bit_rate': {
+                    'type': 'int',
+                    }
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
                 }
             },
         'stats': {

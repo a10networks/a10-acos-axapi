@@ -132,6 +132,10 @@ options:
                 description:
                 - "Use management port as source port"
                 type: bool
+            passphrase:
+                description:
+                - "Password Phrase"
+                type: str
             file_url:
                 description:
                 - "File URL"
@@ -260,6 +264,9 @@ def get_argspec():
                 },
             'use_mgmt_port': {
                 'type': 'bool',
+                },
+            'passphrase': {
+                'type': 'str',
                 },
             'file_url': {
                 'type': 'str',

@@ -159,6 +159,9 @@ def get_argspec():
                 'address_prefix': {
                     'type': 'str',
                     },
+                'assignment_prefix_length': {
+                    'type': 'int',
+                    },
                 'prefixes_count': {
                     'type': 'int',
                     },

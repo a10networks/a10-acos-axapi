@@ -70,6 +70,11 @@ options:
         - "Total configurable CGNV6 Fixed NAT inside users"
         type: int
         required: False
+    radius_table_size:
+        description:
+        - "Total configurable CGNV6 RADIUS Table entries"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -131,6 +136,18 @@ options:
                 description:
                 - "Field fixed_nat_inside_user_count_default"
                 type: int
+            radius_table_size_min:
+                description:
+                - "Field radius_table_size_min"
+                type: int
+            radius_table_size_max:
+                description:
+                - "Field radius_table_size_max"
+                type: int
+            radius_table_size_default:
+                description:
+                - "Field radius_table_size_default"
+                type: int
 
 '''
 
@@ -185,7 +202,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fixed_nat_inside_user_count", "fixed_nat_ip_addr_count", "lsn_nat_addr_count", "oper", "stateless_entries", "uuid", ]
+AVAILABLE_PROPERTIES = ["fixed_nat_inside_user_count", "fixed_nat_ip_addr_count", "lsn_nat_addr_count", "oper", "radius_table_size", "stateless_entries", "uuid", ]
 
 
 def get_default_argspec():
@@ -213,6 +230,9 @@ def get_argspec():
             'type': 'int',
             },
         'fixed_nat_inside_user_count': {
+            'type': 'int',
+            },
+        'radius_table_size': {
             'type': 'int',
             },
         'uuid': {
@@ -254,6 +274,15 @@ def get_argspec():
                 'type': 'int',
                 },
             'fixed_nat_inside_user_count_default': {
+                'type': 'int',
+                },
+            'radius_table_size_min': {
+                'type': 'int',
+                },
+            'radius_table_size_max': {
+                'type': 'int',
+                },
+            'radius_table_size_default': {
                 'type': 'int',
                 }
             }

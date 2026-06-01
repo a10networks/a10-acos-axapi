@@ -55,152 +55,11 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    host:
-        description:
-        - "Set harmony controller host address"
-        type: str
-        required: False
-    host_ipv6:
-        description:
-        - "IPV6 address or FQDN for the host"
-        type: str
-        required: False
-    port:
-        description:
-        - "Set port for remote Harmony Controller"
-        type: int
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port for connections"
-        type: bool
-        required: False
-    provider:
-        description:
-        - "provider for the harmony-controller"
-        type: str
-        required: False
-    user_name:
-        description:
-        - "user-name for the tenant"
-        type: str
-        required: False
-    cluster_name:
-        description:
-        - "name of cluster in harmony controller that this device is a member of"
-        type: str
-        required: False
-    cluster_id:
-        description:
-        - " id for the cluster in harmony controller, typically an uuid"
-        type: str
-        required: False
-    secret_value:
-        description:
-        - "Specify the password for the user"
-        type: str
-        required: False
-    password_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-        type: str
-        required: False
-    region:
-        description:
-        - "region of the thunder-device"
-        type: str
-        required: False
-    auto_restart_action:
-        description:
-        - "'enable'= enable auto analytics bus restart, default behavior is enable;
-          'disable'= disable auto analytics bus restart;"
-        type: str
-        required: False
-    interval:
-        description:
-        - "auto analytics bus restart time interval in mins, default is 3 mins"
-        type: int
-        required: False
-    availability_zone:
-        description:
-        - "availablity zone of the thunder-device"
-        type: str
-        required: False
-    analytics:
-        description:
-        - "'all'= Export all the analytics information.; 'system'= Export only system
-          level policy for device management.; 'disable'= Disable all the exports from
-          the device. This is the default value.;"
-        type: str
-        required: False
-    action:
-        description:
-        - "'register'= Register the device to the controller; 'deregister'= Deregister the
-          device from controller;"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
-    re_sync:
-        description:
-        - "Field re_sync"
-        type: dict
-        required: False
-        suboptions:
-            schema_registry:
-                description:
-                - "re-sync the schema registry"
-                type: bool
-            analytics_bus:
-                description:
-                - "re-sync analtyics bus connections"
-                type: bool
-    force:
-        description:
-        - "Field force"
-        type: dict
-        required: False
-        suboptions:
-            deregister:
-                description:
-                - "forcefully deregister thunder from harmony controller"
-                type: bool
-    thunder_mgmt_ip:
-        description:
-        - "Field thunder_mgmt_ip"
-        type: dict
-        required: False
-        suboptions:
-            ip_address:
-                description:
-                - "IP address (IPv4 address)"
-                type: str
-            ipv6_addr:
-                description:
-                - "IPV6 address for the host"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
-    tunnel:
-        description:
-        - "Field tunnel"
-        type: dict
-        required: False
-        suboptions:
-            action:
-                description:
-                - "'enable'= Tunnel Enable; 'disable'= Tunnel Disable;"
-                type: str
-            uuid:
-                description:
-                - "uuid of the object"
-                type: str
     oper:
         description:
         - "Field oper"
@@ -337,7 +196,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "analytics", "auto_restart_action", "availability_zone", "cluster_id", "cluster_name", "force", "host", "host_ipv6", "interval", "oper", "password_encrypted", "port", "provider", "re_sync", "region", "secret_value", "thunder_mgmt_ip", "tunnel", "use_mgmt_port", "user_name", "uuid", ]
+AVAILABLE_PROPERTIES = ["oper", "uuid", ]
 
 
 def get_default_argspec():
@@ -358,96 +217,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'host': {
-            'type': 'str',
-            },
-        'host_ipv6': {
-            'type': 'str',
-            },
-        'port': {
-            'type': 'int',
-            },
-        'use_mgmt_port': {
-            'type': 'bool',
-            },
-        'provider': {
-            'type': 'str',
-            },
-        'user_name': {
-            'type': 'str',
-            },
-        'cluster_name': {
-            'type': 'str',
-            },
-        'cluster_id': {
-            'type': 'str',
-            },
-        'secret_value': {
-            'type': 'str',
-            },
-        'password_encrypted': {
-            'type': 'str',
-            },
-        'region': {
-            'type': 'str',
-            },
-        'auto_restart_action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-            },
-        'interval': {
-            'type': 'int',
-            },
-        'availability_zone': {
-            'type': 'str',
-            },
-        'analytics': {
-            'type': 'str',
-            'choices': ['all', 'system', 'disable']
-            },
-        'action': {
-            'type': 'str',
-            'choices': ['register', 'deregister']
-            },
         'uuid': {
             'type': 'str',
-            },
-        're_sync': {
-            'type': 'dict',
-            'schema_registry': {
-                'type': 'bool',
-                },
-            'analytics_bus': {
-                'type': 'bool',
-                }
-            },
-        'force': {
-            'type': 'dict',
-            'deregister': {
-                'type': 'bool',
-                }
-            },
-        'thunder_mgmt_ip': {
-            'type': 'dict',
-            'ip_address': {
-                'type': 'str',
-                },
-            'ipv6_addr': {
-                'type': 'str',
-                },
-            'uuid': {
-                'type': 'str',
-                }
-            },
-        'tunnel': {
-            'type': 'dict',
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-                },
-            'uuid': {
-                'type': 'str',
-                }
             },
         'oper': {
             'type': 'dict',
@@ -534,23 +305,10 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config, payload):
-    change_results = copy.deepcopy(result)
-    if not existing_config:
-        change_results["modified_values"].update(**payload)
-        return change_results
-
-    config_changes = copy.deepcopy(existing_config)
-    for k, v in payload["profile"].items():
-        v = 1 if str(v).lower() == "true" else v
-        v = 0 if str(v).lower() == "false" else v
-
-        if config_changes["profile"].get(k) != v:
-            change_results["changed"] = True
-            config_changes["profile"][k] = v
-
-    change_results["modified_values"].update(**config_changes)
-    return change_results
+def report_changes(module, result, existing_config):
+    if existing_config:
+        result["changed"] = True
+    return result
 
 
 def create(module, result, payload={}):

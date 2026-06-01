@@ -680,6 +680,12 @@ def get_argspec():
                     },
                 'version_no_match_drop': {
                     'type': 'str',
+                    },
+                'src_ip_filtering_drop': {
+                    'type': 'str',
+                    },
+                'src_ip_filtering_bypass': {
+                    'type': 'str',
                     }
                 }
             }

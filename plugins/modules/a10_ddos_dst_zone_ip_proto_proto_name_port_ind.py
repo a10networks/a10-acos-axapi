@@ -144,7 +144,15 @@ options:
           Sources Adaptive Threshold; 'ddet_ind_syn_ack_rate_current'= TCP SYN ACK Rate
           Current; 'ddet_ind_syn_ack_rate_min'= TCP SYN ACK Rate Min;
           'ddet_ind_syn_ack_rate_max'= TCP SYN ACK Rate Max;
-          'ddet_ind_syn_ack_rate_adaptive_threshold'= TCP SYN ACK Adaptive Threshold;"
+          'ddet_ind_syn_ack_rate_adaptive_threshold'= TCP SYN ACK Adaptive Threshold;
+          'ddet_ind_inside_out_concurrent_conns_current'= TCP/UDP Inside Out Concurrent
+          Sessions Current; 'ddet_ind_inside_out_concurrent_conns_min'= TCP/UDP Inside
+          Out Concurrent Sessions Min; 'ddet_ind_inside_out_concurrent_conns_max'=
+          TCP/UDP Inside Out Concurrent Sessions Max;
+          'ddet_ind_inside_out_concurrent_conns_adaptive_threshold'= TCP/UDP Inside Out
+          Concurrent Sessions Adaptive Threshold; 'ddet_ind_pkt_rate_adaptive_baseline'=
+          Pkt Rate Adaptive Baseline; 'ddet_ind_bit_rate_adaptive_baseline'= Bit Rate
+          Adaptive Baseline;"
                 type: str
     oper:
         description:
@@ -183,6 +191,10 @@ options:
             active_time:
                 description:
                 - "Field active_time"
+                type: int
+            baseline_window_size:
+                description:
+                - "Field baseline_window_size"
                 type: int
             sources_all_entries:
                 description:
@@ -522,6 +534,30 @@ options:
                 description:
                 - "TCP SYN ACK Adaptive Threshold"
                 type: str
+            ddet_ind_inside_out_concurrent_conns_current:
+                description:
+                - "TCP/UDP Inside Out Concurrent Sessions Current"
+                type: str
+            ddet_ind_inside_out_concurrent_conns_min:
+                description:
+                - "TCP/UDP Inside Out Concurrent Sessions Min"
+                type: str
+            ddet_ind_inside_out_concurrent_conns_max:
+                description:
+                - "TCP/UDP Inside Out Concurrent Sessions Max"
+                type: str
+            ddet_ind_inside_out_concurrent_conns_adaptive_threshold:
+                description:
+                - "TCP/UDP Inside Out Concurrent Sessions Adaptive Threshold"
+                type: str
+            ddet_ind_pkt_rate_adaptive_baseline:
+                description:
+                - "Pkt Rate Adaptive Baseline"
+                type: str
+            ddet_ind_bit_rate_adaptive_baseline:
+                description:
+                - "Bit Rate Adaptive Baseline"
+                type: str
 
 '''
 
@@ -614,7 +650,8 @@ def get_argspec():
                     'ddet_ind_conn_miss_rate_min', 'ddet_ind_conn_miss_rate_max', 'ddet_ind_conn_miss_rate_adaptive_threshold', 'ddet_ind_concurrent_conns_current', 'ddet_ind_concurrent_conns_min', 'ddet_ind_concurrent_conns_max', 'ddet_ind_concurrent_conns_adaptive_threshold', 'ddet_ind_data_cpu_util_current', 'ddet_ind_data_cpu_util_min',
                     'ddet_ind_data_cpu_util_max', 'ddet_ind_data_cpu_util_adaptive_threshold', 'ddet_ind_outside_intf_util_current', 'ddet_ind_outside_intf_util_min', 'ddet_ind_outside_intf_util_max', 'ddet_ind_outside_intf_util_adaptive_threshold', 'ddet_ind_frag_rate_current', 'ddet_ind_frag_rate_min', 'ddet_ind_frag_rate_max',
                     'ddet_ind_frag_rate_adaptive_threshold', 'ddet_ind_bit_rate_current', 'ddet_ind_bit_rate_min', 'ddet_ind_bit_rate_max', 'ddet_ind_bit_rate_adaptive_threshold', 'ddet_ind_total_szp_current', 'ddet_ind_total_szp_min', 'ddet_ind_total_szp_max', 'ddet_ind_total_szp_adaptive_threshold', 'ddet_ind_syn_ack_rate_current',
-                    'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold'
+                    'ddet_ind_syn_ack_rate_min', 'ddet_ind_syn_ack_rate_max', 'ddet_ind_syn_ack_rate_adaptive_threshold', 'ddet_ind_inside_out_concurrent_conns_current', 'ddet_ind_inside_out_concurrent_conns_min', 'ddet_ind_inside_out_concurrent_conns_max', 'ddet_ind_inside_out_concurrent_conns_adaptive_threshold',
+                    'ddet_ind_pkt_rate_adaptive_baseline', 'ddet_ind_bit_rate_adaptive_baseline'
                     ]
                 }
             },
@@ -737,6 +774,9 @@ def get_argspec():
                 'choices': ['None', 'Initializing', 'Completed']
                 },
             'active_time': {
+                'type': 'int',
+                },
+            'baseline_window_size': {
                 'type': 'int',
                 },
             'sources_all_entries': {
@@ -989,6 +1029,24 @@ def get_argspec():
                 'type': 'str',
                 },
             'ddet_ind_syn_ack_rate_adaptive_threshold': {
+                'type': 'str',
+                },
+            'ddet_ind_inside_out_concurrent_conns_current': {
+                'type': 'str',
+                },
+            'ddet_ind_inside_out_concurrent_conns_min': {
+                'type': 'str',
+                },
+            'ddet_ind_inside_out_concurrent_conns_max': {
+                'type': 'str',
+                },
+            'ddet_ind_inside_out_concurrent_conns_adaptive_threshold': {
+                'type': 'str',
+                },
+            'ddet_ind_pkt_rate_adaptive_baseline': {
+                'type': 'str',
+                },
+            'ddet_ind_bit_rate_adaptive_baseline': {
                 'type': 'str',
                 }
             }

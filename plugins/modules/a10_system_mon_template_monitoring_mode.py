@@ -57,8 +57,8 @@ options:
         required: False
     mmode:
         description:
-        - "'interdependent'= INTERDEPENDENT monitoring behaviour; 'and'= AND monitoring
-          behaviour, Default;"
+        - "'interdependent'= INTERDEPENDENT monitoring behaviour, Default; 'and'= AND
+          monitoring behaviour;"
         type: str
         required: False
     uuid:

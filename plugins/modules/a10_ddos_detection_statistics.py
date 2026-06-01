@@ -394,6 +394,14 @@ options:
                 description:
                 - "Samples with Source IP in Trustlist Processed"
                 type: str
+            intf_select_sample_dropped:
+                description:
+                - "Xflow Samples Dropped by Interface Selection"
+                type: str
+            intf_name_regex_match_error:
+                description:
+                - "Regex matching error for Interface Names"
+                type: str
 
 '''
 
@@ -718,6 +726,12 @@ def get_argspec():
                 'type': 'str',
                 },
             'trusted_sample_processed': {
+                'type': 'str',
+                },
+            'intf_select_sample_dropped': {
+                'type': 'str',
+                },
+            'intf_name_regex_match_error': {
                 'type': 'str',
                 }
             }

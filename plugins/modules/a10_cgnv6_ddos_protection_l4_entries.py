@@ -195,12 +195,6 @@ def get_argspec():
                     },
                 'is_deleted': {
                     'type': 'int',
-                    },
-                'hw_add_count': {
-                    'type': 'int',
-                    },
-                'hw_age': {
-                    'type': 'int',
                     }
                 },
             'total_entries': {

@@ -105,6 +105,11 @@ options:
         - "DNS notify enabled"
         type: bool
         required: False
+    refresh_interval_by_soa:
+        description:
+        - "Read by SOA record"
+        type: bool
+        required: False
     refresh_interval_hours:
         description:
         - "Zone transfer refresh rate in hours (Default 4). 0 means no refresh"
@@ -139,6 +144,11 @@ options:
     force:
         description:
         - "Force update even the serial is the same"
+        type: bool
+        required: False
+    ixfr:
+        description:
+        - "Use IXFR to update"
         type: bool
         required: False
     cache_all_records:
@@ -230,8 +240,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "cache_all_records", "cache_dnssec_records", "client_ipv4", "client_ipv6", "dns_notify_enable_ipv4", "dns_notify_enable_ipv6", "force", "manual_refresh", "name", "oversize_answer_response", "packet_capturing", "refresh_interval_hours", "resolve_cname_record", "respond_with_authority", "server_ipv4", "server_ipv6", "server_v4_port",
-    "server_v6_port", "ttl_override", "user_tag", "uuid",
+    "cache_all_records", "cache_dnssec_records", "client_ipv4", "client_ipv6", "dns_notify_enable_ipv4", "dns_notify_enable_ipv6", "force", "ixfr", "manual_refresh", "name", "oversize_answer_response", "packet_capturing", "refresh_interval_by_soa", "refresh_interval_hours", "resolve_cname_record", "respond_with_authority", "server_ipv4",
+    "server_ipv6", "server_v4_port", "server_v6_port", "ttl_override", "user_tag", "uuid",
     ]
 
 
@@ -281,6 +291,9 @@ def get_argspec():
         'dns_notify_enable_ipv6': {
             'type': 'bool',
             },
+        'refresh_interval_by_soa': {
+            'type': 'bool',
+            },
         'refresh_interval_hours': {
             'type': 'int',
             },
@@ -301,6 +314,9 @@ def get_argspec():
             'type': 'str',
             },
         'force': {
+            'type': 'bool',
+            },
+        'ixfr': {
             'type': 'bool',
             },
         'cache_all_records': {

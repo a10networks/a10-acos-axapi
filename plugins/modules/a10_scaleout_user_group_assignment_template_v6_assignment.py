@@ -70,6 +70,12 @@ options:
         - "User group assignment prefix length, default is 128"
         type: int
         required: False
+    assignment_prefix_auto:
+        description:
+        - "Automatically break down the prefix so that each user-group is assigned one and
+          only one subnet"
+        type: bool
+        required: False
     user_group_range_start:
         description:
         - "User group range start"
@@ -84,6 +90,11 @@ options:
         description:
         - "Configure a scaleout service config template to use"
         type: str
+        required: False
+    private_ip:
+        description:
+        - "Set the assignment as private, and no BGP route will be advertised for it"
+        type: bool
         required: False
     uuid:
         description:
@@ -144,7 +155,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["assignment_prefix_length", "ipv6_prefix", "service_config_template", "user_group_range_end", "user_group_range_start", "uuid", ]
+AVAILABLE_PROPERTIES = ["assignment_prefix_auto", "assignment_prefix_length", "ipv6_prefix", "private_ip", "service_config_template", "user_group_range_end", "user_group_range_start", "uuid", ]
 
 
 def get_default_argspec():
@@ -164,7 +175,33 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ipv6_prefix': {'type': 'str', 'required': True, }, 'assignment_prefix_length': {'type': 'int', }, 'user_group_range_start': {'type': 'int', }, 'user_group_range_end': {'type': 'int', }, 'service_config_template': {'type': 'str', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'ipv6_prefix': {
+            'type': 'str',
+            'required': True,
+            },
+        'assignment_prefix_length': {
+            'type': 'int',
+            },
+        'assignment_prefix_auto': {
+            'type': 'bool',
+            },
+        'user_group_range_start': {
+            'type': 'int',
+            },
+        'user_group_range_end': {
+            'type': 'int',
+            },
+        'service_config_template': {
+            'type': 'str',
+            },
+        'private_ip': {
+            'type': 'bool',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     # Parent keys
     rv.update(dict(user_group_assignment_template_name=dict(type='str', required=True), ))
     return rv

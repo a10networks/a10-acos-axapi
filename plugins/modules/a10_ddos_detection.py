@@ -251,6 +251,10 @@ options:
                 description:
                 - "Field netflow"
                 type: dict
+            snmp:
+                description:
+                - "Field snmp"
+                type: dict
     agent_group_list:
         description:
         - "Field agent_group_list"
@@ -291,6 +295,28 @@ options:
                 description:
                 - "uuid of the object"
                 type: str
+    xflow_interface_selection_list:
+        description:
+        - "Field xflow_interface_selection_list"
+        type: list
+        required: False
+        suboptions:
+            ntype:
+                description:
+                - "'internet-side'= internet-side;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            regex:
+                description:
+                - "Field regex"
+                type: dict
     statistics:
         description:
         - "Field statistics"
@@ -355,7 +381,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["agent_group_list", "agent_list", "ddos_script", "disable", "entry_saving", "resource_usage", "settings", "statistics", "trustlist", "uuid", ]
+AVAILABLE_PROPERTIES = ["agent_group_list", "agent_list", "ddos_script", "disable", "entry_saving", "resource_usage", "settings", "statistics", "trustlist", "uuid", "xflow_interface_selection_list", ]
 
 
 def get_default_argspec():
@@ -568,7 +594,7 @@ def get_argspec():
                         'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len',
                         'netflow-v9-sample-flowset-bad-padding', 'netflow-v9-max-records-exceed', 'netflow-v9-template-not-found', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received',
                         'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error', 'flow-dst-entry-miss', 'flow-ip-proto-or-port-miss', 'flow-detection-msgq-full', 'flow-network-entry-miss', 'xflow-extend-pkt-rcv',
-                        'xflow-extend-byte-rcv', 'xflow-dst-entry-miss-extend-pkt-rcv', 'xflow-dst-entry-miss-extend-byte-rcv', 'xflow-dst-svc-miss-extend-pkt-rcv', 'xflow-dst-svc-miss-extend-byte-rcv'
+                        'xflow-extend-byte-rcv', 'xflow-dst-entry-miss-extend-pkt-rcv', 'xflow-dst-entry-miss-extend-byte-rcv', 'xflow-dst-svc-miss-extend-pkt-rcv', 'xflow-dst-svc-miss-extend-byte-rcv', 'xflow-sample-dropped-by-intf-select'
                         ]
                     }
                 },
@@ -596,6 +622,21 @@ def get_argspec():
                     },
                 'inactive_timeout': {
                     'type': 'int',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'snmp': {
+                'type': 'dict',
+                'ipv4_addr': {
+                    'type': 'str',
+                    },
+                'community_string': {
+                    'type': 'str',
+                    },
+                'refresh': {
+                    'type': 'bool',
                     },
                 'uuid': {
                     'type': 'str',
@@ -631,6 +672,32 @@ def get_argspec():
                 },
             'uuid': {
                 'type': 'str',
+                }
+            },
+        'xflow_interface_selection_list': {
+            'type': 'list',
+            'ntype': {
+                'type': 'str',
+                'required': True,
+                'choices': ['internet-side']
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'regex': {
+                'type': 'dict',
+                'rule_list': {
+                    'type': 'list',
+                    'single_regex': {
+                        'type': 'str',
+                        }
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
                 }
             },
         'statistics': {

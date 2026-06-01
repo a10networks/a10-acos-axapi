@@ -130,21 +130,6 @@ options:
         - "Enable automatic packet-capture for SYN cookie verification failed"
         type: bool
         required: False
-    l3_entry_del_to_hw_failure:
-        description:
-        - "Enable automatic packet-capture for L3 entry HW del failure"
-        type: bool
-        required: False
-    l4_entry_del_to_hw_failure:
-        description:
-        - "Enable automatic packet-capture for L4 entry HW del failure"
-        type: bool
-        required: False
-    l4_entry_add_to_hw_failure:
-        description:
-        - "Enable automatic packet-capture for L4 entry HW add failure"
-        type: bool
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -205,8 +190,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "ip_node_alloc_failure", "ip_other_block_alloc_failure", "ip_port_block_alloc_failure", "l3_entry_add_to_bgp_failure", "l3_entry_add_to_hw_failure", "l3_entry_del_to_hw_failure", "l3_entry_drop_max_hw_exceeded", "l3_entry_match_drop", "l3_entry_match_drop_hw", "l3_entry_remove_from_bgp_failure", "l4_entry_add_to_hw_failure",
-    "l4_entry_del_to_hw_failure", "l4_entry_drop_max_hw_exceeded", "l4_entry_list_alloc_failure", "l4_entry_match_drop", "l4_entry_match_drop_hw", "syn_cookie_verification_failed", "uuid",
+    "ip_node_alloc_failure", "ip_other_block_alloc_failure", "ip_port_block_alloc_failure", "l3_entry_add_to_bgp_failure", "l3_entry_add_to_hw_failure", "l3_entry_drop_max_hw_exceeded", "l3_entry_match_drop", "l3_entry_match_drop_hw", "l3_entry_remove_from_bgp_failure", "l4_entry_drop_max_hw_exceeded", "l4_entry_list_alloc_failure",
+    "l4_entry_match_drop", "l4_entry_match_drop_hw", "syn_cookie_verification_failed", "uuid",
     ]
 
 
@@ -268,15 +253,6 @@ def get_argspec():
             'type': 'bool',
             },
         'syn_cookie_verification_failed': {
-            'type': 'bool',
-            },
-        'l3_entry_del_to_hw_failure': {
-            'type': 'bool',
-            },
-        'l4_entry_del_to_hw_failure': {
-            'type': 'bool',
-            },
-        'l4_entry_add_to_hw_failure': {
             'type': 'bool',
             },
         'uuid': {

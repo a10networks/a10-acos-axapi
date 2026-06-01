@@ -59,6 +59,11 @@ options:
         - "Field reboot_flag"
         type: bool
         required: False
+    preserve_license:
+        description:
+        - "preserve license"
+        type: bool
+        required: False
 
 '''
 
@@ -113,7 +118,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["reboot_flag", ]
+AVAILABLE_PROPERTIES = ["preserve_license", "reboot_flag", ]
 
 
 def get_default_argspec():
@@ -133,7 +138,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'reboot_flag': {'type': 'bool', }})
+    rv.update({'reboot_flag': {'type': 'bool', }, 'preserve_license': {'type': 'bool', }})
     return rv
 
 

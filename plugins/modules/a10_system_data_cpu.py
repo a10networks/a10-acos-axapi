@@ -470,26 +470,6 @@ options:
                 description:
                 - "Data CPU-100"
                 type: str
-            cpu_101:
-                description:
-                - "Data CPU-101"
-                type: str
-            cpu_102:
-                description:
-                - "Data CPU-102"
-                type: str
-            cpu_103:
-                description:
-                - "Data CPU-103"
-                type: str
-            cpu_104:
-                description:
-                - "Data CPU-104"
-                type: str
-            cpu_105:
-                description:
-                - "Data CPU-105"
-                type: str
 
 '''
 
@@ -871,21 +851,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'cpu_100': {
-                'type': 'str',
-                },
-            'cpu_101': {
-                'type': 'str',
-                },
-            'cpu_102': {
-                'type': 'str',
-                },
-            'cpu_103': {
-                'type': 'str',
-                },
-            'cpu_104': {
-                'type': 'str',
-                },
-            'cpu_105': {
                 'type': 'str',
                 }
             }

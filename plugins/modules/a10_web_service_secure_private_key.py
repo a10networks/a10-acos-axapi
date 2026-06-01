@@ -64,6 +64,11 @@ options:
         - "Use management port as source port"
         type: bool
         required: False
+    passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
     file_url:
         description:
         - "File URL"
@@ -123,7 +128,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["file_url", "load", "use_mgmt_port", ]
+AVAILABLE_PROPERTIES = ["file_url", "load", "passphrase", "use_mgmt_port", ]
 
 
 def get_default_argspec():
@@ -143,7 +148,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'load': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'file_url': {'type': 'str', }})
+    rv.update({'load': {'type': 'bool', }, 'use_mgmt_port': {'type': 'bool', }, 'passphrase': {'type': 'str', }, 'file_url': {'type': 'str', }})
     return rv
 
 

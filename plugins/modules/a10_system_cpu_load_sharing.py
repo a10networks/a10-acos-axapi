@@ -108,6 +108,29 @@ options:
         - "Disallow redistribution of new non TCP/UDP IP sessions"
         type: bool
         required: False
+    disallow_new_session_cpu_usage_high:
+        description:
+        - "CPU usage threshold (percentage) that fully disallow new sessions (default= 0,
+          not enabled)"
+        type: int
+        required: False
+    disallow_new_session_cpu_usage_low:
+        description:
+        - "CPU usage threshold (percentage) that fully allow new sessions (default= 1/2 of
+          cpu-usage-high configured)"
+        type: int
+        required: False
+    disallow_new_session_cpu_ewma_alpha:
+        description:
+        - "EWMA ALPHA value to control how responsive the system disallow new session to
+          CPU usage changes (default= 18)"
+        type: int
+        required: False
+    disallow_new_session_cpu_probe_time:
+        description:
+        - "Probe time when CPU RR is trigged for disallow new session (default= 20)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -167,7 +190,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["allow_l7_sessions", "cpu_usage", "disable", "others", "packets_per_second", "tcp", "udp", "uuid", ]
+AVAILABLE_PROPERTIES = ["allow_l7_sessions", "cpu_usage", "disable", "disallow_new_session_cpu_ewma_alpha", "disallow_new_session_cpu_probe_time", "disallow_new_session_cpu_usage_high", "disallow_new_session_cpu_usage_low", "others", "packets_per_second", "tcp", "udp", "uuid", ]
 
 
 def get_default_argspec():
@@ -187,7 +210,53 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'disable': {'type': 'bool', }, 'packets_per_second': {'type': 'dict', 'min': {'type': 'int', }}, 'cpu_usage': {'type': 'dict', 'low': {'type': 'int', }, 'high': {'type': 'int', }}, 'allow_l7_sessions': {'type': 'bool', }, 'tcp': {'type': 'bool', }, 'udp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'disable': {
+            'type': 'bool',
+            },
+        'packets_per_second': {
+            'type': 'dict',
+            'min': {
+                'type': 'int',
+                }
+            },
+        'cpu_usage': {
+            'type': 'dict',
+            'low': {
+                'type': 'int',
+                },
+            'high': {
+                'type': 'int',
+                }
+            },
+        'allow_l7_sessions': {
+            'type': 'bool',
+            },
+        'tcp': {
+            'type': 'bool',
+            },
+        'udp': {
+            'type': 'bool',
+            },
+        'others': {
+            'type': 'bool',
+            },
+        'disallow_new_session_cpu_usage_high': {
+            'type': 'int',
+            },
+        'disallow_new_session_cpu_usage_low': {
+            'type': 'int',
+            },
+        'disallow_new_session_cpu_ewma_alpha': {
+            'type': 'int',
+            },
+        'disallow_new_session_cpu_probe_time': {
+            'type': 'int',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 
