@@ -255,7 +255,7 @@ def report_changes(module, result, existing_config, payload):
     file_check = ['file-handle', 'file']
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["ca-cert"].items():
-        if k == 'action' and v == 'import':
+        if k == 'action' and v in ('import', 'replace'):
             change_results["changed"] = True
 
         if k not in file_check:
@@ -272,7 +272,7 @@ def report_changes(module, result, existing_config, payload):
 
 
 def create(module, result, payload={}):
-    if module.params["action"] == "import":
+    if module.params["action"] in ("import", "replace"):
         call_result = api_client.post_file(module.client, new_url(module), payload, file_path=module.params["file_path"], file_name=module.params["file"])
     else:
         call_result = api_client.post(module.client, new_url(module), payload)
@@ -285,7 +285,7 @@ def create(module, result, payload={}):
 
 def update(module, result, existing_config, payload={}):
     final_payload = copy.deepcopy(payload)
-    if module.params["action"] == "import":
+    if module.params["action"] in ("import", "replace"):
         call_result = api_client.post_file(module.client, existing_url(module), final_payload, file_path=module.params["file_path"], file_name=module.params["file"])
     else:
         call_result = api_client.post(module.client, existing_url(module), final_payload)
