@@ -165,65 +165,27 @@ options:
           'l3_entry_too_many'= L3 Too many entries; 'l3_entry_match_drop'= L3 Entry match
           drop; 'l3_entry_match_drop_hw'= L3 HW entry match drop;
           'l3_entry_drop_max_hw_exceeded'= L3 Entry Drop due to HW Limit Exceeded;
-          'l4_entry_added'= L4 Entry added; 'l4_entry_deleted'= L4 Entry set for
-          deletion; 'l4_entry_added_to_hw'= L4 Entry added to HW;
-          'l4_entry_removed_from_hw'= L4 Entry removed from HW; 'l4_hw_out_of_entries'=
-          HW out of L4 entries; 'l4_entry_match_drop'= L4 Entry match drop;
-          'l4_entry_match_drop_hw'= L4 HW Entry match drop;
-          'l4_entry_drop_max_hw_exceeded'= L4 Entry Drop due to HW Limit Exceeded;
-          'l4_entry_list_alloc'= L4 Entry list alloc; 'l4_entry_list_free'= L4 Entry list
-          free; 'l4_entry_list_alloc_failure'= L4 Entry list alloc failures;
-          'ip_node_alloc'= Node alloc; 'ip_node_free'= Node free;
-          'ip_node_alloc_failure'= Node alloc failures; 'ip_port_block_alloc'= Port block
-          alloc; 'ip_port_block_free'= Port block free; 'ip_port_block_alloc_failure'=
-          Port block alloc failure; 'ip_other_block_alloc'= Other block alloc;
-          'ip_other_block_free'= Other block free; 'ip_other_block_alloc_failure'= Other
-          block alloc failure; 'entry_added_shadow'= Entry added shadow;
-          'entry_invalidated'= Entry invalidated; 'l3_entry_add_to_bgp_failure'= L3 Entry
-          BGP add failures; 'l3_entry_remove_from_bgp_failure'= L3 entry BGP remove
-          failures; 'l3_entry_add_to_hw_failure'= L3 entry HW add failure;
+          'l4_entry_added'= L4 Entry added; 'l4_entry_deleted'= L4 Entry deleted;
+          'l4_entry_added_to_hw'= L4 Entry added to HW; 'l4_entry_removed_from_hw'= L4
+          Entry removed from HW; 'l4_hw_out_of_entries'= HW out of L4 entries;
+          'l4_entry_match_drop'= L4 Entry match drop; 'l4_entry_match_drop_hw'= L4 HW
+          Entry match drop; 'l4_entry_drop_max_hw_exceeded'= L4 Entry Drop due to HW
+          Limit Exceeded; 'l4_entry_list_alloc'= L4 Entry list alloc;
+          'l4_entry_list_free'= L4 Entry list free; 'l4_entry_list_alloc_failure'= L4
+          Entry list alloc failures; 'ip_node_alloc'= Node alloc; 'ip_node_free'= Node
+          free; 'ip_node_alloc_failure'= Node alloc failures; 'ip_port_block_alloc'= Port
+          block alloc; 'ip_port_block_free'= Port block free;
+          'ip_port_block_alloc_failure'= Port block alloc failure;
+          'ip_other_block_alloc'= Other block alloc; 'ip_other_block_free'= Other block
+          free; 'ip_other_block_alloc_failure'= Other block alloc failure;
+          'entry_added_shadow'= Entry added shadow; 'entry_invalidated'= Entry
+          invalidated; 'l3_entry_add_to_bgp_failure'= L3 Entry BGP add failures;
+          'l3_entry_remove_from_bgp_failure'= L3 entry BGP remove failures;
+          'l3_entry_add_to_hw_failure'= L3 entry HW add failure;
           'syn_cookie_syn_ack_sent'= SYN cookie SYN ACK sent;
           'syn_cookie_verification_passed'= SYN cookie verification passed;
           'syn_cookie_verification_failed'= SYN cookie verification failed;
-          'syn_cookie_conn_setup_failed'= SYN cookie connection setup failed;
-          'l3_entry_del_to_hw_failure'= L3 entry HW del failure;
-          'add_l3_entry_added_to_hw_blklist_queue'= L3 entry Add request is added to HW
-          BLKLIST queue; 'del_l3_entry_added_to_hw_blklist_queue'= L3 entry Delete
-          request is added to HW BLKLIST queue;
-          'add_l3_entry_dequeued_from_hw_blklist_q'= L3 entry Add request is dequeued
-          from HW BLKLIST queue; 'del_l3_entry_dequeued_from_hw_blklist_q'= L3 entry
-          Delete request is dequeued from HW BLKLIST queue; 'l4_entry_del_to_hw_failure'=
-          L4 entry HW del failure; 'add_l4_entry_added_to_hw_blklist_queue'= L4 entry Add
-          request is added to HW BLKLIST queue; 'del_l4_entry_added_to_hw_blklist_queue'=
-          L4 entry Delete request is added to HW BLKLIST queue;
-          'add_l4_entry_dequeued_from_hw_blklist_q'= L4 entry Add request is dequeued
-          from HW BLKLIST queue; 'del_l4_entry_dequeued_from_hw_blklist_q'= L4 entry
-          Delete request is dequeued from HW BLKLIST queue; 'l4_entry_add_to_hw_failure'=
-          L4 entry HW add failure; 'l3_hw_out_of_entries'= HW out of L3 entries;
-          'l4_entry_add_to_hw_failure_notif'= L4 entry HW add failure Notification;
-          'l3_entry_add_to_hw_failure_notif'= L3 entry HW add failure Notification;
-          'l4_entry_already_in_addQ'= L4 entry add req already in add queue;
-          'l4_entry_already_in_delQ'= L4 entry del req already in del queue;
-          'l3_entry_already_in_addQ'= L3 entry add req already in add queue;
-          'l3_entry_already_in_delQ'= L3 entry del req already in del queue;
-          'l3_entry_added_to_hw_again'= L3 Entry added successfully to HW after timeout;
-          'l3_entry_hw_count_exceeded'= L3 entry hw entry limit exceeded;
-          'l3_entry_hw_res_usage_exceeded'= IDDOS L3 HW Resource usage exceeded;
-          'l3_entry_hw_add_q_size_exceeded'= L3 Add Request to HW Queue size exceeded;
-          'l3_entry_hw_del_q_size_exceeded'= L3 Del Request to HW Queue size exceeded;
-          'l3_entry_hw_add_q_lock_access_failed'= L3 Add Request to HW Queue lock access
-          failed; 'l3_entry_hw_del_q_lock_access_failed'= L3 Del Request to HW Queue lock
-          access failed; 'l4_entry_added_to_hw_again'= L4 Entry added successfully to HW
-          after timeout; 'l4_entry_hw_count_exceeded'= L4 entry hw entry limit exceeded;
-          'l4_entry_hw_res_usage_exceeded'= IDDOS L4 HW Resource usage exceeded;
-          'l4_entry_hw_add_q_size_exceeded'= L4 Add Request to HW Queue size exceeded;
-          'l4_entry_hw_del_q_size_exceeded'= L4 Del Request to HW Queue size exceeded;
-          'l4_entry_hw_add_q_lock_access_failed'= L4 Add Request to HW Queue lock access
-          failed; 'l4_entry_hw_del_q_lock_access_failed'= L4 Del Request to HW Queue lock
-          access failed; 'l4_entry_add_to_hw_with_ipd_match'= L4 entry request to add to
-          hw after timeout; 'l3_entry_add_to_hw_after_timeout'= L3 entry request to add
-          to HW after timeout; 'l4_entry_pkt_hit_count'= L4 HW entry pkt hit count;
-          'l3_entry_pkt_hit_count'= L3 HW entry pkt hit count;"
+          'syn_cookie_conn_setup_failed'= SYN cookie connection setup failed;"
                 type: str
     l4_entries:
         description:
@@ -307,7 +269,7 @@ options:
                 type: str
             l4_entry_deleted:
                 description:
-                - "L4 Entry set for deletion"
+                - "L4 Entry deleted"
                 type: str
             l4_entry_added_to_hw:
                 description:
@@ -412,22 +374,6 @@ options:
             syn_cookie_verification_failed:
                 description:
                 - "SYN cookie verification failed"
-                type: str
-            l3_entry_del_to_hw_failure:
-                description:
-                - "L3 entry HW del failure"
-                type: str
-            l4_entry_del_to_hw_failure:
-                description:
-                - "L4 entry HW del failure"
-                type: str
-            l4_entry_add_to_hw_failure:
-                description:
-                - "L4 entry HW add failure"
-                type: str
-            l3_hw_out_of_entries:
-                description:
-                - "HW out of L3 entries"
                 type: str
 
 '''
@@ -619,11 +565,7 @@ def get_argspec():
                     'all', 'l3_entry_added', 'l3_entry_deleted', 'l3_entry_added_to_bgp', 'l3_entry_removed_from_bgp', 'l3_entry_added_to_hw', 'l3_entry_removed_from_hw', 'l3_entry_too_many', 'l3_entry_match_drop', 'l3_entry_match_drop_hw', 'l3_entry_drop_max_hw_exceeded', 'l4_entry_added', 'l4_entry_deleted', 'l4_entry_added_to_hw',
                     'l4_entry_removed_from_hw', 'l4_hw_out_of_entries', 'l4_entry_match_drop', 'l4_entry_match_drop_hw', 'l4_entry_drop_max_hw_exceeded', 'l4_entry_list_alloc', 'l4_entry_list_free', 'l4_entry_list_alloc_failure', 'ip_node_alloc', 'ip_node_free', 'ip_node_alloc_failure', 'ip_port_block_alloc', 'ip_port_block_free',
                     'ip_port_block_alloc_failure', 'ip_other_block_alloc', 'ip_other_block_free', 'ip_other_block_alloc_failure', 'entry_added_shadow', 'entry_invalidated', 'l3_entry_add_to_bgp_failure', 'l3_entry_remove_from_bgp_failure', 'l3_entry_add_to_hw_failure', 'syn_cookie_syn_ack_sent', 'syn_cookie_verification_passed',
-                    'syn_cookie_verification_failed', 'syn_cookie_conn_setup_failed', 'l3_entry_del_to_hw_failure', 'add_l3_entry_added_to_hw_blklist_queue', 'del_l3_entry_added_to_hw_blklist_queue', 'add_l3_entry_dequeued_from_hw_blklist_q', 'del_l3_entry_dequeued_from_hw_blklist_q', 'l4_entry_del_to_hw_failure',
-                    'add_l4_entry_added_to_hw_blklist_queue', 'del_l4_entry_added_to_hw_blklist_queue', 'add_l4_entry_dequeued_from_hw_blklist_q', 'del_l4_entry_dequeued_from_hw_blklist_q', 'l4_entry_add_to_hw_failure', 'l3_hw_out_of_entries', 'l4_entry_add_to_hw_failure_notif', 'l3_entry_add_to_hw_failure_notif', 'l4_entry_already_in_addQ',
-                    'l4_entry_already_in_delQ', 'l3_entry_already_in_addQ', 'l3_entry_already_in_delQ', 'l3_entry_added_to_hw_again', 'l3_entry_hw_count_exceeded', 'l3_entry_hw_res_usage_exceeded', 'l3_entry_hw_add_q_size_exceeded', 'l3_entry_hw_del_q_size_exceeded', 'l3_entry_hw_add_q_lock_access_failed', 'l3_entry_hw_del_q_lock_access_failed',
-                    'l4_entry_added_to_hw_again', 'l4_entry_hw_count_exceeded', 'l4_entry_hw_res_usage_exceeded', 'l4_entry_hw_add_q_size_exceeded', 'l4_entry_hw_del_q_size_exceeded', 'l4_entry_hw_add_q_lock_access_failed', 'l4_entry_hw_del_q_lock_access_failed', 'l4_entry_add_to_hw_with_ipd_match', 'l3_entry_add_to_hw_after_timeout',
-                    'l4_entry_pkt_hit_count', 'l3_entry_pkt_hit_count'
+                    'syn_cookie_verification_failed', 'syn_cookie_conn_setup_failed'
                     ]
                 }
             },
@@ -759,18 +701,6 @@ def get_argspec():
                 'type': 'str',
                 },
             'syn_cookie_verification_failed': {
-                'type': 'str',
-                },
-            'l3_entry_del_to_hw_failure': {
-                'type': 'str',
-                },
-            'l4_entry_del_to_hw_failure': {
-                'type': 'str',
-                },
-            'l4_entry_add_to_hw_failure': {
-                'type': 'str',
-                },
-            'l3_hw_out_of_entries': {
                 'type': 'str',
                 }
             }

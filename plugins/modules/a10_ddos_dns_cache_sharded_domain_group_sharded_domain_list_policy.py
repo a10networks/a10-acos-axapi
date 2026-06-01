@@ -105,6 +105,11 @@ options:
         - "DNS notify enabled"
         type: bool
         required: False
+    refresh_interval_by_soa:
+        description:
+        - "Read by SOA record"
+        type: bool
+        required: False
     refresh_interval_hours:
         description:
         - "Zone transfer refresh rate in hours (Default 4). 0 means no refresh"
@@ -198,7 +203,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["client_ipv4", "client_ipv6", "dns_notify_enable_ipv4", "dns_notify_enable_ipv6", "force", "manual_refresh", "name", "packet_capturing", "refresh_interval_hours", "server_ipv4", "server_ipv6", "server_v4_port", "server_v6_port", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["client_ipv4", "client_ipv6", "dns_notify_enable_ipv4", "dns_notify_enable_ipv6", "force", "manual_refresh", "name", "packet_capturing", "refresh_interval_by_soa", "refresh_interval_hours", "server_ipv4", "server_ipv6", "server_v4_port", "server_v6_port", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -245,6 +250,9 @@ def get_argspec():
             'type': 'str',
             },
         'dns_notify_enable_ipv6': {
+            'type': 'bool',
+            },
+        'refresh_interval_by_soa': {
             'type': 'bool',
             },
         'refresh_interval_hours': {

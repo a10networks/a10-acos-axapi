@@ -171,6 +171,30 @@ options:
         - "'enabled'= Enable DNSSEC validation; 'disabled'= Disable DNSSEC validation;"
         type: str
         required: False
+    edns_udp_size:
+        description:
+        - "Set EDNS UDP payload size of queries sent during resolution (EDNS UDP payload
+          size of queries, default=4096 bytes)"
+        type: int
+        required: False
+    max_signature_validation_attempts:
+        description:
+        - "Set maximum number of times DNSSEC signature validation attempts allowed per
+          resolution"
+        type: int
+        required: False
+    max_signature_validation_failures:
+        description:
+        - "Set maximum number of times DNSSEC signature validation failures allowed per
+          resolution"
+        type: int
+        required: False
+    max_key_digest_validation_failures:
+        description:
+        - "Set maximum number of times DNSSEC key-digest validation failures allowed per
+          resolution"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -317,8 +341,8 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "csubnet_retry", "default_recursive", "dnssec_validation", "fast_ns_selection", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_trials", "ns_cache_lookup", "ns_longest_match", "oper", "parallel_queries", "request_for_pending_resolution",
-    "retries_per_level", "udp_initial_interval", "udp_retry_interval", "use_client_qid", "use_service_group_response", "uuid",
+    "csubnet_retry", "default_recursive", "dnssec_validation", "edns_udp_size", "fast_ns_selection", "force_cname_resolution", "full_response", "gateway_health_check", "host_list_cfg", "ipv4_nat_pool", "ipv6_nat_pool", "lookup_order", "max_key_digest_validation_failures", "max_signature_validation_attempts", "max_signature_validation_failures",
+    "max_trials", "ns_cache_lookup", "ns_longest_match", "oper", "parallel_queries", "request_for_pending_resolution", "retries_per_level", "udp_initial_interval", "udp_retry_interval", "use_client_qid", "use_service_group_response", "uuid",
     ]
 
 
@@ -406,6 +430,18 @@ def get_argspec():
         'dnssec_validation': {
             'type': 'str',
             'choices': ['enabled', 'disabled']
+            },
+        'edns_udp_size': {
+            'type': 'int',
+            },
+        'max_signature_validation_attempts': {
+            'type': 'int',
+            },
+        'max_signature_validation_failures': {
+            'type': 'int',
+            },
+        'max_key_digest_validation_failures': {
+            'type': 'int',
             },
         'uuid': {
             'type': 'str',

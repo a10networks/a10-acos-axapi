@@ -715,6 +715,21 @@ def get_argspec():
                     },
                 'rrsig_expire_drop': {
                     'type': 'str',
+                    },
+                'pattern_filter1_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter2_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter3_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter4_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter5_drop': {
+                    'type': 'str',
                     }
                 }
             }

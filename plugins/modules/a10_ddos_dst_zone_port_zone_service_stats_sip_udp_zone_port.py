@@ -824,6 +824,27 @@ def get_argspec():
                     },
                 'same_sport_dport_drop': {
                     'type': 'str',
+                    },
+                'pattern_filter1_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter2_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter3_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter4_drop': {
+                    'type': 'str',
+                    },
+                'pattern_filter5_drop': {
+                    'type': 'str',
+                    },
+                'src_ip_filtering_drop': {
+                    'type': 'str',
+                    },
+                'src_ip_filtering_bypass': {
+                    'type': 'str',
                     }
                 }
             }

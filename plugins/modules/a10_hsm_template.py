@@ -62,7 +62,8 @@ options:
         required: True
     softhsm_enum:
         description:
-        - "'softHSM'= software implementation of a cryptographic store;"
+        - "'softHSM'= software implementation of a cryptographic store; 'thalesHSM'=
+          Thales HSM;"
         type: str
         required: False
     hsm_dev:
@@ -245,7 +246,7 @@ def get_argspec():
             },
         'softhsm_enum': {
             'type': 'str',
-            'choices': ['softHSM']
+            'choices': ['softHSM', 'thalesHSM']
             },
         'hsm_dev': {
             'type': 'list',

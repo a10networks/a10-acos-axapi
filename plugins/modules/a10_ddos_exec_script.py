@@ -118,34 +118,6 @@ options:
           'ipv6-encap'= ip-proto IPv6 Encapsulation;"
         type: str
         required: False
-    src_ip:
-        description:
-        - "Field src_ip"
-        type: list
-        required: False
-        suboptions:
-            ip_addr:
-                description:
-                - "Specify IP address"
-                type: str
-            subnet_ip_addr:
-                description:
-                - "IP Subnet"
-                type: str
-    src_ipv6:
-        description:
-        - "Field src_ipv6"
-        type: list
-        required: False
-        suboptions:
-            ip6_addr:
-                description:
-                - "Specify IPv6 address"
-                type: str
-            subnet_ipv6_addr:
-                description:
-                - "IPV6 Subnet"
-                type: str
     timeout:
         description:
         - "Timeout (Default= 10 seconds, Mock Default= 2 seconds)"
@@ -205,7 +177,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alert_type", "exec_script_ip_portocol", "exec_script_port_other_protocol", "level", "mock", "port_num", "port_other", "protocol", "protocol_num", "script", "src_ip", "src_ipv6", "threshold", "timeout", "zone", ]
+AVAILABLE_PROPERTIES = ["alert_type", "exec_script_ip_portocol", "exec_script_port_other_protocol", "level", "mock", "port_num", "port_other", "protocol", "protocol_num", "script", "threshold", "timeout", "zone", ]
 
 
 def get_default_argspec():
@@ -265,24 +237,6 @@ def get_argspec():
         'exec_script_ip_portocol': {
             'type': 'str',
             'choices': ['icmp-v4', 'icmp-v6', 'other', 'gre', 'ipv4-encap', 'ipv6-encap']
-            },
-        'src_ip': {
-            'type': 'list',
-            'ip_addr': {
-                'type': 'str',
-                },
-            'subnet_ip_addr': {
-                'type': 'str',
-                }
-            },
-        'src_ipv6': {
-            'type': 'list',
-            'ip6_addr': {
-                'type': 'str',
-                },
-            'subnet_ipv6_addr': {
-                'type': 'str',
-                }
             },
         'timeout': {
             'type': 'int',

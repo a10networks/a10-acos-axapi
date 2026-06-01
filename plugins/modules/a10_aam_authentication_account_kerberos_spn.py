@@ -90,12 +90,6 @@ options:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.)"
         type: str
         required: False
-    encryption_algorithm:
-        description:
-        - "'aes128-cts-hmac-sha1-96'= AES-128 CTS mode with 96-bit SHA-1 HMAC;
-          'aes256-cts-hmac-sha1-96'= AES-256 CTS mode with 96-bit SHA-1 HMAC (default);"
-        type: str
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -160,7 +154,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["account", "encrypted", "encryption_algorithm", "name", "password", "realm", "secret_string", "service_principal_name", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = ["account", "encrypted", "name", "password", "realm", "secret_string", "service_principal_name", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -180,40 +174,7 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-            },
-        'realm': {
-            'type': 'str',
-            },
-        'account': {
-            'type': 'str',
-            },
-        'service_principal_name': {
-            'type': 'str',
-            },
-        'password': {
-            'type': 'bool',
-            },
-        'secret_string': {
-            'type': 'str',
-            },
-        'encrypted': {
-            'type': 'str',
-            },
-        'encryption_algorithm': {
-            'type': 'str',
-            'choices': ['aes128-cts-hmac-sha1-96', 'aes256-cts-hmac-sha1-96']
-            },
-        'uuid': {
-            'type': 'str',
-            },
-        'user_tag': {
-            'type': 'str',
-            }
-        })
+    rv.update({'name': {'type': 'str', 'required': True, }, 'realm': {'type': 'str', }, 'account': {'type': 'str', }, 'service_principal_name': {'type': 'str', }, 'password': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }})
     return rv
 
 

@@ -88,6 +88,14 @@ options:
                 description:
                 - "'enable'= enable; 'disable'= disable;"
                 type: str
+            failure_domain:
+                description:
+                - "configure failure-domain"
+                type: bool
+            failure_domain_string:
+                description:
+                - "Specify the failure-domain name"
+                type: str
             start_delay:
                 description:
                 - "Field start_delay"
@@ -348,6 +356,12 @@ def get_argspec():
             'action': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
+                },
+            'failure_domain': {
+                'type': 'bool',
+                },
+            'failure_domain_string': {
+                'type': 'str',
                 },
             'start_delay': {
                 'type': 'int',

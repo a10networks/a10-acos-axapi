@@ -378,6 +378,9 @@ def get_argspec():
                 'use_mgmt_port': {
                     'type': 'bool',
                     },
+                'passphrase': {
+                    'type': 'str',
+                    },
                 'file_url': {
                     'type': 'str',
                     }

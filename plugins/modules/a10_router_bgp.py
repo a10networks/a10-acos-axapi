@@ -1424,6 +1424,9 @@ def get_argspec():
                 'originate': {
                     'type': 'bool',
                     },
+                'prefer_global': {
+                    'type': 'bool',
+                    },
                 'aggregate_address_list': {
                     'type': 'list',
                     'aggregate_address': {

@@ -454,6 +454,10 @@ options:
                 description:
                 - "Jumbo Fragment Non Data Plane Drop"
                 type: str
+            outgoing_mtu_exceed_drop:
+                description:
+                - "Outgoing MTU Exceed Drop"
+                type: str
             jumbo_outgoing_mtu_exceed_drop:
                 description:
                 - "Jumbo Outgoing MTU Exceed Drop"
@@ -847,6 +851,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'jumbo_frag_drop_before_slb': {
+                'type': 'str',
+                },
+            'outgoing_mtu_exceed_drop': {
                 'type': 'str',
                 },
             'jumbo_outgoing_mtu_exceed_drop': {

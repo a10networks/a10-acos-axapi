@@ -227,6 +227,21 @@ def get_argspec():
                         'prefer_data_interface': {
                             'type': 'bool',
                             },
+                        'over_tls': {
+                            'type': 'bool',
+                            },
+                        'cert': {
+                            'type': 'str',
+                            },
+                        'private_key': {
+                            'type': 'str',
+                            },
+                        'custom_ca': {
+                            'type': 'str',
+                            },
+                        'skip_cert_verification': {
+                            'type': 'bool',
+                            },
                         'monitor': {
                             'type': 'bool',
                             },
@@ -289,6 +304,21 @@ def get_argspec():
                             'type': 'int',
                             },
                         'prefer_data_interface': {
+                            'type': 'bool',
+                            },
+                        'over_tls': {
+                            'type': 'bool',
+                            },
+                        'cert': {
+                            'type': 'str',
+                            },
+                        'private_key': {
+                            'type': 'str',
+                            },
+                        'custom_ca': {
+                            'type': 'str',
+                            },
+                        'skip_cert_verification': {
                             'type': 'bool',
                             },
                         'monitor': {
@@ -356,6 +386,21 @@ def get_argspec():
                             'type': 'int',
                             },
                         'prefer_data_interface': {
+                            'type': 'bool',
+                            },
+                        'over_tls': {
+                            'type': 'bool',
+                            },
+                        'cert': {
+                            'type': 'str',
+                            },
+                        'private_key': {
+                            'type': 'str',
+                            },
+                        'custom_ca': {
+                            'type': 'str',
+                            },
+                        'skip_cert_verification': {
                             'type': 'bool',
                             },
                         'monitor': {

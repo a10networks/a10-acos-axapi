@@ -413,6 +413,10 @@ options:
                 description:
                 - "Enable ssl key tracking"
                 type: bool
+            pcapng_enhanced_log_enable:
+                description:
+                - "Enable pcapng enhanced logs"
+                type: bool
             exit:
                 description:
                 - "Exit from axdebug pcapng mode"
@@ -743,6 +747,9 @@ def get_argspec():
                 'type': 'bool',
                 },
             'ssl_key_enable': {
+                'type': 'bool',
+                },
+            'pcapng_enhanced_log_enable': {
                 'type': 'bool',
                 },
             'exit': {

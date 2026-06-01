@@ -5783,15 +5783,6 @@ def get_argspec():
                                 'syn_cookie_verification_failed': {
                                     'type': 'bool',
                                     },
-                                'l3_entry_del_to_hw_failure': {
-                                    'type': 'bool',
-                                    },
-                                'l4_entry_del_to_hw_failure': {
-                                    'type': 'bool',
-                                    },
-                                'l4_entry_add_to_hw_failure': {
-                                    'type': 'bool',
-                                    },
                                 'uuid': {
                                     'type': 'str',
                                     }
@@ -5844,15 +5835,6 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'syn_cookie_verification_failed': {
-                                    'type': 'bool',
-                                    },
-                                'l3_entry_del_to_hw_failure': {
-                                    'type': 'bool',
-                                    },
-                                'l4_entry_del_to_hw_failure': {
-                                    'type': 'bool',
-                                    },
-                                'l4_entry_add_to_hw_failure': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -6280,6 +6262,84 @@ def get_argspec():
                                     }
                                 }
                             },
+                        'cgnv6_lsn_radius': {
+                            'type': 'dict',
+                            'uuid': {
+                                'type': 'str',
+                                },
+                            'trigger_stats_inc': {
+                                'type': 'dict',
+                                'radius_request_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_bad_secret_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_no_key_vap_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_malformed_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_ignored': {
+                                    'type': 'bool',
+                                    },
+                                'radius_table_full': {
+                                    'type': 'bool',
+                                    },
+                                'secret_not_configured_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'ha_standby_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'invalid_key': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                },
+                            'trigger_stats_rate': {
+                                'type': 'dict',
+                                'threshold_exceeded_by': {
+                                    'type': 'int',
+                                    },
+                                'duration': {
+                                    'type': 'int',
+                                    },
+                                'radius_request_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_bad_secret_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_no_key_vap_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_malformed_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_ignored': {
+                                    'type': 'bool',
+                                    },
+                                'radius_table_full': {
+                                    'type': 'bool',
+                                    },
+                                'secret_not_configured_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'ha_standby_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'invalid_key': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                }
+                            },
                         'cgnv6_nat64_global': {
                             'type': 'dict',
                             'uuid': {
@@ -6515,6 +6575,9 @@ def get_argspec():
                                 'ha_session_user_quota_exceeded': {
                                     'type': 'bool',
                                     },
+                                'unused_ip_drop': {
+                                    'type': 'bool',
+                                    },
                                 'uuid': {
                                     'type': 'str',
                                     }
@@ -6585,6 +6648,9 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'ha_session_user_quota_exceeded': {
+                                    'type': 'bool',
+                                    },
+                                'unused_ip_drop': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -7239,6 +7305,84 @@ def get_argspec():
                                     'type': 'bool',
                                     },
                                 'call_reply_pns_call_id_mismatch': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                }
+                            },
+                        'fw_rad_server': {
+                            'type': 'dict',
+                            'uuid': {
+                                'type': 'str',
+                                },
+                            'trigger_stats_inc': {
+                                'type': 'dict',
+                                'radius_request_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_bad_secret_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_no_key_vap_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_malformed_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_ignored': {
+                                    'type': 'bool',
+                                    },
+                                'radius_table_full': {
+                                    'type': 'bool',
+                                    },
+                                'ha_standby_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'ipv6_prefix_length_mismatch': {
+                                    'type': 'bool',
+                                    },
+                                'invalid_key': {
+                                    'type': 'bool',
+                                    },
+                                'uuid': {
+                                    'type': 'str',
+                                    }
+                                },
+                            'trigger_stats_rate': {
+                                'type': 'dict',
+                                'threshold_exceeded_by': {
+                                    'type': 'int',
+                                    },
+                                'duration': {
+                                    'type': 'int',
+                                    },
+                                'radius_request_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_bad_secret_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_no_key_vap_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_malformed_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'request_ignored': {
+                                    'type': 'bool',
+                                    },
+                                'radius_table_full': {
+                                    'type': 'bool',
+                                    },
+                                'ha_standby_dropped': {
+                                    'type': 'bool',
+                                    },
+                                'ipv6_prefix_length_mismatch': {
+                                    'type': 'bool',
+                                    },
+                                'invalid_key': {
                                     'type': 'bool',
                                     },
                                 'uuid': {
@@ -12312,6 +12456,94 @@ def get_argspec():
                             'type': 'bool',
                             },
                         'header_save_error': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        }
+                    },
+                'captcha_template_inst_tmpl_list': {
+                    'type': 'list',
+                    'name': {
+                        'type': 'str',
+                        'required': True,
+                        },
+                    'capture_config': {
+                        'type': 'str',
+                        },
+                    'uuid': {
+                        'type': 'str',
+                        },
+                    'user_tag': {
+                        'type': 'str',
+                        },
+                    'trigger_stats_severity': {
+                        'type': 'dict',
+                        'error': {
+                            'type': 'bool',
+                            },
+                        'error_alert': {
+                            'type': 'bool',
+                            },
+                        'error_warning': {
+                            'type': 'bool',
+                            },
+                        'error_critical': {
+                            'type': 'bool',
+                            },
+                        'drop': {
+                            'type': 'bool',
+                            },
+                        'drop_alert': {
+                            'type': 'bool',
+                            },
+                        'drop_warning': {
+                            'type': 'bool',
+                            },
+                        'drop_critical': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_inc': {
+                        'type': 'dict',
+                        'parse_fail': {
+                            'type': 'bool',
+                            },
+                        'json_fail': {
+                            'type': 'bool',
+                            },
+                        'timeout_error': {
+                            'type': 'bool',
+                            },
+                        'other_error': {
+                            'type': 'bool',
+                            },
+                        'uuid': {
+                            'type': 'str',
+                            }
+                        },
+                    'trigger_stats_rate': {
+                        'type': 'dict',
+                        'threshold_exceeded_by': {
+                            'type': 'int',
+                            },
+                        'duration': {
+                            'type': 'int',
+                            },
+                        'parse_fail': {
+                            'type': 'bool',
+                            },
+                        'json_fail': {
+                            'type': 'bool',
+                            },
+                        'timeout_error': {
+                            'type': 'bool',
+                            },
+                        'other_error': {
                             'type': 'bool',
                             },
                         'uuid': {

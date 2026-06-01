@@ -706,6 +706,40 @@ options:
                 description:
                 - "Field trigger_stats_rate"
                 type: dict
+    captcha_template_inst_tmpl_list:
+        description:
+        - "Field captcha_template_inst_tmpl_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Packet Capture Template Name"
+                type: str
+            capture_config:
+                description:
+                - "Specify name of the capture-config to use with this template"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            trigger_stats_severity:
+                description:
+                - "Field trigger_stats_severity"
+                type: dict
+            trigger_stats_inc:
+                description:
+                - "Field trigger_stats_inc"
+                type: dict
+            trigger_stats_rate:
+                description:
+                - "Field trigger_stats_rate"
+                type: dict
     slb_port_tmpl_list:
         description:
         - "Field slb_port_tmpl_list"
@@ -1340,9 +1374,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "aam_aaa_policy_tmpl_list", "aam_auth_captcha_inst_tmpl_list", "aam_auth_logon_http_ins_tmpl_list", "aam_auth_relay_form_inst_tmpl_list", "aam_auth_relay_hbase_inst_tmpl_list", "aam_auth_relay_ws_fed_tmpl_list", "aam_auth_saml_id_prov_tmpl_list", "aam_auth_saml_service_prov_tmpl_list", "aam_auth_server_ldap_inst_tmpl_list",
-    "aam_auth_server_ocsp_inst_tmpl_list", "aam_auth_server_rad_inst_tmpl_list", "aam_auth_server_win_inst_tmpl_list", "aam_auth_service_group_mem_tmpl_list", "aam_auth_service_group_tmpl_list", "aam_jwt_authorization_tmpl_list", "cgnv6_dns64_vs_port_tmpl_list", "cgnv6_encap_domain_tmpl_list", "cgnv6_map_trans_domain_tmpl_list",
-    "cgnv6_serv_group_tmpl_list", "dns_vport_tmpl_list", "fw_server_port_tmpl_list", "fw_service_group_mem_tmpl_list", "fw_service_group_tmpl_list", "imap_vport_tmpl_list", "interface_ethernet_tmpl_list", "interface_tunnel_tmpl_list", "netflow_monitor_tmpl_list", "pop3_vport_tmpl_list", "rule_set_rule_tmpl_list", "rule_set_tmpl_list",
-    "slb_port_tmpl_list", "slb_service_tmpl_list", "slb_templ_cache_tmpl_list", "slb_vport_tmpl_list", "smtp_vport_tmpl_list", "templ_gtp_plcy_tmpl_list", "uuid",
+    "aam_auth_server_ocsp_inst_tmpl_list", "aam_auth_server_rad_inst_tmpl_list", "aam_auth_server_win_inst_tmpl_list", "aam_auth_service_group_mem_tmpl_list", "aam_auth_service_group_tmpl_list", "aam_jwt_authorization_tmpl_list", "captcha_template_inst_tmpl_list", "cgnv6_dns64_vs_port_tmpl_list", "cgnv6_encap_domain_tmpl_list",
+    "cgnv6_map_trans_domain_tmpl_list", "cgnv6_serv_group_tmpl_list", "dns_vport_tmpl_list", "fw_server_port_tmpl_list", "fw_service_group_mem_tmpl_list", "fw_service_group_tmpl_list", "imap_vport_tmpl_list", "interface_ethernet_tmpl_list", "interface_tunnel_tmpl_list", "netflow_monitor_tmpl_list", "pop3_vport_tmpl_list", "rule_set_rule_tmpl_list",
+    "rule_set_tmpl_list", "slb_port_tmpl_list", "slb_service_tmpl_list", "slb_templ_cache_tmpl_list", "slb_vport_tmpl_list", "smtp_vport_tmpl_list", "templ_gtp_plcy_tmpl_list", "uuid",
     ]
 
 
@@ -3188,6 +3222,94 @@ def get_argspec():
                     'type': 'bool',
                     },
                 'header_save_error': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                }
+            },
+        'captcha_template_inst_tmpl_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+                },
+            'capture_config': {
+                'type': 'str',
+                },
+            'uuid': {
+                'type': 'str',
+                },
+            'user_tag': {
+                'type': 'str',
+                },
+            'trigger_stats_severity': {
+                'type': 'dict',
+                'error': {
+                    'type': 'bool',
+                    },
+                'error_alert': {
+                    'type': 'bool',
+                    },
+                'error_warning': {
+                    'type': 'bool',
+                    },
+                'error_critical': {
+                    'type': 'bool',
+                    },
+                'drop': {
+                    'type': 'bool',
+                    },
+                'drop_alert': {
+                    'type': 'bool',
+                    },
+                'drop_warning': {
+                    'type': 'bool',
+                    },
+                'drop_critical': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_inc': {
+                'type': 'dict',
+                'parse_fail': {
+                    'type': 'bool',
+                    },
+                'json_fail': {
+                    'type': 'bool',
+                    },
+                'timeout_error': {
+                    'type': 'bool',
+                    },
+                'other_error': {
+                    'type': 'bool',
+                    },
+                'uuid': {
+                    'type': 'str',
+                    }
+                },
+            'trigger_stats_rate': {
+                'type': 'dict',
+                'threshold_exceeded_by': {
+                    'type': 'int',
+                    },
+                'duration': {
+                    'type': 'int',
+                    },
+                'parse_fail': {
+                    'type': 'bool',
+                    },
+                'json_fail': {
+                    'type': 'bool',
+                    },
+                'timeout_error': {
+                    'type': 'bool',
+                    },
+                'other_error': {
                     'type': 'bool',
                     },
                 'uuid': {

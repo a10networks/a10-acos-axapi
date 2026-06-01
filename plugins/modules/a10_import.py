@@ -260,11 +260,6 @@ options:
         - "Customized tag"
         type: str
         required: False
-    background:
-        description:
-        - "Background mode for importing class-list"
-        type: bool
-        required: False
     overwrite:
         description:
         - "Overwrite existing file"
@@ -597,9 +592,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "auth_saml_idp", "background", "bios_file", "bw_list", "ca_cert", "certificate_type", "class_list", "class_list_convert", "class_list_type", "cloud_config", "cloud_creds", "csr_generate", "ddos_script", "digest", "dnssec_dnskey", "dnssec_ds", "domain_list", "geo_location",
-    "geo_location_archive", "glm_cert", "glm_license", "health_external", "health_postfile", "ip_map_list", "local_uri_file", "lw_4o6", "ng_waf_custom_page", "ng_waf_module", "overwrite", "password", "pfx_password", "proxy", "remote_file", "remote_file_zone_transfer", "rpz", "secured", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "store",
-    "store_name", "terminal", "thales_kmdata", "thales_secworld", "to_device", "tsig", "usb_license", "use_mgmt_port", "use_ssh_key", "user_tag", "web_category_license", "xml_schema", "zone_transfer",
+    "aflex", "auth_jwks", "auth_portal", "auth_portal_image", "auth_saml_idp", "bios_file", "bw_list", "ca_cert", "certificate_type", "class_list", "class_list_convert", "class_list_type", "cloud_config", "cloud_creds", "csr_generate", "ddos_script", "digest", "dnssec_dnskey", "dnssec_ds", "domain_list", "geo_location", "geo_location_archive",
+    "glm_cert", "glm_license", "health_external", "health_postfile", "ip_map_list", "local_uri_file", "lw_4o6", "ng_waf_custom_page", "ng_waf_module", "overwrite", "password", "pfx_password", "proxy", "remote_file", "remote_file_zone_transfer", "rpz", "secured", "ssl_cert", "ssl_cert_key", "ssl_crl", "ssl_key", "store", "store_name", "terminal",
+    "thales_kmdata", "thales_secworld", "to_device", "tsig", "usb_license", "use_mgmt_port", "use_ssh_key", "user_tag", "web_category_license", "xml_schema", "zone_transfer",
     ]
 
 
@@ -748,9 +743,6 @@ def get_argspec():
             },
         'user_tag': {
             'type': 'str',
-            },
-        'background': {
-            'type': 'bool',
             },
         'overwrite': {
             'type': 'bool',

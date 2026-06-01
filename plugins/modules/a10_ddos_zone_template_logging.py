@@ -67,7 +67,7 @@ options:
         required: False
     use_obj_name:
         description:
-        - "Show obj name in the log"
+        - "Show obj name instead of ip in the log"
         type: bool
         required: False
     log_format_custom:

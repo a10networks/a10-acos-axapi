@@ -70,7 +70,7 @@ options:
         - "The password for certificate file (pfx type only)"
         type: str
         required: False
-    encrypted:
+    pfx_encrypted:
         description:
         - "The password for certificate file (pfx type only)"
         type: str
@@ -89,6 +89,21 @@ options:
         description:
         - "Specify the period in second"
         type: int
+        required: False
+    password_key:
+        description:
+        - "Config remote server password"
+        type: bool
+        required: False
+    password:
+        description:
+        - "Config remote server  password"
+        type: str
+        required: False
+    string_encrypted:
+        description:
+        - "Specify an ENCRYPTED password string (remote server password)"
+        type: str
         required: False
     uuid:
         description:
@@ -149,7 +164,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ca_cert", "certificate_type", "encrypted", "period", "pfx_password", "remote_file", "use_mgmt_port", "uuid", ]
+AVAILABLE_PROPERTIES = ["ca_cert", "certificate_type", "password", "password_key", "period", "pfx_encrypted", "pfx_password", "remote_file", "string_encrypted", "use_mgmt_port", "uuid", ]
 
 
 def get_default_argspec():
@@ -169,7 +184,43 @@ def get_default_argspec():
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'ca_cert': {'type': 'str', 'required': True, }, 'certificate_type': {'type': 'str', 'choices': ['pem', 'der', 'pfx', 'p7b']}, 'pfx_password': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'use_mgmt_port': {'type': 'bool', }, 'remote_file': {'type': 'str', }, 'period': {'type': 'int', }, 'uuid': {'type': 'str', }})
+    rv.update({
+        'ca_cert': {
+            'type': 'str',
+            'required': True,
+            },
+        'certificate_type': {
+            'type': 'str',
+            'choices': ['pem', 'der', 'pfx', 'p7b']
+            },
+        'pfx_password': {
+            'type': 'str',
+            },
+        'pfx_encrypted': {
+            'type': 'str',
+            },
+        'use_mgmt_port': {
+            'type': 'bool',
+            },
+        'remote_file': {
+            'type': 'str',
+            },
+        'period': {
+            'type': 'int',
+            },
+        'password_key': {
+            'type': 'bool',
+            },
+        'password': {
+            'type': 'str',
+            },
+        'string_encrypted': {
+            'type': 'str',
+            },
+        'uuid': {
+            'type': 'str',
+            }
+        })
     return rv
 
 

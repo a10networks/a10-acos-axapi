@@ -112,6 +112,10 @@ options:
                 description:
                 - "DNS notify enabled"
                 type: bool
+            refresh_interval_by_soa:
+                description:
+                - "Read by SOA record"
+                type: bool
             refresh_interval_hours:
                 description:
                 - "Zone transfer refresh rate in hours (Default 4). 0 means no refresh"
@@ -140,6 +144,10 @@ options:
             force:
                 description:
                 - "Force update even the serial is the same"
+                type: bool
+            ixfr:
+                description:
+                - "Use IXFR to update"
                 type: bool
             cache_all_records:
                 description:
@@ -273,6 +281,9 @@ def get_argspec():
             'dns_notify_enable_ipv6': {
                 'type': 'bool',
                 },
+            'refresh_interval_by_soa': {
+                'type': 'bool',
+                },
             'refresh_interval_hours': {
                 'type': 'int',
                 },
@@ -293,6 +304,9 @@ def get_argspec():
                 'type': 'str',
                 },
             'force': {
+                'type': 'bool',
+                },
+            'ixfr': {
                 'type': 'bool',
                 },
             'cache_all_records': {
