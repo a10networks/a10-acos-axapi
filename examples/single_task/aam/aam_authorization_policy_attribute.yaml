@@ -1,0 +1,22 @@
+# This is example is for string value. Comment/Uncomment as required for other values (not tested)
+- name: "Create AAM Authorization Policy Attributes"
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  collections:
+    a10.acos_axapi
+  a10.acos_axapi.a10_aam_authorization_policy_attribute:
+    state: present
+    policy_name: my_policy
+    attr_num: 1 # Integer
+    attr_type: true
+    attribute_name: my_string_attribute
+    string_type: true
+    attr_str: match # or sub-string
+    attr_str_val: my_string_value
+    # attr_int: 
+    # attrib_int_val: 
+    # attr_number: 
+    # attrib_number_val:
+    # attr_ip: '
+    # attrib_ipv4: 
+...

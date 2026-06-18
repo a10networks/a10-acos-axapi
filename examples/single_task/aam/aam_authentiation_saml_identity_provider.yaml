@@ -1,0 +1,11 @@
+- name: "Create AAM SAML IDP data"
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  collections:
+    a10.acos_axapi
+  a10.acos_axapi.a10_aam_authentication_saml_identity_provider:
+    state: present
+    name: my_saml_idp_name
+    metadata: metadata_name
+    reload_interval: 28800
+    user_tag: idp_tag_name

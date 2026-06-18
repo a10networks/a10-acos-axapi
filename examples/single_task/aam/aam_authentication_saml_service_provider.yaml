@@ -1,0 +1,40 @@
+- name: "Create AAM SAML SP data"
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  collections:
+    a10.acos_axapi
+  a10.acos_axapi.a10_aam_authentication_saml_service_provider:
+    state: present
+    name: my_server_name
+    entity_id: saml_url
+    certificate: saml_cerificate_name
+    service_url: saml_url
+    user_tag: saml_sp_tag
+    signature_algorithm: saml_signature_algorithm
+    require_assertion_signed:
+      require_assertion_signed_enable: true
+    assertion_consuming_service:
+      - assertion_index: 1 # Integer
+        assertion_location: /my_saml_assertion_location
+        assertion_binding: post # Valid options: artifact, paos or post
+    metadata_export_service:
+      md_export_location: /path/to/metadata
+      sign_xml: true
+    artifact_resolution_service:
+      - artifact_index: 0 # Integer
+        artifact_location: /path/to/artifact
+        artifact_binding: soap # or post
+    adfs_ws_federation:
+      ws_federation_enable: my_ws_federation
+    single_logout_service:
+      - SLO_location: /path/to/slo
+        SLO_binding: post # or soap
+    SP_initiated_single_logout_service:
+      - SP_SLO_location: /path/to/sp_initiated/slo
+      - asynchronous: true
+    saml_request_signed:
+      saml_request_signed_disable: false
+    soap_tls_certificate_validate:
+      soap_tls_certificate_validate_disable: false
+    bad_request_redirect_url: hxxps://redirect.location/path
+    acs_uri_bypass: true

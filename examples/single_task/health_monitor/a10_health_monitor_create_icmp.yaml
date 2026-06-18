@@ -1,0 +1,9 @@
+- name: "Update ICMP Health Check"
+  collections:
+    a10.acos_axapi
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  a10.acos_axapi.a10_health_monitor_method_icmp:
+    state: present
+    monitor_name: my_ping_monitor
+    icmp: true

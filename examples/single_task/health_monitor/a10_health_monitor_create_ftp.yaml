@@ -1,0 +1,10 @@
+- name: "Update FTP Health Check"
+  collections:
+    a10.acos_axapi
+  connection: local
+  hosts: "{{desired_inventory_group}}"
+  a10.acos_axapi.a10_health_monitor_method_ftp:
+    state: present
+    monitor_name: my_ftp_monitor
+    ftp: true
+    ftp_port: "{{ ftp_port }}"
